@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 960" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="floor4" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#1a1a1a"/>
+      <stop offset="1" stop-color="#333"/>
+    </linearGradient>
+    <radialGradient id="vig4" cx="0.5" cy="0.5" r="0.85">
+      <stop offset="0.5" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.75"/>
+    </radialGradient>
+    <pattern id="scan4" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="2" fill="#00ff00" fill-opacity="0.04"/>
+    </pattern>
+  </defs>
+  <rect width="540" height="960" fill="#0a0a0a"/>
+  <!-- T-junction: corridor splits left and right at mid-depth -->
+  <!-- ceiling -->
+  <polygon points="0,0 540,0 540,360 0,360" fill="#1e1e1e"/>
+  <!-- back wall (T-stem) -->
+  <rect x="180" y="360" width="180" height="240" fill="#2a2a2a"/>
+  <!-- left branch (vanishing into dark) -->
+  <polygon points="0,360 180,360 180,600 0,720" fill="#1a1a1a"/>
+  <!-- right branch -->
+  <polygon points="540,360 360,360 360,600 540,720" fill="#1a1a1a"/>
+  <!-- floor -->
+  <polygon points="0,960 540,960 540,720 360,600 180,600 0,720" fill="url(#floor4)"/>
+  <!-- arrow signs at junction -->
+  <rect x="190" y="400" width="70" height="50" fill="#225588"/>
+  <polygon points="195,425 215,410 215,420 255,420 255,430 215,430 215,440" fill="#fff"/>
+  <rect x="280" y="400" width="70" height="50" fill="#225588"/>
+  <polygon points="345,425 325,410 325,420 285,420 285,430 325,430 325,440" fill="#fff"/>
+  <text x="225" y="475" font-family="monospace" font-size="12" fill="#88aacc" text-anchor="middle">B1 NORTH</text>
+  <text x="315" y="475" font-family="monospace" font-size="12" fill="#88aacc" text-anchor="middle">B1 SOUTH</text>
+  <!-- pillar in middle -->
+  <rect x="240" y="500" width="60" height="200" fill="#3a3a3a" stroke="#222" stroke-width="2"/>
+  <rect x="248" y="540" width="44" height="120" fill="#222"/>
+  <text x="270" y="560" font-family="monospace" font-size="9" fill="#888" text-anchor="middle">J-7</text>
+  <!-- ceiling lights -->
+  <rect x="120" y="40" width="40" height="6" fill="#fffacd" opacity="0.8"/>
+  <rect x="380" y="40" width="40" height="6" fill="#fffacd" opacity="0.7"/>
+  <ellipse cx="270" cy="50" rx="240" ry="14" fill="#fffacd" opacity="0.1"/>
+  <!-- floor markings -->
+  <line x1="270" y1="700" x2="270" y2="940" stroke="#665" stroke-width="2" stroke-dasharray="20 20" opacity="0.5"/>
+  <!-- exit sign upper left -->
+  <rect x="30" y="80" width="100" height="40" fill="#1a5a2a" stroke="#2a7a3a"/>
+  <text x="80" y="108" font-family="monospace" font-size="20" fill="#9fe9aa" text-anchor="middle">EXIT</text>
+  <!-- camera dome shadow on ceiling -->
+  <circle cx="450" cy="180" r="20" fill="#111" stroke="#333"/>
+  <circle cx="450" cy="180" r="8" fill="#000"/>
+  <!-- scanlines + vignette -->
+  <rect width="540" height="960" fill="url(#scan4)"/>
+  <rect width="540" height="960" fill="url(#vig4)"/>
+  <!-- HUD -->
+  <text x="20" y="40" font-family="monospace" font-size="14" fill="#3fa55f">REC ●  CAM 04</text>
+  <text x="20" y="58" font-family="monospace" font-size="11" fill="#3fa55f" opacity="0.8">Underground Junction</text>
+  <text x="440" y="940" font-family="monospace" font-size="11" fill="#3fa55f" opacity="0.7">placeholder</text>
+</svg>

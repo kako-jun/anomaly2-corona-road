@@ -1,0 +1,37 @@
+# Anomaly definitions for corona-road
+# 1 entry = 1 anomaly variant (1 base photo can have many variants)
+#
+# Required: id, base_photo, category, anomaly_type, location, detail
+# Optional: phase (early/mid/late), note
+#
+# anomaly_type enum: add_object, remove_object, add_person, add_creature,
+#                    state_change, duplicate, multiply, displace,
+#                    color_shift, text_change, surreal, reflection
+# category enum:     camera, object, environment, person, surreal
+# phase enum:        early, mid, late
+
+anomalies:
+  - id: a001
+    base_photo: photos/cam01_baseline.svg
+    category: surreal
+    anomaly_type: add_creature
+    location: "right-bottom corner, in front of the vending machine"
+    detail: "a small grey alien with large black eyes, crouching, about 60cm tall, partially in shadow"
+    phase: late
+    note: "sample entry — replace when real photos arrive"
+
+  - id: a002
+    base_photo: photos/cam03_baseline.svg
+    category: environment
+    anomaly_type: state_change
+    location: "the shutter at the center-back of the corridor"
+    detail: "the shutter is rolled up halfway, revealing pitch-black void inside (originally closed)"
+    phase: mid
+
+  - id: a003
+    base_photo: photos/cam02_baseline.svg
+    category: object
+    anomaly_type: duplicate
+    location: "the exit sign on the upper-left"
+    detail: "the green exit sign appears twice, the second one floating slightly to the right of the original"
+    phase: early
