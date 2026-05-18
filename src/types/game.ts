@@ -24,6 +24,7 @@ export interface Camera {
   id: number
   name: string
   location: string
+  image: string
   hasAnomaly: boolean
   currentAnomalyId?: string
 }

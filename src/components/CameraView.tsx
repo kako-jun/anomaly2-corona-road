@@ -32,25 +32,29 @@ export const CameraView = ({ camera, onSwipe }: CameraViewProps) => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Camera feed placeholder - will be replaced with actual images */}
-      <div className="flex h-full w-full items-center justify-center bg-gradient-to-b from-gray-900 to-black">
-        <div className="text-center">
-          <div className="mb-4 font-mono text-lg text-green-500">
-            [{camera.name}]
-          </div>
-          <div className="font-mono text-sm text-green-400">
-            {camera.location}
-          </div>
-          <div className="mt-8 text-xs text-gray-600">
-            [CAMERA FEED - SWIPE TO SWITCH]
-          </div>
-          {camera.hasAnomaly && (
-            <div className="mt-4 text-xs text-red-500">
-              [ANOMALY DETECTED - REPORT REQUIRED]
-            </div>
-          )}
+      {/* Camera feed image */}
+      <div
+        className="h-full w-full bg-black bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${camera.image})`,
+          filter: 'saturate(0.6) contrast(0.95) brightness(0.85)',
+        }}
+      />
+
+      {/* Bottom info bar */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/80 to-transparent p-3 font-mono text-xs text-green-400">
+        <div>
+          <div className="text-green-500">[{camera.name}]</div>
+          <div className="opacity-80">{camera.location}</div>
         </div>
+        <div className="opacity-60">SWIPE ⇄</div>
       </div>
+
+      {camera.hasAnomaly && (
+        <div className="pointer-events-none absolute top-3 right-3 animate-pulse font-mono text-xs text-red-500">
+          ⚠ ANOMALY
+        </div>
+      )}
 
       {/* Scanlines effect for retro feel */}
       <div
@@ -62,10 +66,10 @@ export const CameraView = ({ camera, onSwipe }: CameraViewProps) => {
       />
 
       {/* Vignette */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-40" />
+      <div className="bg-gradient-radial pointer-events-none absolute inset-0 from-transparent via-transparent to-black opacity-40" />
 
       {/* Camera info overlay */}
-      <div className="absolute left-4 top-4 font-mono text-xs text-green-500 opacity-80">
+      <div className="absolute top-4 left-4 font-mono text-xs text-green-500 opacity-80">
         <div>REC ●</div>
       </div>
     </div>
