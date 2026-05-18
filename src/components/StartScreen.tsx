@@ -6,13 +6,13 @@ export const StartScreen = ({ onStart }: StartScreenProps) => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black p-6 text-white">
       <div className="max-w-md space-y-8 text-center">
-        {/* Title */}
-        <div>
-          <h1 className="mb-2 font-mono text-4xl font-bold text-red-500">
-            ANOMALY²
-          </h1>
-          <h2 className="font-mono text-2xl text-gray-400">Corona Road</h2>
-        </div>
+        {/* Logo */}
+        <img
+          src="/images/logo.webp"
+          alt="Anomaly² Corona Road"
+          className="mx-auto w-full max-w-xs"
+        />
+        <h1 className="sr-only">ANOMALY² Corona Road</h1>
 
         {/* Subtitle */}
         <div className="border-y border-gray-800 py-4 font-mono text-sm text-gray-500">
@@ -53,7 +53,7 @@ export const StartScreen = ({ onStart }: StartScreenProps) => {
         {/* Start button */}
         <button
           onClick={onStart}
-          className="w-full rounded-lg border-2 border-green-500 bg-green-900/30 py-4 font-mono text-lg font-bold uppercase text-green-500 transition-all hover:bg-green-900/50 active:scale-95"
+          className="w-full rounded-lg border-2 border-green-500 bg-green-900/30 py-4 font-mono text-lg font-bold text-green-500 uppercase transition-all hover:bg-green-900/50 active:scale-95"
         >
           [ BEGIN SHIFT ]
         </button>
