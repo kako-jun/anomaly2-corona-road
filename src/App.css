@@ -1,66 +1,700 @@
-/* Anomaly²: Corona Road - Main Styles */
+/* App-level layout. All visual tokens come from index.css :root. */
 
 .App {
-  margin: 0;
-  padding: 0;
   width: 100%;
+  max-width: 480px;
   min-height: 100vh;
-  background-color: #000;
+  background: var(--surface-0);
+  display: flex;
+  flex-direction: column;
 }
 
-/* Camera View Styles */
-.camera-view {
+.screen {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  background: var(--surface-0);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-4);
+  gap: var(--space-5);
+}
+
+/* ----------------------------------------------------------
+   HUD
+---------------------------------------------------------- */
+.hud {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--outline);
+}
+
+.hud__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.hud__time-label {
+  font-size: var(--text-caption);
+  color: var(--text-mid);
+  letter-spacing: 0.08em;
+}
+
+.hud__time {
+  font-size: var(--text-time);
+  font-weight: 600;
+  color: var(--text-hi);
+  letter-spacing: 0.04em;
+}
+
+.hud__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-0);
+}
+
+.hud__stat-label {
+  font-size: var(--text-caption);
+  color: var(--text-mid);
+  letter-spacing: 0.08em;
+}
+
+.hud__stat-value {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--text-hi);
+}
+
+.hud__stat-value--warning {
+  color: var(--warning);
+}
+.hud__stat-value--danger {
+  color: var(--danger);
+}
+
+.hud__stats {
+  display: flex;
+  gap: var(--space-5);
+}
+
+.hud__stat-divisor {
+  color: var(--text-low);
+  font-weight: 400;
+}
+
+.hud__progress {
+  height: 3px;
+  width: 100%;
+  background: var(--surface-3);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.hud__progress-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width var(--dur-base) var(--ease);
+}
+
+/* ----------------------------------------------------------
+   Camera View
+---------------------------------------------------------- */
+.camera {
   position: relative;
+  flex: 1 1 60vh;
+  min-height: 60vh;
+  background: var(--surface-0);
+  overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: pan-y;
+  /* Swipe surface — disable both axes so mobile doesn't bounce or rubber-band. */
+  touch-action: none;
+  cursor: grab;
 }
 
-/* HUD Styles */
-.game-hud {
+.camera:active {
+  cursor: grabbing;
+}
+
+.camera__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.7) contrast(1) brightness(0.9);
+  transition: filter var(--dur-base) var(--ease);
+  -webkit-user-drag: none;
+}
+
+.camera__image--anomaly {
+  animation: glitch-shake 1.6s var(--ease) infinite;
+  filter: saturate(0.55) contrast(1.05) brightness(0.78) hue-rotate(-8deg);
+}
+
+.camera__scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    color-mix(in srgb, var(--primary) 15%, transparent) 2px,
+    color-mix(in srgb, var(--primary) 15%, transparent) 3px
+  );
+  opacity: 0.5;
+}
+
+.camera__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Raw rgba used here only because shadow/vignette ramps express pure black-occlusion. */
+  background: radial-gradient(
+    circle at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}
+
+.camera__rec {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-caption);
+  color: var(--danger);
+  letter-spacing: 0.1em;
+}
+
+.camera__rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  animation: pulse-warning 1.6s linear infinite;
+}
+
+.camera__timestamp {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  font-size: var(--text-caption);
+  color: var(--text-mid);
+  background: color-mix(in srgb, var(--scrim) 50%, transparent);
+  padding: var(--space-0) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.camera__info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: var(--camera-info-h);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--scrim) 85%, transparent),
+    transparent
+  );
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-0);
+}
+
+.camera__info-name {
+  font-size: var(--text-label);
+  color: var(--text-hi);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.camera__info-location {
+  font-size: var(--text-caption);
+  color: var(--text-mid);
+}
+
+.camera__alert {
+  position: absolute;
+  top: var(--space-5);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: color-mix(in srgb, var(--warning) 18%, transparent);
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-pill);
+  color: var(--warning);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  animation: pulse-warning 1.4s linear infinite;
+}
+
+.camera__alert-text {
+  position: absolute;
+  /* Sits just above .camera__info; both share --camera-info-h so they never collide. */
+  bottom: calc(var(--camera-info-h) + var(--space-2));
+  left: var(--space-4);
+  right: var(--space-4);
+  padding: var(--space-3);
+  background: color-mix(in srgb, var(--scrim) 78%, transparent);
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-md);
+  color: var(--warning);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+
+.camera__nav {
+  position: absolute;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--scrim) 50%, transparent);
+  border: 1px solid var(--outline);
+  border-radius: 50%;
+  color: var(--text-hi);
+  font-size: var(--text-h2);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.camera__nav:hover {
+  background: color-mix(in srgb, white 12%, transparent);
+  border-color: var(--outline-strong);
+}
+
+.camera__nav--prev {
+  left: var(--space-3);
+}
+.camera__nav--next {
+  right: var(--space-3);
+}
+
+/* ----------------------------------------------------------
+   Camera strip (selector)
+---------------------------------------------------------- */
+.strip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-1);
+  border-top: 1px solid var(--outline);
+  border-bottom: 1px solid var(--outline);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.strip__tile {
+  position: relative;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-md);
+  color: var(--text-mid);
+  font-size: var(--text-label);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.strip__tile:hover {
+  background: var(--surface-3);
+  border-color: var(--outline-strong);
+}
+
+.strip__tile--active {
+  /* Selected state-layer per DESIGN.md §2.4 */
+  background: color-mix(in srgb, var(--secondary) 12%, transparent);
+  border-color: var(--secondary);
+  color: var(--text-hi);
+}
+
+.strip__tile-dot {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--warning);
+  box-shadow: 0 0 var(--space-1) var(--warning);
+  animation: pulse-warning 1.2s linear infinite;
+}
+
+/* ----------------------------------------------------------
+   Report panel
+---------------------------------------------------------- */
+.report {
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border-top: 1px solid var(--outline);
+  box-shadow: var(--elev-3);
+}
+
+.report__title {
+  margin-bottom: var(--space-3);
+  text-align: center;
+  font-size: var(--text-caption);
+  letter-spacing: 0.12em;
+  color: var(--text-mid);
+}
+
+.report__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+.report__category {
+  padding: var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-md);
+  color: var(--text-hi);
+  font-size: var(--text-label);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.report__category:hover {
+  background: var(--surface-3);
+  border-color: var(--outline-strong);
+}
+
+.report__category-icon {
+  font-size: 1.5rem;
+}
+
+.report__category--Camera {
+  color: var(--secondary);
+}
+.report__category--Object {
+  color: var(--warning);
+}
+.report__category--Environment {
+  color: var(--primary);
+}
+.report__category--Person {
+  color: var(--accent-violet);
+}
+.report__category--Surreal {
+  color: var(--danger);
+}
+
+/* ----------------------------------------------------------
+   Buttons
+---------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-hi);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+.btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.btn--filled-primary {
+  background: var(--primary);
+  color: var(--primary-on);
+}
+.btn--filled-primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--primary) 88%, white 12%);
+}
+
+.btn--filled-secondary {
+  background: var(--secondary);
+  color: var(--secondary-on);
+}
+.btn--filled-secondary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--secondary) 88%, white 12%);
+}
+
+.btn--outlined-danger {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 8%, transparent);
+}
+.btn--outlined-danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 16%, transparent);
+}
+
+.btn--ghost {
+  color: var(--text-mid);
+}
+.btn--ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--text-hi);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* ----------------------------------------------------------
+   Card
+---------------------------------------------------------- */
+.card {
+  padding: var(--space-4);
+  background: var(--surface-1);
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-1);
+}
+
+.card__label {
+  font-size: var(--text-caption);
+  letter-spacing: 0.12em;
+  color: var(--text-mid);
+  margin-bottom: var(--space-2);
+}
+
+.card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--outline);
+  font-size: var(--text-body);
+}
+
+.card__row:last-child {
+  border-bottom: none;
+}
+.card__row-label {
+  color: var(--text-mid);
+}
+.card__row-value {
+  color: var(--text-hi);
+  font-weight: 600;
+}
+.card__row-value--primary {
+  color: var(--primary);
+}
+.card__row-value--danger {
+  color: var(--danger);
+}
+.card__row-value--muted {
+  color: var(--text-mid);
+}
+
+/* ----------------------------------------------------------
+   Toast (report feedback)
+---------------------------------------------------------- */
+.toast {
+  position: fixed;
+  top: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  z-index: 50;
+  animation: toast-in var(--dur-base) var(--ease-out);
+  box-shadow: var(--elev-3);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 255, 0, 0.2);
 }
 
-/* Report Panel Styles */
-.report-panel {
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 0, 0, 0.2);
+.toast--correct {
+  background: color-mix(in srgb, var(--primary) 20%, var(--surface-2));
+  border: 1px solid var(--primary);
+  color: var(--primary);
 }
 
-/* Radial gradient utility for vignette effect */
-.bg-gradient-radial {
-  background: radial-gradient(circle, var(--tw-gradient-stops));
+.toast--wrong {
+  background: color-mix(in srgb, var(--danger) 20%, var(--surface-2));
+  border: 1px solid var(--danger);
+  color: var(--danger);
 }
 
-/* Monospace font enforcement */
-* {
-  font-variant-numeric: tabular-nums;
+/* ----------------------------------------------------------
+   Feedback flash overlay
+---------------------------------------------------------- */
+.flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
 }
 
-/* Disable text selection for game UI */
-button,
-.camera-view,
-.game-hud {
-  -webkit-tap-highlight-color: transparent;
+.flash--correct {
+  animation: flash-correct var(--dur-slow) var(--ease-out);
+}
+.flash--wrong {
+  animation: flash-wrong var(--dur-slow) var(--ease-out);
 }
 
-/* Mobile optimization */
-@media (max-width: 768px) {
-  .camera-view {
-    height: 55vh !important;
+/* ----------------------------------------------------------
+   Start / End screen
+---------------------------------------------------------- */
+.start__logo {
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  display: block;
+}
+
+.start__subtitle {
+  text-align: center;
+  font-size: var(--text-caption);
+  color: var(--text-mid);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--outline);
+  border-bottom: 1px solid var(--outline);
+  letter-spacing: 0.08em;
+}
+
+.start__card-label {
+  display: inline-block;
+  font-size: var(--text-caption);
+  letter-spacing: 0.12em;
+  margin-bottom: var(--space-2);
+}
+
+.start__card-label--obj {
+  color: var(--primary);
+}
+.start__card-label--ctl {
+  color: var(--secondary);
+}
+.start__card-label--warn {
+  color: var(--danger);
+}
+
+.start__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--text-mid);
+  font-size: var(--text-body);
+}
+
+.start__version {
+  text-align: center;
+  font-size: var(--text-caption);
+  color: var(--text-low);
+}
+
+.end__title {
+  font-size: var(--text-display);
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.end__title--win {
+  color: var(--primary);
+}
+.end__title--lose {
+  color: var(--danger);
+}
+
+.end__subtitle {
+  text-align: center;
+  font-size: var(--text-body);
+  color: var(--text-mid);
+}
+
+.end__message {
+  font-size: var(--text-caption);
+  color: var(--text-mid);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.end__hint--warning {
+  color: var(--warning);
+}
+.end__hint--danger {
+  color: var(--danger);
+}
+
+/* ----------------------------------------------------------
+   Responsive
+---------------------------------------------------------- */
+@media (min-width: 481px) {
+  body {
+    background: linear-gradient(
+      135deg,
+      var(--surface-0) 0%,
+      var(--surface-2) 100%
+    );
+  }
+  .App {
+    box-shadow: var(--elev-4);
   }
 }
 
-/* Accessibility - high contrast mode support */
-@media (prefers-contrast: high) {
-  .game-hud,
-  .report-panel {
-    border-width: 2px;
-  }
+/* ----------------------------------------------------------
+   Modifiers
+---------------------------------------------------------- */
+.card--danger {
+  border-color: var(--danger);
 }
-
-/* Prevent pull-to-refresh on mobile */
-body {
-  overscroll-behavior: none;
+.mt-3 {
+  margin-top: var(--space-3);
 }

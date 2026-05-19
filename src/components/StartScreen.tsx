@@ -2,66 +2,55 @@ interface StartScreenProps {
   onStart: () => void
 }
 
-export const StartScreen = ({ onStart }: StartScreenProps) => {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-black p-6 text-white">
-      <div className="max-w-md space-y-8 text-center">
-        {/* Logo */}
-        <img
-          src="/images/logo.webp"
-          alt="Anomaly² Corona Road"
-          className="mx-auto w-full max-w-xs"
-        />
-        <h1 className="sr-only">ANOMALY² Corona Road</h1>
+export const StartScreen = ({ onStart }: StartScreenProps) => (
+  <div className="screen">
+    <img
+      src="/images/logo.webp"
+      alt="Anomaly² Corona Road"
+      className="start__logo"
+    />
+    <h1 className="sr-only">ANOMALY² Corona Road</h1>
 
-        {/* Subtitle */}
-        <div className="border-y border-gray-800 py-4 font-mono text-sm text-gray-500">
-          Underground Surveillance System
-          <br />
-          Night Shift: 00:00 - 06:00
-        </div>
-
-        {/* Instructions */}
-        <div className="space-y-4 text-left font-mono text-sm text-gray-400">
-          <div className="rounded-lg border border-gray-800 bg-gray-900/30 p-4">
-            <div className="mb-2 text-green-500">OBJECTIVE:</div>
-            <p>
-              Monitor security cameras and report any anomalies detected in
-              Corona Road underground corridor. Survive until dawn.
-            </p>
-          </div>
-
-          <div className="rounded-lg border border-gray-800 bg-gray-900/30 p-4">
-            <div className="mb-2 text-yellow-500">CONTROLS:</div>
-            <ul className="space-y-1">
-              <li>• Swipe left/right to switch cameras</li>
-              <li>• Tap REPORT ANOMALY when detected</li>
-              <li>• Select correct anomaly category</li>
-            </ul>
-          </div>
-
-          <div className="rounded-lg border border-red-900 bg-red-950/30 p-4">
-            <div className="mb-2 text-red-500">WARNING:</div>
-            <ul className="space-y-1">
-              <li>• 3 false reports will terminate your shift</li>
-              <li>• Missing anomalies may have consequences</li>
-              <li>• Trust your instincts</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Start button */}
-        <button
-          onClick={onStart}
-          className="w-full rounded-lg border-2 border-green-500 bg-green-900/30 py-4 font-mono text-lg font-bold text-green-500 uppercase transition-all hover:bg-green-900/50 active:scale-95"
-        >
-          [ BEGIN SHIFT ]
-        </button>
-
-        <div className="pt-4 font-mono text-xs text-gray-700">
-          v1.0.0 - Anomaly Detection System
-        </div>
-      </div>
+    <div className="start__subtitle">
+      UNDERGROUND SURVEILLANCE SYSTEM
+      <br />
+      NIGHT SHIFT · 00:00 → 06:00
     </div>
-  )
-}
+
+    <div className="card">
+      <div className="start__card-label start__card-label--obj">OBJECTIVE</div>
+      <p style={{ color: 'var(--text-mid)', fontSize: 'var(--text-body)' }}>
+        Monitor the eight Corona Road cameras. Report each anomaly with the
+        correct category. Survive until dawn.
+      </p>
+    </div>
+
+    <div className="card">
+      <div className="start__card-label start__card-label--ctl">CONTROLS</div>
+      <ul className="start__list">
+        <li>· Drag, swipe, or use ‹ › to switch cameras</li>
+        <li>· Keyboard: ← →, A / D, 1–8</li>
+        <li>· Tap REPORT ANOMALY and pick the matching type</li>
+      </ul>
+    </div>
+
+    <div className="card card--danger">
+      <div className="start__card-label start__card-label--warn">WARNING</div>
+      <ul className="start__list">
+        <li>· 3 false reports end your shift</li>
+        <li>· At least 4 confirmed reports needed to clear</li>
+        <li>· Late-phase anomalies break the rules</li>
+      </ul>
+    </div>
+
+    <button
+      type="button"
+      className="btn btn--filled-primary btn--block"
+      onClick={onStart}
+    >
+      BEGIN SHIFT
+    </button>
+
+    <div className="start__version">v1.1.0 · Anomaly Detection System</div>
+  </div>
+)

@@ -26,13 +26,14 @@ export interface Camera {
   location: string
   image: string
   hasAnomaly: boolean
-  currentAnomalyId?: string
 }
 
 export interface GameConfig {
   totalDurationMs: number // 6 minutes = 360000ms
-  anomalyIntervalMs: number // 45 seconds average
-  maxMisreports: number // 3 strikes
+  firstAnomalyDelayMs: number // time before the very first anomaly spawn
+  anomalyIntervalMs: number // average spawn cadence
+  maxConcurrentAnomalies: number // spawn skipped while at this cap
+  maxMisreports: number // strikes
   minCorrectReports: number // Minimum to win
 }
 

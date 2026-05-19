@@ -1,76 +1,111 @@
-import { Camera } from '../types/game'
+import { useRef } from 'react'
+import { Anomaly, Camera } from '../types/game'
 
 interface CameraViewProps {
   camera: Camera
+  gameTime: string
+  anomalyHere?: Anomaly
   onSwipe: (direction: 'next' | 'prev') => void
 }
 
-export const CameraView = ({ camera, onSwipe }: CameraViewProps) => {
-  let touchStartX = 0
+const SWIPE_THRESHOLD = 50
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX = e.touches[0].clientX
+export const CameraView = ({
+  camera,
+  gameTime,
+  anomalyHere,
+  onSwipe,
+}: CameraViewProps) => {
+  const dragStartXRef = useRef<number | null>(null)
+
+  const startDrag = (x: number) => {
+    dragStartXRef.current = x
   }
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const touchEndX = e.changedTouches[0].clientX
-    const diff = touchStartX - touchEndX
-
-    if (Math.abs(diff) > 50) {
-      // Minimum swipe distance
-      if (diff > 0) {
-        onSwipe('next')
-      } else {
-        onSwipe('prev')
-      }
+  const endDrag = (x: number) => {
+    if (dragStartXRef.current == null) return
+    const diff = dragStartXRef.current - x
+    dragStartXRef.current = null
+    if (Math.abs(diff) > SWIPE_THRESHOLD) {
+      onSwipe(diff > 0 ? 'next' : 'prev')
     }
   }
 
+  const handleTouchStart = (e: React.TouchEvent) =>
+    startDrag(e.touches[0].clientX)
+  const handleTouchEnd = (e: React.TouchEvent) =>
+    endDrag(e.changedTouches[0].clientX)
+  const handleMouseDown = (e: React.MouseEvent) => startDrag(e.clientX)
+  const handleMouseUp = (e: React.MouseEvent) => endDrag(e.clientX)
+  const handleMouseLeave = () => {
+    dragStartXRef.current = null
+  }
+
+  // Nav buttons must not feed the parent's drag detection: a press on `‹` followed
+  // by mouseup outside the button would otherwise register as both a click and a swipe.
+  const navClick = (dir: 'prev' | 'next') => (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onSwipe(dir)
+  }
+  const stopMouseDown = (e: React.MouseEvent) => e.stopPropagation()
+
+  const imageClass = anomalyHere
+    ? 'camera__image camera__image--anomaly'
+    : 'camera__image'
+
   return (
     <div
-      className="camera-view relative h-[60vh] w-full overflow-hidden bg-black"
+      className="camera"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Camera feed image */}
-      <div
-        className="h-full w-full bg-black bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${camera.image})`,
-          filter: 'saturate(0.6) contrast(0.95) brightness(0.85)',
-        }}
+      <img
+        className={imageClass}
+        src={camera.image}
+        alt={`${camera.name} — ${camera.location}`}
+        draggable={false}
       />
 
-      {/* Bottom info bar */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/80 to-transparent p-3 font-mono text-xs text-green-400">
-        <div>
-          <div className="text-green-500">[{camera.name}]</div>
-          <div className="opacity-80">{camera.location}</div>
-        </div>
-        <div className="opacity-60">SWIPE ⇄</div>
-      </div>
+      <div className="camera__scanlines" />
+      <div className="camera__vignette" />
 
-      {camera.hasAnomaly && (
-        <div className="pointer-events-none absolute top-3 right-3 animate-pulse font-mono text-xs text-red-500">
-          ⚠ ANOMALY
-        </div>
+      <div className="camera__rec">
+        <span className="camera__rec-dot" />
+        REC
+      </div>
+      <div className="camera__timestamp">{gameTime}</div>
+
+      <button
+        type="button"
+        className="camera__nav camera__nav--prev"
+        aria-label="Previous camera"
+        onMouseDown={stopMouseDown}
+        onClick={navClick('prev')}
+      >
+        ‹
+      </button>
+      <button
+        type="button"
+        className="camera__nav camera__nav--next"
+        aria-label="Next camera"
+        onMouseDown={stopMouseDown}
+        onClick={navClick('next')}
+      >
+        ›
+      </button>
+
+      {anomalyHere && (
+        <>
+          <div className="camera__alert">⚠ ANOMALY DETECTED</div>
+          <div className="camera__alert-text">{anomalyHere.description}</div>
+        </>
       )}
 
-      {/* Scanlines effect for retro feel */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-10"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,0,0.3) 2px, rgba(0,255,0,0.3) 4px)',
-        }}
-      />
-
-      {/* Vignette */}
-      <div className="bg-gradient-radial pointer-events-none absolute inset-0 from-transparent via-transparent to-black opacity-40" />
-
-      {/* Camera info overlay */}
-      <div className="absolute top-4 left-4 font-mono text-xs text-green-500 opacity-80">
-        <div>REC ●</div>
+      <div className="camera__info">
+        <div className="camera__info-name">{camera.name}</div>
+        <div className="camera__info-location">{camera.location}</div>
       </div>
     </div>
   )
