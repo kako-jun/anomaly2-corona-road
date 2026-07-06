@@ -29,6 +29,31 @@ Output style:
   (unless detail explicitly says "obvious")
 ```
 
+## 実在看板の差し替えテンプレ
+
+公開用素材を作るときは、異変を足す前にこのテンプレで実在の店名・看板を架空名に差し替える。
+
+```
+Edit the attached surveillance camera photo.
+
+Make ONLY this single change:
+- Replace the real store name/sign text at {location} with this fictional text: "{fictional_text}"
+
+CRITICAL — keep everything else PIXEL-IDENTICAL to the source image:
+- camera angle, framing, lens distortion, aspect ratio
+- sign size, perspective, material, wear, dirt, lighting, shadows, and reflections
+- all surrounding buildings, walls, floor, ceiling, fixtures, and other signs
+- film grain, JPEG compression artifacts, low-fi surveillance look
+
+Do not redesign the sign. Do not add a new sign. Only replace the visible real-world text.
+The replacement text must look printed/painted on the original sign, matching the original perspective and age.
+
+Output style:
+- photo-realistic
+- matches the original's surveillance camera aesthetic exactly
+- same resolution as input
+```
+
 ## anomaly_type 別ヒント（テンプレ内 `{anomaly_type_hint}` 用）
 
 | type            | hint文                                                |
