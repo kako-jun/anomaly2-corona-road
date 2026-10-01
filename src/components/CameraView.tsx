@@ -10,6 +10,14 @@ interface CameraViewProps {
 
 const SWIPE_THRESHOLD = 50
 
+const CATEGORY_ICONS: Record<Anomaly['category'], string> = {
+  Camera: '📹',
+  Object: '📦',
+  Environment: '🌆',
+  Person: '🚶',
+  Surreal: '👁️',
+}
+
 export const CameraView = ({
   camera,
   gameTime,
@@ -97,10 +105,22 @@ export const CameraView = ({
       </button>
 
       {anomalyHere && (
-        <>
-          <div className="camera__alert">⚠ ANOMALY DETECTED</div>
-          <div className="camera__alert-text">{anomalyHere.description}</div>
-        </>
+        <div
+          className={`camera__anomaly camera__anomaly--${anomalyHere.category}`}
+          role="status"
+          aria-label={`Anomaly: ${anomalyHere.category}. ${anomalyHere.description}`}
+        >
+          <div className="camera__anomaly-heading">⚠ ANOMALY</div>
+          <div className="camera__anomaly-category">
+            <span aria-hidden="true">
+              {CATEGORY_ICONS[anomalyHere.category]}
+            </span>
+            {anomalyHere.category.toUpperCase()}
+          </div>
+          <div className="camera__anomaly-description">
+            {anomalyHere.description}
+          </div>
+        </div>
       )}
 
       <div className="camera__info">

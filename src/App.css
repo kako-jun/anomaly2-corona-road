@@ -227,44 +227,80 @@
   color: var(--text-mid);
 }
 
-.camera__alert {
+.camera__anomaly {
   position: absolute;
-  top: var(--space-5);
-  left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  left: var(--space-5);
+  right: var(--space-5);
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  background: color-mix(in srgb, var(--warning) 18%, transparent);
-  border: 1px solid var(--warning);
-  border-radius: var(--radius-pill);
+  flex-direction: column;
+  padding: var(--space-4);
+  background: color-mix(in srgb, var(--surface-1) 94%, transparent);
+  border: 2px solid var(--warning);
+  border-radius: var(--radius-lg);
   color: var(--warning);
+  text-align: center;
+  box-shadow: var(--elev-3);
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+
+.camera__anomaly-heading {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.camera__anomaly-category {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: color-mix(in srgb, currentColor 16%, transparent);
+  border-radius: var(--radius-pill);
   font-size: var(--text-label);
   font-weight: 600;
   letter-spacing: 0.08em;
-  animation: pulse-warning 1.4s linear infinite;
 }
 
-.camera__alert-text {
-  position: absolute;
-  /* Sits just above .camera__info; both share --camera-info-h so they never collide. */
-  bottom: calc(var(--camera-info-h) + var(--space-2));
-  left: var(--space-4);
-  right: var(--space-4);
-  padding: var(--space-3);
-  background: color-mix(in srgb, var(--scrim) 78%, transparent);
-  border: 1px solid var(--warning);
-  border-radius: var(--radius-md);
+.camera__anomaly-description {
+  max-width: 34ch;
+  color: var(--text-hi);
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+
+.camera__anomaly--Camera {
+  color: var(--secondary);
+  border-color: var(--secondary);
+}
+
+.camera__anomaly--Object {
   color: var(--warning);
-  font-size: var(--text-label);
-  letter-spacing: 0.04em;
-  text-align: center;
-  backdrop-filter: blur(8px);
+  border-color: var(--warning);
+}
+
+.camera__anomaly--Environment {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.camera__anomaly--Person {
+  color: var(--accent-violet);
+  border-color: var(--accent-violet);
+}
+
+.camera__anomaly--Surreal {
+  color: var(--danger);
+  border-color: var(--danger);
 }
 
 .camera__nav {
   position: absolute;
+  z-index: 1;
   top: 50%;
   width: 44px;
   height: 44px;

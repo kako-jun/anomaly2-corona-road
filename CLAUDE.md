@@ -132,7 +132,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 - [x] 8 camera feeds defined (with provisional WebP imagery)
 - [x] Multi-input navigation (touch swipe / mouse drag / ‹ › buttons / keyboard / strip tap)
 - [x] Camera selector strip below the view with anomaly dot indicators
-- [x] Visual feedback for anomaly presence (badge + description + glitch-shake)
+- [x] Visual feedback for anomaly presence (on-image provisional marker with category + description, plus glitch-shake)
 - [x] Camera info overlay (name, location, timestamp, REC)
 
 #### Anomaly System
