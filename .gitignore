@@ -25,3 +25,9 @@ dist-ssr
 .claude/settings.local.json
 .serena/
 .mcp.json
+
+# Local production previews and generated full-frame intermediates; the cropped
+# transparent anomaly overlays and production notes are tracked separately.
+experiments/**/*.png
+experiments/**/*.webp
+experiments/**/*.gif

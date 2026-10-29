@@ -1,6 +1,6 @@
 # 写真固有の異変候補プール
 
-各カメラ12案、計96案。まだ採用・生成した異変ではなく、写真の写り込みから発想を広げるための候補。
+各カメラ27案、計216案。まだ採用・生成した異変ではなく、写真の写り込みから発想を広げるための候補。
 
 ## 正本と昇格ルール
 
@@ -144,3 +144,165 @@
 | CR-08-10 | CAM08-E18 | 床の丸い反射が、右壁の光る長方形パネルと同じ二段形になる。   | surreal / late / obvious     |
 | CR-08-11 | CAM08-E15 | 右端の黒い柱の上下パネルの間に、第三の発光パネルが現れる。   | object / late / obvious      |
 | CR-08-12 | CAM08-E11 | 中央の柱の裏側に、同じ幅の柱がもう一つ連続して立つ。         | surreal / late / obvious     |
+
+## 追加候補 — CAM 01
+
+未制作。候補IDは既存の CR-01-01〜12 に続く。各行は独立した一変更。
+
+| 候補ID   | 対象ID    | 変化案                                         | 分類 / フェーズ / 目立ち度   |
+| -------- | --------- | ---------------------------------------------- | ---------------------------- |
+| CR-01-13 | CAM01-E17 | 床タイルの一枚だけ斜め格子模様になる。         | environment / early / subtle |
+| CR-01-14 | CAM01-E17 | 床タイルの一枚だけ淡い藍色になる。             | environment / early / subtle |
+| CR-01-15 | CAM01-E17 | 床タイル一枚に小さな水たまりが現れ照明が映る。 | environment / mid / medium   |
+| CR-01-16 | CAM01-E09 | 壁の粒模様の一部だけ細い縦縞に変わる。         | environment / early / subtle |
+| CR-01-17 | CAM01-E01 | 天井の継ぎ目が一か所だけ円形に変わる。         | environment / mid / medium   |
+| CR-01-18 | CAM01-E04 | 四角い天井点検板が丸くなる。                   | environment / mid / medium   |
+| CR-01-19 | CAM01-E04 | 天井点検板の隣に同じ板がもう一枚増える。       | object / mid / medium        |
+| CR-01-20 | CAM01-E07 | 蛍光灯の端から小さな紙片が吊り下がる。         | object / mid / medium        |
+| CR-01-21 | CAM01-E09 | 左壁に小さな白い貼り紙が一枚増える。           | object / early / medium      |
+| CR-01-22 | CAM01-E11 | シャッターの横板が一列だけ薄い緑になる。       | environment / early / subtle |
+| CR-01-23 | CAM01-E12 | 木格子の一部だけ交差して菱形になる。           | environment / mid / medium   |
+| CR-01-24 | CAM01-E10 | 実物がない猫の後ろ姿だけ曇り窓に映る。         | surreal / mid / medium       |
+| CR-01-25 | CAM01-E14 | 暗い開口の手前に小さな猫が座る。               | object / mid / medium        |
+| CR-01-26 | CAM01-E19 | 青い容器が二つ並ぶ。                           | object / early / medium      |
+| CR-01-27 | CAM01-E19 | 青い容器の上縁が四角く変わる。                 | object / mid / medium        |
+
+## 追加候補 — CAM 02
+
+| 候補ID   | 対象ID    | 変化案                                     | 分類 / フェーズ / 目立ち度   |
+| -------- | --------- | ------------------------------------------ | ---------------------------- |
+| CR-02-13 | CAM02-E20 | 床タイル一枚の中央に小さな円模様が現れる。 | environment / early / subtle |
+| CR-02-14 | CAM02-E20 | 床の一枚だけ市松模様になる。               | environment / mid / medium   |
+| CR-02-15 | CAM02-E20 | 床の一枚だけ薄い桃色になる。               | environment / early / subtle |
+| CR-02-16 | CAM02-E20 | 看板の手前に小さな水たまりが現れる。       | environment / mid / medium   |
+| CR-02-17 | CAM02-E17 | 白い星形装飾が一つだけ花形になる。         | object / early / subtle      |
+| CR-02-18 | CAM02-E17 | 壁の白い装飾が一つだけ淡い赤に変わる。     | object / early / subtle      |
+| CR-02-19 | CAM02-E01 | 天井板の一枚だけ木目模様になる。           | environment / mid / medium   |
+| CR-02-20 | CAM02-E03 | 丸い天井設備が四角い輪郭になる。           | environment / mid / medium   |
+| CR-02-21 | CAM02-E05 | 吊り器具から小さな折り鶴が下がる。         | object / mid / medium        |
+| CR-02-22 | CAM02-E10 | 柱に小さな紙の案内が一枚増える。           | object / early / medium      |
+| CR-02-23 | CAM02-E14 | 下段のカタカナ一文字だけ左右反転する。     | object / early / subtle      |
+| CR-02-24 | CAM02-E14 | 緑色の発光面が琥珀色になる。               | object / mid / medium        |
+| CR-02-25 | CAM02-E16 | 木箱が左右に二つ並ぶ。                     | object / mid / medium        |
+| CR-02-26 | CAM02-E19 | 鉢が消え、ガラス面にだけ鉢の姿が映る。     | surreal / mid / medium       |
+| CR-02-27 | CAM02-E09 | 奥の開口に三毛猫が一匹座る。               | object / mid / medium        |
+
+## 追加候補 — CAM 03
+
+| 候補ID   | 対象ID    | 変化案                                   | 分類 / フェーズ / 目立ち度   |
+| -------- | --------- | ---------------------------------------- | ---------------------------- |
+| CR-03-13 | CAM03-E18 | 床の白い反射の中に丸い水たまりができる。 | environment / mid / medium   |
+| CR-03-14 | CAM03-E19 | 床タイル一枚だけ三角形に分割される。     | environment / early / subtle |
+| CR-03-15 | CAM03-E19 | 床タイル一枚だけ濃い青色になる。         | environment / early / subtle |
+| CR-03-16 | CAM03-E08 | 白い壁飾り一つが円形になる。             | object / early / subtle      |
+| CR-03-17 | CAM03-E08 | 白い壁飾り一つが薄い黄色になる。         | object / early / subtle      |
+| CR-03-18 | CAM03-E01 | 天井の一部に小さな水玉模様が現れる。     | environment / mid / medium   |
+| CR-03-19 | CAM03-E05 | 天井点検板の形が長方形から丸に変わる。   | environment / mid / medium   |
+| CR-03-20 | CAM03-E09 | 天井の器具から細いリボンが一本下がる。   | object / mid / medium        |
+| CR-03-21 | CAM03-E07 | 柱の白い表示面に紙が一枚貼られる。       | object / early / medium      |
+| CR-03-22 | CAM03-E14 | 看板の下段の一文字だけ左右反転する。     | object / early / subtle      |
+| CR-03-23 | CAM03-E14 | 看板の緑の面だけ青色に発光する。         | object / mid / medium        |
+| CR-03-24 | CAM03-E15 | 木箱の隣に同じ木箱が増える。             | object / mid / medium        |
+| CR-03-25 | CAM03-E08 | 実際の通路にない猫だけ店先ガラスに映る。 | surreal / mid / medium       |
+| CR-03-26 | CAM03-E13 | 暗い開口の前を白猫が歩く。               | object / mid / medium        |
+| CR-03-27 | CAM03-E06 | シャッターの横板一枚が波形に変わる。     | environment / mid / medium   |
+
+## 追加候補 — CAM 04
+
+| 候補ID   | 対象ID    | 変化案                                                         | 分類 / フェーズ / 目立ち度   |
+| -------- | --------- | -------------------------------------------------------------- | ---------------------------- |
+| CR-04-13 | CAM04-E15 | 床タイル一枚が淡い橙色になる。                                 | environment / early / subtle |
+| CR-04-14 | CAM04-E15 | 床タイル一枚に花の模様が現れる。                               | environment / early / subtle |
+| CR-04-15 | CAM04-E17 | 点検口の脇に水たまりが現れ照明を映す。                         | environment / mid / medium   |
+| CR-04-16 | CAM04-E14 | ガラス上部の文字の一字だけ左右反転する（架空化後に字を確定）。 | object / early / subtle      |
+| CR-04-17 | CAM04-E14 | 店舗ガラスに、通路にはない傘だけが映る。                       | surreal / mid / medium       |
+| CR-04-18 | CAM04-E09 | 窓のポスターの隣に同じポスターが増える。                       | object / mid / medium        |
+| CR-04-19 | CAM04-E09 | 窓のポスターだけ縦長から丸形になる。                           | object / mid / medium        |
+| CR-04-20 | CAM04-E08 | 看板の一部分だけ赤から青へ変わる。                             | object / early / subtle      |
+| CR-04-21 | CAM04-E06 | 天井器具から小さな札が吊られる。                               | object / mid / medium        |
+| CR-04-22 | CAM04-E10 | 扉の取手が左右逆側になる（原寸確認後に配置）。                 | object / mid / medium        |
+| CR-04-23 | CAM04-E10 | 扉の前に小さな猫が一匹座る。                                   | object / mid / medium        |
+| CR-04-24 | CAM04-E11 | 鉢植え一鉢の葉だけ淡い赤紫になる。                             | object / early / subtle      |
+| CR-04-25 | CAM04-E11 | 鉢植え一鉢が同じ形でもう一鉢増える。                           | object / mid / medium        |
+| CR-04-26 | CAM04-E16 | 床点検口の四角い外枠が円形になる。                             | environment / mid / medium   |
+| CR-04-27 | CAM04-E07 | 壁面に縦長の白い紙が一枚増える。                               | object / early / medium      |
+
+## 追加候補 — CAM 05
+
+| 候補ID   | 対象ID    | 変化案                                           | 分類 / フェーズ / 目立ち度   |
+| -------- | --------- | ------------------------------------------------ | ---------------------------- |
+| CR-05-13 | CAM05-E13 | 床タイル一枚だけ緑がかった色になる。             | environment / early / subtle |
+| CR-05-14 | CAM05-E13 | 床タイル一枚だけ縞模様になる。                   | environment / early / subtle |
+| CR-05-15 | CAM05-E13 | 店舗角の床に小さな水たまりが現れる。             | environment / mid / medium   |
+| CR-05-16 | CAM05-E12 | レンガ帯の一枚だけ青いタイルになる。             | environment / early / subtle |
+| CR-05-17 | CAM05-E12 | レンガ帯の一枚だけ円形になる。                   | environment / mid / medium   |
+| CR-05-18 | CAM05-E01 | 天井の一部だけ格子模様になる。                   | environment / early / subtle |
+| CR-05-19 | CAM05-E05 | 蛍光灯の隣に同じ長さの照明がもう一本増える。     | environment / mid / medium   |
+| CR-05-20 | CAM05-E05 | 照明の下から小さな風鈴が一つ下がる。             | object / mid / medium        |
+| CR-05-21 | CAM05-E11 | 黒い側面の上部に白い紙が一枚貼られる。           | object / early / medium      |
+| CR-05-22 | CAM05-E08 | 実際の通路にはない椅子だけ正面ガラスに映る。     | surreal / mid / medium       |
+| CR-05-23 | CAM05-E08 | カーテンの縦縞一枚分だけ横縞に変わる。           | object / mid / medium        |
+| CR-05-24 | CAM05-E08 | 正面ガラスの一枚だけ淡い琥珀色になる。           | environment / mid / medium   |
+| CR-05-25 | CAM05-E06 | 奥の通路に黒猫が一匹現れる。                     | object / mid / medium        |
+| CR-05-26 | CAM05-E10 | 架空化した看板のひらがな一文字だけ左右反転する。 | object / early / subtle      |
+| CR-05-27 | CAM05-E09 | 暗い隙間の反射にだけ小さな傘が映る。             | surreal / mid / medium       |
+
+## 追加候補 — CAM 06
+
+| 候補ID   | 対象ID    | 変化案                                   | 分類 / フェーズ / 目立ち度   |
+| -------- | --------- | ---------------------------------------- | ---------------------------- |
+| CR-06-13 | CAM06-E16 | 床タイル一枚に細かな水玉模様が現れる。   | environment / early / subtle |
+| CR-06-14 | CAM06-E16 | 床タイル一枚だけ淡い緑色になる。         | environment / early / subtle |
+| CR-06-15 | CAM06-E16 | 右壁沿いの床に水たまりが一つ現れる。     | environment / mid / medium   |
+| CR-06-16 | CAM06-E15 | 粗い壁の一部分だけ横縞の模様になる。     | environment / early / subtle |
+| CR-06-17 | CAM06-E15 | 額入り掲示の横に小さな紙が一枚増える。   | object / early / medium      |
+| CR-06-18 | CAM06-E15 | 扉の銀色取手が扉の反対側になる。         | object / mid / medium        |
+| CR-06-19 | CAM06-E01 | 天井の板一枚だけ小さな市松模様になる。   | environment / mid / medium   |
+| CR-06-20 | CAM06-E03 | 蛍光灯の端に小さな紙札がぶら下がる。     | object / mid / medium        |
+| CR-06-21 | CAM06-E07 | 看板のひらがな一文字だけ左右反転する。   | object / early / subtle      |
+| CR-06-22 | CAM06-E07 | 看板の橙色の四角だけ青色になる。         | object / mid / medium        |
+| CR-06-23 | CAM06-E12 | メニュー板の小画像一つだけ円形になる。   | object / early / subtle      |
+| CR-06-24 | CAM06-E10 | 植木鉢一鉢だけ同じ形のものが隣に増える。 | object / mid / medium        |
+| CR-06-25 | CAM06-E13 | 実際の通路にない白猫だけガラスに映る。   | surreal / mid / medium       |
+| CR-06-26 | CAM06-E09 | 植物の足元に茶トラ猫が一匹座る。         | object / mid / medium        |
+| CR-06-27 | CAM06-E12 | メニュー板全体が横長の形になる。         | object / mid / medium        |
+
+## 追加候補 — CAM 07
+
+| 候補ID   | 対象ID    | 変化案                                             | 分類 / フェーズ / 目立ち度   |
+| -------- | --------- | -------------------------------------------------- | ---------------------------- |
+| CR-07-13 | CAM07-E09 | 左階段の段が一段だけ減り段差が均等に再配分される。 | environment / mid / medium   |
+| CR-07-14 | CAM07-E14 | 右階段の段が一段増え、手すりはそのまま残る。       | environment / mid / medium   |
+| CR-07-15 | CAM07-E14 | 右階段の段が一段減り、最上部の高さは変わらない。   | environment / mid / medium   |
+| CR-07-16 | CAM07-E16 | 床タイル一枚だけ淡い紫色になる。                   | environment / early / subtle |
+| CR-07-17 | CAM07-E16 | 床タイル一枚だけひし形模様になる。                 | environment / early / subtle |
+| CR-07-18 | CAM07-E18 | 丸い照明反射の間に水たまりが一つ現れる。           | environment / mid / medium   |
+| CR-07-19 | CAM07-E12 | 白壁に薄い格子模様が局所的に現れる。               | environment / early / subtle |
+| CR-07-20 | CAM07-E12 | 白壁に小さな掲示が一枚増える。                     | object / early / medium      |
+| CR-07-21 | CAM07-E01 | 天井板の一枚だけ淡い黄色になる。                   | environment / early / subtle |
+| CR-07-22 | CAM07-E03 | 丸型設備の隣に同じ設備が増える。                   | environment / mid / medium   |
+| CR-07-23 | CAM07-E05 | 奥の天井器具から短い紐が一本下がる。               | object / mid / medium        |
+| CR-07-24 | CAM07-E13 | 丸い扉の取手が四角い取手になる。                   | object / early / subtle      |
+| CR-07-25 | CAM07-E13 | 扉上部の小窓が二つに増える。                       | object / mid / medium        |
+| CR-07-26 | CAM07-E06 | 現実の踊り場にはいない猫だけガラスに映る。         | surreal / mid / medium       |
+| CR-07-27 | CAM07-E09 | 左階段の一段に小さな猫が横たわる。                 | object / mid / medium        |
+
+## 追加候補 — CAM 08
+
+| 候補ID   | 対象ID    | 変化案                                     | 分類 / フェーズ / 目立ち度   |
+| -------- | --------- | ------------------------------------------ | ---------------------------- |
+| CR-08-13 | CAM08-E16 | 床タイル一枚だけ薄い茶色になる。           | environment / early / subtle |
+| CR-08-14 | CAM08-E16 | 床タイル一枚だけ同心円模様になる。         | environment / early / subtle |
+| CR-08-15 | CAM08-E17 | 白い床反射の隣に小さな水たまりができる。   | environment / mid / medium   |
+| CR-08-16 | CAM08-E11 | 柱正面の粒模様が一部分だけ縦縞になる。     | environment / early / subtle |
+| CR-08-17 | CAM08-E11 | 柱に小さな紙の案内が一枚現れる。           | object / early / medium      |
+| CR-08-18 | CAM08-E01 | 天井の汚れが一部分だけ格子模様になる。     | environment / early / subtle |
+| CR-08-19 | CAM08-E03 | 同心円設備の外形だけ四角くなる。           | environment / mid / medium   |
+| CR-08-20 | CAM08-E05 | 奥の天井器具から小さな折り鶴が下がる。     | object / mid / medium        |
+| CR-08-21 | CAM08-E12 | 柱の横長器具が二つ並ぶ。                   | object / mid / medium        |
+| CR-08-22 | CAM08-E13 | コンセントの四角い外形が円形になる。       | object / early / subtle      |
+| CR-08-23 | CAM08-E15 | 発光パネルの一枚だけ淡い青色になる。       | environment / early / subtle |
+| CR-08-24 | CAM08-E06 | ガラス内にだけ、実物のない買い物袋が映る。 | surreal / mid / medium       |
+| CR-08-25 | CAM08-E07 | 左の暗い店先に一匹の猫が現れる。           | object / mid / medium        |
+| CR-08-26 | CAM08-E10 | 架空化した看板の文字一字だけ左右反転する。 | object / early / subtle      |
+| CR-08-27 | CAM08-E14 | 白い帯状パネルの一部分だけ波形に曲がる。   | environment / mid / medium   |

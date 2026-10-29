@@ -25,13 +25,13 @@ Use this skill when planning or producing an image-based anomaly for this game. 
 5. **Generate a proposal.** Attach the baseline and ask for only the defined change. Tell the image model to preserve framing, perspective, lighting, texture, grain, compression, and every other object. Treat the result as a source layer, never as the finished full frame.
 6. **Composite into the baseline.** Align the generated layer to the baseline without resizing or warping the baseline. Build a mask that covers the changed object and its immediate contact shadow/reflection when needed. Use a softly feathered, semi-transparent gradient transition around that mask so the insertion blends into the surveillance image. Keep mask alpha exactly zero outside the documented transition boundary. Do not apply global color correction to the baseline.
 7. **Review the result.** Compare baseline and composite at the same dimensions. Inspect a blink/A-B view and a difference image. Confirm that every changed pixel lies inside the documented mask/transition envelope; confirm no unrelated object, sign, camera framing, or overlay changed. If the changed region is too large to blend without collateral edits, regenerate or edit the local region manually.
-8. **Register only after review.** Save the final image as a variant, preserve the baseline and generated source separately, and update the anomaly record with the selected element ID, final mask/box, paths, dimensions, and review status. Keep runtime-only effects out of the image-variant queue.
+8. **Register only after review.** Save the cropped transparent overlay and its placement as the game asset, preserve the baseline and generated source separately, and update the anomaly record with the selected element ID, final mask/box, paths, dimensions, and review status. Keep runtime-only effects out of the image-variant queue.
 
 ## Record fields
 
 For each candidate/variant, maintain:
 
-`id`, `camera_id`, `element_id`, `base_photo`, `mask_box_1000`, `category`, `anomaly_type`, `phase`, `subtlety`, `description`, `generation_prompt`, `generated_source`, `mask`, `composite`, `dimensions`, `review_status`, `notes`.
+`id`, `camera_id`, `element_id`, `base_photo`, `mask_box_1000`, `category`, `anomaly_type`, `phase`, `subtlety`, `description`, `generation_prompt`, `generated_source`, `mask`, `overlay`, `overlay_origin`, `dimensions`, `review_status`, `notes`.
 
 Use `planned`, `generated`, `composited`, and `reviewed` as distinct states. Never mark an AI-generated full frame as reviewed merely because the requested object looks right.
 
@@ -42,3 +42,16 @@ Use `planned`, `generated`, `composited`, and `reviewed` as distinct states. Nev
 - Check whether readable signage is fictional/public-safe before creating public variants. Keep sign sanitization as its own edit, separate from the anomaly.
 - The eight processed `public/images/cam*.webp` files are the complete camera-photo set and the authoritative baselines for anomaly variants.
 - Coordinate boxes are normalized so they survive resolution changes. Convert them to pixels only for the selected source dimensions and record those dimensions.
+
+## 昭和の時間が戻る異変
+
+この作品では、懐かしく寂しい日常が一瞬戻る方向を優先する。閉店した店が営業する、壊れていた物が直る等、写真で確認できる現状から一つだけ変える。怖がらせる小道具を前提にしない。候補は `prompts/showa-anomaly-ideas.md` を参照。
+
+生成結果が全体を描き直しても、元画像を下地とし、生成画像を元の寸法・構図に位置合わせして対象と必要な光・影だけをマスクで重ねる。境界は徐々に透過させ、マスク外は必ずゼロにする。床目地やシャッターの線を確認し、ずれが見える場合は位置合わせやマスクを調整する。PNGなどロスレスで保存し、マスク外差分ゼロを検証する。`experiments/showa-cam02/` は試行例であり、見た目の最終承認を意味しない。
+
+## 差分アセット管理
+
+ゲーム用の正本は共通 baseline と、変化領域を不定形の透過マスクで切り抜いた差分画像。差分を透過範囲に合わせて矩形にトリミングし、元画像内の左上座標と元画像・差分の寸法を記録する。全画面の合成画像は検証用であり量産配布しない。lossless WebP 等の透過形式を使い、元画像に記録座標で重ねた再構成が検証画像と一致することを確認する。生成元、マスク、差分・blink 等の制作資料はゲーム用アセットと分ける。詳細は `assets/anomaly-overlays/README.md`。
+
+看板を架空化する時は、他作品の名前だけでなく実際のロゴやモチーフも参照し、旧店舗の意匠を残さない。同じ店が画面端に一部しか写っていない看板や別カメラにも現れる場合、断片まで同じ架空店に統一する。文字・絵だけが鮮明に浮かないよう、元写真の劣化、色、ぼけ、光、粒子に合わせて局所調整し、原寸で確認する。
+元看板の図形レイアウト（例えば橙色の四角と内側の白い丸）は守り、文字と他作品由来の小さなロゴを元の表示面内に収める。ロゴを看板いっぱいに拡大しない。昭和の手描きらしさは細い不均一な筆致と適切なサイズで表し、機械的な書体や過度なぼかしを避ける。

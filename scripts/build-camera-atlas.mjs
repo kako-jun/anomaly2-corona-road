@@ -41,13 +41,13 @@ function parseInventory(markdown) {
       continue
     }
 
-    if (line === '|順|要素ID|矩形|写っているもの|') {
+    const cells = line.split('|').map((cell) => cell.trim())
+    if (cells.join('|') === '|順|要素ID|矩形|写っているもの|') {
       inTable = Boolean(camera)
       continue
     }
 
     if (!inTable || !camera || !line.startsWith('|')) continue
-    const cells = line.split('|')
     if (cells.length !== 6 || !/^CAM\d{2}-E\d{2}$/.test(cells[2])) continue
 
     const bounds = cells[3].match(/\((\d+),(\d+)\)–\((\d+),(\d+)\)/)
