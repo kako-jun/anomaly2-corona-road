@@ -1,6 +1,6 @@
 # 写真固有の異変候補プール
 
-各カメラ27案、計216案。まだ採用・生成した異変ではなく、写真の写り込みから発想を広げるための候補。
+各カメラ42案、計336案。まだ採用・生成した異変ではなく、写真の写り込みから発想を広げるための候補。
 
 ## 正本と昇格ルール
 
@@ -306,3 +306,130 @@
 | CR-08-25 | CAM08-E07 | 左の暗い店先に一匹の猫が現れる。           | object / mid / medium        |
 | CR-08-26 | CAM08-E10 | 架空化した看板の文字一字だけ左右反転する。 | object / early / subtle      |
 | CR-08-27 | CAM08-E14 | 白い帯状パネルの一部分だけ波形に曲がる。   | environment / mid / medium   |
+
+## 追加候補 — 各要素の状態・関係（CR-XX-28〜42）
+
+全件未制作。各行は単独の変化として扱う。反射や光の案は基準画像に実際に存在する光源・面を原寸で確認する。看板に関わる案は架空化済みの基準画像を作ってから具体的な文字や図柄を確定する。
+
+| 候補ID   | 対象ID    | 変化案                                             | 分類 / フェーズ / 目立ち度   |
+| -------- | --------- | -------------------------------------------------- | ---------------------------- |
+| CR-01-28 | CAM01-E02 | 小さな丸灯の周囲の色にじみだけ消える。             | environment / early / subtle |
+| CR-01-29 | CAM01-E03 | 換気口の中央の丸穴が三角形になる。                 | object / mid / medium        |
+| CR-01-30 | CAM01-E05 | 画面端の丸灯が半分だけ点灯する。                   | environment / early / subtle |
+| CR-01-31 | CAM01-E06 | 奥の丸灯が一回り小さくなる。                       | environment / early / subtle |
+| CR-01-32 | CAM01-E08 | 奥へ並ぶ小型器具の一つだけ天井面から少し浮く。     | surreal / mid / medium       |
+| CR-01-33 | CAM01-E09 | 粗い壁の一角だけ四角い塗り直し跡が現れる。         | environment / early / subtle |
+| CR-01-34 | CAM01-E10 | 曇り面の内側から拭いたような小さな円が現れる。     | object / early / medium      |
+| CR-01-35 | CAM01-E11 | 閉じたシャッターの下端だけ暖色の光が漏れる。       | environment / mid / medium   |
+| CR-01-36 | CAM01-E12 | 格子戸の中ほどの一本だけ周囲と違う淡い色になる。   | object / early / subtle      |
+| CR-01-37 | CAM01-E14 | 奥の暗い開口の中に畳まれた傘が立てかけられる。     | object / mid / medium        |
+| CR-01-38 | CAM01-E15 | 小さい案内板の矢印だけ左右反転する。               | object / early / subtle      |
+| CR-01-39 | CAM01-E16 | 吊り看板の縁だけ赤茶色から濃い青に変わる。         | object / mid / medium        |
+| CR-01-40 | CAM01-E17 | 一枚の床タイルが隣より少し沈む。                   | environment / mid / medium   |
+| CR-01-41 | CAM01-E18 | 床反射の明るい筋が一か所だけ途切れる。             | environment / early / subtle |
+| CR-01-42 | CAM01-E19 | 容器の中に白い折り紙が一つ現れる。                 | object / early / medium      |
+| CR-02-28 | CAM02-E01 | 天井面の継ぎ目の交点一つに小さな丸い染みが現れる。 | environment / early / subtle |
+| CR-02-29 | CAM02-E03 | 丸型設備の外周だけ淡い錆色になる。                 | environment / early / subtle |
+| CR-02-30 | CAM02-E04 | 丸灯の中心だけ細い三日月形に暗くなる。             | environment / mid / medium   |
+| CR-02-31 | CAM02-E05 | 吊り器具の一つに短い紐が結ばれて垂れる。           | object / mid / medium        |
+| CR-02-32 | CAM02-E07 | シャッターの下に小さな折り畳まれた包装紙が挟まる。 | object / early / medium      |
+| CR-02-33 | CAM02-E08 | 暗いガラスにだけ小さな赤い風船が映る。             | surreal / mid / medium       |
+| CR-02-34 | CAM02-E10 | 柱の正面の白い表示面に細い額縁が現れる。           | object / early / medium      |
+| CR-02-35 | CAM02-E11 | 柱の小さな掲示が一枚だけ横向きになる。             | object / early / subtle      |
+| CR-02-36 | CAM02-E12 | 奥のシャッターの縦枠が一箇所だけ途中で途切れる。   | environment / mid / medium   |
+| CR-02-37 | CAM02-E13 | 白い看板箱の側面だけ青灰色に変わる。               | object / early / subtle      |
+| CR-02-38 | CAM02-E14 | 緑の看板の上下二段の明るさが入れ替わる。           | object / mid / medium        |
+| CR-02-39 | CAM02-E15 | 鉢植えの葉の先端一枚だけ黄葉する。                 | object / early / subtle      |
+| CR-02-40 | CAM02-E16 | 木箱の上に紙のコースターが一枚現れる。             | object / early / medium      |
+| CR-02-41 | CAM02-E18 | 立て掛けた黒板の面が白いまっさらな面になる。       | object / mid / medium        |
+| CR-02-42 | CAM02-E23 | 緑の床反射の片端だけ看板から離れて小さく残る。     | surreal / mid / medium       |
+| CR-03-28 | CAM03-E01 | 天井板の継ぎ目が一箇所だけ波形になる。             | environment / early / subtle |
+| CR-03-29 | CAM03-E03 | 丸灯の照らす部分だけ淡い橙色になる。               | environment / early / medium |
+| CR-03-30 | CAM03-E04 | 長い蛍光灯の奥側だけ暗くなり短く見える。           | environment / early / subtle |
+| CR-03-31 | CAM03-E05 | 天井の小型点検板に細い赤い紐が下がる。             | object / mid / medium        |
+| CR-03-32 | CAM03-E06 | 左シャッターの下端に白い紙袋が一つ現れる。         | object / early / medium      |
+| CR-03-33 | CAM03-E07 | 柱の縦長表示窓に閉店時刻らしい紙が追加される。     | object / early / medium      |
+| CR-03-34 | CAM03-E08 | 店壁の白い装飾一つだけ薄い桃色になる。             | object / early / subtle      |
+| CR-03-35 | CAM03-E09 | 吊り器具の影だけ天井に二つ現れる。                 | surreal / mid / medium       |
+| CR-03-36 | CAM03-E10 | 右シャッターの横板一枚だけ短くなる。               | environment / early / subtle |
+| CR-03-37 | CAM03-E11 | 奥の丸看板の外枠だけ四角くなる。                   | object / mid / medium        |
+| CR-03-38 | CAM03-E12 | 細いスタンドの脚が一本だけ反対に傾く。             | object / mid / medium        |
+| CR-03-39 | CAM03-E13 | 奥の開口の床に小さな白い帽子が置かれる。           | object / mid / medium        |
+| CR-03-40 | CAM03-E14 | 緑色看板の光だけ消え、文字は読めるまま残る。       | object / mid / medium        |
+| CR-03-41 | CAM03-E15 | 木箱の下に片方だけの布製スリッパが現れる。         | object / early / medium      |
+| CR-03-42 | CAM03-E18 | 床の白い反射に小さな傘の影だけ映る。               | surreal / mid / medium       |
+| CR-04-28 | CAM04-E01 | 天井面の汚れが一箇所だけ真新しい白い円になる。     | environment / early / subtle |
+| CR-04-29 | CAM04-E02 | 蛍光灯の外枠だけ一部が灰色に変わる。               | environment / early / subtle |
+| CR-04-30 | CAM04-E03 | 換気口の中心に小さな白い紙片が一枚引っ掛かる。     | object / mid / medium        |
+| CR-04-31 | CAM04-E04 | 天井板の角一つだけ下向きに折れる。                 | environment / mid / medium   |
+| CR-04-32 | CAM04-E05 | 奥の丸灯が一つだけ楕円形に変わる。                 | environment / early / subtle |
+| CR-04-33 | CAM04-E07 | ガラス内だけに古い買い物かごが反射する。           | surreal / mid / medium       |
+| CR-04-34 | CAM04-E08 | 緑看板の一文字の一部だけ小さな花模様になる。       | object / early / subtle      |
+| CR-04-35 | CAM04-E09 | 左の掲示の四隅のうち一角だけ折れる。               | object / early / subtle      |
+| CR-04-36 | CAM04-E10 | 扉の中央の縦長取手が二つに増える。                 | object / mid / medium        |
+| CR-04-37 | CAM04-E11 | 大きな葉の一枚に小さな丸い穴が開く。               | object / early / subtle      |
+| CR-04-38 | CAM04-E12 | 什器の脚元に小さな紙コップが置かれる。             | object / early / medium      |
+| CR-04-39 | CAM04-E13 | 丸看板が灯っているのに縁の影だけ二重になる。       | surreal / mid / medium       |
+| CR-04-40 | CAM04-E14 | 右のガラス文字一文字だけ上下逆になる。             | object / mid / medium        |
+| CR-04-41 | CAM04-E16 | 点検口の外枠の一辺だけ床と同色になる。             | object / early / subtle      |
+| CR-04-42 | CAM04-E18 | 左端の暗い床際から紙片が一枚覗く。                 | object / early / medium      |
+| CR-05-28 | CAM05-E01 | 天井板の点状汚れが一画だけ均等な格子に並ぶ。       | environment / early / subtle |
+| CR-05-29 | CAM05-E02 | 左上の丸灯の縁だけ淡い緑に変わる。                 | environment / early / subtle |
+| CR-05-30 | CAM05-E03 | 右上の丸灯の中央に小さな黒点が現れる。             | environment / early / subtle |
+| CR-05-31 | CAM05-E04 | 左端の蛍光灯から小さな白いリボンが下がる。         | object / mid / medium        |
+| CR-05-32 | CAM05-E05 | 長い蛍光灯の反射だけガラス面に二本映る。           | surreal / mid / medium       |
+| CR-05-33 | CAM05-E06 | 左奥の細脚スタンドに小さな白い札が追加される。     | object / early / medium      |
+| CR-05-34 | CAM05-E07 | 区画外周の角柱だけ薄い茶色に変わる。               | environment / early / medium |
+| CR-05-35 | CAM05-E08 | カーテンの裾の一箇所に小さな繕い跡が現れる。       | object / early / subtle      |
+| CR-05-36 | CAM05-E09 | 暗い隙間に小さな白い紙袋の輪郭が見える。           | object / mid / medium        |
+| CR-05-37 | CAM05-E10 | 緑看板の端に小さな丸い絵柄が一つ増える。           | object / early / subtle      |
+| CR-05-38 | CAM05-E11 | 黒い側面にだけ人のいない傘立ての反射が現れる。     | surreal / mid / medium       |
+| CR-05-39 | CAM05-E12 | レンガ調帯の一枚だけ角が丸くなる。                 | environment / early / subtle |
+| CR-05-40 | CAM05-E13 | 床の一枚の目地が細い二重線になる。                 | environment / early / subtle |
+| CR-05-41 | CAM05-E14 | 左奥の照明反射に小さな靴の跡が一つだけ現れる。     | surreal / mid / medium       |
+| CR-05-42 | CAM05-E16 | 前景床の一箇所に古いレシートが一枚落ちる。         | object / early / medium      |
+| CR-06-28 | CAM06-E01 | 天井の染み一つだけ消えてきれいな円形になる。       | environment / early / subtle |
+| CR-06-29 | CAM06-E02 | 左寄り丸灯の白い円が少しだけ四角くなる。           | environment / early / subtle |
+| CR-06-30 | CAM06-E03 | 蛍光灯の下に小さな折り紙が吊り下がる。             | object / mid / medium        |
+| CR-06-31 | CAM06-E05 | 黒い天井パネルの一隅だけ白く塗り直される。         | environment / early / subtle |
+| CR-06-32 | CAM06-E07 | 看板の小さな葉の図柄一枚だけ消える。               | object / early / subtle      |
+| CR-06-33 | CAM06-E08 | 暗い店先にだけ温かい丸い照明の反射が現れる。       | surreal / mid / medium       |
+| CR-06-34 | CAM06-E09 | 一枚の大きな葉の葉先が紙のように折れる。           | object / early / subtle      |
+| CR-06-35 | CAM06-E10 | 黒い鉢の一つだけ小さな白い名札が付く。             | object / early / medium      |
+| CR-06-36 | CAM06-E11 | 左下の布状物の端に青いリボンが結ばれる。           | object / early / medium      |
+| CR-06-37 | CAM06-E12 | メニュー板の一つの写真だけ丸枠になる。             | object / early / subtle      |
+| CR-06-38 | CAM06-E13 | ガラスの縦枠一箇所に淡い手書きの矢印が現れる。     | object / early / medium      |
+| CR-06-39 | CAM06-E14 | 奥の看板の外周が一箇所だけ欠ける。                 | object / early / subtle      |
+| CR-06-40 | CAM06-E15 | 壁の額入り掲示が一回り小さくなる。                 | object / mid / medium        |
+| CR-06-41 | CAM06-E16 | 床の目地の交点だけ小さく白く光る。                 | surreal / mid / medium       |
+| CR-06-42 | CAM06-E17 | 長い床反射の端に紙袋の影だけ映る。                 | surreal / mid / medium       |
+| CR-07-28 | CAM07-E01 | 天井の継ぎ目の一箇所だけ二股に分かれる。           | environment / early / subtle |
+| CR-07-29 | CAM07-E02 | 長方形蛍光灯の一端に小さな紙札が貼られる。         | object / early / medium      |
+| CR-07-30 | CAM07-E03 | 換気口の輪の一つだけ幅が広くなる。                 | environment / early / subtle |
+| CR-07-31 | CAM07-E04 | 丸灯の周りに小さな青い輪が現れる。                 | environment / early / subtle |
+| CR-07-32 | CAM07-E05 | 奥の短い照明一つだけ別の角度を向く。               | environment / mid / medium   |
+| CR-07-33 | CAM07-E06 | 左端ガラスに存在しない白い手袋が映る。             | surreal / mid / medium       |
+| CR-07-34 | CAM07-E07 | 奥の扉に貼られた緑系の紙が淡い桃色になる。         | object / early / subtle      |
+| CR-07-35 | CAM07-E08 | 看板の縁の一箇所だけ細い金色になる。               | object / early / subtle      |
+| CR-07-36 | CAM07-E09 | 左階段の一段の段鼻だけ白く塗られる。               | environment / early / medium |
+| CR-07-37 | CAM07-E10 | 細い暗い開口の縁に小さな紙切れが挟まる。           | object / early / medium      |
+| CR-07-38 | CAM07-E11 | 黒い開口の奥に小さな暖色の灯りが一つ点く。         | environment / mid / medium   |
+| CR-07-39 | CAM07-E12 | 白い壁に日焼けしていない四角い跡が現れる。         | environment / early / medium |
+| CR-07-40 | CAM07-E13 | 扉の白い押し板だけ淡い青に変わる。                 | object / early / subtle      |
+| CR-07-41 | CAM07-E14 | 右階段の手すりの端だけ床側に曲がる。               | environment / mid / medium   |
+| CR-07-42 | CAM07-E18 | 丸い床反射の一つが星形になる。                     | surreal / mid / medium       |
+| CR-08-28 | CAM08-E01 | 天井の小さな斑点が一か所だけ同心円に並ぶ。         | environment / early / subtle |
+| CR-08-29 | CAM08-E02 | 長い蛍光灯の端に淡い青い光のにじみが現れる。       | environment / early / subtle |
+| CR-08-30 | CAM08-E03 | 丸型換気口の中心だけ白い紙で塞がれる。             | object / mid / medium        |
+| CR-08-31 | CAM08-E04 | 丸灯の下に小さな水滴が一つ吊り下がる。             | environment / mid / medium   |
+| CR-08-32 | CAM08-E05 | 奥の短い天井器具の一つだけ暗い赤色になる。         | environment / early / subtle |
+| CR-08-33 | CAM08-E06 | 左のガラスに存在しない手提げ鞄が映る。             | surreal / mid / medium       |
+| CR-08-34 | CAM08-E07 | 暗い壁面の一角に古い貼り紙の剥がし跡が現れる。     | environment / early / medium |
+| CR-08-35 | CAM08-E08 | 明るい通路の壁に小さな紙風船が一つ置かれる。       | object / mid / medium        |
+| CR-08-36 | CAM08-E09 | 奥の緑表示の下に同じ形の小さな表示が増える。       | object / mid / medium        |
+| CR-08-37 | CAM08-E10 | 丸看板の白い面に小さな青い点が一つ現れる。         | object / early / subtle      |
+| CR-08-38 | CAM08-E11 | 中央柱の角に小さな木製の名札が付く。               | object / early / medium      |
+| CR-08-39 | CAM08-E12 | 横長器具の下縁だけ緩やかな曲線になる。             | object / early / subtle      |
+| CR-08-40 | CAM08-E13 | スイッチ状部品のすぐ横に同じ部品がもう一つ現れる。 | object / early / medium      |
+| CR-08-41 | CAM08-E14 | 右壁の白い帯の一本だけ薄い桃色になる。             | environment / early / medium |
+| CR-08-42 | CAM08-E16 | 床タイルの一枚の中央に小さな落ち葉が一枚現れる。   | object / early / medium      |
