@@ -14,7 +14,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
     "prepare": "husky",
-    "build:prompts": "node scripts/build-prompt-queue.mjs"
+    "build:prompts": "node scripts/build-prompt-queue.mjs",
+    "build:camera-atlas": "node scripts/build-camera-atlas.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

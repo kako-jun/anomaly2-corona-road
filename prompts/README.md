@@ -5,18 +5,27 @@ GPT Image 2 で「元の監視カメラ写真の同一性を保ったまま異�
 ## ファイル構成
 
 - `anomalies.yaml` — 異変データ正本（1異変=1エントリ）
+- `candidate-pool.md` — 未採用の発想候補。選ぶ時は該当案をここから削除して `anomalies.yaml` へ一度だけ登録する
 - `base-template.md` — 共通プロンプト（背景保持の定型文）
-- `photos/` — 元写真の置き場（`photos/cam01_baseline.jpg` 等）
+- `photos/` — 旧試作のSVG仮ベース。加工済みカメラ写真の正本ではない
+- `camera-element-inventory.md` — 写真8枚を上から下/左から右へ走査した唯一の写り込み/座標台帳。各要素に固定IDを持つ
+- `atlas/cam01.svg`〜`atlas/cam08.svg` — 上の台帳から生成する白地モノクロの視覚ガイド。番号付き輪郭と凡例は座標/説明の正本ではなく、いつでも再生成できる派生物
+- `.agents/skills/corona-road-anomaly/SKILL.md` — 候補選定から差分合成・レビュー・登録までの反復手順
 - `queue/index.html` — 生成済みプロンプトのコピペUI（ブラウザで開く）
 
 ## ワークフロー
 
-1. 元写真を `prompts/photos/` に置く
-2. `anomalies.yaml` に異変を追記する
-3. `npm run build:prompts` で `queue/index.html` を再生成
-4. ブラウザで `queue/index.html` を開く
-5. 各行の Copy ボタンでプロンプトをコピー → ChatGPT に元写真と一緒に投げる
-6. 出力画像を `src/assets/anomalies/{id}.webp` 等に保存
+1. `camera-element-inventory.md` から対象要素の固定ID・説明・座標を選ぶ
+2. 加工済みの `public/images/cam*.webp` を基準画像として使う
+3. `candidate-pool.md` から案を選ぶ。選んだ案は候補一覧から削除し、`anomalies.yaml` に生成待ちとして一度だけ登録する。カメラIDと要素IDを記録し、物体説明/座標はインベントリを参照する
+4. `npm run build:prompts` で `queue/index.html` を再生成する
+5. ブラウザでキューを開き、元画像とプロンプトをChatGPTに渡す
+6. 生成出力を全面採用せず、元画像をベースに指定領域のみをマスク合成する。境界は半透明のぼかし/グラデーションでなじませる
+7. 差分画像で変更が指定マスクの外に漏れていないことを確認する。レビュー済みの variant とマスクを登録する
+
+繰り返し制作時は `.agents/skills/corona-road-anomaly/SKILL.md` の作業順と記録フィールドに従う。`camera-element-inventory.md` が写真要素と座標の唯一の正本。最終マスクは固定IDを参照しつつ、原寸で対象輪郭に合わせて確定する。
+
+視覚ガイドを更新する場合は `npm run build:camera-atlas` を実行する。ガイド画像内のID/輪郭を手で編集せず、写り込みや座標の変更は必ず `camera-element-inventory.md` に行ってから再生成する。
 
 ## 現行の画像制作方針
 
