@@ -11,8 +11,8 @@
  * both brush it off.
  * The "who" field is not shown on screen; tone tells them apart.
  * Arc (kept subtle): unaware of each other -> his awkwardness -> she notices and gets awkward too.
- * Entries are consumed in pairs (two lines, "- " prefixed) whenever speakers alternate.
- * hint: true = sample hint lines shown (as a 2-line exchange) after a false report. */
+ * Entries are shown one at a time, in order, as film-style subtitles.
+ * hint: true = sample hint lines, shown in sequence (one at a time) after a false report. */
 const DIALOGUE = [
   { who: 'A', text: '今夜もここ使わせてもらうわね。' },
   { who: 'M', text: 'はい。三時に巡回に出ます。' },
@@ -34,6 +34,7 @@ const DIALOGUE = [
 const NORMAL = DIALOGUE.filter(d => !d.hint);
 const HINT_GROUPS = [];
 DIALOGUE.filter(d => d.hint).forEach((d, i, arr) => { if (i % 2 === 0) HINT_GROUPS.push(arr.slice(i, i + 2).map(x => x.text)); });
+let pending = []; // queued hint lines, shown before the normal sequence resumes
 const CATEGORIES = ['CAMERA', 'OBJECT', 'ENVIRONMENT', 'PERSON', 'SURREAL'];
 
 const $ = id => document.getElementById(id);
@@ -147,7 +148,8 @@ function feedback() {
     strikes = Math.min(3, strikes + 1);
     document.querySelectorAll('#strikes .lamp').forEach((l, i) => l.classList.toggle('on', i < strikes));
     $('strikes').setAttribute('aria-label', `Strikes ${strikes} of 3`);
-    showLines(HINT_GROUPS[hintIdx++ % HINT_GROUPS.length], 6500);
+    pending = HINT_GROUPS[hintIdx++ % HINT_GROUPS.length].slice();
+    next();
   }
   clearTimeout(fbTimer);
   fbTimer = setTimeout(() => { fb.textContent = 'READY'; fb.classList.remove('bad'); }, 2400);
@@ -163,21 +165,21 @@ setInterval(() => {
 /* ---- Subtitles (movie style, white text over the picture) ---- */
 const sub = $('movieSub');
 let idx = 0, hintIdx = 0, subTimer = 0;
-function showLines(lines, hold) {
+function showLines(lines) {
   clearTimeout(subTimer);
   sub.classList.remove('show');
+  const hold = Math.max(2200, 1600 + lines.join('').length * 120);
   setTimeout(() => {
     sub.textContent = '';
-    lines.forEach(t => { const d = document.createElement('div'); d.textContent = lines.length > 1 ? '- ' + t : t; sub.append(d); });
+    lines.forEach(t => { const d = document.createElement('div'); d.textContent = t; sub.append(d); });
     sub.classList.add('show');
   }, 600);
-  subTimer = setTimeout(next, hold || 5200);
+  subTimer = setTimeout(next, hold + 600);
 }
-// Two lines ("- " prefixed, like film dialogue) whenever the next entry is the other speaker.
+// One speaker at a time; queued hint lines go first.
 function next() {
-  const a = NORMAL[idx % NORMAL.length], b = NORMAL[(idx + 1) % NORMAL.length];
-  if (a.who !== b.who) { idx += 2; showLines([a.text, b.text], 6500); }
-  else { idx += 1; showLines([a.text]); }
+  const text = pending.length ? pending.shift() : NORMAL[idx++ % NORMAL.length].text;
+  showLines([text]);
 }
 next();
 
