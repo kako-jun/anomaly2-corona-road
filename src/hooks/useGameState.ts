@@ -12,7 +12,8 @@ import {
   msToGameTime,
   getGamePhase,
 } from '../utils/gameConfig'
-import { generateAnomaly } from '../utils/anomalyData'
+import { createAnomaly, pickLedgerEntry } from '../utils/anomalyData'
+import { ANOMALY_LEDGER, overlayUrlFor } from '../data/anomalyLedger'
 
 export type FeedbackKind = 'correct' | 'wrong' | null
 
@@ -33,7 +34,7 @@ export const useGameState = () => {
     totalAnomalies: 0,
     detectedAnomalies: 0,
   })
-  const [cameras, setCameras] = useState<Camera[]>(CAMERAS)
+  const [cameras] = useState<Camera[]>(CAMERAS)
   const [currentCameraIndex, setCurrentCameraIndex] = useState(0)
   const [activeAnomalies, setActiveAnomalies] = useState<Anomaly[]>([])
   const [feedback, setFeedback] = useState<Feedback | null>(null)
@@ -48,6 +49,8 @@ export const useGameState = () => {
   const currentIndexRef = useRef(currentCameraIndex)
   const activeAnomaliesRef = useRef(activeAnomalies)
   const feedbackIdRef = useRef(0)
+  // Ledger ids already shown this shift (no repeats within a shift).
+  const usedLedgerIdsRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     statsRef.current = stats
@@ -70,7 +73,7 @@ export const useGameState = () => {
       totalAnomalies: 0,
       detectedAnomalies: 0,
     })
-    setCameras(CAMERAS.map(cam => ({ ...cam, hasAnomaly: false })))
+    usedLedgerIdsRef.current = new Set()
     setActiveAnomalies([])
     setFeedback(null)
     setCurrentCameraIndex(0)
@@ -125,11 +128,6 @@ export const useGameState = () => {
               : a
           )
         )
-        setCameras(prev =>
-          prev.map(cam =>
-            cam.id === currentCamera.id ? { ...cam, hasAnomaly: false } : cam
-          )
-        )
         pushFeedback('correct', `CONFIRMED — ${anomalyOnCamera.category}`)
         return
       }
@@ -147,25 +145,30 @@ export const useGameState = () => {
     [pushFeedback]
   )
 
-  const spawnAnomaly = useCallback((currentTime: number) => {
-    const phase = getGamePhase(currentTime)
-    const candidates = CAMERAS.filter(
+  /** Returns false when the ledger has nothing left to show, so no anomaly was spawned. */
+  const spawnAnomaly = useCallback((currentTime: number): boolean => {
+    const freeCameraIds = CAMERAS.filter(
       c =>
         !activeAnomaliesRef.current.some(
           a => a.cameraId === c.id && !a.detectedAt
         )
+    ).map(c => c.id)
+    const entry = pickLedgerEntry(
+      ANOMALY_LEDGER,
+      freeCameraIds,
+      usedLedgerIdsRef.current
     )
-    const pool = candidates.length > 0 ? candidates : CAMERAS
-    const cameraId = pool[Math.floor(Math.random() * pool.length)].id
-    const newAnomaly = generateAnomaly(phase, cameraId, true)
+    if (!entry) return false
 
+    usedLedgerIdsRef.current.add(entry.id)
+    const newAnomaly = createAnomaly(
+      entry,
+      getGamePhase(currentTime),
+      overlayUrlFor(entry)
+    )
     setActiveAnomalies(prev => [...prev, newAnomaly])
     setStats(prev => ({ ...prev, totalAnomalies: prev.totalAnomalies + 1 }))
-    setCameras(prev =>
-      prev.map(cam =>
-        cam.id === cameraId ? { ...cam, hasAnomaly: true } : cam
-      )
-    )
+    return true
   }, [])
 
   // Game loop — built once per gameState transition; reads everything through refs.
@@ -201,8 +204,7 @@ export const useGameState = () => {
         // clearing the cap immediately triggers a back-to-back burst.
         lastAnomalyTimeRef.current = elapsed
         if (activeCount < DEFAULT_CONFIG.maxConcurrentAnomalies) {
-          spawnAnomaly(elapsed)
-          firstSpawnDoneRef.current = true
+          if (spawnAnomaly(elapsed)) firstSpawnDoneRef.current = true
         }
       }
 
