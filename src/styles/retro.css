@@ -1,5 +1,7 @@
 /* Retro cabinet UI (CRT monitor + control panel). See DESIGN.md section 11.
    All tokens are scoped to .retro so the start / result screens keep the global tokens from index.css.
+   NOTE: the generic class names here (.label .row .cell .key .lamp .fx .noise ...) are global. Do not
+   collide with the ones StartScreen / GameOverScreen use (.screen .card .btn .start__* .end__*).
    The report dialog is mounted only while open, so no [hidden] attribute is used. */
 
 .retro * {

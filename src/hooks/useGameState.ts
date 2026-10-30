@@ -140,7 +140,7 @@ export const useGameState = () => {
       const reason = anomalyOnCamera ? 'WRONG CATEGORY' : 'NO ANOMALY HERE'
       pushFeedback('wrong', `FALSE REPORT — ${reason}`)
       if (newMisreports >= DEFAULT_CONFIG.maxMisreports) {
-        // Brief delay so the feedback flash/toast is visible before the game-over screen.
+        // Brief delay so the result OSD is visible before the game-over screen.
         window.setTimeout(() => setGameState('lose'), TOAST_MS)
       }
     },
@@ -237,6 +237,5 @@ export const useGameState = () => {
     switchCamera,
     reportAnomaly,
     gameTime: msToGameTime(stats.currentTime),
-    progress: Math.min(1, stats.currentTime / DEFAULT_CONFIG.totalDurationMs),
   }
 }

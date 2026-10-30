@@ -12,6 +12,7 @@ import { GameHUD } from './GameHUD'
 import { Knob } from './Knob'
 import { ReportButton, ReportDialog } from './ReportPanel'
 
+// Fixed at module load: changing `?wear=` needs a page reload.
 const WEAR = parseWear(window.location.search)
 
 interface CabinetProps {
@@ -51,7 +52,8 @@ export const Cabinet = ({
     if (feedback) setShownResult(feedback)
   }, [feedback])
 
-  // The background is inert while the dialog is open.
+  // The background is inert while the dialog is open. Safari < 15.5 ignores `inert`, so there the
+  // background stays operable and only ReportDialog's focus trap applies.
   // On close, focus returns to the REPORT key (after the cabinet stops being inert, so focus() works).
   useEffect(() => {
     if (cabinetRef.current) cabinetRef.current.inert = reportOpen

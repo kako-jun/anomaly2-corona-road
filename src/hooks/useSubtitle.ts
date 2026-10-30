@@ -16,6 +16,7 @@ const HINTS = hintGroups(DIALOGUE)
 /**
  * Movie-style subtitles: one line at a time, looping. A false report
  * (`wrongFeedbackId` changes) queues the next hint lines and shows them next.
+ * The timers keep running in a hidden tab, same as the in-game clock (intended).
  */
 export const useSubtitle = (wrongFeedbackId: number | null) => {
   const [text, setText] = useState('')
@@ -48,6 +49,8 @@ export const useSubtitle = (wrongFeedbackId: number | null) => {
     return () => {
       window.clearTimeout(showTimerRef.current)
       window.clearTimeout(nextTimerRef.current)
+      // Idempotent under StrictMode's dev double-run: the first line is not skipped.
+      cursorRef.current = { index: 0, pending: [] }
     }
   }, [])
 

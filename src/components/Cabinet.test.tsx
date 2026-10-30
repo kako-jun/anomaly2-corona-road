@@ -127,6 +127,7 @@ describe('Cabinet result OSD', () => {
     const { container } = render(<Cabinet {...makeProps()} />)
     expect(osd(container)).toBeEmptyDOMElement()
     expect(osd(container)).not.toHaveClass('show')
+    expect(osd(container)).toHaveAttribute('aria-hidden', 'true')
   })
 
   it('shows the message while feedback is set', () => {
@@ -135,6 +136,7 @@ describe('Cabinet result OSD', () => {
     )
     expect(osd(container)).toHaveTextContent('ANOMALY LOGGED')
     expect(osd(container)).toHaveClass('show')
+    expect(osd(container)).toHaveAttribute('aria-hidden', 'false')
   })
 
   it('keeps the message but drops "show" when feedback goes back to null', () => {
@@ -143,6 +145,7 @@ describe('Cabinet result OSD', () => {
     rerender(<Cabinet {...props} feedback={null} />)
     expect(osd(container)).toHaveTextContent('ANOMALY LOGGED')
     expect(osd(container)).not.toHaveClass('show')
+    expect(osd(container)).toHaveAttribute('aria-hidden', 'true')
   })
 })
 

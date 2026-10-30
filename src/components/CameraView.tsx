@@ -98,10 +98,7 @@ export const CameraView = ({
             </div>
           )}
 
-          <div
-            className={cx('movie-sub', subtitle.visible && 'show')}
-            aria-live="polite"
-          >
+          <div className={cx('movie-sub', subtitle.visible && 'show')}>
             {subtitle.text && <div>{subtitle.text}</div>}
           </div>
           <div
@@ -111,6 +108,7 @@ export const CameraView = ({
               resultVisible && 'show'
             )}
             role="status"
+            aria-hidden={!resultVisible}
           >
             {result?.message}
           </div>
