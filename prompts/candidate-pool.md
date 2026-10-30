@@ -384,7 +384,6 @@
 | CR-SH-01 | CAM02-E07 | シャッターに色褪せたホーロー広告が一枚現れる。                                                                                                                                | object / early / subtle    |
 | CR-SH-02 | CAM02-E14 | 自立看板の文字が昔の喫茶店の名前に戻る（架空名）。                                                                                                                            | object / mid / medium      |
 | CR-SH-03 | CAM02-E20 | 誰もいない床に革靴の足跡が続く。                                                                                                                                              | person / mid / medium      |
-| CR-SH-04 | CAM01-E12 | 閉店した店の格子戸に暖簾が現れる（写真に暖簾は無いので要設計）。                                                                                                              | object / mid / medium      |
 | CR-SH-05 | CAM01-E12 | 格子戸が少しだけ開く。                                                                                                                                                        | environment / mid / medium |
 | CR-SH-06 | CAM01-E16 | 消えた商店の表示が吊り看板に戻る。                                                                                                                                            | object / early / subtle    |
 | CR-SH-07 | CAM03-E06 | シャッターに色褪せた特売ポスターが現れる。                                                                                                                                    | object / early / subtle    |
