@@ -12,6 +12,8 @@
 
 > **Twist (kako-jun, 2026-10-30; spoilers are not a concern):** the player is in fact the anomaly itself. The player is already inside the guard room, standing behind the two and watching them. The surface framing stays "observer watching the cameras"; the truth is held back as the meta-horror reveal (it fits "the rules themselves break down"). Dialogue should read differently on a second look, and how and when the reveal happens is undecided.
 
+> **Dialogue system direction (kako-jun, 2026-10-30):** the story advances across playthroughs (loops), so progress needs flag management. Dialogue has three patterns: fully random chatter, loop-progress story lines, and per-anomaly lines. Each anomaly gets several alternative lines and a "used once" record to avoid repeats. Design notes and open questions live in Issue #29.
+
 ---
 
 ## 📋 Game Specifications
