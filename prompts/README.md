@@ -89,7 +89,7 @@ prompts/
 
 ```
 prompts/anomalies.yaml に以下の異変を5件追加してください:
-- base_photo: photos/cam01_baseline.jpg
+- base_photo: photos/cam01_baseline.svg
 - カテゴリ: surreal、フェーズ: late
 - 内容は宇宙人系で、自由に
 ```

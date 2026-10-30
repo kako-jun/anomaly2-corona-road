@@ -1,10 +1,11 @@
-# 写真固有の異変候補プール
+# 異変候補プール
 
-まだ採用・生成した異変ではなく、写真の写り込みから発想を広げるための候補。
+まだ採用・生成した異変ではなく、写真の写り込みから発想を広げる写真固有案、昭和テーマ案、写真に紐づかない runtime 在庫をまとめた候補。
 
 ## 正本と昇格ルール
 
-- 写っている物の説明・座標・カメラ写真の正本は [`camera-element-inventory.md`](./camera-element-inventory.md)。ここでは要素IDだけ参照し、物体説明や座標を複製しない。
+- 写っている物の説明・座標・カメラ写真の正本は [`camera-element-inventory.md`](./camera-element-inventory.md)。写真固有の候補ではここでは要素IDだけ参照し、物体説明や座標を複製しない。
+- 末尾の「Runtime / 背景非依存の異変在庫」は写真に紐づかず、昇格しても `anomalies.yaml` には載せない（実装タスクとして別管理）。
 - 候補の正本はこのファイル。採用候補を生成工程へ移す時は、この行を削除し、`anomalies.yaml` に一件だけ登録する。候補と制作データを二重に残さない。
 - カテゴリは `camera` / `object` / `environment` / `person` / `surreal`、フェーズは `early` / `mid` / `late`。目立ち度は `subtle` / `medium` / `obvious`。
 - 文字の改変案は、元の文字を原寸で読み直してから具体的な文言を決める。
@@ -374,28 +375,24 @@
 
 ## 昭和テーマ候補（閉店後の地下街に日常が戻る）
 
-未制作。旧・昭和案メモから、`anomalies.yaml` に同等の試作が無いものだけを移した。候補IDは `CR-SH-NN`。方針（核となる変化・小道具を主役にしない・修復は元写真で破損が確認できる箇所だけ）は制作スキルの「昭和の時間が戻る異変」を参照。着手前に通常どおり類似照合する（近縁: AR-01-shutter-light / AR-08-notice-residue / CR-08-17 / AR-02-duplicate-coffee-sign）。
+未制作。旧・昭和案メモから、`anomalies.yaml` に同等の試作が無く、対象要素を特定できるものだけを移した。時計の針は写真に時計が写っていないため候補にしない。候補IDは `CR-SH-NN`。方針（核となる変化・小道具を主役にしない・修復は元写真で破損が確認できる箇所だけ）は制作スキルの「昭和の時間が戻る異変」を参照。着手前に通常どおり類似照合する（近縁: AR-01-shutter-light / AR-08-notice-residue / CR-08-17 / AR-02-duplicate-coffee-sign）。
 
-| 候補ID   | 対象ID    | 変化案                                                                                     | 分類 / フェーズ / 目立ち度  |
-| -------- | --------- | ------------------------------------------------------------------------------------------ | --------------------------- |
-| CR-SH-01 | CAM02-E07 | シャッターに色褪せたホーロー広告が一枚現れる。                                             | object / early / subtle     |
-| CR-SH-02 | CAM02-E14 | 自立看板の文字が昔の喫茶店の名前に戻る（架空名）。                                         | object / mid / medium       |
-| CR-SH-03 | CAM02-E20 | 誰もいない床に革靴の足跡が続く。                                                           | person / mid / medium       |
-| CR-SH-04 | CAM01-E12 | 閉店した店の格子戸に暖簾が現れる（写真に暖簾は無いので要設計）。                           | object / mid / medium       |
-| CR-SH-05 | CAM01-E12 | 格子戸が少しだけ開く。                                                                     | environment / mid / medium  |
-| CR-SH-06 | CAM01-E16 | 消えた商店の表示が吊り看板に戻る。                                                         | object / early / subtle     |
-| CR-SH-07 | CAM03-E06 | シャッターに色褪せた特売ポスターが現れる。                                                 | object / early / subtle     |
-| CR-SH-08 | CAM04-E16 | 点検口の蓋の隙間に古い新聞の端が挟まる。                                                   | object / early / subtle     |
-| CR-SH-09 | CAM05-E08 | ガラス内のカーテンが少し開く。                                                             | environment / mid / medium  |
-| CR-SH-10 | CAM06-E12 | メニュー板の値段が昔の価格に戻る。                                                         | object / early / subtle     |
-| CR-SH-11 | CAM06-E09 | 観葉植物の鉢が懐かしいブリキ缶に変わる。                                                   | object / mid / medium       |
-| CR-SH-12 | CAM08-E14 | ガラスに背広姿が映り、奥へ去る（動きは複数画像または runtime）。                           | person / late / obvious     |
-| CR-SH-13 | 通路奥    | 紙袋を持つ後ろ姿が遠くに立つ（対象IDは該当カメラで確定）。                                 | person / mid / medium       |
-| CR-SH-14 | 各カメラ  | 蛍光灯一本だけが暖色に変わる（対象IDは該当カメラで確定）。                                 | environment / mid / medium  |
-| CR-SH-15 | CAM05-E08 | ガラス内だけ昔の明かりが灯る（近縁: AR-05-glass-light を確認）。                           | environment / late / medium |
-| CR-SH-16 | 要確認    | 看板の消灯文字が一文字だけ点灯する（消灯文字の確認と架空化 baseline 確定が先）。           | object / mid / medium       |
-| CR-SH-17 | 要確認    | ポスターの色が復元する（元の劣化を確認要。生成結果に実在ブランド風文字が入り一度不採用）。 | object / early / subtle     |
-| CR-SH-18 | 要確認    | タイル・壁の破損が直る（写真で破損が確認できる箇所を選んでから）。                         | environment / mid / medium  |
+| 候補ID   | 対象ID    | 変化案                                                                                     | 分類 / フェーズ / 目立ち度 |
+| -------- | --------- | ------------------------------------------------------------------------------------------ | -------------------------- |
+| CR-SH-01 | CAM02-E07 | シャッターに色褪せたホーロー広告が一枚現れる。                                             | object / early / subtle    |
+| CR-SH-02 | CAM02-E14 | 自立看板の文字が昔の喫茶店の名前に戻る（架空名）。                                         | object / mid / medium      |
+| CR-SH-03 | CAM02-E20 | 誰もいない床に革靴の足跡が続く。                                                           | person / mid / medium      |
+| CR-SH-04 | CAM01-E12 | 閉店した店の格子戸に暖簾が現れる（写真に暖簾は無いので要設計）。                           | object / mid / medium      |
+| CR-SH-05 | CAM01-E12 | 格子戸が少しだけ開く。                                                                     | environment / mid / medium |
+| CR-SH-06 | CAM01-E16 | 消えた商店の表示が吊り看板に戻る。                                                         | object / early / subtle    |
+| CR-SH-07 | CAM03-E06 | シャッターに色褪せた特売ポスターが現れる。                                                 | object / early / subtle    |
+| CR-SH-08 | CAM04-E16 | 点検口の蓋の隙間に古い新聞の端が挟まる。                                                   | object / early / subtle    |
+| CR-SH-09 | CAM05-E08 | ガラス内のカーテンが少し開く。                                                             | environment / mid / medium |
+| CR-SH-10 | CAM06-E12 | メニュー板の値段が昔の価格に戻る。                                                         | object / early / subtle    |
+| CR-SH-11 | CAM06-E09 | 観葉植物の鉢が懐かしいブリキ缶に変わる。                                                   | object / mid / medium      |
+| CR-SH-12 | CAM08-E14 | ガラスに背広姿が映り、奥へ去る（動きは複数画像または runtime）。                           | person / late / obvious    |
+| CR-SH-13 | CAM01-E14 | 紙袋を持つ後ろ姿が遠くに立つ（近縁: CR-01-06 人影、AR-06-worker。紙袋で差別化）。          | person / mid / medium      |
+| CR-SH-17 | CAM04-E09 | ポスターの色が復元する（元の劣化を確認要。生成結果に実在ブランド風文字が入り一度不採用）。 | object / early / subtle    |
 
 音や映像の昭和系 runtime 案（食器の音、古い館内放送、映像が一瞬褪色）は下の runtime 在庫を参照。
 
@@ -472,9 +469,24 @@
 - safe camera unsafe: 何もないはずのカメラで strike 誘導が起きる。
 - tutorial rule break: 画面上のルール文が変わる。
 
-### 配分の目安（MVP 40 件）
+### 配分の目安（初期案。MVP 40 件想定・現状の台帳件数とは別）
 
 - 内訳: sanitized baseline は全カメラ、画像異変 24、runtime カメラ 6、音 4、UI/メタ 6。
 - フェーズ: early 12（小さな物体・看板・照明・音の違和感）/ mid 16（扉・通路奥・人影・camera lost・画面揺れ）/ late 12（物理崩壊・人物異常・UI 破壊・タイマー異常）。
 - 背景別: 看板が強い背景は signage/text/poster 系、通路奥は intruder/corridor/door/fog 系、シャッター・店先は door/shutter/peek/knock 系、蛍光灯・天井は light/flicker/ceiling/shadow 系、余白・暗部は creature/surreal/reflection 系。camera lost・shake・static・audio・UI/meta はどの背景にも置ける。
 - 方針: 序盤は小さく、中盤は確信でき、終盤はルール自体が壊れる構成にする（Observation Duty / Exit 8 系の反復空間の差分を参考）。
+
+### 汎用タイプの視点（取りこぼし防止）
+
+画像異変の汎用タイプは `anomaly_type` enum（README）と上の写真固有案で足りる。enum の名前だけでは見落としやすい視点を、案出しのチェックとして残す。
+
+| 視点                | 内容                                   | 近い `anomaly_type`          |
+| ------------------- | -------------------------------------- | ---------------------------- |
+| scale               | 看板やゴミ箱が不自然に大きい/小さい    | `surreal` / `state_change`   |
+| rotate              | 貼り紙や看板だけ上下逆・横向き         | `state_change` / `displace`  |
+| float / phase       | 物が少し浮く／壁に半分埋まる           | `displace` / `surreal`       |
+| language drift      | 日本語看板が英語・記号・読めない文字へ | `text_change`                |
+| impossible geometry | 通路が伸びる・ループする・角が増える   | `surreal`                    |
+| wrong shadow        | 影だけ光源と逆を向く                   | `reflection`                 |
+| flood / wet         | 床が濡れる、黒い水が流れる             | `add_object` / `color_shift` |
+| twins / crawling    | 同じ姿が左右対称／低い姿勢の人影       | `duplicate` / `add_person`   |
