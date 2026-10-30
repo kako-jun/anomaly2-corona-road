@@ -484,21 +484,21 @@
 
 画像異変の汎用タイプは `anomaly_type` enum（README）と上の写真固有案で足りる。enum の名前だけでは見落としやすい視点を、案出しのチェックとして残す。
 
-| 視点                | 内容                                           | 近い `anomaly_type`                 |
-| ------------------- | ---------------------------------------------- | ----------------------------------- |
-| scale               | 看板やゴミ箱が不自然に大きい/小さい            | `surreal` / `state_change`          |
-| rotate              | 貼り紙や看板だけ上下逆・横向き                 | `state_change` / `displace`         |
-| float / phase       | 物が少し浮く／壁に半分埋まる                   | `displace` / `surreal`              |
-| language drift      | 日本語看板が英語・記号・読めない文字へ         | `text_change`                       |
-| impossible geometry | 通路が伸びる・ループする・角が増える           | `surreal`                           |
-| wrong shadow        | 影だけ光源と逆を向く                           | `reflection`                        |
-| flood / wet         | 床が濡れる、黒い水が流れる                     | `add_object` / `color_shift`        |
-| twins               | 同じ姿が左右対称に立つ（`duplicate` の人物版） | `duplicate`                         |
-| crawling figure     | 床や壁際に低い姿勢の人影                       | `add_person`                        |
-| shadow appears      | 物体なしの影が床や壁に出る                     | `reflection`                        |
-| human disappears    | もともといた人や影が消える                     | `add_person` の逆（`state_change`） |
-| faceless person     | 人物の顔の情報だけが消える                     | `state_change`                      |
-| giant / tiny human  | 通路奥の人影のサイズが不自然                   | `surreal`                           |
-| intruder seated     | ベンチや床に座る人影                           | `add_person`                        |
-| fast figure         | 画像では残像、runtime で一瞬横切る             | `add_person`                        |
-| forbidden object    | 屋内に場違いな物（濡れた道路標識など）         | `add_object`                        |
+| 視点                | 内容                                           | 近い `anomaly_type`          |
+| ------------------- | ---------------------------------------------- | ---------------------------- |
+| scale               | 看板やゴミ箱が不自然に大きい/小さい            | `surreal` / `state_change`   |
+| rotate              | 貼り紙や看板だけ上下逆・横向き                 | `state_change` / `displace`  |
+| float / phase       | 物が少し浮く／壁に半分埋まる                   | `displace` / `surreal`       |
+| language drift      | 日本語看板が英語・記号・読めない文字へ         | `text_change`                |
+| impossible geometry | 通路が伸びる・ループする・角が増える           | `surreal`                    |
+| wrong shadow        | 影だけ光源と逆を向く                           | `reflection`                 |
+| flood / wet         | 床が濡れる、黒い水が流れる                     | `add_object` / `color_shift` |
+| twins               | 同じ姿が左右対称に立つ（`duplicate` の人物版） | `duplicate`                  |
+| crawling figure     | 床や壁際に低い姿勢の人影                       | `add_person`                 |
+| shadow appears      | 物体なしの影が床や壁に出る                     | `reflection`                 |
+| human disappears    | もともといた人や影が消える                     | `remove_object`              |
+| faceless person     | 人物の顔の情報だけが消える                     | `state_change`               |
+| giant / tiny human  | 通路奥の人影のサイズが不自然                   | `surreal`                    |
+| intruder seated     | ベンチや床に座る人影                           | `add_person`                 |
+| fast figure         | 画像では残像、runtime で一瞬横切る             | `add_person`                 |
+| forbidden object    | 屋内に場違いな物（濡れた道路標識など）         | `add_object`                 |
