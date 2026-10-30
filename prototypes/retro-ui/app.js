@@ -1,23 +1,36 @@
 'use strict';
 /* ---- PLACEHOLDER DIALOGUE (sample only) ----
- * These lines are temporary samples written for a look-and-feel check.
- * They are NOT final script. who: 'A' = partner, 'ME' = player.
- * kind 'hint' = sample hint line shown after a false report. */
+ * Temporary samples for a look-and-feel check. NOT the final script.
+ * Setting: present day (Reiwa), a night shift in an old building.
+ * who 'M' = the young man, the building's security guard (owns the guard room; polite, hesitant).
+ * who 'A' = the middle-aged woman, a veteran detective staking out on the side, allowed in by him
+ *           (casual, bossy-kind speech; knows her way around but he knows the site better).
+ * No names, ages or case details on purpose (only hints like "that matter").
+ * The "who" field is not shown on screen; tone tells them apart.
+ * Arc (kept subtle): unaware of each other -> his awkwardness -> she notices and gets awkward too.
+ * Entries are consumed in pairs (two lines, "- " prefixed) whenever speakers alternate.
+ * hint: true = sample hint lines shown (as a 2-line exchange) after a false report. */
 const DIALOGUE = [
-  { who: 'A',  text: 'おい、今日の弁当、何だった? 俺は唐揚げだ。' },
-  { who: 'ME', text: '焼き鮭。冷めてるとあんまりうまくないな。' },
-  { who: 'A',  text: '次の巡回、二時だっけ。三時だっけ。' },
-  { who: 'ME', text: '二時。さっき日誌に書いたろ。' },
-  { who: 'A',  text: 'この前の雨、地下まで湿気がすごかったよな。' },
-  { who: 'A',  text: 'なあ、さっきの3番、看板あったっけ。' },
-  { who: 'ME', text: '……なんか変だぞ。今、誰か映らなかったか。' },
-  { who: 'A',  text: 'ストーブ点けるか。足元だけ寒いんだよ。' },
-  { who: 'ME', text: '五番の蛍光灯、前からあんなに暗かったか?' },
-  { hint: true, who: 'A', text: '今のは違うな。もっと、床の近くを見てみろ。' },
-  { hint: true, who: 'A', text: '映ってる物じゃない。カメラのほうがおかしくないか?' },
+  { who: 'A', text: 'お邪魔してごめんね、夜中に。' },
+  { who: 'M', text: 'いえ。巡回は三時なので……' },
+  { who: 'A', text: 'あんた、コンビニ弁当ばっかね。' },
+  { who: 'M', text: 'はい。物価高ですから。' },
+  { who: 'A', text: 'あの件、今夜も動きなしか。' },
+  { who: 'M', text: 'スマホの天気だと冷えますよ。' },
+  { who: 'M', text: 'あ、毛布……いえ、なんでも。' },
+  { who: 'A', text: 'なによ、言いかけてやめて。' },
+  { who: 'M', text: '3番の看板、いつもと違います。' },
+  { who: 'A', text: 'それ、メモして。例の件かも。' },
+  { who: 'A', text: '……あんた、顔赤くない?' },
+  { who: 'M', text: 'い、いえ! 暖房のせいです。' },
+  { hint: true, who: 'A', text: 'ほら、今の違うみたいよ。' },
+  { hint: true, who: 'M', text: '日誌だと、3番に看板ないです。' },
+  { hint: true, who: 'A', text: '映ってる物だけ見てない?' },
+  { hint: true, who: 'M', text: 'カメラの向きも日誌にあります。' },
 ];
 const NORMAL = DIALOGUE.filter(d => !d.hint);
-const HINTS = DIALOGUE.filter(d => d.hint);
+const HINT_GROUPS = [];
+DIALOGUE.filter(d => d.hint).forEach((d, i, arr) => { if (i % 2 === 0) HINT_GROUPS.push(arr.slice(i, i + 2).map(x => x.text)); });
 const CATEGORIES = ['CAMERA', 'OBJECT', 'ENVIRONMENT', 'PERSON', 'SURREAL'];
 
 const $ = id => document.getElementById(id);
@@ -131,7 +144,7 @@ function feedback() {
     strikes = Math.min(3, strikes + 1);
     document.querySelectorAll('#strikes .lamp').forEach((l, i) => l.classList.toggle('on', i < strikes));
     $('strikes').setAttribute('aria-label', `Strikes ${strikes} of 3`);
-    showLine(HINTS[hintIdx++ % HINTS.length], 6000);
+    showLines(HINT_GROUPS[hintIdx++ % HINT_GROUPS.length], 6500);
   }
   clearTimeout(fbTimer);
   fbTimer = setTimeout(() => { fb.textContent = 'READY'; fb.classList.remove('bad'); }, 2400);
@@ -157,11 +170,10 @@ function showLines(lines, hold) {
   }, 600);
   subTimer = setTimeout(next, hold || 5200);
 }
-function showLine(d, hold) { showLines([d.text], hold); }
-// Two lines ("- " prefixed, like film dialogue) when the next entry is the other speaker.
+// Two lines ("- " prefixed, like film dialogue) whenever the next entry is the other speaker.
 function next() {
   const a = NORMAL[idx % NORMAL.length], b = NORMAL[(idx + 1) % NORMAL.length];
-  if (a.who !== b.who && idx % 2 === 0) { idx += 2; showLines([a.text, b.text], 6500); }
+  if (a.who !== b.who) { idx += 2; showLines([a.text, b.text], 6500); }
   else { idx += 1; showLines([a.text]); }
 }
 next();
