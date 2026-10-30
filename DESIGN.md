@@ -245,3 +245,19 @@ For correct/wrong report feedback. Position: top center under HUD. Auto-dismiss 
 
 **Last updated:** 2026-05-20
 **Owner:** kako-jun
+
+---
+
+## 11. Retro display reference
+
+**Direction (kako-jun, 2026-10-30):** the game watches a corona-era underground arcade, so the _display_ should look like old physical surveillance hardware while the _interaction_ stays modern and phone-native (touch targets, gestures, readable controls). Retro is a rendering layer, not a behavior change.
+
+**Reference:** `assets/reference/crt-monitor/panasonic-wv-bm140.jpg` — Panasonic WV-BM140 surveillance video monitor, photographed by kako-jun. Reference only: it is not bundled into the game, and the Panasonic mark must not be reproduced (use invented names, as with the signage baselines). EXIF is stripped; pixels are unchanged from the original.
+
+What to take from it:
+
+- **Screen:** rounded-corner rectangle (large radius), thick dark inner bezel, slightly bluish monochrome picture, clearly visible horizontal scanlines, low contrast, soft glow.
+- **Housing:** aged cream/beige matte plastic with a recessed frame around the tube.
+- **Control strip:** square recessed power button with a red LED, slide switches, knobs with an indicator line, four numbered push buttons with arrow marks, a speaker slit grid, and silkscreened labels.
+
+Open decision: build these parts as CSS, as generated raster images layered over the UI, or both. Realism favors raster parts (bezel, knobs, buttons, LED, speaker grille) with CSS only for the live scanlines, noise, and glow. Tracked in Issue #2.
