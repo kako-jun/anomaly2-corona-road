@@ -171,6 +171,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 - [x] GitHub Actions deployment
 - [x] Automatic GitHub Pages publishing
 - [x] ESLint + Prettier setup
+- [x] Vitest + Testing Library (see Testing below)
 - [x] Pre-commit hooks (Husky + lint-staged)
 - [x] TypeScript strict mode
 
@@ -510,8 +511,15 @@ src/
 1. Update this document first
 2. Create feature branch
 3. Implement with TypeScript
-4. Add tests (if applicable)
+4. Add tests (see Testing below)
 5. Update README.md
+
+#### Testing
+
+- Run with `npm test` (once) or `npm run test:watch`. CI runs **lint → test → build** in that order (`.github/workflows/ci.yml`).
+- Vitest + Testing Library. Tests sit next to the code as `*.test.ts` / `*.test.tsx`; shared setup is `src/test/setup.ts`.
+- Environments: the default is **node**, for pure functions (`src/utils/`). Hooks and components need the DOM: put `// @vitest-environment jsdom` at the top of that test file.
+- jsdom cannot verify: the real blocking effect of `inert`, touch input, the moving noise, and anything about CSS appearance. Check these in a real browser (production build served statically) before calling UI work done.
 
 #### Code Style
 
