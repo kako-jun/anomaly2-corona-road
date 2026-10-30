@@ -78,7 +78,7 @@ describe('real anomaly ledger', () => {
     }
   )
 
-  it('base photos are within the 676x900 the ledger was authored against', () => {
+  it('base photos (size read from the real public/images WebP headers) are within the 676x900 that ledger coordinates assume', () => {
     for (const c of CAMERAS) {
       const s = baseSizeOf(c.id)
       expect(s.w).toBeLessThanOrEqual(676)
