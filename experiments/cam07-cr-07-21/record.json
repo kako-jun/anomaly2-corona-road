@@ -1,0 +1,20 @@
+{
+  "candidate_id": "CR-07-21",
+  "element_id": "CAM07-E01",
+  "description": "天井板の一枚だけ淡い黄色になる",
+  "category": "environment",
+  "phase": "early",
+  "subtlety": "subtle",
+  "base_photo": "public/images/cam7.webp",
+  "source": "experiments/cam07-cr-07-21/source.png",
+  "mask": "experiments/cam07-cr-07-21/mask.png",
+  "overlay": "experiments/cam07-cr-07-21/overlay.webp",
+  "origin": [389, 40],
+  "dimensions": [174, 52],
+  "change_bbox": [391, 43, 559, 92],
+  "reconstruction_exact": true,
+  "blink_live_reviewed": false,
+  "note": "天井板の着色。AR-07-crane の天井からの折り鶴とは異なる。",
+  "review_status": "rejected",
+  "reason": "生成部分が既存の天井板境界に沿わない大きな黄色い四角形に見え、薄い一枚の板として確認できない。"
+}

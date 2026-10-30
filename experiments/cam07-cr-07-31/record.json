@@ -1,0 +1,20 @@
+{
+  "candidate_id": "CR-07-31",
+  "element_id": "CAM07-E04",
+  "base_photo": "public/images/cam7.webp",
+  "source": "experiments/cam07-cr-07-31/source.png",
+  "mask": "experiments/cam07-cr-07-31/mask.png",
+  "overlay": "experiments/cam07-cr-07-31/overlay.webp",
+  "origin": [536, 51],
+  "dimensions": [45, 32],
+  "change_bbox": [537, 51, 581, 83],
+  "reconstruction_exact": true,
+  "blink_live_reviewed": false,
+  "description": "右上丸灯の周囲に小さな青い輪",
+  "category": "environment",
+  "phase": "early",
+  "subtlety": "subtle",
+  "note": "CR-05-29 は別カメラの緑色の縁。",
+  "review_status": "rejected",
+  "reason": "青色が灯具上辺の弧に偏り、周囲を一周する輪として確認できない。"
+}

@@ -1,0 +1,6 @@
+{
+  "candidate": "CR-03-05",
+  "status": "rejected",
+  "reason": "既存の白い装飾を変える代わりに、空白部分へ大きな人物の顔を追加した。",
+  "source": "experiments/cr-03-05/source.png"
+}

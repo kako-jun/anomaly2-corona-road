@@ -1,0 +1,5 @@
+{
+  "candidate_id": "CR-02-30",
+  "reason": "生成された暗部は細い三日月ではなく直線状の黒い楕円。候補に残す。",
+  "generation_prompt": "Edit the attached exact CAM02 surveillance photo. Only one change: on the small round ceiling lamp at the upper right, darken a thin crescent shape at its center while the rest of that lamp stays lit. Preserve all other lights, floor reflections, ceiling, walls, signs, perspective, colors, blur and grain. Return the entire image."
+}

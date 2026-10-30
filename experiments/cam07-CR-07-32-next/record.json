@@ -1,0 +1,6 @@
+{
+  "candidate_id": "CR-07-32",
+  "review_status": "rejected",
+  "prompt": "Edit the attached 675x900 surveillance photo. Only one change: rotate exactly one of the small short rectangular ceiling fixtures in the distant central row slightly sideways, so it points a different angle from the others. Preserve its size and number of lights, all other fixtures, perspective, walls, stairs, doors, signs, floor, reflections, framing, texture and grain. Return the full image.",
+  "reason": "生成画像は既存の丸灯を大きな四角い灯具へ変えた。短い長方形器具の向き変更ではない。"
+}

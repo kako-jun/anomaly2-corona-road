@@ -1,0 +1,7 @@
+{
+  "candidate_id": "CR-05-39",
+  "camera_id": "CAM05",
+  "element_id": "CAM05-E12",
+  "review_status": "rejected",
+  "reason": "No reliably identifiable rounded brick corner in generated source; requested change cannot be located confidently."
+}

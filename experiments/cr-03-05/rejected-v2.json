@@ -1,0 +1,6 @@
+{
+  "candidate": "CR-03-05",
+  "status": "rejected",
+  "reason": "2回とも元の白い装飾を変えず、空白面に大きめの人物の顔を追加した。候補の一装飾の形変化になっていない。",
+  "source": "experiments/cr-03-05/source-v2.png"
+}

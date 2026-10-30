@@ -1,0 +1,5 @@
+{
+  "candidate_id": "CR-02-25",
+  "reason": "既存木箱を元の位置・形のまま残さず幅広い一体の箱に変えており、二つの独立した木箱と確認できない。",
+  "generation_prompt": "Edit the attached exact CAM02 surveillance photograph. Duplicate the existing small tan wooden crate beside the green standing sign, placing a second identical crate immediately next to it on the same shelf at a plausible scale. Preserve the original crate, all signage, all other objects, perspective, lighting, framing, grain and blur. Make only this one addition. Return full frame."
+}

@@ -1,0 +1,9 @@
+{
+  "candidate_id": "CR-05-28",
+  "camera_id": "CAM05",
+  "element_id": "CAM05-E01",
+  "review_status": "rejected",
+  "reason": "Generated dirt dots form an irregular cluster rather than the requested evenly spaced grid.",
+  "generation_prompt": "Edit the attached exact 676×900 surveillance camera photo. Only one change: On one small patch of the existing dark blue-gray ceiling, change the existing speckled dirt so the tiny dark spots are arranged in an evenly spaced square grid. Keep the spots subtle, same size and color as the original grime; do not draw thick lines or alter other ceiling areas. Keep camera framing, lighting, architecture, floor, all text and signs, reflections outside the target, grain, texture and colors intact. Output the entire frame at the same aspect ratio.",
+  "generated_source": "experiments/cam05-cr-05-28/source.png"
+}

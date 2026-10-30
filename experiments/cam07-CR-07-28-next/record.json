@@ -1,0 +1,7 @@
+{
+  "candidate_id": "CR-07-28",
+  "review_status": "rejected",
+  "prompt": "Edit this exact surveillance photo. On the blue-gray ceiling near the center, take one existing thin panel seam and make it fork once into a tiny Y shape, as though one seam branches into two. The alteration is subtle, local, and follows the ceiling perspective. Preserve all fixtures and lamps, signs, walls, stairs, floor, camera framing, texture and grain. Make no other changes. Return the full image.",
+  "generated_source": "experiments/cam07-CR-07-28-next/source.png",
+  "reason": "既存継ぎ目を分岐させる代わりに、画面を横断する大きく濃いY字の線を新規描画した。"
+}

@@ -1,0 +1,13 @@
+{
+  "candidate_id": "CR-07-18",
+  "element_id": "CAM07-E18",
+  "base_photo": "public/images/cam7.webp",
+  "base_size": [675, 900],
+  "bbox": [527, 456, 609, 525],
+  "dimensions": [82, 69],
+  "diff_bbox": [529, 458, 608, 524],
+  "prompt": "Edit the attached 675x900 surveillance photo. Only one change: add one small shallow clear water puddle on the floor at the right of the corridor between the existing round reflected ceiling lights; it has a faint realistic reflected highlight and contacts the floor. Keep all existing reflections, floor grout, lights, doors, stairs, signs, framing, texture and grain unchanged. Return the full image.",
+  "review_status": "rejected",
+  "note": "生成位置が CAM07-E18 の記録範囲 y=700–970/1000 の外であるため不採用。",
+  "reconstruction_exact": true
+}

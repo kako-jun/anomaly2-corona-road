@@ -1,0 +1,7 @@
+{
+  "candidate_id": "CR-07-15",
+  "review_status": "rejected",
+  "prompt": "Edit this exact surveillance photo. On the dark staircase at the far right, remove exactly one step and redistribute the step spacing evenly so the total height and the top landing stay unchanged. Keep the same dark material, perspective, handrail, wall, light and every other object. Preserve camera framing, floor, all signs, reflections, texture and grain. Do not alter the left staircase. Return the entire image.",
+  "generated_source": "experiments/cam07-CR-07-15-next/source.png",
+  "reason": "生成後の段数は元の多数の段から大幅に減少し、1段だけの減少と確認できない。"
+}

@@ -1,0 +1,9 @@
+{
+  "candidate_id": "CR-05-40",
+  "camera_id": "CAM05",
+  "element_id": "CAM05-E13",
+  "review_status": "rejected",
+  "reason": "Generated two bright raised metallic lines instead of a fine doubled floor grout seam.",
+  "generation_prompt": "Edit the attached exact 676×900 surveillance camera photo. Only one change: Make one short section of a single existing grout line on the foreground floor into two fine parallel lines, as if that one tile seam is doubled. Keep all tiles, other seams, reflections and texture unchanged; do not draw a heavy line. Preserve camera framing, lights, architecture, floor, all text and signs, reflections outside the target, grain, texture and colors. Output full frame at same aspect ratio.",
+  "generated_source": "experiments/cam05-cr-05-40/source.png"
+}

@@ -1,0 +1,19 @@
+{
+  "candidate_id": "CR-07-41",
+  "element_id": "CAM07-E14",
+  "description": "右階段の手すりの端だけ床側に曲がる",
+  "category": "environment",
+  "phase": "mid",
+  "subtlety": "medium",
+  "generation_prompt": "Edit the attached CCTV photo. Make exactly one change: the very lower end of the existing handrail along the right staircase bends downward toward the floor, while the rest of the handrail, mounting, staircase and wall stay unchanged. Match the metal material, scale, perspective and lighting. Keep all other objects, camera framing and grain unchanged. Full photo, same aspect ratio.",
+  "base_photo": "public/images/cam7.webp",
+  "source": "experiments/cam07-cr-07-41/source.png",
+  "mask": "experiments/cam07-cr-07-41/mask.png",
+  "overlay": "experiments/cam07-cr-07-41/overlay.webp",
+  "origin": [516, 260],
+  "dimensions": [44, 58],
+  "change_bbox": [516, 260, 560, 318],
+  "reconstruction_exact": true,
+  "blink_live_reviewed": false,
+  "note": "手すり端の形の変化。追加された別部材に見えないか要確認。"
+}

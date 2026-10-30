@@ -1,0 +1,18 @@
+{
+  "candidate_id": "CR-07-34",
+  "element_id": "CAM07-E07",
+  "description": "奥の扉の緑系の紙が淡い桃色になる",
+  "category": "object",
+  "phase": "early",
+  "subtlety": "subtle",
+  "base_photo": "public/images/cam7.webp",
+  "source": "experiments/cam07-cr-07-34/source.png",
+  "mask": "experiments/cam07-cr-07-34/mask-v2.png",
+  "overlay": "experiments/cam07-cr-07-34/overlay-v2.webp",
+  "origin": [150, 134],
+  "dimensions": [21, 19],
+  "change_bbox": [151, 135, 169, 151],
+  "reconstruction_exact": true,
+  "blink_live_reviewed": false,
+  "note": "紙の色変化。AR-07-notice の壁面掲示追加や AR-07-ticket の階段上の紙片と異なる。 v2 は元の紙の外形に合わせてマスクを縮小。"
+}
