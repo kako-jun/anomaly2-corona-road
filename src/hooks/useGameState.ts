@@ -1,11 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import {
-  GameState,
-  GameStats,
-  Anomaly,
-  Camera,
-  AnomalyCategory,
-} from '../types/game'
+import { GameState, GameStats, Anomaly, AnomalyCategory } from '../types/game'
 import {
   DEFAULT_CONFIG,
   CAMERAS,
@@ -13,7 +7,11 @@ import {
   getGamePhase,
 } from '../utils/gameConfig'
 import { createAnomaly, pickLedgerEntry } from '../utils/anomalyData'
-import { ANOMALY_LEDGER, overlayUrlFor } from '../data/anomalyLedger'
+import {
+  ANOMALY_LEDGER,
+  overlayUrlFor,
+  preloadOverlays,
+} from '../data/anomalyLedger'
 
 export type FeedbackKind = 'correct' | 'wrong' | null
 
@@ -24,6 +22,8 @@ export interface Feedback {
 }
 
 const TOAST_MS = 1500
+/** When a spawn could not happen only for lack of a free camera, try again after this (not every frame). */
+const SPAWN_RETRY_MS = 1000
 
 export const useGameState = () => {
   const [gameState, setGameState] = useState<GameState>('idle')
@@ -34,7 +34,6 @@ export const useGameState = () => {
     totalAnomalies: 0,
     detectedAnomalies: 0,
   })
-  const [cameras] = useState<Camera[]>(CAMERAS)
   const [currentCameraIndex, setCurrentCameraIndex] = useState(0)
   const [activeAnomalies, setActiveAnomalies] = useState<Anomaly[]>([])
   const [feedback, setFeedback] = useState<Feedback | null>(null)
@@ -45,19 +44,17 @@ export const useGameState = () => {
   const lastAnomalyTimeRef = useRef<number>(0)
   const firstSpawnDoneRef = useRef<boolean>(false)
   const statsRef = useRef(stats)
-  const camerasRef = useRef(cameras)
   const currentIndexRef = useRef(currentCameraIndex)
   const activeAnomaliesRef = useRef(activeAnomalies)
   const feedbackIdRef = useRef(0)
+  // Set once every ledger entry has been used: spawning stops for the rest of the shift.
+  const ledgerExhaustedRef = useRef(false)
   // Ledger ids already shown this shift (no repeats within a shift).
   const usedLedgerIdsRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     statsRef.current = stats
   }, [stats])
-  useEffect(() => {
-    camerasRef.current = cameras
-  }, [cameras])
   useEffect(() => {
     currentIndexRef.current = currentCameraIndex
   }, [currentCameraIndex])
@@ -74,6 +71,7 @@ export const useGameState = () => {
       detectedAnomalies: 0,
     })
     usedLedgerIdsRef.current = new Set()
+    ledgerExhaustedRef.current = false
     setActiveAnomalies([])
     setFeedback(null)
     setCurrentCameraIndex(0)
@@ -110,7 +108,7 @@ export const useGameState = () => {
   // freshly-rendered `cameras` / `activeAnomalies` props inside the callback.
   const reportAnomaly = useCallback(
     (category: AnomalyCategory) => {
-      const currentCamera = camerasRef.current[currentIndexRef.current]
+      const currentCamera = CAMERAS[currentIndexRef.current]
       const anomalyOnCamera = activeAnomaliesRef.current.find(
         a => a.cameraId === currentCamera.id && !a.detectedAt
       )
@@ -145,31 +143,52 @@ export const useGameState = () => {
     [pushFeedback]
   )
 
-  /** Returns false when the ledger has nothing left to show, so no anomaly was spawned. */
-  const spawnAnomaly = useCallback((currentTime: number): boolean => {
-    const freeCameraIds = CAMERAS.filter(
-      c =>
-        !activeAnomaliesRef.current.some(
-          a => a.cameraId === c.id && !a.detectedAt
-        )
-    ).map(c => c.id)
-    const entry = pickLedgerEntry(
-      ANOMALY_LEDGER,
-      freeCameraIds,
-      usedLedgerIdsRef.current
-    )
-    if (!entry) return false
+  /**
+   * 'spawned'  - an anomaly was added.
+   * 'no-free-camera' - unused entries remain but none is on a camera without an anomaly (retry soon).
+   * 'exhausted' - no unused entry is left at all (stop spawning for this shift).
+   * An entry whose overlay cannot be resolved is skipped (and marked used) instead of throwing, so the
+   * game loop is never stopped by one bad entry.
+   */
+  const spawnAnomaly = useCallback(
+    (currentTime: number): 'spawned' | 'no-free-camera' | 'exhausted' => {
+      const freeCameraIds = CAMERAS.filter(
+        c =>
+          !activeAnomaliesRef.current.some(
+            a => a.cameraId === c.id && !a.detectedAt
+          )
+      ).map(c => c.id)
+      const used = usedLedgerIdsRef.current
+      for (;;) {
+        const entry = pickLedgerEntry(ANOMALY_LEDGER, freeCameraIds, used)
+        if (!entry) break
+        used.add(entry.id)
+        let url: string
+        try {
+          url = overlayUrlFor(entry)
+        } catch (e) {
+          console.warn(`Skipping anomaly "${entry.id}":`, e)
+          continue
+        }
+        const newAnomaly = createAnomaly(entry, getGamePhase(currentTime), url)
+        setActiveAnomalies(prev => [...prev, newAnomaly])
+        setStats(prev => ({
+          ...prev,
+          totalAnomalies: prev.totalAnomalies + 1,
+        }))
+        return 'spawned'
+      }
+      return ANOMALY_LEDGER.some(e => !used.has(e.id))
+        ? 'no-free-camera'
+        : 'exhausted'
+    },
+    []
+  )
 
-    usedLedgerIdsRef.current.add(entry.id)
-    const newAnomaly = createAnomaly(
-      entry,
-      getGamePhase(currentTime),
-      overlayUrlFor(entry)
-    )
-    setActiveAnomalies(prev => [...prev, newAnomaly])
-    setStats(prev => ({ ...prev, totalAnomalies: prev.totalAnomalies + 1 }))
-    return true
-  }, [])
+  // Warm the cache for the overlay images once play starts (runs once per page, see preload.ts).
+  useEffect(() => {
+    if (gameState === 'playing') preloadOverlays()
+  }, [gameState])
 
   // Game loop — built once per gameState transition; reads everything through refs.
   useEffect(() => {
@@ -199,12 +218,22 @@ export const useGameState = () => {
         a => !a.detectedAt
       ).length
 
-      if (sinceLast >= interval) {
-        // Advance the cadence even when the cap blocks the spawn — otherwise
-        // clearing the cap immediately triggers a back-to-back burst.
-        lastAnomalyTimeRef.current = elapsed
-        if (activeCount < DEFAULT_CONFIG.maxConcurrentAnomalies) {
-          if (spawnAnomaly(elapsed)) firstSpawnDoneRef.current = true
+      if (sinceLast >= interval && !ledgerExhaustedRef.current) {
+        if (activeCount >= DEFAULT_CONFIG.maxConcurrentAnomalies) {
+          // Advance the cadence even when the cap blocks the spawn — otherwise
+          // clearing the cap immediately triggers a back-to-back burst.
+          lastAnomalyTimeRef.current = elapsed
+        } else {
+          const result = spawnAnomaly(elapsed)
+          if (result === 'spawned') {
+            lastAnomalyTimeRef.current = elapsed
+            firstSpawnDoneRef.current = true
+          } else if (result === 'exhausted') {
+            ledgerExhaustedRef.current = true
+          } else {
+            // A failed attempt does not use up the interval: retry shortly (not every frame).
+            lastAnomalyTimeRef.current = elapsed - interval + SPAWN_RETRY_MS
+          }
         }
       }
 
@@ -223,15 +252,15 @@ export const useGameState = () => {
   }, [feedback, clearFeedback])
 
   const activeAnomalyHere = activeAnomalies.find(
-    a => a.cameraId === cameras[currentCameraIndex].id && !a.detectedAt
+    a => a.cameraId === CAMERAS[currentCameraIndex].id && !a.detectedAt
   )
 
   return {
     gameState,
     stats,
-    cameras,
+    cameras: CAMERAS,
     currentCameraIndex,
-    currentCamera: cameras[currentCameraIndex],
+    currentCamera: CAMERAS[currentCameraIndex],
     activeAnomalies,
     activeAnomalyHere,
     feedback,

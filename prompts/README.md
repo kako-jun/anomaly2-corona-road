@@ -99,6 +99,8 @@ prompts/anomalies.yaml に以下の異変を5件追加してください:
 
 Claude は enum から適切な `anomaly_type` を選び、`location` と `detail` を埋めて追記する。
 
+ゲームが読む台帳の書式: `overlay` は `assets/anomaly-overlays/camNN/<name>.webp`、`overlay_origin` は `'(x,y)'`、`dimensions` は小文字 x の `'幅x高さ'`（`46x97`）、`camera_id` は `CAMnn`。形が違うとビルドが失敗し、エントリ id が表示される。
+
 異変の多様性を確保するため、写真要素ごとの未採用案は `candidate-pool.md` に集約する。猫、物の増減、反射、床壁天井の模様、文字反転、色形、段数、ノブ左右、吊り物、紙、水たまりを含む。候補数は完成素材数ではない。
 
 `anomalies.yaml` は試作した差分の台帳。現在の `queue/index.html` は状態で絞らず登録全件を表示するため、表示された項目が生成待ちとは限らない。`review_status: composited` は静止差分の試作で、完成・採用・ゲームへの実装を意味しない。`category` はゲームの報告用5分類に合わせた暫定値で、猫などの小動物も現在は `object` に仮分類している。ゲーム側の報告分類確定時に見直す。

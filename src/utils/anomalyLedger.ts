@@ -66,6 +66,18 @@ export const parseCategory = (text: string): AnomalyCategory => {
   return category
 }
 
+/** 'assets/anomaly-overlays/cam01/notice.webp' shape: the game resolves the URL by this exact path. */
+export const OVERLAY_PATH = /^assets\/anomaly-overlays\/cam\d+\/.+\.webp$/
+
+export const parseOverlayPath = (text: string): string => {
+  if (!OVERLAY_PATH.test(text)) {
+    throw new Error(
+      `overlay "${text}" is not "assets/anomaly-overlays/camNN/<name>.webp"`
+    )
+  }
+  return text
+}
+
 /** Parse and validate one raw YAML entry. Throws an Error naming the entry on any problem. */
 export const parseLedgerEntry = (raw: unknown, index: number): LedgerEntry => {
   const rec = (raw ?? {}) as Record<string, unknown>
@@ -78,7 +90,7 @@ export const parseLedgerEntry = (raw: unknown, index: number): LedgerEntry => {
       id: field(rec, 'id'),
       cameraId: parseCameraId(field(rec, 'camera_id')),
       category: parseCategory(field(rec, 'category')),
-      overlay: field(rec, 'overlay'),
+      overlay: parseOverlayPath(field(rec, 'overlay')),
       origin: parseOrigin(field(rec, 'overlay_origin')),
       size: parseDimensions(field(rec, 'dimensions')),
     }

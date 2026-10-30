@@ -150,6 +150,32 @@ describe('parseLedgerEntry', () => {
     ['bad origin', { overlay_origin: '137,379' }, /overlay_origin/],
     ['bad dimensions', { dimensions: '0x9' }, /dimensions/],
     ['bad camera', { camera_id: 'CAM00' }, /camera_id/],
+    ['uppercase X in dimensions', { dimensions: '46X97' }, /dimensions/],
+    [
+      'overlay outside the overlay dir',
+      { overlay: 'public/x.webp' },
+      /overlay/,
+    ],
+    [
+      'overlay with a traversal',
+      { overlay: 'assets/anomaly-overlays/../x.webp' },
+      /overlay/,
+    ],
+    [
+      'overlay not under a camNN dir',
+      { overlay: 'assets/anomaly-overlays/x.webp' },
+      /overlay/,
+    ],
+    [
+      'overlay not webp',
+      { overlay: 'assets/anomaly-overlays/cam01/x.png' },
+      /overlay/,
+    ],
+    [
+      'overlay with a leading slash',
+      { overlay: '/assets/anomaly-overlays/cam01/x.webp' },
+      /overlay/,
+    ],
   ])('%s: error names the id and the problem', (_n, over, problem) => {
     expect(() => parseLedgerEntry(raw(over), 0)).toThrow(
       /^anomalies\.yaml entry "AR-01-notice": /

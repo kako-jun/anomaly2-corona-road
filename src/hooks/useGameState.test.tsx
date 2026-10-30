@@ -7,9 +7,14 @@ import { useGameState } from './useGameState'
 
 // A small, controllable ledger instead of the real one (mutated in place per test).
 const ledger = vi.hoisted(() => [] as LedgerEntry[])
+const preload = vi.hoisted(() => vi.fn())
 vi.mock('../data/anomalyLedger', () => ({
   ANOMALY_LEDGER: ledger,
-  overlayUrlFor: (e: { id: string }) => `/overlay/${e.id}.webp`,
+  overlayUrlFor: (e: { id: string }) => {
+    if (e.id.startsWith('broken')) throw new Error('Overlay image not bundled')
+    return `/overlay/${e.id}.webp`
+  },
+  preloadOverlays: preload,
 }))
 
 const entry = (
@@ -126,14 +131,70 @@ describe('spawning from the ledger', () => {
     )
   })
 
-  it('a failed spawn (empty ledger) leaves firstSpawnDone false: retry after the short delay', () => {
+  it('an empty ledger stops spawning for the shift (no retries)', () => {
     const { result } = start()
     advance(FIRST + 100)
     expect(result.current.stats.totalAnomalies).toBe(0)
     ledger.push(entry('late', 1))
-    // Short first-delay applies again, not the 30 s interval.
-    advance(FIRST)
+    advance(FIRST + INTERVAL * 2)
+    expect(result.current.stats.totalAnomalies).toBe(0)
+  })
+
+  it('a failed spawn for lack of a free camera does not use up the interval: retry after ~1 s', () => {
+    // Both entries sit on camera 1: after 'a' spawns, 'b' has no free camera.
+    ledger.push(entry('a', 1), entry('b', 1))
+    const { result } = start()
+    advance(FIRST + 100)
     expect(result.current.stats.totalAnomalies).toBe(1)
+    advance(INTERVAL + 2000) // the interval elapses; the attempt fails (camera 1 busy)
+    expect(result.current.stats.totalAnomalies).toBe(1)
+    act(() => result.current.reportAnomaly('Object')) // frees camera 1
+    // Retries on a ~1 s cadence, so 'b' comes right away instead of one more 30 s interval later.
+    advance(1500)
+    expect(result.current.stats.totalAnomalies).toBe(2)
+  })
+
+  it('does not retry every frame while no camera is free', () => {
+    ledger.push(entry('a', 1), entry('b', 1))
+    const { result } = start()
+    advance(FIRST + 100)
+    const some = vi.spyOn(ledger, 'some')
+    advance(INTERVAL + 10_000) // first attempt ~30 s after the spawn, then once a second
+    expect(result.current.stats.totalAnomalies).toBe(1)
+    expect(some.mock.calls.length).toBeGreaterThanOrEqual(5)
+    expect(some.mock.calls.length).toBeLessThanOrEqual(15) // a frame loop would be ~600
+  })
+
+  it('skips an entry whose overlay cannot be resolved and spawns another, without stopping the loop', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    ledger.push(entry('broken1', 1), entry('ok', 1))
+    const { result } = start()
+    advance(FIRST + 100)
+    expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['ok'])
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('broken1'),
+      expect.anything()
+    )
+    // the loop keeps running: time still advances
+    advance(1000)
+    expect(result.current.stats.currentTime).toBeGreaterThan(FIRST)
+  })
+
+  it('stops spawning when only unresolvable entries are left', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    ledger.push(entry('broken1', 1), entry('broken2', 2))
+    const { result } = start()
+    advance(FIRST + INTERVAL * 2)
+    expect(result.current.stats.totalAnomalies).toBe(0)
+    expect(result.current.gameState).toBe('playing')
+  })
+
+  it('starts the overlay preload when play begins (and not before)', () => {
+    preload.mockClear()
+    const hook = renderHook(() => useGameState())
+    expect(preload).not.toHaveBeenCalled()
+    act(() => hook.result.current.startGame())
+    expect(preload).toHaveBeenCalled()
   })
 
   it('after a successful first spawn the longer interval applies', () => {

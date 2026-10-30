@@ -125,6 +125,12 @@ describe('anomaly-ledger vite plugin', () => {
     ).rejects.toThrow(/entry "a1".*category/)
   })
 
+  it('fails the build on an overlay path of the wrong shape, naming the entry', async () => {
+    await expect(
+      run(`anomalies:\n${entryYaml({ overlay: 'assets/other/a1.webp' })}\n`)
+    ).rejects.toThrow(/entry "a1".*overlay/)
+  })
+
   it('fails the build on duplicate ids', async () => {
     await expect(
       run(`anomalies:\n${entryYaml()}\n${entryYaml()}\n`)
