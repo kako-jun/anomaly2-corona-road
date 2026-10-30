@@ -2,23 +2,33 @@
 
 GPT Image 2 で「元の監視カメラ写真の同一性を保ったまま異変だけ追加する」ためのプロンプト管理。
 
-## ファイル構成
+## ファイル構成（このREADMEが根）
 
-- `anomalies.yaml` — 異変データ正本（1異変=1エントリ）
-- `candidate-pool.md` — 未採用の発想候補。選ぶ時は該当案をここから削除して `anomalies.yaml` へ一度だけ登録する
-- `base-template.md` — 共通プロンプト（背景保持の定型文）
-- `photos/` — 旧試作のSVG仮ベース。加工済みカメラ写真の正本ではない
-- `camera-element-inventory.md` — 写真8枚を上から下/左から右へ走査した唯一の写り込み/座標台帳。各要素に固定IDを持つ
-- `atlas/cam01.svg`〜`atlas/cam08.svg` — 上の台帳から生成する白地モノクロの視覚ガイド。番号付き輪郭と凡例は座標/説明の正本ではなく、いつでも再生成できる派生物
-- `.agents/skills/corona-road-anomaly/SKILL.md` — 候補選定から差分合成・レビュー・登録までの反復手順
-- `queue/index.html` — 生成済みプロンプトのコピペUI（ブラウザで開く）
+`prompts/` 配下の全ファイルはここから辿れる。台帳は多重管理しない。1つの事実の正本は1か所だけで、他は参照する。
+
+```
+prompts/
+├── README.md                    根。全体の地図・enum・ワークフロー
+├── camera-element-inventory.md  [正本] 写真8枚の写り込み要素・固定ID・座標
+│   └── atlas/cam01〜08.svg      [派生物] 上の台帳から `npm run build:camera-atlas` で生成する視覚ガイド
+├── candidate-pool.md            [正本] 未採用の異変案（写真固有・昭和テーマ・runtime/音/UI/ルール在庫・配分目安）
+├── anomalies.yaml               [正本] 制作済み/試作した画像異変の台帳（制作状態・配置・差分画像のパス）
+│   └── queue/index.html         [派生物] 上の台帳（のみ）から `npm run build:prompts` で生成するコピペUI
+├── base-template.md             [正本] 共通プロンプト（背景保持の定型文）
+└── photos/cam01〜04_baseline.svg  旧試作のSVG仮ベース。加工済みカメラ写真の正本ではない
+```
+
+- `.agents/skills/corona-road-anomaly/SKILL.md` — 候補選定から差分合成・レビュー・登録までの反復手順（prompts/ の外にある制作スキル）。
+- 候補は `candidate-pool.md`、制作に進んだ案は `anomalies.yaml`。選ぶ時は該当案を候補から削除して台帳へ一度だけ登録する。
+- `queue/index.html` と `atlas/*.svg` は**生成物**。手で編集せず、元の正本を直して再生成する。
+- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、未制作の昭和案は `candidate-pool.md` の「昭和テーマ候補」にある。
 
 ## ワークフロー
 
 1. `camera-element-inventory.md` から対象要素の固定ID・説明・座標を選ぶ
 2. 加工済みの `public/images/cam*.webp` を基準画像として使う
 3. `candidate-pool.md` から案を選ぶ。選んだ案は候補一覧から削除し、`anomalies.yaml` に生成待ちとして一度だけ登録する。カメラIDと要素IDを記録し、物体説明/座標はインベントリを参照する
-4. `npm run build:prompts` で `queue/index.html` を再生成する
+4. `npm run build:prompts`（`node scripts/build-prompt-queue.mjs`）で `queue/index.html` を再生成する。元は `anomalies.yaml` のみ（`base-template.md` は読まない）
 5. ブラウザでキューを開き、元画像とプロンプトをChatGPTに渡す
 6. 生成出力を全面採用せず、元画像をベースに指定領域のみをマスク合成する。境界は半透明のぼかし/グラデーションでなじませる
 7. 差分画像で変更が指定マスクの外に漏れていないことを確認する。レビュー済みの variant とマスクを登録する
@@ -79,7 +89,7 @@ GPT Image 2 で「元の監視カメラ写真の同一性を保ったまま異�
 
 ```
 prompts/anomalies.yaml に以下の異変を5件追加してください:
-- base_photo: photos/cam01_baseline.jpg
+- base_photo: photos/cam01_baseline.svg
 - カテゴリ: surreal、フェーズ: late
 - 内容は宇宙人系で、自由に
 ```
