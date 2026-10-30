@@ -355,7 +355,6 @@
 | CR-08-30 | CAM08-E03 | 丸型換気口の中心だけ白い紙で塞がれる。             | object / mid / medium        |
 | CR-08-31 | CAM08-E04 | 丸灯の下に小さな水滴が一つ吊り下がる。             | environment / mid / medium   |
 | CR-08-32 | CAM08-E05 | 奥の短い天井器具の一つだけ暗い赤色になる。         | environment / early / subtle |
-| CR-08-33 | CAM08-E06 | 左のガラスに存在しない手提げ鞄が映る。             | surreal / mid / medium       |
 | CR-08-35 | CAM08-E08 | 明るい通路の壁に小さな紙風船が一つ置かれる。       | object / mid / medium        |
 | CR-08-36 | CAM08-E09 | 奥の緑表示の下に同じ形の小さな表示が増える。       | object / mid / medium        |
 | CR-08-37 | CAM08-E10 | 丸看板の白い面に小さな青い点が一つ現れる。         | object / early / subtle      |

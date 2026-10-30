@@ -1562,219 +1562,219 @@ anomalies:
     dimensions: "25x38"
     review_status: "composited"
     note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
-  - id: "AR-01-noren"
-    candidate_id: "CR-SH-04"
-    camera_id: "CAM01"
-    element_id: "CAM01-E12"
-    base_photo: "public/images/cam1.webp"
-    category: "object"
-    anomaly_type: "add_object"
-    phase: "mid"
-    subtlety: "medium"
-    mask_box_1000: "(852,333)\u2013(1000,478)"
-    location: "CAM01-E12\u3001\u5dee\u5206\u5de6\u4e0a (565,302) px"
-    detail: "\u9589\u5e97\u3057\u305f\u5e97\u306e\u683c\u5b50\u6238\u306e\u4e0a\u90e8\u306b\u3001\u8272\u892a\u305b\u305f\u85cd\u8272\u306e\u7121\u5730\u306e\u6696\u7c3e\u304c\u4e0b\u304c\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: hang a short plain faded indigo noren (split shop curtain, no writing, no emblem) from the top rail of the large wooden lattice sliding door on the right (approx x=575-675, y=310-420 of 675x900), covering the upper third of the lattice, with two slits. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam01/noren.webp"
-    overlay_origin: "(565,302)"
-    dimensions: "110x138"
-    review_status: "composited"
-    note: "\u662d\u548c\u306e\u7269(\u8001\u4eba\u305f\u3061\u306e\u8a18\u61b6\u306e\u50cf)\u3002\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-01-door-ajar"
-    candidate_id: "CR-SH-05"
-    camera_id: "CAM01"
-    element_id: "CAM01-E12"
-    base_photo: "public/images/cam1.webp"
-    category: "environment"
-    anomaly_type: "state_change"
-    phase: "mid"
-    subtlety: "medium"
-    mask_box_1000: "(852,344)\u2013(1000,611)"
-    location: "CAM01-E12\u3001\u5dee\u5206\u5de6\u4e0a (566,300) px"
-    detail: "\u9589\u5e97\u3057\u305f\u5e97\u306e\u683c\u5b50\u6238\u304c\u5c11\u3057\u3060\u3051\u958b\u304d\u3001\u5965\u306e\u6697\u3044\u5e97\u5185\u304c\u8997\u304f\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: slide the large wooden lattice sliding door on the right open a little, leaving a narrow dark vertical gap (approx x=575-675, y=310-550 of 675x900). Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam01/door-ajar.webp"
-    overlay_origin: "(566,300)"
-    dimensions: "109x260"
-    review_status: "composited"
-    note: "\u662d\u548c\u306e\u7269(\u8001\u4eba\u305f\u3061\u306e\u8a18\u61b6\u306e\u50cf)\u3002\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-01-tube-end"
-    candidate_id: "CR-01-04"
-    camera_id: "CAM01"
-    element_id: "CAM01-E07"
-    base_photo: "public/images/cam1.webp"
-    category: "environment"
-    anomaly_type: "state_change"
-    phase: "early"
-    subtlety: "subtle"
-    mask_box_1000: "(615,322)\u2013(711,383)"
-    location: "CAM01-E07\u3001\u5dee\u5206\u5de6\u4e0a (405,280) px"
-    detail: "\u9577\u3044\u86cd\u5149\u706f\u306e\u7247\u7aef\u304c\u5207\u308c\u3066\u6697\u304f\u306a\u308b\u3002\u5e8a\u306e\u53cd\u5c04\u306f\u5143\u306e\u307e\u307e\u6b8b\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: burn out the lower-left third of the long diagonal ceiling fluorescent light (approx x=415-480, y=290-345): that end becomes unlit grey, the rest stays bright. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam01/tube-end.webp"
-    overlay_origin: "(405,280)"
-    dimensions: "84x75"
-    review_status: "composited"
-    note: "\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-04-newspaper"
-    candidate_id: "CR-SH-08"
-    camera_id: "CAM04"
-    element_id: "CAM04-E16"
-    base_photo: "public/images/cam4.webp"
-    category: "object"
-    anomaly_type: "add_object"
-    phase: "early"
-    subtlety: "subtle"
-    mask_box_1000: "(570,767)\u2013(658,833)"
-    location: "CAM04-E16\u3001\u5dee\u5206\u5de6\u4e0a (394,713) px"
-    detail: "\u5e8a\u306e\u70b9\u691c\u53e3\u306e\u84cb\u306e\u9699\u9593\u306b\u3001\u53e4\u3044\u65b0\u805e\u306e\u7aef\u304c\u631f\u307e\u3063\u3066\u3044\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: an old yellowed newspaper corner sticks out of the gap at the right edge of the metal floor inspection hatch (approx x=385-445, y=690-750 of 676x900), no readable headline. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam04/newspaper.webp"
-    overlay_origin: "(394,713)"
-    dimensions: "53x47"
-    review_status: "composited"
-    note: "\u662d\u548c\u306e\u7269\u3002\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-04-basket"
-    candidate_id: "CR-04-33"
-    camera_id: "CAM04"
-    element_id: "CAM04-E07"
-    base_photo: "public/images/cam4.webp"
-    category: "surreal"
-    anomaly_type: "reflection"
-    phase: "mid"
-    subtlety: "medium"
-    mask_box_1000: "(22,333)\u2013(155,578)"
-    location: "CAM04-E07\u3001\u5dee\u5206\u5de6\u4e0a (22,381) px"
-    detail: "\u5de6\u306e\u30ac\u30e9\u30b9\u5e97\u5148\u306b\u3060\u3051\u3001\u901a\u8def\u306b\u306f\u306a\u3044\u53e4\u3044\u8d64\u3044\u8cb7\u3044\u7269\u304b\u3054\u304c\u6de1\u304f\u6620\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: a faint reflection of an old red plastic shopping basket appears only in the left glass storefront (approx x=15-105, y=300-520); no basket in the corridor. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam04/basket.webp"
-    overlay_origin: "(22,381)"
-    dimensions: "92x96"
-    review_status: "composited"
-    note: "\u662d\u548c\u306e\u7269\u3002\u6de1\u3044\u6620\u308a\u8fbc\u307f\u3067\u8981\u3064\u307e\u307f\u8abf\u6574\u3002\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-04-poster"
-    candidate_id: "CR-04-18"
-    camera_id: "CAM04"
-    element_id: "CAM04-E09"
-    base_photo: "public/images/cam4.webp"
-    category: "object"
-    anomaly_type: "duplicate"
-    phase: "mid"
-    subtlety: "medium"
-    mask_box_1000: "(141,222)\u2013(222,289)"
-    location: "CAM04-E09\u3001\u5dee\u5206\u5de6\u4e0a (101,205) px"
-    detail: "\u5de6\u306e\u30ac\u30e9\u30b9\u5185\u306e\u5c0f\u3055\u306a\u30dd\u30b9\u30bf\u30fc\u306e\u96a3\u306b\u3001\u540c\u3058\u30dd\u30b9\u30bf\u30fc\u304c\u3082\u3046\u4e00\u679a\u73fe\u308c\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: an identical copy of the small orange poster (approx x=63-90, y=205-250) appears in the neighbouring glass pane (approx x=95-150, y=200-260), illegible. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam04/poster.webp"
-    overlay_origin: "(101,205)"
-    dimensions: "49x65"
-    review_status: "composited"
-    note: "\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-08-bag"
-    candidate_id: "CR-08-24"
-    camera_id: "CAM08"
-    element_id: "CAM08-E06"
-    base_photo: "public/images/cam8.webp"
-    category: "surreal"
-    anomaly_type: "reflection"
-    phase: "mid"
-    subtlety: "medium"
-    mask_box_1000: "(7,189)\u2013(185,356)"
-    location: "CAM08-E06\u3001\u5dee\u5206\u5de6\u4e0a (0,179) px"
-    detail: "\u5de6\u306e\u6697\u3044\u30ac\u30e9\u30b9\u6238\u306b\u3060\u3051\u3001\u901a\u8def\u306b\u306f\u306a\u3044\u53e4\u3044\u7d19\u888b\u304c\u6de1\u304f\u6620\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: a faint reflection of a vintage paper shopping bag with rope handles appears only in the dark glass door of the left storefront (approx x=5-125, y=170-320); no bag in the corridor. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam08/bag.webp"
-    overlay_origin: "(0,179)"
-    dimensions: "94x133"
-    review_status: "composited"
-    note: "\u662d\u548c\u306e\u7269\u3002\u6de1\u3044\u6620\u308a\u8fbc\u307f\u3067\u8981\u3064\u307e\u307f\u8abf\u6574\u3002\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-08-sign"
-    candidate_id: "CR-08-03"
-    camera_id: "CAM08"
-    element_id: "CAM08-E10"
-    base_photo: "public/images/cam8.webp"
-    category: "object"
-    anomaly_type: "color_shift"
-    phase: "early"
-    subtlety: "subtle"
-    mask_box_1000: "(570,156)\u2013(652,217)"
-    location: "CAM08-E10\u3001\u5dee\u5206\u5de6\u4e0a (383,141) px"
-    detail: "\u5965\u306e\u4e38\u3044\u540a\u308a\u770b\u677f\u306e\u767d\u3044\u5186\u9762\u3060\u3051\u304c\u3001\u5149\u3092\u8fd4\u3055\u306a\u3044\u9ed2\u306b\u306a\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: turn the white disc of the small round hanging sign in the far corridor (approx x=385-440, y=140-195) matte black; rim and bracket unchanged. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam08/sign.webp"
-    overlay_origin: "(383,141)"
-    dimensions: "57x56"
-    review_status: "composited"
-    note: "\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-08-suit"
-    candidate_id: "CR-SH-12"
-    camera_id: "CAM08"
-    element_id: "CAM08-E14"
-    base_photo: "public/images/cam8.webp"
-    category: "person"
-    anomaly_type: "reflection"
-    phase: "late"
-    subtlety: "obvious"
-    mask_box_1000: "(696,189)\u2013(793,444)"
-    location: "CAM08-E14\u3001\u5dee\u5206\u5de6\u4e0a (469,211) px"
-    detail: "\u53f3\u306e\u8276\u306e\u3042\u308b\u58c1\u9762\u306b\u3001\u901a\u8def\u306b\u306f\u3044\u306a\u3044\u80cc\u5e83\u59ff\u306e\u5f8c\u308d\u59ff\u304c\u6de1\u304f\u6620\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: a faint reflection of a man in a dark Showa-era business suit seen from behind, small, no face, appears only on the glossy dark right wall panels (approx x=470-535, y=170-400). Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam08/suit.webp"
-    overlay_origin: "(469,211)"
-    dimensions: "76x199"
-    review_status: "composited"
-    note: "\u662d\u548c\u306e\u50cf(\u8001\u4eba\u305f\u3061\u306e\u8a18\u61b6)\u3002\u9759\u6b62\u306e\u8a66\u6848\u3001\u53bb\u3063\u3066\u3044\u304f\u52d5\u304d\u306f\u672a\u5b9f\u88c5\u3002\u6de1\u3044\u6620\u308a\u8fbc\u307f\u3067\u8981\u3064\u307e\u307f\u8abf\u6574\u3002\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-01-sign-rim"
-    candidate_id: "CR-01-39"
-    camera_id: "CAM01"
-    element_id: "CAM01-E16"
-    base_photo: "public/images/cam1.webp"
-    category: "object"
-    anomaly_type: "color_shift"
-    phase: "mid"
-    subtlety: "medium"
-    mask_box_1000: "(637,367)\u2013(704,439)"
-    location: "CAM01-E16\u3001\u5dee\u5206\u5de6\u4e0a (429,325) px"
-    detail: "\u540a\u308a\u770b\u677f\u306e\u7e01\u3060\u3051\u8d64\u8336\u8272\u304b\u3089\u6fc3\u3044\u9752\u306b\u5909\u308f\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: change only the thin reddish-brown rim of the larger hanging round sign (approx x=435-470, y=335-390) to deep navy blue; disc and symbol unchanged. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam01/sign-rim.webp"
-    overlay_origin: "(429,325)"
-    dimensions: "56x69"
-    review_status: "composited"
-    note: "\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-04-handle"
-    candidate_id: "CR-04-36"
-    camera_id: "CAM04"
-    element_id: "CAM04-E10"
-    base_photo: "public/images/cam4.webp"
-    category: "object"
-    anomaly_type: "duplicate"
-    phase: "mid"
-    subtlety: "medium"
-    mask_box_1000: "(488,333)\u2013(547,383)"
-    location: "CAM04-E10\u3001\u5dee\u5206\u5de6\u4e0a (345,297) px"
-    detail: "\u5965\u306e\u30ac\u30e9\u30b9\u6249\u306e\u7e26\u9577\u53d6\u624b\u304c\u4e8c\u3064\u306b\u5897\u3048\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: a second identical vertical handle appears beside the vertical handle on the far glass double door (approx x=330-370, y=300-345 of 676x900). Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam04/handle.webp"
-    overlay_origin: "(345,297)"
-    dimensions: "27x49"
-    review_status: "composited"
-    note: "\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
-  - id: "AR-08-pillar-notice"
-    candidate_id: "CR-08-17"
-    camera_id: "CAM08"
-    element_id: "CAM08-E11"
-    base_photo: "public/images/cam8.webp"
-    category: "object"
-    anomaly_type: "add_object"
-    phase: "early"
-    subtlety: "medium"
-    mask_box_1000: "(433,296)\u2013(492,351)"
-    location: "CAM08-E11\u3001\u5dee\u5206\u5de6\u4e0a (291,266) px"
-    detail: "\u4e2d\u592e\u306e\u67f1\u306e\u6b63\u9762\u306b\u3001\u7121\u5730\u306b\u8fd1\u3044\u767d\u3044\u7d19\u306e\u6848\u5185\u304c\u4e00\u679a\u8cbc\u3089\u308c\u308b\u3002"
-    generation_prompt: "Edit the attached surveillance camera photo. Make ONLY this single change: tape one small plain white paper notice with no readable writing on the front face of the central pillar (approx x=300-320, y=277-307). Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text."
-    overlay: "assets/anomaly-overlays/cam08/pillar-notice.webp"
-    overlay_origin: "(291,266)"
-    dimensions: "40x51"
-    review_status: "composited"
-    note: "\u518d\u69cb\u6210\u4e00\u81f4\u3001\u30de\u30b9\u30af\u5916\u5dee\u5206\u30bc\u30ed\u3002\u30b2\u30fc\u30e0\u672a\u78ba\u8a8d\u3002"
+  - id: 'AR-01-noren'
+    candidate_id: 'CR-SH-04'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E12'
+    base_photo: 'public/images/cam1.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(852,333)–(1000,478)'
+    location: 'CAM01-E12、差分左上 (565,302) px'
+    detail: '閉店した店の格子戸の上部に、色褪せた藍色の無地の暖簾が下がる。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: hang a short plain faded indigo noren (split shop curtain, no writing, no emblem) from the top rail of the large wooden lattice sliding door on the right (approx x=575-675, y=310-420 of 675x900), covering the upper third of the lattice, with two slits. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam01/noren.webp'
+    overlay_origin: '(565,302)'
+    dimensions: '110x138'
+    review_status: 'composited'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-01-door-ajar'
+    candidate_id: 'CR-SH-05'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E12'
+    base_photo: 'public/images/cam1.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(852,344)–(1000,611)'
+    location: 'CAM01-E12、差分左上 (566,300) px'
+    detail: '閉店した店の格子戸が少しだけ開き、奥の暗い店内が覗く。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: slide the large wooden lattice sliding door on the right open a little, leaving a narrow dark vertical gap (approx x=575-675, y=310-550 of 675x900). Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam01/door-ajar.webp'
+    overlay_origin: '(566,300)'
+    dimensions: '109x260'
+    review_status: 'composited'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-01-tube-end'
+    candidate_id: 'CR-01-04'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E07'
+    base_photo: 'public/images/cam1.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(615,322)–(711,383)'
+    location: 'CAM01-E07、差分左上 (405,280) px'
+    detail: '長い蛍光灯の片端が切れて暗くなる。床の反射は元のまま残る。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: burn out the lower-left third of the long diagonal ceiling fluorescent light (approx x=415-480, y=290-345): that end becomes unlit grey, the rest stays bright. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam01/tube-end.webp'
+    overlay_origin: '(405,280)'
+    dimensions: '84x75'
+    review_status: 'composited'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-04-newspaper'
+    candidate_id: 'CR-SH-08'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E16'
+    base_photo: 'public/images/cam4.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(570,767)–(658,833)'
+    location: 'CAM04-E16、差分左上 (394,713) px'
+    detail: '床の点検口の蓋の隙間に、古い新聞の端が挟まっている。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: an old yellowed newspaper corner sticks out of the gap at the right edge of the metal floor inspection hatch (approx x=385-445, y=690-750 of 676x900), no readable headline. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam04/newspaper.webp'
+    overlay_origin: '(394,713)'
+    dimensions: '53x47'
+    review_status: 'composited'
+    note: '昭和の物。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-04-basket'
+    candidate_id: 'CR-04-33'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E07'
+    base_photo: 'public/images/cam4.webp'
+    category: 'surreal'
+    anomaly_type: 'reflection'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(22,333)–(155,578)'
+    location: 'CAM04-E07、差分左上 (22,381) px'
+    detail: '左のガラス店先にだけ、通路にはない古い赤い買い物かごが淡く映る。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: a faint reflection of an old red plastic shopping basket appears only in the left glass storefront (approx x=15-105, y=300-520); no basket in the corridor. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam04/basket.webp'
+    overlay_origin: '(22,381)'
+    dimensions: '92x96'
+    review_status: 'composited'
+    note: '昭和の物。淡い映り込みで要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-04-poster'
+    candidate_id: 'CR-04-18'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E09'
+    base_photo: 'public/images/cam4.webp'
+    category: 'object'
+    anomaly_type: 'duplicate'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(141,222)–(222,289)'
+    location: 'CAM04-E09、差分左上 (101,205) px'
+    detail: '左のガラス内の小さなポスターの隣に、同じポスターがもう一枚現れる。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: an identical copy of the small orange poster (approx x=63-90, y=205-250) appears in the neighbouring glass pane (approx x=95-150, y=200-260), illegible. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam04/poster.webp'
+    overlay_origin: '(101,205)'
+    dimensions: '49x65'
+    review_status: 'composited'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-08-bag'
+    candidate_id: 'CR-08-24'
+    camera_id: 'CAM08'
+    element_id: 'CAM08-E06'
+    base_photo: 'public/images/cam8.webp'
+    category: 'surreal'
+    anomaly_type: 'reflection'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(7,189)–(185,356)'
+    location: 'CAM08-E06、差分左上 (0,179) px'
+    detail: '左の暗いガラス戸にだけ、通路にはない古い紙袋が淡く映る。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: a faint reflection of a vintage paper shopping bag with rope handles appears only in the dark glass door of the left storefront (approx x=5-125, y=170-320); no bag in the corridor. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam08/bag.webp'
+    overlay_origin: '(0,179)'
+    dimensions: '94x133'
+    review_status: 'composited'
+    note: '昭和の物。淡い映り込みで要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-08-sign'
+    candidate_id: 'CR-08-03'
+    camera_id: 'CAM08'
+    element_id: 'CAM08-E10'
+    base_photo: 'public/images/cam8.webp'
+    category: 'object'
+    anomaly_type: 'color_shift'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(570,156)–(652,217)'
+    location: 'CAM08-E10、差分左上 (383,141) px'
+    detail: '奥の丸い吊り看板の白い円面だけが、光を返さない黒になる。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: turn the white disc of the small round hanging sign in the far corridor (approx x=385-440, y=140-195) matte black; rim and bracket unchanged. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam08/sign.webp'
+    overlay_origin: '(383,141)'
+    dimensions: '57x56'
+    review_status: 'composited'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-08-suit'
+    candidate_id: 'CR-SH-12'
+    camera_id: 'CAM08'
+    element_id: 'CAM08-E14'
+    base_photo: 'public/images/cam8.webp'
+    category: 'person'
+    anomaly_type: 'reflection'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(696,189)–(793,444)'
+    location: 'CAM08-E14、差分左上 (469,211) px'
+    detail: '右の艶のある壁面に、通路にはいない背広姿の後ろ姿が淡く映る。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: a faint reflection of a man in a dark Showa-era business suit seen from behind, small, no face, appears only on the glossy dark right wall panels (approx x=470-535, y=170-400). Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam08/suit.webp'
+    overlay_origin: '(469,211)'
+    dimensions: '76x199'
+    review_status: 'composited'
+    note: '昭和の像(老人たちの記憶)。静止の試案、去っていく動きは未実装。淡い映り込みで要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-01-sign-rim'
+    candidate_id: 'CR-01-39'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E16'
+    base_photo: 'public/images/cam1.webp'
+    category: 'object'
+    anomaly_type: 'color_shift'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(637,367)–(704,439)'
+    location: 'CAM01-E16、差分左上 (429,325) px'
+    detail: '吊り看板の縁だけ赤茶色から濃い青に変わる。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: change only the thin reddish-brown rim of the larger hanging round sign (approx x=435-470, y=335-390) to deep navy blue; disc and symbol unchanged. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam01/sign-rim.webp'
+    overlay_origin: '(429,325)'
+    dimensions: '56x69'
+    review_status: 'composited'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-04-handle'
+    candidate_id: 'CR-04-36'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E10'
+    base_photo: 'public/images/cam4.webp'
+    category: 'object'
+    anomaly_type: 'duplicate'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(488,333)–(547,383)'
+    location: 'CAM04-E10、差分左上 (345,297) px'
+    detail: '奥のガラス扉の縦長取手が二つに増える。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: a second identical vertical handle appears beside the vertical handle on the far glass double door (approx x=330-370, y=300-345 of 676x900). Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam04/handle.webp'
+    overlay_origin: '(345,297)'
+    dimensions: '27x49'
+    review_status: 'composited'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+  - id: 'AR-08-pillar-notice'
+    candidate_id: 'CR-08-17'
+    camera_id: 'CAM08'
+    element_id: 'CAM08-E11'
+    base_photo: 'public/images/cam8.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(433,296)–(492,351)'
+    location: 'CAM08-E11、差分左上 (291,266) px'
+    detail: '中央の柱の正面に、無地に近い白い紙の案内が一枚貼られる。'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: tape one small plain white paper notice with no readable writing on the front face of the central pillar (approx x=300-320, y=277-307). Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
+    overlay: 'assets/anomaly-overlays/cam08/pillar-notice.webp'
+    overlay_origin: '(291,266)'
+    dimensions: '40x51'
+    review_status: 'composited'
+    note: '視認性が低い(alpha内の差分は最大26・平均9で他より弱い)。再生成は画像生成の利用上限で未実施。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
