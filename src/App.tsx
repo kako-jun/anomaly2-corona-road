@@ -1,10 +1,8 @@
 import './App.css'
+import './styles/retro.css'
 import { useGameState } from './hooks/useGameState'
 import { StartScreen } from './components/StartScreen'
-import { GameHUD } from './components/GameHUD'
-import { CameraView } from './components/CameraView'
-import { CameraStrip } from './components/CameraStrip'
-import { ReportPanel } from './components/ReportPanel'
+import { Cabinet } from './components/Cabinet'
 import { GameOverScreen } from './components/GameOverScreen'
 
 function App() {
@@ -20,7 +18,6 @@ function App() {
     switchCamera,
     reportAnomaly,
     gameTime,
-    progress,
   } = useGameState()
 
   if (gameState === 'idle') {
@@ -38,32 +35,17 @@ function App() {
   }
 
   return (
-    <div className="App">
-      {feedback && (
-        <div className={`flash flash--${feedback.kind}`} key={feedback.id} />
-      )}
-      {feedback && (
-        <div
-          className={`toast toast--${feedback.kind}`}
-          key={`t-${feedback.id}`}
-        >
-          {feedback.message}
-        </div>
-      )}
-      <GameHUD gameTime={gameTime} stats={stats} progress={progress} />
-      <CameraView
-        camera={currentCamera}
-        gameTime={gameTime}
-        anomalyHere={activeAnomalyHere}
-        onSwipe={switchCamera}
-      />
-      <CameraStrip
-        cameras={cameras}
-        currentIndex={currentCameraIndex}
-        onSelect={i => switchCamera(i)}
-      />
-      <ReportPanel onReport={reportAnomaly} />
-    </div>
+    <Cabinet
+      stats={stats}
+      cameras={cameras}
+      currentCameraIndex={currentCameraIndex}
+      currentCamera={currentCamera}
+      anomalyHere={activeAnomalyHere}
+      feedback={feedback}
+      gameTime={gameTime}
+      onSwitch={switchCamera}
+      onReport={reportAnomaly}
+    />
   )
 }
 

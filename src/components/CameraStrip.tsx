@@ -1,4 +1,5 @@
 import { Camera } from '../types/game'
+import { cx } from '../utils/cx'
 
 interface CameraStripProps {
   cameras: Camera[]
@@ -6,27 +7,37 @@ interface CameraStripProps {
   onSelect: (index: number) => void
 }
 
+/** Numbered push buttons. Green lamp = selected; small amber lamp = anomaly active on that camera. */
 export const CameraStrip = ({
   cameras,
   currentIndex,
   onSelect,
 }: CameraStripProps) => (
-  <div className="strip" role="tablist" aria-label="Camera selector">
-    {cameras.map((cam, i) => (
-      <button
-        key={cam.id}
-        type="button"
-        role="tab"
-        aria-selected={i === currentIndex}
-        className={`strip__tile ${i === currentIndex ? 'strip__tile--active' : ''}`}
-        onClick={() => onSelect(i)}
-        title={`${cam.name} — ${cam.location}`}
-      >
-        <span>{cam.id.toString().padStart(2, '0')}</span>
-        {cam.hasAnomaly && (
-          <span className="strip__tile-dot" aria-label="Anomaly active" />
-        )}
-      </button>
-    ))}
+  <div className="row cams">
+    <div className="label">CAMERA SELECT</div>
+    <div className="cam-grid" role="tablist" aria-label="Camera selector">
+      {cameras.map((cam, i) => {
+        const selected = i === currentIndex
+        return (
+          <div className="cam-cell" key={cam.id}>
+            <div className="cam-lamps">
+              <i className={cx('lamp green', selected && 'on')} />
+              <i className={cx('lamp alert', cam.hasAnomaly && 'on')} />
+            </div>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              aria-label={`Camera ${cam.id}${cam.hasAnomaly ? ', anomaly active' : ''}`}
+              className={cx('key', selected && 'pressed')}
+              onClick={() => onSelect(i)}
+              title={`${cam.name} — ${cam.location}`}
+            >
+              {cam.id}
+            </button>
+          </div>
+        )
+      })}
+    </div>
   </div>
 )

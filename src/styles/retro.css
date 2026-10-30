@@ -1,0 +1,1317 @@
+/* Retro cabinet UI (CRT monitor + control panel). See DESIGN.md section 11.
+   All tokens are scoped to .retro so the start / result screens keep the global tokens from index.css.
+   The report dialog is mounted only while open, so no [hidden] attribute is used. */
+
+.retro * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Tube */
+
+.pic {
+  position: absolute;
+  inset: 0;
+  animation: flick 5.3s ease-in-out infinite;
+}
+
+.pic img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(var(--bri, 1)) contrast(var(--con, 1)) saturate(0.9)
+    hue-rotate(var(--hue, 0deg));
+}
+
+.pic img.glow {
+  filter: brightness(var(--bri, 1)) contrast(var(--con, 1)) blur(7px)
+    saturate(1.3);
+  opacity: 0.35;
+  mix-blend-mode: screen;
+}
+
+@keyframes flick {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  23% {
+    opacity: 0.965;
+  }
+  41% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.975;
+  }
+  78% {
+    opacity: 0.99;
+  }
+}
+
+.fx {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* the canvas is .fx.noise */
+.noise {
+  opacity: 0.11;
+  mix-blend-mode: overlay;
+  image-rendering: pixelated;
+}
+
+.scan {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.28) 0,
+    rgba(0, 0, 0, 0.28) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+}
+
+.vignette {
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 45%,
+      rgba(0, 0, 0, 0.55) 100%
+    ),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.07), transparent 30%);
+}
+
+.osd {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: #e9efe6;
+  text-shadow:
+    0 0 6px #9fc,
+    0 0 2px #fff8;
+  z-index: 3;
+}
+
+.osd-cam {
+  left: 14px;
+  bottom: 14px;
+  font-size: 1rem;
+}
+
+.osd-rec {
+  right: 14px;
+  top: 12px;
+  color: #ff8d84;
+  text-shadow: 0 0 6px #f44;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff3b30;
+  box-shadow: 0 0 6px #f33;
+  animation: blink 1.6s steps(2) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.15;
+  }
+}
+
+.maker {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 6px 2px;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.maker .model {
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+/* Panel */
+
+.label {
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+  color: var(--ink);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.row {
+  position: relative;
+}
+
+.vfd {
+  background: #06100c;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  letter-spacing: 0.06em;
+  color: #79ffd0;
+  text-shadow:
+    0 0 8px #2fe3a8,
+    0 0 2px #cfffee;
+  box-shadow:
+    inset 0 2px 5px #000,
+    0 1px 0 #fff8;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.vfd .dim {
+  opacity: 0.45;
+  font-size: 0.95rem;
+}
+
+.lamps {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 6px;
+  background: #14110c;
+  border-radius: 8px;
+  box-shadow:
+    inset 0 2px 5px #000,
+    0 1px 0 #fff8;
+  justify-content: center;
+}
+
+.lamp {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--lamp-off);
+  box-shadow:
+    inset 0 1px 3px #000,
+    0 1px 0 #fff3;
+  display: inline-block;
+  transition: 0.15s;
+}
+
+.lamp.on.amber {
+  background: var(--amber);
+  box-shadow:
+    0 0 10px 2px #ffa21f99,
+    inset 0 0 3px #fff9;
+}
+
+.lamp.on.green {
+  background: var(--green);
+  box-shadow:
+    0 0 8px 2px #3f9a,
+    inset 0 0 3px #fff9;
+}
+
+/* Movie-style subtitles over the picture (above scan/noise/dirt layers) */
+
+.movie-sub {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 14%;
+  z-index: 6;
+  text-align: center;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.8;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000,
+    0 0 4px #000,
+    0 2px 6px #000;
+}
+
+.movie-sub.show {
+  opacity: 1;
+}
+
+.movie-sub div {
+  margin: 0 auto;
+  width: fit-content;
+  max-width: 100%;
+}
+
+/* Knobs */
+
+.knob::after {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  border: 1px solid #0002;
+  background: repeating-conic-gradient(#0000 0 6deg, #0001 6deg 8deg);
+}
+
+.knob:active {
+  cursor: grabbing;
+}
+
+.knob .mark {
+  position: absolute;
+  left: 50%;
+  top: 5px;
+  width: 4px;
+  height: 22px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: #2a1c10;
+  z-index: 2;
+  box-shadow: 0 1px 0 #fff6;
+}
+
+/* Keys */
+
+.key:active,
+.key.pressed {
+  transform: translateY(4px);
+  box-shadow:
+    0 0 0 var(--cream-dk),
+    0 1px 2px #0006,
+    inset 0 3px 5px #0004;
+}
+
+.key:focus-visible {
+  outline: 3px solid #2a6cd8;
+  outline-offset: 3px;
+}
+
+.cam-cell .lamp {
+  width: 10px;
+  height: 10px;
+}
+
+.report-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 100%;
+}
+
+.lamp-big {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #5a2a24;
+  box-shadow: inset 0 1px 3px #000;
+  flex: none;
+  transition: 0.15s;
+}
+
+.lamp-big.lit {
+  background: #ff4a3d;
+  box-shadow:
+    0 0 12px 3px #ff3a2d99,
+    inset 0 0 3px #fff9;
+}
+
+.cat-grid .key {
+  min-height: 48px;
+  font-size: 0.82rem;
+}
+
+.cat-grid .key.cancel {
+  background: linear-gradient(180deg, #cfc7b3, #b5ab93 55%, #968c75);
+}
+
+/* Desktop: same parts, landscape arrangement */
+
+@media (min-width: 900px) {
+  .cabinet {
+    max-width: 1080px;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 22px;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .tube {
+    align-self: center;
+    flex: 0 0 auto;
+    width: min(60vh * 0.9, 560px);
+    width: calc((100vh - 120px) * 0.75 + 56px);
+    max-width: 600px;
+    min-width: 420px;
+  }
+  .panel {
+    margin: 0;
+    flex: 1;
+    justify-content: space-between;
+    padding: 18px;
+  }
+  .cabinet {
+    align-self: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pic,
+  .rec-dot {
+    animation: none;
+  }
+}
+
+/* ===== Wear / grime (static, CSS+SVG only, fixed seeds, no animation) =====
+   Strength: --wear 0..1 on .retro. A/B via URL: ?wear=0 (clean), ?wear=1 (standard, default), values in between ok.
+   Overlays are pseudo-elements with pointer-events:none; the CRT picture effects are untouched. */
+
+.cabinet > *,
+.tube > *,
+.panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cabinet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--wear);
+  background: /* drips */
+    linear-gradient(180deg, rgba(95, 65, 25, 0.34), rgba(95, 65, 25, 0)) 18% 0 /
+      3px 90px no-repeat,
+    linear-gradient(180deg, rgba(95, 65, 25, 0.28), rgba(95, 65, 25, 0)) 71% 0 /
+      2px 140px no-repeat,
+    linear-gradient(180deg, rgba(80, 55, 20, 0.3), rgba(80, 55, 20, 0)) 93% 4% /
+      3px 70px no-repeat,
+    /* corner scuffs */
+      radial-gradient(circle at 0 0, rgba(70, 48, 22, 0.4), transparent 46px),
+    radial-gradient(circle at 100% 0, rgba(70, 48, 22, 0.32), transparent 40px),
+    radial-gradient(circle at 0 100%, rgba(70, 48, 22, 0.45), transparent 60px),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(70, 48, 22, 0.45),
+      transparent 60px
+    ),
+    /* big yellowed stains */
+      radial-gradient(
+        ellipse 45% 22% at 22% 38%,
+        rgba(150, 110, 40, 0.2),
+        transparent 70%
+      ),
+    radial-gradient(
+      ellipse 40% 30% at 82% 64%,
+      rgba(130, 90, 30, 0.22),
+      transparent 70%
+    ),
+    linear-gradient(180deg, transparent 55%, rgba(110, 75, 25, 0.22) 100%),
+    var(--mottle),
+    var(--grain);
+  box-shadow:
+    inset 0 0 22px 2px rgba(80, 55, 20, 0.45),
+    inset 0 -14px 20px -8px rgba(70, 45, 15, 0.4);
+}
+
+/* scratches (light + dark hairline pairs), different spots per surface */
+
+/* printed labels: patchy, partly faded (still legible) */
+
+.label,
+.drag-hint,
+.maker {
+  -webkit-mask-image: linear-gradient(
+    95deg,
+    rgba(0, 0, 0, calc(1 - 0.3 * var(--wear))) 0%,
+    #000 22%,
+    rgba(0, 0, 0, calc(1 - 0.4 * var(--wear))) 48%,
+    #000 70%,
+    rgba(0, 0, 0, calc(1 - 0.25 * var(--wear))) 100%
+  );
+  mask-image: linear-gradient(
+    95deg,
+    rgba(0, 0, 0, calc(1 - 0.3 * var(--wear))) 0%,
+    #000 22%,
+    rgba(0, 0, 0, calc(1 - 0.4 * var(--wear))) 48%,
+    #000 70%,
+    rgba(0, 0, 0, calc(1 - 0.25 * var(--wear))) 100%
+  );
+}
+
+/* keys: darkened rim, shiny worn centre, faded print */
+
+.cam-cell,
+.cat-grid {
+  /* dust packed around key bases */
+  --dust: rgba(60, 40, 18, 0.35);
+}
+
+.cam-cell .key {
+  width: 100%;
+  min-height: 48px;
+  font-size: 1.05rem;
+  box-shadow:
+    0 4px 0 var(--cream-dk),
+    0 6px 6px #0005,
+    inset 0 1px 1px #fffa,
+    0 0 0 2px rgba(60, 40, 18, calc(0.28 * var(--wear)));
+}
+
+.cam-cell .key:active,
+.cam-cell .key.pressed {
+  box-shadow:
+    0 0 0 var(--cream-dk),
+    0 1px 2px #0006,
+    inset 0 3px 5px #0004,
+    0 0 0 2px rgba(60, 40, 18, calc(0.28 * var(--wear)));
+}
+
+/* knobs: dirt ring around, scratches on the face */
+
+/* glass of the small display windows and the CRT: faint haze / fingerprints, text stays readable */
+
+.vfd::after,
+.lamps::after,
+.glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 5;
+  opacity: var(--wear);
+  background:
+    radial-gradient(
+      ellipse 30% 55% at 72% 55%,
+      rgba(255, 255, 255, 0.1),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 22% 40% at 28% 35%,
+      rgba(255, 255, 255, 0.07),
+      transparent 70%
+    ),
+    var(--grain);
+}
+
+.glass::after {
+  background:
+    radial-gradient(
+      ellipse 14% 10% at 68% 70%,
+      rgba(255, 255, 255, 0.06),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 20% 12% at 30% 28%,
+      rgba(255, 255, 255, 0.05),
+      transparent 75%
+    ),
+    radial-gradient(
+      circle at 82% 18%,
+      rgba(255, 255, 255, 0.05) 0 3px,
+      transparent 6px
+    ),
+    radial-gradient(
+      circle at 15% 80%,
+      rgba(255, 255, 255, 0.05) 0 2px,
+      transparent 5px
+    );
+}
+
+/* ===== Compact layout: single bezel, one integrated cabinet, minimal margins (overrides above) ===== */
+
+.retro {
+  width: 100%;
+  min-height: 100vh;
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    var(--desk) 0%,
+    var(--desk2) 80%
+  );
+  font-family: var(--font-label);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+.cabinet {
+  width: 100%;
+  max-width: 560px;
+  padding: 5px 4px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: linear-gradient(
+    180deg,
+    var(--cream-hi),
+    var(--cream) 12%,
+    var(--cream) 85%,
+    var(--cream-lo)
+  );
+  border-radius: 12px;
+  margin: 0 auto;
+  box-shadow:
+    0 20px 50px #000a,
+    inset 0 2px 2px #fff6,
+    inset 0 -3px 6px #0003;
+  position: relative;
+}
+
+@media (max-width: 440px) {
+  .cabinet {
+    max-width: none;
+    border-radius: 0;
+  }
+}
+
+/* the cream recess frame is gone: the black bezel starts directly on the cabinet face */
+
+.tube {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  position: relative;
+}
+
+.bezel {
+  background: var(--bezel);
+  border-radius: 24px;
+  padding: 7px 7px 20px;
+  box-shadow:
+    inset 0 0 0 2px #222,
+    inset 0 4px 12px #000,
+    0 0 0 2px rgba(60, 40, 18, 0.35),
+    0 3px 6px 1px rgba(40, 25, 10, 0.5),
+    0 -1px 0 1px #fff6;
+}
+
+.glass {
+  position: relative;
+  aspect-ratio: 3/4;
+  border-radius: 17px / 19px;
+  overflow: hidden;
+  background: #050505;
+  box-shadow:
+    inset 0 0 40px 8px #000c,
+    inset 0 0 8px 1px #000;
+  isolation: isolate;
+}
+
+/* maker/model print lives on the bezel's lower rim, not on its own row */
+
+/* panel is not a separate box any more */
+
+.panel {
+  margin-top: 10px;
+  padding: 2px 2px 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+}
+
+.status {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 6px;
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.vfd,
+.lamps {
+  position: relative;
+  min-height: 44px;
+}
+
+.knobs {
+  display: flex;
+  justify-content: space-around;
+  padding: 2px 0 0;
+}
+
+.cams {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cam-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px 8px;
+  padding: 2px 2px 3px;
+}
+
+.cam-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.report {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px 8px;
+  padding-bottom: 4px;
+}
+
+.speaker {
+  height: 14px;
+  border-radius: 8px;
+  opacity: 0.55;
+  background:
+    repeating-linear-gradient(90deg, #0000 0 6px, #0000 6px 8px),
+    radial-gradient(circle, #0006 1.4px, #0000 2px) 0 0/8px 8px;
+  box-shadow: inset 0 1px 3px #0003;
+}
+
+/* Desktop: fill the viewport, keep the 3:4 picture, scale the control panel up */
+
+@media (min-width: 900px) {
+  .cabinet {
+    max-width: none;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 8px;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 14px;
+    border-radius: 0;
+  }
+  .tube {
+    flex: none;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    height: calc(100vh - 16px);
+    display: flex;
+    align-self: flex-start;
+  }
+  .bezel {
+    height: 100%;
+    display: flex;
+  }
+  .glass {
+    height: 100%;
+    width: auto;
+    aspect-ratio: 3 / 4;
+  }
+  .panel {
+    flex: 1;
+    min-width: 0;
+    justify-content: space-between;
+    padding: 4px 6px;
+  }
+  .cat-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .panel {
+    /* zoom: used to enlarge the controls at desktop width; non-standard, can be replaced by transform later */
+    zoom: 1.3;
+  }
+}
+
+@media (min-width: 1400px) {
+  .panel {
+    zoom: 1.45;
+  }
+}
+
+@media (min-width: 900px) {
+  .movie-sub {
+    font-size: 1.45rem;
+  }
+}
+
+/* ===== Grunge pass: large soft stains / soot / drips / grease instead of fine grain or hairlines =====
+   No thresholded cell patterns: every SVG layer is low-frequency, gently ramped and blurred, so edges stay soft.
+   Static, fixed seeds. Strength is still --wear (?wear=0 turns it all off). */
+
+.retro {
+  --desk: #17140f;
+  --desk2: #0e0c09;
+  --cream: #d9ceb0;
+  --cream-hi: #ece3c9;
+  --cream-lo: #b3a785;
+  --cream-dk: #8f8466;
+  --ink: #3a2f22;
+  --ink-soft: #5b4d3a;
+  --bezel: #0b0b0a;
+  --red: #d3342a;
+  --green: #4fd36a;
+  --amber: #ffb23a;
+  --lamp-off: #4a4030;
+  --font-label: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
+  --font-mono:
+    ui-monospace, 'SFMono-Regular', 'DejaVu Sans Mono', Menlo, Consolas,
+    monospace;
+  --wear: 1;
+  --grain: linear-gradient(transparent, transparent);
+  --mottle: linear-gradient(transparent, transparent);
+  --stain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.007' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .30 0 0 0 0 .14 1.5 0 0 0 -.58'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  --soot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='460' height='460'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.011' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .13 0 0 0 0 .09 0 0 0 0 .05 1.7 0 0 0 -.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  --drip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='520'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.03 .003' numOctaves='2' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .19 0 0 0 0 .06 3.2 0 0 0 -1.55'/%3E%3CfeGaussianBlur stdDeviation='2 8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  --grease: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='260'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .03' numOctaves='2' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .21 0 0 0 0 .08 3 0 0 0 -1.4'/%3E%3CfeGaussianBlur stdDeviation='8 2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+}
+
+/* hand grease: soft dark halos round everything that gets touched */
+
+.cam-cell .key,
+.cat-grid .key {
+  outline-offset: 3px;
+  box-shadow:
+    0 4px 0 var(--cream-dk),
+    0 6px 6px #0005,
+    inset 0 1px 1px #fffa,
+    0 0 10px 3px rgba(50, 30, 10, calc(0.3 * var(--wear)));
+}
+
+.cam-cell .key:active,
+.cam-cell .key.pressed,
+.cat-grid .key:active,
+.cat-grid .key.pressed {
+  box-shadow:
+    0 0 0 var(--cream-dk),
+    0 1px 2px #0006,
+    inset 0 3px 5px #0004,
+    0 0 10px 3px rgba(50, 30, 10, calc(0.3 * var(--wear)));
+}
+
+.key-report:active,
+.key-report.pressed {
+  box-shadow:
+    0 0 0 #6a130d,
+    0 1px 2px #0006,
+    inset 0 3px 6px #0006,
+    0 0 12px 4px rgba(50, 30, 10, calc(0.3 * var(--wear)));
+}
+
+.knob:focus-visible {
+  box-shadow:
+    0 0 0 4px var(--cream-dk),
+    0 0 0 7px #2a6cd8,
+    0 5px 8px 3px #0006;
+}
+
+/* knob face: only a soft darkening toward the rim and a smudge, no line patterns */
+
+.knob::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--wear);
+  background:
+    radial-gradient(
+      ellipse 40% 28% at 35% 30%,
+      rgba(255, 255, 255, 0.22),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 45% 30% at 65% 72%,
+      rgba(70, 45, 15, 0.22),
+      transparent 75%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 60%,
+      rgba(60, 40, 18, 0.3) 100%
+    );
+}
+
+/* key faces: soft wear only */
+
+.key::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--wear);
+  background:
+    radial-gradient(
+      ellipse at 50% 38%,
+      rgba(255, 255, 255, 0.3),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 30% 26% at 70% 62%,
+      rgba(var(--blot), 0.28),
+      transparent 80%
+    );
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 25, 10, 0.4),
+    inset 0 -7px 9px -5px rgba(40, 25, 10, 0.45),
+    inset 0 0 8px 1px rgba(40, 25, 10, 0.25);
+}
+
+.cabinet::before {
+  background-image:
+    linear-gradient(
+      103deg,
+      transparent 44%,
+      rgba(255, 255, 255, 0.6) 47%,
+      rgba(50, 30, 10, 0.5) 53%,
+      transparent 56%
+    ),
+    linear-gradient(
+      80deg,
+      transparent 44%,
+      rgba(255, 255, 255, 0.5) 47%,
+      rgba(50, 30, 10, 0.45) 53%,
+      transparent 56%
+    ),
+    linear-gradient(
+      118deg,
+      transparent 44%,
+      rgba(255, 255, 255, 0.5) 47%,
+      rgba(50, 30, 10, 0.45) 53%,
+      transparent 56%
+    ),
+    var(--mottle), var(--grain);
+  background-size:
+    58px 12px,
+    40px 10px,
+    30px 14px,
+    420px 420px,
+    240px 240px;
+  background-position:
+    3% 1.2%,
+    96% 98%,
+    1% 70%,
+    0 0,
+    0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+  background: /* a few short, thick, straight scratches (light edge + dark edge) */
+    linear-gradient(
+        104deg,
+        transparent 38%,
+        rgba(255, 255, 255, 0.7) 42%,
+        rgba(60, 38, 14, 0.55) 52%,
+        transparent 58%
+      )
+      4% 1.6% / 34px 9px no-repeat,
+    linear-gradient(
+        78deg,
+        transparent 38%,
+        rgba(255, 255, 255, 0.65) 42%,
+        rgba(60, 38, 14, 0.5) 52%,
+        transparent 58%
+      )
+      95% 97% / 30px 9px no-repeat,
+    linear-gradient(
+        112deg,
+        transparent 38%,
+        rgba(255, 255, 255, 0.6) 42%,
+        rgba(60, 38, 14, 0.5) 52%,
+        transparent 58%
+      )
+      1.5% 62% / 26px 9px no-repeat,
+    /* paint rubbed off at corners: darker substrate showing */
+      radial-gradient(ellipse 22px 12px at 0 0, #8a7650 0 60%, transparent 78%)
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(
+        ellipse 18px 14px at 100% 100%,
+        #86724c 0 60%,
+        transparent 78%
+      )
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(ellipse 16px 10px at 100% 0, #8d7a55 0 55%, transparent 75%)
+      0 0 / 100% 100% no-repeat,
+    /* a few soft vertical drips (no noise tile: avoids a plaid look) */
+      radial-gradient(
+        ellipse 4px 90px at 17% 0,
+        rgba(70, 45, 15, 0.32),
+        transparent
+      )
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(
+        ellipse 3px 130px at 64% 0,
+        rgba(70, 45, 15, 0.26),
+        transparent
+      )
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(
+        ellipse 4px 70px at 88% 0,
+        rgba(70, 45, 15, 0.3),
+        transparent
+      )
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(
+        ellipse 3px 100px at 41% 0,
+        rgba(70, 45, 15, 0.22),
+        transparent
+      )
+      0 0 / 100% 100% no-repeat,
+    /* grime gathering in the corners and along the bottom */
+      radial-gradient(
+        circle at 0 100%,
+        rgba(50, 32, 12, 0.5),
+        transparent 130px
+      ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(50, 32, 12, 0.5),
+      transparent 130px
+    ),
+    radial-gradient(circle at 0 0, rgba(50, 32, 12, 0.35), transparent 90px),
+    radial-gradient(circle at 100% 0, rgba(50, 32, 12, 0.3), transparent 90px),
+    linear-gradient(180deg, transparent 60%, rgba(60, 38, 14, 0.3) 100%),
+    var(--soot) 0 0 / 460px 460px repeat,
+    var(--stain) 0 0 / 520px 520px repeat;
+  opacity: calc(var(--wear) * 0.72);
+}
+
+/* ===== Layout fixes ===== */
+
+/* knobs: clear space between knob (incl. rim/halo) and label, label and drag hint */
+
+.knob-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.knob-wrap .label {
+  margin-bottom: 4px;
+}
+
+.drag-hint {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin-top: 0;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.knob {
+  --a: 0deg;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: relative;
+  cursor: grab;
+  touch-action: none;
+  outline: none;
+  background: radial-gradient(circle at 35% 30%, #f3ecd6, #c9bd9b 55%, #a59a78);
+  box-shadow:
+    0 0 0 5px var(--cream-dk),
+    0 0 0 7px #0003,
+    0 0 9px 5px rgba(50, 30, 10, calc(0.3 * var(--wear))),
+    0 4px 5px 1px #0006,
+    inset 0 -3px 5px #0003,
+    inset 0 2px 2px #fff9;
+  transform: rotate(var(--a));
+  margin-bottom: 20px;
+}
+
+/* SHIFT TIME: label and digits centred in the window; REPORTS digits centred */
+
+.vfd--center {
+  justify-content: center;
+}
+
+/* CAMERA SELECT label centred over the key group */
+
+.cams .label {
+  text-align: center;
+}
+
+/* model print on the right of the bezel's lower rim, clear of the rounded corner */
+
+.tube > .maker {
+  position: absolute;
+  left: auto;
+  bottom: 4px;
+  padding: 0;
+  z-index: 2;
+  color: #a99d7e;
+  font-size: 0.58rem;
+  right: 26px;
+}
+
+/* ===== Report type picker: modal popup (fixed overlay, does not change page layout) ===== */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.dialog {
+  position: relative;
+  width: min(100%, 360px);
+  padding: 16px 14px 14px;
+  border-radius: 18px;
+  background: linear-gradient(
+    180deg,
+    var(--cream-hi),
+    var(--cream) 14%,
+    var(--cream) 85%,
+    var(--cream-lo)
+  );
+  box-shadow:
+    0 18px 40px #000b,
+    0 0 0 2px rgba(60, 40, 18, 0.4),
+    inset 0 2px 2px #fff7,
+    inset 0 -3px 6px #0003;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dialog::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: calc(var(--wear) * 0.72);
+  background:
+    radial-gradient(circle at 0 100%, rgba(50, 32, 12, 0.5), transparent 90px),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(50, 32, 12, 0.5),
+      transparent 90px
+    ),
+    radial-gradient(circle at 0 0, rgba(50, 32, 12, 0.35), transparent 70px),
+    var(--soot) 0 0 / 460px 460px repeat,
+    var(--stain) 0 0 / 520px 520px repeat;
+}
+
+.dialog > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dialog .dlg-title {
+  text-align: center;
+}
+
+.dialog .cat-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 10px;
+}
+
+@media (min-width: 900px) {
+  .dialog {
+    width: 460px;
+    zoom: 1.25;
+  }
+  .dialog .cat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Report result: camera OSD style text on the picture (separate look from the white italic film subtitles) */
+
+.osd-result {
+  left: 0;
+  right: 0;
+  top: 12%;
+  text-align: center;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  color: #7dff9e;
+  text-shadow:
+    0 0 6px #2f6,
+    0 0 2px #cfe;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+
+.osd-result.show {
+  opacity: 1;
+  transition-duration: 0.12s;
+}
+
+.osd-result.bad {
+  color: #ff6a5c;
+  text-shadow:
+    0 0 6px #f33,
+    0 0 2px #fcc;
+}
+
+@media (min-width: 900px) {
+  .osd-result {
+    font-size: 1.25rem;
+  }
+}
+
+/* all status labels centred over their windows; letter-spaced key text optically centred */
+
+.status .cell .label {
+  text-align: center;
+}
+
+.key {
+  font-family: var(--font-label);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  cursor: pointer;
+  border: 0;
+  border-radius: 9px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 10px;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    var(--cream-hi),
+    var(--cream) 55%,
+    var(--cream-lo)
+  );
+  box-shadow:
+    0 4px 0 var(--cream-dk),
+    0 6px 6px #0005,
+    inset 0 1px 1px #fffa;
+  transition:
+    transform 0.06s,
+    box-shadow 0.06s;
+  touch-action: manipulation;
+  --blot: 236, 227, 201;
+  padding-left: calc(10px + 0.1em);
+}
+
+.key-report {
+  flex: 1;
+  min-height: 56px;
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  color: #fff3ea;
+  background: linear-gradient(180deg, #ee5a4c, var(--red) 55%, #9e2119);
+  box-shadow:
+    0 5px 0 #6a130d,
+    0 7px 7px #0006,
+    inset 0 1px 1px #fff7,
+    0 0 12px 4px rgba(50, 30, 10, calc(0.3 * var(--wear)));
+  text-shadow: 0 -1px 0 #0006;
+  --blot: 211, 52, 42;
+  padding-left: calc(10px + 0.2em);
+}
+
+/* ===== Game integration ===== */
+
+/* Anomaly active on the current camera: the picture jitters and shifts hue (kept from the previous UI). */
+
+.pic--anomaly {
+  --hue: -8deg;
+}
+
+.pic--anomaly img {
+  animation: glitch-shake 1.6s var(--ease) infinite;
+}
+
+/* Camera select cell: green lamp = selected, small amber lamp = anomaly on that camera */
+
+.cam-lamps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 10px;
+}
+
+.cam-lamps .lamp.alert {
+  width: 6px;
+  height: 6px;
+}
+
+.cam-lamps .lamp.alert.on {
+  background: var(--amber);
+  box-shadow:
+    0 0 6px 1px #ffa21f99,
+    inset 0 0 2px #fff9;
+}
+
+/* Anomaly read-out on the picture (OSD style, top left, below the REC line) */
+
+.osd-anomaly {
+  left: 14px;
+  top: 26%;
+  right: 40%;
+  color: #ffd27a;
+  text-shadow:
+    0 0 3px #000,
+    0 0 6px #fa3,
+    0 0 2px #fec;
+}
+
+.osd-anomaly-head {
+  font-size: 0.8rem;
+}
+
+.osd-anomaly-desc {
+  margin-top: 4px;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  color: #e9efe6;
+  text-shadow:
+    0 0 3px #000,
+    0 0 4px #000;
+}
+
+@media (min-width: 900px) {
+  .osd-anomaly-head {
+    font-size: 1rem;
+  }
+  .osd-anomaly-desc {
+    font-size: 0.85rem;
+  }
+}

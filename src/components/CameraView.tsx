@@ -1,27 +1,32 @@
-import { useRef } from 'react'
+import { CSSProperties, useRef } from 'react'
 import { Anomaly, Camera } from '../types/game'
+import { Feedback } from '../hooks/useGameState'
+import { cx } from '../utils/cx'
+import { NoiseCanvas } from './NoiseCanvas'
 
 interface CameraViewProps {
   camera: Camera
-  gameTime: string
   anomalyHere?: Anomaly
+  /** Last report result, kept after it is cleared so it can fade out. */
+  result: Feedback | null
+  resultVisible: boolean
+  subtitle: { text: string; visible: boolean }
+  /** CSS filter multipliers from the knobs. */
+  brightness: number
+  contrast: number
   onSwipe: (direction: 'next' | 'prev') => void
 }
 
 const SWIPE_THRESHOLD = 50
 
-const CATEGORY_ICONS: Record<Anomaly['category'], string> = {
-  Camera: '📹',
-  Object: '📦',
-  Environment: '🌆',
-  Person: '🚶',
-  Surreal: '👁️',
-}
-
 export const CameraView = ({
   camera,
-  gameTime,
   anomalyHere,
+  result,
+  resultVisible,
+  subtitle,
+  brightness,
+  contrast,
   onSwipe,
 }: CameraViewProps) => {
   const dragStartXRef = useRef<number | null>(null)
@@ -38,95 +43,82 @@ export const CameraView = ({
     }
   }
 
-  const handleTouchStart = (e: React.TouchEvent) =>
-    startDrag(e.touches[0].clientX)
-  const handleTouchEnd = (e: React.TouchEvent) =>
-    endDrag(e.changedTouches[0].clientX)
-  const handleMouseDown = (e: React.MouseEvent) => startDrag(e.clientX)
-  const handleMouseUp = (e: React.MouseEvent) => endDrag(e.clientX)
-  const handleMouseLeave = () => {
-    dragStartXRef.current = null
-  }
-
-  // Nav buttons must not feed the parent's drag detection: a press on `‹` followed
-  // by mouseup outside the button would otherwise register as both a click and a swipe.
-  const navClick = (dir: 'prev' | 'next') => (e: React.MouseEvent) => {
-    e.stopPropagation()
-    onSwipe(dir)
-  }
-  const stopMouseDown = (e: React.MouseEvent) => e.stopPropagation()
-
-  const imageClass = anomalyHere
-    ? 'camera__image camera__image--anomaly'
-    : 'camera__image'
+  const style = {
+    '--bri': brightness,
+    '--con': contrast,
+  } as CSSProperties
 
   return (
-    <div
-      className="camera"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-    >
-      <img
-        className={imageClass}
-        src={camera.image}
-        alt={`${camera.name} — ${camera.location}`}
-        draggable={false}
-      />
-
-      <div className="camera__scanlines" />
-      <div className="camera__vignette" />
-
-      <div className="camera__rec">
-        <span className="camera__rec-dot" />
-        REC
-      </div>
-      <div className="camera__timestamp">{gameTime}</div>
-
-      <button
-        type="button"
-        className="camera__nav camera__nav--prev"
-        aria-label="Previous camera"
-        onMouseDown={stopMouseDown}
-        onClick={navClick('prev')}
-      >
-        ‹
-      </button>
-      <button
-        type="button"
-        className="camera__nav camera__nav--next"
-        aria-label="Next camera"
-        onMouseDown={stopMouseDown}
-        onClick={navClick('next')}
-      >
-        ›
-      </button>
-
-      {anomalyHere && (
+    <section className="tube" aria-label="Monitor">
+      <div className="bezel">
         <div
-          className={`camera__anomaly camera__anomaly--${anomalyHere.category}`}
-          role="status"
-          aria-label={`Anomaly: ${anomalyHere.category}. ${anomalyHere.description}`}
+          className="glass"
+          style={style}
+          onTouchStart={e => startDrag(e.touches[0].clientX)}
+          onTouchEnd={e => endDrag(e.changedTouches[0].clientX)}
+          onMouseDown={e => startDrag(e.clientX)}
+          onMouseUp={e => endDrag(e.clientX)}
+          onMouseLeave={() => {
+            dragStartXRef.current = null
+          }}
         >
-          <div className="camera__anomaly-heading">⚠ ANOMALY</div>
-          <div className="camera__anomaly-category">
-            <span aria-hidden="true">
-              {CATEGORY_ICONS[anomalyHere.category]}
-            </span>
-            {anomalyHere.category.toUpperCase()}
+          <div className={cx('pic', anomalyHere && 'pic--anomaly')}>
+            <img
+              src={camera.image}
+              alt={`${camera.name} — ${camera.location}`}
+              draggable={false}
+            />
+            <img
+              className="glow"
+              src={camera.image}
+              alt=""
+              aria-hidden="true"
+              draggable={false}
+            />
           </div>
-          <div className="camera__anomaly-description">
-            {anomalyHere.description}
+          <NoiseCanvas />
+          <div className="fx scan" aria-hidden="true" />
+          <div className="fx vignette" aria-hidden="true" />
+          <div className="osd osd-cam">CAM {camera.id}</div>
+          <div className="osd osd-rec">
+            <i className="rec-dot" />
+            REC
+          </div>
+
+          {anomalyHere && (
+            <div
+              className="osd osd-anomaly"
+              role="status"
+              aria-label={`Anomaly: ${anomalyHere.category}. ${anomalyHere.description}`}
+            >
+              <div className="osd-anomaly-head">
+                ANOMALY / {anomalyHere.category.toUpperCase()}
+              </div>
+              <div className="osd-anomaly-desc">{anomalyHere.description}</div>
+            </div>
+          )}
+
+          <div
+            className={cx('movie-sub', subtitle.visible && 'show')}
+            aria-live="polite"
+          >
+            {subtitle.text && <div>{subtitle.text}</div>}
+          </div>
+          <div
+            className={cx(
+              'osd osd-result',
+              result?.kind === 'wrong' && 'bad',
+              resultVisible && 'show'
+            )}
+            role="status"
+          >
+            {result?.message}
           </div>
         </div>
-      )}
-
-      <div className="camera__info">
-        <div className="camera__info-name">{camera.name}</div>
-        <div className="camera__info-location">{camera.location}</div>
       </div>
-    </div>
+      <div className="maker" aria-hidden="true">
+        <span className="model">VIDEO MONITOR CR-42</span>
+      </div>
+    </section>
   )
 }

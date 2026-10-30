@@ -220,19 +220,6 @@ export const useGameState = () => {
     return () => window.clearTimeout(timer)
   }, [feedback, clearFeedback])
 
-  useEffect(() => {
-    if (gameState !== 'playing') return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a') switchCamera('prev')
-      else if (e.key === 'ArrowRight' || e.key === 'd') switchCamera('next')
-      else if (e.key >= '1' && e.key <= String(CAMERAS.length)) {
-        switchCamera(Number(e.key) - 1)
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [gameState, switchCamera])
-
   const activeAnomalyHere = activeAnomalies.find(
     a => a.cameraId === cameras[currentCameraIndex].id && !a.detectedAt
   )
