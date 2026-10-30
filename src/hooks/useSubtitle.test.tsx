@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { act, renderHook } from '@testing-library/react'
+import { StrictMode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DIALOGUE } from '../data/dialogue'
 import {
@@ -137,5 +138,19 @@ describe('useSubtitle', () => {
     expect(vi.getTimerCount()).toBeGreaterThan(0)
     unmount()
     expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it('under StrictMode (mount, cleanup, mount) still starts at the first normal line', () => {
+    const plain = setup()
+    advance(SUBTITLE_GAP_MS)
+    const expected = plain.result.current.text
+    plain.unmount()
+
+    const { result } = renderHook(() => useSubtitle(null), {
+      wrapper: StrictMode,
+    })
+    advance(SUBTITLE_GAP_MS)
+    expect(result.current.text).toBe(NORMAL[0])
+    expect(result.current.text).toBe(expected)
   })
 })

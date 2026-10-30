@@ -483,7 +483,7 @@ src/
 2. **No Audio**: Silent gameplay, relies only on visuals
 3. **Meta-Anomalies Not Visual**: Templates exist but no UI corruption effects
 4. **Limited Anomaly Pool**: Only template text, not varied enough
-5. **No Persistence**: No save states or progress tracking
+5. **No Persistence**: No save states or progress tracking (現状は何も保存していない＝未実装。設計は `docs/save-data.md`)
 
 ### Technical Debt
 

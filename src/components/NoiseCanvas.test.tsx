@@ -89,7 +89,7 @@ describe('NoiseCanvas timer', () => {
     expect(vi.getTimerCount()).toBe(1)
   })
 
-  it('draws nothing more just before the interval (boundary - 1)', () => {
+  it('draws nothing at floor(1000/12) - 1 = 82 ms, just before the first period', () => {
     render(<NoiseCanvas />)
     advance(Math.floor(INTERVAL_MS) - 1)
     expect(timerFrames()).toBe(0)
