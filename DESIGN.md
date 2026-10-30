@@ -263,7 +263,7 @@ What to take from it:
 - Rounded corners on the screen and on the parts.
 - The Report buttons, the camera selector tabs, and every other control use the same retro hardware look (push buttons, switches, lamps), not Material-style buttons. The reference's numbered push buttons (1-4) are the model for the camera selector. Touch-target size and readability stay modern. The §8 components are reskinned to this look.
 - Every knob and button shows a visible label; no hidden operations.
-- Open: whether knob settings change what is visible (gameplay) or only the look.
+- Decided (2026-10-30): anomalies that are hard to see unless a knob is adjusted (e.g. brightness) are allowed. They are an option, not a requirement; most anomalies stay visible at the default setting. Which knobs matter and how the ledger marks such anomalies are decided when the knobs are implemented.
 
 Open decision: build these parts as CSS, as generated raster images layered over the UI, or both. Realism favors raster parts (bezel, knobs, buttons, LED, speaker grille) with CSS only for the live scanlines, noise, and glow. Tracked in Issue #2.
 
