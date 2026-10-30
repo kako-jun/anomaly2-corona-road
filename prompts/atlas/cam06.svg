@@ -134,9 +134,9 @@
 
       <g class="element " id="CAM06-E10">
         <title>CAM06-E10 — 下側の複数鉢植え。黒い円形鉢、細い茎、小さな葉/橙色花状部分。</title>
-        <rect x="68.5" y="733.0" width="229.5" height="207.0" rx="2" class="bounds" />
-        <circle cx="183.3" cy="836.5" r="10" class="marker" />
-        <text x="183.3" y="840.0" text-anchor="middle" class="marker-number">10</text>
+        <rect x="156.3" y="517.0" width="141.8" height="207.0" rx="2" class="bounds" />
+        <circle cx="227.1" cy="620.5" r="10" class="marker" />
+        <text x="227.1" y="624.0" text-anchor="middle" class="marker-number">10</text>
         <circle cx="945" cy="510" r="10" class="legend-number" />
         <text x="945" y="513.5" text-anchor="middle" class="legend-number-text">10</text>
         <text x="990" y="507" class="legend-id">CAM06-E10</text>

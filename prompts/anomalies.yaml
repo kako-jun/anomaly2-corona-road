@@ -446,3 +446,1243 @@ anomalies:
     dimensions: '96x133'
     review_status: 'composited'
     note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+  - id: 'AR-08-cat'
+    candidate_id: 'CR-08-25'
+    camera_id: 'CAM08'
+    element_id: 'CAM08-E07'
+    base_photo: 'public/images/cam8.webp'
+    category: 'object'
+    anomaly_type: 'add_creature'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(132,326)–(187,382)'
+    location: 'CAM08-E07 の店先と床の境目付近、左上 (89,293) px'
+    detail: '左の暗い店先の床近くに小さな猫が一匹現れる。AR-02-cat と同じ猫の反復モチーフとして扱い、CAM02のシャッター際の座る猫とは別の画角・姿勢にする'
+    generation_prompt: '添付のCAM08監視カメラ写真を編集する。左端の暗い店先の床際（CAM08-E07内、画面左側の黒いガラス/壁のすぐ前、床との境界）に、小さな猫を一匹だけ静かに座らせる。猫は画面全体に対して小さく、自然な四つ足の座り姿で、店先の暗部から少し見える。閉店後の地下街に日常が一瞬戻ったような、懐かしく静かな違和感。カメラ構図、床目地、看板、壁、ガラス、照明、影、色、粒状感、圧縮感、その他すべては保持し、猫と直近の接地影以外を描き直さない。'
+    generated_source: 'experiments/cam08-cat/source.png'
+    mask: 'experiments/cam08-cat/mask.png'
+    overlay: 'assets/anomaly-overlays/cam08/cat.webp'
+    overlay_origin: '(89,293)'
+    dimensions: '35x51'
+    review_status: 'composited'
+    note: '実験資料: experiments/cam08-cat/。基準675x900、変化画素bbox=(90,295)–(124,343)、変更1274px。透過差分からの再構成は全画素一致。ブラウザでblinkの切替動作は確認したが、ライブ目視・ゲーム画面は未確認。ゲーム未接続'
+  - id: 'AR-01-wiped-window'
+    candidate_id: 'CR-01-34'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E10'
+    base_photo: 'public/images/cam1.webp'
+    category: 'object'
+    anomaly_type: 'state_change'
+    phase: 'early'
+    subtlety: 'medium'
+    mask_box_1000: '(89,430)–(121,454)'
+    location: 'CAM01-E10 の曇り面、差分左上 (60,387) px'
+    detail: '曇りガラスの内側に、小さく円形に拭いた透明な跡が現れる'
+    generation_prompt: '添付のCAM01写真の左手前、CAM01-E10の明るい曇りガラス面の中央に、直径14〜18px相当の小さな円形の透明な拭き跡を一つだけ加える。縁は曇りから透明へ柔らかく移り、手形・筋・傷・新しい景色や物を入れない。閉店後の地下街に誰かがいた気配が静かに戻る。ほかの窓枠、壁、床、照明、反射、構図、色、粒状感、圧縮感は保持する。'
+    generated_source: 'experiments/cam01-wiped-window/source-v2.png'
+    mask: 'experiments/cam01-wiped-window/mask.png'
+    overlay: 'assets/anomaly-overlays/cam01/wiped-window.webp'
+    overlay_origin: '(60,387)'
+    dimensions: '21x21'
+    review_status: 'composited'
+    note: 'CR-01-09の別景色反射、CR-01-24の猫の反射とは異なり、曇り面自体の局所的な透明化。初回生成の横長汚れは不採用。基準675x900、変化268px、overlay再構成は全画素一致。ブラウザでblinkの切替動作は確認したが、ライブ目視・ゲーム画面は未確認。ゲーム未接続'
+  - id: 'AR-04-purple-leaves'
+    candidate_id: 'CR-04-24'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E11'
+    base_photo: 'public/images/cam4.webp'
+    category: 'object'
+    anomaly_type: 'color_shift'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(559,283)–(653,414)'
+    location: 'CAM04-E11、差分左上 (378,255) px'
+    detail: '奥の鉢植えの葉が淡い赤紫になる'
+    generation_prompt: 'CAM04-E11 の鉢植え一鉢の葉だけを淡い赤紫にし、花、鉢、背景、構図、照明、粒状感を保持する。'
+    generated_source: 'experiments/cam04-purple-leaves/source.png'
+    mask: 'experiments/cam04-purple-leaves/mask.png'
+    overlay: 'assets/anomaly-overlays/cam04/purple-leaves.webp'
+    overlay_origin: '(378,255)'
+    dimensions: '63x117'
+    review_status: 'composited'
+    note: '試作。既存AR-02-blue-potは鉢本体の色変更で、こちらは葉の色変更。基準676x900、変更画素bbox=(379,256)–(441,371)、透過差分からの再構成は全画素一致。ライブblink・ゲーム画面確認は未了。'
+  - id: 'AR-03-red-string'
+    candidate_id: 'CR-03-31'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E05'
+    base_photo: 'public/images/cam3.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(467,73)–(477,110)'
+    location: 'CAM03-E05、差分左上 (316,66) px'
+    detail: '天井の小型点検板から細い赤い紐が下がる'
+    generation_prompt: 'CAM03-E05 の点検板から細い赤い紐を一本下げ、周囲を保持する。'
+    generated_source: 'experiments/cam03-agent/source.png'
+    mask: 'experiments/cam03-agent/mask.png'
+    overlay: 'assets/anomaly-overlays/cam03/red-string.webp'
+    overlay_origin: '(316,66)'
+    dimensions: '6x33'
+    review_status: 'composited'
+    note: 'CR-01-20の紙片・CR-05-31の白いリボンと形と色が異なる。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-05-wind-chime'
+    candidate_id: 'CR-05-20'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E05'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(612,92)–(650,208)'
+    location: 'CAM05-E05、差分左上 (414,83) px'
+    detail: '照明の下から透明な風鈴と短冊が一つ下がる'
+    generation_prompt: 'CAM05-E05 の照明の下に小さな透明な風鈴と短冊を一つ下げ、周囲を保持する。'
+    generated_source: 'experiments/cam05-agent/source.png'
+    mask: 'experiments/cam05-agent/mask.png'
+    overlay: 'assets/anomaly-overlays/cam05/wind-chime.webp'
+    overlay_origin: '(414,83)'
+    dimensions: '25x104'
+    review_status: 'composited'
+    note: 'AR-07-craneの折り鶴とは材質と形が異なる。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-07-warm-light'
+    candidate_id: 'CR-07-38'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E11'
+    base_photo: 'public/images/cam7.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(456,259)–(501,293)'
+    location: 'CAM07-E11、差分左上 (308,233) px'
+    detail: '黒い開口の奥に小さな暖色の灯りが一つ点く'
+    generation_prompt: 'CAM07-E11 の黒い開口奥に暖色の小さな点光を一つ加え、ほかの構図・照明・看板等を保持する。'
+    generated_source: 'experiments/cam07-agent/source.png'
+    mask: 'experiments/cam07-agent/mask.png'
+    overlay: 'assets/anomaly-overlays/cam07/warm-light.webp'
+    overlay_origin: '(308,233)'
+    dimensions: '30x30'
+    review_status: 'composited'
+    note: 'AR-05-glass-light・AR-06-reopenedは広い店先の灯りで、こちらは暗い開口内の点光。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-05-blue-brick'
+    candidate_id: 'CR-05-16'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E12'
+    base_photo: 'public/images/cam5.webp'
+    category: 'environment'
+    anomaly_type: 'color_shift'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(486,588)–(526,613)'
+    location: 'CAM05-E12、差分左上 (329,530) px'
+    detail: '店舗下端のレンガ帯の一枚だけ青いタイルになる'
+    generation_prompt: 'CAM05-E12 の店舗下端のレンガ帯の一枚だけ青くし、ほかは保持する。'
+    generated_source: 'experiments/cam05-cr-05-16/source.png'
+    mask: 'experiments/cam05-cr-05-16/mask.png'
+    overlay: 'assets/anomaly-overlays/cam05/blue-brick.webp'
+    overlay_origin: '(329,530)'
+    dimensions: '26x21'
+    review_status: 'composited'
+    note: 'AR-02-tile-colorは床タイルで、こちらは店舗下端のレンガ帯。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-06-tilted-notice'
+    candidate_id: 'CR-06-02'
+    camera_id: 'CAM06'
+    element_id: 'CAM06-E15'
+    base_photo: 'public/images/cam6.webp'
+    category: 'object'
+    anomaly_type: 'state_change'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(791,260)–(846,352)'
+    location: 'CAM06-E15、差分左上 (534,234) px'
+    detail: '右壁の額入り掲示が数度傾く'
+    generation_prompt: '右壁の額入り掲示を数度だけ傾け、周囲と構図を保持する。'
+    generated_source: 'experiments/cam06-tilted-notice/source.png'
+    mask: 'experiments/cam06-tilted-notice/mask.png'
+    overlay: 'assets/anomaly-overlays/cam06/tilted-notice.webp'
+    overlay_origin: '(534,234)'
+    dimensions: '37x82'
+    review_status: 'composited'
+    note: '変更画素bbox=(536,236)–(569,315)。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-01-shutter-light'
+    candidate_id: 'CR-01-35'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E11'
+    base_photo: 'public/images/cam1.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(355,543)–(427,595)'
+    location: 'CAM01-E11、差分左上 (240,489) px'
+    detail: '閉じたシャッターの下端から暖色の光が漏れる'
+    generation_prompt: '左中景の閉じたシャッターの下端だけから細い暖色の光が漏れ、床のごく近くを照らす。シャッターは閉じたまま、周囲を保つ。'
+    generated_source: 'experiments/cam01-shutter-light/source.png'
+    mask: 'experiments/cam01-shutter-light/mask.png'
+    overlay: 'assets/anomaly-overlays/cam01/shutter-light.webp'
+    overlay_origin: '(240,489)'
+    dimensions: '48x46'
+    review_status: 'composited'
+    note: 'AR-02-shop-reopensは開いた店先、こちらは閉じたシャッター下の光。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-03-ceiling-dots'
+    candidate_id: 'CR-03-18'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E01'
+    base_photo: 'public/images/cam3.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(285,21)–(376,60)'
+    location: 'CAM03-E01、差分左上 (193,19) px'
+    detail: '天井の一部に小さな水玉模様が現れる'
+    generation_prompt: 'CAM03 の天井面の一部に小さな水玉模様を加え、それ以外を保つ。'
+    generated_source: 'experiments/cr-03-18/source.png'
+    mask: 'experiments/cr-03-18/mask.png'
+    overlay: 'assets/anomaly-overlays/cam03/ceiling-dots.webp'
+    overlay_origin: '(193,19)'
+    dimensions: '61x35'
+    review_status: 'composited'
+    note: 'CR-05-28は点汚れの格子、CR-08-28は同心円で配置と模様が異なる。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-03-paper-bag'
+    candidate_id: 'CR-03-32'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E06'
+    base_photo: 'public/images/cam3.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'early'
+    subtlety: 'medium'
+    mask_box_1000: '(152,591)–(211,676)'
+    location: 'CAM03-E06、差分左上 (103,532) px'
+    detail: '左シャッター下端に白い紙袋が一つ現れる'
+    generation_prompt: 'CAM03 の左シャッターの下端に白い紙袋を一つ置き、周囲を保つ。'
+    generated_source: 'experiments/cr-03-32/source.png'
+    mask: 'experiments/cr-03-32/mask-v2.png'
+    overlay: 'assets/anomaly-overlays/cam03/paper-bag.webp'
+    overlay_origin: '(103,532)'
+    dimensions: '39x76'
+    review_status: 'composited'
+    note: 'AR-02-bagとは別カメラ・位置の反復モチーフ。初版は浮いて見えたため20px下げて接地調整。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-07-wall-grid'
+    candidate_id: 'CR-07-19'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E12'
+    base_photo: 'public/images/cam7.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(537,204)–(614,272)'
+    location: 'CAM07-E12、差分左上 (363,184) px'
+    detail: '白い中央壁に薄い格子模様が局所的に現れる'
+    generation_prompt: 'CAM07 の中央白壁の一部に薄い格子模様を作り、周囲を保持する。'
+    generated_source: 'experiments/cam07-cr-07-19/source.png'
+    mask: 'experiments/cam07-cr-07-19/mask.png'
+    overlay: 'assets/anomaly-overlays/cam07/wall-grid.webp'
+    overlay_origin: '(363,184)'
+    dimensions: '51x60'
+    review_status: 'composited'
+    note: 'AR-07-noticeは掲示の出現で、こちらは壁自体の模様。写真と既存差分に合わせて CAM07-E12 の台帳座標を修正。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-05-green-lamp-rim'
+    candidate_id: 'CR-05-29'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E02'
+    base_photo: 'public/images/cam5.webp'
+    category: 'environment'
+    anomaly_type: 'color_shift'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(60,5)–(147,38)'
+    location: 'CAM05-E02、差分左上 (41,5) px'
+    detail: '左上の丸灯の縁だけ淡い緑になる'
+    generation_prompt: 'CAM05 左上の丸灯の縁だけを淡い緑にし、周囲を保持する。'
+    generated_source: 'experiments/cam05-cr-05-29/source.png'
+    mask: 'experiments/cam05-cr-05-29/mask.png'
+    overlay: 'assets/anomaly-overlays/cam05/green-lamp-rim.webp'
+    overlay_origin: '(41,5)'
+    dimensions: '58x29'
+    review_status: 'composited'
+    note: '丸灯全体や床反射は変更しない。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-05-curtain-mend'
+    candidate_id: 'CR-05-35'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E08'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'state_change'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(468,491)–(520,560)'
+    location: 'CAM05-E08、差分左上 (317,442) px'
+    detail: 'カーテンの裾の一箇所に小さな繕い跡が現れる'
+    generation_prompt: 'CAM05 のカーテンの裾に小さな繕い跡を一箇所だけ加え、周囲を保持する。'
+    generated_source: 'experiments/cam05-cr-05-35/source.png'
+    mask: 'experiments/cam05-cr-05-35/mask.png'
+    overlay: 'assets/anomaly-overlays/cam05/curtain-mend.webp'
+    overlay_origin: '(317,442)'
+    dimensions: '34x62'
+    review_status: 'composited'
+    note: 'AR-05-glass-lightの店の灯りとは異なる布そのものの変化。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-03-striped-sign'
+    candidate_id: 'CR-03-06'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E07'
+    base_photo: 'public/images/cam3.webp'
+    category: 'object'
+    anomaly_type: 'state_change'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(406,134)–(503,199)'
+    location: 'CAM03-E07、差分左上 (275,121) px'
+    detail: '白い空白看板に周囲のシャッターと同じ横縞が浮かぶ'
+    generation_prompt: 'CAM03-E07 の白い看板面にシャッター状の横縞を加え、枠と周囲を保持する。'
+    generated_source: 'experiments/cr-03-06/source.png'
+    mask: 'experiments/cr-03-06/mask.png'
+    overlay: 'assets/anomaly-overlays/cam03/striped-sign.webp'
+    overlay_origin: '(275,121)'
+    dimensions: '65x58'
+    review_status: 'composited'
+    note: 'CR-03-03・27はシャッター自体の変化で、こちらは看板面の模様。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-04-door-gap'
+    candidate_id: 'CR-04-05'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E10'
+    base_photo: 'public/images/cam4.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(488,285)–(537,428)'
+    location: 'CAM04-E10、差分左上 (330,257) px'
+    detail: '奥の両開き扉の片側だけが少し開き、奥が暗い'
+    generation_prompt: 'CAM04-E10 の両開き扉の片側だけを指一本分開き、狭い暗い隙間を作る。周囲を保持する。'
+    generated_source: 'experiments/cam04-door-gap/source.png'
+    mask: 'experiments/cam04-door-gap/mask.png'
+    overlay: 'assets/anomaly-overlays/cam04/door-gap.webp'
+    overlay_origin: '(330,257)'
+    dimensions: '33x128'
+    review_status: 'composited'
+    note: '扉の開閉という変化。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-07-lamp-off'
+    candidate_id: 'CR-07-04'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E04'
+    base_photo: 'public/images/cam7.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(794,56)–(861,93)'
+    location: 'CAM07-E04、差分左上 (536,51) px'
+    detail: '右上の丸灯一つだけが消え、床反射は残る'
+    generation_prompt: 'CAM07 右上の丸灯一つだけを消し、床反射を含め周囲を保持する。'
+    generated_source: 'experiments/cam07-cr-07-04/source.png'
+    mask: 'experiments/cam07-cr-07-04/mask.png'
+    overlay: 'assets/anomaly-overlays/cam07/lamp-off.webp'
+    overlay_origin: '(536,51)'
+    dimensions: '45x32'
+    review_status: 'composited'
+    note: 'CR-07-31は灯具周囲の青い輪で、消灯とは異なる。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-01-container-origami'
+    candidate_id: 'CR-01-42'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E19'
+    base_photo: 'public/images/cam1.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'early'
+    subtlety: 'medium'
+    mask_box_1000: '(970,858)–(1000,886)'
+    location: 'CAM01-E19、差分左上 (655,773) px'
+    detail: '右下の青い容器の中に白い折り紙が一つ現れる'
+    generation_prompt: 'Edit the attached surveillance camera photo. Make one change only: place one small white folded origami paper inside the blue container partially visible at the lower right edge of the frame. Keep the container, crop, floor, framing, walls, shopfronts, signs, perspective, lighting, reflections, blur, grain and every other detail intact. The paper should be small and naturally rest inside the container. Return the complete original composition.'
+    generated_source: 'experiments/cam01-container-origami/source.png'
+    mask: 'experiments/cam01-container-origami/mask.png'
+    overlay: 'assets/anomaly-overlays/cam01/container-origami.webp'
+    overlay_origin: '(655,773)'
+    dimensions: '20x24'
+    review_status: 'composited'
+    note: 'AR-07-craneは天井の折り鶴で、こちらは画面端の容器内。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-05-lamp-dot'
+    candidate_id: 'CR-05-30'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E03'
+    base_photo: 'public/images/cam5.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(899,23)–(918,38)'
+    location: 'CAM05-E03、差分左上 (608,21) px'
+    detail: '右上の丸灯の中央に小さな黒点が現れる'
+    generation_prompt: 'CAM05右上の丸灯の中央に小さな黒点を一つ加え、周囲を保持する。'
+    generated_source: 'experiments/cam05-cr-05-30/source.png'
+    mask: 'experiments/cam05-cr-05-30/mask.png'
+    overlay: 'assets/anomaly-overlays/cam05/lamp-dot.webp'
+    overlay_origin: '(608,21)'
+    dimensions: '12x13'
+    review_status: 'composited'
+    note: '同じ灯具への色変更ではなく中央の点の出現。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-05-brown-column'
+    candidate_id: 'CR-05-34'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E07'
+    base_photo: 'public/images/cam5.webp'
+    category: 'environment'
+    anomaly_type: 'color_shift'
+    phase: 'early'
+    subtlety: 'medium'
+    mask_box_1000: '(377,91)–(418,675)'
+    location: 'CAM05-E07、差分左上 (255,82) px'
+    detail: '店舗区画の角柱が薄い茶色に変わる'
+    generation_prompt: 'CAM05の店舗区画外周の角柱だけを薄い茶色にし、周囲を保持する。'
+    generated_source: 'experiments/cam05-cr-05-34/source.png'
+    mask: 'experiments/cam05-cr-05-34/mask.png'
+    overlay: 'assets/anomaly-overlays/cam05/brown-column.webp'
+    overlay_origin: '(255,82)'
+    dimensions: '27x525'
+    review_status: 'composited'
+    note: '角柱全体の色変化。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-03-tile-diagonal'
+    candidate_id: 'CR-03-14'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E19'
+    base_photo: 'public/images/cam3.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(217,733)–(468,829)'
+    location: 'CAM03-E19、差分左上 (147,660) px'
+    detail: '床タイル一枚に斜めの目地が現れ、三角形に分割される'
+    generation_prompt: 'CAM03-E19 手前の床タイル一枚を斜め目地で二つの三角形に分割し、ほかの床目地と光、質感を保つ。'
+    generated_source: 'experiments/cr-03-14/source.png'
+    mask: 'experiments/cr-03-14/mask.png'
+    overlay: 'assets/anomaly-overlays/cam03/tile-diagonal.webp'
+    overlay_origin: '(147,660)'
+    dimensions: '169x86'
+    review_status: 'composited'
+    note: 'AR-02-tileは床の模様、こちらは斜め目地による形状の変化。実際の目地に合わせE19座標を修正。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-08-panel-off'
+    candidate_id: 'CR-08-02'
+    camera_id: 'CAM08'
+    element_id: 'CAM08-E15'
+    base_photo: 'public/images/cam8.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(840,268)–(931,394)'
+    location: 'CAM08-E15、差分左上 (567,242) px'
+    detail: '右端の上下の乳白パネルのうち、上だけ消灯する'
+    generation_prompt: '右端の柱の上の乳白パネルだけを消灯し、パネルを暗い灰色にする。下のパネルと床反射、周囲は保持する。'
+    generated_source: 'experiments/cam08-panel-off/source.png'
+    mask: 'experiments/cam08-panel-off/mask.png'
+    overlay: 'assets/anomaly-overlays/cam08/panel-off.webp'
+    overlay_origin: '(567,242)'
+    dimensions: '61x112'
+    review_status: 'composited'
+    note: 'AR-08-panelは第三のパネル追加、こちらは既存パネルの消灯。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-03-crate-duplicate'
+    candidate_id: 'CR-03-24'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E15'
+    base_photo: 'public/images/cam3.webp'
+    category: 'object'
+    anomaly_type: 'duplicate'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(415,407)–(481,472)'
+    location: 'CAM03-E15、差分左上 (281,367) px'
+    detail: '緑看板横の木箱の前に同型の木箱がもう一つ現れる'
+    generation_prompt: 'CAM03-E15 の木箱の近くに同型の木箱を一つ追加し、背景を保持する。'
+    generated_source: 'experiments/cr-03-24/source.png'
+    mask: 'experiments/cr-03-24/mask.png'
+    overlay: 'assets/anomaly-overlays/cam03/crate-duplicate.webp'
+    overlay_origin: '(281,367)'
+    dimensions: '44x57'
+    review_status: 'composited'
+    note: '既存箱の前に重ねて配置。CAM03-E15の座標を実写真に合わせて修正。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-05-white-ribbon'
+    candidate_id: 'CR-05-31'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E04'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(131,148)–(153,215)'
+    location: 'CAM05-E04、差分左上 (89,134) px'
+    detail: '左端の蛍光灯から小さな白いリボンが下がる'
+    generation_prompt: 'CAM05-E04 の蛍光灯から小さな白いリボンを下げ、周囲を保持する。'
+    generated_source: 'experiments/cam05-cr-05-31/source.png'
+    mask: 'experiments/cam05-cr-05-31/mask.png'
+    overlay: 'assets/anomaly-overlays/cam05/white-ribbon.webp'
+    overlay_origin: '(89,134)'
+    dimensions: '14x59'
+    review_status: 'composited'
+    note: 'AR-03-red-stringは赤い細紐で、こちらは白いリボン。E04台帳範囲を実際の灯具に合わせ拡張。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-05-stand-tag'
+    candidate_id: 'CR-05-33'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E06'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'early'
+    subtlety: 'medium'
+    mask_box_1000: '(34,358)–(57,389)'
+    location: 'CAM05-E06、差分左上 (23,323) px'
+    detail: '左奥の細脚スタンドに小さな白い札が追加される'
+    generation_prompt: 'CAM05-E06 の左奥の細脚スタンドに小さな白い札を一枚加え、周囲を保持する。'
+    generated_source: 'experiments/cam05-cr-05-33/source.png'
+    mask: 'experiments/cam05-cr-05-33/mask.png'
+    overlay: 'assets/anomaly-overlays/cam05/stand-tag.webp'
+    overlay_origin: '(23,323)'
+    dimensions: '15x27'
+    review_status: 'composited'
+    note: 'AR-07-noticeは壁面の掲示。非常に小さいためゲーム画面で札と認識できるか要確認。再構成一致、マスク外差分ゼロ。ライブblink未確認。'
+  - id: 'AR-07-blue-push-plate'
+    candidate_id: 'CR-07-40'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E13'
+    base_photo: 'public/images/cam7.webp'
+    category: 'object'
+    anomaly_type: 'color_shift'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(659,292)–(737,318)'
+    location: 'CAM07-E13、差分左上 (445,263) px'
+    detail: '扉の白い押し板だけが青に変わる'
+    generation_prompt: 'CAM07-E13 の扉の白い押し板だけ淡い青に変え、周囲を保持する。'
+    generated_source: 'experiments/cam07-cr-07-40/source.png'
+    mask: 'experiments/cam07-cr-07-40/mask.png'
+    overlay: 'assets/anomaly-overlays/cam07/blue-push-plate.webp'
+    overlay_origin: '(445,263)'
+    dimensions: '52x23'
+    review_status: 'composited'
+    note: 'AR-07-reopenedは扉の開閉・光。E13台帳座標を実際の扉位置に修正。青の鮮やかさ、ライブblink・ゲーム画面は要確認。再構成一致、マスク外差分ゼロ。'
+  - id: 'AR-06-missing-flower'
+    candidate_id: 'CR-06-03'
+    camera_id: 'CAM06'
+    element_id: 'CAM06-E10'
+    base_photo: 'public/images/cam6.webp'
+    category: 'object'
+    anomaly_type: 'remove_object'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(198,472)–(261,504)'
+    location: 'CAM06-E10、差分左上 (134,425) px'
+    detail: '鉢植えの小さな橙色の花が一輪消える'
+    generation_prompt: 'CAM06 の左下の鉢植えにある橙色の花一輪だけを消し、残りの葉・鉢・背景を保持する。'
+    generated_source: 'experiments/cam06-missing-flower/source.png'
+    mask: 'experiments/cam06-missing-flower/mask.png'
+    overlay: 'assets/anomaly-overlays/cam06/missing-flower.webp'
+    overlay_origin: '(134,425)'
+    dimensions: '42x28'
+    review_status: 'composited'
+    note: 'AR-04-purple-leavesは葉の色変更で、こちらは花の消失。写真上の鉢位置に合わせE10座標を修正。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+  - id: 'AR-03-pink-ornament'
+    candidate_id: 'CR-03-34'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E08'
+    base_photo: 'public/images/cam3.webp'
+    category: 'object'
+    anomaly_type: 'color_shift'
+    phase: 'early'
+    subtlety: 'subtle'
+    mask_box_1000: '(560,240)–(582,263)'
+    location: 'CAM03-E08、差分左上 (379,216) px'
+    detail: '黒い店壁の白い装飾一つだけが淡い桃色になる'
+    generation_prompt: 'CAM03-E08 黒い店壁の右側に並ぶ既存の白い花飾りのうち一つだけを淡い桃色にし、形と他の装飾を保つ。'
+    generated_source: 'experiments/cr-03-34/source-v2.png'
+    mask: 'experiments/cr-03-34/mask.png'
+    overlay: 'assets/anomaly-overlays/cam03/pink-ornament.webp'
+    overlay_origin: '(379,216)'
+    dimensions: '14x20'
+    review_status: 'composited'
+    note: '初回の新規花は不採用。既存装飾の色のみ変更したv2を使用。再構成一致、マスク外差分ゼロ。原寸では非常に小さく、ライブblink・ゲーム画面で視認性未確認。'
+  - id: "AR-03-shutter-wave"
+    candidate_id: "CR-03-27"
+    camera_id: "CAM03"
+    element_id: "CAM03-E06"
+    base_photo: "public/images/cam3.webp"
+    category: "environment"
+    anomaly_type: "state_change"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(19,260)–(324,344)"
+    location: "CAM03-E06、差分左上 (13,234) px"
+    detail: "シャッターの横板一枚が波形に変わる。"
+    generation_prompt: "CAM03-E06 の左シャッターの横板一枚を緩い波形に曲げ、他の横板、看板、床、照明と構図を保つ。"
+    generated_source: "experiments/cr-03-27/source.png"
+    mask: "experiments/cr-03-27/mask.png"
+    overlay: "assets/anomaly-overlays/cam03/shutter-wave.webp"
+    overlay_origin: "(13,234)"
+    dimensions: "206x75"
+    review_status: "composited"
+    note: "再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-03-white-cap"
+    candidate_id: "CR-03-39"
+    camera_id: "CAM03"
+    element_id: "CAM03-E13"
+    base_photo: "public/images/cam3.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(607,373)–(657,396)"
+    location: "CAM03-E13、差分左上 (411,336) px"
+    detail: "奥の開口の床に小さな白い帽子が置かれる。"
+    generation_prompt: "Use case: precise-object-edit. Input is the authoritative 676×900 surveillance photograph of an empty underground passage. Make exactly one change: place a small simple white cloth cap on the floor near the distant dark storefront opening, just right and behind the green standing sign (CAM03-E13, roughly x=430–465 and y=280–325 original pixels). The cap lies naturally on the floor, looks small with distance, has a modest contact shadow, and contains no text or logo. Keep the existing standing sign and its lettering, surrounding doors, shutter, floor joints, lighting, reflections, noise, grain, perspective and framing unchanged. Do not add any other objects or people. Output full frame at original aspect ratio, to be locally masked."
+    generated_source: "experiments/cr-03-39/source.png"
+    mask: "experiments/cr-03-39/mask.png"
+    overlay: "assets/anomaly-overlays/cam03/white-cap.webp"
+    overlay_origin: "(411,336)"
+    dimensions: "33x20"
+    review_status: "composited"
+    note: "再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-07-white-step"
+    candidate_id: "CR-07-36"
+    camera_id: "CAM07"
+    element_id: "CAM07-E09"
+    base_photo: "public/images/cam7.webp"
+    category: "environment"
+    anomaly_type: "color_shift"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(134,293)–(344,309)"
+    location: "CAM07-E09、差分左上 (91,264) px"
+    detail: "左階段の一段の段鼻だけ白く塗られる。"
+    generation_prompt: "CAM07-E09 の候補「左階段の一段の段鼻だけ白く塗られる。」を一変更として指定し、周囲を保持。"
+    generated_source: "experiments/cam07-cr-07-36/source.png"
+    mask: "experiments/cam07-cr-07-36/mask.png"
+    overlay: "assets/anomaly-overlays/cam07/white-step.webp"
+    overlay_origin: "(91,264)"
+    dimensions: "141x14"
+    review_status: "composited"
+    note: "AR-07-stairs は階段数の変更であり、これは一段の色の変化。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+  - id: "AR-07-stairs-cat"
+    candidate_id: "CR-07-27"
+    camera_id: "CAM07"
+    element_id: "CAM07-E09"
+    base_photo: "public/images/cam7.webp"
+    category: "object"
+    anomaly_type: "add_creature"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(158,265)–(238,306)"
+    location: "CAM07-E09、差分左上 (107,239) px"
+    detail: "左階段の一段に小さな猫が横たわる。"
+    generation_prompt: "CAM07-E09 の候補「左階段の一段に小さな猫が横たわる。」を一変更として指定し、周囲を保持。"
+    generated_source: "experiments/cam07-cr-07-27/source.png"
+    mask: "experiments/cam07-cr-07-27/mask.png"
+    overlay: "assets/anomaly-overlays/cam07/stairs-cat.webp"
+    overlay_origin: "(107,239)"
+    dimensions: "53x36"
+    review_status: "composited"
+    note: "AR-02-cat/AR-08-cat と同じ猫の反復モチーフ。階段上に横たわる姿勢と位置が異なる。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+  - id: "AR-07-opening-paper"
+    candidate_id: "CR-07-37"
+    camera_id: "CAM07"
+    element_id: "CAM07-E10"
+    base_photo: "public/images/cam7.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(414,262)–(442,289)"
+    location: "CAM07-E10、差分左上 (280,236) px"
+    detail: "細い暗い開口の縁に小さな紙切れが挟まる。"
+    generation_prompt: "CAM07-E10 の候補「細い暗い開口の縁に小さな紙切れが挟まる。」を一変更として指定し、周囲を保持。"
+    generated_source: "experiments/cam07-cr-07-37/source.png"
+    mask: "experiments/cam07-cr-07-37/mask.png"
+    overlay: "assets/anomaly-overlays/cam07/opening-paper.webp"
+    overlay_origin: "(280,236)"
+    dimensions: "18x24"
+    review_status: "composited"
+    note: "AR-07-ticket は階段上の紙片、こちらは開口縁に挟まれた紙。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+  - id: "AR-07-duplicate-green-sign"
+    candidate_id: "CR-07-06"
+    camera_id: "CAM07"
+    element_id: "CAM07-E14"
+    base_photo: "public/images/cam7.webp"
+    category: "object"
+    anomaly_type: "duplicate"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(786,305)–(830,345)"
+    location: "CAM07-E14、差分左上 (531,275) px"
+    detail: "右階段上の緑表示が、階段の下側にも同時に現れる。"
+    generation_prompt: "CAM07-E14 の候補「右階段上の緑表示が、階段の下側にも同時に現れる。」を一変更として指定し、周囲を保持。"
+    generated_source: "experiments/cam07-cr-07-06/source.png"
+    mask: "experiments/cam07-cr-07-06/mask.png"
+    overlay: "assets/anomaly-overlays/cam07/duplicate-green-sign.webp"
+    overlay_origin: "(531,275)"
+    dimensions: "29x35"
+    review_status: "composited"
+    note: "CR-07-14/15の段数変更と異なり、既存の表示がもう一つ現れる。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+  - id: "AR-07-ceiling-string"
+    candidate_id: "CR-07-23"
+    camera_id: "CAM07"
+    element_id: "CAM07-E05"
+    base_photo: "public/images/cam7.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(491,93)–(510,143)"
+    location: "CAM07-E05、差分左上 (332,84) px"
+    detail: "奥の天井器具から短い紐が一本下がる。"
+    generation_prompt: "CAM07-E05 の候補「奥の天井器具から短い紐が一本下がる。」を一変更として指定し、周囲を保持。"
+    generated_source: "experiments/cam07-cr-07-23/source.png"
+    mask: "experiments/cam07-cr-07-23/mask.png"
+    overlay: "assets/anomaly-overlays/cam07/ceiling-string.webp"
+    overlay_origin: "(332,84)"
+    dimensions: "12x44"
+    review_status: "composited"
+    note: "AR-07-craneの折り鶴と違い、装飾のない短い紐。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+  - id: "AR-05-duplicate-light"
+    candidate_id: "CR-05-19"
+    camera_id: "CAM05"
+    element_id: "CAM05-E05"
+    base_photo: "public/images/cam5.webp"
+    category: "environment"
+    anomaly_type: "duplicate"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(495,45)–(1000,132)"
+    location: "CAM05-E05、差分左上 (335,41) px"
+    detail: "蛍光灯の隣に同じ長さの照明がもう一本増える。"
+    generation_prompt: "Edit the attached exact 676×900 surveillance camera photo. Only one change: Duplicate the long fluorescent ceiling light directly beside itself, adding exactly one parallel light of the same shape and length. Keep the original light unchanged. Change no sign or other object. Keep camera framing, lighting, architecture, floor, all text and signs, reflections outside the target, grain, texture and colors intact. Output the entire frame at the same aspect ratio."
+    generated_source: "experiments/cam05-cr-05-19/source.png"
+    mask: "experiments/cam05-cr-05-19/mask.png"
+    overlay: "assets/anomaly-overlays/cam05/duplicate-light.webp"
+    overlay_origin: "(335,41)"
+    dimensions: "341x77"
+    review_status: "composited"
+    note: "Additional light starts about 40px farther left than existing light; both run off the right edge. Confirm apparent equal length and visual blend. 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-05-chair-reflection"
+    candidate_id: "CR-05-22"
+    camera_id: "CAM05"
+    element_id: "CAM05-E08"
+    base_photo: "public/images/cam5.webp"
+    category: "surreal"
+    anomaly_type: "reflection"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(452,386)–(566,504)"
+    location: "CAM05-E08、差分左上 (306,348) px"
+    detail: "実際の通路にはない椅子だけ正面ガラスに映る。"
+    generation_prompt: "Edit the attached exact 676×900 surveillance camera photo. Only one change: In the central front glass of the closed shop, add only a faint reflected image of an old unoccupied wooden chair. It is a ghostlike reflection on the glass surface, not inside the store; no chair exists on the real corridor floor. Preserve curtains, window frames and signs. Keep camera framing, lighting, architecture, floor, all text and signs, reflections outside the target, grain, texture and colors intact. Output the entire frame at the same aspect ratio."
+    generated_source: "experiments/cam05-cr-05-22/source.png"
+    mask: "experiments/cam05-cr-05-22/mask.png"
+    overlay: "assets/anomaly-overlays/cam05/chair-reflection.webp"
+    overlay_origin: "(306,348)"
+    dimensions: "76x105"
+    review_status: "composited"
+    note: "Chair reflection is faint and broken by curtain texture; confirm recognition in game. 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-05-amber-pane"
+    candidate_id: "CR-05-24"
+    camera_id: "CAM05"
+    element_id: "CAM05-E08"
+    base_photo: "public/images/cam5.webp"
+    category: "environment"
+    anomaly_type: "color_shift"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(591,237)–(733,563)"
+    location: "CAM05-E08、差分左上 (400,214) px"
+    detail: "正面ガラスの一枚だけ淡い琥珀色になる。"
+    generation_prompt: "Edit the attached exact 676×900 surveillance camera photo. Only one change: Change only one pane of the front storefront glass to a faint translucent amber tint. Keep the gray curtain visible through it and the metal framing, other panes, lighting and reflections unchanged. Choose the large lower pane centered near x=350 y=350. Preserve camera framing, lights, architecture, floor, all text and signs, reflections outside the target, grain, texture and colors. Output full frame at same aspect ratio."
+    generated_source: "experiments/cam05-cr-05-24/source.png"
+    mask: "experiments/cam05-cr-05-24/mask.png"
+    overlay: "assets/anomaly-overlays/cam05/amber-pane.webp"
+    overlay_origin: "(400,214)"
+    dimensions: "95x292"
+    review_status: "composited"
+    note: "Tinted pane is intentionally faint via 120/255 alpha; confirm recognition at game size. 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-04-paper-cup"
+    candidate_id: "CR-04-38"
+    camera_id: "CAM04"
+    element_id: "CAM04-E12"
+    base_photo: "public/images/cam4.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(624,466)–(659,496)"
+    location: "CAM04-E12、差分左上 (422,420) px"
+    detail: "什器の脚元に小さな紙コップが置かれる。"
+    generation_prompt: "Edit this surveillance photograph. Add one small plain white disposable paper cup on the floor at the foot of the thin black standing display beside the plants on the far right of the corridor (original frame approx x=405–450 y=390–460). The cup rests on the floor with a small contact shadow. Preserve all existing objects, people-free scene, doors, signs, floor tiles, framing, lighting, reflections, grain, blur, and colors. Only the cup and immediate shadow may change. Return the complete frame."
+    generated_source: "experiments/cam04-paper-cup/source.png"
+    mask: "experiments/cam04-paper-cup/mask.png"
+    overlay: "assets/anomaly-overlays/cam04/paper-cup.webp"
+    overlay_origin: "(422,420)"
+    dimensions: "23x26"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-06-wall-stripes"
+    candidate_id: "CR-06-16"
+    camera_id: "CAM06"
+    element_id: "CAM06-E15"
+    base_photo: "public/images/cam6.webp"
+    category: "environment"
+    anomaly_type: "state_change"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(752,380)–(835,455)"
+    location: "CAM06-E15、差分左上 (508,342) px"
+    detail: "粗い壁の一部分だけ横縞の模様になる。"
+    generation_prompt: "Edit this surveillance photograph. On a small area of the pale rough right wall near the framed notice, change only the surface texture into faint, close horizontal stripes. Keep the shape and position of the notice, door and wall, as well as all plants, signs, lighting, floor tiles, framing, perspective, blur and grain unchanged. Alter only one local patch of wall, no extra objects. Return the complete frame."
+    generated_source: "experiments/cam06-wall-stripes/source.png"
+    mask: "experiments/cam06-wall-stripes/mask.png"
+    overlay: "assets/anomaly-overlays/cam06/wall-stripes.webp"
+    overlay_origin: "(508,342)"
+    dimensions: "55x67"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-08-fixture-duplicate"
+    candidate_id: "CR-08-21"
+    camera_id: "CAM08"
+    element_id: "CAM08-E12"
+    base_photo: "public/images/cam8.webp"
+    category: "object"
+    anomaly_type: "duplicate"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(371,252)–(445,297)"
+    location: "CAM08-E12、差分左上 (251,227) px"
+    detail: "柱の横長器具が二つ並ぶ。"
+    generation_prompt: "Edit this surveillance photograph. On the central white pillar, duplicate the existing small gray horizontal rectangular projecting fixture so that there are exactly two identical fixtures side by side on the pillar face. The original remains in place; the new one has matching perspective, scale, material and immediate contact shadow. Preserve the pillar, floor, signs, walls, lights, reflections, framing, grain and every other element. Make only the new fixture. Return the full frame."
+    generated_source: "experiments/cam08-fixture-duplicate/source.png"
+    mask: "experiments/cam08-fixture-duplicate/mask.png"
+    overlay: "assets/anomaly-overlays/cam08/fixture-duplicate.webp"
+    overlay_origin: "(251,227)"
+    dimensions: "49x40"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-01-lattice-tile"
+    candidate_id: "CR-01-13"
+    camera_id: "CAM01"
+    element_id: "CAM01-E17"
+    base_photo: "public/images/cam1.webp"
+    category: "environment"
+    anomaly_type: "state_change"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(186,874)–(365,928)"
+    location: "CAM01-E17、差分左上 (126,787) px"
+    detail: "床タイルの一枚だけ斜め格子模様になる。"
+    generation_prompt: "Edit the attached surveillance photo. Make only one change: one existing floor tile in the open foreground near x=320,y=700 on the 675×900 reference gains a subtle diagonal crisscross lattice pattern, confined inside that single tile. Preserve the tile’s outline and perspective and all other tiles, lights, signs, walls, framing, color, grain and reflections. No added objects. Return the entire image at original composition."
+    generated_source: "experiments/cam01-lattice-tile/source.png"
+    mask: "experiments/cam01-lattice-tile/mask.png"
+    overlay: "assets/anomaly-overlays/cam01/lattice-tile.webp"
+    overlay_origin: "(126,787)"
+    dimensions: "120x48"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。生成位置は指示より手前だが対象の床タイル一枚に限定。"
+  - id: "AR-04-orange-tile"
+    candidate_id: "CR-04-13"
+    camera_id: "CAM04"
+    element_id: "CAM04-E15"
+    base_photo: "public/images/cam4.webp"
+    category: "environment"
+    anomaly_type: "color_shift"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(128,702)–(323,753)"
+    location: "CAM04-E15、差分左上 (87,632) px"
+    detail: "床タイル一枚が淡い橙色になる。"
+    generation_prompt: "Edit the attached surveillance photo. Make one change only: change a single floor tile near x=240,y=570 on the original 676×900 frame to a faint pale orange. Keep that tile’s outlines, texture, shadows and reflections and all other floor tiles, architecture, signs, lights, framing and grain unchanged. No new objects. Return the full original composition."
+    generated_source: "experiments/cam04-orange-tile/source.png"
+    mask: "experiments/cam04-orange-tile/mask.png"
+    overlay: "assets/anomaly-overlays/cam04/orange-tile.webp"
+    overlay_origin: "(87,632)"
+    dimensions: "131x45"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。生成位置は指示より手前だが対象の床タイル一枚に限定。"
+  - id: "AR-08-blue-panel"
+    candidate_id: "CR-08-23"
+    camera_id: "CAM08"
+    element_id: "CAM08-E15"
+    base_photo: "public/images/cam8.webp"
+    category: "environment"
+    anomaly_type: "color_shift"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(840,268)–(931,394)"
+    location: "CAM08-E15、差分左上 (567,242) px"
+    detail: "発光パネルの一枚だけ淡い青色になる。"
+    generation_prompt: "Edit the attached surveillance photo. On the far-right black pillar, change only the upper of the two existing luminous frosted panels from warm white to a faint soft blue, keeping it lit. Keep the lower panel warm white and preserve all shapes, floor reflections, walls, framing, lighting elsewhere, grain and every other element. Change only the color of this upper panel and its immediate edge. Return the full frame."
+    generated_source: "experiments/cam08-blue-panel/source.png"
+    mask: "experiments/cam08-blue-panel/mask.png"
+    overlay: "assets/anomaly-overlays/cam08/blue-panel.webp"
+    overlay_origin: "(567,242)"
+    dimensions: "61x112"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。AR-08-panel-offは消灯で、こちらは点灯色の変化。"
+  - id: "AR-02-rusty-vent"
+    candidate_id: "CR-02-29"
+    camera_id: "CAM02"
+    element_id: "CAM02-E03"
+    base_photo: "public/images/cam2.webp"
+    category: "environment"
+    anomaly_type: "color_shift"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(378,47)–(572,90)"
+    location: "CAM02-E03、差分左上 (256,43) px"
+    detail: "丸型設備の外周だけ淡い錆色になる。"
+    generation_prompt: "Edit the attached exact CAM02 surveillance photo. Only one change: make the outermost rim of the round concentric ceiling ventilation fixture at the top center a faint rusty reddish brown. Keep the central rings, ceiling, lights, shop signs, walls, floor, perspective, colors, blur and grain unchanged. No other change. Return the entire image."
+    generated_source: "experiments/cam02-CR-02-29/source.png"
+    mask: "experiments/cam02-CR-02-29/mask.png"
+    overlay: "assets/anomaly-overlays/cam02/rusty-vent.webp"
+    overlay_origin: "(256,43)"
+    dimensions: "130x38"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-02-wrapping-paper"
+    candidate_id: "CR-02-32"
+    camera_id: "CAM02"
+    element_id: "CAM02-E07"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(66,568)–(123,599)"
+    location: "CAM02-E07、差分左上 (45,512) px"
+    detail: "シャッターの下に小さな折り畳まれた包装紙が挟まる。"
+    generation_prompt: "Edit the attached exact CAM02 surveillance photo. Only one change: put a small folded piece of faded plain wrapping paper caught under the bottom edge of the left foreground metal shutter, naturally touching the floor. Preserve the shutter geometry, floor tile lines, sign lettering, objects, framing, lighting, blur and grain. No other new object. Return the complete image."
+    generated_source: "experiments/cam02-CR-02-32/source.png"
+    mask: "experiments/cam02-CR-02-32/mask.png"
+    overlay: "assets/anomaly-overlays/cam02/wrapping-paper.webp"
+    overlay_origin: "(45,512)"
+    dimensions: "38x27"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-03-blue-floor-tile"
+    candidate_id: "CR-03-15"
+    camera_id: "CAM03"
+    element_id: "CAM03-E19"
+    base_photo: "public/images/cam3.webp"
+    category: "environment"
+    anomaly_type: "color_shift"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(220,728)–(465,830)"
+    location: "CAM03-E19、差分左上 (149,656) px"
+    detail: "床タイル一枚だけ濃い青色になる。"
+    generation_prompt: "Use case: precise-object-edit. Edit the supplied exact CAM03 676×900 surveillance photograph. Make exactly one change: one existing large foreground floor tile around x=300,y=750 becomes dark desaturated blue, while retaining the exact original tile shape, grout lines, floor texture, reflections and perspective. All surrounding tiles remain their original gray. Preserve the camera framing, shutter, green sign, objects, walls, ceiling, lights, all text, color outside that one tile, blur, grain and compression. Output the complete original composition."
+    generated_source: "experiments/cr-03-15-next/source.png"
+    mask: "experiments/cr-03-15-next/mask.png"
+    overlay: "assets/anomaly-overlays/cam03/blue-floor-tile.webp"
+    overlay_origin: "(149,656)"
+    dimensions: "165x91"
+    review_status: "composited"
+    note: "既存 AR-02-tile-color とは別カメラの反復。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-07-purple-floor-tile"
+    candidate_id: "CR-07-16"
+    camera_id: "CAM07"
+    element_id: "CAM07-E16"
+    base_photo: "public/images/cam7.webp"
+    category: "environment"
+    anomaly_type: "color_shift"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(395,781)–(642,944)"
+    location: "CAM07-E16、差分左上 (267,703) px"
+    detail: "床タイル一枚だけ淡い紫色になる。"
+    generation_prompt: "Use case: precise-object-edit. Edit the attached 675x900 surveillance camera photo. Make exactly one local change: change one existing floor tile in the lower central foreground, near x=345 y=680, to a muted pale lavender-purple color. Preserve that tile's existing outline and all its grout boundaries, texture, grain, perspective and reflections. All other floor tiles, lights, stairs, walls, doors, signs, camera framing and lighting stay unchanged. No objects or text added. Return the full photo in the original composition."
+    generated_source: "experiments/cam07-CR-07-16-next/source.png"
+    mask: "experiments/cam07-CR-07-16-next/mask.png"
+    overlay: "assets/anomaly-overlays/cam07/purple-floor-tile.webp"
+    overlay_origin: "(267,703)"
+    dimensions: "166x146"
+    review_status: "composited"
+    note: "AR-02-tile-colorは別カメラで異なる色。ライブblink・ゲーム画面未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-02-duplicate-coffee-sign"
+    candidate_id: "CR-02-11"
+    camera_id: "CAM02"
+    element_id: "CAM02-E14"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "duplicate"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(721,322)–(847,533)"
+    location: "CAM02-E14、差分左上 (488,290) px"
+    detail: "緑色の自立看板が少し右にもう一つ現れ、二枚が同じ文字を表示する。"
+    generation_prompt: "Edit the attached exact CAM02 surveillance photograph. Make just one change: duplicate the existing green freestanding sign and place the identical second sign immediately to the right of the original, with matching scale, perspective, stand, illumination, shadow and exactly the same existing lettering. Preserve the original sign and every other object, framing, walls, floor, lights, grain and blur. Add no other object. Return full frame."
+    generated_source: "experiments/cam02-CR-02-11/source.png"
+    mask: "experiments/cam02-CR-02-11/mask.png"
+    overlay: "assets/anomaly-overlays/cam02/duplicate-coffee-sign.webp"
+    overlay_origin: "(488,290)"
+    dimensions: "84x189"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-02-flower-ornament"
+    candidate_id: "CR-02-17"
+    camera_id: "CAM02"
+    element_id: "CAM02-E17"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "state_change"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(955,171)–(996,204)"
+    location: "CAM02-E17、差分左上 (646,154) px"
+    detail: "白い星形装飾が一つだけ花形になる。"
+    generation_prompt: "Edit the attached exact CAM02 surveillance photograph. On the far right dark wall, change exactly one existing small white star decoration near the upper right into a small simple white five-petaled flower of the same size and same position. Do not add an extra decoration; preserve every other decoration, sign, frame, lighting, grain and blur. Return full frame."
+    generated_source: "experiments/cam02-CR-02-17/source.png"
+    mask: "experiments/cam02-CR-02-17/mask.png"
+    overlay: "assets/anomaly-overlays/cam02/flower-ornament.webp"
+    overlay_origin: "(646,154)"
+    dimensions: "27x29"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-02-red-star"
+    candidate_id: "CR-02-18"
+    camera_id: "CAM02"
+    element_id: "CAM02-E17"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "color_shift"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(965,172)–(992,200)"
+    location: "CAM02-E17、差分左上 (653,155) px"
+    detail: "壁の白い装飾が一つだけ淡い赤に変わる。"
+    generation_prompt: "Edit the attached exact CAM02 surveillance photo. On the dark wall at the far right there are several small white star and bird ornaments. Change exactly one existing small white star ornament near the upper right to a faint muted red, retaining its exact shape and position. Do not add an ornament or change any other ornament, signs, framing, lighting, blur or grain. Return the entire frame."
+    generated_source: "experiments/cam02-CR-02-18/source.png"
+    mask: "experiments/cam02-CR-02-18/mask.png"
+    overlay: "assets/anomaly-overlays/cam02/red-star.webp"
+    overlay_origin: "(653,155)"
+    dimensions: "17x25"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-02-pillar-notice"
+    candidate_id: "CR-02-22"
+    camera_id: "CAM02"
+    element_id: "CAM02-E10"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(479,248)–(529,292)"
+    location: "CAM02-E10、差分左上 (324,224) px"
+    detail: "柱に小さな紙の案内が一枚増える。"
+    generation_prompt: "Edit the attached exact CAM02 surveillance photo. Add one small plain white paper notice to the front of the white central pillar, around original image x=305,y=275. The notice is modest, lightly aged and has no legible text. Preserve the existing pillar and all existing notices, signs, people-free corridor, floor, lighting, framing, blur and grain. Add no other object. Return the complete frame."
+    generated_source: "experiments/cam02-CR-02-22/source.png"
+    mask: "experiments/cam02-CR-02-22/mask.png"
+    overlay: "assets/anomaly-overlays/cam02/pillar-notice.webp"
+    overlay_origin: "(324,224)"
+    dimensions: "33x38"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-03-amber-lamp-glow"
+    candidate_id: "CR-03-29"
+    camera_id: "CAM03"
+    element_id: "CAM03-E03"
+    base_photo: "public/images/cam3.webp"
+    category: "environment"
+    anomaly_type: "color_shift"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(599,0)–(764,62)"
+    location: "CAM03-E03、差分左上 (405,0) px"
+    detail: "丸灯の照らす部分だけ淡い橙色になる。"
+    generation_prompt: "Use case: precise-object-edit. Edit the attached exact CAM03 surveillance photograph. Make exactly one change: the small round white ceiling lamp near the upper center-right edge retains its white lamp surface, but the immediately adjacent ceiling it illuminates takes on a faint muted amber-orange glow. Keep the glow local and subtle. Preserve every other light, sign, shutter, walls, floor, camera framing, perspective, color outside that illumination, film grain, texture and compression. Output the complete original composition."
+    generated_source: "experiments/cr-03-29-next/source.png"
+    mask: "experiments/cr-03-29-next/mask.png"
+    overlay: "assets/anomaly-overlays/cam03/amber-lamp-glow.webp"
+    overlay_origin: "(405,0)"
+    dimensions: "111x55"
+    review_status: "composited"
+    note: "白い灯具はマスクから除外。E03の実位置は上端 x≈430–490px で既存台帳座標と食い違う。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-03-coffee-text-missing"
+    candidate_id: "CR-03-02"
+    camera_id: "CAM03"
+    element_id: "CAM03-E14"
+    base_photo: "public/images/cam3.webp"
+    category: "object"
+    anomaly_type: "text_change"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(498,305)–(595,349)"
+    location: "CAM03-E14、差分左上 (337,275) px"
+    detail: "看板の緑の光は残るが、上段の「COFFEE」だけが消える。"
+    generation_prompt: "Use case: precise-object-edit. Edit the attached exact 676×900 surveillance photo. Make only one change to the freestanding green illuminated sign in the middle-left: erase the white word COFFEE from the UPPER rectangular green face completely, leaving a plain evenly glowing green surface where those letters were. Keep the upper panel's shape, illumination and border, and keep the LOWER panel's Japanese lettering exactly unchanged. Preserve the sign's base and every other object, signs, camera angle, floor, lighting, reflections, color, blur, grain and texture. Return the complete original composition."
+    generated_source: "experiments/cr-03-02-next/source.png"
+    mask: "experiments/cr-03-02-next/mask.png"
+    overlay: "assets/anomaly-overlays/cam03/coffee-text-missing.webp"
+    overlay_origin: "(337,275)"
+    dimensions: "65x39"
+    review_status: "composited"
+    note: "看板上段の文字のみ消去、下段の架空店名を保護。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-03-walking-cat"
+    candidate_id: "CR-03-26"
+    camera_id: "CAM03"
+    element_id: "CAM03-E13"
+    base_photo: "public/images/cam3.webp"
+    category: "object"
+    anomaly_type: "add_creature"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(605,350)–(709,395)"
+    location: "CAM03-E13、差分左上 (409,315) px"
+    detail: "暗い開口の前を白猫が歩く。"
+    generation_prompt: "Use case: precise-object-edit. Edit the attached 676×900 underground arcade surveillance photograph. Make exactly one change: add a single small white short-haired cat walking in profile across the floor immediately in front of the dark middle-distance storefront opening, just right of the green standing sign, around x=440, y=315 in original pixels. The cat is small relative to the sign, its paws touch the floor and its modest contact shadow matches the scene. Preserve the green sign and all its lettering, other signs, shutter, floor grout, storefront, camera angle, lighting, blur, grain and every other object. Add no other subject. Output the complete original composition."
+    generated_source: "experiments/cr-03-26-next/source.png"
+    mask: "experiments/cr-03-26-next/mask.png"
+    overlay: "assets/anomaly-overlays/cam03/walking-cat.webp"
+    overlay_origin: "(409,315)"
+    dimensions: "70x40"
+    review_status: "composited"
+    note: "既存 AR-02/08-cat は座る猫、AR-07-stairs-cat は横たわる猫。こちらは白猫が歩く。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-03-round-puddle"
+    candidate_id: "CR-03-13"
+    camera_id: "CAM03"
+    element_id: "CAM03-E18"
+    base_photo: "public/images/cam3.webp"
+    category: "environment"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(440,603)–(554,644)"
+    location: "CAM03-E18、差分左上 (298,543) px"
+    detail: "床の白い反射の中に丸い水たまりができる。"
+    generation_prompt: "Precisely edit the attached surveillance photograph: add just one SMALL shallow oval water puddle, approximately 40 pixels wide by 20 pixels high in the ORIGINAL 676×900 image, centered at pixel (340, 600). It lies in the foreground floor below the green sign, visibly separate from the sign itself. A subtle, slightly glossy patch with one faint white light reflection; smooth water with NO concentric waves, NO splashes, NO spreading wet floor. Keep all floor grout lines, all other reflections, sign lettering, architecture, lights, camera angle and framing completely unchanged. Match the original low resolution, grain and color. Return the entire original photo."
+    generated_source: "experiments/cr-03-13-next/source-v2.png"
+    mask: "experiments/cr-03-13-next/mask.png"
+    overlay: "assets/anomaly-overlays/cam03/round-puddle.webp"
+    overlay_origin: "(298,543)"
+    dimensions: "76x36"
+    review_status: "composited"
+    note: "初回は水たまりが大きく波立ち位置もずれたため不採用。v2を使用。AR-02-puddle・AR-04-puddleとの背景別反復。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-07-diamond-tile"
+    candidate_id: "CR-07-17"
+    camera_id: "CAM07"
+    element_id: "CAM07-E16"
+    base_photo: "public/images/cam7.webp"
+    category: "environment"
+    anomaly_type: "state_change"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(515,685)–(720,786)"
+    location: "CAM07-E16、差分左上 (348,617) px"
+    detail: "床タイル一枚だけひし形模様になる。"
+    generation_prompt: "Use case: precise-object-edit. Edit the attached 675x900 surveillance photo. Only one change: add a delicate repeating diamond lattice pattern on the surface of one single foreground floor tile near the center, with tile edges and grout lines unchanged. Pattern is muted and fits the worn tile surface. Keep the entire rest of the corridor, stairs, doors, lights, signs, floor texture, reflections, camera geometry and grain unchanged. Return the full image."
+    generated_source: "experiments/cam07-CR-07-17-next/source.png"
+    mask: "experiments/cam07-CR-07-17-next/mask.png"
+    overlay: "assets/anomaly-overlays/cam07/diamond-tile.webp"
+    overlay_origin: "(348,617)"
+    dimensions: "138x90"
+    review_status: "composited"
+    note: "ライブblink・ゲーム画面未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-07-floor-puddle"
+    candidate_id: "CR-07-18"
+    camera_id: "CAM07"
+    element_id: "CAM07-E18"
+    base_photo: "public/images/cam7.webp"
+    category: "environment"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(582,718)–(839,860)"
+    location: "CAM07-E18、差分左上 (393,647) px"
+    detail: "丸い照明反射の間に水たまりが一つ現れる。"
+    generation_prompt: "Use case: precise-object-edit. The input is the 675x900 surveillance photo. Add exactly one shallow, small irregular clear puddle on the LOWER RIGHT foreground floor, with its center at x=500 y=690 pixels, within normalized rectangle (540,700)-(1000,970). Place it between existing round white floor-light reflections, not around an existing reflection. It should read as water on the floor and have subtle local specular glints. Preserve the rest of the floor, grout, all existing light reflections, stairs, doors, signs, camera angle, color, grain, shadows and lighting. Do not add other objects. Return the full frame."
+    generated_source: "experiments/cam07-CR-07-18-next/source-v2.png"
+    mask: "experiments/cam07-CR-07-18-next/mask-v2.png"
+    overlay: "assets/anomaly-overlays/cam07/floor-puddle.webp"
+    overlay_origin: "(393,647)"
+    dimensions: "173x127"
+    review_status: "composited"
+    note: "初版はE18範囲外で不採用。v2はE18範囲内だが光沢が強い。ライブblink・ゲーム画面未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-07-stair-figures"
+    candidate_id: "CR-07-11"
+    camera_id: "CAM07"
+    element_id: "CAM07-E14"
+    base_photo: "public/images/cam7.webp"
+    category: "person"
+    anomaly_type: "duplicate"
+    phase: "late"
+    subtlety: "obvious"
+    mask_box_1000: "(871,211)–(928,362)"
+    location: "CAM07-E14、差分左上 (588,190) px"
+    detail: "右階段に、同じ段へ立つ人影が上下二段に重なって見える。"
+    generation_prompt: "Edit the supplied 675×900 surveillance photograph. On the dark staircase at the far right, add exactly two identical small human figures at two vertically adjacent steps, overlapping so that they look like the same person is simultaneously standing on both steps. Both face toward the camera and fit the distant scale of the stairs. Preserve every other object, doors, wall, handrail, floor, lights, camera framing, shadows, grain and signs. No other people. Return the full frame."
+    generated_source: "experiments/cam07-CR-07-11-next/source.png"
+    mask: "experiments/cam07-CR-07-11-next/mask.png"
+    overlay: "assets/anomaly-overlays/cam07/stair-figures.webp"
+    overlay_origin: "(588,190)"
+    dimensions: "38x135"
+    review_status: "composited"
+    note: "2人の衣服と姿は近いが完全一致は原寸では判定困難。ライブblink・ゲーム画面未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-04-leaf-hole"
+    candidate_id: "CR-04-37"
+    camera_id: "CAM04"
+    element_id: "CAM04-E11"
+    base_photo: "public/images/cam4.webp"
+    category: "object"
+    anomaly_type: "state_change"
+    phase: "early"
+    subtlety: "subtle"
+    mask_box_1000: "(582,332)–(610,350)"
+    location: "CAM04-E11、差分左上 (394,299) px"
+    detail: "大きな葉の一枚に小さな丸い穴が開く。"
+    generation_prompt: "Edit this surveillance photograph. In the potted plant near the distant right-hand door, add exactly one small circular hole in one large green leaf. The hole should reveal the existing dark background behind the leaf, with a natural crisp edge. Preserve all other leaves, flowers, pot, door, signs, walls, lighting, floor, framing, reflections, grain and every other object. Make no other change. Return the complete original composition."
+    generated_source: "experiments/cam04-leaf-hole/source.png"
+    mask: "experiments/cam04-leaf-hole/mask.png"
+    overlay: "assets/anomaly-overlays/cam04/leaf-hole.webp"
+    overlay_origin: "(394,299)"
+    dimensions: "18x16"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-06-pot-tag"
+    candidate_id: "CR-06-35"
+    camera_id: "CAM06"
+    element_id: "CAM06-E10"
+    base_photo: "public/images/cam6.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(219,594)–(257,620)"
+    location: "CAM06-E10、差分左上 (148,535) px"
+    detail: "黒い鉢の一つだけ小さな白い名札が付く。"
+    generation_prompt: "Edit this surveillance photograph. Attach one small plain white plant name tag to the front of the black flowerpot in the lower left foreground, about x=130–180 y=510–580 on the 675×900 original. The tag is small, weathered and has no legible writing. Keep the pot, plants, flowers, sign, walls, floor, camera framing, perspective, color, light and grain unchanged. Add only the tag and its immediate contact shadow. Return the complete original frame."
+    generated_source: "experiments/cam06-pot-tag/source.png"
+    mask: "experiments/cam06-pot-tag/mask.png"
+    overlay: "assets/anomaly-overlays/cam06/pot-tag.webp"
+    overlay_origin: "(148,535)"
+    dimensions: "25x23"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+  - id: "AR-08-notice-residue"
+    candidate_id: "CR-08-34"
+    camera_id: "CAM08"
+    element_id: "CAM08-E07"
+    base_photo: "public/images/cam8.webp"
+    category: "environment"
+    anomaly_type: "state_change"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(151,218)–(189,262)"
+    location: "CAM08-E07、差分左上 (102,197) px"
+    detail: "暗い壁面の一角に古い貼り紙の剥がし跡が現れる。"
+    generation_prompt: "Edit this surveillance photograph. On a small area of the dark left storefront wall near the glass door, add one faint rectangular pale adhesive residue where an old notice was removed. The residue is small, weathered and contains no readable writing. Keep the storefront, glass, floor, central pillar, signs, lighting, framing, perspective, grain and every other element unchanged. Make only this small local mark. Return the full original frame."
+    generated_source: "experiments/cam08-notice-residue/source.png"
+    mask: "experiments/cam08-notice-residue/mask.png"
+    overlay: "assets/anomaly-overlays/cam08/notice-residue.webp"
+    overlay_origin: "(102,197)"
+    dimensions: "25x38"
+    review_status: "composited"
+    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
