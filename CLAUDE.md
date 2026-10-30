@@ -14,7 +14,7 @@
 
 ### Core Mechanics
 
-> **Direction (kako-jun, 2026-10-30):** the rules below are the _current implementation_ and are provisional. Corona Road is meant to be much harder and more analog than typical anomaly games (target ~300 anomalies, retro display and knobs; see `DESIGN.md` §11 and `prompts/README.md`). It will **not** use the standard rule of being attacked when time runs out and losing life. The replacement rules are undecided.
+> **Direction (kako-jun, 2026-10-30):** the rules below are the _current implementation_ and are provisional. Corona Road is meant to be much harder and more analog than typical anomaly games (target ~300 anomalies, retro display and knobs; see `DESIGN.md` §11 and `prompts/README.md`). It will **not** use the standard rule of being attacked when time runs out and losing life. Direction so far: each wrong report (お手つき) gives the player a small hint. The other rules (how the game is lost, timing) are undecided.
 
 #### 1. Time System
 
