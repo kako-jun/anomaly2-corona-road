@@ -563,19 +563,6 @@ body {
   color: #ff9a7a;
   text-shadow: 0 0 6px #f64;
 }
-.cats {
-  flex: 1 1 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px;
-  border-radius: 12px;
-  background: var(--cream-lo);
-  box-shadow: inset 0 2px 6px #0005;
-}
-.cats[hidden] {
-  display: none;
-}
 .cat-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1105,10 +1092,6 @@ body {
 .report {
   gap: 8px;
 }
-.cats {
-  padding: 8px;
-  gap: 6px;
-}
 .cat-grid {
   gap: 9px 8px;
 }
@@ -1385,8 +1368,10 @@ body {
   justify-content: center;
 }
 .status .cell:nth-child(2) .vfd {
-  justify-content: flex-end;
-  padding-right: 16px;
+  justify-content: center;
+}
+.status .cell:nth-child(2) .label {
+  text-align: center;
 }
 /* CAMERA SELECT label centred over the key group */
 .cams .label {
