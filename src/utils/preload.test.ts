@@ -1,5 +1,10 @@
-import { describe, expect, it } from 'vitest'
-import { createOverlayPreloader } from './preload'
+// @vitest-environment jsdom
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import {
+  createOverlayPreloader,
+  IDLE_TIMEOUT_MS,
+  idleSchedule,
+} from './preload'
 
 const setup = (urls: string[], batchSize?: number) => {
   const images: { src: string; decoding?: string; fetchPriority?: string }[] =
@@ -75,5 +80,47 @@ describe('createOverlayPreloader', () => {
     preload()
     flush()
     expect(images).toHaveLength(0)
+  })
+})
+
+describe('idleSchedule', () => {
+  afterEach(() => {
+    delete (window as { requestIdleCallback?: unknown }).requestIdleCallback
+    vi.useRealTimers()
+  })
+
+  it('passes a timeout to requestIdleCallback so it still runs when the page is never idle', () => {
+    const ric = vi.fn()
+    ;(window as { requestIdleCallback?: unknown }).requestIdleCallback = ric
+    const fn = vi.fn()
+    idleSchedule(fn)
+    expect(ric).toHaveBeenCalledWith(fn, { timeout: IDLE_TIMEOUT_MS })
+    expect(IDLE_TIMEOUT_MS).toBe(2000)
+  })
+
+  it('falls back to a short timer where requestIdleCallback does not exist', () => {
+    vi.useFakeTimers()
+    const fn = vi.fn()
+    idleSchedule(fn)
+    expect(fn).not.toHaveBeenCalled()
+    vi.advanceTimersByTime(IDLE_TIMEOUT_MS)
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
+
+  it('a preload driven by the timeout path still completes without any idle time', () => {
+    vi.useFakeTimers()
+    const imgs: { src: string }[] = []
+    const preload = createOverlayPreloader(['/a', '/b', '/c'], {
+      createImage: () => {
+        const i = { src: '' }
+        imgs.push(i)
+        return i
+      },
+      schedule: idleSchedule,
+      batchSize: 1,
+    })
+    preload()
+    vi.advanceTimersByTime(IDLE_TIMEOUT_MS * 3)
+    expect(imgs.map(i => i.src)).toEqual(['/a', '/b', '/c'])
   })
 })

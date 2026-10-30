@@ -42,10 +42,16 @@ export const createOverlayPreloader = (
   }
 }
 
+/** Longest wait for an idle slot (ms). The game runs rAF + a noise canvas every frame, so on a weak device idle time may never come. */
+export const IDLE_TIMEOUT_MS = 2000
+
 export const idleSchedule = (fn: () => void) => {
   const w = window as Window & {
-    requestIdleCallback?: (cb: () => void) => number
+    requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number
   }
-  if (w.requestIdleCallback) w.requestIdleCallback(fn)
-  else window.setTimeout(fn, 200)
+  if (w.requestIdleCallback) {
+    w.requestIdleCallback(fn, { timeout: IDLE_TIMEOUT_MS })
+  } else {
+    window.setTimeout(fn, 200)
+  }
 }
