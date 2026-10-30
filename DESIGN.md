@@ -261,7 +261,7 @@ What to take from it:
 - Adjustments such as brightness are knobs: operated by touch (drag/rotate) but drawn as physical knobs.
 - The picture stays in color. Analog noise is added and drifts subtly over time (not a visible loop, not frozen static).
 - Rounded corners on the screen and on the parts.
-- The Report buttons and every other control use the same retro hardware look (push buttons, switches, lamps), not Material-style buttons. Touch-target size and readability stay modern. The §8 components are reskinned to this look.
+- The Report buttons, the camera selector tabs, and every other control use the same retro hardware look (push buttons, switches, lamps), not Material-style buttons. The reference's numbered push buttons (1-4) are the model for the camera selector. Touch-target size and readability stay modern. The §8 components are reskinned to this look.
 - Every knob and button shows a visible label; no hidden operations.
 - Open: whether knob settings change what is visible (gameplay) or only the look.
 
