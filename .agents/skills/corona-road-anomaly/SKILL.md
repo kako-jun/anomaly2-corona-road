@@ -11,8 +11,7 @@ Use this skill when planning or producing an image-based anomaly for this game. 
 
 - Read [`prompts/camera-element-inventory.md`](../../../prompts/camera-element-inventory.md) for the single source of truth for camera photos, visible elements, stable IDs, and approximate bounds.
 - Open the matching `prompts/atlas/camNN.svg` for a visual index of those IDs; regenerate maps with `npm run build:camera-atlas` after changing the inventory.
-- Read [`prompts/anomaly-catalog.md`](../../../prompts/anomaly-catalog.md) for candidate types and phase balance.
-- Read [`prompts/candidate-pool.md`](../../../prompts/candidate-pool.md) for photo-specific unselected ideas; remove a selected row when promoting it into `anomalies.yaml`.
+- Read [`prompts/candidate-pool.md`](../../../prompts/candidate-pool.md) for photo-specific unselected ideas, the Showa-theme candidates, and the runtime/audio/UI anomaly stock with its phase-allocation guide; remove a selected row when promoting it into `anomalies.yaml`.
 - Follow [`prompts/README.md`](../../../prompts/README.md) and [`prompts/base-template.md`](../../../prompts/base-template.md) for prompt conventions.
 - The current game camera mapping is in `src/utils/gameConfig.ts`; the WebP exports are in `public/images/`.
 
@@ -45,7 +44,7 @@ Use `planned`, `generated`, `composited`, and `reviewed` as distinct states. Nev
 
 ## 昭和の時間が戻る異変
 
-この作品では、懐かしく寂しい日常が一瞬戻る方向を優先する。閉店した店が営業する、壊れていた物が直る等、写真で確認できる現状から一つだけ変える。怖がらせる小道具を前提にしない。候補は `prompts/showa-anomaly-ideas.md` を参照。
+この作品では、懐かしく寂しい日常が一瞬戻る方向を優先する。閉店した店が営業する、壊れていた物が直る等、写真で確認できる現状から一つだけ変える。怖がらせる小道具を前提にしない。核となる変化は「閉店した店が再び営業し、壊れたものが直り、失われた日常が一瞬戻る」で、広告などの小道具は補助でありテーマの中心にしない。修復は元写真で破損が確認できる箇所を選んでから制作し、破損を想像で決めない。『既に存在した物の変化』と『追加』を混同しない。小物は実ゲームの表示寸法で視認性を検証する。公開用 baseline の店名・マークは kako-jun の他作品のパロディにし、Corona Road の名前は維持する。最初の本命は「閉じたシャッターが少し開き暖かな店内光が漏れる」。候補は `prompts/candidate-pool.md` の「昭和テーマ候補」を参照（制作状態は `prompts/anomalies.yaml` が正本）。
 
 生成結果が全体を描き直しても、元画像を下地とし、生成画像を元の寸法・構図に位置合わせして対象と必要な光・影だけをマスクで重ねる。境界は徐々に透過させ、マスク外は必ずゼロにする。床目地やシャッターの線を確認し、ずれが見える場合は位置合わせやマスクを調整する。PNGなどロスレスで保存し、マスク外差分ゼロを検証する。`experiments/showa-cam02/` は試行例であり、見た目の最終承認を意味しない。
 

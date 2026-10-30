@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Build prompts/queue/index.html from prompts/anomalies.yaml + base-template.md
+// Build prompts/queue/index.html from prompts/anomalies.yaml
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

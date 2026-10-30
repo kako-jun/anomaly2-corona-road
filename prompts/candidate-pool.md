@@ -371,3 +371,110 @@
 | CR-08-40 | CAM08-E13 | スイッチ状部品のすぐ横に同じ部品がもう一つ現れる。 | object / early / medium      |
 | CR-08-41 | CAM08-E14 | 右壁の白い帯の一本だけ薄い桃色になる。             | environment / early / medium |
 | CR-08-42 | CAM08-E16 | 床タイルの一枚の中央に小さな落ち葉が一枚現れる。   | object / early / medium      |
+
+## 昭和テーマ候補（閉店後の地下街に日常が戻る）
+
+未制作。旧・昭和案メモから、`anomalies.yaml` に同等の試作が無いものだけを移した。候補IDは `CR-SH-NN`。方針（核となる変化・小道具を主役にしない・修復は元写真で破損が確認できる箇所だけ）は制作スキルの「昭和の時間が戻る異変」を参照。着手前に通常どおり類似照合する（近縁: AR-01-shutter-light / AR-08-notice-residue / CR-08-17 / AR-02-duplicate-coffee-sign）。
+
+| 候補ID   | 対象ID    | 変化案                                                                                     | 分類 / フェーズ / 目立ち度  |
+| -------- | --------- | ------------------------------------------------------------------------------------------ | --------------------------- |
+| CR-SH-01 | CAM02-E07 | シャッターに色褪せたホーロー広告が一枚現れる。                                             | object / early / subtle     |
+| CR-SH-02 | CAM02-E14 | 自立看板の文字が昔の喫茶店の名前に戻る（架空名）。                                         | object / mid / medium       |
+| CR-SH-03 | CAM02-E20 | 誰もいない床に革靴の足跡が続く。                                                           | person / mid / medium       |
+| CR-SH-04 | CAM01-E12 | 閉店した店の格子戸に暖簾が現れる（写真に暖簾は無いので要設計）。                           | object / mid / medium       |
+| CR-SH-05 | CAM01-E12 | 格子戸が少しだけ開く。                                                                     | environment / mid / medium  |
+| CR-SH-06 | CAM01-E16 | 消えた商店の表示が吊り看板に戻る。                                                         | object / early / subtle     |
+| CR-SH-07 | CAM03-E06 | シャッターに色褪せた特売ポスターが現れる。                                                 | object / early / subtle     |
+| CR-SH-08 | CAM04-E16 | 点検口の蓋の隙間に古い新聞の端が挟まる。                                                   | object / early / subtle     |
+| CR-SH-09 | CAM05-E08 | ガラス内のカーテンが少し開く。                                                             | environment / mid / medium  |
+| CR-SH-10 | CAM06-E12 | メニュー板の値段が昔の価格に戻る。                                                         | object / early / subtle     |
+| CR-SH-11 | CAM06-E09 | 観葉植物の鉢が懐かしいブリキ缶に変わる。                                                   | object / mid / medium       |
+| CR-SH-12 | CAM08-E14 | ガラスに背広姿が映り、奥へ去る（動きは複数画像または runtime）。                           | person / late / obvious     |
+| CR-SH-13 | 通路奥    | 紙袋を持つ後ろ姿が遠くに立つ（対象IDは該当カメラで確定）。                                 | person / mid / medium       |
+| CR-SH-14 | 各カメラ  | 蛍光灯一本だけが暖色に変わる（対象IDは該当カメラで確定）。                                 | environment / mid / medium  |
+| CR-SH-15 | CAM05-E08 | ガラス内だけ昔の明かりが灯る（近縁: AR-05-glass-light を確認）。                           | environment / late / medium |
+| CR-SH-16 | 要確認    | 看板の消灯文字が一文字だけ点灯する（消灯文字の確認と架空化 baseline 確定が先）。           | object / mid / medium       |
+| CR-SH-17 | 要確認    | ポスターの色が復元する（元の劣化を確認要。生成結果に実在ブランド風文字が入り一度不採用）。 | object / early / subtle     |
+| CR-SH-18 | 要確認    | タイル・壁の破損が直る（写真で破損が確認できる箇所を選んでから）。                         | environment / mid / medium  |
+
+音や映像の昭和系 runtime 案（食器の音、古い館内放送、映像が一瞬褪色）は下の runtime 在庫を参照。
+
+## Runtime / 背景非依存の異変在庫
+
+画像差分を作らず、CSS / Canvas / Web Audio / 状態管理で出す異変の在庫（旧・異変在庫メモから移設）。写真要素に紐づかないため要素IDは持たない。採用時は画像異変と別の実装タスクにし、`anomalies.yaml`（画像差分台帳）には載せない。
+
+分類軸: `asset`（画像差分が必要）/ `runtime`（画像生成不要）/ `hybrid`（両方）。`background-bound`（看板・シャッター・通路奥など背景依存）/ `background-free`（画面揺れ・音・camera lost など）。
+
+### カメラ画像そのもの（asset または hybrid）
+
+- frame crop: 同じカメラなのに少しズームされている。
+- angle shifted: カメラ角度が数度ずれる。
+- focus blur: 一部/全体のピントが外れる。
+- exposure shift: 白飛び、黒潰れ。
+- compression artifact: ブロックノイズが異常に増える。
+- scanline burn: 走査線や焼き付きが増える。
+- freeze frame marker: 時刻だけ進むが映像が止まったように見える。
+- duplicate feed image: 別カメラと同じ映像になる。
+- fast figure: 画像では残像、runtime で一瞬横切る。
+- flicker source: 画像差分では明滅対象を作り、runtime で点滅させる。
+
+### カメラ・映像
+
+- camera lost: カメラ一覧から1台消える、または黒画面になる。
+- camera feed swapped: ラベルと映像が入れ替わる。
+- camera label shuffle: CAM番号や場所名がランダムに変わる。
+- camera locked: 一時的に特定カメラへ切替不能。
+- camera auto switch: 勝手に別カメラへ切り替わる。
+- camera delayed: 数秒前の映像のように時刻だけ遅れる。
+- camera rewind: 短く巻き戻る。
+- camera loop: 同じ数秒をループする。
+- shake / hard shake: 画面が小刻みに揺れる / 報告を急がせる大きい揺れ。
+- distortion: 魚眼、波打ち、引き伸ばし。
+- chromatic aberration: 色ズレ。
+- static noise: ノイズが画面を覆う。
+- black frame blink: 一瞬黒フレームを挟む。
+- dead pixels: 固定点のノイズや欠けが増える。
+- overlay ghosting: 前フレームが薄く残る。
+
+### 音
+
+- ambience missing: 環境音が急に消える。
+- hum grows: 低いハム音が大きくなる。
+- fluorescent buzz: 蛍光灯のジリジリ音。
+- distant footsteps / running footsteps: 奥から足音 / 近づく速い足音。
+- knock: シャッター/壁/ガラスを叩く音。
+- whisper: 聞き取れない囁き。
+- reversed announcement: 逆再生の館内放送。
+- wrong location sound: 見ていないカメラの音が鳴る。
+- report stinger: 異変中だけ短い不協和音。
+- silence after report: 正報後に一瞬無音。
+- 昭和系: 食器の音、古い館内放送がかすかに混ざる（音素材と再生機構が必要）。映像が一瞬だけ褪色する。
+
+### UI・メタ
+
+- report button disappears / moves: 報告ボタンが短時間消える / 位置がずれる。
+- wrong category labels: カテゴリ名だけ入れ替わる。
+- disabled category: 正しいカテゴリが一時的に押せない。
+- false strike display: strike 表示が増えたように見える。
+- timer backwards / jumps / frozen: 時刻が逆走する / 0:00・6:00付近へ飛ぶ / 映像は動くが時刻が止まる。
+- text corruption: UI 文字が壊れる。
+- language drift: 英語 UI に日本語/記号が混ざる。
+- notification lies: toast が嘘を言う。
+- badge appears without anomaly / badge missing: 異変が無いのに警告バッジ / 異変中なのにバッジが出ない。
+- cursor/hover glitch: desktop 時のみカーソルや hover が乱れる。
+
+### ゲームルール
+
+- extra active anomaly: 同時発生上限を一時的に超える。
+- anomaly refuses report: 正しく報告しても一度だけ直らない。
+- wrong camera accepted: 別カメラの報告が通る。
+- category inversion: 特定時間だけカテゴリ判定が逆になる。
+- safe camera unsafe: 何もないはずのカメラで strike 誘導が起きる。
+- tutorial rule break: 画面上のルール文が変わる。
+
+### 配分の目安（MVP 40 件）
+
+- 内訳: sanitized baseline は全カメラ、画像異変 24、runtime カメラ 6、音 4、UI/メタ 6。
+- フェーズ: early 12（小さな物体・看板・照明・音の違和感）/ mid 16（扉・通路奥・人影・camera lost・画面揺れ）/ late 12（物理崩壊・人物異常・UI 破壊・タイマー異常）。
+- 背景別: 看板が強い背景は signage/text/poster 系、通路奥は intruder/corridor/door/fog 系、シャッター・店先は door/shutter/peek/knock 系、蛍光灯・天井は light/flicker/ceiling/shadow 系、余白・暗部は creature/surreal/reflection 系。camera lost・shake・static・audio・UI/meta はどの背景にも置ける。
+- 方針: 序盤は小さく、中盤は確信でき、終盤はルール自体が壊れる構成にする（Observation Duty / Exit 8 系の反復空間の差分を参考）。
