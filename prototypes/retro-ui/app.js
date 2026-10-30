@@ -150,7 +150,10 @@ function setCats(open) {
 }
 reportBtn.addEventListener('click', () => setCats(scrim.hidden));
 // click (not pointerdown): a touch tap must not leave a synthesized click for the element underneath
-scrim.addEventListener('click', e => { if (e.target === scrim) setCats(false); });
+// Close only when both the press and the release happened on the backdrop itself (not a drag out of the dialog).
+let downOnScrim = false;
+scrim.addEventListener('pointerdown', e => { downOnScrim = e.target === scrim; });
+scrim.addEventListener('click', e => { if (e.target === scrim && downOnScrim) setCats(false); downOnScrim = false; });
 document.addEventListener('keydown', e => {
   if (scrim.hidden) return;
   if (e.key === 'Escape') { e.preventDefault(); setCats(false); return; }
