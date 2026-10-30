@@ -70,15 +70,17 @@
         <button type="button" class="key key-report" id="reportBtn" aria-expanded="false" aria-controls="cats">REPORT</button>
       </div>
       <div class="lcd" id="feedback" role="status">READY</div>
-      <div class="cats" id="cats" hidden>
-        <div class="label">SELECT TYPE</div>
-        <div class="cat-grid" id="catGrid"></div>
-      </div>
     </div>
 
     <div class="speaker" aria-hidden="true"></div>
   </section>
 </main>
+<div class="scrim" id="scrim" hidden>
+  <div class="dialog" id="cats" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+    <div class="label dlg-title" id="dlgTitle">SELECT TYPE</div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+</div>
 <script src="app.js"></script>
 </body>
 </html>

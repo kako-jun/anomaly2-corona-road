@@ -1175,3 +1175,299 @@ body {
     font-size: 1.45rem;
   }
 }
+
+/* ===== Grunge pass: large soft stains / soot / drips / grease instead of fine grain or hairlines =====
+   No thresholded cell patterns: every SVG layer is low-frequency, gently ramped and blurred, so edges stay soft.
+   Static, fixed seeds. Strength is still --wear (?wear=0 turns it all off). */
+:root {
+  --grain: linear-gradient(transparent, transparent);
+  --stain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.007' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .30 0 0 0 0 .14 1.5 0 0 0 -.58'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  --soot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='460' height='460'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.011' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .13 0 0 0 0 .09 0 0 0 0 .05 1.7 0 0 0 -.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  --drip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='520'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.03 .003' numOctaves='2' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .19 0 0 0 0 .06 3.2 0 0 0 -1.55'/%3E%3CfeGaussianBlur stdDeviation='2 8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  --grease: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='260'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .03' numOctaves='2' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .21 0 0 0 0 .08 3 0 0 0 -1.4'/%3E%3CfeGaussianBlur stdDeviation='8 2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  --mottle: linear-gradient(transparent, transparent);
+}
+.cabinet::before {
+  background:
+    /* a few short, thick, straight scratches (light edge + dark edge) */
+    linear-gradient(
+        104deg,
+        transparent 38%,
+        rgba(255, 255, 255, 0.7) 42%,
+        rgba(60, 38, 14, 0.55) 52%,
+        transparent 58%
+      )
+      4% 1.6% / 34px 9px no-repeat,
+    linear-gradient(
+        78deg,
+        transparent 38%,
+        rgba(255, 255, 255, 0.65) 42%,
+        rgba(60, 38, 14, 0.5) 52%,
+        transparent 58%
+      )
+      95% 97% / 30px 9px no-repeat,
+    linear-gradient(
+        112deg,
+        transparent 38%,
+        rgba(255, 255, 255, 0.6) 42%,
+        rgba(60, 38, 14, 0.5) 52%,
+        transparent 58%
+      )
+      1.5% 62% / 26px 9px no-repeat,
+    /* paint rubbed off at corners: darker substrate showing */
+      radial-gradient(ellipse 22px 12px at 0 0, #8a7650 0 60%, transparent 78%)
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(
+        ellipse 18px 14px at 100% 100%,
+        #86724c 0 60%,
+        transparent 78%
+      )
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(ellipse 16px 10px at 100% 0, #8d7a55 0 55%, transparent 75%)
+      0 0 / 100% 100% no-repeat,
+    /* a few soft vertical drips (no noise tile: avoids a plaid look) */
+      radial-gradient(
+        ellipse 4px 90px at 17% 0,
+        rgba(70, 45, 15, 0.32),
+        transparent
+      )
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(
+        ellipse 3px 130px at 64% 0,
+        rgba(70, 45, 15, 0.26),
+        transparent
+      )
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(
+        ellipse 4px 70px at 88% 0,
+        rgba(70, 45, 15, 0.3),
+        transparent
+      )
+      0 0 / 100% 100% no-repeat,
+    radial-gradient(
+        ellipse 3px 100px at 41% 0,
+        rgba(70, 45, 15, 0.22),
+        transparent
+      )
+      0 0 / 100% 100% no-repeat,
+    /* grime gathering in the corners and along the bottom */
+      radial-gradient(
+        circle at 0 100%,
+        rgba(50, 32, 12, 0.5),
+        transparent 130px
+      ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(50, 32, 12, 0.5),
+      transparent 130px
+    ),
+    radial-gradient(circle at 0 0, rgba(50, 32, 12, 0.35), transparent 90px),
+    radial-gradient(circle at 100% 0, rgba(50, 32, 12, 0.3), transparent 90px),
+    linear-gradient(180deg, transparent 60%, rgba(60, 38, 14, 0.3) 100%),
+    var(--soot) 0 0 / 460px 460px repeat,
+    var(--stain) 0 0 / 520px 520px repeat;
+}
+/* hand grease: soft dark halos round everything that gets touched */
+.cam-cell .key,
+.cat-grid .key {
+  box-shadow:
+    0 4px 0 var(--cream-dk),
+    0 6px 6px #0005,
+    inset 0 1px 1px #fffa,
+    0 0 10px 3px rgba(50, 30, 10, calc(0.3 * var(--wear)));
+}
+.cam-cell .key:active,
+.cam-cell .key.pressed,
+.cat-grid .key:active,
+.cat-grid .key.pressed {
+  box-shadow:
+    0 0 0 var(--cream-dk),
+    0 1px 2px #0006,
+    inset 0 3px 5px #0004,
+    0 0 10px 3px rgba(50, 30, 10, calc(0.3 * var(--wear)));
+}
+.key-report {
+  box-shadow:
+    0 5px 0 #6a130d,
+    0 7px 7px #0006,
+    inset 0 1px 1px #fff7,
+    0 0 12px 4px rgba(50, 30, 10, calc(0.3 * var(--wear)));
+}
+.key-report:active,
+.key-report.pressed {
+  box-shadow:
+    0 0 0 #6a130d,
+    0 1px 2px #0006,
+    inset 0 3px 6px #0006,
+    0 0 12px 4px rgba(50, 30, 10, calc(0.3 * var(--wear)));
+}
+.knob {
+  box-shadow:
+    0 0 0 5px var(--cream-dk),
+    0 0 0 7px #0003,
+    0 0 14px 8px rgba(50, 30, 10, calc(0.34 * var(--wear))),
+    0 5px 8px 3px #0006,
+    inset 0 -3px 5px #0003,
+    inset 0 2px 2px #fff9;
+}
+.knob:focus-visible {
+  box-shadow:
+    0 0 0 4px var(--cream-dk),
+    0 0 0 7px #2a6cd8,
+    0 5px 8px 3px #0006;
+}
+/* knob face: only a soft darkening toward the rim and a smudge, no line patterns */
+.knob::before {
+  background:
+    radial-gradient(
+      ellipse 40% 28% at 35% 30%,
+      rgba(255, 255, 255, 0.22),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 45% 30% at 65% 72%,
+      rgba(70, 45, 15, 0.22),
+      transparent 75%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 60%,
+      rgba(60, 40, 18, 0.3) 100%
+    );
+}
+/* key faces: soft wear only */
+.key::after {
+  background:
+    radial-gradient(
+      ellipse at 50% 38%,
+      rgba(255, 255, 255, 0.3),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 30% 26% at 70% 62%,
+      rgba(var(--blot), 0.28),
+      transparent 80%
+    );
+}
+.cabinet::before {
+  opacity: calc(var(--wear) * 0.72);
+}
+
+/* ===== Layout fixes ===== */
+/* knobs: clear space between knob (incl. rim/halo) and label, label and drag hint */
+.knob-wrap {
+  gap: 0;
+}
+.knob {
+  margin-bottom: 20px;
+}
+.knob-wrap .label {
+  margin-bottom: 4px;
+}
+.drag-hint {
+  margin-top: 0;
+  line-height: 1.3;
+}
+.knob {
+  box-shadow:
+    0 0 0 5px var(--cream-dk),
+    0 0 0 7px #0003,
+    0 0 9px 5px rgba(50, 30, 10, calc(0.3 * var(--wear))),
+    0 4px 5px 1px #0006,
+    inset 0 -3px 5px #0003,
+    inset 0 2px 2px #fff9;
+}
+/* SHIFT TIME: label and digits centred in the window; REPORTS digits right-aligned */
+.status .cell:first-child .label {
+  text-align: center;
+}
+#shiftTime {
+  justify-content: center;
+}
+.status .cell:nth-child(2) .vfd {
+  justify-content: flex-end;
+  padding-right: 16px;
+}
+/* CAMERA SELECT label centred over the key group */
+.cams .label {
+  text-align: center;
+}
+/* model print on the right of the bezel's lower rim, clear of the rounded corner */
+.tube > .maker {
+  left: auto;
+  right: 26px;
+}
+
+/* ===== Report type picker: modal popup (fixed overlay, does not change page layout) ===== */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.6);
+}
+.scrim[hidden] {
+  display: none;
+}
+.dialog {
+  position: relative;
+  width: min(100%, 360px);
+  padding: 16px 14px 14px;
+  border-radius: 18px;
+  background: linear-gradient(
+    180deg,
+    var(--cream-hi),
+    var(--cream) 14%,
+    var(--cream) 85%,
+    var(--cream-lo)
+  );
+  box-shadow:
+    0 18px 40px #000b,
+    0 0 0 2px rgba(60, 40, 18, 0.4),
+    inset 0 2px 2px #fff7,
+    inset 0 -3px 6px #0003;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dialog::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: calc(var(--wear) * 0.72);
+  background:
+    radial-gradient(circle at 0 100%, rgba(50, 32, 12, 0.5), transparent 90px),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(50, 32, 12, 0.5),
+      transparent 90px
+    ),
+    radial-gradient(circle at 0 0, rgba(50, 32, 12, 0.35), transparent 70px),
+    var(--soot) 0 0 / 460px 460px repeat,
+    var(--stain) 0 0 / 520px 520px repeat;
+}
+.dialog > * {
+  position: relative;
+  z-index: 1;
+}
+.dialog .dlg-title {
+  text-align: center;
+}
+.dialog .cat-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 10px;
+}
+@media (min-width: 900px) {
+  .dialog {
+    width: 460px;
+    zoom: 1.25;
+  }
+  .dialog .cat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -9,27 +9,28 @@
  * No names, ages or case details on purpose (only hints like "that matter").
  * A few lines faintly foreshadow a presence behind them (cold neck, a door closing, a half-finished "behind me...");
  * both brush it off.
+ * Film subtitle convention: no punctuation marks (、。); separate phrases with a full-width space. ? ! and …… are fine.
  * The "who" field is not shown on screen; tone tells them apart.
  * Arc (kept subtle): unaware of each other -> his awkwardness -> she notices and gets awkward too.
  * Entries are shown one at a time, in order, as film-style subtitles.
  * hint: true = sample hint lines, shown in sequence (one at a time) after a false report. */
 const DIALOGUE = [
-  { who: 'A', text: '今夜もここ使わせてもらうわね。' },
-  { who: 'M', text: 'はい。三時に巡回に出ます。' },
-  { who: 'A', text: '換気効きすぎ? 首のうしろ寒いわ。' },
-  { who: 'M', text: 'すみません。空調、見ておきます。' },
-  { who: 'M', text: '3番の看板、いつもと違います。' },
-  { who: 'A', text: 'メモしといてもらえる? 例の件。' },
-  { who: 'M', text: 'あ、毛布……いえ、なんでも。' },
-  { who: 'A', text: 'なによ、言いかけてやめて。' },
-  { who: 'M', text: 'いま後ろ……いえ、なんでもないです。' },
-  { who: 'A', text: '今ドア閉まった? 気のせいね。' },
-  { who: 'A', text: '……あんた、顔赤くない?' },
-  { who: 'M', text: 'い、いえ! 暖房のせいです。' },
-  { hint: true, who: 'A', text: 'さっきの違うみたい。日誌は?' },
-  { hint: true, who: 'M', text: '3番に看板はない、はずです。' },
+  { who: 'A', text: '今夜もここ使わせてもらうわね' },
+  { who: 'M', text: 'はい　三時に巡回に出ます' },
+  { who: 'A', text: '換気効きすぎ?　首のうしろ寒いわ' },
+  { who: 'M', text: 'すみません　空調　見ておきます' },
+  { who: 'M', text: '3番の看板　いつもと違います' },
+  { who: 'A', text: 'メモしといてもらえる?　例の件' },
+  { who: 'M', text: 'あ　毛布……いえ　なんでも' },
+  { who: 'A', text: 'なによ　言いかけてやめて' },
+  { who: 'M', text: 'いま後ろ……いえ　なんでもないです' },
+  { who: 'A', text: '今ドア閉まった?　気のせいね' },
+  { who: 'A', text: '……あんた　顔赤くない?' },
+  { who: 'M', text: 'い　いえ!　暖房のせいです' },
+  { hint: true, who: 'A', text: 'さっきの違うみたい　日誌は?' },
+  { hint: true, who: 'M', text: '3番に看板はない　はずです' },
   { hint: true, who: 'A', text: '映ってる物だけ見てない?' },
-  { hint: true, who: 'M', text: 'カメラの向きも日誌にあります。' },
+  { hint: true, who: 'M', text: 'カメラの向きも日誌にあります' },
 ];
 const NORMAL = DIALOGUE.filter(d => !d.hint);
 const HINT_GROUPS = [];
@@ -123,13 +124,25 @@ function selectCam(n) {
 selectCam(1);
 
 /* ---- Report ---- */
-const reportBtn = $('reportBtn'), cats = $('cats'), lamp = $('reportLamp'), fb = $('feedback');
+const reportBtn = $('reportBtn'), scrim = $('scrim'), dialog = $('cats'), lamp = $('reportLamp'), fb = $('feedback');
 let falseNext = false, reports = 0, strikes = 0, fbTimer = 0;
 function setCats(open) {
-  cats.hidden = !open; reportBtn.setAttribute('aria-expanded', String(open)); lamp.classList.toggle('lit', open);
+  scrim.hidden = !open; reportBtn.setAttribute('aria-expanded', String(open)); lamp.classList.toggle('lit', open);
   reportBtn.classList.toggle('pressed', open);
+  if (open) dialog.querySelector('button').focus(); else reportBtn.focus();
 }
-reportBtn.addEventListener('click', () => setCats(cats.hidden));
+reportBtn.addEventListener('click', () => setCats(scrim.hidden));
+scrim.addEventListener('pointerdown', e => { if (e.target === scrim) setCats(false); });
+document.addEventListener('keydown', e => {
+  if (scrim.hidden) return;
+  if (e.key === 'Escape') { e.preventDefault(); setCats(false); return; }
+  if (e.key === 'Tab') { // keep focus inside the dialog
+    const f = [...dialog.querySelectorAll('button')], first = f[0], last = f[f.length - 1];
+    if (!dialog.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
 const catGrid = $('catGrid');
 CATEGORIES.forEach(name => {
   const b = document.createElement('button'); b.type = 'button'; b.className = 'key'; b.textContent = name;
