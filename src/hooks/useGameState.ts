@@ -140,7 +140,7 @@ export const useGameState = () => {
       const reason = anomalyOnCamera ? 'WRONG CATEGORY' : 'NO ANOMALY HERE'
       pushFeedback('wrong', `FALSE REPORT — ${reason}`)
       if (newMisreports >= DEFAULT_CONFIG.maxMisreports) {
-        // Brief delay so the feedback flash/toast is visible before the game-over screen.
+        // Brief delay so the result OSD is visible before the game-over screen.
         window.setTimeout(() => setGameState('lose'), TOAST_MS)
       }
     },
@@ -220,19 +220,6 @@ export const useGameState = () => {
     return () => window.clearTimeout(timer)
   }, [feedback, clearFeedback])
 
-  useEffect(() => {
-    if (gameState !== 'playing') return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a') switchCamera('prev')
-      else if (e.key === 'ArrowRight' || e.key === 'd') switchCamera('next')
-      else if (e.key >= '1' && e.key <= String(CAMERAS.length)) {
-        switchCamera(Number(e.key) - 1)
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [gameState, switchCamera])
-
   const activeAnomalyHere = activeAnomalies.find(
     a => a.cameraId === cameras[currentCameraIndex].id && !a.detectedAt
   )
@@ -250,6 +237,5 @@ export const useGameState = () => {
     switchCamera,
     reportAnomaly,
     gameTime: msToGameTime(stats.currentTime),
-    progress: Math.min(1, stats.currentTime / DEFAULT_CONFIG.totalDurationMs),
   }
 }

@@ -1,61 +1,42 @@
 import { GameStats } from '../types/game'
+import { cx } from '../utils/cx'
 import { DEFAULT_CONFIG } from '../utils/gameConfig'
 
 interface GameHUDProps {
   gameTime: string
   stats: GameStats
-  progress: number
 }
 
-export const GameHUD = ({ gameTime, stats, progress }: GameHUDProps) => {
-  const strikeModifier =
-    stats.misreports >= DEFAULT_CONFIG.maxMisreports - 1
-      ? ' hud__stat-value--danger'
-      : stats.misreports > 0
-        ? ' hud__stat-value--warning'
-        : ''
-
+/** Display windows: SHIFT TIME / REPORTS (VFD) and STRIKES (lamps). */
+export const GameHUD = ({ gameTime, stats }: GameHUDProps) => {
+  const max = DEFAULT_CONFIG.maxMisreports
   return (
-    <div className="hud">
-      <div className="hud__row">
-        <div>
-          <div className="hud__time-label">SHIFT TIME</div>
-          <div className="hud__time">{gameTime}</div>
-        </div>
-        <div className="hud__stats">
-          <div className="hud__stat">
-            <span className="hud__stat-label">REPORTS</span>
-            <span className="hud__stat-value">
-              {stats.correctReports}
-              <span className="hud__stat-divisor">
-                {' '}
-                / {DEFAULT_CONFIG.minCorrectReports}
-              </span>
-            </span>
-          </div>
-          <div className="hud__stat">
-            <span className="hud__stat-label">STRIKES</span>
-            <span className={`hud__stat-value${strikeModifier}`}>
-              {stats.misreports}
-              <span className="hud__stat-divisor">
-                {' '}
-                / {DEFAULT_CONFIG.maxMisreports}
-              </span>
-            </span>
-          </div>
+    <div className="row status">
+      <div className="cell">
+        <div className="label">SHIFT TIME</div>
+        <div className="vfd vfd--center">{gameTime}</div>
+      </div>
+      <div className="cell">
+        <div className="label">REPORTS</div>
+        <div className="vfd vfd--center">
+          <span>{stats.correctReports}</span>
+          <span className="dim"> / {DEFAULT_CONFIG.minCorrectReports}</span>
         </div>
       </div>
-      <div
-        className="hud__progress"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(progress * 100)}
-      >
+      <div className="cell">
+        <div className="label">STRIKES</div>
         <div
-          className="hud__progress-fill"
-          style={{ width: `${progress * 100}%` }}
-        />
+          className="lamps"
+          role="img"
+          aria-label={`Strikes ${stats.misreports} of ${max}`}
+        >
+          {Array.from({ length: max }, (_, i) => (
+            <i
+              key={i}
+              className={cx('lamp amber', i < stats.misreports && 'on')}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )

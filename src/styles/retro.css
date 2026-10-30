@@ -1,24 +1,11 @@
-/* Retro UI prototype. Standalone; not connected to game logic. */
+/* Retro cabinet UI (CRT monitor + control panel). See DESIGN.md section 11.
+   All tokens are scoped to .retro so the start / result screens keep the global tokens from index.css.
+   NOTE: the generic class names here (.label .row .cell .key .lamp .fx .noise ...) are global. Do not
+   collide with the ones StartScreen / GameOverScreen use (.screen .card .btn .start__* .end__*).
+   The report dialog is mounted only while open, so no [hidden] attribute is used. */
 
-* {
-  box-sizing: border-box;
+.retro * {
   -webkit-tap-highlight-color: transparent;
-}
-
-html {
-  font-size: 16px;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-@media (max-width: 440px) {
-  .cabinet {
-    margin: 0;
-    border-radius: 0;
-    max-width: none;
-  }
 }
 
 /* Tube */
@@ -36,7 +23,8 @@ html {
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: brightness(var(--bri, 1)) contrast(var(--con, 1)) saturate(0.9);
+  filter: brightness(var(--bri, 1)) contrast(var(--con, 1)) saturate(0.9)
+    hue-rotate(var(--hue, 0deg));
 }
 
 .pic img.glow {
@@ -73,7 +61,8 @@ html {
   pointer-events: none;
 }
 
-#noise {
+/* the canvas is .fx.noise */
+.noise {
   opacity: 0.11;
   mix-blend-mode: overlay;
   image-rendering: pixelated;
@@ -361,9 +350,6 @@ html {
 /* Desktop: same parts, landscape arrangement */
 
 @media (min-width: 900px) {
-  html {
-    font-size: 17px;
-  }
   .cabinet {
     max-width: 1080px;
     flex-direction: row;
@@ -399,7 +385,7 @@ html {
 }
 
 /* ===== Wear / grime (static, CSS+SVG only, fixed seeds, no animation) =====
-   Strength: --wear 0..1 on :root. A/B via URL: ?wear=0 (clean), ?wear=1 (standard, default), values in between ok.
+   Strength: --wear 0..1 on .retro. A/B via URL: ?wear=0 (clean), ?wear=1 (standard, default), values in between ok.
    Overlays are pseudo-elements with pointer-events:none; the CRT picture effects are untouched. */
 
 .cabinet > *,
@@ -559,8 +545,8 @@ html {
 
 /* ===== Compact layout: single bezel, one integrated cabinet, minimal margins (overrides above) ===== */
 
-body {
-  margin: 0;
+.retro {
+  width: 100%;
   min-height: 100vh;
   background: radial-gradient(
     ellipse at 50% 30%,
@@ -570,8 +556,6 @@ body {
   font-family: var(--font-label);
   color: var(--ink);
   overflow-x: hidden;
-  display: block;
-  justify-content: center;
 }
 
 .cabinet {
@@ -726,9 +710,6 @@ body {
 /* Desktop: fill the viewport, keep the 3:4 picture, scale the control panel up */
 
 @media (min-width: 900px) {
-  html {
-    font-size: 16px;
-  }
   .cabinet {
     max-width: none;
     width: 100%;
@@ -792,7 +773,7 @@ body {
    No thresholded cell patterns: every SVG layer is low-frequency, gently ramped and blurred, so edges stay soft.
    Static, fixed seeds. Strength is still --wear (?wear=0 turns it all off). */
 
-:root {
+.retro {
   --desk: #17140f;
   --desk2: #0e0c09;
   --cream: #d9ceb0;
@@ -1076,20 +1057,8 @@ body {
 
 /* SHIFT TIME: label and digits centred in the window; REPORTS digits centred */
 
-.status .cell:first-child .label {
-  text-align: center;
-}
-
-#shiftTime {
+.vfd--center {
   justify-content: center;
-}
-
-.status .cell:nth-child(2) .vfd {
-  justify-content: center;
-}
-
-.status .cell:nth-child(2) .label {
-  text-align: center;
 }
 
 /* CAMERA SELECT label centred over the key group */
@@ -1122,10 +1091,6 @@ body {
   justify-content: center;
   padding: 16px;
   background: rgba(0, 0, 0, 0.6);
-}
-
-.scrim[hidden] {
-  display: none;
 }
 
 .dialog {
@@ -1280,4 +1245,75 @@ body {
   text-shadow: 0 -1px 0 #0006;
   --blot: 211, 52, 42;
   padding-left: calc(10px + 0.2em);
+}
+
+/* ===== Game integration ===== */
+
+/* Anomaly active on the current camera: the picture jitters and shifts hue (kept from the previous UI). */
+
+.pic--anomaly {
+  --hue: -8deg;
+}
+
+.pic--anomaly img {
+  animation: glitch-shake 1.6s var(--ease) infinite;
+}
+
+/* Camera select cell: green lamp = selected, small amber lamp = anomaly on that camera */
+
+.cam-lamps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 10px;
+}
+
+.cam-lamps .lamp.alert {
+  width: 6px;
+  height: 6px;
+}
+
+.cam-lamps .lamp.alert.on {
+  background: var(--amber);
+  box-shadow:
+    0 0 6px 1px #ffa21f99,
+    inset 0 0 2px #fff9;
+}
+
+/* Anomaly read-out on the picture (OSD style, top left, below the REC line) */
+
+.osd-anomaly {
+  left: 14px;
+  top: 26%;
+  right: 40%;
+  color: #ffd27a;
+  text-shadow:
+    0 0 3px #000,
+    0 0 6px #fa3,
+    0 0 2px #fec;
+}
+
+.osd-anomaly-head {
+  font-size: 0.8rem;
+}
+
+.osd-anomaly-desc {
+  margin-top: 4px;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  color: #e9efe6;
+  text-shadow:
+    0 0 3px #000,
+    0 0 4px #000;
+}
+
+@media (min-width: 900px) {
+  .osd-anomaly-head {
+    font-size: 1rem;
+  }
+  .osd-anomaly-desc {
+    font-size: 0.85rem;
+  }
 }

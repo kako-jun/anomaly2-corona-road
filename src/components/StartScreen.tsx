@@ -28,9 +28,9 @@ export const StartScreen = ({ onStart }: StartScreenProps) => (
     <div className="card">
       <div className="start__card-label start__card-label--ctl">CONTROLS</div>
       <ul className="start__list">
-        <li>· Drag, swipe, or use ‹ › to switch cameras</li>
+        <li>· Tap a camera number, or swipe the monitor, to switch cameras</li>
         <li>· Keyboard: ← →, A / D, 1–8</li>
-        <li>· Tap REPORT ANOMALY and pick the matching type</li>
+        <li>· Press REPORT and pick the matching type</li>
       </ul>
     </div>
 

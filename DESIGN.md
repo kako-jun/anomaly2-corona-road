@@ -49,17 +49,7 @@ All colors expressed as CSS custom properties on `:root`. Always reference token
 
 ### 2.3 Category palette
 
-Each anomaly category has exactly **one color** and **one icon**. Both icon and color must appear together — never color-only or icon-only.
-
-| Category    | Icon | Color token                |
-| ----------- | ---- | -------------------------- |
-| Camera      | 📹   | `--secondary` (blue)       |
-| Object      | 📦   | `--warning` (amber)        |
-| Environment | 🌆   | `--primary` (green)        |
-| Person      | 🚶   | `--accent-violet` (violet) |
-| Surreal     | 👁️   | `--danger` (red)           |
-
-> "Surreal" the category is the meta-rule breaker — it wears danger red so the player feels the stakes. The violet `--accent-violet` token belongs to the "Person" category specifically; it is reused for meta-anomaly accents in late phase.
+Anomaly categories are shown as **text labels** (CAMERA, OBJECT, ENVIRONMENT, PERSON, SURREAL), never by color or icon alone, and never with emoji (kako-jun, 2026-10-30). The in-game cabinet UI (§8, §11) uses the cream/amber/green/red hardware palette scoped to `.retro` in `src/styles/retro.css`; the old per-category colors are no longer used there.
 
 ### 2.4 State-layer opacities
 
@@ -164,62 +154,39 @@ Two easings (in/standard + emphasized-out) and four durations.
 
 ## 7. Layout
 
-Mobile-first vertical stack:
-
-```
-┌──────────────────┐
-│       HUD        │  56 px fixed, surface-1
-├──────────────────┤
-│                  │
-│   Camera View    │  flex-1 min-height 55vh, surface-0
-│                  │
-├──────────────────┤
-│  Camera Strip    │  64 px fixed, surface-1 — anomaly badges
-├──────────────────┤
-│   Report Panel   │  fits content, surface-1, elevation 3
-└──────────────────┘
-```
-
-On desktop (≥768 px), the column is centered with `max-width: 480px`. The game preserves a tall-phone shape regardless of viewport.
+The in-game screen is a single cabinet (`.cabinet` in `src/styles/retro.css`): the CRT monitor on top and the control panel below on phones (tube first, panel under it, full-bleed up to 440 px and at most 560 px wide); at ≥ 900 px the cabinet fills the viewport with the 3:4 monitor on the left and the control panel on the right (panel scaled up with `zoom` from 1200 px). The start and result screens keep the old 480 px column (`.screen`).
 
 ---
 
 ## 8. Components
 
-### 8.1 Button
+The in-game components are the retro hardware parts from §11, implemented in `src/components/` with all styling in `src/styles/retro.css` (tokens scoped to `.retro`). `Cabinet.tsx` assembles them and owns the local UI state (knob positions, report dialog, last result OSD, subtitles). The Material-style Button and Card below are used only by the start and result screens (`StartScreen`, `GameOverScreen`).
+
+| Part                       | File                                                              | Notes                                                                                                                                                                                                                                                                    |
+| -------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| CRT monitor                | `CameraView.tsx`, `NoiseCanvas.tsx`                               | Picture, glow, scanlines, moving noise, vignette, REC, `CAM n`, result OSD, subtitles, anomaly read-out. Swipe / mouse drag switches cameras.                                                                                                                            |
+| Display windows            | `GameHUD.tsx`                                                     | SHIFT TIME and REPORTS (VFD), STRIKES (one amber lamp per allowed false report, lit by misreports). No progress bar.                                                                                                                                                     |
+| Knobs                      | `Knob.tsx`, `src/utils/knob.ts`                                   | BRIGHTNESS / CONTRAST. Horizontal drag, arrow keys (Shift = big step), Home / End; `role="slider"`. Values map to the picture's CSS `brightness()` / `contrast()`.                                                                                                       |
+| Camera select              | `CameraStrip.tsx`                                                 | Numbered push buttons (`role="group"`, each button `aria-pressed`). Green lamp = selected; small amber lamp = anomaly active on that camera.                                                                                                                             |
+| REPORT key and type picker | `ReportPanel.tsx`                                                 | Red REPORT key with lamp (always enabled; opening the picker costs nothing, choosing a wrong type costs a strike). The picker is a modal dialog outside `.cabinet`, which is `inert` while it is open. Esc, backdrop and CANCEL close it.                                |
+| Report result (OSD)        | `CameraView.tsx` (`.osd-result`)                                  | Green `CONFIRMED - ...` / red `FALSE REPORT - ...` on the picture; replaces the old toast and flash. Visible while `feedback` is set (1.5 s), then fades.                                                                                                                |
+| Subtitles                  | `useSubtitle.ts`, `src/utils/subtitle.ts`, `src/data/dialogue.ts` | Movie-style (not a live region: subtitles are never announced by screen readers): white italic, one line at a time, no punctuation marks, bottom of the picture. A false report queues the next hint lines. The lines in `dialogue.ts` are placeholders until Issue #29. |
+
+Keyboard (playing, report dialog closed): ← / → and A / D switch cameras, 1-8 select one (`useCameraKeys.ts`).
+
+### 8.1 Button (start / result screens)
 
 Three variants. All share radius `--radius-md`, padding `--space-3 --space-4`, type `--text-label`, motion `--dur-fast`.
 
-| Variant  | Bg          | Border             | Text           | Use           |
-| -------- | ----------- | ------------------ | -------------- | ------------- |
-| Filled   | `--primary` | none               | `--primary-on` | Primary CTA   |
-| Outlined | transparent | `--outline-strong` | semantic       | Secondary CTA |
-| Ghost    | transparent | none               | `--text-mid`   | Cancel, back  |
+| Variant | Bg          | Border | Text           | Use         |
+| ------- | ----------- | ------ | -------------- | ----------- |
+| Filled  | `--primary` | none   | `--primary-on` | Primary CTA |
 
 Disabled = opacity 0.38, pointer-events none, no hover.
 
-### 8.2 Card / Panel
+### 8.2 Card / Panel (start / result screens)
 
 Bg `--surface-1` (or `--surface-2` if nested), border `1px --outline`, radius `--radius-lg`, padding `--space-4`. Elevation 1.
-
-### 8.3 Chip
-
-Used for status flags (REC, anomaly counters). Bg `rgba(<semantic>, 0.16)`, text full semantic, radius `--radius-pill`, padding `2px --space-3`, type `--text-caption`.
-
-### 8.4 Camera selector strip
-
-A row of 8 tiles below the camera view. Each tile shows camera number; tiles with active anomalies show an animated amber dot. The active camera tile uses the selected state layer.
-
-### 8.5 Report panel
-
-Two states:
-
-- **Collapsed:** single primary outlined button "REPORT ANOMALY" (red outline) — _always enabled_; opening the panel costs nothing, choosing the wrong category in the expanded state costs a strike.
-- **Expanded:** 5 category tiles in a 2-column grid (asymmetric — the 5th tile spans the bottom row's left cell; this is intentional, matching a casino-style "odd one out") + cancel ghost button. The asymmetry doubles as a visual cue that "Surreal" is the rule-breaker.
-
-### 8.6 Toast
-
-For correct/wrong report feedback. Position: top center under HUD. Auto-dismiss 1.5 s. Bg `rgba(<semantic>, 0.16)` over `--surface-2`, border `1px <semantic>`, radius `--radius-md`.
 
 ---
 
@@ -228,7 +195,7 @@ For correct/wrong report feedback. Position: top center under HUD. Auto-dismiss 
 - **Focus ring:** 2 px solid `--outline-strong`, offset 2 px. Always visible on keyboard focus.
 - **Tap target:** minimum 44 × 44 px.
 - **Reduced motion:** `@media (prefers-reduced-motion: reduce)` disables anomaly pulse, flash, and camera fade.
-- **Color-blind safety:** every semantic color paired with an icon or text label.
+- **Color-blind safety:** every semantic color paired with a text label (lamps are always next to or inside a labelled control).
 
 ---
 
@@ -265,7 +232,7 @@ What to take from it:
 - Every knob and button shows a visible label; no hidden operations.
 - Decided (2026-10-30): anomalies that are hard to see unless a knob is adjusted (e.g. brightness) are allowed. They are an option, not a requirement; most anomalies stay visible at the default setting. Which knobs matter and how the ledger marks such anomalies are decided when the knobs are implemented.
 
-**Interactive prototype:** `prototypes/retro-ui/` (static page, not connected to game logic; serve the repo root and open `/prototypes/retro-ui/`). Knobs are operated by horizontal drag, slider-style (right = clockwise = increase), plus arrow keys. Append `?wear=0` (clean) or `?wear=1` (default grime; values in between work) to compare the wear overlay A/B.
+**Implementation:** the retro UI is built into the game (`src/components/`, `src/styles/retro.css`; parts table in §8). The earlier standalone prototype `prototypes/retro-ui/` was removed once integrated (it remains in git history, PR #43). Knobs are operated by horizontal drag, slider-style (right = clockwise = increase), plus arrow keys. Append `?wear=0` (clean) or `?wear=1` (default grime; values in between work) to the game URL to compare the wear overlay A/B.
 
 **Order of work (kako-jun, 2026-10-30):** generated part images (bezel, knobs, buttons, LED, speaker grille) are **reference only** until the UI is built. The final images are regenerated at the end: first review the current UI, build and fine-tune the retro UI so phone and desktop share the same design, then regenerate the part images and overlay them lightly on top. Realism favors raster parts, with CSS for the live scanlines, noise, and glow. Early generated images may be made as look targets, but nothing built on them is final, and they are deleted once superseded.
 

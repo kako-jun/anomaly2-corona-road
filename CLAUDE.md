@@ -97,9 +97,9 @@ Meta-anomalies challenge the player's trust in the game interface itself:
 
 ### Accessibility
 
-- **Color-blind Safe**: Anomaly categories pair one icon with one color (see DESIGN.md §2.3)
-- **Multi-input controls**: Touch swipe, mouse drag, on-screen ‹ › buttons, keyboard (← → / A D / 1–8), and the camera strip — all five paths switch cameras
-- **Clear Feedback**: Flash overlay + toast on every report (correct / wrong)
+- **Color-blind Safe**: Anomaly categories are always text labels, never color-only and never emoji (see DESIGN.md §2.3)
+- **Multi-input controls**: Touch swipe, mouse drag, keyboard (← → / A D / 1–8), and the numbered camera buttons — all four paths switch cameras
+- **Clear Feedback**: A green / red on-screen display (OSD) message on the monitor for every report (correct / wrong)
 - **Mobile-first, desktop-equal**: 480 px column on desktop, full-bleed on mobile; never assumes a touchscreen
 
 ### Visual Design
@@ -128,18 +128,18 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 #### UI Components
 
 - [x] Start screen with instructions
-- [x] Game HUD (time, stats display)
+- [x] Display windows (shift time, reports, strike lamps)
 - [x] Camera view with swipe controls
-- [x] Report panel with category selection
+- [x] REPORT key and type-picker dialog
 - [x] Game over screens (win/lose)
 
 #### Camera System
 
 - [x] 8 camera feeds defined (with provisional WebP imagery)
-- [x] Multi-input navigation (touch swipe / mouse drag / ‹ › buttons / keyboard / strip tap)
-- [x] Camera selector strip below the view with anomaly dot indicators
+- [x] Multi-input navigation (touch swipe / mouse drag / keyboard / numbered buttons)
+- [x] Numbered camera buttons with a green selected lamp and a small amber anomaly lamp
 - [x] Visual feedback for anomaly presence (on-image provisional marker with category + description, plus glitch-shake)
-- [x] Camera info overlay (name, location, timestamp, REC)
+- [x] Monitor OSD (`CAM n`, REC)
 
 #### Anomaly System
 
@@ -151,16 +151,16 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 
 #### Reporting System
 
-- [x] Category-based reporting (5 types, each with icon + color)
+- [x] Category-based reporting (5 types, text labels)
 - [x] Correct/incorrect detection
 - [x] Strike counter (3 max)
 - [x] Report button **always enabled** — false reports cost a strike (intentional risk/reward; the player decides when to act)
-- [x] Flash overlay + toast feedback on every report
+- [x] OSD result message on the monitor for every report
 
 #### Visual Polish
 
 - [x] Unified design-token system (see DESIGN.md)
-- [x] Retro CRT scanline effect
+- [x] Retro CRT cabinet UI: scanlines, moving noise, knobs (brightness / contrast), movie-style subtitles (see DESIGN.md §8, §11; sample dialogue only, Issue #29)
 - [x] Monospace JetBrains Mono styling
 - [x] Material 3-style semantic palette
 - [x] Vignette + glitch-shake camera effect during anomalies
@@ -171,6 +171,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 - [x] GitHub Actions deployment
 - [x] Automatic GitHub Pages publishing
 - [x] ESLint + Prettier setup
+- [x] Vitest + Testing Library (see Testing below)
 - [x] Pre-commit hooks (Husky + lint-staged)
 - [x] TypeScript strict mode
 
@@ -387,22 +388,35 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 DESIGN.md               # Design-token system (Material 3-inspired, single source of truth)
 src/
 ├── components/          # React components
-│   ├── CameraView.tsx
-│   ├── CameraStrip.tsx  # Camera selector tiles below the view
-│   ├── GameHUD.tsx
+│   ├── Cabinet.tsx      # In-game screen: monitor + control panel, local UI state
+│   ├── CameraView.tsx   # CRT monitor (picture, noise, OSD, subtitles)
+│   ├── NoiseCanvas.tsx
+│   ├── CameraStrip.tsx  # Numbered camera push buttons
+│   ├── Knob.tsx         # BRIGHTNESS / CONTRAST knob
+│   ├── GameHUD.tsx      # Display windows (time, reports, strike lamps)
+│   ├── ReportPanel.tsx  # REPORT key + type-picker dialog
 │   ├── GameOverScreen.tsx
-│   ├── ReportPanel.tsx
 │   └── StartScreen.tsx
+├── data/
+│   └── dialogue.ts      # PLACEHOLDER subtitle lines (replaced in Issue #29)
 ├── hooks/              # Custom React hooks
-│   └── useGameState.ts
+│   ├── useGameState.ts
+│   ├── useCameraKeys.ts
+│   └── useSubtitle.ts
 ├── types/              # TypeScript definitions
 │   └── game.ts
-├── utils/              # Game logic utilities
+├── utils/              # Game logic and pure UI helpers
 │   ├── anomalyData.ts
-│   └── gameConfig.ts
+│   ├── gameConfig.ts
+│   ├── knob.ts         # Knob value <-> angle / filter maths
+│   ├── subtitle.ts     # Subtitle timing and line selection
+│   ├── wear.ts         # ?wear= parsing
+│   └── cx.ts
+├── styles/
+│   └── retro.css       # Cabinet UI styles (tokens scoped to .retro)
 ├── App.tsx
 ├── main.tsx
-├── App.css             # Component classes — all values reference :root tokens
+├── App.css             # Start / result screen classes — values reference :root tokens
 └── index.css           # Design tokens (:root vars), reset, keyframes
 ```
 
@@ -469,7 +483,7 @@ src/
 2. **No Audio**: Silent gameplay, relies only on visuals
 3. **Meta-Anomalies Not Visual**: Templates exist but no UI corruption effects
 4. **Limited Anomaly Pool**: Only template text, not varied enough
-5. **No Persistence**: No save states or progress tracking
+5. **No Persistence**: No save states or progress tracking (現状は何も保存していない＝未実装。設計は `docs/save-data.md`)
 
 ### Technical Debt
 
@@ -497,8 +511,15 @@ src/
 1. Update this document first
 2. Create feature branch
 3. Implement with TypeScript
-4. Add tests (if applicable)
+4. Add tests (see Testing below)
 5. Update README.md
+
+#### Testing
+
+- Run with `npm test` (once) or `npm run test:watch`. CI runs **lint → test → build** in that order (`.github/workflows/ci.yml`).
+- Vitest + Testing Library. Tests sit next to the code as `*.test.ts` / `*.test.tsx`; shared setup is `src/test/setup.ts`.
+- Environments: the default is **node**, for pure functions (`src/utils/`). Hooks and components need the DOM: put `// @vitest-environment jsdom` at the top of that test file.
+- jsdom cannot verify: the real blocking effect of `inert`, touch input, the moving noise, and anything about CSS appearance. Check these in a real browser (production build served statically) before calling UI work done.
 
 #### Code Style
 
