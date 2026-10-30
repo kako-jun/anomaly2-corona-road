@@ -325,46 +325,37 @@ body {
     inset 0 0 3px #fff9;
 }
 
-.subtitle {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.sub-window {
-  background: #14100a;
-  border-radius: 10px;
-  padding: 8px 10px;
-  min-height: 62px;
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-  box-shadow:
-    inset 0 2px 6px #000,
-    0 1px 0 #fff8;
-  color: #ffd48a;
-  font-size: 0.92rem;
-  line-height: 1.45;
-}
-.sub-window .who {
-  flex: none;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  background: #ffd48a;
-  color: #2a1c08;
-  border-radius: 4px;
-  padding: 2px 6px;
-  margin-top: 2px;
-}
-.sub-window .line {
-  text-shadow: 0 0 6px #ff9c2a66;
-  transition: opacity 0.35s;
-}
-.sub-window .line.fade {
+/* Movie-style subtitles over the picture (above scan/noise/dirt layers) */
+.movie-sub {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 14%;
+  z-index: 6;
+  text-align: center;
+  color: #fff;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  pointer-events: none;
   opacity: 0;
+  transition: opacity 0.6s ease;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000,
+    0 0 4px #000,
+    0 2px 6px #000;
 }
-.sub-window.hint .who {
-  background: #ff8d5a;
+.movie-sub.show {
+  opacity: 1;
+}
+.movie-sub div {
+  margin: 0 auto;
+  width: fit-content;
+  max-width: 100%;
 }
 
 /* Knobs */
@@ -644,4 +635,376 @@ body {
   .rec-dot {
     animation: none;
   }
+}
+
+/* ===== Wear / grime (static, CSS+SVG only, fixed seeds, no animation) =====
+   Strength: --wear 0..1 on :root. A/B via URL: ?wear=0 (clean), ?wear=1 (standard, default), values in between ok.
+   Overlays are pseudo-elements with pointer-events:none; the CRT picture effects are untouched. */
+:root {
+  --wear: 1;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .22 0 0 0 0 .15 0 0 0 0 .08 0 0 0 1.5 -.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --mottle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.011' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .38 0 0 0 0 .12 0 0 0 1.3 -.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+}
+.cabinet > *,
+.tube > *,
+.panel > * {
+  position: relative;
+  z-index: 1;
+}
+.tube {
+  position: relative;
+}
+.cabinet::before,
+.tube::before,
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--wear);
+  background:
+    /* drips */
+    linear-gradient(180deg, rgba(95, 65, 25, 0.34), rgba(95, 65, 25, 0)) 18% 0 /
+      3px 90px no-repeat,
+    linear-gradient(180deg, rgba(95, 65, 25, 0.28), rgba(95, 65, 25, 0)) 71% 0 /
+      2px 140px no-repeat,
+    linear-gradient(180deg, rgba(80, 55, 20, 0.3), rgba(80, 55, 20, 0)) 93% 4% /
+      3px 70px no-repeat,
+    /* corner scuffs */
+      radial-gradient(circle at 0 0, rgba(70, 48, 22, 0.4), transparent 46px),
+    radial-gradient(circle at 100% 0, rgba(70, 48, 22, 0.32), transparent 40px),
+    radial-gradient(circle at 0 100%, rgba(70, 48, 22, 0.45), transparent 60px),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(70, 48, 22, 0.45),
+      transparent 60px
+    ),
+    /* big yellowed stains */
+      radial-gradient(
+        ellipse 45% 22% at 22% 38%,
+        rgba(150, 110, 40, 0.2),
+        transparent 70%
+      ),
+    radial-gradient(
+      ellipse 40% 30% at 82% 64%,
+      rgba(130, 90, 30, 0.22),
+      transparent 70%
+    ),
+    linear-gradient(180deg, transparent 55%, rgba(110, 75, 25, 0.22) 100%),
+    var(--mottle),
+    var(--grain);
+  box-shadow:
+    inset 0 0 22px 2px rgba(80, 55, 20, 0.45),
+    inset 0 -14px 20px -8px rgba(70, 45, 15, 0.4);
+}
+/* scratches (light + dark hairline pairs), different spots per surface */
+.cabinet::before {
+  background-image:
+    linear-gradient(
+      103deg,
+      transparent 44%,
+      rgba(255, 255, 255, 0.6) 47%,
+      rgba(50, 30, 10, 0.5) 53%,
+      transparent 56%
+    ),
+    linear-gradient(
+      80deg,
+      transparent 44%,
+      rgba(255, 255, 255, 0.5) 47%,
+      rgba(50, 30, 10, 0.45) 53%,
+      transparent 56%
+    ),
+    linear-gradient(
+      118deg,
+      transparent 44%,
+      rgba(255, 255, 255, 0.5) 47%,
+      rgba(50, 30, 10, 0.45) 53%,
+      transparent 56%
+    ),
+    var(--mottle), var(--grain);
+  background-size:
+    58px 12px,
+    40px 10px,
+    30px 14px,
+    420px 420px,
+    240px 240px;
+  background-position:
+    3% 1.2%,
+    96% 98%,
+    1% 70%,
+    0 0,
+    0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+}
+.tube::before {
+  background-image:
+    linear-gradient(180deg, rgba(95, 65, 25, 0.38), rgba(95, 65, 25, 0)),
+    linear-gradient(
+      95deg,
+      transparent 44%,
+      rgba(255, 255, 255, 0.55) 47%,
+      rgba(50, 30, 10, 0.5) 53%,
+      transparent 56%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(70, 48, 22, 0.5),
+      transparent 50px
+    ),
+    var(--mottle), var(--grain);
+  background-size:
+    3px 80px,
+    46px 10px,
+    auto,
+    420px 420px,
+    240px 240px;
+  background-position:
+    12% 0,
+    90% 3%,
+    0 0,
+    0 0,
+    0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+}
+.panel::before {
+  background-image:
+    linear-gradient(
+      100deg,
+      transparent 44%,
+      rgba(255, 255, 255, 0.55) 47%,
+      rgba(50, 30, 10, 0.5) 53%,
+      transparent 56%
+    ),
+    linear-gradient(
+      72deg,
+      transparent 44%,
+      rgba(255, 255, 255, 0.5) 47%,
+      rgba(50, 30, 10, 0.45) 53%,
+      transparent 56%
+    ),
+    linear-gradient(180deg, rgba(95, 65, 25, 0.34), rgba(95, 65, 25, 0)),
+    linear-gradient(180deg, rgba(95, 65, 25, 0.26), rgba(95, 65, 25, 0)),
+    radial-gradient(circle at 0 100%, rgba(70, 48, 22, 0.5), transparent 60px),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(70, 48, 22, 0.5),
+      transparent 60px
+    ),
+    radial-gradient(
+      ellipse 45% 18% at 25% 45%,
+      rgba(150, 110, 40, 0.2),
+      transparent 70%
+    ),
+    var(--mottle), var(--grain);
+  background-size:
+    50px 11px,
+    34px 10px,
+    3px 110px,
+    2px 70px,
+    auto,
+    auto,
+    auto,
+    420px 420px,
+    240px 240px;
+  background-position:
+    97% 2%,
+    2% 96%,
+    8% 0,
+    55% 100%,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0;
+  background-repeat:
+    no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
+    repeat, repeat;
+}
+
+/* printed labels: patchy, partly faded (still legible) */
+.label,
+.drag-hint,
+.maker {
+  -webkit-mask-image: linear-gradient(
+    95deg,
+    rgba(0, 0, 0, calc(1 - 0.3 * var(--wear))) 0%,
+    #000 22%,
+    rgba(0, 0, 0, calc(1 - 0.4 * var(--wear))) 48%,
+    #000 70%,
+    rgba(0, 0, 0, calc(1 - 0.25 * var(--wear))) 100%
+  );
+  mask-image: linear-gradient(
+    95deg,
+    rgba(0, 0, 0, calc(1 - 0.3 * var(--wear))) 0%,
+    #000 22%,
+    rgba(0, 0, 0, calc(1 - 0.4 * var(--wear))) 48%,
+    #000 70%,
+    rgba(0, 0, 0, calc(1 - 0.25 * var(--wear))) 100%
+  );
+}
+
+/* keys: darkened rim, shiny worn centre, faded print */
+.key {
+  --blot: 236, 227, 201;
+}
+.key-report {
+  --blot: 211, 52, 42;
+}
+.key::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--wear);
+  background:
+    radial-gradient(
+      circle at 68% 58%,
+      rgba(var(--blot), 0.4) 0 5px,
+      transparent 6px
+    ),
+    radial-gradient(
+      circle at 30% 40%,
+      rgba(var(--blot), 0.3) 0 4px,
+      transparent 5px
+    ),
+    radial-gradient(
+      ellipse at 50% 38%,
+      rgba(255, 255, 255, 0.34),
+      transparent 58%
+    ),
+    var(--grain);
+  box-shadow:
+    inset 0 0 0 1px rgba(40, 25, 10, 0.4),
+    inset 0 -7px 9px -5px rgba(40, 25, 10, 0.45),
+    inset 0 0 8px 1px rgba(40, 25, 10, 0.25);
+}
+.cam-cell .key,
+.cat-grid .key {
+  outline-offset: 3px;
+}
+.cam-cell,
+.cat-grid {
+  /* dust packed around key bases */
+  --dust: rgba(60, 40, 18, 0.35);
+}
+.cam-cell .key {
+  box-shadow:
+    0 4px 0 var(--cream-dk),
+    0 6px 6px #0005,
+    inset 0 1px 1px #fffa,
+    0 0 0 2px rgba(60, 40, 18, calc(0.28 * var(--wear)));
+}
+.cam-cell .key:active,
+.cam-cell .key.pressed {
+  box-shadow:
+    0 0 0 var(--cream-dk),
+    0 1px 2px #0006,
+    inset 0 3px 5px #0004,
+    0 0 0 2px rgba(60, 40, 18, calc(0.28 * var(--wear)));
+}
+
+/* knobs: dirt ring around, scratches on the face */
+.knob {
+  box-shadow:
+    0 0 0 5px var(--cream-dk),
+    0 0 0 7px #0003,
+    0 0 0 10px rgba(60, 40, 18, calc(0.26 * var(--wear))),
+    0 5px 8px 3px #0006,
+    inset 0 -3px 5px #0003,
+    inset 0 2px 2px #fff9;
+}
+.knob:focus-visible {
+  box-shadow:
+    0 0 0 4px var(--cream-dk),
+    0 0 0 7px #2a6cd8,
+    0 5px 8px 3px #0006;
+}
+.knob::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--wear);
+  background:
+    linear-gradient(
+        35deg,
+        transparent 47%,
+        rgba(255, 255, 255, 0.7) 49%,
+        rgba(50, 30, 10, 0.5) 52%,
+        transparent 54%
+      )
+      20% 55% / 26px 10px no-repeat,
+    linear-gradient(
+        160deg,
+        transparent 47%,
+        rgba(255, 255, 255, 0.6) 49%,
+        rgba(50, 30, 10, 0.45) 52%,
+        transparent 54%
+      )
+      62% 20% / 22px 10px no-repeat,
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 58%,
+      rgba(60, 40, 18, 0.28) 100%
+    ),
+    var(--grain);
+}
+
+/* glass of the small display windows and the CRT: faint haze / fingerprints, text stays readable */
+.vfd,
+.lamps,
+.lcd {
+  position: relative;
+}
+.vfd::after,
+.lamps::after,
+.lcd::after,
+.glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 5;
+  opacity: var(--wear);
+  background:
+    radial-gradient(
+      ellipse 30% 55% at 72% 55%,
+      rgba(255, 255, 255, 0.1),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 22% 40% at 28% 35%,
+      rgba(255, 255, 255, 0.07),
+      transparent 70%
+    ),
+    var(--grain);
+}
+.glass::after {
+  background:
+    radial-gradient(
+      ellipse 14% 10% at 68% 70%,
+      rgba(255, 255, 255, 0.06),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 20% 12% at 30% 28%,
+      rgba(255, 255, 255, 0.05),
+      transparent 75%
+    ),
+    radial-gradient(
+      circle at 82% 18%,
+      rgba(255, 255, 255, 0.05) 0 3px,
+      transparent 6px
+    ),
+    radial-gradient(
+      circle at 15% 80%,
+      rgba(255, 255, 255, 0.05) 0 2px,
+      transparent 5px
+    );
 }

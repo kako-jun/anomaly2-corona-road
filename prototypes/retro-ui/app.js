@@ -18,7 +18,6 @@ const DIALOGUE = [
 ];
 const NORMAL = DIALOGUE.filter(d => !d.hint);
 const HINTS = DIALOGUE.filter(d => d.hint);
-const WHO_LABEL = { A: 'PARTNER', ME: 'YOU' };
 const CATEGORIES = ['CAMERA', 'OBJECT', 'ENVIRONMENT', 'PERSON', 'SURREAL'];
 
 const $ = id => document.getElementById(id);
@@ -145,18 +144,30 @@ setInterval(() => {
   $('shiftTime').textContent = String(mins / 60 | 0).padStart(2, '0') + ':' + String(mins % 60).padStart(2, '0');
 }, 2000);
 
-/* ---- Subtitles ---- */
-const subLine = $('subLine'), subWho = $('subWho'), subWin = subLine.parentElement;
+/* ---- Subtitles (movie style, white text over the picture) ---- */
+const sub = $('movieSub');
 let idx = 0, hintIdx = 0, subTimer = 0;
-function showLine(d, hold) {
+function showLines(lines, hold) {
   clearTimeout(subTimer);
-  subLine.classList.add('fade');
+  sub.classList.remove('show');
   setTimeout(() => {
-    subWho.textContent = WHO_LABEL[d.who]; subLine.textContent = d.text; subWin.classList.toggle('hint', !!d.hint);
-    subLine.classList.remove('fade');
-  }, 250);
-  subTimer = setTimeout(next, hold || 5000);
+    sub.textContent = '';
+    lines.forEach(t => { const d = document.createElement('div'); d.textContent = lines.length > 1 ? '- ' + t : t; sub.append(d); });
+    sub.classList.add('show');
+  }, 600);
+  subTimer = setTimeout(next, hold || 5200);
 }
-function next() { showLine(NORMAL[idx++ % NORMAL.length]); }
-subWho.textContent = WHO_LABEL[NORMAL[0].who]; subLine.textContent = NORMAL[0].text; idx = 1;
-subTimer = setTimeout(next, 5000);
+function showLine(d, hold) { showLines([d.text], hold); }
+// Two lines ("- " prefixed, like film dialogue) when the next entry is the other speaker.
+function next() {
+  const a = NORMAL[idx % NORMAL.length], b = NORMAL[(idx + 1) % NORMAL.length];
+  if (a.who !== b.who && idx % 2 === 0) { idx += 2; showLines([a.text, b.text], 6500); }
+  else { idx += 1; showLines([a.text]); }
+}
+next();
+
+/* ---- Wear A/B: ?wear=0 (clean) ... ?wear=1 (standard, default) sets the --wear CSS variable ---- */
+(function () {
+  const w = parseFloat(new URLSearchParams(location.search).get('wear'));
+  if (!isNaN(w)) document.documentElement.style.setProperty('--wear', String(Math.max(0, Math.min(1, w))));
+})();
