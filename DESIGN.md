@@ -265,7 +265,7 @@ What to take from it:
 - Every knob and button shows a visible label; no hidden operations.
 - Decided (2026-10-30): anomalies that are hard to see unless a knob is adjusted (e.g. brightness) are allowed. They are an option, not a requirement; most anomalies stay visible at the default setting. Which knobs matter and how the ledger marks such anomalies are decided when the knobs are implemented.
 
-Open decision: build these parts as CSS, as generated raster images layered over the UI, or both. Realism favors raster parts (bezel, knobs, buttons, LED, speaker grille) with CSS only for the live scanlines, noise, and glow. Tracked in Issue #2.
+**Order of work (kako-jun, 2026-10-30):** generated part images (bezel, knobs, buttons, LED, speaker grille) are **reference only** until the UI is built. The final images are regenerated at the end: first review the current UI, build and fine-tune the retro UI so phone and desktop share the same design, then regenerate the part images and overlay them lightly on top. Realism favors raster parts, with CSS for the live scanlines, noise, and glow. Early generated images may be made as look targets, but nothing built on them is final, and they are deleted once superseded.
 
 ---
 
