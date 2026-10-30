@@ -1,9 +1,0 @@
-{
-  "candidate_id": "CR-05-05",
-  "camera_id": "CAM05",
-  "element_id": "CAM05-E09",
-  "review_status": "rejected",
-  "reason": "No confidently identifiable finger-like shadow was generated in the curtain gap.",
-  "generation_prompt": "Edit the attached exact 676×900 surveillance camera photo. Only one change: In the narrow dark gap behind the rightmost shop curtain, add just one thin finger-like shadow peeking from behind the curtain edge; it should be subtle, a shadow rather than a visible person. Preserve all glass, frames and signs. Preserve camera framing, lights, architecture, floor, all text and signs, reflections outside the target, grain, texture and colors. Output full frame at same aspect ratio.",
-  "generated_source": "experiments/cam05-cr-05-05/source.png"
-}

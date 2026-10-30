@@ -1,7 +1,0 @@
-{
-  "candidate_id": "CR-05-17",
-  "camera_id": "CAM05",
-  "element_id": "CAM05-E12",
-  "review_status": "rejected",
-  "reason": "The circular feature spans two brick rows instead of replacing one brick, changing multiple bricks."
-}

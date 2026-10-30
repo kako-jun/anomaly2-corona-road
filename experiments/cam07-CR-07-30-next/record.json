@@ -1,7 +1,0 @@
-{
-  "candidate_id": "CR-07-30",
-  "review_status": "rejected",
-  "generated_source": "experiments/cam07-CR-07-30-next/source.png",
-  "prompt": "Edit the supplied 675×900 surveillance photograph. On the large concentric circular ceiling ventilation grille near the top center, widen exactly one concentric ring slightly, keeping its circular shape, center, count of rings, lighting and material. Preserve the rest of the ceiling, all fixtures, doors, signs, stairs, floor, framing, reflections, colors and surveillance grain. Make no other change. Return full frame.",
-  "reason": "換気口の一輪だけでなく、複数の輪の形・幅と外縁が変化した。"
-}

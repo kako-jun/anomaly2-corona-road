@@ -1,5 +1,0 @@
-{
-  "candidate_id": "CR-02-28",
-  "reason": "円形の小さな染みではなく線状の尾を伴う不定形汚れとなり、指定された天井の継ぎ目の交点も判別できない。候補に残す。",
-  "generation_prompt": "Edit the attached exact CAM02 surveillance photo. Add a single small circular age stain at one intersection of ceiling panel seams on the dark ceiling near the top center-left, around original image x=220,y=65. The stain is only a few pixels across at original size, subtle and plausible. Preserve all existing ceiling panels, ventilation, lighting, storefronts, signs, floor, framing, blur and grain. Return the complete frame."
-}

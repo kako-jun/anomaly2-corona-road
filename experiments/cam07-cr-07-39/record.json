@@ -1,7 +1,0 @@
-{
-  "candidate_id": "CR-07-39",
-  "element_id": "CAM07-E12",
-  "review_status": "rejected",
-  "reason": "生成された矩形は周囲より暗く、日焼けしていない明るい跡に見えない。",
-  "source": "experiments/cam07-cr-07-39/source.png"
-}

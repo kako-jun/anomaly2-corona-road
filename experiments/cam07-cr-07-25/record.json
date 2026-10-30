@@ -1,7 +1,0 @@
-{
-  "candidate_id": "CR-07-25",
-  "element_id": "CAM07-E13",
-  "review_status": "rejected",
-  "reason": "基準画像の扉上部は淡い板状で窓と断定できず、生成では既存窓の複製ではなく新しい暗色窓が2枚追加された。",
-  "source": "experiments/cam07-cr-07-25/source.png"
-}
