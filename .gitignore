@@ -29,3 +29,4 @@ dist-ssr
 # experiments/ is a local scratch area: never commit it, and do not let work files pile up
 # (delete each item folder after its overlay is committed). See the corona-road-anomaly skill.
 experiments/
+__pycache__/
