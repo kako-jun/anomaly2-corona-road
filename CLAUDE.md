@@ -164,7 +164,6 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 - [x] Retro CRT cabinet UI: scanlines, moving noise, knobs (brightness / contrast), movie-style subtitles (see DESIGN.md §8, §11; sample dialogue only, Issue #29)
 - [x] Monospace JetBrains Mono styling
 - [x] Material 3-style semantic palette
-- [x] Vignette + glitch-shake camera effect during anomalies
 - [x] Mobile-optimized layout, centered on desktop
 
 #### DevOps
