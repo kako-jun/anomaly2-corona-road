@@ -251,9 +251,19 @@ For correct/wrong report feedback. Position: top center under HUD. Auto-dismiss 
 
 What to take from it:
 
-- **Screen:** rounded-corner rectangle (large radius), thick dark inner bezel, slightly bluish monochrome picture, clearly visible horizontal scanlines, low contrast, soft glow.
+- **Screen:** rounded-corner rectangle (large radius), thick dark inner bezel, full-color picture (the reference unit is monochrome; the game is not), clearly visible horizontal scanlines, low contrast, soft glow.
 - **Housing:** aged cream/beige matte plastic with a recessed frame around the tube.
 - **Control strip:** square recessed power button with a red LED, slide switches, knobs with an indicator line, four numbered push buttons with arrow marks, a speaker slit grid, and silkscreened labels.
+
+**Analog operation (kako-jun, 2026-10-30):**
+
+- Corona Road is meant to be unusually fine-grained and hard, unlike click-only spot-the-difference games (target scale: see `prompts/README.md`). Operation should feel analog.
+- Adjustments such as brightness are knobs: operated by touch (drag/rotate) but drawn as physical knobs.
+- The picture stays in color. Analog noise is added and drifts subtly over time (not a visible loop, not frozen static).
+- Rounded corners on the screen and on the parts.
+- The Report buttons and every other control use the same retro hardware look (push buttons, switches, lamps), not Material-style buttons. Touch-target size and readability stay modern. The §8 components are reskinned to this look.
+- Every knob and button shows a visible label; no hidden operations.
+- Open: whether knob settings change what is visible (gameplay) or only the look.
 
 Open decision: build these parts as CSS, as generated raster images layered over the UI, or both. Realism favors raster parts (bezel, knobs, buttons, LED, speaker grille) with CSS only for the live scanlines, noise, and glow. Tracked in Issue #2.
 
