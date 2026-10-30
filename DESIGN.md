@@ -265,7 +265,7 @@ What to take from it:
 - Every knob and button shows a visible label; no hidden operations.
 - Decided (2026-10-30): anomalies that are hard to see unless a knob is adjusted (e.g. brightness) are allowed. They are an option, not a requirement; most anomalies stay visible at the default setting. Which knobs matter and how the ledger marks such anomalies are decided when the knobs are implemented.
 
-**Interactive prototype:** `prototypes/retro-ui/` (static page, not connected to game logic; serve the repo root and open `/prototypes/retro-ui/`). Knobs are operated by horizontal drag, slider-style (right = clockwise = increase), plus arrow keys.
+**Interactive prototype:** `prototypes/retro-ui/` (static page, not connected to game logic; serve the repo root and open `/prototypes/retro-ui/`). Knobs are operated by horizontal drag, slider-style (right = clockwise = increase), plus arrow keys. Append `?wear=0` (clean) or `?wear=1` (default grime; values in between work) to compare the wear overlay A/B.
 
 **Order of work (kako-jun, 2026-10-30):** generated part images (bezel, knobs, buttons, LED, speaker grille) are **reference only** until the UI is built. The final images are regenerated at the end: first review the current UI, build and fine-tune the retro UI so phone and desktop share the same design, then regenerate the part images and overlay them lightly on top. Realism favors raster parts, with CSS for the live scanlines, noise, and glow. Early generated images may be made as look targets, but nothing built on them is final, and they are deleted once superseded.
 

@@ -39,7 +39,7 @@ let pending = []; // queued hint lines, shown before the normal sequence resumes
 const CATEGORIES = ['CAMERA', 'OBJECT', 'ENVIRONMENT', 'PERSON', 'SURREAL'];
 
 const $ = id => document.getElementById(id);
-const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 
 /* ---- Noise (low-res canvas, ~12fps, fresh random every frame) ---- */
 (function noise() {
@@ -60,7 +60,15 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
   }
   frame();
-  if (!reduced) setInterval(frame, 1000 / 12);
+  // Animate only while the tab is visible and motion is allowed; follows live changes of the setting.
+  let timer = 0;
+  function update() {
+    clearInterval(timer); timer = 0;
+    if (!motionQuery.matches && !document.hidden) timer = setInterval(frame, 1000 / 12);
+  }
+  motionQuery.addEventListener('change', update);
+  document.addEventListener('visibilitychange', update);
+  update();
 })();
 
 /* ---- Knobs ---- */
@@ -71,16 +79,22 @@ function makeKnob(el, onChange) {
     const ang = MIN + (MAX - MIN) * value / 100;
     el.style.setProperty('--a', ang + 'deg');
     el.setAttribute('aria-valuenow', String(Math.round(value)));
+    el.setAttribute('aria-valuetext', Math.round(value) + '%');
     onChange(value);
   }
   // Slider-style: horizontal drag only. Right = clockwise = increase. Start point on the knob does not matter.
   const PX_FULL_RANGE = 180;
-  let startX = 0, startValue = 0;
+  let startX = 0, startValue = 0, dragging = false;
   el.addEventListener('pointerdown', e => {
-    el.setPointerCapture(e.pointerId); startX = e.clientX; startValue = value; e.preventDefault();
+    if (e.button !== 0) return; // primary button / touch / pen only
+    el.setPointerCapture(e.pointerId); startX = e.clientX; startValue = value; dragging = true; e.preventDefault();
   });
+  const endDrag = () => { dragging = false; };
+  el.addEventListener('pointerup', endDrag);
+  el.addEventListener('pointercancel', endDrag);
+  el.addEventListener('lostpointercapture', endDrag);
   el.addEventListener('pointermove', e => {
-    if (!el.hasPointerCapture(e.pointerId)) return;
+    if (!dragging) return;
     value = Math.max(0, Math.min(100, startValue + (e.clientX - startX) / PX_FULL_RANGE * 100));
     render();
   });
@@ -93,6 +107,7 @@ function makeKnob(el, onChange) {
     else return;
     e.preventDefault(); render();
   });
+  el.setAttribute('aria-orientation', 'horizontal');
   render();
 }
 const glass = $('glass');
@@ -121,18 +136,21 @@ function selectCam(n) {
     k.lamp.classList.toggle('on', on); k.b.classList.toggle('pressed', on); k.b.setAttribute('aria-pressed', String(on));
   });
 }
+['picBase', 'picGlow'].forEach(id => $(id).addEventListener('error', e => console.warn('Camera image failed to load:', e.target.getAttribute('src'))));
 selectCam(1);
 
 /* ---- Report ---- */
 const reportBtn = $('reportBtn'), scrim = $('scrim'), dialog = $('cats'), lamp = $('reportLamp'), osdResult = $('osdResult');
 let falseNext = false, reports = 0, strikes = 0, fbTimer = 0;
 function setCats(open) {
+  document.querySelector('.cabinet').inert = open; // background is inert while the dialog is open
   scrim.hidden = !open; reportBtn.setAttribute('aria-expanded', String(open)); lamp.classList.toggle('lit', open);
   reportBtn.classList.toggle('pressed', open);
   if (open) dialog.querySelector('button').focus(); else reportBtn.focus();
 }
 reportBtn.addEventListener('click', () => setCats(scrim.hidden));
-scrim.addEventListener('pointerdown', e => { if (e.target === scrim) setCats(false); });
+// click (not pointerdown): a touch tap must not leave a synthesized click for the element underneath
+scrim.addEventListener('click', e => { if (e.target === scrim) setCats(false); });
 document.addEventListener('keydown', e => {
   if (scrim.hidden) return;
   if (e.key === 'Escape') { e.preventDefault(); setCats(false); return; }
@@ -178,12 +196,12 @@ setInterval(() => {
 
 /* ---- Subtitles (movie style, white text over the picture) ---- */
 const sub = $('movieSub');
-let idx = 0, hintIdx = 0, subTimer = 0;
+let idx = 0, hintIdx = 0, subTimer = 0, showTimer = 0;
 function showLines(lines) {
-  clearTimeout(subTimer);
+  clearTimeout(subTimer); clearTimeout(showTimer);
   sub.classList.remove('show');
   const hold = Math.max(2200, 1600 + lines.join('').length * 120);
-  setTimeout(() => {
+  showTimer = setTimeout(() => {
     sub.textContent = '';
     lines.forEach(t => { const d = document.createElement('div'); d.textContent = t; sub.append(d); });
     sub.classList.add('show');
