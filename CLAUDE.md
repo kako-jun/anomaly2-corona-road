@@ -8,6 +8,8 @@
 
 "Monitor the cameras. Report the anomalies. Trust your eyes... or don't."
 
+> **Setting direction (kako-jun, 2026-10-30):** not a lone operator. The player is in a Showa-era security guard room with a second guard. A large volume of mundane, realistic conversation between the two, mixed with "something's off" remarks, is shown as subtitles. Language of the subtitles vs. the English-only UI principle is undecided.
+
 ---
 
 ## 📋 Game Specifications
