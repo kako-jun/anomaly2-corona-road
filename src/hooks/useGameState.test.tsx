@@ -167,6 +167,8 @@ describe('spawning from the ledger', () => {
 
   it('skips an entry whose overlay cannot be resolved and spawns another, without stopping the loop', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    // rng = 0 picks the first entry, so the broken one is tried first (deterministic).
+    vi.spyOn(Math, 'random').mockReturnValue(0)
     ledger.push(entry('broken1', 1), entry('ok', 1))
     const { result } = start()
     advance(FIRST + 100)
