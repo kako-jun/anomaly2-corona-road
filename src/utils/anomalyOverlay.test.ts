@@ -52,10 +52,11 @@ describe('overlayPlacement', () => {
   ])('returns null for %s', (_n, w, h) => {
     expect(overlayPlacement(at(1, 1, 1, 1), w, h)).toBeNull()
   })
-  // Documents current behaviour: Infinity passes the ">0" guard and yields 0%.
-  it('accepts Infinity as a size (yields 0%, current behaviour)', () => {
-    const p = overlayPlacement(at(1, 1, 1, 1), Infinity, 100)
-    expect(p).not.toBeNull()
-    expect(p!.left).toBe(0)
+  it.each([
+    ['Infinity width', Infinity, 100],
+    ['Infinity height', 100, Infinity],
+    ['-Infinity width', -Infinity, 100],
+  ])('returns null for %s', (_n, w, h) => {
+    expect(overlayPlacement(at(1, 1, 1, 1), w, h)).toBeNull()
   })
 })

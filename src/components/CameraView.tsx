@@ -1,4 +1,4 @@
-import { CSSProperties, useRef, useState } from 'react'
+import { CSSProperties, useCallback, useRef, useState } from 'react'
 import { Anomaly, Camera } from '../types/game'
 import { Feedback } from '../hooks/useGameState'
 import { overlayPlacement } from '../utils/anomalyOverlay'
@@ -55,22 +55,35 @@ export const CameraView = ({
     anomalyHere && baseSize
       ? overlayPlacement(anomalyHere.overlay, baseSize.w, baseSize.h)
       : null
-  const readSize = (img: HTMLImageElement) => {
-    // Ignore a stale element: only the image that is currently the camera's base photo counts.
-    if (img.getAttribute('src') !== camera.image) return
-    if (img.complete && img.naturalWidth > 0) {
-      const next = {
-        src: camera.image,
-        w: img.naturalWidth,
-        h: img.naturalHeight,
+  const readSize = useCallback(
+    (img: HTMLImageElement) => {
+      // Ignore a stale element: only the image that is currently the camera's base photo counts.
+      if (img.getAttribute('src') !== camera.image) return
+      if (img.complete && img.naturalWidth > 0) {
+        const next = {
+          src: camera.image,
+          w: img.naturalWidth,
+          h: img.naturalHeight,
+        }
+        setNatural(prev =>
+          prev &&
+          prev.src === next.src &&
+          prev.w === next.w &&
+          prev.h === next.h
+            ? prev
+            : next
+        )
       }
-      setNatural(prev =>
-        prev && prev.src === next.src && prev.w === next.w && prev.h === next.h
-          ? prev
-          : next
-      )
-    }
-  }
+    },
+    [camera.image]
+  )
+  // Stable, so React does not detach / re-attach the ref on every render.
+  const baseRef = useCallback(
+    (img: HTMLImageElement | null) => {
+      if (img) readSize(img)
+    },
+    [readSize]
+  )
 
   const style = {
     '--bri': brightness,
@@ -109,10 +122,17 @@ export const CameraView = ({
                 draggable={false}
                 // A cached / already-decoded image can finish before onLoad is attached, so also
                 // read the size when the element mounts (the key remounts it per camera).
-                ref={img => {
-                  if (img) readSize(img)
-                }}
+                ref={baseRef}
                 onLoad={e => readSize(e.currentTarget)}
+              />
+              {/* glow sits right above the base photo and BELOW the overlay: its blur would otherwise
+                  ghost the original object that the overlay replaces. */}
+              <img
+                className="glow"
+                src={camera.image}
+                alt=""
+                aria-hidden="true"
+                draggable={false}
               />
               {anomalyHere && placement && (
                 <img
@@ -130,13 +150,6 @@ export const CameraView = ({
                   }}
                 />
               )}
-              <img
-                className="glow"
-                src={camera.image}
-                alt=""
-                aria-hidden="true"
-                draggable={false}
-              />
             </div>
           </div>
           <NoiseCanvas />

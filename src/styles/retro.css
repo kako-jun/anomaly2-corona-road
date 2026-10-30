@@ -21,10 +21,16 @@
 /* A box with the base photo's aspect ratio that covers the glass (like object-fit: cover), so
    anomaly overlays can be placed in base-photo coordinates with plain percentages. */
 .pic__frame {
-  --ratio: 3 / 4;
+  /* Until the real size is read: the base photos are 675-676 x 900, so this keeps the jump when the
+     real ratio arrives under 0.2%. */
+  --ratio: 676 / 900;
   position: absolute;
   left: 50%;
   top: 50%;
+  /* Fallback first (a declaration with an unsupported unit is dropped, this one stays): browsers
+     without container query units (before Safari 16 / Chrome 105) show the photo, uncovered but
+     visible, instead of a 0-size frame. */
+  width: 100%;
   width: max(100cqw, calc(100cqh * (var(--ratio))));
   aspect-ratio: var(--ratio);
   transform: translate(-50%, -50%);

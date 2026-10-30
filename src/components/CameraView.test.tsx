@@ -148,7 +148,7 @@ describe('CameraView anomaly overlay', () => {
     expect(overlayOf(container)).toBeNull()
   })
 
-  it('is a decorative, non-draggable image in the DOM order base < overlay < glow', () => {
+  it('is a decorative, non-draggable image in the DOM order base < glow < overlay', () => {
     loaded.add('/images/cam1.webp')
     const { container } = render(
       <CameraView {...props({ anomalyHere: anomaly1 })} />
@@ -158,8 +158,11 @@ describe('CameraView anomaly overlay', () => {
     expect(o).toHaveAttribute('aria-hidden', 'true')
     expect(o).toHaveAttribute('draggable', 'false')
     expect(o).toHaveClass('overlay')
-    expect(o.previousElementSibling).toBe(baseOf(cams[0]))
-    expect(o.nextElementSibling).toHaveClass('glow')
+    // base < glow < overlay: the glow must not ghost the object the overlay replaces
+    const glow = o.previousElementSibling as HTMLElement
+    expect(glow).toHaveClass('glow')
+    expect(glow.previousElementSibling).toBe(baseOf(cams[0]))
+    expect(o.nextElementSibling).toBeNull()
   })
 
   it('removes the overlay when the anomaly is resolved', () => {

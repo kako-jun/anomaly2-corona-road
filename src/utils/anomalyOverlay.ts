@@ -11,14 +11,15 @@ export interface OverlayPlacement {
 /**
  * Where to put an overlay inside a frame that has the base photo's aspect ratio, so it lands on the
  * same pixels as in the ledger regardless of display size. Returns null until the base photo's
- * natural size is known (or if it is invalid).
+ * natural size is known (or if it is not a positive finite number).
  */
 export const overlayPlacement = (
   entry: Pick<LedgerEntry, 'origin' | 'size'>,
   baseWidth: number,
   baseHeight: number
 ): OverlayPlacement | null => {
-  if (!(baseWidth > 0) || !(baseHeight > 0)) return null
+  if (!(Number.isFinite(baseWidth) && baseWidth > 0)) return null
+  if (!(Number.isFinite(baseHeight) && baseHeight > 0)) return null
   return {
     left: (entry.origin.x / baseWidth) * 100,
     top: (entry.origin.y / baseHeight) * 100,
