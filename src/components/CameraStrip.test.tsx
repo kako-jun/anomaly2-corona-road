@@ -21,8 +21,8 @@ const setup = (current: number, anomalyAt: number[] = []) => {
 describe('CameraStrip', () => {
   it('marks only the current camera as selected', () => {
     setup(2)
-    const tabs = screen.getAllByRole('tab')
-    expect(tabs.map(t => t.getAttribute('aria-selected'))).toEqual([
+    const tabs = screen.getAllByRole('button')
+    expect(tabs.map(t => t.getAttribute('aria-pressed'))).toEqual([
       'false',
       'false',
       'true',
@@ -40,7 +40,7 @@ describe('CameraStrip', () => {
 
   it('presses only the selected key', () => {
     setup(0)
-    const tabs = screen.getAllByRole('tab')
+    const tabs = screen.getAllByRole('button')
     expect(tabs[0]).toHaveClass('pressed')
     expect(tabs[1]).not.toHaveClass('pressed')
   })
@@ -56,14 +56,14 @@ describe('CameraStrip', () => {
   it('adds ", anomaly active" to the label only for anomalous cameras', () => {
     setup(0, [1])
     expect(
-      screen.getByRole('tab', { name: 'Camera 2, anomaly active' })
+      screen.getByRole('button', { name: 'Camera 2, anomaly active' })
     ).toBeInTheDocument()
-    expect(screen.getByRole('tab', { name: 'Camera 1' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Camera 1' })).toBeInTheDocument()
   })
 
   it('calls onSelect with the clicked index', async () => {
     const { onSelect } = setup(0)
-    await userEvent.click(screen.getByRole('tab', { name: 'Camera 3' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Camera 3' }))
     expect(onSelect).toHaveBeenCalledTimes(1)
     expect(onSelect).toHaveBeenCalledWith(2)
   })

@@ -15,7 +15,7 @@ export const CameraStrip = ({
 }: CameraStripProps) => (
   <div className="row cams">
     <div className="label">CAMERA SELECT</div>
-    <div className="cam-grid" role="tablist" aria-label="Camera selector">
+    <div className="cam-grid" role="group" aria-label="Camera selector">
       {cameras.map((cam, i) => {
         const selected = i === currentIndex
         return (
@@ -26,8 +26,7 @@ export const CameraStrip = ({
             </div>
             <button
               type="button"
-              role="tab"
-              aria-selected={selected}
+              aria-pressed={selected}
               aria-label={`Camera ${cam.id}${cam.hasAnomaly ? ', anomaly active' : ''}`}
               className={cx('key', selected && 'pressed')}
               onClick={() => onSelect(i)}
