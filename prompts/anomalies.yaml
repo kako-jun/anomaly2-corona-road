@@ -1777,4 +1777,4 @@ anomalies:
     overlay_origin: '(291,266)'
     dimensions: '40x51'
     review_status: 'composited'
-    note: '視認性が低い(alpha内の差分は最大26・平均9で他より弱い)。再生成は画像生成の利用上限で未実施。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '視認性が低い(alpha内の差分は最大26・平均9)。再生成候補。再構成一致、マスク外差分ゼロ。ゲーム未確認。'

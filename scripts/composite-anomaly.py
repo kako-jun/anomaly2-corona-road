@@ -17,6 +17,7 @@ import argparse
 import json
 import os
 import sys
+import shutil
 import tempfile
 
 import numpy as np
@@ -26,8 +27,8 @@ from scipy import ndimage
 ALIGN_MAX_PX = 12
 
 
-class Fail(Exception):
-    pass
+MIN_OUTSIDE_FRAC = 0.05  # below this share of valid pixels outside the box, alignment/tone matching are unreliable
+MIN_OUTSIDE_PX = 2000
 
 
 def parse_box(s):
@@ -67,7 +68,7 @@ def build_parser():
     p.add_argument("--min-frac", type=float, default=0.004, help="changed/box below this is fail")
     p.add_argument("--max-frac", type=float, default=0.65, help="changed/box above this is warn")
     p.add_argument("--max-outside", type=float, default=0.03, help="fraction over threshold outside the box above this is fail")
-    p.add_argument("--selftest", action="store_true", help="run the synthetic self-check (uses --base, default public/images/cam1.webp)")
+    p.add_argument("--selftest", action="store_true", help="run the synthetic self-check (uses --base, default cam1.webp; --threshold/--dilate/--feather are passed through)")
     return p
 
 
@@ -140,10 +141,14 @@ def process(a):
 
     # Translation alignment, estimated only from pixels outside the (dilated) change box.
     shift = (0, 0)
-    if not a.no_align:
-        pad = 8
-        excl = np.zeros((H, W), bool)
-        excl[max(0, y1 - pad) : y2 + pad, max(0, x1 - pad) : x2 + pad] = True
+    pad = 8
+    excl = np.zeros((H, W), bool)
+    excl[max(0, y1 - pad) : y2 + pad, max(0, x1 - pad) : x2 + pad] = True
+    min_out = max(MIN_OUTSIDE_PX, int(MIN_OUTSIDE_FRAC * W * H))
+    few_outside = int((~excl).sum()) < min_out
+    if few_outside:
+        warnings.append(f"the box covers nearly the whole frame (fewer than {min_out} reference pixels outside it): alignment and tone matching were skipped, and the redraw check is unreliable")
+    if not a.no_align and not few_outside:
         dx, dy = phase_shift(base.mean(2), gen.mean(2), excl)
         if (dx, dy) != (0, 0):
             if abs(dx) <= ALIGN_MAX_PX and abs(dy) <= ALIGN_MAX_PX:
@@ -155,7 +160,7 @@ def process(a):
     res["align_shift"] = list(shift)
 
     out_idx = (~box_mask) & valid
-    if not a.no_tone_match:
+    if not a.no_tone_match and not few_outside and int(out_idx.sum()) >= min_out:
         for c in range(3):
             g = gen[..., c][out_idx][::7]
             b = base[..., c][out_idx][::7]
@@ -222,9 +227,7 @@ def process(a):
 
     genu = np.clip(np.round(gen), 0, 255).astype(np.uint8)
     ov = Image.fromarray(np.dstack([genu, a8])[by1:by2, bx1:bx2], "RGBA")
-    out_dir = os.path.dirname(os.path.abspath(a.out))
-    os.makedirs(out_dir, exist_ok=True)
-    fd, tmp = tempfile.mkstemp(suffix=".webp", prefix=".composite-", dir=out_dir)
+    fd, tmp = tempfile.mkstemp(suffix=".webp", prefix="composite-")
     os.close(fd)
     try:
         ov.save(tmp, "WEBP", lossless=True, exact=True)
@@ -253,7 +256,8 @@ def process(a):
         if a.preview:
             Image.fromarray(recon_a.astype(np.uint8)).save(a.preview)
         if status != "fail":
-            os.replace(tmp, a.out)
+            os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
+            shutil.move(tmp, a.out)
             tmp = None
     finally:
         if tmp and os.path.exists(tmp):
@@ -265,34 +269,39 @@ def run_cli(argv):
     p = build_parser()
     a = p.parse_args(argv)
     if a.selftest:
-        return selftest(a.base or "public/images/cam1.webp")
+        default = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public", "images", "cam1.webp")
+        return selftest(a.base or default, a)
     for k in ("base", "gen", "box", "out"):
         if getattr(a, k) is None:
             p.error(f"--{k} is required")
     try:
         res, code = process(a)
-    except (OSError, Fail) as e:
+    except (OSError, ValueError) as e:
         res, code = {"status": "fail", "warnings": [f"{type(e).__name__}: {e}"]}, 2
     print(json.dumps(res, ensure_ascii=False, indent=2))
     return code
 
 
-def selftest(base_path):
-    """Synthetic checks from a baseline photo: known shift, known change region, edge, aspect, no change, redraw."""
+def selftest(base_path, opts):
+    """Synthetic checks from a baseline photo with planted changes: known shift, known region (its bbox must be
+    covered by the detected bbox and not exceeded by more than the feather margin), edge contact, near-full box,
+    aspect mismatch, no change, full redraw, bad --box. opts supplies --threshold/--dilate/--feather."""
+    from PIL import ImageDraw
+
     base = Image.open(base_path).convert("RGB")
     W, H = base.size
     rng = np.random.default_rng(1)
     tmpd = tempfile.mkdtemp(prefix="composite-selftest-")
+    margin = int(opts.feather * 3 + opts.dilate + 1) + 3  # allowed overshoot of the detected bbox
+    tol = 3  # allowed shortfall (threshold erodes the faint rim)
 
-    def patch(img, box, shape="ellipse", color=(235, 50, 40)):
-        from PIL import ImageDraw
-
-        im = img.copy()
+    def patch(box, shape="ellipse", color=(235, 50, 40)):
+        im = base.copy()
         d = ImageDraw.Draw(im)
         (d.ellipse if shape == "ellipse" else d.rectangle)(box, fill=color)
         return im
 
-    def make(name, gen, size=None):
+    def make(name, gen):
         path = os.path.join(tmpd, name + ".png")
         gen.save(path)
         return path
@@ -301,32 +310,64 @@ def selftest(base_path):
         arr, _ = shift_zero(np.asarray(img), dx, dy)
         return Image.fromarray(arr)
 
-    cases = []  # (name, gen_path, box, expect_status, check)
+    def bb(b):  # drawn inclusive box -> exclusive bbox
+        return (b[0], b[1], b[2] + 1, b[3] + 1)
+
+    cases = []  # (name, gen_path, box, expect_statuses, planted_bbox|None, expected_shift|None, need_warning_text)
     bx = (W // 2 - 40, H // 2 - 50, W // 2 + 40, H // 2 + 50)
-    cases.append(("ok_clean", make("a", patch(base, (bx[0] + 15, bx[1] + 20, bx[2] - 15, bx[3] - 20))), bx, {"ok"}, lambda r: r["align_shift"] == [0, 0]))
-    cases.append(("ok_shift(+5,-3)+rescale", make("b", shifted(patch(base, (bx[0] + 15, bx[1] + 20, bx[2] - 15, bx[3] - 20)), 5, -3).resize((int(W * 1.6), int(H * 1.6)))), bx, {"ok"}, lambda r: r["align_shift"] == [-5, 3] and r["pixels_changed_outside_alpha"] == 0))
+    pl = (bx[0] + 15, bx[1] + 20, bx[2] - 15, bx[3] - 20)
+    cases.append(("ok_clean", make("a", patch(pl)), bx, {"ok"}, bb(pl), [0, 0], None))
+    cases.append(("ok_shift(+5,-3)+rescale", make("b", shifted(patch(pl), 5, -3).resize((int(W * 1.6), int(H * 1.6)))), bx, {"ok"}, bb(pl), [-5, 3], None))
     eb = (0, 0, 70, 70)
-    cases.append(("ok_edge_region+shift(4,3)", make("c", shifted(patch(base, (0, 0, 55, 55), "rect"), 4, 3)), eb, {"ok", "warn"}, lambda r: r["align_shift"] == [-4, -3] and r["overlay_origin"][0] >= 0))
+    cases.append(("ok_edge_region+shift(4,3)", make("c", shifted(patch((0, 0, 55, 55), "rect"), 4, 3)), eb, {"ok", "warn"}, (0, 0, 56, 56), [-4, -3], None))
     big = (W - 200, 150, W - 20, 450)
-    cases.append(("large_change(85%)+shift(4,3)", make("d", shifted(patch(base, (big[0] + 10, big[1] + 10, big[2] - 10, big[3] - 10), "rect"), 4, 3)), big, {"ok", "warn"}, lambda r: r["align_shift"] == [-4, -3]))
-    cases.append(("fail_aspect", make("e", patch(base, (bx[0] + 15, bx[1] + 20, bx[2] - 15, bx[3] - 20)).resize((W, W))), bx, {"fail"}, lambda r: True))
-    cases.append(("fail_no_change", make("f", base), bx, {"fail"}, lambda r: True))
+    plb = (big[0] + 10, big[1] + 10, big[2] - 10, big[3] - 10)
+    cases.append(("large_change(85%)+shift(4,3)", make("d", shifted(patch(plb, "rect"), 4, 3)), big, {"ok", "warn"}, bb(plb), [-4, -3], None))
+    full = (3, 3, W - 3, H - 3)
+    plf = (W // 2 - 60, H // 2 - 60, W // 2 + 60, H // 2 + 60)
+    cases.append(("near_full_box(skip align)", make("h", patch(plf)), full, {"ok", "warn"}, bb(plf), [0, 0], "nearly the whole frame"))
+    cases.append(("fail_aspect", make("e", patch(pl).resize((W, W))), bx, {"fail"}, None, None, None))
+    cases.append(("fail_no_change", make("f", base), bx, {"fail"}, None, None, None))
     noise = Image.fromarray(np.clip(np.asarray(base).astype(np.int16) + rng.normal(0, 40, (H, W, 3)), 0, 255).astype(np.uint8))
-    cases.append(("fail_full_redraw", make("g", noise.transpose(Image.FLIP_LEFT_RIGHT)), bx, {"fail"}, lambda r: True))
+    cases.append(("fail_full_redraw", make("g", noise.transpose(Image.FLIP_LEFT_RIGHT)), bx, {"fail"}, None, None, None))
 
     rows, ok_all = [], True
-    for name, gp, box, expect, chk in cases:
-        out = os.path.join(tmpd, name.replace("(", "_").replace(")", "_").replace("+", "_").replace("%", "") + ".webp")
-        a = build_parser().parse_args(["--base", base_path, "--gen", gp, "--box", ",".join(map(str, box)), "--out", out])
+    for name, gp, box, expect, planted, want_shift, want_warn in cases:
+        out = os.path.join(tmpd, "".join(ch if ch.isalnum() else "_" for ch in name) + ".webp")
+        a = build_parser().parse_args(["--base", base_path, "--gen", gp, "--box", ",".join(map(str, box)), "--out", out,
+                                       "--threshold", str(opts.threshold), "--dilate", str(opts.dilate), "--feather", str(opts.feather)])
+        notes = []
         try:
             res, code = process(a)
         except Exception as e:  # selftest must report, not crash
             res, code = {"status": "error", "warnings": [repr(e)]}, 99
+        st = res["status"]
         exists = os.path.exists(out)
-        good = res["status"] in expect and code == (2 if res["status"] == "fail" else 0) and (exists != (res["status"] == "fail")) and chk(res) if res["status"] != "error" else False
+        good = st in expect and code == (2 if st == "fail" else 0) and exists == (st != "fail")
+        if good and st != "fail":
+            if want_shift is not None and res.get("align_shift") != want_shift:
+                good = False
+                notes.append(f"shift {res.get('align_shift')}")
+            if res.get("pixels_changed_outside_alpha") != 0:
+                good = False
+                notes.append("changed outside alpha")
+            if want_warn and not any(want_warn in w for w in res["warnings"]):
+                good = False
+                notes.append("expected warning missing")
+            if planted is not None and res.get("bbox"):
+                dx1, dy1, dx2, dy2 = res["bbox"]
+                px1, py1, px2, py2 = planted
+                if dx1 > px1 + tol or dy1 > py1 + tol or dx2 < px2 - tol or dy2 < py2 - tol:
+                    good = False
+                    notes.append(f"bbox {res['bbox']} does not cover planted {list(planted)}")
+                if dx1 < px1 - margin or dy1 < py1 - margin or dx2 > px2 + margin or dy2 > py2 + margin:
+                    good = False
+                    notes.append(f"bbox {res['bbox']} overshoots planted {list(planted)}")
+        elif st == "error":
+            good = False
+            notes.append(res["warnings"][0])
         ok_all &= bool(good)
-        rows.append((name, res["status"], code, "yes" if exists else "no", res.get("align_shift"), "PASS" if good else "FAIL"))
-    # bad --box formats exit 2
+        rows.append((name, st, code, "yes" if exists else "no", res.get("align_shift"), res.get("bbox"), "PASS" if good else "FAIL " + "; ".join(notes)))
     for bad in ("1,2,3", "50,50,10,10", "a,b,c,d"):
         try:
             build_parser().parse_args(["--base", base_path, "--gen", base_path, "--box", bad, "--out", os.path.join(tmpd, "x.webp")])
@@ -335,10 +376,10 @@ def selftest(base_path):
             code = e.code
         good = code == 2
         ok_all &= good
-        rows.append((f"bad_box {bad}", "argparse error", code, "no", None, "PASS" if good else "FAIL"))
-    print("%-34s %-14s %-5s %-6s %-10s %s" % ("case", "status", "exit", "--out", "align", "result"))
+        rows.append((f"bad_box {bad}", "argparse error", code, "no", None, None, "PASS" if good else "FAIL"))
+    print("%-30s %-14s %-5s %-6s %-9s %-22s %s" % ("case", "status", "exit", "--out", "align", "bbox", "result"))
     for r in rows:
-        print("%-34s %-14s %-5s %-6s %-10s %s" % tuple(str(x) for x in r))
+        print("%-30s %-14s %-5s %-6s %-9s %-22s %s" % tuple(str(x) for x in r))
     print("SELFTEST", "PASSED" if ok_all else "FAILED")
     for f in os.listdir(tmpd):
         os.remove(os.path.join(tmpd, f))
