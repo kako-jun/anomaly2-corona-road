@@ -124,7 +124,7 @@ function selectCam(n) {
 selectCam(1);
 
 /* ---- Report ---- */
-const reportBtn = $('reportBtn'), scrim = $('scrim'), dialog = $('cats'), lamp = $('reportLamp'), fb = $('feedback');
+const reportBtn = $('reportBtn'), scrim = $('scrim'), dialog = $('cats'), lamp = $('reportLamp'), osdResult = $('osdResult');
 let falseNext = false, reports = 0, strikes = 0, fbTimer = 0;
 function setCats(open) {
   scrim.hidden = !open; reportBtn.setAttribute('aria-expanded', String(open)); lamp.classList.toggle('lit', open);
@@ -155,7 +155,8 @@ catGrid.append(cancel);
 
 function feedback() {
   const ok = !falseNext; falseNext = !falseNext;
-  fb.textContent = ok ? 'CONFIRMED' : 'FALSE REPORT'; fb.classList.toggle('bad', !ok);
+  osdResult.textContent = ok ? 'CONFIRMED' : 'FALSE REPORT';
+  osdResult.classList.toggle('bad', !ok); osdResult.classList.add('show');
   if (ok) { reports = Math.min(4, reports + 1); $('reports').textContent = reports; }
   else {
     strikes = Math.min(3, strikes + 1);
@@ -165,7 +166,7 @@ function feedback() {
     next();
   }
   clearTimeout(fbTimer);
-  fbTimer = setTimeout(() => { fb.textContent = 'READY'; fb.classList.remove('bad'); }, 2400);
+  fbTimer = setTimeout(() => osdResult.classList.remove('show'), 2600);
 }
 
 /* ---- Shift clock (dummy: 1 minute per 2 seconds) ---- */

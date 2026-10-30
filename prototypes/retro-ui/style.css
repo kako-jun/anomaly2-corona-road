@@ -503,7 +503,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1 1 150px;
+  flex: 1 1 100%;
 }
 .lamp-big {
   width: 16px;
@@ -539,29 +539,6 @@ body {
     0 0 0 #6a130d,
     0 1px 2px #0006,
     inset 0 3px 6px #0006;
-}
-.lcd {
-  flex: 1 1 130px;
-  min-height: 44px;
-  border-radius: 12px;
-  background: #0e130c;
-  color: #b8ff78;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  letter-spacing: 0.12em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-shadow: 0 0 6px #8f4;
-  box-shadow:
-    inset 0 2px 5px #000,
-    0 1px 0 #fff8;
-  padding: 0 8px;
-  text-align: center;
-}
-.lcd.bad {
-  color: #ff9a7a;
-  text-shadow: 0 0 6px #f64;
 }
 .cat-grid {
   display: grid;
@@ -945,13 +922,11 @@ body {
 
 /* glass of the small display windows and the CRT: faint haze / fingerprints, text stays readable */
 .vfd,
-.lamps,
-.lcd {
+.lamps {
   position: relative;
 }
 .vfd::after,
 .lamps::after,
-.lcd::after,
 .glass::after {
   content: '';
   position: absolute;
@@ -1455,4 +1430,47 @@ body {
   .dialog .cat-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* Report result: camera OSD style text on the picture (separate look from the white italic film subtitles) */
+.osd-result {
+  left: 0;
+  right: 0;
+  top: 12%;
+  text-align: center;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  color: #7dff9e;
+  text-shadow:
+    0 0 6px #2f6,
+    0 0 2px #cfe;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+.osd-result.show {
+  opacity: 1;
+  transition-duration: 0.12s;
+}
+.osd-result.bad {
+  color: #ff6a5c;
+  text-shadow:
+    0 0 6px #f33,
+    0 0 2px #fcc;
+}
+@media (min-width: 900px) {
+  .osd-result {
+    font-size: 1.25rem;
+  }
+}
+
+/* all status labels centred over their windows; letter-spaced key text optically centred */
+.status .cell .label {
+  text-align: center;
+}
+.key {
+  padding-left: calc(10px + 0.1em);
+}
+.key-report {
+  padding-left: calc(10px + 0.2em);
 }
