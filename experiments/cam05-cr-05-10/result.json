@@ -1,9 +1,0 @@
-{
-  "candidate_id": "CR-05-10",
-  "camera_id": "CAM05",
-  "element_id": "CAM05-E08",
-  "review_status": "rejected",
-  "reason": "The source depicts a full head and torso silhouette rather than a small shoulder-width bulge in one curtain.",
-  "generation_prompt": "Edit the attached exact 676×900 surveillance camera photo. Only one change: Make one small section of the central front curtain gently bulge outward in a silhouette the width and shape of a person's shoulders, as if someone is behind the fabric. Do not reveal a person, face, or hand. Keep the curtain texture, glass and frames unchanged. Preserve framing, signs, lighting, architecture, floor, all text, reflections outside the target, grain, texture and colors. Output full frame at same aspect ratio.",
-  "generated_source": "experiments/cam05-cr-05-10/source.png"
-}

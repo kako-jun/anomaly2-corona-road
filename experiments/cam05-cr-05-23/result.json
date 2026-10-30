@@ -1,9 +1,0 @@
-{
-  "candidate_id": "CR-05-23",
-  "camera_id": "CAM05",
-  "element_id": "CAM05-E08",
-  "review_status": "rejected",
-  "generated_source": "experiments/cam05-cr-05-23/source.png",
-  "reason": "Requested horizontally striped curtain fabric was rendered as a rigid metal shutter; the intended material and anomaly differ.",
-  "related": "AR-05-glass-light changes a reflection, not curtain fabric."
-}

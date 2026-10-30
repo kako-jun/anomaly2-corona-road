@@ -1,9 +1,0 @@
-{
-  "candidate_id": "CR-05-06",
-  "camera_id": "CAM05",
-  "element_id": "CAM05-E07",
-  "review_status": "rejected",
-  "reason": "The model extended the mullion as a freestanding post down onto the floor, rather than making the existing mullion appear just in front of the glass.",
-  "generation_prompt": "Edit the attached exact 676×900 surveillance camera photo. Only one change: Make one central vertical metal mullion of the storefront appear distinctly displaced forward in front of the glass, with a small natural contact shadow that shows the mullion is forward. Keep all other frames and objects in their original positions. Preserve framing, signs, lighting, architecture, floor, all text, reflections outside the target, grain, texture and colors. Output full frame at same aspect ratio.",
-  "generated_source": "experiments/cam05-cr-05-06/source.png"
-}

@@ -1,7 +1,0 @@
-{
-  "candidate_id": "CR-03-16",
-  "status": "rejected",
-  "reason": "生成元に対象装飾の円形化を確認できず、複数の装飾が星形に描き直された。",
-  "source": "experiments/cr-03-16-next/source.png",
-  "prompt": "Use case: precise-object-edit. Edit the exact attached 676×900 CAM03 surveillance photo. On the black shop wall behind the green sign, there are several tiny white floral or star-shaped decorations. Change only one existing decoration on the right side of the wall, around x=385, y=224 in the original image, into a small plain white circular spot of the same approximate area. It must REPLACE that one decoration, not add a new object elsewhere. Preserve all other decorations, storefront, text, signs, shutter, camera framing, light, floor, texture, blur and grain. Output the complete original composition."
-}

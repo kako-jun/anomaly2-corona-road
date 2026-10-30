@@ -1,7 +1,0 @@
-{
-  "candidate_id": "CR-07-01",
-  "review_status": "rejected",
-  "prompt": "Edit this exact surveillance photo. On the gray door above the left stairs, there is one small white notice with a black human pictogram (original frame x=155–165, y=168–181). Rotate only the black pictogram itself 180 degrees upside down inside the same white notice; preserve the notice rectangle, its other markings, the door, other signs, camera framing, lighting, floor reflections and every other detail. No extra signs or symbols. Return the entire composition.",
-  "generated_source": "experiments/cam07-CR-07-01-next/source.png",
-  "reason": "生成した図柄は元の人型から別の矢印状になり、掲示も明るい長方形へ変化した。"
-}

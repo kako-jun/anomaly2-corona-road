@@ -1,9 +1,0 @@
-{
-  "candidate_id": "CR-05-11",
-  "camera_id": "CAM05",
-  "element_id": "CAM05-E05",
-  "review_status": "rejected",
-  "reason": "The model placed the bent light along the storefront eaves and moved the existing ceiling light, so the original fixture could not be retained as requested.",
-  "generation_prompt": "Edit the attached exact 676×900 surveillance camera photo. Only one change: Bend the long fluorescent ceiling lamp at the glass store corner into a clear 90 degree right-angle elbow, with the light continuing around the corner. Keep the original light source and ceiling otherwise unchanged, and leave other fixtures untouched. Preserve framing, signs, lighting, architecture, floor, all text, reflections outside the target, grain, texture and colors. Output full frame at same aspect ratio.",
-  "generated_source": "experiments/cam05-cr-05-11/source.png"
-}

@@ -21,16 +21,16 @@ Use this skill when planning or producing an image-based anomaly for this game. 
 2. **Inspect the whole frame before ideation.** Sweep the image in reading order: top to bottom, and within each horizontal band left to right. Check the element inventory against the actual frame, including objects, surfaces, fixtures, sign/text, openings, lights, shadows, reflections, and notable empty/dark areas. Record uncertain readings as uncertain rather than guessing. The camera's game label may not match the photographed scene. Build ideas only from visible affordances. Mark unsupported ideas as runtime/hybrid instead of forcing them into the photo.
 3. **Define one anomaly.** Record a stable anomaly ID, source baseline, camera ID, element ID, category, anomaly type, phase, intended subtlety, exact changed element, and short rationale. Do not combine unrelated changes in one generation.
 4. **Specify location reproducibly.** Use the selected element's normalized coordinates `(x,y)` from 0 to 1000, origin at top left. Refine its box around the actual object at full resolution. Record the element ID and final mask/box in the anomaly entry; do not copy the element's description into a second inventory. A polygon or hand-painted mask is preferred for irregular objects.
-5. **Generate a proposal.** Attach the baseline and ask for only the defined change. Tell the image model to preserve framing, perspective, lighting, texture, grain, compression, and every other object. Treat the result as a source layer, never as the finished full frame.
+5. **Generate a proposal.** Attach the baseline and ask for only the defined change. Tell the image model to preserve framing, perspective, lighting, texture, grain, compression, and every other object. Treat the result as a source layer, never as the finished full frame. This source layer and the mask are working files: discard them after verification (see "作業置き場(experiments/)"); only the transparent WebP is kept.
 6. **Composite into the baseline.** Align the generated layer to the baseline without resizing or warping the baseline. Build a mask that covers the changed object and its immediate contact shadow/reflection when needed. Use a softly feathered, semi-transparent gradient transition around that mask so the insertion blends into the surveillance image. Keep mask alpha exactly zero outside the documented transition boundary. Do not apply global color correction to the baseline.
-7. **Review the result.** Compare baseline and composite at the same dimensions. Inspect a blink/A-B view and a difference image. Confirm that every changed pixel lies inside the documented mask/transition envelope; confirm no unrelated object, sign, camera framing, or overlay changed. If the changed region is too large to blend without collateral edits, regenerate or edit the local region manually.
-8. **Register only after review.** Save the cropped transparent overlay and its placement as the game asset, preserve the baseline and generated source separately, and update the anomaly record with the selected element ID, final mask/box, paths, dimensions, and review status. Keep runtime-only effects out of the image-variant queue.
+7. **Review the result.** Compare baseline and composite at the same dimensions. Inspect a blink/A-B view and a difference image. Confirm that every changed pixel lies inside the mask/transition envelope (a working concept, not a stored file; see "作業置き場(experiments/)"); confirm no unrelated object, sign, camera framing, or overlay changed. If the changed region is too large to blend without collateral edits, regenerate or edit the local region manually.
+8. **Register only after review.** Save the cropped transparent overlay and its placement as the game asset, and update the anomaly record with the selected element ID, final mask/box, paths, dimensions, and review status. Keep runtime-only effects out of the image-variant queue.
 
 ## Record fields
 
 For each candidate/variant, maintain:
 
-`id`, `camera_id`, `element_id`, `base_photo`, `mask_box_1000`, `category`, `anomaly_type`, `phase`, `subtlety`, `description`, `generation_prompt`, `generated_source`, `mask`, `overlay`, `overlay_origin`, `dimensions`, `review_status`, `notes`.
+`id`, `camera_id`, `element_id`, `base_photo`, `mask_box_1000`, `category`, `anomaly_type`, `phase`, `subtlety`, `description`, `generation_prompt`, `overlay`, `overlay_origin`, `dimensions`, `review_status`, `notes`.
 
 Use `planned`, `generated`, `composited`, and `reviewed` as distinct states. Never mark an AI-generated full frame as reviewed merely because the requested object looks right.
 
@@ -46,7 +46,11 @@ Use `planned`, `generated`, `composited`, and `reviewed` as distinct states. Nev
 
 この作品では、懐かしく寂しい日常が一瞬戻る方向を優先する。閉店した店が営業する、壊れていた物が直る等、写真で確認できる現状から一つだけ変える。怖がらせる小道具を前提にしない。核となる変化は「閉店した店が再び営業し、壊れたものが直り、失われた日常が一瞬戻る」で、広告などの小道具は補助でありテーマの中心にしない。修復は元写真で破損が確認できる箇所を選んでから制作し、破損を想像で決めない。『既に存在した物の変化』と『追加』を混同しない。小物は実ゲームの表示寸法で視認性を検証する。公開用 baseline の店名・マークは kako-jun の他作品のパロディにし、Corona Road の名前は維持する。最初の本命は「閉じたシャッターが少し開き暖かな店内光が漏れる」。候補は `prompts/candidate-pool.md` の「昭和テーマ候補」を参照（制作状態は `prompts/anomalies.yaml` が正本）。
 
-生成結果が全体を描き直しても、元画像を下地とし、生成画像を元の寸法・構図に位置合わせして対象と必要な光・影だけをマスクで重ねる。境界は徐々に透過させ、マスク外は必ずゼロにする。床目地やシャッターの線を確認し、ずれが見える場合は位置合わせやマスクを調整する。PNGなどロスレスで保存し、マスク外差分ゼロを検証する。`experiments/showa-cam02/` は試行例であり、見た目の最終承認を意味しない。
+生成結果が全体を描き直しても、元画像を下地とし、生成画像を元の寸法・構図に位置合わせして対象と必要な光・影だけをマスクで重ねる。境界は徐々に透過させ、マスク外は必ずゼロにする。床目地やシャッターの線を確認し、ずれが見える場合は位置合わせやマスクを調整する。PNGなどロスレスで保存し、マスク外差分ゼロを検証する。
+
+## 作業置き場(experiments/)
+
+`experiments/` はローカル一時領域で、正本ではなくコミットしない。1件ごとに生成・合成して切り出した透過 WebP を `assets/anomaly-overlays/` に置き、台帳(`prompts/anomalies.yaml`)に登録してコミットしたら、その件の作業フォルダ(`experiments/<件名>/` 配下すべて)を即削除する。生成元・マスク・比較画像・blink 等の作業物は溜めない。
 
 ## 差分アセット管理
 

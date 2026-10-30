@@ -26,8 +26,6 @@ dist-ssr
 .serena/
 .mcp.json
 
-# Local production previews and generated full-frame intermediates; the cropped
-# transparent anomaly overlays and production notes are tracked separately.
-experiments/**/*.png
-experiments/**/*.webp
-experiments/**/*.gif
+# experiments/ is a local scratch area: never commit it, and do not let work files pile up
+# (delete each item folder after its overlay is committed). See the corona-road-anomaly skill.
+experiments/
