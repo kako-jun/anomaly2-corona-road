@@ -32,7 +32,9 @@
 - **First Anomaly Delay**: 12 seconds
 - **Spawn Interval**: 30 seconds (cap of 2 concurrent — see Game Balance)
 - **Total Anomalies**: 6-11 per playthrough depending on report cadence
-- **Categories**: 5 types
+- **Source**: the anomaly ledger `prompts/anomalies.yaml` (single source of truth). Each anomaly is a transparent WebP overlay (`assets/anomaly-overlays/camNN/*.webp`) drawn over the camera's base photo at the ledger's pixel position. The game never tells the player where or what: no lamp, no description, no on-screen hint — spotting the difference _is_ the game (#5).
+- **How it is wired** (#46): `vite.config.ts` reads the ledger into the `virtual:anomalies` module (only `id`, camera, category, overlay path, origin, size; a broken entry fails the build and names the entry); `src/data/anomalyLedger.ts` resolves overlay URLs; `src/utils/anomalyLedger.ts` / `anomalyData.ts` / `anomalyOverlay.ts` are the pure parse / pick / placement helpers; `CameraView.tsx` draws the overlay (order: base photo, glow, overlay, then scanlines etc.); the overlay images are preloaded on idle time once play starts (`src/utils/preload.ts`). Minimum browser: CSS container query size units (Safari 16+ / Chrome 105+ / Firefox 110+); older ones show the photo uncovered but visible, and overlay percentages still hold. Selection: a camera with no anomaly now, an entry not already used this shift, random; when the ledger runs out, spawning stops; if only no camera is free, it retries after 1 s instead of waiting a whole interval; an entry whose image cannot be resolved is skipped with a console warning. Playthrough-to-playthrough repeat avoidance needs save data (not implemented, `docs/save-data.md`).
+- **Categories**: 5 types (the ledger's `category`; the correct report is the category of the anomaly on the camera you are watching)
   - 📹 Camera: Technical glitches, feed anomalies
   - 📦 Object: Physical items appearing/disappearing/changing
   - 🌆 Environment: Lighting, structure, atmosphere changes
@@ -42,6 +44,8 @@
 #### 3. Phase System
 
 Anomalies become progressively more disturbing and rule-breaking:
+
+> The phases below are the design intent. The implementation currently does not weight the ledger by phase (the entry is chosen at random from the unused ones); `Anomaly.phase` is only recorded.
 
 **Early Phase (0:00 - 2:00)**
 
@@ -64,7 +68,7 @@ Anomalies become progressively more disturbing and rule-breaking:
 
 #### 4. Meta-Anomaly System
 
-Meta-anomalies challenge the player's trust in the game interface itself:
+Meta-anomalies challenge the player's trust in the game interface itself (not implemented; the old placeholder text templates were removed in #46):
 
 - Report button disappears
 - Camera labels randomize
@@ -109,7 +113,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 - Scanline CRT overlay
 - Monospace JetBrains Mono stack
 - Google-family semantic palette (green/blue/amber/red/violet)
-- Vignette + glitch-shake on camera feeds during active anomalies
+- Vignette on the camera feeds; nothing on the picture changes to signal an anomaly
 
 ---
 
@@ -121,7 +125,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 
 - [x] Game state management (idle/playing/win/lose)
 - [x] 6-minute game loop with real-time conversion
-- [x] Anomaly spawning system (45s intervals)
+- [x] Anomaly spawning system (first at 12 s, then every 30 s; see Anomaly System)
 - [x] Phase-based difficulty progression
 - [x] Win/lose condition checking
 
@@ -137,17 +141,14 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 
 - [x] 8 camera feeds defined (with provisional WebP imagery)
 - [x] Multi-input navigation (touch swipe / mouse drag / keyboard / numbered buttons)
-- [x] Numbered camera buttons with a green selected lamp and a small amber anomaly lamp
-- [x] Visual feedback for anomaly presence (on-image provisional marker with category + description, plus glitch-shake)
+- [x] Numbered camera buttons with a green selected lamp (no anomaly indicator)
+- [x] Anomalies shown as transparent overlay images on the base photo, with the same brightness / contrast filter as the photo
 - [x] Monitor OSD (`CAM n`, REC)
 
 #### Anomaly System
 
 - [x] 5 anomaly categories implemented
-- [x] Template-based anomaly generation
-- [x] Phase-appropriate anomaly selection
-- [x] Weighted random selection by phase
-- [x] Meta-anomaly templates (10% in late phase)
+- [x] Ledger-driven anomaly selection (`prompts/anomalies.yaml`)
 
 #### Reporting System
 
@@ -163,7 +164,6 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 - [x] Retro CRT cabinet UI: scanlines, moving noise, knobs (brightness / contrast), movie-style subtitles (see DESIGN.md §8, §11; sample dialogue only, Issue #29)
 - [x] Monospace JetBrains Mono styling
 - [x] Material 3-style semantic palette
-- [x] Vignette + glitch-shake camera effect during anomalies
 - [x] Mobile-optimized layout, centered on desktop
 
 #### DevOps
@@ -269,7 +269,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 
 #### 3.1 UI Corruption Effects
 
-**Current:** Only in templates, not visually implemented
+**Current:** Not implemented
 
 **Tasks:**
 
@@ -398,6 +398,7 @@ src/
 │   ├── GameOverScreen.tsx
 │   └── StartScreen.tsx
 ├── data/
+│   ├── anomalyLedger.ts # ledger (virtual:anomalies) + overlay URLs
 │   └── dialogue.ts      # PLACEHOLDER subtitle lines (replaced in Issue #29)
 ├── hooks/              # Custom React hooks
 │   ├── useGameState.ts
@@ -406,7 +407,9 @@ src/
 ├── types/              # TypeScript definitions
 │   └── game.ts
 ├── utils/              # Game logic and pure UI helpers
-│   ├── anomalyData.ts
+│   ├── anomalyData.ts      # pick a ledger entry / build the running anomaly
+│   ├── anomalyLedger.ts    # parse + validate ledger entries (used by vite.config.ts)
+│   ├── anomalyOverlay.ts   # overlay % placement on the base photo
 │   ├── gameConfig.ts
 │   ├── knob.ts         # Knob value <-> angle / filter maths
 │   ├── subtitle.ts     # Subtitle timing and line selection
@@ -481,8 +484,8 @@ src/
 
 1. **Provisional Imagery**: 8 WebP feeds in place, but variants per anomaly state are not yet rendered
 2. **No Audio**: Silent gameplay, relies only on visuals
-3. **Meta-Anomalies Not Visual**: Templates exist but no UI corruption effects
-4. **Limited Anomaly Pool**: Only template text, not varied enough
+3. **Meta-Anomalies Not Implemented**: No UI corruption effects
+4. **Limited Anomaly Pool**: the ledger is being grown toward ~300 entries (`prompts/README.md`); until then a shift can run out of unused entries
 5. **No Persistence**: No save states or progress tracking (現状は何も保存していない＝未実装。設計は `docs/save-data.md`)
 
 ### Technical Debt
@@ -501,10 +504,9 @@ src/
 
 #### Adding New Anomalies
 
-1. Add template to `src/utils/anomalyData.ts`
+1. Add the overlay under `assets/anomaly-overlays/camNN/` and register it in `prompts/anomalies.yaml` (workflow: `prompts/README.md`). No code change: the game reads the ledger as is.
 2. Categorize correctly (Camera/Object/Environment/Person/Surreal)
-3. Assign to appropriate phase (early/mid/late)
-4. Consider visibility and difficulty
+3. Consider visibility and difficulty
 
 #### Adding New Features
 

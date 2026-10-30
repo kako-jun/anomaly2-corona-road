@@ -1,5 +1,5 @@
 # 異変画像の制作台帳。候補案は candidate-pool.md、報告カテゴリは category。
-# 全件は静止差分試作であり、実ゲーム未接続・ゲーム画面とライブ blink は未検証。
+# ゲームはこの台帳を直接読んで異変を出す（仕組みは CLAUDE.md の Anomaly System）。ゲーム画面でのライブ blink は個別に未検証のものがある。
 # review_status: composited は部分合成試作であり、完成・採用を意味しない。
 # enum は prompts/README.md を参照。
 

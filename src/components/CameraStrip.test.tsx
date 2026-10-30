@@ -5,11 +5,11 @@ import { describe, expect, it, vi } from 'vitest'
 import { makeCameras } from '../test/factories'
 import { CameraStrip } from './CameraStrip'
 
-const setup = (current: number, anomalyAt: number[] = []) => {
+const setup = (current: number) => {
   const onSelect = vi.fn()
   const { container } = render(
     <CameraStrip
-      cameras={makeCameras(4, anomalyAt)}
+      cameras={makeCameras(4)}
       currentIndex={current}
       onSelect={onSelect}
     />
@@ -45,20 +45,10 @@ describe('CameraStrip', () => {
     expect(tabs[1]).not.toHaveClass('pressed')
   })
 
-  it('lights the amber lamp only where hasAnomaly is set', () => {
-    const { cells } = setup(0, [3])
-    const on = cells.map(c =>
-      c.querySelector('.lamp.alert')!.classList.contains('on')
-    )
-    expect(on).toEqual([false, false, false, true])
-  })
-
-  it('adds ", anomaly active" to the label only for anomalous cameras', () => {
-    setup(0, [1])
-    expect(
-      screen.getByRole('button', { name: 'Camera 2, anomaly active' })
-    ).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Camera 1' })).toBeInTheDocument()
+  it('shows no anomaly indicator (the player must spot the difference)', () => {
+    const { cells } = setup(0)
+    expect(cells.some(c => c.querySelector('.lamp.alert'))).toBe(false)
+    expect(screen.getByRole('button', { name: 'Camera 2' })).toBeInTheDocument()
   })
 
   it('calls onSelect with the clicked index', async () => {

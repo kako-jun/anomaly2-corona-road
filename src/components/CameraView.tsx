@@ -1,6 +1,7 @@
-import { CSSProperties, useRef } from 'react'
+import { CSSProperties, useCallback, useRef, useState } from 'react'
 import { Anomaly, Camera } from '../types/game'
 import { Feedback } from '../hooks/useGameState'
+import { overlayPlacement } from '../utils/anomalyOverlay'
 import { cx } from '../utils/cx'
 import { NoiseCanvas } from './NoiseCanvas'
 
@@ -43,6 +44,47 @@ export const CameraView = ({
     }
   }
 
+  // The overlay is placed in base-photo pixels, so it waits for the base photo's natural size.
+  const [natural, setNatural] = useState<{
+    src: string
+    w: number
+    h: number
+  } | null>(null)
+  const baseSize = natural?.src === camera.image ? natural : null
+  const placement =
+    anomalyHere && baseSize
+      ? overlayPlacement(anomalyHere.overlay, baseSize.w, baseSize.h)
+      : null
+  const readSize = useCallback(
+    (img: HTMLImageElement) => {
+      // Ignore a stale element: only the image that is currently the camera's base photo counts.
+      if (img.getAttribute('src') !== camera.image) return
+      if (img.complete && img.naturalWidth > 0) {
+        const next = {
+          src: camera.image,
+          w: img.naturalWidth,
+          h: img.naturalHeight,
+        }
+        setNatural(prev =>
+          prev &&
+          prev.src === next.src &&
+          prev.w === next.w &&
+          prev.h === next.h
+            ? prev
+            : next
+        )
+      }
+    },
+    [camera.image]
+  )
+  // Stable, so React does not detach / re-attach the ref on every render.
+  const baseRef = useCallback(
+    (img: HTMLImageElement | null) => {
+      if (img) readSize(img)
+    },
+    [readSize]
+  )
+
   const style = {
     '--bri': brightness,
     '--con': contrast,
@@ -62,19 +104,53 @@ export const CameraView = ({
             dragStartXRef.current = null
           }}
         >
-          <div className={cx('pic', anomalyHere && 'pic--anomaly')}>
-            <img
-              src={camera.image}
-              alt={`${camera.name} — ${camera.location}`}
-              draggable={false}
-            />
-            <img
-              className="glow"
-              src={camera.image}
-              alt=""
-              aria-hidden="true"
-              draggable={false}
-            />
+          <div className="pic">
+            <div
+              className="pic__frame"
+              style={
+                baseSize
+                  ? ({
+                      '--ratio': `${baseSize.w} / ${baseSize.h}`,
+                    } as CSSProperties)
+                  : undefined
+              }
+            >
+              <img
+                key={camera.image}
+                src={camera.image}
+                alt={`${camera.name} — ${camera.location}`}
+                draggable={false}
+                // A cached / already-decoded image can finish before onLoad is attached, so also
+                // read the size when the element mounts (the key remounts it per camera).
+                ref={baseRef}
+                onLoad={e => readSize(e.currentTarget)}
+              />
+              {/* glow sits right above the base photo and BELOW the overlay: its blur would otherwise
+                  ghost the original object that the overlay replaces. */}
+              <img
+                className="glow"
+                src={camera.image}
+                alt=""
+                aria-hidden="true"
+                draggable={false}
+              />
+              {anomalyHere && placement && (
+                <img
+                  key={anomalyHere.id}
+                  className="overlay"
+                  src={anomalyHere.overlay.url}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  style={{
+                    left: `${placement.left}%`,
+                    top: `${placement.top}%`,
+                    width: `${placement.width}%`,
+                    height: `${placement.height}%`,
+                  }}
+                />
+              )}
+            </div>
           </div>
           <NoiseCanvas />
           <div className="fx scan" aria-hidden="true" />
@@ -84,19 +160,6 @@ export const CameraView = ({
             <i className="rec-dot" />
             REC
           </div>
-
-          {anomalyHere && (
-            <div
-              className="osd osd-anomaly"
-              role="status"
-              aria-label={`Anomaly: ${anomalyHere.category}. ${anomalyHere.description}`}
-            >
-              <div className="osd-anomaly-head">
-                ANOMALY / {anomalyHere.category.toUpperCase()}
-              </div>
-              <div className="osd-anomaly-desc">{anomalyHere.description}</div>
-            </div>
-          )}
 
           <div className={cx('movie-sub', subtitle.visible && 'show')}>
             {subtitle.text && <div>{subtitle.text}</div>}

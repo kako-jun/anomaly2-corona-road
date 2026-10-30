@@ -9,15 +9,21 @@ export type GamePhase = 'early' | 'mid' | 'late'
 
 export type GameState = 'idle' | 'playing' | 'win' | 'lose'
 
+/** The transparent image laid over the base photo; pixel values are in base-photo pixels. */
+export interface AnomalyOverlay {
+  url: string
+  origin: { x: number; y: number }
+  size: { w: number; h: number }
+}
+
 export interface Anomaly {
+  /** Ledger id (prompts/anomalies.yaml). */
   id: string
   category: AnomalyCategory
   cameraId: number
-  description: string
   detectedAt?: number
   phase: GamePhase
-  // Meta property: some anomalies will break expected rules
-  isMeta?: boolean
+  overlay: AnomalyOverlay
 }
 
 export interface Camera {
@@ -25,7 +31,6 @@ export interface Camera {
   name: string
   location: string
   image: string
-  hasAnomaly: boolean
 }
 
 export interface GameConfig {
