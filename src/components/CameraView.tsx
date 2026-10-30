@@ -56,7 +56,9 @@ export const CameraView = ({
       ? overlayPlacement(anomalyHere.overlay, baseSize.w, baseSize.h)
       : null
   const readSize = (img: HTMLImageElement) => {
-    if (img.naturalWidth > 0) {
+    // Ignore a stale element: only the image that is currently the camera's base photo counts.
+    if (img.getAttribute('src') !== camera.image) return
+    if (img.complete && img.naturalWidth > 0) {
       const next = {
         src: camera.image,
         w: img.naturalWidth,
@@ -101,11 +103,14 @@ export const CameraView = ({
               }
             >
               <img
+                key={camera.image}
                 src={camera.image}
                 alt={`${camera.name} — ${camera.location}`}
                 draggable={false}
+                // A cached / already-decoded image can finish before onLoad is attached, so also
+                // read the size when the element mounts (the key remounts it per camera).
                 ref={img => {
-                  if (img?.complete) readSize(img)
+                  if (img) readSize(img)
                 }}
                 onLoad={e => readSize(e.currentTarget)}
               />
