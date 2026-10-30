@@ -2,30 +2,32 @@
 /* ---- PLACEHOLDER DIALOGUE (sample only) ----
  * Temporary samples for a look-and-feel check. NOT the final script.
  * Setting: present day (Reiwa), a night shift in an old building.
- * who 'M' = the young man, the building's security guard (owns the guard room; polite, hesitant).
- * who 'A' = the middle-aged woman, a veteran detective staking out on the side, allowed in by him
- *           (casual, bossy-kind speech; knows her way around but he knows the site better).
+ * who 'A' = the middle-aged woman, a veteran detective staking out in the guard room.
+ *           She outranks him: phrased as requests ("...してもらえる?") but really orders. Casual, confident.
+ * who 'M' = the young man, the building's security guard. Always polite, hesitant, goes along with her.
+ *           (He knows the site better; that is a fact in the lines, not a change in rank.)
  * No names, ages or case details on purpose (only hints like "that matter").
- * A few lines faintly foreshadow a presence behind them (cold neck, a door closing, a half-finished "behind me..."); both brush it off.
+ * A few lines faintly foreshadow a presence behind them (cold neck, a door closing, a half-finished "behind me...");
+ * both brush it off.
  * The "who" field is not shown on screen; tone tells them apart.
  * Arc (kept subtle): unaware of each other -> his awkwardness -> she notices and gets awkward too.
  * Entries are consumed in pairs (two lines, "- " prefixed) whenever speakers alternate.
  * hint: true = sample hint lines shown (as a 2-line exchange) after a false report. */
 const DIALOGUE = [
-  { who: 'A', text: 'お邪魔してごめんね、張り込みで。' },
-  { who: 'M', text: 'いえ。巡回表はスマホで見ます。' },
+  { who: 'A', text: '今夜もここ使わせてもらうわね。' },
+  { who: 'M', text: 'はい。三時に巡回に出ます。' },
   { who: 'A', text: '換気効きすぎ? 首のうしろ寒いわ。' },
-  { who: 'M', text: '空調、後で見ておきます。' },
+  { who: 'M', text: 'すみません。空調、見ておきます。' },
   { who: 'M', text: '3番の看板、いつもと違います。' },
-  { who: 'A', text: 'それ、メモして。例の件かも。' },
+  { who: 'A', text: 'メモしといてもらえる? 例の件。' },
   { who: 'M', text: 'あ、毛布……いえ、なんでも。' },
   { who: 'A', text: 'なによ、言いかけてやめて。' },
   { who: 'M', text: 'いま後ろ……いえ、なんでもないです。' },
   { who: 'A', text: '今ドア閉まった? 気のせいね。' },
   { who: 'A', text: '……あんた、顔赤くない?' },
   { who: 'M', text: 'い、いえ! 暖房のせいです。' },
-  { hint: true, who: 'A', text: 'ほら、今の違うみたいよ。' },
-  { hint: true, who: 'M', text: '日誌だと、3番に看板ないです。' },
+  { hint: true, who: 'A', text: 'さっきの違うみたい。日誌は?' },
+  { hint: true, who: 'M', text: '3番に看板はない、はずです。' },
   { hint: true, who: 'A', text: '映ってる物だけ見てない?' },
   { hint: true, who: 'M', text: 'カメラの向きも日誌にあります。' },
 ];
