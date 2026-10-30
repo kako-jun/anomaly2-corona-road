@@ -7,7 +7,7 @@ interface CameraStripProps {
   onSelect: (index: number) => void
 }
 
-/** Numbered push buttons. Green lamp = selected; small amber lamp = anomaly active on that camera. */
+/** Numbered push buttons. Green lamp = selected. (No anomaly indicator: spotting the difference is the game.) */
 export const CameraStrip = ({
   cameras,
   currentIndex,
@@ -22,12 +22,11 @@ export const CameraStrip = ({
           <div className="cam-cell" key={cam.id}>
             <div className="cam-lamps">
               <i className={cx('lamp green', selected && 'on')} />
-              <i className={cx('lamp alert', cam.hasAnomaly && 'on')} />
             </div>
             <button
               type="button"
               aria-pressed={selected}
-              aria-label={`Camera ${cam.id}${cam.hasAnomaly ? ', anomaly active' : ''}`}
+              aria-label={`Camera ${cam.id}`}
               className={cx('key', selected && 'pressed')}
               onClick={() => onSelect(i)}
               title={`${cam.name} — ${cam.location}`}
