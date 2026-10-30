@@ -6,21 +6,22 @@
  * who 'A' = the middle-aged woman, a veteran detective staking out on the side, allowed in by him
  *           (casual, bossy-kind speech; knows her way around but he knows the site better).
  * No names, ages or case details on purpose (only hints like "that matter").
+ * A few lines faintly foreshadow a presence behind them (cold neck, a door closing, a half-finished "behind me..."); both brush it off.
  * The "who" field is not shown on screen; tone tells them apart.
  * Arc (kept subtle): unaware of each other -> his awkwardness -> she notices and gets awkward too.
  * Entries are consumed in pairs (two lines, "- " prefixed) whenever speakers alternate.
  * hint: true = sample hint lines shown (as a 2-line exchange) after a false report. */
 const DIALOGUE = [
-  { who: 'A', text: 'お邪魔してごめんね、夜中に。' },
-  { who: 'M', text: 'いえ。巡回は三時なので……' },
-  { who: 'A', text: 'あんた、コンビニ弁当ばっかね。' },
-  { who: 'M', text: 'はい。物価高ですから。' },
-  { who: 'A', text: 'あの件、今夜も動きなしか。' },
-  { who: 'M', text: 'スマホの天気だと冷えますよ。' },
-  { who: 'M', text: 'あ、毛布……いえ、なんでも。' },
-  { who: 'A', text: 'なによ、言いかけてやめて。' },
+  { who: 'A', text: 'お邪魔してごめんね、張り込みで。' },
+  { who: 'M', text: 'いえ。巡回表はスマホで見ます。' },
+  { who: 'A', text: '換気効きすぎ? 首のうしろ寒いわ。' },
+  { who: 'M', text: '空調、後で見ておきます。' },
   { who: 'M', text: '3番の看板、いつもと違います。' },
   { who: 'A', text: 'それ、メモして。例の件かも。' },
+  { who: 'M', text: 'あ、毛布……いえ、なんでも。' },
+  { who: 'A', text: 'なによ、言いかけてやめて。' },
+  { who: 'M', text: 'いま後ろ……いえ、なんでもないです。' },
+  { who: 'A', text: '今ドア閉まった? 気のせいね。' },
   { who: 'A', text: '……あんた、顔赤くない?' },
   { who: 'M', text: 'い、いえ! 暖房のせいです。' },
   { hint: true, who: 'A', text: 'ほら、今の違うみたいよ。' },
