@@ -78,14 +78,14 @@
       </g>
 
       <g class="element " id="CAM05-E05">
-        <title>CAM05-E05 — 中央右を横切る長い蛍光灯。下に大きな店舗区画の黒い上枠が続く。</title>
+        <title>CAM05-E05 — 中央右を横切る長い蛍光灯。画面右端まで斜めに伸びる。</title>
         <rect x="430.2" y="175.9" width="300.8" height="62.1" rx="2" class="bounds" />
         <circle cx="580.6" cy="206.9" r="10" class="marker" />
         <text x="580.6" y="210.4" text-anchor="middle" class="marker-number">05</text>
         <circle cx="945" cy="300" r="10" class="legend-number" />
         <text x="945" y="303.5" text-anchor="middle" class="legend-number-text">05</text>
         <text x="990" y="297" class="legend-id">CAM05-E05</text>
-        <text x="1105" y="297" class="legend-description">中央右を横切る長い蛍光灯。下に大きな店舗区画の黒い上枠が続く。</text>
+        <text x="1105" y="297" class="legend-description">中央右を横切る長い蛍光灯。画面右端まで斜めに伸びる。</text>
       </g>
 
       <g class="element " id="CAM05-E06">
@@ -144,14 +144,14 @@
       </g>
 
       <g class="element " id="CAM05-E11">
-        <title>CAM05-E11 — 区画左側面は黒い不透明面。上部の水平帯と下へ続く暗い縦面がある。</title>
+        <title>CAM05-E11 — 区画左側面は黒い不透明面。上部は黒い面、下は暗いカーテン越しの面で、下端にレンガ帯が続く。</title>
         <rect x="176.7" y="210.1" width="136.6" height="502.2" rx="2" class="bounds" />
         <circle cx="245.0" cy="461.2" r="10" class="marker" />
         <text x="245.0" y="464.7" text-anchor="middle" class="marker-number">11</text>
         <circle cx="945" cy="552" r="10" class="legend-number" />
         <text x="945" y="555.5" text-anchor="middle" class="legend-number-text">11</text>
         <text x="990" y="549" class="legend-id">CAM05-E11</text>
-        <text x="1105" y="549" class="legend-description">区画左側面は黒い不透明面。上部の水平帯と下へ続く暗い縦面がある。</text>
+        <text x="1105" y="549" class="legend-description">区画左側面は黒い不透明面。上部は黒い面、下は暗いカーテン越しの面で、下端にレンガ帯が続く。</text>
       </g>
 
       <g class="element " id="CAM05-E12">
@@ -210,13 +210,13 @@
       </g>
 
       <g class="element note-entry" id="CAM05-E17">
-        <title>CAM05-E17 — 人物、階段、椅子、床置き小物は確認できない。ゲーム内ラベルと実景が異なる例として扱う。</title>
+        <title>CAM05-E17 — 人物・階段は確認できない。左奥に細い脚のスタンド(椅子状に見える)が通路脇にある。ゲーム内ラベルと実景が異なる例として扱う。</title>
         
         <circle cx="393.0" cy="562.0" r="7" class="marker marker-neutral" />
         <text x="393.0" y="565.5" text-anchor="middle" class="marker-number marker-number-neutral">17</text>
         <circle cx="945" cy="804" r="10" class="legend-number" />
         <text x="945" y="807.5" text-anchor="middle" class="legend-number-text">17</text>
         <text x="990" y="801" class="legend-id">CAM05-E17</text>
-        <text x="1105" y="801" class="legend-description">Note — 人物、階段、椅子、床置き小物は確認できない。ゲーム内ラベルと実景が異なる例として扱う。</text>
+        <text x="1105" y="801" class="legend-description">Note — 人物・階段は確認できない。左奥に細い脚のスタンド(椅子状に見える)が通路脇にある。ゲーム内ラベル…</text>
       </g>
 </svg>
