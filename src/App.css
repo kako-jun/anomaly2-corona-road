@@ -112,57 +112,8 @@
 }
 
 /* ----------------------------------------------------------
-   Start / End screen
+   End screen
 ---------------------------------------------------------- */
-.start__logo {
-  width: 100%;
-  max-width: 280px;
-  margin: 0 auto;
-  display: block;
-}
-
-.start__subtitle {
-  text-align: center;
-  font-size: var(--text-caption);
-  color: var(--text-mid);
-  padding: var(--space-3) 0;
-  border-top: 1px solid var(--outline);
-  border-bottom: 1px solid var(--outline);
-  letter-spacing: 0.08em;
-}
-
-.start__card-label {
-  display: inline-block;
-  font-size: var(--text-caption);
-  letter-spacing: 0.12em;
-  margin-bottom: var(--space-2);
-}
-
-.start__card-label--obj {
-  color: var(--primary);
-}
-.start__card-label--ctl {
-  color: var(--secondary);
-}
-.start__card-label--warn {
-  color: var(--danger);
-}
-
-.start__list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  color: var(--text-mid);
-  font-size: var(--text-body);
-}
-
-.start__version {
-  text-align: center;
-  font-size: var(--text-caption);
-  color: var(--text-low);
-}
-
 .end__title {
   font-size: var(--text-display);
   font-weight: 700;
@@ -208,11 +159,4 @@
       var(--surface-2) 100%
     );
   }
-}
-
-/* ----------------------------------------------------------
-   Modifiers
----------------------------------------------------------- */
-.card--danger {
-  border-color: var(--danger);
 }
