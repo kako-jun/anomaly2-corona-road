@@ -1,56 +1,88 @@
+import { useEffect } from 'react'
+import '../styles/start.css'
+import { misreportLampCount, misreportLimitText } from '../utils/startScreen'
+
 interface StartScreenProps {
   onStart: () => void
 }
 
-export const StartScreen = ({ onStart }: StartScreenProps) => (
-  <div className="screen">
-    <img
-      src="/images/logo.webp"
-      alt="Anomaly² Corona Road"
-      className="start__logo"
-    />
-    <h1 className="sr-only">ANOMALY² Corona Road</h1>
+export const StartScreen = ({ onStart }: StartScreenProps) => {
+  // Lock body scrolling only while this screen is mounted (no :has() dependency).
+  useEffect(() => {
+    document.body.classList.add('start-open')
+    return () => document.body.classList.remove('start-open')
+  }, [])
 
-    <div className="start__subtitle">
-      UNDERGROUND SURVEILLANCE SYSTEM
-      <br />
-      NIGHT SHIFT · 00:00 → 06:00
-    </div>
+  const lamps = Array.from({ length: misreportLampCount() }, (_, i) => i)
 
-    <div className="card">
-      <div className="start__card-label start__card-label--obj">OBJECTIVE</div>
-      <p style={{ color: 'var(--text-mid)', fontSize: 'var(--text-body)' }}>
-        Monitor the eight Corona Road cameras. Report each anomaly with the
-        correct category. Survive until dawn.
-      </p>
-    </div>
+  return (
+    <main className="start-screen">
+      <div className="start-logo">
+        <img src="/images/logo.webp" alt="" />
+      </div>
+      <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
 
-    <div className="card">
-      <div className="start__card-label start__card-label--ctl">CONTROLS</div>
-      <ul className="start__list">
-        <li>· Tap a camera number, or swipe the monitor, to switch cameras</li>
-        <li>· Keyboard: ← →, A / D, 1–8</li>
-        <li>· Press REPORT and pick the matching type</li>
-      </ul>
-    </div>
+      <section className="start-panel">
+        <div className="start-plate">取扱い・監視カメラ 8台</div>
 
-    <div className="card card--danger">
-      <div className="start__card-label start__card-label--warn">WARNING</div>
-      <ul className="start__list">
-        <li>· 3 false reports end your shift</li>
-        <li>· At least 4 confirmed reports needed to clear</li>
-        <li>· Late-phase anomalies break the rules</li>
-      </ul>
-    </div>
+        <div className="start-row">
+          <div className="start-lab">目的</div>
+          <div className="start-desc">
+            地下街の監視カメラ8台を見て、おかしなところを見つけたら報告する。
+          </div>
+        </div>
 
-    <button
-      type="button"
-      className="btn btn--filled-primary btn--block"
-      onClick={onStart}
-    >
-      BEGIN SHIFT
-    </button>
+        <div className="start-row">
+          <div className="start-lab">切替</div>
+          <div className="start-desc">
+            番号ボタン / 画面を左右にスワイプ
+            <div className="start-keys" aria-hidden="true">
+              <span className="start-key start-key--tri" />
+              <span className="start-key start-key--tri start-key--right" />
+              <span className="start-key">A</span>
+              <span className="start-key">D</span>
+              <span className="start-key">1</span>
+              <span className="start-key">…</span>
+              <span className="start-key">8</span>
+            </div>
+            <span className="start-sr-only">
+              キーボードは左右の矢印キー、A と D、数字の1から8
+            </span>
+          </div>
+        </div>
 
-    <div className="start__version">v1.1.0 · Anomaly Detection System</div>
-  </div>
-)
+        <div className="start-row">
+          <div className="start-lab">調整</div>
+          <div className="start-desc">
+            <span className="start-knob" aria-hidden="true" />{' '}
+            明るさ・コントラストは左右にドラッグ(矢印キーでも)
+          </div>
+        </div>
+
+        <div className="start-row">
+          <div className="start-lab">報告</div>
+          <div className="start-desc">
+            <span className="start-rep">REPORT</span> を押して種類を選ぶ
+          </div>
+        </div>
+
+        <div className="start-row">
+          <div className="start-lab">お手つき</div>
+          <div className="start-desc">
+            <span className="start-lamps" aria-hidden="true">
+              {lamps.map(i => (
+                <i key={i} className="start-lamp" />
+              ))}
+            </span>
+            <b>{misreportLimitText()}</b>
+          </div>
+        </div>
+      </section>
+
+      <button type="button" className="start-go" onClick={onStart}>
+        <i aria-hidden="true" />
+        勤務開始
+      </button>
+    </main>
+  )
+}
