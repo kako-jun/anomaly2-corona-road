@@ -12,6 +12,8 @@
 
 > **Dialogue system direction (kako-jun, 2026-10-30):** the story advances across playthroughs (loops), so progress needs flag management. Dialogue has three patterns: fully random chatter, loop-progress story lines, and per-anomaly lines. Each anomaly gets several alternative lines and a "used once" record to avoid repeats. Design notes and open questions live in Issue #29. Save data design (storage choice, schema, rules): [`docs/save-data.md`](docs/save-data.md).
 
+> **Dialogue wiring (#74):** the ledger [`dialogue/`](dialogue/README.md) is the single source of the lines (`virtual:dialogue`, validated at build). `src/hooks/useSubtitle.ts` plays it: the opening after `openingDelayMs` (4 s), then chatter conversations (2-4 lines) with `chatterIntervalMs` (30 s) of silence between them; a false report cuts in at once (the anomaly's own lines first, then the common ones); a flag that just rose cuts in after the line on screen; one midpoint comment at `midpointAtSec` (240 s); at the end the closing conversation plays before the result screen. Selection and priority are the pure functions in `src/utils/dialogueEngine.ts`; counting, flags and loops are saved by `src/utils/shiftProgress.ts` through `src/utils/saveData.ts`. Settings: `DIALOGUE_CONFIG` in `src/utils/gameConfig.ts`. `SaveNotice` shows "進行を保存できません" whenever storage fails. Not connected yet: the true ending (final flag + time out without pointing it out), the Reiwa marking (`REIWA_IDS` in `shiftProgress.ts` is empty), and the 22:00-06:00 / 8 min clock.
+
 ---
 
 ## 📋 Game Specifications
@@ -161,7 +163,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 #### Visual Polish
 
 - [x] Unified design-token system (see DESIGN.md)
-- [x] Retro CRT cabinet UI: scanlines, moving noise, knobs (brightness / contrast), movie-style subtitles (see DESIGN.md §8, §11; sample dialogue only, Issue #29)
+- [x] Retro CRT cabinet UI: scanlines, moving noise, knobs (brightness / contrast), movie-style subtitles (see DESIGN.md §8, §11; lines come from the dialogue ledger, sample text only until it is written)
 - [x] Monospace JetBrains Mono styling
 - [x] Material 3-style semantic palette
 - [x] Mobile-optimized layout, centered on desktop
@@ -396,10 +398,10 @@ src/
 │   ├── GameHUD.tsx      # Display windows (time, reports, strike lamps)
 │   ├── ReportPanel.tsx  # REPORT key + type-picker dialog
 │   ├── GameOverScreen.tsx
+│   ├── SaveNotice.tsx   # always-on "進行を保存できません" when storage fails
 │   └── StartScreen.tsx
 ├── data/
-│   ├── anomalyLedger.ts # ledger (virtual:anomalies) + overlay URLs
-│   └── dialogue.ts      # PLACEHOLDER subtitle lines (replaced in Issue #29)
+│   └── anomalyLedger.ts # ledger (virtual:anomalies) + overlay URLs
 ├── hooks/              # Custom React hooks
 │   ├── useGameState.ts
 │   ├── useCameraKeys.ts
@@ -410,9 +412,13 @@ src/
 │   ├── anomalyData.ts      # pick a ledger entry / build the running anomaly
 │   ├── anomalyLedger.ts    # parse + validate ledger entries (used by vite.config.ts)
 │   ├── anomalyOverlay.ts   # overlay % placement on the base photo
-│   ├── gameConfig.ts
+│   ├── dialogueLedger.ts   # parse + validate dialogue/*.yaml (used by vite.config.ts)
+│   ├── dialogueEngine.ts   # pure selection: bags, priority, flags, midpoint stage
+│   ├── saveData.ts         # save store (localStorage, load / update)
+│   ├── shiftProgress.ts    # record finds, flags and loops into the save
+│   ├── gameConfig.ts       # shift config, cameras, DIALOGUE_CONFIG
 │   ├── knob.ts         # Knob value <-> angle / filter maths
-│   ├── subtitle.ts     # Subtitle timing and line selection
+│   ├── subtitle.ts     # Subtitle gap and hold time
 │   ├── wear.ts         # ?wear= parsing
 │   └── cx.ts
 ├── styles/
@@ -486,7 +492,7 @@ src/
 2. **No Audio**: Silent gameplay, relies only on visuals
 3. **Meta-Anomalies Not Implemented**: No UI corruption effects
 4. **Limited Anomaly Pool**: the ledger is being grown toward ~300 entries (`prompts/README.md`); until then a shift can run out of unused entries
-5. **No Persistence**: No save states or progress tracking (現状は何も保存していない＝未実装。設計は `docs/save-data.md`)
+5. **Persistence is localStorage only**: progress (finds, flags, used lines, loops) is saved; no hand-over code or settings UI yet (`docs/save-data.md`)
 
 ### Technical Debt
 

@@ -4,6 +4,10 @@
 
 ここにある `*-sample-NN` は動作確認用の実例で、本制作ではない（本制作は量産の型で行い、置き換える）。
 
+## ゲームでの使われ方
+
+再生は `src/hooks/useSubtitle.ts`、選択は `src/utils/dialogueEngine.ts`、時間などの設定値は `src/utils/gameConfig.ts` の `DIALOGUE_CONFIG`（開始待ち 4 秒、雑談の間の無言 30 秒、中間コメント 240 秒）。優先順位は フラグ会話 > 誤報 > 中間コメント > 雑談。誤報は即座に、フラグ会話は表示中の字幕の直後に割り込む（中断された会話の残りは捨てる）。`closing` の `ending` は未接続。
+
 ## ファイル
 
 | ファイル | 種類 | `when` |
