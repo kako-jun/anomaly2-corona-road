@@ -406,6 +406,8 @@ def run_cli(argv):
         return 2 if bad else 0
     if a.element and a.box:
         p.error("--element and --box are mutually exclusive")
+    if a.margin is not None and a.margin < 0:
+        p.error("--margin must be 0 or greater")
     if a.margin is not None and not a.element:
         p.error("--margin only applies with --element")
     if a.element:
