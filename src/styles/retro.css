@@ -1291,18 +1291,15 @@
 
 /* Always-visible notice when progress cannot be saved (docs/save-data.md rule 6) */
 .save-notice {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 50;
+  /* In normal flow (below the cabinet / start screen), never overlaid on the controls. */
+  position: relative;
+  flex: 0 0 100%;
   padding: 2px 8px;
   text-align: center;
   font-size: 11px;
   letter-spacing: 0.08em;
   color: #e8d9a0;
-  background: rgb(0 0 0 / 0.75);
-  pointer-events: none;
+  background: rgb(0 0 0 / 0.85);
 }
 .save-notice[hidden] {
   display: none;
