@@ -15,12 +15,14 @@ vi.mock('../utils/saveData', async importOriginal => {
     update: (fn: Parameters<typeof actual.update>[0]) =>
       holder.store.update(fn),
     canPersist: () => holder.store.canPersist(),
+    probe: () => holder.store.probe(),
     resetStore: () => {
       holder.store = make()
     },
   }
 })
 
+const PROBE_KEY = saveData.PROBE_KEY
 const NOTICE = '進行を保存できません'
 
 beforeEach(() => {
@@ -75,5 +77,27 @@ describe('SaveNotice', () => {
     })
     render(<SaveNotice />)
     expect(err).not.toHaveBeenCalled()
+  })
+
+  it('shows the notice from the first render when only setItem throws', () => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('quota')
+    })
+    render(<SaveNotice />)
+    expect(screen.getByRole('status')).toHaveTextContent(NOTICE)
+  })
+
+  it('shows no notice and leaves no probe key when storage works', () => {
+    render(<SaveNotice />)
+    expect(screen.queryByRole('status')).toBeNull()
+    expect(localStorage.getItem(PROBE_KEY)).toBeNull()
+  })
+
+  it('shows the notice when storage getters throw', () => {
+    vi.spyOn(window, 'localStorage', 'get').mockImplementation(() => {
+      throw new DOMException('denied', 'SecurityError')
+    })
+    render(<SaveNotice />)
+    expect(screen.getByRole('status')).toBeInTheDocument()
   })
 })

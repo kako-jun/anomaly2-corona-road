@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   BROKEN_KEY,
+  PROBE_KEY,
   SAVE_KEY,
   createSaveStore,
   emptySave,
@@ -403,5 +404,75 @@ describe('createSaveStore.update', () => {
     tabA.update(cur => ({ ...cur, foundIds: [...cur.foundIds, 'c'] }))
     const fresh = createSaveStore({ getStorage: () => storage }).load()
     expect([...fresh.foundIds].sort()).toEqual(['a', 'b', 'c'])
+  })
+})
+
+describe('createSaveStore.probe', () => {
+  it('keeps canPersist true when writes work', () => {
+    const { storage } = fakeStorage()
+    const store = createSaveStore({ getStorage: () => storage })
+    store.probe()
+    expect(store.canPersist()).toBe(true)
+  })
+  it('leaves no probe key behind', () => {
+    const { storage, data } = fakeStorage()
+    createSaveStore({ getStorage: () => storage }).probe()
+    expect(data.has(PROBE_KEY)).toBe(false)
+  })
+  it('never writes the save key', () => {
+    const { storage, data } = fakeStorage()
+    const setItem = vi.spyOn(storage, 'setItem')
+    createSaveStore({ getStorage: () => storage }).probe()
+    expect(setItem.mock.calls.map(c => c[0])).toEqual([PROBE_KEY])
+    expect(data.has(SAVE_KEY)).toBe(false)
+  })
+  it('does not touch an existing save', () => {
+    const { storage, data } = fakeStorage({ [SAVE_KEY]: '{"keep":1}' })
+    createSaveStore({ getStorage: () => storage }).probe()
+    expect(data.get(SAVE_KEY)).toBe('{"keep":1}')
+  })
+  it('setItem throwing: canPersist false', () => {
+    const { storage, fail } = fakeStorage()
+    fail.set = true
+    const store = createSaveStore({ getStorage: () => storage })
+    expect(() => store.probe()).not.toThrow()
+    expect(store.canPersist()).toBe(false)
+  })
+  it('removeItem throwing: canPersist false, no exception', () => {
+    const { storage, fail } = fakeStorage()
+    fail.remove = true
+    const store = createSaveStore({ getStorage: () => storage })
+    expect(() => store.probe()).not.toThrow()
+    expect(store.canPersist()).toBe(false)
+  })
+  it('getStorage returning null: canPersist false', () => {
+    const store = createSaveStore({ getStorage: () => null })
+    store.probe()
+    expect(store.canPersist()).toBe(false)
+  })
+  it('getStorage throwing: canPersist false, no exception', () => {
+    const store = createSaveStore({
+      getStorage: () => {
+        throw new Error('blocked')
+      },
+    })
+    expect(() => store.probe()).not.toThrow()
+    expect(store.canPersist()).toBe(false)
+  })
+  it('is stable when called twice', () => {
+    const { storage, data } = fakeStorage()
+    const store = createSaveStore({ getStorage: () => storage })
+    store.probe()
+    store.probe()
+    expect(store.canPersist()).toBe(true)
+    expect(data.has(PROBE_KEY)).toBe(false)
+  })
+  it('a failed probe stays failed on a second probe', () => {
+    const { storage, fail } = fakeStorage()
+    fail.set = true
+    const store = createSaveStore({ getStorage: () => storage })
+    store.probe()
+    store.probe()
+    expect(store.canPersist()).toBe(false)
   })
 })
