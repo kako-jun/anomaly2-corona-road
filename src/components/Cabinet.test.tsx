@@ -11,10 +11,14 @@ import { Cabinet } from './Cabinet'
 vi.mock('./NoiseCanvas', () => ({ NoiseCanvas: () => null }))
 
 // Record what the cabinet hands to the subtitle hook (the hook itself has its own tests).
+const subtitleInputs = vi.hoisted(
+  () => [] as import('../hooks/useSubtitle').SubtitleInput[]
+)
 const subtitleCalls = vi.hoisted(() => [] as (number | null)[])
 vi.mock('../hooks/useSubtitle', () => ({
-  useSubtitle: (id: number | null) => {
-    subtitleCalls.push(id)
+  useSubtitle: (input: import('../hooks/useSubtitle').SubtitleInput) => {
+    subtitleInputs.push(input)
+    subtitleCalls.push(input.wrongFeedbackId)
     return { text: '', visible: false }
   },
 }))
@@ -30,6 +34,9 @@ const makeProps = (
   currentCamera: cameras[0],
   feedback: null,
   gameTime: '00:00',
+  flagEvent: null,
+  ending: null,
+  onEndingDone: vi.fn(),
   onSwitch: vi.fn(),
   onReport: vi.fn(),
   ...over,
@@ -42,6 +49,7 @@ const cabinetEl = (c: HTMLElement) =>
 
 beforeEach(() => {
   subtitleCalls.length = 0
+  subtitleInputs.length = 0
   window.history.replaceState(null, '', '/')
 })
 afterEach(() => {
@@ -169,6 +177,72 @@ describe('Cabinet subtitle wiring', () => {
   it('passes null when there is no feedback', () => {
     render(<Cabinet {...makeProps()} />)
     expect(subtitleCalls[subtitleCalls.length - 1]).toBeNull()
+  })
+})
+
+describe('Cabinet subtitle wiring (dialogue ledger inputs)', () => {
+  const last = () => subtitleInputs[subtitleInputs.length - 1]
+
+  it('hands the wrong report id and the anomaly of that report to the hook', () => {
+    render(
+      <Cabinet
+        {...makeProps({
+          feedback: { id: 7, kind: 'wrong', message: 'x', anomalyId: 'an-1' },
+        })}
+      />
+    )
+    expect(last().wrongFeedbackId).toBe(7)
+    expect(last().wrongAnomalyId).toBe('an-1')
+  })
+
+  it('hands a null anomaly id when the wrong report had none', () => {
+    render(
+      <Cabinet
+        {...makeProps({
+          feedback: { id: 7, kind: 'wrong', message: 'x', anomalyId: null },
+        })}
+      />
+    )
+    expect(last().wrongAnomalyId).toBeNull()
+  })
+
+  it('hands null ids for a correct report, even if it carried an anomaly id', () => {
+    render(
+      <Cabinet
+        {...makeProps({
+          feedback: { id: 8, kind: 'correct', message: 'x', anomalyId: 'an-1' },
+        })}
+      />
+    )
+    expect(last().wrongFeedbackId).toBeNull()
+    expect(last().wrongAnomalyId).toBeNull()
+  })
+
+  it('hands the play time and the correct reports so far', () => {
+    render(
+      <Cabinet
+        {...makeProps({
+          stats: makeStats({ currentTime: 123_456, correctReports: 3 }),
+        })}
+      />
+    )
+    expect(last().elapsedMs).toBe(123_456)
+    expect(last().foundThisPlay).toBe(3)
+  })
+
+  it('hands the flag event, the ending and the done callback through', () => {
+    const flagEvent = { seq: 4, flags: ['elder1'] }
+    const props = makeProps({ flagEvent, ending: 'withdraw' })
+    render(<Cabinet {...props} />)
+    expect(last().flagEvent).toBe(flagEvent)
+    expect(last().ending).toBe('withdraw')
+    expect(last().onClosingDone).toBe(props.onEndingDone)
+  })
+
+  it('hands null for the flag event and the ending while the shift is running', () => {
+    render(<Cabinet {...makeProps()} />)
+    expect(last().flagEvent).toBeNull()
+    expect(last().ending).toBeNull()
   })
 })
 

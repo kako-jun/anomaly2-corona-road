@@ -7,6 +7,12 @@ import {
   getGamePhase,
 } from '../utils/gameConfig'
 import { createAnomaly, pickLedgerEntry } from '../utils/anomalyData'
+import type { FlagEvent } from './useSubtitle'
+import {
+  raiseFlagsAtStart,
+  recordFound,
+  recordShiftEnd,
+} from '../utils/shiftProgress'
 import {
   ANOMALY_LEDGER,
   overlayUrlFor,
@@ -19,11 +25,19 @@ export interface Feedback {
   id: number
   kind: Exclude<FeedbackKind, null>
   message: string
+  /** Wrong reports only: the anomaly showing on the watched camera at that moment (null = none). */
+  anomalyId?: string | null
 }
 
 const TOAST_MS = 1500
 /** When a spawn could not happen only for lack of a free camera, try again after this (not every frame). */
 const SPAWN_RETRY_MS = 1000
+
+/** How a shift ended: the closing conversation to play, and the result screen that follows. */
+export interface Ending {
+  closing: 'dawn' | 'withdraw'
+  outcome: 'win' | 'lose'
+}
 
 export const useGameState = () => {
   const [gameState, setGameState] = useState<GameState>('idle')
@@ -37,6 +51,8 @@ export const useGameState = () => {
   const [currentCameraIndex, setCurrentCameraIndex] = useState(0)
   const [activeAnomalies, setActiveAnomalies] = useState<Anomaly[]>([])
   const [feedback, setFeedback] = useState<Feedback | null>(null)
+  const [ending, setEnding] = useState<Ending | null>(null)
+  const [flagEvent, setFlagEvent] = useState<FlagEvent | null>(null)
 
   // Refs hold the latest game state so the rAF loop and event handlers
   // avoid stale closures without forcing the loop to be re-created on every spawn.
@@ -47,6 +63,12 @@ export const useGameState = () => {
   const currentIndexRef = useRef(currentCameraIndex)
   const activeAnomaliesRef = useRef(activeAnomalies)
   const feedbackIdRef = useRef(0)
+  const flagSeqRef = useRef(0)
+  // Set when the shift is over (the closing conversation is playing); blocks further reports and a second end.
+  const endedRef = useRef(false)
+  // Set when the false-report limit is reached: reports stop being accepted while the withdraw ending is pending.
+  const misreportCapRef = useRef(false)
+  const endingRef = useRef<Ending | null>(null)
   // Set once every ledger entry has been used: spawning stops for the rest of the shift.
   const ledgerExhaustedRef = useRef(false)
   // Ledger ids already shown this shift (no repeats within a shift).
@@ -74,6 +96,16 @@ export const useGameState = () => {
     ledgerExhaustedRef.current = false
     setActiveAnomalies([])
     setFeedback(null)
+    setEnding(null)
+    endedRef.current = false
+    misreportCapRef.current = false
+    endingRef.current = null
+    // Flags that became true between shifts (loop-based ones) cut in once the shift is running.
+    const raised = raiseFlagsAtStart()
+    flagSeqRef.current += 1
+    setFlagEvent(
+      raised.length > 0 ? { seq: flagSeqRef.current, flags: raised } : null
+    )
     setCurrentCameraIndex(0)
     startTimeRef.current = Date.now()
     lastAnomalyTimeRef.current = 0
@@ -93,9 +125,13 @@ export const useGameState = () => {
   }, [])
 
   const pushFeedback = useCallback(
-    (kind: Exclude<FeedbackKind, null>, message: string) => {
+    (
+      kind: Exclude<FeedbackKind, null>,
+      message: string,
+      anomalyId?: string | null
+    ) => {
       feedbackIdRef.current += 1
-      setFeedback({ id: feedbackIdRef.current, kind, message })
+      setFeedback({ id: feedbackIdRef.current, kind, message, anomalyId })
     },
     []
   )
@@ -104,10 +140,34 @@ export const useGameState = () => {
     setFeedback(prev => (prev && prev.id === id ? null : prev))
   }, [])
 
+  /**
+   * The shift is over: count the loop and hand over to the closing conversation (`Cabinet` plays it,
+   * then calls `finishEnding`). 'dawn' = time ran out, 'withdraw' = too many false reports.
+   * The true ending (final flag, time out without pointing it out) is not connected yet (Issue #74).
+   */
+  const endShift = useCallback(
+    (closing: Ending['closing'], outcome: Ending['outcome']) => {
+      if (endedRef.current) return
+      endedRef.current = true
+      recordShiftEnd()
+      const e = { closing, outcome }
+      endingRef.current = e
+      setEnding(e)
+      setGameState('ending')
+    },
+    []
+  )
+
+  const finishEnding = useCallback(() => {
+    const e = endingRef.current
+    if (e) setGameState(e.outcome)
+  }, [])
+
   // Ref-symmetric report — same pattern as the game loop, so we never depend on
   // freshly-rendered `cameras` / `activeAnomalies` props inside the callback.
   const reportAnomaly = useCallback(
     (category: AnomalyCategory) => {
+      if (endedRef.current || misreportCapRef.current) return
       const currentCamera = CAMERAS[currentIndexRef.current]
       const anomalyOnCamera = activeAnomaliesRef.current.find(
         a => a.cameraId === currentCamera.id && !a.detectedAt
@@ -127,6 +187,11 @@ export const useGameState = () => {
           )
         )
         pushFeedback('correct', `CONFIRMED — ${anomalyOnCamera.category}`)
+        const raised = recordFound(anomalyOnCamera.id)
+        if (raised.length > 0) {
+          flagSeqRef.current += 1
+          setFlagEvent({ seq: flagSeqRef.current, flags: raised })
+        }
         return
       }
 
@@ -134,13 +199,18 @@ export const useGameState = () => {
       const newMisreports = statsRef.current.misreports + 1
       setStats(prev => ({ ...prev, misreports: prev.misreports + 1 }))
       const reason = anomalyOnCamera ? 'WRONG CATEGORY' : 'NO ANOMALY HERE'
-      pushFeedback('wrong', `FALSE REPORT — ${reason}`)
+      pushFeedback(
+        'wrong',
+        `FALSE REPORT — ${reason}`,
+        anomalyOnCamera?.id ?? null
+      )
       if (newMisreports >= DEFAULT_CONFIG.maxMisreports) {
+        misreportCapRef.current = true
         // Brief delay so the result OSD is visible before the game-over screen.
-        window.setTimeout(() => setGameState('lose'), TOAST_MS)
+        window.setTimeout(() => endShift('withdraw', 'lose'), TOAST_MS)
       }
     },
-    [pushFeedback]
+    [pushFeedback, endShift]
   )
 
   /**
@@ -202,7 +272,14 @@ export const useGameState = () => {
       )
 
       if (elapsed >= DEFAULT_CONFIG.totalDurationMs) {
-        setGameState(
+        // The false-report cap was reached first (its withdraw is still waiting out the toast):
+        // that came first, so it stays a withdraw/lose even though time ran out in between.
+        if (misreportCapRef.current) {
+          endShift('withdraw', 'lose')
+          return
+        }
+        endShift(
+          'dawn',
           statsRef.current.correctReports >= DEFAULT_CONFIG.minCorrectReports
             ? 'win'
             : 'lose'
@@ -242,7 +319,7 @@ export const useGameState = () => {
 
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [gameState, spawnAnomaly])
+  }, [gameState, spawnAnomaly, endShift])
 
   useEffect(() => {
     if (!feedback) return
@@ -264,6 +341,9 @@ export const useGameState = () => {
     activeAnomalies,
     activeAnomalyHere,
     feedback,
+    ending,
+    flagEvent,
+    finishEnding,
     startGame,
     switchCamera,
     reportAnomaly,

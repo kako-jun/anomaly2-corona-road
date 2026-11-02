@@ -73,3 +73,15 @@ export const getGamePhase = (ms: number): 'early' | 'mid' | 'late' => {
   if (ms < 240_000) return 'mid'
   return 'late'
 }
+
+/** Dialogue timing and thresholds (docs/save-data.md and dialogue/README.md describe the behaviour). */
+export const DIALOGUE_CONFIG = {
+  /** Wait after the shift starts before the opening conversation. */
+  openingDelayMs: 4_000,
+  /** Silence between conversations (chatter, and after any other conversation). */
+  chatterIntervalMs: 30_000,
+  /** When the single midpoint comment is due, in seconds of play time (4 min of the current 6 min shift). */
+  midpointAtSec: 240,
+  /** Quiet time after a `serious` conversation before chatter may appear. */
+  seriousQuietMs: 20_000,
+}

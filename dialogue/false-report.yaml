@@ -1,0 +1,12 @@
+# 共通の誤報（お手つき）の会話。ヒントは入れない。異変ごとの会話（anomaly-lines.yaml）を使い切った
+# とき・該当がないときの受け皿。動作確認用の実例のみ（本制作ではない）。
+dialogues:
+  - id: false-report-sample-01
+    tone: light
+    lines:
+      - { who: A, text: '今の違うわね　見間違いよ' }
+  - id: false-report-sample-02
+    tone: light
+    lines:
+      - { who: M, text: 'すみません　勘違いでした' }
+      - { who: A, text: '落ち着いて　もう一度ね' }

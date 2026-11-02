@@ -1,0 +1,12 @@
+# 開始時の定番のやり取り。動作確認用の実例のみ（本制作ではない）。
+dialogues:
+  - id: opening-sample-01
+    tone: light
+    lines:
+      - { who: A, text: '今夜もここ使わせてもらうわね' }
+      - { who: M, text: 'はい　三時に巡回に出ます' }
+  - id: opening-sample-02
+    tone: light
+    lines:
+      - { who: M, text: 'お疲れさまです　コーヒー淹れました' }
+      - { who: A, text: 'ありがとう　助かるわ' }
