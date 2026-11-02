@@ -154,13 +154,13 @@ Two easings (in/standard + emphasized-out) and four durations.
 
 ## 7. Layout
 
-The in-game screen is a single cabinet (`.cabinet` in `src/styles/retro.css`): the CRT monitor on top and the control panel below on phones (tube first, panel under it, full-bleed up to 440 px and at most 560 px wide); at ≥ 900 px the cabinet fills the viewport with the 3:4 monitor on the left and the control panel on the right (panel scaled up with `zoom` from 1200 px). The start and result screens keep the old 480 px column (`.screen`).
+The in-game screen is a single cabinet (`.cabinet` in `src/styles/retro.css`): the CRT monitor on top and the control panel below on phones (tube first, panel under it, full-bleed up to 440 px and at most 560 px wide); at ≥ 900 px the cabinet fills the viewport with the 3:4 monitor on the left and the control panel on the right (panel scaled up with `zoom` from 1200 px). The result screen keeps the old 480 px column (`.screen`). The start screen is a single-viewport equipment nameplate (`src/styles/start.css`, `start-*` classes, max 460 px wide, no scrolling): logo, cream nameplate panel with the rules, and the "勤務開始" key.
 
 ---
 
 ## 8. Components
 
-The in-game components are the retro hardware parts from §11, implemented in `src/components/` with all styling in `src/styles/retro.css` (tokens scoped to `.retro`). `Cabinet.tsx` assembles them and owns the local UI state (knob positions, report dialog, last result OSD, subtitles). The Material-style Button and Card below are used only by the start and result screens (`StartScreen`, `GameOverScreen`).
+The in-game components are the retro hardware parts from §11, implemented in `src/components/` with all styling in `src/styles/retro.css` (tokens scoped to `.retro`). `Cabinet.tsx` assembles them and owns the local UI state (knob positions, report dialog, last result OSD, subtitles). The Material-style Button and Card below are used only by the result screen (`GameOverScreen`); the start screen is the nameplate described in §7.
 
 | Part                       | File                                                              | Notes                                                                                                                                                                                                                                                                    |
 | -------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -174,7 +174,7 @@ The in-game components are the retro hardware parts from §11, implemented in `s
 
 Keyboard (playing, report dialog closed): ← / → and A / D switch cameras, 1-8 select one (`useCameraKeys.ts`).
 
-### 8.1 Button (start / result screens)
+### 8.1 Button (result screen)
 
 Three variants. All share radius `--radius-md`, padding `--space-3 --space-4`, type `--text-label`, motion `--dur-fast`.
 
@@ -184,7 +184,7 @@ Three variants. All share radius `--radius-md`, padding `--space-3 --space-4`, t
 
 Disabled = opacity 0.38, pointer-events none, no hover.
 
-### 8.2 Card / Panel (start / result screens)
+### 8.2 Card / Panel (result screen)
 
 Bg `--surface-1` (or `--surface-2` if nested), border `1px --outline`, radius `--radius-lg`, padding `--space-4`. Elevation 1.
 
