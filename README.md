@@ -35,8 +35,7 @@
 
 ### オンラインでプレイ（推奨）
 
-現在デプロイ中...
-完了後: **https://kako-jun.github.io/anomaly2-corona-road/**
+**https://anomaly2-corona-road.llll-ll.com/**
 
 ### ローカルで開発
 
@@ -106,7 +105,7 @@ npm run format    # Prettierフォーマット
 
 ## 🚀 デプロイ
 
-`main`ブランチにpushすると自動的にGitHub Pagesにデプロイされます。
+`main`ブランチにpushすると、Cloudflare Pages（Git 連携）が自動でビルド・公開します（https://anomaly2-corona-road.llll-ll.com/）。GitHub Actions の CI は lint・テスト・ビルドの検査のみ行います。
 
 ### 初回セットアップ
 

@@ -169,7 +169,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 #### DevOps
 
 - [x] GitHub Actions deployment
-- [x] Automatic GitHub Pages publishing
+- [x] Automatic publishing (Cloudflare Pages on push to `main`)
 - [x] ESLint + Prettier setup
 - [x] Vitest + Testing Library (see Testing below)
 - [x] Pre-commit hooks (Husky + lint-staged)
@@ -380,7 +380,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS
 - **State Management**: Custom hooks (useGameState)
-- **Deployment**: GitHub Pages via GitHub Actions
+- **Deployment**: Cloudflare Pages (Git integration): a push to `main` builds and publishes to https://anomaly2-corona-road.llll-ll.com/. GitHub Actions CI only lints, tests and builds
 
 ### File Structure
 
