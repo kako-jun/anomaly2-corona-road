@@ -1447,7 +1447,7 @@ anomalies:
     subtlety: "medium"
     mask_box_1000: "(440,603)–(554,644)"
     location: "CAM03-E16、差分左上 (298,543) px"
-    detail: "床の白い反射の中に丸い水たまりができる。"
+    detail: "床に丸い水たまりができ、水面に照明が映る。"
     generation_prompt: "Precisely edit the attached surveillance photograph: add just one SMALL shallow oval water puddle, approximately 40 pixels wide by 20 pixels high in the ORIGINAL 676×900 image, centered at pixel (340, 600). It lies in the foreground floor below the green sign, visibly separate from the sign itself. A subtle, slightly glossy patch with one faint white light reflection; smooth water with NO concentric waves, NO splashes, NO spreading wet floor. Keep all floor grout lines, all other reflections, sign lettering, architecture, lights, camera angle and framing completely unchanged. Match the original low resolution, grain and color. Return the entire original photo."
     overlay: "assets/anomaly-overlays/cam03/round-puddle.webp"
     overlay_origin: "(298,543)"
@@ -2629,7 +2629,7 @@ anomalies:
     subtlety: 'obvious'
     mask_box_1000: '(388,751)–(687,959)'
     location: 'CAM08-E18、差分左上 (252,676) px'
-    detail: '柱右手前の床の丸い白反射の一つが、右壁の光る長方形パネルと同じ上下二段の形になる。'
+    detail: '柱左手前の床の丸い白反射の一つが、右壁の光る長方形パネルと同じ上下二段の形になる。'
     generation_prompt: 'Edit the attached surveillance camera photo (675x900 reference, empty shopping arcade corridor with a large square pillar in the center). Make ONLY this single change: state change: the front-most round white floor reflection among the several round reflections at the lower right of the pillar (approx x=300-420, y=700-840 of the 675x900 frame) changes shape into a two-tier shape: a taller rounded rectangle split by a thin dark horizontal band into an upper glowing panel and a lower glowing panel, like the glowing milky-white vertical panels on the right wall. The other round reflections stay unchanged. Keep camera angle, framing, lens distortion, lighting color temperature, shadows, floor reflections, film grain, JPEG artifacts and every other object pixel-identical. Do not regenerate or redraw the scene. No new readable text.'
     overlay: 'assets/anomaly-overlays/cam08/floor-reflection-two-tier.webp'
     overlay_origin: '(252,676)'
@@ -2665,7 +2665,7 @@ anomalies:
     subtlety: 'medium'
     mask_box_1000: '(397,1)–(622,99)'
     location: 'CAM08-E01、差分左上 (258,10) px'
-    detail: '天井中央の同心円の換気口の外形が、角のある四角形に変わる。'
+    detail: '天井に角のある四角い換気口が現れる。'
     generation_prompt: 'Edit the attached surveillance camera photo (675x900 reference, empty shopping arcade corridor with a large square pillar in the center). Make ONLY this single change: state change: the large circular concentric ceiling vent at the top center (approx x=276-412, y=9-81 of the 675x900 frame) changes its outer shape into a sharp-cornered square vent with the same concentric inner pattern, same size and color. Keep camera angle, framing, lens distortion, lighting color temperature, shadows, floor reflections, film grain, JPEG artifacts and every other object pixel-identical. Do not regenerate or redraw the scene. No new readable text.'
     overlay: 'assets/anomaly-overlays/cam08/vent-square.webp'
     overlay_origin: '(258,10)'
@@ -2701,7 +2701,7 @@ anomalies:
     subtlety: 'subtle'
     mask_box_1000: '(0,46)–(233,199)'
     location: 'CAM08-E02、差分左上 (84,78) px'
-    detail: '左上の長い蛍光灯の端に、淡い青い光のにじみが現れる。'
+    detail: '左上の天井の短い灯の一つに、淡い青い光のにじみが現れる。'
     generation_prompt: 'Edit the attached surveillance camera photo (675x900 reference, empty shopping arcade corridor with a large square pillar in the center). Make ONLY this single change: color shift: a faint pale blue glow bleeds out from the far (lower-right) end of the long white fluorescent light at the top left (the tube runs diagonally from the top-left corner to approx x=149,y=171 of the 675x900 frame; the glow is near x=90-150, y=100-175). Subtle, soft, low-saturation pale blue halo only. Keep camera angle, framing, lens distortion, lighting color temperature, shadows, floor reflections, film grain, JPEG artifacts and every other object pixel-identical. Do not regenerate or redraw the scene. No new readable text.'
     overlay: 'assets/anomaly-overlays/cam08/light-blue-bleed.webp'
     overlay_origin: '(84,78)'

@@ -105,7 +105,7 @@ prompts/anomalies.yaml に以下の異変を5件追加してください:
 
 Claude は enum から適切な `anomaly_type` を選び、`location` と `detail` を埋めて追記する。
 
-ゲームが読む台帳の書式: `overlay` は `assets/anomaly-overlays/camNN/<name>.webp`、`overlay_origin` は `'(x,y)'`、`dimensions` は小文字 x の `'幅x高さ'`（`46x97`）、`camera_id` は `CAMnn`。形が違うとビルドが失敗し、エントリ id が表示される。
+ゲームが読む台帳の書式: `overlay` は `assets/anomaly-overlays/camNN/<name>.webp`、`overlay_origin` は `'(x,y)'`、`dimensions` は小文字 x の `'幅x高さ'`（`46x97`）、`camera_id` は `CAMnn`。形が違うとビルドが失敗し、エントリ id が表示される。`element_id` は変化の起点となる要素で、複製・反射・はみ出しの異変でも起点の要素を指す（overlay が要素の枠からはみ出していてもよい）。
 
 異変の多様性を確保するため、写真要素ごとの未採用案は `candidate-pool.md` に集約する。猫、物の増減、反射、床壁天井の模様、文字反転、色形、段数、ノブ左右、吊り物、紙、水たまりを含む。候補数は完成素材数ではない。
 
