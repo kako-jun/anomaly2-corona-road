@@ -95,6 +95,8 @@ export const useSubtitle = (input: SubtitleInput) => {
       storyFlags.has(f)
     )
     let playingStory = false
+    // Flags already waiting when the opening starts: the opening is not cut for them; their story follows it.
+    let heldFlags: string[] = []
     // The drawn conversation's used state, saved when its first line shows.
     let candidate: { prev: UsedState; next: UsedState; meta: PlayMeta } | null =
       null
@@ -117,6 +119,7 @@ export const useSubtitle = (input: SubtitleInput) => {
       }
       phase = 'silent'
       playingStory = false
+      heldFlags = []
       // A raised flag or a false report that waited does not wait out the silence.
       later(
         selectAndPlay,
@@ -128,7 +131,12 @@ export const useSubtitle = (input: SubtitleInput) => {
 
     const showLine = () => {
       // Line boundary: a raised flag cuts in here.
-      if (!closing && !playingStory && pendingFlags.length > 0) lines = []
+      if (
+        !closing &&
+        !playingStory &&
+        pendingFlags.some(f => !heldFlags.includes(f))
+      )
+        lines = []
       const text = lines.shift()
       if (text === undefined) {
         endConversation()
@@ -257,8 +265,10 @@ export const useSubtitle = (input: SubtitleInput) => {
     // Opening after a short wait, then chatter (via the silence after it).
     later(() => {
       const opening = pickOpening(ledger, used)
-      if (opening) play(opening.entry, opening.used)
-      else selectAndPlay()
+      if (opening) {
+        heldFlags = [...pendingFlags]
+        play(opening.entry, opening.used)
+      } else selectAndPlay()
     }, cfg.openingDelayMs)
 
     return () => {
