@@ -146,6 +146,19 @@ describe('validateSave', () => {
   })
 })
 
+describe('mergeSave keeps what only one side has', () => {
+  const side = (own: string[]) =>
+    save({ foundIds: own, usedChatter: own, pendingStories: own })
+  const m = mergeSave(side(['a-only', 'both']), side(['both', 'b-only']))
+  const expected = ['a-only', 'b-only', 'both']
+  it('usedChatter is a union of both sides', () =>
+    expect([...m.usedChatter].sort()).toEqual(expected))
+  it('pendingStories is a union of both sides', () =>
+    expect([...m.pendingStories].sort()).toEqual(expected))
+  it('foundIds is a union of both sides', () =>
+    expect([...m.foundIds].sort()).toEqual(expected))
+})
+
 describe('mergeSave', () => {
   const a = save({
     foundTotal: 5,

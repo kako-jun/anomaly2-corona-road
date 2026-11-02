@@ -524,6 +524,103 @@ describe('the end is counted once', () => {
   })
 })
 
+describe('time running out around the false-report limit', () => {
+  const total = DEFAULT_CONFIG.totalDurationMs
+  const wrong = (
+    result: { current: ReturnType<typeof useGameState> },
+    n: number
+  ) => {
+    for (let i = 0; i < n; i++) wrongReport(result)
+  }
+  /** Resolves `n` anomalies, then returns the time (ms) already played. */
+  const resolve = (hook: ReturnType<typeof start>, n: number) => {
+    for (let i = 0; i < 6; i++) ledger.push(entry(`a${i}`, 1))
+    let at = 0
+    for (let i = 0; i < n; i++) {
+      const step = i === 0 ? FIRST + 100 : INTERVAL
+      advance(step)
+      at += step
+      act(() => hook.result.current.reportAnomaly('Object'))
+    }
+    return at
+  }
+
+  it('the limit reached just before time runs out ends as withdraw / lose, counted once', () => {
+    const { result } = start()
+    advance(total - 500)
+    wrong(result, DEFAULT_CONFIG.maxMisreports)
+    advance(TOAST_MS + 5000)
+    expect(result.current.ending).toEqual({
+      closing: 'withdraw',
+      outcome: 'lose',
+    })
+    expect(saveData.load().loops).toBe(1)
+  })
+
+  it('stays a withdraw / lose even with enough correct reports to win', () => {
+    const hook = start()
+    const at = resolve(hook, DEFAULT_CONFIG.minCorrectReports)
+    advance(total - 500 - at)
+    wrong(hook.result, DEFAULT_CONFIG.maxMisreports)
+    advance(TOAST_MS + 5000)
+    expect(hook.result.current.ending).toEqual({
+      closing: 'withdraw',
+      outcome: 'lose',
+    })
+  })
+
+  it('below the limit, time running out is still a dawn: lose under the minimum', () => {
+    const { result } = start()
+    wrong(result, DEFAULT_CONFIG.maxMisreports - 1)
+    advance(total)
+    expect(result.current.ending).toEqual({ closing: 'dawn', outcome: 'lose' })
+  })
+
+  it('below the limit, time running out is still a dawn: win at the minimum', () => {
+    const hook = start()
+    const at = resolve(hook, DEFAULT_CONFIG.minCorrectReports)
+    wrong(hook.result, DEFAULT_CONFIG.maxMisreports - 1)
+    advance(total - at)
+    expect(hook.result.current.ending).toEqual({
+      closing: 'dawn',
+      outcome: 'win',
+    })
+  })
+
+  it('the withdraw due after the toast does not run again once the shift has ended', () => {
+    const { result } = start()
+    wrong(result, DEFAULT_CONFIG.maxMisreports)
+    advance(TOAST_MS)
+    expect(result.current.ending?.closing).toBe('withdraw')
+    expect(saveData.load().loops).toBe(1)
+    advance(total + 5000)
+    expect(result.current.ending?.closing).toBe('withdraw')
+    expect(saveData.load().loops).toBe(1)
+  })
+
+  it('boundary below the limit: playing at 359999 ms, dawn at 360000 ms', () => {
+    const { result } = start()
+    wrong(result, DEFAULT_CONFIG.maxMisreports - 1)
+    advance(total - 1)
+    expect(result.current.gameState).toBe('playing')
+    advance(1)
+    expect(result.current.ending).toEqual({ closing: 'dawn', outcome: 'lose' })
+  })
+
+  it('boundary at the limit: playing at 359999 ms, withdraw at 360000 ms (toast still pending)', () => {
+    const { result } = start()
+    advance(total - 1000)
+    wrong(result, DEFAULT_CONFIG.maxMisreports)
+    advance(999)
+    expect(result.current.gameState).toBe('playing')
+    advance(1)
+    expect(result.current.ending).toEqual({
+      closing: 'withdraw',
+      outcome: 'lose',
+    })
+  })
+})
+
 describe('reports during the ending', () => {
   it('change neither the stats nor the save', () => {
     ledger.push(entry('a', 1))
