@@ -56,14 +56,14 @@
       </g>
 
       <g class="element " id="CAM06-E03">
-        <title>CAM06-E03 — 中央上から右へ伸びる大きな白色蛍光灯。画面上端で切れる。その下に小さい蛍光灯が別にある。</title>
+        <title>CAM06-E03 — 中央上から右へ伸びる大きな白色蛍光灯。画面上端で切れる。</title>
         <rect x="468.1" y="112.0" width="77.0" height="207.9" rx="2" class="bounds" />
         <circle cx="506.6" cy="215.9" r="10" class="marker" />
         <text x="506.6" y="219.4" text-anchor="middle" class="marker-number">03</text>
         <circle cx="945" cy="216" r="10" class="legend-number" />
         <text x="945" y="219.5" text-anchor="middle" class="legend-number-text">03</text>
         <text x="990" y="213" class="legend-id">CAM06-E03</text>
-        <text x="1105" y="213" class="legend-description">中央上から右へ伸びる大きな白色蛍光灯。画面上端で切れる。その下に小さい蛍光灯が別にある。</text>
+        <text x="1105" y="213" class="legend-description">中央上から右へ伸びる大きな白色蛍光灯。画面上端で切れる。</text>
       </g>
 
       <g class="element " id="CAM06-E04">
