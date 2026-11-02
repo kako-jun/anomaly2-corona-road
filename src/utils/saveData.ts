@@ -26,6 +26,8 @@ export interface SaveData {
   usedLines: Record<string, string[]>
   /** Ids of every other used conversation (opening, closing, midpoint, chatter, story, common false report). */
   usedChatter: string[]
+  /** Story flags that are raised but whose story conversation has not been played yet (carried to the next start). */
+  pendingStories: string[]
   settings?: SaveSettings
 }
 
@@ -37,6 +39,7 @@ export const emptySave = (): SaveData => ({
   flags: {},
   usedLines: {},
   usedChatter: [],
+  pendingStories: [],
 })
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
@@ -83,6 +86,9 @@ export const validateSave = (raw: unknown): SaveData | null => {
   } = rec
   if (!isCount(foundTotal) || !isCount(loops)) return null
   if (!isStringArray(foundIds) || !isStringArray(usedChatter)) return null
+  // Absent in saves written before the field existed (same version): treated as none.
+  const pendingStories = rec.pendingStories ?? []
+  if (!isStringArray(pendingStories)) return null
   if (
     !isRecord(flags) ||
     !Object.values(flags).every(f => typeof f === 'boolean')
@@ -103,6 +109,7 @@ export const validateSave = (raw: unknown): SaveData | null => {
       ])
     ),
     usedChatter: uniq(usedChatter),
+    pendingStories: uniq(pendingStories),
   }
   if (settings !== undefined) {
     if (
@@ -139,6 +146,7 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
     flags: { ...a.flags, ...b.flags },
     usedLines,
     usedChatter: uniq([...a.usedChatter, ...b.usedChatter]),
+    pendingStories: uniq([...a.pendingStories, ...b.pendingStories]),
   }
   const settings = b.settings ?? a.settings
   if (settings) out.settings = settings
@@ -169,6 +177,8 @@ export const createSaveStore = (opts: SaveStoreOptions): SaveStore => {
   let memory: SaveData | null = null
   let persistable = true
   let persistRequested = false
+  // Set when storage holds a save of a newer version than this build knows: never touched, never written.
+  let newerSave = false
 
   const storage = (): Storage | null => {
     try {
@@ -199,6 +209,12 @@ export const createSaveStore = (opts: SaveStoreOptions): SaveStore => {
     } catch {
       parsed = undefined
     }
+    if (isRecord(parsed) && isCount(parsed.v) && parsed.v > SAVE_VERSION) {
+      // A newer build's save: not broken. Keep it as it is and run without saving this time.
+      newerSave = true
+      persistable = false
+      return null
+    }
     const valid = validateSave(parsed)
     if (valid) return valid
     try {
@@ -211,6 +227,7 @@ export const createSaveStore = (opts: SaveStoreOptions): SaveStore => {
   }
 
   const write = (data: SaveData) => {
+    if (newerSave) return
     const s = storage()
     if (!s) {
       persistable = false
