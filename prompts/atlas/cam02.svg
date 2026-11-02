@@ -36,8 +36,8 @@
       <g class="element " id="CAM02-E01">
         <title>CAM02-E01 — 暗い青灰色の天井面。粒状の汚れと板継ぎ目がある。</title>
         
-        <circle cx="393.0" cy="238.0" r="7" class="marker marker-neutral" />
-        <text x="393.0" y="241.5" text-anchor="middle" class="marker-number marker-number-neutral">01</text>
+        <circle cx="393.0" cy="199.3" r="7" class="marker marker-neutral" />
+        <text x="393.0" y="202.8" text-anchor="middle" class="marker-number marker-number-neutral">01</text>
         <circle cx="945" cy="132" r="10" class="legend-number" />
         <text x="945" y="135.5" text-anchor="middle" class="legend-number-text">01</text>
         <text x="990" y="129" class="legend-id">CAM02-E01</text>
@@ -46,9 +46,9 @@
 
       <g class="element " id="CAM02-E02">
         <title>CAM02-E02 — 左上から斜めに入る幅広い白色蛍光灯。左上端で切れ、奥へ細くなる。</title>
-        <rect x="55.0" y="112.0" width="229.8" height="252.0" rx="2" class="bounds" />
-        <circle cx="169.9" cy="238.0" r="10" class="marker" />
-        <text x="169.9" y="241.5" text-anchor="middle" class="marker-number">02</text>
+        <rect x="94.9" y="112.0" width="183.9" height="150.3" rx="2" class="bounds" />
+        <circle cx="186.8" cy="187.2" r="10" class="marker" />
+        <text x="186.8" y="190.7" text-anchor="middle" class="marker-number">02</text>
         <circle cx="945" cy="174" r="10" class="legend-number" />
         <text x="945" y="177.5" text-anchor="middle" class="legend-number-text">02</text>
         <text x="990" y="171" class="legend-id">CAM02-E02</text>
@@ -57,9 +57,9 @@
 
       <g class="element " id="CAM02-E03">
         <title>CAM02-E03 — 天井中央上部の同心円状丸型設備。</title>
-        <rect x="322.0" y="125.5" width="145.3" height="63.0" rx="2" class="bounds" />
-        <circle cx="394.7" cy="157.0" r="10" class="marker" />
-        <text x="394.7" y="160.5" text-anchor="middle" class="marker-number">03</text>
+        <rect x="313.2" y="156.1" width="123.7" height="31.5" rx="2" class="bounds" />
+        <circle cx="375.1" cy="171.8" r="10" class="marker" />
+        <text x="375.1" y="175.3" text-anchor="middle" class="marker-number">03</text>
         <circle cx="945" cy="216" r="10" class="legend-number" />
         <text x="945" y="219.5" text-anchor="middle" class="legend-number-text">03</text>
         <text x="990" y="213" class="legend-id">CAM02-E03</text>
@@ -68,9 +68,9 @@
 
       <g class="element " id="CAM02-E04">
         <title>CAM02-E04 — 右上寄りの白い丸灯。</title>
-        <rect x="521.4" y="139.0" width="43.9" height="36.0" rx="2" class="bounds" />
-        <circle cx="543.4" cy="157.0" r="10" class="marker" />
-        <text x="543.4" y="160.5" text-anchor="middle" class="marker-number">04</text>
+        <rect x="518.7" y="160.6" width="41.2" height="18.0" rx="2" class="bounds" />
+        <circle cx="539.4" cy="169.6" r="10" class="marker" />
+        <text x="539.4" y="173.1" text-anchor="middle" class="marker-number">04</text>
         <circle cx="945" cy="258" r="10" class="legend-number" />
         <text x="945" y="261.5" text-anchor="middle" class="legend-number-text">04</text>
         <text x="990" y="255" class="legend-id">CAM02-E04</text>
@@ -79,9 +79,9 @@
 
       <g class="element " id="CAM02-E05">
         <title>CAM02-E05 — 小型の黒い吊り器具/監視機器状の突起、丸灯、板状器具が奥へ複数並ぶ。用途は確定できない。</title>
-        <rect x="413.3" y="193.0" width="175.8" height="153.0" rx="2" class="bounds" />
-        <circle cx="501.2" cy="269.5" r="10" class="marker" />
-        <text x="501.2" y="273.0" text-anchor="middle" class="marker-number">05</text>
+        <rect x="309.9" y="220.0" width="210.2" height="78.3" rx="2" class="bounds" />
+        <circle cx="415.0" cy="259.1" r="10" class="marker" />
+        <text x="415.0" y="262.6" text-anchor="middle" class="marker-number">05</text>
         <circle cx="945" cy="300" r="10" class="legend-number" />
         <text x="945" y="303.5" text-anchor="middle" class="legend-number-text">05</text>
         <text x="990" y="297" class="legend-id">CAM02-E05</text>
@@ -90,9 +90,9 @@
 
       <g class="element " id="CAM02-E06">
         <title>CAM02-E06 — 右上端から切れている赤/橙色地・白い円の店看板。緑文字「ノスタ…」が画面端で切れる。</title>
-        <rect x="663.4" y="112.0" width="67.6" height="180.0" rx="2" class="bounds" />
-        <circle cx="697.2" cy="202.0" r="10" class="marker" />
-        <text x="697.2" y="205.5" text-anchor="middle" class="marker-number">06</text>
+        <rect x="662.7" y="121.9" width="68.3" height="119.7" rx="2" class="bounds" />
+        <circle cx="696.9" cy="181.8" r="10" class="marker" />
+        <text x="696.9" y="185.3" text-anchor="middle" class="marker-number">06</text>
         <circle cx="945" cy="342" r="10" class="legend-number" />
         <text x="945" y="345.5" text-anchor="middle" class="legend-number-text">06</text>
         <text x="990" y="339" class="legend-id">CAM02-E06</text>
@@ -101,9 +101,9 @@
 
       <g class="element " id="CAM02-E07">
         <title>CAM02-E07 — 左側の大きな銀灰色横縞シャッター。縦枠が数本、表面に細かな汚れ。</title>
-        <rect x="55.0" y="161.5" width="169.0" height="522.0" rx="2" class="bounds" />
-        <circle cx="139.5" cy="422.5" r="10" class="marker" />
-        <text x="139.5" y="426.0" text-anchor="middle" class="marker-number">07</text>
+        <rect x="55.0" y="164.2" width="131.8" height="542.7" rx="2" class="bounds" />
+        <circle cx="120.9" cy="435.6" r="10" class="marker" />
+        <text x="120.9" y="439.1" text-anchor="middle" class="marker-number">07</text>
         <circle cx="945" cy="384" r="10" class="legend-number" />
         <text x="945" y="387.5" text-anchor="middle" class="legend-number-text">07</text>
         <text x="990" y="381" class="legend-id">CAM02-E07</text>
@@ -112,9 +112,9 @@
 
       <g class="element " id="CAM02-E08">
         <title>CAM02-E08 — シャッターの奥側に続く暗いガラス/店先開口と、縦の金属枠。</title>
-        <rect x="193.6" y="206.5" width="50.7" height="265.5" rx="2" class="bounds" />
-        <circle cx="218.9" cy="339.3" r="10" class="marker" />
-        <text x="218.9" y="342.8" text-anchor="middle" class="marker-number">08</text>
+        <rect x="180.7" y="237.1" width="46.0" height="289.8" rx="2" class="bounds" />
+        <circle cx="203.7" cy="382.0" r="10" class="marker" />
+        <text x="203.7" y="385.5" text-anchor="middle" class="marker-number">08</text>
         <circle cx="945" cy="426" r="10" class="legend-number" />
         <text x="945" y="429.5" text-anchor="middle" class="legend-number-text">08</text>
         <text x="990" y="423" class="legend-id">CAM02-E08</text>
@@ -134,9 +134,9 @@
 
       <g class="element " id="CAM02-E10">
         <title>CAM02-E10 — 中央に立つ白灰色の角柱。上側に小さな紙/掲示、正面に縦長の白い表示面、下方に小さな黒点/金具。</title>
-        <rect x="335.5" y="260.5" width="135.2" height="193.5" rx="2" class="bounds" />
-        <circle cx="403.1" cy="357.3" r="10" class="marker" />
-        <text x="403.1" y="360.8" text-anchor="middle" class="marker-number">10</text>
+        <rect x="328.1" y="272.2" width="89.2" height="181.8" rx="2" class="bounds" />
+        <circle cx="372.7" cy="363.1" r="10" class="marker" />
+        <text x="372.7" y="366.6" text-anchor="middle" class="marker-number">10</text>
         <circle cx="945" cy="510" r="10" class="legend-number" />
         <text x="945" y="513.5" text-anchor="middle" class="legend-number-text">10</text>
         <text x="990" y="507" class="legend-id">CAM02-E10</text>
@@ -145,9 +145,9 @@
 
       <g class="element " id="CAM02-E11">
         <title>CAM02-E11 — 柱上方の紙掲示/小型看板。日本語らしい細線があるが文字は判読困難。</title>
-        <rect x="362.6" y="283.0" width="57.5" height="54.0" rx="2" class="bounds" />
-        <circle cx="391.3" cy="310.0" r="10" class="marker" />
-        <text x="391.3" y="313.5" text-anchor="middle" class="marker-number">11</text>
+        <rect x="380.2" y="265.0" width="58.1" height="71.1" rx="2" class="bounds" />
+        <circle cx="409.2" cy="300.5" r="10" class="marker" />
+        <text x="409.2" y="304.0" text-anchor="middle" class="marker-number">11</text>
         <circle cx="945" cy="552" r="10" class="legend-number" />
         <text x="945" y="555.5" text-anchor="middle" class="legend-number-text">11</text>
         <text x="990" y="549" class="legend-id">CAM02-E11</text>
@@ -156,9 +156,9 @@
 
       <g class="element " id="CAM02-E12">
         <title>CAM02-E12 — 柱右側の暗い縦長開口と、横縞シャッター/ブラインド面。上端付近に白い箱型看板が重なる。</title>
-        <rect x="436.9" y="229.0" width="104.8" height="234.0" rx="2" class="bounds" />
-        <circle cx="489.3" cy="346.0" r="10" class="marker" />
-        <text x="489.3" y="349.5" text-anchor="middle" class="marker-number">12</text>
+        <rect x="413.3" y="241.6" width="103.4" height="205.2" rx="2" class="bounds" />
+        <circle cx="465.0" cy="344.2" r="10" class="marker" />
+        <text x="465.0" y="347.7" text-anchor="middle" class="marker-number">12</text>
         <circle cx="945" cy="594" r="10" class="legend-number" />
         <text x="945" y="597.5" text-anchor="middle" class="legend-number-text">12</text>
         <text x="990" y="591" class="legend-id">CAM02-E12</text>
@@ -167,9 +167,9 @@
 
       <g class="element " id="CAM02-E13">
         <title>CAM02-E13 — 白い吊り/壁付け看板箱。下に暗い面、文字らしい横線があるが読めない。</title>
-        <rect x="474.1" y="364.0" width="91.3" height="144.0" rx="2" class="bounds" />
-        <circle cx="519.8" cy="436.0" r="10" class="marker" />
-        <text x="519.8" y="439.5" text-anchor="middle" class="marker-number">13</text>
+        <rect x="560.0" y="293.8" width="62.9" height="148.5" rx="2" class="bounds" />
+        <circle cx="591.4" cy="368.0" r="10" class="marker" />
+        <text x="591.4" y="371.5" text-anchor="middle" class="marker-number">13</text>
         <circle cx="945" cy="636" r="10" class="legend-number" />
         <text x="945" y="639.5" text-anchor="middle" class="legend-number-text">13</text>
         <text x="990" y="633" class="legend-id">CAM02-E13</text>
@@ -178,9 +178,9 @@
 
       <g class="element " id="CAM02-E14">
         <title>CAM02-E14 — 黒い脚付き緑色の自立式看板。上段は英字「COFFEE」、下段は白い手描き風「ノスタルジック」。枠下部は黒い台座。</title>
-        <rect x="477.5" y="400.0" width="67.6" height="243.0" rx="2" class="bounds" />
-        <circle cx="511.3" cy="521.5" r="10" class="marker" />
-        <text x="511.3" y="525.0" text-anchor="middle" class="marker-number">14</text>
+        <rect x="463.3" y="403.6" width="85.9" height="182.7" rx="2" class="bounds" />
+        <circle cx="506.2" cy="494.9" r="10" class="marker" />
+        <text x="506.2" y="498.4" text-anchor="middle" class="marker-number">14</text>
         <circle cx="945" cy="678" r="10" class="legend-number" />
         <text x="945" y="681.5" text-anchor="middle" class="legend-number-text">14</text>
         <text x="990" y="675" class="legend-id">CAM02-E14</text>
@@ -189,9 +189,9 @@
 
       <g class="element " id="CAM02-E15">
         <title>CAM02-E15 — 看板の右奥に葉のある鉢植え状の緑。葉と鉢の輪郭が什器に一部隠れる。</title>
-        <rect x="548.5" y="467.5" width="64.2" height="135.0" rx="2" class="bounds" />
-        <circle cx="580.6" cy="535.0" r="10" class="marker" />
-        <text x="580.6" y="538.5" text-anchor="middle" class="marker-number">15</text>
+        <rect x="537.0" y="344.2" width="35.2" height="167.4" rx="2" class="bounds" />
+        <circle cx="554.6" cy="427.9" r="10" class="marker" />
+        <text x="554.6" y="431.4" text-anchor="middle" class="marker-number">15</text>
         <circle cx="945" cy="720" r="10" class="legend-number" />
         <text x="945" y="723.5" text-anchor="middle" class="legend-number-text">15</text>
         <text x="990" y="717" class="legend-id">CAM02-E15</text>
@@ -200,9 +200,9 @@
 
       <g class="element " id="CAM02-E16">
         <title>CAM02-E16 — 茶色い木製の箱/クレート。格子状の側面、店先寄りに置かれる。</title>
-        <rect x="551.9" y="503.5" width="71.0" height="108.0" rx="2" class="bounds" />
-        <circle cx="587.4" cy="557.5" r="10" class="marker" />
-        <text x="587.4" y="561.0" text-anchor="middle" class="marker-number">16</text>
+        <rect x="553.2" y="498.1" width="65.6" height="55.8" rx="2" class="bounds" />
+        <circle cx="586.0" cy="526.0" r="10" class="marker" />
+        <text x="586.0" y="529.5" text-anchor="middle" class="marker-number">16</text>
         <circle cx="945" cy="762" r="10" class="legend-number" />
         <text x="945" y="765.5" text-anchor="middle" class="legend-number-text">16</text>
         <text x="990" y="759" class="legend-id">CAM02-E16</text>
@@ -222,9 +222,9 @@
 
       <g class="element " id="CAM02-E18">
         <title>CAM02-E18 — 右手前の什器群。傾いた木枠の黒板/メニュー板、細い脚、右端で切れる椅子/台の木枠が重なる。</title>
-        <rect x="629.6" y="499.0" width="101.4" height="274.5" rx="2" class="bounds" />
-        <circle cx="680.3" cy="636.3" r="10" class="marker" />
-        <text x="680.3" y="639.8" text-anchor="middle" class="marker-number">18</text>
+        <rect x="614.7" y="444.1" width="85.2" height="350.1" rx="2" class="bounds" />
+        <circle cx="657.3" cy="619.1" r="10" class="marker" />
+        <text x="657.3" y="622.6" text-anchor="middle" class="marker-number">18</text>
         <circle cx="945" cy="846" r="10" class="legend-number" />
         <text x="945" y="849.5" text-anchor="middle" class="legend-number-text">18</text>
         <text x="990" y="843" class="legend-id">CAM02-E18</text>
@@ -233,9 +233,9 @@
 
       <g class="element " id="CAM02-E19">
         <title>CAM02-E19 — 小さな木製スツール/台。その上にピンク色の植木鉢または器と受け皿、中央に黒い土/穴状の部分。</title>
-        <rect x="585.7" y="697.0" width="64.2" height="130.5" rx="2" class="bounds" />
-        <circle cx="617.8" cy="762.3" r="10" class="marker" />
-        <text x="617.8" y="765.8" text-anchor="middle" class="marker-number">19</text>
+        <rect x="570.1" y="640.3" width="100.0" height="111.6" rx="2" class="bounds" />
+        <circle cx="620.1" cy="696.1" r="10" class="marker" />
+        <text x="620.1" y="699.6" text-anchor="middle" class="marker-number">19</text>
         <circle cx="945" cy="888" r="10" class="legend-number" />
         <text x="945" y="891.5" text-anchor="middle" class="legend-number-text">19</text>
         <text x="990" y="885" class="legend-id">CAM02-E19</text>
@@ -255,9 +255,9 @@
 
       <g class="element " id="CAM02-E21">
         <title>CAM02-E21 — 床中央寄りの金属製長方形点検口。枠が二重に見え、上面に黒い留め具/小部品。</title>
-        <rect x="291.6" y="647.5" width="148.7" height="94.5" rx="2" class="bounds" />
-        <circle cx="366.0" cy="694.8" r="10" class="marker" />
-        <text x="366.0" y="698.3" text-anchor="middle" class="marker-number">21</text>
+        <rect x="290.9" y="622.3" width="164.3" height="74.7" rx="2" class="bounds" />
+        <circle cx="373.1" cy="659.7" r="10" class="marker" />
+        <text x="373.1" y="663.2" text-anchor="middle" class="marker-number">21</text>
         <circle cx="945" cy="972" r="10" class="legend-number" />
         <text x="945" y="975.5" text-anchor="middle" class="legend-number-text">21</text>
         <text x="990" y="969" class="legend-id">CAM02-E21</text>
@@ -266,9 +266,9 @@
 
       <g class="element " id="CAM02-E22">
         <title>CAM02-E22 — 左下から中央へ広がる強い白色照明反射。</title>
-        <rect x="55.0" y="760.0" width="344.8" height="252.0" rx="2" class="bounds" />
-        <circle cx="227.4" cy="886.0" r="10" class="marker" />
-        <text x="227.4" y="889.5" text-anchor="middle" class="marker-number">22</text>
+        <rect x="144.9" y="697.0" width="160.2" height="315.0" rx="2" class="bounds" />
+        <circle cx="225.0" cy="854.5" r="10" class="marker" />
+        <text x="225.0" y="858.0" text-anchor="middle" class="marker-number">22</text>
         <circle cx="945" cy="1014" r="10" class="legend-number" />
         <text x="945" y="1017.5" text-anchor="middle" class="legend-number-text">22</text>
         <text x="990" y="1011" class="legend-id">CAM02-E22</text>
@@ -277,9 +277,9 @@
 
       <g class="element " id="CAM02-E23">
         <title>CAM02-E23 — 看板の下から床に落ちる緑色の光/反射。</title>
-        <rect x="440.3" y="539.5" width="155.5" height="166.5" rx="2" class="bounds" />
-        <circle cx="518.1" cy="622.8" r="10" class="marker" />
-        <text x="518.1" y="626.3" text-anchor="middle" class="marker-number">23</text>
+        <rect x="455.2" y="573.7" width="89.9" height="108.0" rx="2" class="bounds" />
+        <circle cx="500.1" cy="627.7" r="10" class="marker" />
+        <text x="500.1" y="631.2" text-anchor="middle" class="marker-number">23</text>
         <circle cx="945" cy="1056" r="10" class="legend-number" />
         <text x="945" y="1059.5" text-anchor="middle" class="legend-number-text">23</text>
         <text x="990" y="1053" class="legend-id">CAM02-E23</text>

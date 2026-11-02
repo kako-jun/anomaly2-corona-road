@@ -35,9 +35,9 @@
   
       <g class="element " id="CAM07-E01">
         <title>CAM07-E01 — 青灰色の天井。細かな斑点/汚れ、天井板の線。</title>
-        
-        <circle cx="392.5" cy="224.5" r="7" class="marker marker-neutral" />
-        <text x="392.5" y="228.0" text-anchor="middle" class="marker-number marker-number-neutral">01</text>
+        <rect x="55.0" y="112.0" width="675.0" height="132.3" rx="2" class="bounds" />
+        <circle cx="392.5" cy="178.1" r="10" class="marker" />
+        <text x="392.5" y="181.6" text-anchor="middle" class="marker-number">01</text>
         <circle cx="945" cy="132" r="10" class="legend-number" />
         <text x="945" y="135.5" text-anchor="middle" class="legend-number-text">01</text>
         <text x="990" y="129" class="legend-id">CAM07-E01</text>
@@ -46,9 +46,9 @@
 
       <g class="element " id="CAM07-E02">
         <title>CAM07-E02 — 左上から斜めに入る長方形蛍光灯。</title>
-        <rect x="176.5" y="112.0" width="70.9" height="67.5" rx="2" class="bounds" />
-        <circle cx="211.9" cy="145.8" r="10" class="marker" />
-        <text x="211.9" y="149.3" text-anchor="middle" class="marker-number">02</text>
+        <rect x="187.3" y="112.0" width="97.9" height="62.1" rx="2" class="bounds" />
+        <circle cx="236.2" cy="143.1" r="10" class="marker" />
+        <text x="236.2" y="146.6" text-anchor="middle" class="marker-number">02</text>
         <circle cx="945" cy="174" r="10" class="legend-number" />
         <text x="945" y="177.5" text-anchor="middle" class="legend-number-text">02</text>
         <text x="990" y="171" class="legend-id">CAM07-E02</text>
@@ -57,9 +57,9 @@
 
       <g class="element " id="CAM07-E03">
         <title>CAM07-E03 — 中央上部の同心円状換気口。</title>
-        <rect x="331.8" y="112.0" width="128.3" height="90.0" rx="2" class="bounds" />
-        <circle cx="395.9" cy="157.0" r="10" class="marker" />
-        <text x="395.9" y="160.5" text-anchor="middle" class="marker-number">03</text>
+        <rect x="295.3" y="117.4" width="169.4" height="49.5" rx="2" class="bounds" />
+        <circle cx="380.0" cy="142.2" r="10" class="marker" />
+        <text x="380.0" y="145.7" text-anchor="middle" class="marker-number">03</text>
         <circle cx="945" cy="216" r="10" class="legend-number" />
         <text x="945" y="219.5" text-anchor="middle" class="legend-number-text">03</text>
         <text x="990" y="213" class="legend-id">CAM07-E03</text>
@@ -68,9 +68,9 @@
 
       <g class="element " id="CAM07-E04">
         <title>CAM07-E04 — 右上寄りの丸い白色灯。</title>
-        <rect x="598.4" y="130.0" width="57.4" height="49.5" rx="2" class="bounds" />
-        <circle cx="627.1" cy="154.8" r="10" class="marker" />
-        <text x="627.1" y="158.3" text-anchor="middle" class="marker-number">04</text>
+        <rect x="590.3" y="168.7" width="44.6" height="18.9" rx="2" class="bounds" />
+        <circle cx="612.5" cy="178.1" r="10" class="marker" />
+        <text x="612.5" y="181.6" text-anchor="middle" class="marker-number">04</text>
         <circle cx="945" cy="258" r="10" class="legend-number" />
         <text x="945" y="261.5" text-anchor="middle" class="legend-number-text">04</text>
         <text x="990" y="255" class="legend-id">CAM07-E04</text>
@@ -79,9 +79,9 @@
 
       <g class="element " id="CAM07-E05">
         <title>CAM07-E05 — 奥の天井に小さな黒い器具/センサーと短い照明が複数。</title>
-        <rect x="230.5" y="148.0" width="297.0" height="121.5" rx="2" class="bounds" />
-        <circle cx="379.0" cy="208.8" r="10" class="marker" />
-        <text x="379.0" y="212.3" text-anchor="middle" class="marker-number">05</text>
+        <rect x="215.0" y="182.2" width="515.0" height="64.8" rx="2" class="bounds" />
+        <circle cx="472.5" cy="214.6" r="10" class="marker" />
+        <text x="472.5" y="218.1" text-anchor="middle" class="marker-number">05</text>
         <circle cx="945" cy="300" r="10" class="legend-number" />
         <text x="945" y="303.5" text-anchor="middle" class="legend-number-text">05</text>
         <text x="990" y="297" class="legend-id">CAM07-E05</text>
@@ -90,9 +90,9 @@
 
       <g class="element " id="CAM07-E06">
         <title>CAM07-E06 — 左端のガラス/店先境界。縦金属枠、暗いガラス面、白灰色の壁が重なる。</title>
-        <rect x="55.0" y="202.0" width="114.8" height="450.0" rx="2" class="bounds" />
-        <circle cx="112.4" cy="427.0" r="10" class="marker" />
-        <text x="112.4" y="430.5" text-anchor="middle" class="marker-number">06</text>
+        <rect x="55.0" y="141.7" width="99.9" height="870.3" rx="2" class="bounds" />
+        <circle cx="104.9" cy="576.8" r="10" class="marker" />
+        <text x="104.9" y="580.3" text-anchor="middle" class="marker-number">06</text>
         <circle cx="945" cy="342" r="10" class="legend-number" />
         <text x="945" y="345.5" text-anchor="middle" class="legend-number-text">06</text>
         <text x="990" y="339" class="legend-id">CAM07-E06</text>
@@ -101,9 +101,9 @@
 
       <g class="element " id="CAM07-E07">
         <title>CAM07-E07 — 左奥の灰色扉。上部に緑系/黄系の小さな貼り紙、中央に白黒の注意/人物ピクトグラム状掲示、横に細い暗色表示器。文字は読めない。</title>
-        <rect x="152.9" y="283.0" width="104.6" height="328.5" rx="2" class="bounds" />
-        <circle cx="205.2" cy="447.3" r="10" class="marker" />
-        <text x="205.2" y="450.8" text-anchor="middle" class="marker-number">07</text>
+        <rect x="194.7" y="239.8" width="46.6" height="99.9" rx="2" class="bounds" />
+        <circle cx="218.0" cy="289.8" r="10" class="marker" />
+        <text x="218.0" y="293.3" text-anchor="middle" class="marker-number">07</text>
         <circle cx="945" cy="384" r="10" class="legend-number" />
         <text x="945" y="387.5" text-anchor="middle" class="legend-number-text">07</text>
         <text x="990" y="381" class="legend-id">CAM07-E07</text>
@@ -112,9 +112,9 @@
 
       <g class="element " id="CAM07-E08">
         <title>CAM07-E08 — 左奥壁面に大きな白円・赤橙枠の吊り看板。円内に小ロゴ、数行の文字/記号。判読不能。</title>
-        <rect x="250.8" y="305.5" width="87.8" height="211.5" rx="2" class="bounds" />
-        <circle cx="294.6" cy="411.3" r="10" class="marker" />
-        <text x="294.6" y="414.8" text-anchor="middle" class="marker-number">08</text>
+        <rect x="254.1" y="244.3" width="43.9" height="41.4" rx="2" class="bounds" />
+        <circle cx="276.1" cy="265.0" r="10" class="marker" />
+        <text x="276.1" y="268.5" text-anchor="middle" class="marker-number">08</text>
         <circle cx="945" cy="426" r="10" class="legend-number" />
         <text x="945" y="429.5" text-anchor="middle" class="legend-number-text">08</text>
         <text x="990" y="423" class="legend-id">CAM07-E08</text>
@@ -123,9 +123,9 @@
 
       <g class="element " id="CAM07-E09">
         <title>CAM07-E09 — 左側奥に上がる幅広階段。複数の暗い段鼻/水平線、左端の壁/手すりに接する。</title>
-        <rect x="55.0" y="319.0" width="276.8" height="121.5" rx="2" class="bounds" />
-        <circle cx="193.4" cy="379.8" r="10" class="marker" />
-        <text x="193.4" y="383.3" text-anchor="middle" class="marker-number">09</text>
+        <rect x="150.2" y="334.3" width="145.1" height="85.5" rx="2" class="bounds" />
+        <circle cx="222.7" cy="377.1" r="10" class="marker" />
+        <text x="222.7" y="380.6" text-anchor="middle" class="marker-number">09</text>
         <circle cx="945" cy="468" r="10" class="legend-number" />
         <text x="945" y="471.5" text-anchor="middle" class="legend-number-text">09</text>
         <text x="990" y="465" class="legend-id">CAM07-E09</text>
@@ -134,9 +134,9 @@
 
       <g class="element " id="CAM07-E10">
         <title>CAM07-E10 — 左階段と中央壁の間にある細い暗い開口/縦枠。</title>
-        <rect x="304.8" y="238.0" width="50.6" height="225.0" rx="2" class="bounds" />
-        <circle cx="330.1" cy="350.5" r="10" class="marker" />
-        <text x="330.1" y="354.0" text-anchor="middle" class="marker-number">10</text>
+        <rect x="304.8" y="239.8" width="37.1" height="220.5" rx="2" class="bounds" />
+        <circle cx="323.3" cy="350.1" r="10" class="marker" />
+        <text x="323.3" y="353.6" text-anchor="middle" class="marker-number">10</text>
         <circle cx="945" cy="510" r="10" class="legend-number" />
         <text x="945" y="513.5" text-anchor="middle" class="legend-number-text">10</text>
         <text x="990" y="507" class="legend-id">CAM07-E10</text>
@@ -145,9 +145,9 @@
 
       <g class="element " id="CAM07-E11">
         <title>CAM07-E11 — 中央上部に白灰色の箱型看板/庇。下に深い黒色の縦長開口/パネル。</title>
-        <rect x="301.4" y="238.0" width="84.4" height="270.0" rx="2" class="bounds" />
-        <circle cx="343.6" cy="373.0" r="10" class="marker" />
-        <text x="343.6" y="376.5" text-anchor="middle" class="marker-number">11</text>
+        <rect x="337.8" y="238.0" width="77.0" height="219.6" rx="2" class="bounds" />
+        <circle cx="376.3" cy="347.8" r="10" class="marker" />
+        <text x="376.3" y="351.3" text-anchor="middle" class="marker-number">11</text>
         <circle cx="945" cy="552" r="10" class="legend-number" />
         <text x="945" y="555.5" text-anchor="middle" class="legend-number-text">11</text>
         <text x="990" y="549" class="legend-id">CAM07-E11</text>
@@ -156,9 +156,9 @@
 
       <g class="element " id="CAM07-E12">
         <title>CAM07-E12 — 中央正面の広い白い壁面。細かな汚れ、中央右に扉枠が付く。</title>
-        <rect x="409.4" y="238.0" width="84.4" height="225.0" rx="2" class="bounds" />
-        <circle cx="451.6" cy="350.5" r="10" class="marker" />
-        <text x="451.6" y="354.0" text-anchor="middle" class="marker-number">12</text>
+        <rect x="410.7" y="238.0" width="164.0" height="225.9" rx="2" class="bounds" />
+        <circle cx="492.7" cy="351.0" r="10" class="marker" />
+        <text x="492.7" y="354.5" text-anchor="middle" class="marker-number">12</text>
         <circle cx="945" cy="594" r="10" class="legend-number" />
         <text x="945" y="597.5" text-anchor="middle" class="legend-number-text">12</text>
         <text x="990" y="591" class="legend-id">CAM07-E12</text>
@@ -201,8 +201,8 @@
       <g class="element " id="CAM07-E16">
         <title>CAM07-E16 — 広い灰色タイル床。目地が格子状に並び、中央から右奥へ広がる。</title>
         
-        <circle cx="392.5" cy="841.0" r="7" class="marker marker-neutral" />
-        <text x="392.5" y="844.5" text-anchor="middle" class="marker-number marker-number-neutral">16</text>
+        <circle cx="422.5" cy="711.9" r="7" class="marker marker-neutral" />
+        <text x="422.5" y="715.4" text-anchor="middle" class="marker-number marker-number-neutral">16</text>
         <circle cx="945" cy="762" r="10" class="legend-number" />
         <text x="945" y="765.5" text-anchor="middle" class="legend-number-text">16</text>
         <text x="990" y="759" class="legend-id">CAM07-E16</text>
@@ -211,9 +211,9 @@
 
       <g class="element " id="CAM07-E17">
         <title>CAM07-E17 — 床左側に長い白色蛍光灯反射。</title>
-        <rect x="115.8" y="562.0" width="202.5" height="396.0" rx="2" class="bounds" />
-        <circle cx="217.0" cy="760.0" r="10" class="marker" />
-        <text x="217.0" y="763.5" text-anchor="middle" class="marker-number">17</text>
+        <rect x="169.8" y="573.7" width="85.0" height="286.2" rx="2" class="bounds" />
+        <circle cx="212.3" cy="716.8" r="10" class="marker" />
+        <text x="212.3" y="720.3" text-anchor="middle" class="marker-number">17</text>
         <circle cx="945" cy="804" r="10" class="legend-number" />
         <text x="945" y="807.5" text-anchor="middle" class="legend-number-text">17</text>
         <text x="990" y="801" class="legend-id">CAM07-E17</text>
