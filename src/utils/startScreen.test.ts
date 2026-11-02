@@ -22,11 +22,11 @@ describe('misreportLampCount', () => {
   ])('floors the decimal %d to %d', (n, expected) => {
     expect(misreportLampCount(n)).toBe(expected)
   })
-  it('turns NaN into NaN (current behaviour: Math.max/floor propagate NaN)', () => {
-    expect(misreportLampCount(NaN)).toBeNaN()
+  it('turns NaN into 0 so a bad config cannot break the screen', () => {
+    expect(misreportLampCount(NaN)).toBe(0)
   })
-  it('lets Infinity through (current behaviour)', () => {
-    expect(misreportLampCount(Infinity)).toBe(Infinity)
+  it('turns Infinity into 0 (non-finite is a config error)', () => {
+    expect(misreportLampCount(Infinity)).toBe(0)
   })
   it('turns -Infinity into 0', () => {
     expect(misreportLampCount(-Infinity)).toBe(0)

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { DEFAULT_CONFIG } from '../utils/gameConfig'
 import { StartScreen } from './StartScreen'
 
@@ -58,11 +58,13 @@ describe('StartScreen headings and logo', () => {
     expect(h1).toHaveClass('start-sr-only')
     expect(h1).toHaveTextContent('Corona Road')
   })
-  it('gives the logo image a non-empty alt', () => {
-    setup()
-    const img = screen.getByRole('img', { name: /Corona Road/ })
-    expect(img.getAttribute('alt')).not.toBe('')
+  it('treats the logo image as decorative (the h1 carries the name)', () => {
+    const { q } = setup()
+    const img = q('.start-logo img')[0]
+    expect(img.getAttribute('alt')).toBe('')
     expect(img).toHaveAttribute('src', '/images/logo.webp')
+    expect(screen.queryByRole('img')).toBeNull()
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
   })
 })
 
@@ -156,7 +158,20 @@ describe('StartScreen content', () => {
   })
 })
 
+describe('StartScreen body class', () => {
+  it('adds start-open to body while mounted and removes it on unmount', () => {
+    const { unmount } = setup()
+    expect(document.body).toHaveClass('start-open')
+    unmount()
+    expect(document.body).not.toHaveClass('start-open')
+  })
+})
+
 describe('StartScreen follows a changed config', () => {
+  afterEach(() => {
+    vi.doUnmock('../utils/gameConfig')
+    vi.resetModules()
+  })
   it.each([1, 5])(
     'maxMisreports=%i changes the text and the lamp count',
     async n => {
@@ -174,8 +189,6 @@ describe('StartScreen follows a changed config', () => {
       const view = rtl.render(<Fresh onStart={() => {}} />)
       expect(view.container.querySelectorAll('.start-lamp')).toHaveLength(n)
       expect(view.getByText(`${n}回まで`)).toBeInTheDocument()
-      view.unmount()
-      vi.doUnmock('../utils/gameConfig')
     }
   )
 })
