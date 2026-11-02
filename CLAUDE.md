@@ -95,7 +95,7 @@ Meta-anomalies challenge the player's trust in the game interface itself (not im
 ### Atmosphere
 
 - **Retro Horror**: Inspired by analog horror and surveillance footage aesthetics
-- **English-only UI (in-game HUD and equipment labels)**: Creates alienation and professional surveillance system feel. The start-screen instructions and subtitles are Japanese (see `docs/story.md`, open question on subtitle language)
+- **English-only UI (HUD and equipment labels)**: Creates alienation and professional surveillance system feel. Start-screen text and subtitles are Japanese (see `docs/story.md`)
 - **Minimalist**: Focus on tension, not jump scares
 - **Showa Era Aesthetics**: 1960s-80s Japanese underground corridor design
 
