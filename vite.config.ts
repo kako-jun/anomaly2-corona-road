@@ -5,6 +5,7 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { parse as parseYaml } from 'yaml'
 import { parseLedger } from './src/utils/anomalyLedger'
+import { DIALOGUE_FILES, parseDialogueLedger } from './src/utils/dialogueLedger'
 
 const LEDGER_PATH = resolve(__dirname, 'prompts/anomalies.yaml')
 const VIRTUAL_ID = 'virtual:anomalies'
@@ -35,9 +36,42 @@ const anomalyLedgerPlugin = (): Plugin => ({
   },
 })
 
+const DIALOGUE_DIR = resolve(__dirname, 'dialogue')
+const DIALOGUE_VIRTUAL_ID = 'virtual:dialogue'
+const DIALOGUE_RESOLVED_ID = '\0' + DIALOGUE_VIRTUAL_ID
+
+/**
+ * Exposes the dialogue ledger (dialogue/*.yaml, the single source of truth) to the game as
+ * `virtual:dialogue`. A broken entry fails the build and the message names the file and the id.
+ * Anomaly ids come from the anomaly ledger, so a line cannot point at a missing anomaly.
+ */
+const dialogueLedgerPlugin = (): Plugin => ({
+  name: 'dialogue-ledger',
+  resolveId(id) {
+    return id === DIALOGUE_VIRTUAL_ID ? DIALOGUE_RESOLVED_ID : undefined
+  },
+  load(id) {
+    if (id !== DIALOGUE_RESOLVED_ID) return undefined
+    this.addWatchFile(LEDGER_PATH)
+    const read = (name: string) => {
+      const path = resolve(DIALOGUE_DIR, `${name}.yaml`)
+      this.addWatchFile(path)
+      return parseYaml(readFileSync(path, 'utf8'))
+    }
+    const anomalyIds = new Set(
+      parseLedger(parseYaml(readFileSync(LEDGER_PATH, 'utf8'))).map(e => e.id)
+    )
+    const parsed = { flags: read('flags') } as Parameters<
+      typeof parseDialogueLedger
+    >[0]
+    for (const file of DIALOGUE_FILES) parsed[file] = read(file)
+    return `export default ${JSON.stringify(parseDialogueLedger(parsed, anomalyIds))}`
+  },
+})
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), anomalyLedgerPlugin()],
+  plugins: [react(), anomalyLedgerPlugin(), dialogueLedgerPlugin()],
   base: '/',
   server: {
     port: 3000,

@@ -1,0 +1,19 @@
+# 経過時点の中間コメント。when.stage: few | mid | many（その回のここまでの見つけた数の段階）。
+# 動作確認用の実例のみ（本制作ではない）。
+dialogues:
+  - id: midpoint-sample-01
+    tone: serious
+    when: { stage: few }
+    lines:
+      - { who: A, text: 'ここまで静かね　見落としてないかしら' }
+  - id: midpoint-sample-02
+    tone: light
+    when: { stage: mid }
+    lines:
+      - { who: M, text: 'ぼちぼち折り返しですね' }
+      - { who: A, text: 'まあ　順調ってところかしら' }
+  - id: midpoint-sample-03
+    tone: light
+    when: { stage: many }
+    lines:
+      - { who: A, text: 'あんた　今夜は目がいいわね' }

@@ -1,0 +1,17 @@
+# 雑談。すべて tone: light（日常のどうでもいい会話）。動作確認用の実例のみ（本制作ではない）。
+dialogues:
+  - id: chatter-sample-01
+    tone: light
+    lines:
+      - { who: M, text: '昨日の特番　見ました?' }
+      - { who: A, text: 'いや　興味ないから' }
+  - id: chatter-sample-02
+    tone: light
+    lines:
+      - { who: A, text: '換気効きすぎ?　首のうしろ寒いわ' }
+      - { who: M, text: 'すみません　空調　見ておきます' }
+  - id: chatter-sample-03
+    tone: light
+    lines:
+      - { who: M, text: '昼　何食べました?' }
+      - { who: A, text: '覚えてないわ　寝たの朝だもの' }

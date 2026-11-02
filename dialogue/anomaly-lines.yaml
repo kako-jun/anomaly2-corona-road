@@ -1,0 +1,20 @@
+# 異変ごとの会話（お手つきのときの小さなヒントを含む）。when.anomaly は prompts/anomalies.yaml の id。
+# id は an-<異変id>-連番。動作確認用の実例のみ（本制作ではない）。
+dialogues:
+  - id: an-AR-01-notice-sample-01
+    tone: serious
+    when: { anomaly: AR-01-notice }
+    lines:
+      - { who: A, text: '今の違うみたい　壁はどうなってた?' }
+      - { who: M, text: '1番の壁に　古い紙があった気が' }
+  - id: an-AR-01-notice-sample-02
+    tone: serious
+    when: { anomaly: AR-01-notice }
+    lines:
+      - { who: M, text: '1番　左の壁をよく見てください' }
+  - id: an-AR-02-ashtray-sample-01
+    tone: serious
+    when: { anomaly: AR-02-ashtray }
+    lines:
+      - { who: A, text: 'ここ禁煙のはずよね?' }
+      - { who: M, text: '2番の台の上　見てください' }

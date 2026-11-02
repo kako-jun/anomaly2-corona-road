@@ -1,0 +1,29 @@
+# フラグで発生する会話。when.flag は flags.yaml のフラグ名。立った瞬間に割り込んで出す。
+# 動作確認用の実例のみ（本制作ではない）。
+dialogues:
+  - id: story-sample-01
+    tone: serious
+    when: { flag: elder1 }
+    lines:
+      - { who: A, text: 'ひとり目　見つかったわ' }
+      - { who: M, text: '……そう　ですか' }
+  - id: story-sample-02
+    tone: serious
+    when: { flag: elder2 }
+    lines:
+      - { who: A, text: 'ふたり目も　この近くだった' }
+  - id: story-sample-03
+    tone: serious
+    when: { flag: elder3 }
+    lines:
+      - { who: A, text: '三人とも　昭和の人たちよ' }
+  - id: story-sample-04
+    tone: serious
+    when: { flag: child }
+    lines:
+      - { who: A, text: '四人目は　まだ子供だった' }
+  - id: story-sample-05
+    tone: serious
+    when: { flag: final }
+    lines:
+      - { who: M, text: '全部　つながりました' }

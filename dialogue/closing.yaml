@@ -1,0 +1,21 @@
+# 毎回のゲーム終了時の会話。when.result: dawn（夜明け）| withdraw（撤収）| ending（エンディング）。
+# 動作確認用の実例のみ（本制作ではない）。
+dialogues:
+  - id: closing-sample-01
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: M, text: '朝ですね　引き継ぎ　行ってきます' }
+      - { who: A, text: 'お疲れさま　気をつけてね' }
+  - id: closing-sample-02
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '今夜はここまでにするわ' }
+      - { who: M, text: 'あ　はい　お疲れさまでした' }
+  - id: closing-sample-03
+    tone: serious
+    when: { result: ending }
+    lines:
+      - { who: A, text: '……何も映ってなかった　そういうことにしましょう' }
+      - { who: M, text: 'はい　朝ですから' }
