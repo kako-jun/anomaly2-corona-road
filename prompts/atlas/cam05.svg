@@ -46,9 +46,9 @@
 
       <g class="element " id="CAM05-E02">
         <title>CAM05-E02 — 左上寄りの丸い白色照明。</title>
-        <rect x="75.3" y="112.0" width="60.8" height="54.0" rx="2" class="bounds" />
-        <circle cx="105.7" cy="139.0" r="10" class="marker" />
-        <text x="105.7" y="142.5" text-anchor="middle" class="marker-number">02</text>
+        <rect x="96.9" y="115.6" width="56.1" height="26.1" rx="2" class="bounds" />
+        <circle cx="125.0" cy="128.7" r="10" class="marker" />
+        <text x="125.0" y="132.2" text-anchor="middle" class="marker-number">02</text>
         <circle cx="945" cy="174" r="10" class="legend-number" />
         <text x="945" y="177.5" text-anchor="middle" class="legend-number-text">02</text>
         <text x="990" y="171" class="legend-id">CAM05-E02</text>
@@ -57,9 +57,9 @@
 
       <g class="element " id="CAM05-E03">
         <title>CAM05-E03 — 右上寄りの丸い白色照明。</title>
-        <rect x="629.6" y="112.0" width="74.4" height="58.5" rx="2" class="bounds" />
-        <circle cx="666.8" cy="141.3" r="10" class="marker" />
-        <text x="666.8" y="144.8" text-anchor="middle" class="marker-number">03</text>
+        <rect x="639.7" y="123.7" width="60.2" height="27.9" rx="2" class="bounds" />
+        <circle cx="669.8" cy="137.7" r="10" class="marker" />
+        <text x="669.8" y="141.2" text-anchor="middle" class="marker-number">03</text>
         <circle cx="945" cy="216" r="10" class="legend-number" />
         <text x="945" y="219.5" text-anchor="middle" class="legend-number-text">03</text>
         <text x="990" y="213" class="legend-id">CAM05-E03</text>
@@ -68,9 +68,9 @@
 
       <g class="element " id="CAM05-E04">
         <title>CAM05-E04 — 左端から差し込む斜めの白色蛍光灯の一部。</title>
-        <rect x="55.0" y="202.0" width="128.4" height="108.0" rx="2" class="bounds" />
-        <circle cx="119.2" cy="256.0" r="10" class="marker" />
-        <text x="119.2" y="259.5" text-anchor="middle" class="marker-number">04</text>
+        <rect x="98.9" y="229.9" width="81.8" height="36.9" rx="2" class="bounds" />
+        <circle cx="139.8" cy="248.3" r="10" class="marker" />
+        <text x="139.8" y="251.8" text-anchor="middle" class="marker-number">04</text>
         <circle cx="945" cy="258" r="10" class="legend-number" />
         <text x="945" y="261.5" text-anchor="middle" class="legend-number-text">04</text>
         <text x="990" y="255" class="legend-id">CAM05-E04</text>
@@ -78,21 +78,21 @@
       </g>
 
       <g class="element " id="CAM05-E05">
-        <title>CAM05-E05 — 中央右を横切る長い蛍光灯。下に大きな店舗区画の黒い上枠が続く。</title>
-        <rect x="278.1" y="112.0" width="331.2" height="202.5" rx="2" class="bounds" />
-        <circle cx="443.7" cy="213.3" r="10" class="marker" />
-        <text x="443.7" y="216.8" text-anchor="middle" class="marker-number">05</text>
+        <title>CAM05-E05 — 中央右を横切る長い蛍光灯。画面右端まで斜めに伸びる。</title>
+        <rect x="430.2" y="175.9" width="300.8" height="62.1" rx="2" class="bounds" />
+        <circle cx="580.6" cy="206.9" r="10" class="marker" />
+        <text x="580.6" y="210.4" text-anchor="middle" class="marker-number">05</text>
         <circle cx="945" cy="300" r="10" class="legend-number" />
         <text x="945" y="303.5" text-anchor="middle" class="legend-number-text">05</text>
         <text x="990" y="297" class="legend-id">CAM05-E05</text>
-        <text x="1105" y="297" class="legend-description">中央右を横切る長い蛍光灯。下に大きな店舗区画の黒い上枠が続く。</text>
+        <text x="1105" y="297" class="legend-description">中央右を横切る長い蛍光灯。画面右端まで斜めに伸びる。</text>
       </g>
 
       <g class="element " id="CAM05-E06">
         <title>CAM05-E06 — 左奥へ伸びる通路。店先の縦枠、棚/ガラス面、細い脚のスタンド、天井下の小型丸看板が重なる。文字は不鮮明。</title>
-        <rect x="55.0" y="283.0" width="182.5" height="414.0" rx="2" class="bounds" />
-        <circle cx="146.3" cy="490.0" r="10" class="marker" />
-        <text x="146.3" y="493.5" text-anchor="middle" class="marker-number">06</text>
+        <rect x="55.0" y="275.8" width="127.8" height="235.8" rx="2" class="bounds" />
+        <circle cx="118.9" cy="393.7" r="10" class="marker" />
+        <text x="118.9" y="397.2" text-anchor="middle" class="marker-number">06</text>
         <circle cx="945" cy="342" r="10" class="legend-number" />
         <text x="945" y="345.5" text-anchor="middle" class="legend-number-text">06</text>
         <text x="990" y="339" class="legend-id">CAM05-E06</text>
@@ -102,8 +102,8 @@
       <g class="element " id="CAM05-E07">
         <title>CAM05-E07 — 画面中央を占める大きな角型ガラス張り店舗区画。外周は濃い金属枠、左角の柱は太い。</title>
         
-        <circle cx="393.0" cy="548.5" r="7" class="marker marker-neutral" />
-        <text x="393.0" y="552.0" text-anchor="middle" class="marker-number marker-number-neutral">07</text>
+        <circle cx="452.2" cy="457.2" r="7" class="marker marker-neutral" />
+        <text x="452.2" y="460.7" text-anchor="middle" class="marker-number marker-number-neutral">07</text>
         <circle cx="945" cy="384" r="10" class="legend-number" />
         <text x="945" y="387.5" text-anchor="middle" class="legend-number-text">07</text>
         <text x="990" y="381" class="legend-id">CAM05-E07</text>
@@ -113,8 +113,8 @@
       <g class="element " id="CAM05-E08">
         <title>CAM05-E08 — 正面ガラス面。縦横の金属枠で長方形に分割され、内側に灰色の縦カーテン/ブラインドが垂れる。</title>
         
-        <circle cx="418.3" cy="483.3" r="7" class="marker marker-neutral" />
-        <text x="418.3" y="486.8" text-anchor="middle" class="marker-number marker-number-neutral">08</text>
+        <circle cx="470.4" cy="483.7" r="7" class="marker marker-neutral" />
+        <text x="470.4" y="487.2" text-anchor="middle" class="marker-number marker-number-neutral">08</text>
         <circle cx="945" cy="426" r="10" class="legend-number" />
         <text x="945" y="429.5" text-anchor="middle" class="legend-number-text">08</text>
         <text x="990" y="423" class="legend-id">CAM05-E08</text>
@@ -123,9 +123,9 @@
 
       <g class="element " id="CAM05-E09">
         <title>CAM05-E09 — 右側ガラス面の一部に暗い隙間/黒い縦長部分。内側に細長く立てかけた物体または布状の影がある。何かは確定できない。</title>
-        <rect x="426.8" y="359.5" width="185.9" height="346.5" rx="2" class="bounds" />
-        <circle cx="519.8" cy="532.8" r="10" class="marker" />
-        <text x="519.8" y="536.3" text-anchor="middle" class="marker-number">09</text>
+        <rect x="610.0" y="308.2" width="89.9" height="265.5" rx="2" class="bounds" />
+        <circle cx="654.9" cy="440.9" r="10" class="marker" />
+        <text x="654.9" y="444.4" text-anchor="middle" class="marker-number">09</text>
         <circle cx="945" cy="468" r="10" class="legend-number" />
         <text x="945" y="471.5" text-anchor="middle" class="legend-number-text">09</text>
         <text x="990" y="465" class="legend-id">CAM05-E09</text>
@@ -134,9 +134,9 @@
 
       <g class="element " id="CAM05-E10">
         <title>CAM05-E10 — 店舗区画上部の緑地横長看板。赤/白っぽい日本語で「クリーニングスペース300」または近い文字列に見える。全字の確定は原寸要確認。</title>
-        <rect x="480.9" y="215.5" width="250.1" height="130.5" rx="2" class="bounds" />
-        <circle cx="605.9" cy="280.8" r="10" class="marker" />
-        <text x="605.9" y="284.3" text-anchor="middle" class="marker-number">10</text>
+        <rect x="610.0" y="239.8" width="93.3" height="52.2" rx="2" class="bounds" />
+        <circle cx="656.6" cy="265.9" r="10" class="marker" />
+        <text x="656.6" y="269.4" text-anchor="middle" class="marker-number">10</text>
         <circle cx="945" cy="510" r="10" class="legend-number" />
         <text x="945" y="513.5" text-anchor="middle" class="legend-number-text">10</text>
         <text x="990" y="507" class="legend-id">CAM05-E10</text>
@@ -144,14 +144,14 @@
       </g>
 
       <g class="element " id="CAM05-E11">
-        <title>CAM05-E11 — 区画左側面は黒い不透明面。上部の水平帯と下へ続く暗い縦面がある。</title>
-        <rect x="180.1" y="215.5" width="74.4" height="634.5" rx="2" class="bounds" />
-        <circle cx="217.2" cy="532.8" r="10" class="marker" />
-        <text x="217.2" y="536.3" text-anchor="middle" class="marker-number">11</text>
+        <title>CAM05-E11 — 区画左側面は黒い不透明面。上部は黒い面、下は暗いカーテン越しの面で、下端にレンガ帯が続く。</title>
+        <rect x="176.7" y="210.1" width="136.6" height="502.2" rx="2" class="bounds" />
+        <circle cx="245.0" cy="461.2" r="10" class="marker" />
+        <text x="245.0" y="464.7" text-anchor="middle" class="marker-number">11</text>
         <circle cx="945" cy="552" r="10" class="legend-number" />
         <text x="945" y="555.5" text-anchor="middle" class="legend-number-text">11</text>
         <text x="990" y="549" class="legend-id">CAM05-E11</text>
-        <text x="1105" y="549" class="legend-description">区画左側面は黒い不透明面。上部の水平帯と下へ続く暗い縦面がある。</text>
+        <text x="1105" y="549" class="legend-description">区画左側面は黒い不透明面。上部は黒い面、下は暗いカーテン越しの面で、下端にレンガ帯が続く。</text>
       </g>
 
       <g class="element " id="CAM05-E12">
@@ -168,8 +168,8 @@
       <g class="element " id="CAM05-E13">
         <title>CAM05-E13 — 灰色正方形の床タイル。左奥から区画の周囲を回って右前景へ広がる。</title>
         
-        <circle cx="393.0" cy="674.5" r="7" class="marker marker-neutral" />
-        <text x="393.0" y="678.0" text-anchor="middle" class="marker-number marker-number-neutral">13</text>
+        <circle cx="393.0" cy="724.5" r="7" class="marker marker-neutral" />
+        <text x="393.0" y="728.0" text-anchor="middle" class="marker-number marker-number-neutral">13</text>
         <circle cx="945" cy="636" r="10" class="legend-number" />
         <text x="945" y="639.5" text-anchor="middle" class="legend-number-text">13</text>
         <text x="990" y="633" class="legend-id">CAM05-E13</text>
@@ -178,9 +178,9 @@
 
       <g class="element " id="CAM05-E14">
         <title>CAM05-E14 — 左奥通路の床に長い白い照明反射。</title>
-        <rect x="55.0" y="571.0" width="128.4" height="306.0" rx="2" class="bounds" />
-        <circle cx="119.2" cy="724.0" r="10" class="marker" />
-        <text x="119.2" y="727.5" text-anchor="middle" class="marker-number">14</text>
+        <rect x="55.0" y="446.8" width="129.8" height="234.9" rx="2" class="bounds" />
+        <circle cx="119.9" cy="564.3" r="10" class="marker" />
+        <text x="119.9" y="567.8" text-anchor="middle" class="marker-number">14</text>
         <circle cx="945" cy="678" r="10" class="legend-number" />
         <text x="945" y="681.5" text-anchor="middle" class="legend-number-text">14</text>
         <text x="990" y="675" class="legend-id">CAM05-E14</text>
@@ -189,9 +189,9 @@
 
       <g class="element " id="CAM05-E15">
         <title>CAM05-E15 — 右下隅の床面に白飛びした大きな反射が画面外へ切れて続く。</title>
-        <rect x="629.6" y="778.0" width="101.4" height="234.0" rx="2" class="bounds" />
-        <circle cx="680.3" cy="895.0" r="10" class="marker" />
-        <text x="680.3" y="898.5" text-anchor="middle" class="marker-number">15</text>
+        <rect x="635.0" y="912.1" width="96.0" height="99.9" rx="2" class="bounds" />
+        <circle cx="683.0" cy="962.0" r="10" class="marker" />
+        <text x="683.0" y="965.5" text-anchor="middle" class="marker-number">15</text>
         <circle cx="945" cy="720" r="10" class="legend-number" />
         <text x="945" y="723.5" text-anchor="middle" class="legend-number-text">15</text>
         <text x="990" y="717" class="legend-id">CAM05-E15</text>
@@ -210,13 +210,13 @@
       </g>
 
       <g class="element note-entry" id="CAM05-E17">
-        <title>CAM05-E17 — 人物、階段、椅子、床置き小物は確認できない。ゲーム内ラベルと実景が異なる例として扱う。</title>
+        <title>CAM05-E17 — 人物・階段は確認できない。左奥に細い脚のスタンド(椅子状に見える)が通路脇にある。ゲーム内ラベルと実景が異なる例として扱う。</title>
         
         <circle cx="393.0" cy="562.0" r="7" class="marker marker-neutral" />
         <text x="393.0" y="565.5" text-anchor="middle" class="marker-number marker-number-neutral">17</text>
         <circle cx="945" cy="804" r="10" class="legend-number" />
         <text x="945" y="807.5" text-anchor="middle" class="legend-number-text">17</text>
         <text x="990" y="801" class="legend-id">CAM05-E17</text>
-        <text x="1105" y="801" class="legend-description">Note — 人物、階段、椅子、床置き小物は確認できない。ゲーム内ラベルと実景が異なる例として扱う。</text>
+        <text x="1105" y="801" class="legend-description">Note — 人物・階段は確認できない。左奥に細い脚のスタンド(椅子状に見える)が通路脇にある。ゲーム内ラベル…</text>
       </g>
 </svg>

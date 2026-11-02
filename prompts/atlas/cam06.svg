@@ -36,8 +36,8 @@
       <g class="element " id="CAM06-E01">
         <title>CAM06-E01 — 青灰色の天井。点状汚れ、細い板継ぎ目。</title>
         
-        <circle cx="392.5" cy="215.5" r="7" class="marker marker-neutral" />
-        <text x="392.5" y="219.0" text-anchor="middle" class="marker-number marker-number-neutral">01</text>
+        <circle cx="355.0" cy="244.3" r="7" class="marker marker-neutral" />
+        <text x="355.0" y="247.8" text-anchor="middle" class="marker-number marker-number-neutral">01</text>
         <circle cx="945" cy="132" r="10" class="legend-number" />
         <text x="945" y="135.5" text-anchor="middle" class="legend-number-text">01</text>
         <text x="990" y="129" class="legend-id">CAM06-E01</text>
@@ -46,9 +46,9 @@
 
       <g class="element " id="CAM06-E02">
         <title>CAM06-E02 — 左寄りの白い丸灯。</title>
-        <rect x="217.0" y="197.5" width="57.4" height="24.3" rx="2" class="bounds" />
-        <circle cx="245.7" cy="209.7" r="10" class="marker" />
-        <text x="245.7" y="213.2" text-anchor="middle" class="marker-number">02</text>
+        <rect x="219.0" y="198.4" width="52.0" height="18.9" rx="2" class="bounds" />
+        <circle cx="245.0" cy="207.8" r="10" class="marker" />
+        <text x="245.0" y="211.3" text-anchor="middle" class="marker-number">02</text>
         <circle cx="945" cy="174" r="10" class="legend-number" />
         <text x="945" y="177.5" text-anchor="middle" class="legend-number-text">02</text>
         <text x="990" y="171" class="legend-id">CAM06-E02</text>
@@ -57,9 +57,9 @@
 
       <g class="element " id="CAM06-E03">
         <title>CAM06-E03 — 中央上から右へ伸びる大きな白色蛍光灯。画面上端で切れる。</title>
-        <rect x="416.1" y="112.0" width="77.6" height="117.0" rx="2" class="bounds" />
-        <circle cx="454.9" cy="170.5" r="10" class="marker" />
-        <text x="454.9" y="174.0" text-anchor="middle" class="marker-number">03</text>
+        <rect x="468.1" y="112.0" width="77.0" height="207.9" rx="2" class="bounds" />
+        <circle cx="506.6" cy="215.9" r="10" class="marker" />
+        <text x="506.6" y="219.4" text-anchor="middle" class="marker-number">03</text>
         <circle cx="945" cy="216" r="10" class="legend-number" />
         <text x="945" y="219.5" text-anchor="middle" class="legend-number-text">03</text>
         <text x="990" y="213" class="legend-id">CAM06-E03</text>
@@ -67,43 +67,43 @@
       </g>
 
       <g class="element " id="CAM06-E04">
-        <title>CAM06-E04 — 右寄りの丸い埋め込み灯。</title>
-        <rect x="520.8" y="143.5" width="54.0" height="54.0" rx="2" class="bounds" />
-        <circle cx="547.8" cy="170.5" r="10" class="marker" />
-        <text x="547.8" y="174.0" text-anchor="middle" class="marker-number">04</text>
+        <title>CAM06-E04 — 通路中央奥の天井に並ぶ小さな丸い埋め込み灯のうち、いちばん手前(吊り器具の左上)の1つ。</title>
+        <rect x="341.2" y="289.3" width="31.1" height="13.5" rx="2" class="bounds" />
+        <circle cx="356.7" cy="296.0" r="10" class="marker" />
+        <text x="356.7" y="299.5" text-anchor="middle" class="marker-number">04</text>
         <circle cx="945" cy="258" r="10" class="legend-number" />
         <text x="945" y="261.5" text-anchor="middle" class="legend-number-text">04</text>
         <text x="990" y="255" class="legend-id">CAM06-E04</text>
-        <text x="1105" y="255" class="legend-description">右寄りの丸い埋め込み灯。</text>
+        <text x="1105" y="255" class="legend-description">通路中央奥の天井に並ぶ小さな丸い埋め込み灯のうち、いちばん手前(吊り器具の左上)の1つ。</text>
       </g>
 
       <g class="element " id="CAM06-E05">
-        <title>CAM06-E05 — 右上寄りの黒っぽい斜めの天井凹み(四角い開口に見えるが斜めに歪む)。</title>
-        <rect x="588.3" y="112.0" width="94.5" height="99.0" rx="2" class="bounds" />
-        <circle cx="635.5" cy="161.5" r="10" class="marker" />
-        <text x="635.5" y="165.0" text-anchor="middle" class="marker-number">05</text>
+        <title>CAM06-E05 — 天井中央の黒い長方形の換気口/点検口(斜めに歪む)。</title>
+        <rect x="345.3" y="222.7" width="77.6" height="22.5" rx="2" class="bounds" />
+        <circle cx="384.1" cy="233.9" r="10" class="marker" />
+        <text x="384.1" y="237.4" text-anchor="middle" class="marker-number">05</text>
         <circle cx="945" cy="300" r="10" class="legend-number" />
         <text x="945" y="303.5" text-anchor="middle" class="legend-number-text">05</text>
         <text x="990" y="297" class="legend-id">CAM06-E05</text>
-        <text x="1105" y="297" class="legend-description">右上寄りの黒っぽい斜めの天井凹み(四角い開口に見えるが斜めに歪む)。</text>
+        <text x="1105" y="297" class="legend-description">天井中央の黒い長方形の換気口/点検口(斜めに歪む)。</text>
       </g>
 
       <g class="element " id="CAM06-E06">
-        <title>CAM06-E06 — 右上奥に小さな黒い吊り器具/センサー状の物。</title>
-        <rect x="669.3" y="215.5" width="60.8" height="63.0" rx="2" class="bounds" />
-        <circle cx="699.6" cy="247.0" r="10" class="marker" />
-        <text x="699.6" y="250.5" text-anchor="middle" class="marker-number">06</text>
+        <title>CAM06-E06 — 天井中央の小さな黒い吊り器具/煙感知器状の物。</title>
+        <rect x="412.8" y="282.1" width="30.4" height="24.3" rx="2" class="bounds" />
+        <circle cx="427.9" cy="294.3" r="10" class="marker" />
+        <text x="427.9" y="297.8" text-anchor="middle" class="marker-number">06</text>
         <circle cx="945" cy="342" r="10" class="legend-number" />
         <text x="945" y="345.5" text-anchor="middle" class="legend-number-text">06</text>
         <text x="990" y="339" class="legend-id">CAM06-E06</text>
-        <text x="1105" y="339" class="legend-description">右上奥に小さな黒い吊り器具/センサー状の物。</text>
+        <text x="1105" y="339" class="legend-description">天井中央の小さな黒い吊り器具/煙感知器状の物。</text>
       </g>
 
       <g class="element " id="CAM06-E07">
         <title>CAM06-E07 — 左上の吊り看板。赤橙の四角い外枠と白円、中央に小さなエビと葉のロゴ、下に「まちがいサラダ」。</title>
-        <rect x="203.5" y="211.0" width="182.3" height="207.0" rx="2" class="bounds" />
-        <circle cx="294.6" cy="314.5" r="10" class="marker" />
-        <text x="294.6" y="318.0" text-anchor="middle" class="marker-number">07</text>
+        <rect x="202.8" y="237.1" width="101.9" height="105.3" rx="2" class="bounds" />
+        <circle cx="253.8" cy="289.8" r="10" class="marker" />
+        <text x="253.8" y="293.3" text-anchor="middle" class="marker-number">07</text>
         <circle cx="945" cy="384" r="10" class="legend-number" />
         <text x="945" y="387.5" text-anchor="middle" class="legend-number-text">07</text>
         <text x="990" y="381" class="legend-id">CAM06-E07</text>
@@ -124,8 +124,8 @@
       <g class="element " id="CAM06-E09">
         <title>CAM06-E09 — 左手前の大型観葉植物。幅広く尖った葉が複数、手前へ張り出す。葉脈/筋がある。</title>
         
-        <circle cx="169.8" cy="643.0" r="7" class="marker marker-neutral" />
-        <text x="169.8" y="646.5" text-anchor="middle" class="marker-number marker-number-neutral">09</text>
+        <circle cx="164.0" cy="554.8" r="7" class="marker marker-neutral" />
+        <text x="164.0" y="558.3" text-anchor="middle" class="marker-number marker-number-neutral">09</text>
         <circle cx="945" cy="468" r="10" class="legend-number" />
         <text x="945" y="471.5" text-anchor="middle" class="legend-number-text">09</text>
         <text x="990" y="465" class="legend-id">CAM06-E09</text>
@@ -134,9 +134,9 @@
 
       <g class="element " id="CAM06-E10">
         <title>CAM06-E10 — 下側の複数鉢植え。黒い円形鉢、細い茎、小さな葉/橙色花状部分。</title>
-        <rect x="156.3" y="517.0" width="141.8" height="207.0" rx="2" class="bounds" />
-        <circle cx="227.1" cy="620.5" r="10" class="marker" />
-        <text x="227.1" y="624.0" text-anchor="middle" class="marker-number">10</text>
+        <rect x="167.1" y="534.1" width="110.0" height="170.1" rx="2" class="bounds" />
+        <circle cx="222.1" cy="619.1" r="10" class="marker" />
+        <text x="222.1" y="622.6" text-anchor="middle" class="marker-number">10</text>
         <circle cx="945" cy="510" r="10" class="legend-number" />
         <text x="945" y="513.5" text-anchor="middle" class="legend-number-text">10</text>
         <text x="990" y="507" class="legend-id">CAM06-E10</text>
@@ -145,9 +145,9 @@
 
       <g class="element " id="CAM06-E11">
         <title>CAM06-E11 — 画面左下で切れた青い袋/布状物、紫桃色の布/飾り、黒い台状物が重なる。内訳は判別しきれない。</title>
-        <rect x="55.0" y="854.5" width="148.5" height="157.5" rx="2" class="bounds" />
-        <circle cx="129.3" cy="933.3" r="10" class="marker" />
-        <text x="129.3" y="936.8" text-anchor="middle" class="marker-number">11</text>
+        <rect x="55.0" y="636.7" width="141.8" height="130.5" rx="2" class="bounds" />
+        <circle cx="125.9" cy="701.9" r="10" class="marker" />
+        <text x="125.9" y="705.4" text-anchor="middle" class="marker-number">11</text>
         <circle cx="945" cy="552" r="10" class="legend-number" />
         <text x="945" y="555.5" text-anchor="middle" class="legend-number-text">11</text>
         <text x="990" y="549" class="legend-id">CAM06-E11</text>
@@ -156,9 +156,9 @@
 
       <g class="element " id="CAM06-E12">
         <title>CAM06-E12 — 通路左寄りの自立式メニュー/案内板。白い縦長板に複数の小画像/文字行、傾いた細い黒脚。個々の文字は判読不能。</title>
-        <rect x="227.1" y="472.0" width="141.8" height="333.0" rx="2" class="bounds" />
-        <circle cx="298.0" cy="638.5" r="10" class="marker" />
-        <text x="298.0" y="642.0" text-anchor="middle" class="marker-number">12</text>
+        <rect x="295.3" y="415.3" width="75.6" height="186.3" rx="2" class="bounds" />
+        <circle cx="333.1" cy="508.4" r="10" class="marker" />
+        <text x="333.1" y="511.9" text-anchor="middle" class="marker-number">12</text>
         <circle cx="945" cy="594" r="10" class="legend-number" />
         <text x="945" y="597.5" text-anchor="middle" class="legend-number-text">12</text>
         <text x="990" y="591" class="legend-id">CAM06-E12</text>
@@ -166,14 +166,14 @@
       </g>
 
       <g class="element " id="CAM06-E13">
-        <title>CAM06-E13 — 左奥から中央に連なる暗い店先/ガラス扉。黒/青灰色の縦枠とガラス反射、白い短い文字/ロゴらしい形が一部ある。</title>
-        <rect x="260.9" y="409.0" width="178.9" height="297.0" rx="2" class="bounds" />
-        <circle cx="350.3" cy="557.5" r="10" class="marker" />
-        <text x="350.3" y="561.0" text-anchor="middle" class="marker-number">13</text>
+        <title>CAM06-E13 — 通路左奥の暗い店先/ガラス扉。黒/青灰色の縦枠とガラス反射。</title>
+        <rect x="316.9" y="307.3" width="99.9" height="225.0" rx="2" class="bounds" />
+        <circle cx="366.9" cy="419.8" r="10" class="marker" />
+        <text x="366.9" y="423.3" text-anchor="middle" class="marker-number">13</text>
         <circle cx="945" cy="636" r="10" class="legend-number" />
         <text x="945" y="639.5" text-anchor="middle" class="legend-number-text">13</text>
         <text x="990" y="633" class="legend-id">CAM06-E13</text>
-        <text x="1105" y="633" class="legend-description">左奥から中央に連なる暗い店先/ガラス扉。黒/青灰色の縦枠とガラス反射、白い短い文字/ロゴらしい形…</text>
+        <text x="1105" y="633" class="legend-description">通路左奥の暗い店先/ガラス扉。黒/青灰色の縦枠とガラス反射。</text>
       </g>
 
       <g class="element " id="CAM06-E14">
@@ -189,9 +189,9 @@
 
       <g class="element " id="CAM06-E15">
         <title>CAM06-E15 — 右側の灰白色粗面壁。小さな額入り掲示/絵が一つ、下方に黒枠の扉、銀色取手。</title>
-        <rect x="568.0" y="323.5" width="162.0" height="418.5" rx="2" class="bounds" />
-        <circle cx="649.0" cy="532.8" r="10" class="marker" />
-        <text x="649.0" y="536.3" text-anchor="middle" class="marker-number">15</text>
+        
+        <circle cx="638.9" cy="557.0" r="7" class="marker marker-neutral" />
+        <text x="638.9" y="560.5" text-anchor="middle" class="marker-number marker-number-neutral">15</text>
         <circle cx="945" cy="720" r="10" class="legend-number" />
         <text x="945" y="723.5" text-anchor="middle" class="legend-number-text">15</text>
         <text x="990" y="717" class="legend-id">CAM06-E15</text>
@@ -201,8 +201,8 @@
       <g class="element " id="CAM06-E16">
         <title>CAM06-E16 — 灰色の正方形床タイル。目地が奥へ収束し、植物や看板の影が左床に濃く落ちる。</title>
         
-        <circle cx="392.5" cy="787.0" r="7" class="marker marker-neutral" />
-        <text x="392.5" y="790.5" text-anchor="middle" class="marker-number marker-number-neutral">16</text>
+        <circle cx="380.0" cy="742.9" r="7" class="marker marker-neutral" />
+        <text x="380.0" y="746.4" text-anchor="middle" class="marker-number marker-number-neutral">16</text>
         <circle cx="945" cy="762" r="10" class="legend-number" />
         <text x="945" y="765.5" text-anchor="middle" class="legend-number-text">16</text>
         <text x="990" y="759" class="legend-id">CAM06-E16</text>
@@ -211,9 +211,9 @@
 
       <g class="element " id="CAM06-E17">
         <title>CAM06-E17 — 床中央右に蛍光灯の長い白反射。奥の暗部から前景へ続く。</title>
-        <rect x="456.6" y="427.0" width="145.1" height="540.0" rx="2" class="bounds" />
-        <circle cx="529.2" cy="697.0" r="10" class="marker" />
-        <text x="529.2" y="700.5" text-anchor="middle" class="marker-number">17</text>
+        <rect x="466.8" y="446.8" width="70.2" height="520.2" rx="2" class="bounds" />
+        <circle cx="501.9" cy="706.9" r="10" class="marker" />
+        <text x="501.9" y="710.4" text-anchor="middle" class="marker-number">17</text>
         <circle cx="945" cy="804" r="10" class="legend-number" />
         <text x="945" y="807.5" text-anchor="middle" class="legend-number-text">17</text>
         <text x="990" y="801" class="legend-id">CAM06-E17</text>
