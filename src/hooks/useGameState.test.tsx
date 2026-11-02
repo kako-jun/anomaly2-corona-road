@@ -621,6 +621,52 @@ describe('time running out around the false-report limit', () => {
   })
 })
 
+describe('startGame after a withdraw by the false-report limit', () => {
+  const withdraw = (hook: ReturnType<typeof start>) => {
+    for (let i = 0; i < DEFAULT_CONFIG.maxMisreports; i++)
+      wrongReport(hook.result)
+    advance(TOAST_MS)
+    expect(hook.result.current.ending?.closing).toBe('withdraw')
+    act(() => hook.result.current.finishEnding())
+  }
+
+  it('accepts reports again in the second shift (correct and false)', () => {
+    ledger.push(entry('a', 1))
+    const hook = start()
+    withdraw(hook)
+    act(() => hook.result.current.startGame())
+    expect(hook.result.current.stats.misreports).toBe(0)
+
+    advance(FIRST + 100)
+    act(() => hook.result.current.reportAnomaly('Object'))
+    expect(hook.result.current.stats.correctReports).toBe(1)
+
+    wrongReport(hook.result)
+    expect(hook.result.current.stats.misreports).toBe(1)
+  })
+
+  it('applies the false-report limit again in the second shift, counting loops cumulatively', () => {
+    const hook = start()
+    withdraw(hook)
+    expect(saveData.load().loops).toBe(1)
+    act(() => hook.result.current.startGame())
+
+    for (let i = 0; i < DEFAULT_CONFIG.maxMisreports; i++)
+      wrongReport(hook.result)
+    expect(hook.result.current.stats.misreports).toBe(
+      DEFAULT_CONFIG.maxMisreports
+    )
+    advance(TOAST_MS - 1)
+    expect(hook.result.current.gameState).toBe('playing')
+    advance(1)
+    expect(hook.result.current.ending).toEqual({
+      closing: 'withdraw',
+      outcome: 'lose',
+    })
+    expect(saveData.load().loops).toBe(2)
+  })
+})
+
 describe('reports during the ending', () => {
   it('change neither the stats nor the save', () => {
     ledger.push(entry('a', 1))
