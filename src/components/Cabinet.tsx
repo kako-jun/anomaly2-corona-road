@@ -1,7 +1,7 @@
 import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
 import { Feedback } from '../hooks/useGameState'
 import { useCameraKeys } from '../hooks/useCameraKeys'
-import { useSubtitle } from '../hooks/useSubtitle'
+import { FlagEvent, useSubtitle } from '../hooks/useSubtitle'
 import { Anomaly, AnomalyCategory, Camera, GameStats } from '../types/game'
 import { CAMERAS } from '../utils/gameConfig'
 import { KNOB_DEFAULT, brightnessFilter, contrastFilter } from '../utils/knob'
@@ -23,6 +23,11 @@ interface CabinetProps {
   anomalyHere?: Anomaly
   feedback: Feedback | null
   gameTime: string
+  /** Flags that just rose (their story conversation cuts into the subtitles). */
+  flagEvent: FlagEvent | null
+  /** Set once the shift is over: the closing conversation plays, then `onEndingDone`. */
+  ending: 'dawn' | 'withdraw' | null
+  onEndingDone: () => void
   onSwitch: (to: 'prev' | 'next' | number) => void
   onReport: (category: AnomalyCategory) => void
 }
@@ -36,6 +41,9 @@ export const Cabinet = ({
   anomalyHere,
   feedback,
   gameTime,
+  flagEvent,
+  ending,
+  onEndingDone,
   onSwitch,
   onReport,
 }: CabinetProps) => {
@@ -63,7 +71,16 @@ export const Cabinet = ({
 
   useCameraKeys(!reportOpen, CAMERAS.length, onSwitch)
 
-  const subtitle = useSubtitle(feedback?.kind === 'wrong' ? feedback.id : null)
+  const subtitle = useSubtitle({
+    wrongFeedbackId: feedback?.kind === 'wrong' ? feedback.id : null,
+    wrongAnomalyId:
+      feedback?.kind === 'wrong' ? (feedback.anomalyId ?? null) : null,
+    elapsedMs: stats.currentTime,
+    foundThisPlay: stats.correctReports,
+    flagEvent,
+    ending,
+    onClosingDone: onEndingDone,
+  })
 
   const closeReport = useCallback(() => setReportOpen(false), [])
 

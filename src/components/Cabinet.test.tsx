@@ -13,8 +13,8 @@ vi.mock('./NoiseCanvas', () => ({ NoiseCanvas: () => null }))
 // Record what the cabinet hands to the subtitle hook (the hook itself has its own tests).
 const subtitleCalls = vi.hoisted(() => [] as (number | null)[])
 vi.mock('../hooks/useSubtitle', () => ({
-  useSubtitle: (id: number | null) => {
-    subtitleCalls.push(id)
+  useSubtitle: (input: { wrongFeedbackId: number | null }) => {
+    subtitleCalls.push(input.wrongFeedbackId)
     return { text: '', visible: false }
   },
 }))
@@ -30,6 +30,9 @@ const makeProps = (
   currentCamera: cameras[0],
   feedback: null,
   gameTime: '00:00',
+  flagEvent: null,
+  ending: null,
+  onEndingDone: vi.fn(),
   onSwitch: vi.fn(),
   onReport: vi.fn(),
   ...over,

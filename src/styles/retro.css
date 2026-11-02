@@ -1288,3 +1288,22 @@
   gap: 6px;
   height: 10px;
 }
+
+/* Always-visible notice when progress cannot be saved (docs/save-data.md rule 6) */
+.save-notice {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  padding: 2px 8px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #e8d9a0;
+  background: rgb(0 0 0 / 0.75);
+  pointer-events: none;
+}
+.save-notice[hidden] {
+  display: none;
+}

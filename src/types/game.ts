@@ -7,7 +7,7 @@ export type AnomalyCategory =
 
 export type GamePhase = 'early' | 'mid' | 'late'
 
-export type GameState = 'idle' | 'playing' | 'win' | 'lose'
+export type GameState = 'idle' | 'playing' | 'ending' | 'win' | 'lose'
 
 /** The transparent image laid over the base photo; pixel values are in base-photo pixels. */
 export interface AnomalyOverlay {
