@@ -514,12 +514,13 @@ describe('the end is counted once', () => {
     expect(saveData.load().loops).toBe(1)
   })
 
-  it('the first ending wins: a late withdraw does not replace a dawn ending', () => {
+  it('the cap was reached first: time running out during the toast still ends as a withdraw', () => {
     const { result } = start()
     advance(DEFAULT_CONFIG.totalDurationMs - 500)
     for (let i = 0; i < DEFAULT_CONFIG.maxMisreports; i++) wrongReport(result)
     advance(5000)
-    expect(result.current.ending?.closing).toBe('dawn')
+    expect(result.current.ending?.closing).toBe('withdraw')
+    expect(result.current.ending?.outcome).toBe('lose')
   })
 })
 

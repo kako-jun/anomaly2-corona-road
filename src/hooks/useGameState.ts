@@ -272,6 +272,12 @@ export const useGameState = () => {
       )
 
       if (elapsed >= DEFAULT_CONFIG.totalDurationMs) {
+        // The false-report cap was reached first (its withdraw is still waiting out the toast):
+        // that came first, so it stays a withdraw/lose even though time ran out in between.
+        if (misreportCapRef.current) {
+          endShift('withdraw', 'lose')
+          return
+        }
         endShift(
           'dawn',
           statsRef.current.correctReports >= DEFAULT_CONFIG.minCorrectReports
