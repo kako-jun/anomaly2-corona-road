@@ -331,11 +331,11 @@ anomalies:
     note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-umbrella'
     camera_id: 'CAM06'
-    element_id: 'CAM06-E13'
+    element_id: 'CAM06-E16'
     base_photo: 'public/images/cam6.webp'
     category: 'object'
     anomaly_type: 'add_object'
-    location: 'CAM06-E13 の周辺、差分左上 (208,360) px'
+    location: 'CAM06-E16 の周辺、差分左上 (208,360) px'
     detail: '左店先にたたんだ傘が現れる'
     overlay: 'assets/anomaly-overlays/cam06/umbrella.webp'
     overlay_origin: '(208,360)'
@@ -971,14 +971,14 @@ anomalies:
   - id: "AR-03-white-cap"
     candidate_id: "CR-03-39"
     camera_id: "CAM03"
-    element_id: "CAM03-E13"
+    element_id: "CAM03-E16"
     base_photo: "public/images/cam3.webp"
     category: "object"
     anomaly_type: "add_object"
     phase: "mid"
     subtlety: "medium"
     mask_box_1000: "(607,373)–(657,396)"
-    location: "CAM03-E13、差分左上 (411,336) px"
+    location: "CAM03-E16、差分左上 (411,336) px"
     detail: "奥の開口の床に小さな白い帽子が置かれる。"
     generation_prompt: "Use case: precise-object-edit. Input is the authoritative 676×900 surveillance photograph of an empty underground passage. Make exactly one change: place a small simple white cloth cap on the floor near the distant dark storefront opening, just right and behind the green standing sign (CAM03-E13, roughly x=430–465 and y=280–325 original pixels). The cap lies naturally on the floor, looks small with distance, has a modest contact shadow, and contains no text or logo. Keep the existing standing sign and its lettering, surrounding doors, shutter, floor joints, lighting, reflections, noise, grain, perspective and framing unchanged. Do not add any other objects or people. Output full frame at original aspect ratio, to be locally masked."
     overlay: "assets/anomaly-overlays/cam03/white-cap.webp"
@@ -1421,14 +1421,14 @@ anomalies:
   - id: "AR-03-walking-cat"
     candidate_id: "CR-03-26"
     camera_id: "CAM03"
-    element_id: "CAM03-E13"
+    element_id: "CAM03-E16"
     base_photo: "public/images/cam3.webp"
     category: "object"
     anomaly_type: "add_creature"
     phase: "mid"
     subtlety: "medium"
     mask_box_1000: "(605,350)–(709,395)"
-    location: "CAM03-E13、差分左上 (409,315) px"
+    location: "CAM03-E16、差分左上 (409,315) px"
     detail: "暗い開口の前を白猫が歩く。"
     generation_prompt: "Use case: precise-object-edit. Edit the attached 676×900 underground arcade surveillance photograph. Make exactly one change: add a single small white short-haired cat walking in profile across the floor immediately in front of the dark middle-distance storefront opening, just right of the green standing sign, around x=440, y=315 in original pixels. The cat is small relative to the sign, its paws touch the floor and its modest contact shadow matches the scene. Preserve the green sign and all its lettering, other signs, shutter, floor grout, storefront, camera angle, lighting, blur, grain and every other object. Add no other subject. Output the complete original composition."
     overlay: "assets/anomaly-overlays/cam03/walking-cat.webp"
@@ -1439,14 +1439,14 @@ anomalies:
   - id: "AR-03-round-puddle"
     candidate_id: "CR-03-13"
     camera_id: "CAM03"
-    element_id: "CAM03-E18"
+    element_id: "CAM03-E16"
     base_photo: "public/images/cam3.webp"
     category: "environment"
     anomaly_type: "add_object"
     phase: "mid"
     subtlety: "medium"
     mask_box_1000: "(440,603)–(554,644)"
-    location: "CAM03-E18、差分左上 (298,543) px"
+    location: "CAM03-E16、差分左上 (298,543) px"
     detail: "床の白い反射の中に丸い水たまりができる。"
     generation_prompt: "Precisely edit the attached surveillance photograph: add just one SMALL shallow oval water puddle, approximately 40 pixels wide by 20 pixels high in the ORIGINAL 676×900 image, centered at pixel (340, 600). It lies in the foreground floor below the green sign, visibly separate from the sign itself. A subtle, slightly glossy patch with one faint white light reflection; smooth water with NO concentric waves, NO splashes, NO spreading wet floor. Keep all floor grout lines, all other reflections, sign lettering, architecture, lights, camera angle and framing completely unchanged. Match the original low resolution, grain and color. Return the entire original photo."
     overlay: "assets/anomaly-overlays/cam03/round-puddle.webp"
@@ -2263,14 +2263,14 @@ anomalies:
     note: '再構成一致・マスク外差分ゼロ(pixels_changed_outside_alpha=0)。変化は中央左寄りのカーテン一枚(x299-387)で、位置は正面ガラス中央。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-old-woman-in-glass'
     camera_id: 'CAM05'
-    element_id: 'CAM05-E09'
+    element_id: 'CAM05-E08'
     base_photo: 'public/images/cam5.webp'
     category: 'person'
     anomaly_type: 'add_person'
     phase: 'late'
     subtlety: 'medium'
     mask_box_1000: '(537,266)–(837,669)'
-    location: 'CAM05-E09、差分左上 (361,237) px'
+    location: 'CAM05-E08、差分左上 (361,237) px'
     detail: '正面ガラスの内側に、割烹着姿の小柄な老婆が背を向けて立つ'
     generation_prompt: 'Edit the attached surveillance camera photo (an empty underground shopping arcade, cool blue-grey tones, glass-fronted vacant shop with grey curtains). Make ONLY this single change: - Add a human figure: a small elderly Japanese woman wearing a white kappogi apron (old-style full-length cooking smock) over dark clothes, seen from behind (back to the camera), standing still inside the shop behind the glass, visible in the dark vertical gap between the curtains. She is small, about 160-190 px tall in the 676x900 frame, dim and slightly veiled by the curtain and glass, as if a faint memory. - Location in frame: the right-side glass panels of the front wall, in the dark narrow vertical gap at around x=505-550, y=300-480 (just right of the metal mullion at x~500, left of the glass door at x~560-600). CRITICAL: keep everything else PIXEL-IDENTICAL to the source image: camera angle, framing, aspect ratio, all buildings, signs, glass, curtains, floor tiles, ceiling lights, lighting, shadows, film grain, JPEG artifacts, low-fi surveillance look. Do not regenerate or redraw the scene. Only the single figure is added.'
     overlay: 'assets/anomaly-overlays/cam05/old-woman-in-glass.webp'
@@ -2497,14 +2497,14 @@ anomalies:
   - id: 'AR-06-ceiling-panel-white'
     candidate_id: 'CR-06-31'
     camera_id: 'CAM06'
-    element_id: 'CAM06-E05'
+    element_id: 'CAM06-E01'
     base_photo: 'public/images/cam6.webp'
     category: 'environment'
     anomaly_type: 'color_shift'
     phase: 'early'
     subtlety: 'subtle'
     mask_box_1000: '(778,0)–(942,119)'
-    location: 'CAM06-E05、差分左上 (536,44) px'
+    location: 'CAM06-E01、差分左上 (536,44) px'
     detail: '右上の黒い天井の斜めの凹み(四角い開口)の一隅が、白く塗り直されたように明るい白い板状に浮く。'
     generation_prompt: 'Edit the attached surveillance camera photo (a shopping arcade corridor, low-fi CCTV look, 675x900 frame). Make ONLY this single change: - Color shift: in the upper-right corner of the frame, the dark shadowed soffit/overhang area above the right wall (the black-shadowed region at approx x=590-675, y=0-90, just right of the diagonal ceiling edge) has its lower-left part (approx x=590-640, y=40-95) repainted bright clean white, as if freshly painted plaster, with a fairly crisp edge against the remaining black shadow. The rest of the frame stays unchanged. CRITICAL - keep everything else PIXEL-IDENTICAL to the source image: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, film grain, JPEG artifacts, low-fi surveillance look, and every object and text already present. Do not regenerate or redraw the scene. Only inject this one change. No real shop names; any text must be illegible or fictional.'
     overlay: 'assets/anomaly-overlays/cam06/ceiling-panel-white.webp'
@@ -2657,14 +2657,14 @@ anomalies:
   - id: 'AR-08-vent-square'
     candidate_id: 'CR-08-19'
     camera_id: 'CAM08'
-    element_id: 'CAM08-E03'
+    element_id: 'CAM08-E01'
     base_photo: 'public/images/cam8.webp'
     category: 'environment'
     anomaly_type: 'state_change'
     phase: 'mid'
     subtlety: 'medium'
     mask_box_1000: '(397,1)–(622,99)'
-    location: 'CAM08-E03、差分左上 (258,10) px'
+    location: 'CAM08-E01、差分左上 (258,10) px'
     detail: '天井中央の同心円の換気口の外形が、角のある四角形に変わる。'
     generation_prompt: 'Edit the attached surveillance camera photo (675x900 reference, empty shopping arcade corridor with a large square pillar in the center). Make ONLY this single change: state change: the large circular concentric ceiling vent at the top center (approx x=276-412, y=9-81 of the 675x900 frame) changes its outer shape into a sharp-cornered square vent with the same concentric inner pattern, same size and color. Keep camera angle, framing, lens distortion, lighting color temperature, shadows, floor reflections, film grain, JPEG artifacts and every other object pixel-identical. Do not regenerate or redraw the scene. No new readable text.'
     overlay: 'assets/anomaly-overlays/cam08/vent-square.webp'
