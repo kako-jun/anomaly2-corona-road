@@ -15,7 +15,9 @@ verification report; status "fail" exits with code 2 and writes nothing to --out
 """
 import argparse
 import json
+import math
 import os
+import re
 import sys
 import shutil
 import tempfile
@@ -45,6 +47,119 @@ def parse_box(s):
     return tuple(v)
 
 
+INVENTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "prompts", "camera-element-inventory.md")
+DEFAULT_MARGIN = 8
+_ID_RE = re.compile(r"^CAM(\d{2})-E(\d{2})$")
+_HEAD_RE = re.compile(r"^##\s+CAM\s*(\d+)\b.*?\(`?(cam\d+\.webp)`?\s*,\s*(\d+)\s*[×x]\s*(\d+)\)")
+_NUM = r"(\d+(?:\.\d+)?)"
+_RECT_RE = re.compile(r"`?\(\s*" + _NUM + r"\s*,\s*" + _NUM + r"\s*\)\s*[–—~-]+\s*\(\s*" + _NUM + r"\s*,\s*" + _NUM + r"\s*\)`?")
+
+
+def parse_inventory(path=INVENTORY):
+    """Parse the element inventory. Returns {cam_no: {"file", "size", "elements": {id: {"rect": (x1,y1,x2,y2), "desc"}}}}.
+    Raises ValueError for a row whose rectangle cannot be parsed or is degenerate."""
+    cams, cur = {}, None
+    with open(path, encoding="utf-8") as f:
+        for ln, line in enumerate(f, 1):
+            line = line.rstrip("\n")
+            m = _HEAD_RE.match(line)
+            if m:
+                cur = int(m.group(1))
+                cams[cur] = {"file": m.group(2), "size": (int(m.group(3)), int(m.group(4))), "elements": {}}
+                continue
+            if line.startswith("## "):
+                cur = None
+                continue
+            cells = [c.strip() for c in line.strip().strip("|").split("|")] if line.lstrip().startswith("|") else []
+            idc = next((c for c in cells[:3] if _ID_RE.match(c)), None)
+            if idc is None:
+                continue
+            i = cells.index(idc)
+            cam = int(_ID_RE.match(idc).group(1))
+            if cur is None or cam != cur:
+                raise ValueError(f"inventory line {ln}: {idc} is outside its CAM {cam:02d} section")
+            rm = _RECT_RE.fullmatch(cells[i + 1]) if i + 1 < len(cells) else None
+            if not rm:
+                raise ValueError(f"inventory line {ln}: cannot parse the rectangle of {idc}: {cells[i + 1:i + 2]}")
+            x1, y1, x2, y2 = (float(v) for v in rm.groups())
+            if not (0 <= x1 < x2 <= 1000 and 0 <= y1 < y2 <= 1000):
+                raise ValueError(f"inventory line {ln}: {idc} rectangle {rm.group(0)} is degenerate or outside 0-1000")
+            if idc in cams[cur]["elements"]:
+                raise ValueError(f"inventory line {ln}: duplicate id {idc}")
+            cams[cur]["elements"][idc] = {"rect": (x1, y1, x2, y2), "desc": " ".join(cells[i + 2:]).strip()}
+    return cams
+
+
+def norm_to_px(rect, size, margin=0):
+    """Normalized 0-1000 rect -> baseline px, outward-rounded, widened by margin and clamped to the image."""
+    W, H = size
+    x1, y1, x2, y2 = rect
+    px = (math.floor(x1 * W / 1000) - margin, math.floor(y1 * H / 1000) - margin,
+          math.ceil(x2 * W / 1000) + margin, math.ceil(y2 * H / 1000) + margin)
+    return (max(0, px[0]), max(0, px[1]), min(W, px[2]), min(H, px[3]))
+
+
+def lookup_element(eid, base_path, margin, inv_path=INVENTORY):
+    """Resolve an element id against the inventory and the actual baseline. Returns (box_px, info). Raises ValueError."""
+    m = _ID_RE.match(eid or "")
+    if not m:
+        raise ValueError(f"--element must look like CAM01-E12, got {eid!r}")
+    cam = int(m.group(1))
+    inv = parse_inventory(inv_path)
+    if cam not in inv:
+        raise ValueError(f"camera CAM{cam:02d} is not in the inventory")
+    c = inv[cam]
+    if eid not in c["elements"]:
+        raise ValueError(f"unknown element {eid}; try --list-elements CAM{cam:02d}")
+    if os.path.basename(base_path) != c["file"]:
+        raise ValueError(f"{eid} belongs to {c['file']} but --base is {os.path.basename(base_path)}")
+    size = Image.open(base_path).size
+    if size != c["size"]:
+        raise ValueError(f"baseline is {size[0]}x{size[1]} but the inventory says {c['size'][0]}x{c['size'][1]} for {c['file']}")
+    e = c["elements"][eid]
+    box = norm_to_px(e["rect"], size, margin)
+    info = {"element_id": eid, "element_description": e["desc"], "element_rect_1000": list(e["rect"]),
+            "margin_px": margin, "box_source": "element", "box_px_used": list(box)}
+    return box, info
+
+
+def list_elements(cam_arg, images_dir=None):
+    m = re.fullmatch(r"(?i)(?:CAM)?\s*0*(\d{1,2})", cam_arg.strip())
+    if not m:
+        raise ValueError(f"--list-elements needs a camera like CAM01, got {cam_arg!r}")
+    cam = int(m.group(1))
+    inv = parse_inventory()
+    if cam not in inv:
+        raise ValueError(f"camera CAM{cam:02d} is not in the inventory")
+    c = inv[cam]
+    images_dir = images_dir or os.path.join(os.path.dirname(INVENTORY), "..", "public", "images")
+    size = Image.open(os.path.join(images_dir, c["file"])).size
+    print(f"CAM{cam:02d} {c['file']} {size[0]}x{size[1]} (px box without margin: x1,y1,x2,y2)")
+    for eid, e in c["elements"].items():
+        b = norm_to_px(e["rect"], size)
+        d = e["desc"]
+        print(f"{eid}  {b[0]},{b[1]},{b[2]},{b[3]}  {d[:60]}{'...' if len(d) > 60 else ''}")
+
+
+def check_inventory(images_dir=None):
+    """Every element of every camera must convert to a positive-size px box inside the baseline. Returns (n, problems)."""
+    inv = parse_inventory()
+    images_dir = images_dir or os.path.join(os.path.dirname(INVENTORY), "..", "public", "images")
+    n, bad = 0, []
+    for cam, c in sorted(inv.items()):
+        size = Image.open(os.path.join(images_dir, c["file"])).size
+        if size != c["size"]:
+            bad.append(f"CAM{cam:02d}: baseline {size[0]}x{size[1]} != inventory {c['size'][0]}x{c['size'][1]}")
+        for eid, e in c["elements"].items():
+            n += 1
+            b = norm_to_px(e["rect"], size)
+            if not (0 <= b[0] < b[2] <= size[0] and 0 <= b[1] < b[3] <= size[1]):
+                bad.append(f"{eid}: px box {b} not positive/inside {size}")
+    missing = [k for k in range(1, 9) if k not in inv]
+    bad += [f"CAM{k:02d}: no section in the inventory" for k in missing]
+    return n, len(inv), bad
+
+
 class _Parser(argparse.ArgumentParser):
     def error(self, message):  # same exit code as a verification fail
         self.print_usage(sys.stderr)
@@ -57,6 +172,10 @@ def build_parser():
     p.add_argument("--base", help="baseline photo (public/images/camN.webp)")
     p.add_argument("--gen", help="generated image (png)")
     p.add_argument("--box", type=parse_box, help="x1,y1,x2,y2 in baseline px")
+    p.add_argument("--element", help="camera element id (e.g. CAM01-E12) from prompts/camera-element-inventory.md; its box is converted to baseline px and used instead of --box")
+    p.add_argument("--margin", type=int, help=f"with --element: widen the converted box by this many px, clamped to the image (default {DEFAULT_MARGIN})")
+    p.add_argument("--list-elements", metavar="CAMNN", help="print the elements of a camera (id, px box, description) and exit")
+    p.add_argument("--check-inventory", action="store_true", help="check that every inventory element converts to a valid px box inside its baseline, and exit")
     p.add_argument("--out", help="transparent WebP to write (only on non-fail)")
     p.add_argument("--preview", help="full-frame verification composite PNG (work file, never commit)")
     p.add_argument("--threshold", type=float, default=18.0, help="difference threshold (0-255)")
@@ -118,6 +237,7 @@ def process(a):
     W, H = base_img.size
     gen_img = Image.open(a.gen).convert("RGB")
     res.update(base_size=[W, H], gen_size=list(gen_img.size))
+    res.update(getattr(a, "element_info", None) or {"box_source": "box"})
 
     if abs(gen_img.width / gen_img.height - W / H) > 0.02:
         warnings.append("aspect ratio of the generated image differs from the baseline; resizing would distort it")
@@ -271,9 +391,34 @@ def run_cli(argv):
     if a.selftest:
         default = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public", "images", "cam1.webp")
         return selftest(a.base or default, a)
+    if a.list_elements or a.check_inventory:
+        try:
+            if a.list_elements:
+                list_elements(a.list_elements)
+                return 0
+            n, ncam, bad = check_inventory()
+        except (OSError, ValueError) as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 2
+        print(f"inventory: {ncam} cameras, {n} elements, {len(bad)} problems")
+        for b in bad:
+            print("  PROBLEM", b)
+        return 2 if bad else 0
+    if a.element and a.box:
+        p.error("--element and --box are mutually exclusive")
+    if a.margin is not None and not a.element:
+        p.error("--margin only applies with --element")
+    if a.element:
+        if a.base is None:
+            p.error("--base is required")
+        try:
+            a.box, a.element_info = lookup_element(a.element, a.base, DEFAULT_MARGIN if a.margin is None else a.margin)
+        except (OSError, ValueError) as e:
+            print(json.dumps({"status": "fail", "warnings": [str(e)]}, ensure_ascii=False, indent=2))
+            return 2
     for k in ("base", "gen", "box", "out"):
         if getattr(a, k) is None:
-            p.error(f"--{k} is required")
+            p.error(f"--{k} is required" + (" (or --element)" if k == "box" else ""))
     try:
         res, code = process(a)
     except (OSError, ValueError) as e:
@@ -377,6 +522,44 @@ def selftest(base_path, opts):
         good = code == 2
         ok_all &= good
         rows.append((f"bad_box {bad}", "argparse error", code, "no", None, None, "PASS" if good else "FAIL"))
+    def elem_case(name, ok, note=""):
+        nonlocal ok_all
+        ok_all &= bool(ok)
+        rows.append((name, "-", "-", "-", None, None, "PASS" if ok else "FAIL " + note))
+
+    img1 = os.path.join(os.path.dirname(os.path.abspath(INVENTORY)), "..", "public", "images")
+    img1 = os.path.normpath(img1)
+    b1 = os.path.join(img1, "cam1.webp")
+    if os.path.exists(b1):
+        W1, H1 = Image.open(b1).size
+        try:
+            box, info = lookup_element("CAM01-E12", b1, 0)
+            want = (math.floor(660 * W1 / 1000), math.floor(245 * H1 / 1000), math.ceil(1000 * W1 / 1000), math.ceil(690 * H1 / 1000))
+            elem_case("element_px_conversion", tuple(box) == want and info["element_id"] == "CAM01-E12" and "店先" in info["element_description"], f"{box} vs {want}")
+            box8, _ = lookup_element("CAM01-E12", b1, 8)
+            elem_case("element_margin(+8,clamped)", box8 == (want[0] - 8, want[1] - 8, min(W1, want[2] + 8), want[3] + 8), str(box8))
+            boxc, _ = lookup_element("CAM01-E01", b1, 50)
+            elem_case("element_clamp_to_image", boxc[0] == 0 and boxc[1] == 0 and boxc[2] == W1, str(boxc))
+        except Exception as e:
+            elem_case("element_px_conversion", False, repr(e))
+        for nm, eid, bp in (("fail_unknown_element", "CAM01-E99", b1), ("fail_bad_element_syntax", "CAM1-12", b1),
+                            ("fail_camera_mismatch", "CAM02-E01", b1)):
+            try:
+                lookup_element(eid, bp, 0)
+                elem_case(nm, False, "did not raise")
+            except ValueError:
+                elem_case(nm, True)
+        for nm, extra in (("fail_element_with_box", ["--box", "1,1,5,5"]), ("fail_margin_without_element", ["--margin", "3"])):
+            argv = ["--base", b1, "--gen", b1, "--out", os.path.join(tmpd, "x.webp")] + (["--element", "CAM01-E12"] if "box" in nm else []) + extra
+            try:
+                code = run_cli(argv)
+            except SystemExit as e:
+                code = e.code
+            elem_case(nm, code == 2, f"exit {code}")
+        n, ncam, bad = check_inventory()
+        elem_case(f"inventory_all_valid({ncam}cams,{n}el)", not bad and ncam == 8, "; ".join(bad[:3]))
+    else:
+        elem_case("element_cases", False, f"{b1} missing")
     print("%-30s %-14s %-5s %-6s %-9s %-22s %s" % ("case", "status", "exit", "--out", "align", "bbox", "result"))
     for r in rows:
         print("%-30s %-14s %-5s %-6s %-9s %-22s %s" % tuple(str(x) for x in r))
