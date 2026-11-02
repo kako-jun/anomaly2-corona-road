@@ -79,9 +79,9 @@
 
       <g class="element " id="CAM02-E05">
         <title>CAM02-E05 — 小型の黒い吊り器具/監視機器状の突起、丸灯、板状器具が奥へ複数並ぶ。用途は確定できない。</title>
-        <rect x="309.9" y="220.0" width="210.2" height="78.3" rx="2" class="bounds" />
-        <circle cx="415.0" cy="259.1" r="10" class="marker" />
-        <text x="415.0" y="262.6" text-anchor="middle" class="marker-number">05</text>
+        <rect x="290.2" y="220.0" width="179.8" height="54.0" rx="2" class="bounds" />
+        <circle cx="380.2" cy="247.0" r="10" class="marker" />
+        <text x="380.2" y="250.5" text-anchor="middle" class="marker-number">05</text>
         <circle cx="945" cy="300" r="10" class="legend-number" />
         <text x="945" y="303.5" text-anchor="middle" class="legend-number-text">05</text>
         <text x="990" y="297" class="legend-id">CAM02-E05</text>
@@ -123,9 +123,9 @@
 
       <g class="element " id="CAM02-E09">
         <title>CAM02-E09 — 中央奥の暗い店先/通路。黒い壁、縦枠、奥へ並ぶ暗い開口。</title>
-        <rect x="227.4" y="233.5" width="185.9" height="229.5" rx="2" class="bounds" />
-        <circle cx="320.3" cy="348.3" r="10" class="marker" />
-        <text x="320.3" y="351.8" text-anchor="middle" class="marker-number">09</text>
+        <rect x="223.3" y="276.7" width="106.8" height="165.6" rx="2" class="bounds" />
+        <circle cx="276.7" cy="359.5" r="10" class="marker" />
+        <text x="276.7" y="363.0" text-anchor="middle" class="marker-number">09</text>
         <circle cx="945" cy="468" r="10" class="legend-number" />
         <text x="945" y="471.5" text-anchor="middle" class="legend-number-text">09</text>
         <text x="990" y="465" class="legend-id">CAM02-E09</text>
@@ -277,9 +277,9 @@
 
       <g class="element " id="CAM02-E23">
         <title>CAM02-E23 — 看板の下から床に落ちる緑色の光/反射。</title>
-        <rect x="455.2" y="573.7" width="89.9" height="108.0" rx="2" class="bounds" />
-        <circle cx="500.1" cy="627.7" r="10" class="marker" />
-        <text x="500.1" y="631.2" text-anchor="middle" class="marker-number">23</text>
+        <rect x="499.8" y="615.1" width="50.0" height="76.5" rx="2" class="bounds" />
+        <circle cx="524.8" cy="653.4" r="10" class="marker" />
+        <text x="524.8" y="656.9" text-anchor="middle" class="marker-number">23</text>
         <circle cx="945" cy="1056" r="10" class="legend-number" />
         <text x="945" y="1059.5" text-anchor="middle" class="legend-number-text">23</text>
         <text x="990" y="1053" class="legend-id">CAM02-E23</text>
