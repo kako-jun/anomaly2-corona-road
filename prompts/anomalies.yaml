@@ -16,7 +16,7 @@ anomalies:
     overlay_origin: '(137,379)'
     dimensions: '46x97'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-ashtray'
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
@@ -29,7 +29,7 @@ anomalies:
     overlay_origin: '(560,549)'
     dimensions: '65x47'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-bag'
     camera_id: 'CAM02'
     element_id: 'CAM02-E20'
@@ -42,7 +42,7 @@ anomalies:
     overlay_origin: '(525,566)'
     dimensions: '86x127'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-blue-pot'
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
@@ -55,7 +55,7 @@ anomalies:
     overlay_origin: '(523,520)'
     dimensions: '61x63'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-cat'
     camera_id: 'CAM02'
     element_id: 'CAM02-E07'
@@ -68,7 +68,7 @@ anomalies:
     overlay_origin: '(86,389)'
     dimensions: '65x97'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-cigarette'
     camera_id: 'CAM02'
     element_id: 'CAM02-E20'
@@ -94,7 +94,7 @@ anomalies:
     overlay_origin: '(554,533)'
     dimensions: '53x50'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-newspaper'
     camera_id: 'CAM02'
     element_id: 'CAM02-E07'
@@ -107,7 +107,7 @@ anomalies:
     overlay_origin: '(36,491)'
     dimensions: '94x67'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-open-sign'
     camera_id: 'CAM02'
     element_id: 'CAM02-E07'
@@ -120,7 +120,7 @@ anomalies:
     overlay_origin: '(38,190)'
     dimensions: '72x112'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-pot-duplicate'
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
@@ -133,7 +133,7 @@ anomalies:
     overlay_origin: '(510,511)'
     dimensions: '91x77'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-puddle'
     camera_id: 'CAM02'
     element_id: 'CAM02-E20'
@@ -146,7 +146,7 @@ anomalies:
     overlay_origin: '(47,436)'
     dimensions: '191x143'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-receipt'
     camera_id: 'CAM02'
     element_id: 'CAM02-E20'
@@ -159,7 +159,7 @@ anomalies:
     overlay_origin: '(76,546)'
     dimensions: '55x44'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-shop-reopens'
     camera_id: 'CAM02'
     element_id: 'CAM02-E07'
@@ -172,7 +172,7 @@ anomalies:
     overlay_origin: '(0,308)'
     dimensions: '199x250'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-smoke'
     camera_id: 'CAM02'
     element_id: 'CAM02-E17'
@@ -198,7 +198,7 @@ anomalies:
     overlay_origin: '(523,516)'
     dimensions: '63x69'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-stool'
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
@@ -211,7 +211,7 @@ anomalies:
     overlay_origin: '(456,491)'
     dimensions: '179x210'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-tile-color'
     camera_id: 'CAM02'
     element_id: 'CAM02-E20'
@@ -224,7 +224,7 @@ anomalies:
     overlay_origin: '(152,502)'
     dimensions: '100x86'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-tile'
     camera_id: 'CAM02'
     element_id: 'CAM02-E20'
@@ -237,7 +237,7 @@ anomalies:
     overlay_origin: '(151,523)'
     dimensions: '98x64'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-newspaper'
     camera_id: 'CAM03'
     element_id: 'CAM03-E06'
@@ -263,7 +263,7 @@ anomalies:
     overlay_origin: '(383,639)'
     dimensions: '163x148'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-glass-light'
     camera_id: 'CAM05'
     element_id: 'CAM05-E08'
@@ -302,7 +302,7 @@ anomalies:
     overlay_origin: '(264,286)'
     dimensions: '64x133'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-reopened'
     camera_id: 'CAM06'
     element_id: 'CAM06-E13'
@@ -315,7 +315,7 @@ anomalies:
     overlay_origin: '(253,192)'
     dimensions: '109x291'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-soda'
     camera_id: 'CAM06'
     element_id: 'CAM06-E12'
@@ -328,7 +328,7 @@ anomalies:
     overlay_origin: '(263,390)'
     dimensions: '50x81'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-umbrella'
     camera_id: 'CAM06'
     element_id: 'CAM06-E13'
@@ -341,7 +341,7 @@ anomalies:
     overlay_origin: '(208,360)'
     dimensions: '61x141'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-worker'
     camera_id: 'CAM06'
     element_id: 'CAM06-E18'
@@ -367,7 +367,7 @@ anomalies:
     overlay_origin: '(325,0)'
     dimensions: '79x240'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-07-notice'
     camera_id: 'CAM07'
     element_id: 'CAM07-E12'
@@ -380,7 +380,7 @@ anomalies:
     overlay_origin: '(373,202)'
     dimensions: '49x59'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-07-reopened'
     camera_id: 'CAM07'
     element_id: 'CAM07-E13'
@@ -393,7 +393,7 @@ anomalies:
     overlay_origin: '(405,158)'
     dimensions: '119x316'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-07-shoe-v2'
     camera_id: 'CAM07'
     element_id: 'CAM07-E09'
@@ -432,7 +432,7 @@ anomalies:
     overlay_origin: '(106,264)'
     dimensions: '49x32'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-panel'
     camera_id: 'CAM08'
     element_id: 'CAM08-E15'
@@ -445,7 +445,7 @@ anomalies:
     overlay_origin: '(556,339)'
     dimensions: '96x133'
     review_status: 'composited'
-    note: 'ゲーム未接続、ゲーム画面とライブ blink 未確認'
+    note: 'ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-cat'
     candidate_id: 'CR-08-25'
     camera_id: 'CAM08'
@@ -463,7 +463,7 @@ anomalies:
     overlay_origin: '(89,293)'
     dimensions: '35x51'
     review_status: 'composited'
-    note: '基準675x900、変化画素bbox=(90,295)–(124,343)、変更1274px。透過差分からの再構成は全画素一致。ブラウザでblinkの切替動作は確認したが、ライブ目視・ゲーム画面は未確認。ゲーム未接続'
+    note: '基準675x900、変化画素bbox=(90,295)–(124,343)、変更1274px。透過差分からの再構成は全画素一致。ブラウザでblinkの切替動作は確認したが、ライブ目視・ゲーム画面での確認は未了。'
   - id: 'AR-01-wiped-window'
     candidate_id: 'CR-01-34'
     camera_id: 'CAM01'
@@ -481,7 +481,7 @@ anomalies:
     overlay_origin: '(60,387)'
     dimensions: '21x21'
     review_status: 'composited'
-    note: 'CR-01-09の別景色反射、CR-01-24の猫の反射とは異なり、曇り面自体の局所的な透明化。初回生成の横長汚れは不採用。基準675x900、変化268px、overlay再構成は全画素一致。ブラウザでblinkの切替動作は確認したが、ライブ目視・ゲーム画面は未確認。ゲーム未接続'
+    note: 'CR-01-09の別景色反射、CR-01-24の猫の反射とは異なり、曇り面自体の局所的な透明化。初回生成の横長汚れは不採用。基準675x900、変化268px、overlay再構成は全画素一致。ブラウザでblinkの切替動作は確認したが、ライブ目視・ゲーム画面での確認は未了。'
   - id: 'AR-04-purple-leaves'
     candidate_id: 'CR-04-24'
     camera_id: 'CAM04'
@@ -517,7 +517,7 @@ anomalies:
     overlay_origin: '(316,66)'
     dimensions: '6x33'
     review_status: 'composited'
-    note: 'CR-01-20の紙片・CR-05-31の白いリボンと形と色が異なる。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'CR-01-20の紙片・CR-05-31の白いリボンと形と色が異なる。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-wind-chime'
     candidate_id: 'CR-05-20'
     camera_id: 'CAM05'
@@ -535,7 +535,7 @@ anomalies:
     overlay_origin: '(414,83)'
     dimensions: '25x104'
     review_status: 'composited'
-    note: 'AR-07-craneの折り鶴とは材質と形が異なる。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-07-craneの折り鶴とは材質と形が異なる。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-07-warm-light'
     candidate_id: 'CR-07-38'
     camera_id: 'CAM07'
@@ -553,7 +553,7 @@ anomalies:
     overlay_origin: '(308,233)'
     dimensions: '30x30'
     review_status: 'composited'
-    note: 'AR-05-glass-light・AR-06-reopenedは広い店先の灯りで、こちらは暗い開口内の点光。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-05-glass-light・AR-06-reopenedは広い店先の灯りで、こちらは暗い開口内の点光。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-blue-brick'
     candidate_id: 'CR-05-16'
     camera_id: 'CAM05'
@@ -571,7 +571,7 @@ anomalies:
     overlay_origin: '(329,530)'
     dimensions: '26x21'
     review_status: 'composited'
-    note: 'AR-02-tile-colorは床タイルで、こちらは店舗下端のレンガ帯。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-02-tile-colorは床タイルで、こちらは店舗下端のレンガ帯。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-tilted-notice'
     candidate_id: 'CR-06-02'
     camera_id: 'CAM06'
@@ -589,7 +589,7 @@ anomalies:
     overlay_origin: '(534,234)'
     dimensions: '37x82'
     review_status: 'composited'
-    note: '変更画素bbox=(536,236)–(569,315)。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: '変更画素bbox=(536,236)–(569,315)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-shutter-light'
     candidate_id: 'CR-01-35'
     camera_id: 'CAM01'
@@ -607,7 +607,7 @@ anomalies:
     overlay_origin: '(240,489)'
     dimensions: '48x46'
     review_status: 'composited'
-    note: 'AR-02-shop-reopensは開いた店先、こちらは閉じたシャッター下の光。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-02-shop-reopensは開いた店先、こちらは閉じたシャッター下の光。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-ceiling-dots'
     candidate_id: 'CR-03-18'
     camera_id: 'CAM03'
@@ -625,7 +625,7 @@ anomalies:
     overlay_origin: '(193,19)'
     dimensions: '61x35'
     review_status: 'composited'
-    note: 'CR-05-28は点汚れの格子、CR-08-28は同心円で配置と模様が異なる。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'CR-05-28は点汚れの格子、CR-08-28は同心円で配置と模様が異なる。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-paper-bag'
     candidate_id: 'CR-03-32'
     camera_id: 'CAM03'
@@ -643,7 +643,7 @@ anomalies:
     overlay_origin: '(103,532)'
     dimensions: '39x76'
     review_status: 'composited'
-    note: 'AR-02-bagとは別カメラ・位置の反復モチーフ。初版は浮いて見えたため20px下げて接地調整。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-02-bagとは別カメラ・位置の反復モチーフ。初版は浮いて見えたため20px下げて接地調整。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-07-wall-grid'
     candidate_id: 'CR-07-19'
     camera_id: 'CAM07'
@@ -661,7 +661,7 @@ anomalies:
     overlay_origin: '(363,184)'
     dimensions: '51x60'
     review_status: 'composited'
-    note: 'AR-07-noticeは掲示の出現で、こちらは壁自体の模様。写真と既存差分に合わせて CAM07-E12 の台帳座標を修正。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-07-noticeは掲示の出現で、こちらは壁自体の模様。写真と既存差分に合わせて CAM07-E12 の台帳座標を修正。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-green-lamp-rim'
     candidate_id: 'CR-05-29'
     camera_id: 'CAM05'
@@ -679,7 +679,7 @@ anomalies:
     overlay_origin: '(41,5)'
     dimensions: '58x29'
     review_status: 'composited'
-    note: '丸灯全体や床反射は変更しない。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: '丸灯全体や床反射は変更しない。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-curtain-mend'
     candidate_id: 'CR-05-35'
     camera_id: 'CAM05'
@@ -697,7 +697,7 @@ anomalies:
     overlay_origin: '(317,442)'
     dimensions: '34x62'
     review_status: 'composited'
-    note: 'AR-05-glass-lightの店の灯りとは異なる布そのものの変化。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-05-glass-lightの店の灯りとは異なる布そのものの変化。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-striped-sign'
     candidate_id: 'CR-03-06'
     camera_id: 'CAM03'
@@ -715,7 +715,7 @@ anomalies:
     overlay_origin: '(275,121)'
     dimensions: '65x58'
     review_status: 'composited'
-    note: 'CR-03-03・27はシャッター自体の変化で、こちらは看板面の模様。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'CR-03-03・27はシャッター自体の変化で、こちらは看板面の模様。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-door-gap'
     candidate_id: 'CR-04-05'
     camera_id: 'CAM04'
@@ -733,7 +733,7 @@ anomalies:
     overlay_origin: '(330,257)'
     dimensions: '33x128'
     review_status: 'composited'
-    note: '扉の開閉という変化。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: '扉の開閉という変化。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-07-lamp-off'
     candidate_id: 'CR-07-04'
     camera_id: 'CAM07'
@@ -751,7 +751,7 @@ anomalies:
     overlay_origin: '(536,51)'
     dimensions: '45x32'
     review_status: 'composited'
-    note: 'CR-07-31は灯具周囲の青い輪で、消灯とは異なる。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'CR-07-31は灯具周囲の青い輪で、消灯とは異なる。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-container-origami'
     candidate_id: 'CR-01-42'
     camera_id: 'CAM01'
@@ -769,7 +769,7 @@ anomalies:
     overlay_origin: '(655,773)'
     dimensions: '20x24'
     review_status: 'composited'
-    note: 'AR-07-craneは天井の折り鶴で、こちらは画面端の容器内。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-07-craneは天井の折り鶴で、こちらは画面端の容器内。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-lamp-dot'
     candidate_id: 'CR-05-30'
     camera_id: 'CAM05'
@@ -787,7 +787,7 @@ anomalies:
     overlay_origin: '(608,21)'
     dimensions: '12x13'
     review_status: 'composited'
-    note: '同じ灯具への色変更ではなく中央の点の出現。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: '同じ灯具への色変更ではなく中央の点の出現。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-brown-column'
     candidate_id: 'CR-05-34'
     camera_id: 'CAM05'
@@ -805,7 +805,7 @@ anomalies:
     overlay_origin: '(255,82)'
     dimensions: '27x525'
     review_status: 'composited'
-    note: '角柱全体の色変化。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: '角柱全体の色変化。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-tile-diagonal'
     candidate_id: 'CR-03-14'
     camera_id: 'CAM03'
@@ -823,7 +823,7 @@ anomalies:
     overlay_origin: '(147,660)'
     dimensions: '169x86'
     review_status: 'composited'
-    note: 'AR-02-tileは床の模様、こちらは斜め目地による形状の変化。実際の目地に合わせE19座標を修正。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-02-tileは床の模様、こちらは斜め目地による形状の変化。実際の目地に合わせE19座標を修正。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-panel-off'
     candidate_id: 'CR-08-02'
     camera_id: 'CAM08'
@@ -841,7 +841,7 @@ anomalies:
     overlay_origin: '(567,242)'
     dimensions: '61x112'
     review_status: 'composited'
-    note: 'AR-08-panelは第三のパネル追加、こちらは既存パネルの消灯。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-08-panelは第三のパネル追加、こちらは既存パネルの消灯。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-crate-duplicate'
     candidate_id: 'CR-03-24'
     camera_id: 'CAM03'
@@ -859,7 +859,7 @@ anomalies:
     overlay_origin: '(281,367)'
     dimensions: '44x57'
     review_status: 'composited'
-    note: '既存箱の前に重ねて配置。CAM03-E15の座標を実写真に合わせて修正。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: '既存箱の前に重ねて配置。CAM03-E15の座標を実写真に合わせて修正。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-white-ribbon'
     candidate_id: 'CR-05-31'
     camera_id: 'CAM05'
@@ -877,7 +877,7 @@ anomalies:
     overlay_origin: '(89,134)'
     dimensions: '14x59'
     review_status: 'composited'
-    note: 'AR-03-red-stringは赤い細紐で、こちらは白いリボン。E04台帳範囲を実際の灯具に合わせ拡張。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-03-red-stringは赤い細紐で、こちらは白いリボン。E04台帳範囲を実際の灯具に合わせ拡張。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-stand-tag'
     candidate_id: 'CR-05-33'
     camera_id: 'CAM05'
@@ -931,7 +931,7 @@ anomalies:
     overlay_origin: '(134,425)'
     dimensions: '42x28'
     review_status: 'composited'
-    note: 'AR-04-purple-leavesは葉の色変更で、こちらは花の消失。写真上の鉢位置に合わせE10座標を修正。再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。'
+    note: 'AR-04-purple-leavesは葉の色変更で、こちらは花の消失。写真上の鉢位置に合わせE10座標を修正。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-pink-ornament'
     candidate_id: 'CR-03-34'
     camera_id: 'CAM03'
@@ -967,7 +967,7 @@ anomalies:
     overlay_origin: "(13,234)"
     dimensions: "206x75"
     review_status: "composited"
-    note: "再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク範囲外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-03-white-cap"
     candidate_id: "CR-03-39"
     camera_id: "CAM03"
@@ -985,7 +985,7 @@ anomalies:
     overlay_origin: "(411,336)"
     dimensions: "33x20"
     review_status: "composited"
-    note: "再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク範囲外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-07-white-step"
     candidate_id: "CR-07-36"
     camera_id: "CAM07"
@@ -1003,7 +1003,7 @@ anomalies:
     overlay_origin: "(91,264)"
     dimensions: "141x14"
     review_status: "composited"
-    note: "AR-07-stairs は階段数の変更であり、これは一段の色の変化。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+    note: "AR-07-stairs は階段数の変更であり、これは一段の色の変化。 再構成一致、マスク範囲外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 生成指示の全文は未保存。"
   - id: "AR-07-stairs-cat"
     candidate_id: "CR-07-27"
     camera_id: "CAM07"
@@ -1021,7 +1021,7 @@ anomalies:
     overlay_origin: "(107,239)"
     dimensions: "53x36"
     review_status: "composited"
-    note: "AR-02-cat/AR-08-cat と同じ猫の反復モチーフ。階段上に横たわる姿勢と位置が異なる。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+    note: "AR-02-cat/AR-08-cat と同じ猫の反復モチーフ。階段上に横たわる姿勢と位置が異なる。 再構成一致、マスク範囲外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 生成指示の全文は未保存。"
   - id: "AR-07-opening-paper"
     candidate_id: "CR-07-37"
     camera_id: "CAM07"
@@ -1039,7 +1039,7 @@ anomalies:
     overlay_origin: "(280,236)"
     dimensions: "18x24"
     review_status: "composited"
-    note: "AR-07-ticket は階段上の紙片、こちらは開口縁に挟まれた紙。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+    note: "AR-07-ticket は階段上の紙片、こちらは開口縁に挟まれた紙。 再構成一致、マスク範囲外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 生成指示の全文は未保存。"
   - id: "AR-07-duplicate-green-sign"
     candidate_id: "CR-07-06"
     camera_id: "CAM07"
@@ -1057,7 +1057,7 @@ anomalies:
     overlay_origin: "(531,275)"
     dimensions: "29x35"
     review_status: "composited"
-    note: "CR-07-14/15の段数変更と異なり、既存の表示がもう一つ現れる。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+    note: "CR-07-14/15の段数変更と異なり、既存の表示がもう一つ現れる。 再構成一致、マスク範囲外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 生成指示の全文は未保存。"
   - id: "AR-07-ceiling-string"
     candidate_id: "CR-07-23"
     camera_id: "CAM07"
@@ -1075,7 +1075,7 @@ anomalies:
     overlay_origin: "(332,84)"
     dimensions: "12x44"
     review_status: "composited"
-    note: "AR-07-craneの折り鶴と違い、装飾のない短い紐。 再構成一致、マスク範囲外差分ゼロ。ライブblink・ゲーム画面未確認。 生成指示の全文は未保存。"
+    note: "AR-07-craneの折り鶴と違い、装飾のない短い紐。 再構成一致、マスク範囲外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 生成指示の全文は未保存。"
   - id: "AR-05-duplicate-light"
     candidate_id: "CR-05-19"
     camera_id: "CAM05"
@@ -1093,7 +1093,7 @@ anomalies:
     overlay_origin: "(335,41)"
     dimensions: "341x77"
     review_status: "composited"
-    note: "Additional light starts about 40px farther left than existing light; both run off the right edge. Confirm apparent equal length and visual blend. 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "Additional light starts about 40px farther left than existing light; both run off the right edge. Confirm apparent equal length and visual blend. 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-05-chair-reflection"
     candidate_id: "CR-05-22"
     camera_id: "CAM05"
@@ -1111,7 +1111,7 @@ anomalies:
     overlay_origin: "(306,348)"
     dimensions: "76x105"
     review_status: "composited"
-    note: "Chair reflection is faint and broken by curtain texture; confirm recognition in game. 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "Chair reflection is faint and broken by curtain texture; confirm recognition in game. 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-05-amber-pane"
     candidate_id: "CR-05-24"
     camera_id: "CAM05"
@@ -1129,7 +1129,7 @@ anomalies:
     overlay_origin: "(400,214)"
     dimensions: "95x292"
     review_status: "composited"
-    note: "Tinted pane is intentionally faint via 120/255 alpha; confirm recognition at game size. 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "Tinted pane is intentionally faint via 120/255 alpha; confirm recognition at game size. 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-04-paper-cup"
     candidate_id: "CR-04-38"
     camera_id: "CAM04"
@@ -1147,7 +1147,7 @@ anomalies:
     overlay_origin: "(422,420)"
     dimensions: "23x26"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-06-wall-stripes"
     candidate_id: "CR-06-16"
     camera_id: "CAM06"
@@ -1165,7 +1165,7 @@ anomalies:
     overlay_origin: "(508,342)"
     dimensions: "55x67"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-08-fixture-duplicate"
     candidate_id: "CR-08-21"
     camera_id: "CAM08"
@@ -1183,7 +1183,7 @@ anomalies:
     overlay_origin: "(251,227)"
     dimensions: "49x40"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-01-lattice-tile"
     candidate_id: "CR-01-13"
     camera_id: "CAM01"
@@ -1201,7 +1201,7 @@ anomalies:
     overlay_origin: "(126,787)"
     dimensions: "120x48"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。生成位置は指示より手前だが対象の床タイル一枚に限定。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。生成位置は指示より手前だが対象の床タイル一枚に限定。"
   - id: "AR-04-orange-tile"
     candidate_id: "CR-04-13"
     camera_id: "CAM04"
@@ -1219,7 +1219,7 @@ anomalies:
     overlay_origin: "(87,632)"
     dimensions: "131x45"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。生成位置は指示より手前だが対象の床タイル一枚に限定。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。生成位置は指示より手前だが対象の床タイル一枚に限定。"
   - id: "AR-08-blue-panel"
     candidate_id: "CR-08-23"
     camera_id: "CAM08"
@@ -1237,7 +1237,7 @@ anomalies:
     overlay_origin: "(567,242)"
     dimensions: "61x112"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。AR-08-panel-offは消灯で、こちらは点灯色の変化。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。AR-08-panel-offは消灯で、こちらは点灯色の変化。"
   - id: "AR-02-rusty-vent"
     candidate_id: "CR-02-29"
     camera_id: "CAM02"
@@ -1255,7 +1255,7 @@ anomalies:
     overlay_origin: "(256,43)"
     dimensions: "130x38"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-02-wrapping-paper"
     candidate_id: "CR-02-32"
     camera_id: "CAM02"
@@ -1273,7 +1273,7 @@ anomalies:
     overlay_origin: "(45,512)"
     dimensions: "38x27"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-03-blue-floor-tile"
     candidate_id: "CR-03-15"
     camera_id: "CAM03"
@@ -1291,7 +1291,7 @@ anomalies:
     overlay_origin: "(149,656)"
     dimensions: "165x91"
     review_status: "composited"
-    note: "既存 AR-02-tile-color とは別カメラの反復。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "既存 AR-02-tile-color とは別カメラの反復。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-07-purple-floor-tile"
     candidate_id: "CR-07-16"
     camera_id: "CAM07"
@@ -1309,7 +1309,7 @@ anomalies:
     overlay_origin: "(267,703)"
     dimensions: "166x146"
     review_status: "composited"
-    note: "AR-02-tile-colorは別カメラで異なる色。ライブblink・ゲーム画面未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "AR-02-tile-colorは別カメラで異なる色。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-02-duplicate-coffee-sign"
     candidate_id: "CR-02-11"
     camera_id: "CAM02"
@@ -1327,7 +1327,7 @@ anomalies:
     overlay_origin: "(488,290)"
     dimensions: "84x189"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-02-flower-ornament"
     candidate_id: "CR-02-17"
     camera_id: "CAM02"
@@ -1345,7 +1345,7 @@ anomalies:
     overlay_origin: "(646,154)"
     dimensions: "27x29"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-02-red-star"
     candidate_id: "CR-02-18"
     camera_id: "CAM02"
@@ -1363,7 +1363,7 @@ anomalies:
     overlay_origin: "(653,155)"
     dimensions: "17x25"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-02-pillar-notice"
     candidate_id: "CR-02-22"
     camera_id: "CAM02"
@@ -1381,7 +1381,7 @@ anomalies:
     overlay_origin: "(324,224)"
     dimensions: "33x38"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-03-amber-lamp-glow"
     candidate_id: "CR-03-29"
     camera_id: "CAM03"
@@ -1399,7 +1399,7 @@ anomalies:
     overlay_origin: "(405,0)"
     dimensions: "111x55"
     review_status: "composited"
-    note: "白い灯具はマスクから除外。E03の実位置は上端 x≈430–490px で既存台帳座標と食い違う。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "白い灯具はマスクから除外。E03の実位置は上端 x≈430–490px で既存台帳座標と食い違う。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-03-coffee-text-missing"
     candidate_id: "CR-03-02"
     camera_id: "CAM03"
@@ -1417,7 +1417,7 @@ anomalies:
     overlay_origin: "(337,275)"
     dimensions: "65x39"
     review_status: "composited"
-    note: "看板上段の文字のみ消去、下段の架空店名を保護。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "看板上段の文字のみ消去、下段の架空店名を保護。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-03-walking-cat"
     candidate_id: "CR-03-26"
     camera_id: "CAM03"
@@ -1435,7 +1435,7 @@ anomalies:
     overlay_origin: "(409,315)"
     dimensions: "70x40"
     review_status: "composited"
-    note: "既存 AR-02/08-cat は座る猫、AR-07-stairs-cat は横たわる猫。こちらは白猫が歩く。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "既存 AR-02/08-cat は座る猫、AR-07-stairs-cat は横たわる猫。こちらは白猫が歩く。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-03-round-puddle"
     candidate_id: "CR-03-13"
     camera_id: "CAM03"
@@ -1453,7 +1453,7 @@ anomalies:
     overlay_origin: "(298,543)"
     dimensions: "76x36"
     review_status: "composited"
-    note: "初回は水たまりが大きく波立ち位置もずれたため不採用。v2を使用。AR-02-puddle・AR-04-puddleとの背景別反復。ライブblink・ゲーム表示未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "初回は水たまりが大きく波立ち位置もずれたため不採用。v2を使用。AR-02-puddle・AR-04-puddleとの背景別反復。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-07-diamond-tile"
     candidate_id: "CR-07-17"
     camera_id: "CAM07"
@@ -1471,7 +1471,7 @@ anomalies:
     overlay_origin: "(348,617)"
     dimensions: "138x90"
     review_status: "composited"
-    note: "ライブblink・ゲーム画面未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-07-floor-puddle"
     candidate_id: "CR-07-18"
     camera_id: "CAM07"
@@ -1489,7 +1489,7 @@ anomalies:
     overlay_origin: "(393,647)"
     dimensions: "173x127"
     review_status: "composited"
-    note: "初版はE18範囲外で不採用。v2はE18範囲内だが光沢が強い。ライブblink・ゲーム画面未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "初版はE18範囲外で不採用。v2はE18範囲内だが光沢が強い。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-07-stair-figures"
     candidate_id: "CR-07-11"
     camera_id: "CAM07"
@@ -1507,7 +1507,7 @@ anomalies:
     overlay_origin: "(588,190)"
     dimensions: "38x135"
     review_status: "composited"
-    note: "2人の衣服と姿は近いが完全一致は原寸では判定困難。ライブblink・ゲーム画面未確認。 再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "2人の衣服と姿は近いが完全一致は原寸では判定困難。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-04-leaf-hole"
     candidate_id: "CR-04-37"
     camera_id: "CAM04"
@@ -1525,7 +1525,7 @@ anomalies:
     overlay_origin: "(394,299)"
     dimensions: "18x16"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-06-pot-tag"
     candidate_id: "CR-06-35"
     camera_id: "CAM06"
@@ -1543,7 +1543,7 @@ anomalies:
     overlay_origin: "(148,535)"
     dimensions: "25x23"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-08-notice-residue"
     candidate_id: "CR-08-34"
     camera_id: "CAM08"
@@ -1561,7 +1561,7 @@ anomalies:
     overlay_origin: "(102,197)"
     dimensions: "25x38"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ライブblink・ゲーム画面未確認。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
   - id: 'AR-01-noren'
     candidate_id: 'CR-SH-04'
     camera_id: 'CAM01'
@@ -1579,7 +1579,7 @@ anomalies:
     overlay_origin: '(565,302)'
     dimensions: '110x138'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-door-ajar'
     candidate_id: 'CR-SH-05'
     camera_id: 'CAM01'
@@ -1597,7 +1597,7 @@ anomalies:
     overlay_origin: '(566,300)'
     dimensions: '109x260'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-tube-end'
     candidate_id: 'CR-01-04'
     camera_id: 'CAM01'
@@ -1615,7 +1615,7 @@ anomalies:
     overlay_origin: '(405,280)'
     dimensions: '84x75'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-newspaper'
     candidate_id: 'CR-SH-08'
     camera_id: 'CAM04'
@@ -1633,7 +1633,7 @@ anomalies:
     overlay_origin: '(394,713)'
     dimensions: '53x47'
     review_status: 'composited'
-    note: '昭和の物。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-basket'
     candidate_id: 'CR-04-33'
     camera_id: 'CAM04'
@@ -1651,7 +1651,7 @@ anomalies:
     overlay_origin: '(22,381)'
     dimensions: '92x96'
     review_status: 'composited'
-    note: '昭和の物。淡い映り込みで要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物。淡い映り込みで要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-poster'
     candidate_id: 'CR-04-18'
     camera_id: 'CAM04'
@@ -1669,7 +1669,7 @@ anomalies:
     overlay_origin: '(101,205)'
     dimensions: '49x65'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-bag'
     candidate_id: 'CR-08-24'
     camera_id: 'CAM08'
@@ -1687,7 +1687,7 @@ anomalies:
     overlay_origin: '(0,179)'
     dimensions: '94x133'
     review_status: 'composited'
-    note: '昭和の物。淡い映り込みで要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物。淡い映り込みで要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-sign'
     candidate_id: 'CR-08-03'
     camera_id: 'CAM08'
@@ -1705,7 +1705,7 @@ anomalies:
     overlay_origin: '(383,141)'
     dimensions: '57x56'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-suit'
     candidate_id: 'CR-SH-12'
     camera_id: 'CAM08'
@@ -1723,7 +1723,7 @@ anomalies:
     overlay_origin: '(469,211)'
     dimensions: '76x199'
     review_status: 'composited'
-    note: '昭和の像(老人たちの記憶)。静止の試案、去っていく動きは未実装。淡い映り込みで要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の像(老人たちの記憶)。静止の試案、去っていく動きは未実装。淡い映り込みで要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-sign-rim'
     candidate_id: 'CR-01-39'
     camera_id: 'CAM01'
@@ -1741,7 +1741,7 @@ anomalies:
     overlay_origin: '(429,325)'
     dimensions: '56x69'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-handle'
     candidate_id: 'CR-04-36'
     camera_id: 'CAM04'
@@ -1759,7 +1759,7 @@ anomalies:
     overlay_origin: '(345,297)'
     dimensions: '27x49'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-pillar-notice'
     candidate_id: 'CR-08-17'
     camera_id: 'CAM08'
@@ -1777,7 +1777,7 @@ anomalies:
     overlay_origin: '(282,257)'
     dimensions: '63x82'
     review_status: 'composited'
-    note: '柱の貼り紙を大きく・太枠・赤い見出し帯で再生成して置換(alpha内の差分は最大195・平均31.8)。再構成一致、マスク外差分ゼロ。紙の文字風の線は判読不能な疑似文字。ゲーム未確認。'
+    note: '柱の貼り紙を大きく・太枠・赤い見出し帯で再生成して置換(alpha内の差分は最大195・平均31.8)。再構成一致、マスク外差分ゼロ。紙の文字風の線は判読不能な疑似文字。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-sign-old-shop'
     candidate_id: 'CR-SH-06'
     camera_id: 'CAM01'
@@ -1795,7 +1795,7 @@ anomalies:
     overlay_origin: '(437,339)'
     dimensions: '47x45'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-back-view-paper-bag'
     candidate_id: 'CR-SH-13'
     camera_id: 'CAM01'
@@ -1813,7 +1813,7 @@ anomalies:
     overlay_origin: '(289,405)'
     dimensions: '47x130'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。人物が要素箱(347-419)の左外(x289-336)に出たため margin50で抽出。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。人物が要素箱(347-419)の左外(x289-336)に出たため margin50で抽出。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-cat-in-frosted-window'
     candidate_id: 'CR-01-24'
     camera_id: 'CAM01'
@@ -1831,7 +1831,7 @@ anomalies:
     overlay_origin: '(46,416)'
     dimensions: '47x72'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-floor-sign-reflection-inverted'
     candidate_id: 'CR-01-10'
     camera_id: 'CAM01'
@@ -1849,7 +1849,7 @@ anomalies:
     overlay_origin: '(425,688)'
     dimensions: '66x66'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-floor-puddle-light'
     candidate_id: 'CR-01-15'
     camera_id: 'CAM01'
@@ -1867,7 +1867,7 @@ anomalies:
     overlay_origin: '(220,737)'
     dimensions: '132x116'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-vent-hole-triangle'
     candidate_id: 'CR-01-29'
     camera_id: 'CAM01'
@@ -1885,7 +1885,7 @@ anomalies:
     overlay_origin: '(330,148)'
     dimensions: '43x32'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-wall-repaint-patch'
     candidate_id: 'CR-01-33'
     camera_id: 'CAM01'
@@ -1903,7 +1903,7 @@ anomalies:
     overlay_origin: '(141,413)'
     dimensions: '45x62'
     review_status: 'composited'
-    note: '要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '要つまみ調整。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-ceiling-panel-round'
     candidate_id: 'CR-01-18'
     camera_id: 'CAM01'
@@ -1921,7 +1921,7 @@ anomalies:
     overlay_origin: '(536,138)'
     dimensions: '97x29'
     review_status: 'composited'
-    note: '細い丸枠線のため threshold 12 で抽出。丸枠の線は薄く、元の四角枠の消去は抽出されていない可能性。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '細い丸枠線のため threshold 12 で抽出。丸枠の線は薄く、元の四角枠の消去は抽出されていない可能性。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-milk-bottle-crate'
     camera_id: 'CAM01'
     element_id: 'CAM01-E20'
@@ -1938,7 +1938,7 @@ anomalies:
     overlay_origin: '(619,690)'
     dimensions: '56x154'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。margin 24 で抽出(変化が要素箱を満たす)。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。margin 24 で抽出(変化が要素箱を満たす)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-shutter-stripe-break'
     candidate_id: 'CR-01-03'
     camera_id: 'CAM01'
@@ -1956,7 +1956,7 @@ anomalies:
     overlay_origin: '(220,373)'
     dimensions: '69x163'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-ceiling-seam-circle'
     candidate_id: 'CR-01-17'
     camera_id: 'CAM01'
@@ -1974,7 +1974,7 @@ anomalies:
     overlay_origin: '(224,199)'
     dimensions: '78x55'
     review_status: 'composited'
-    note: '合成ツールの判定は warn。要つまみ調整。円の一部(弧)のみ抽出された弱い変化(生成の円線が極めて薄い)。再生成で線を濃くする余地あり。--box 指定のため element 箱とずれる。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '合成ツールの判定は warn。要つまみ調整。円の一部(弧)のみ抽出された弱い変化(生成の円線が極めて薄い)。再生成で線を濃くする余地あり。--box 指定のため element 箱とずれる。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-shutter-faded-poster'
     candidate_id: 'CR-SH-07'
     camera_id: 'CAM03'
@@ -1992,7 +1992,7 @@ anomalies:
     overlay_origin: '(644,186)'
     dimensions: '32x68'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。画面右端の細いシャッター帯に貼られるため小さい(32x68)。再構成一致、マスク外差分ゼロ(alpha外変化0)。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。画面右端の細いシャッター帯に貼られるため小さい(32x68)。再構成一致、マスク外差分ゼロ(alpha外変化0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-sign-glow-blue'
     candidate_id: 'CR-03-23'
     camera_id: 'CAM03'
@@ -2010,7 +2010,7 @@ anomalies:
     overlay_origin: '(313,267)'
     dimensions: '103x127'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。プレビュー未目視(数値のみ)。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。プレビュー未目視(数値のみ)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-slipper-single'
     candidate_id: 'CR-03-41'
     camera_id: 'CAM03'
@@ -2028,7 +2028,7 @@ anomalies:
     overlay_origin: '(277,365)'
     dimensions: '54x58'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。プレビュー未目視(数値のみ)。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。プレビュー未目視(数値のみ)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-face-ornament'
     candidate_id: 'CR-03-05'
     camera_id: 'CAM03'
@@ -2046,7 +2046,7 @@ anomalies:
     overlay_origin: '(349,209)'
     dimensions: '39x105'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。変化は小さく(338px)、顔として読めるかは未確認のため要目視。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。変化は小さく(338px)、顔として読めるかは未確認のため要目視。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-sign-frame-square'
     candidate_id: 'CR-03-37'
     camera_id: 'CAM03'
@@ -2064,7 +2064,7 @@ anomalies:
     overlay_origin: '(447,144)'
     dimensions: '47x51'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。白赤の丸看板の実位置(約x455-485,y155-185)に合わせた箱で切り出した。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。白赤の丸看板の実位置(約x455-485,y155-185)に合わせた箱で切り出した。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-poster-colour-restore'
     candidate_id: 'CR-SH-17'
     camera_id: 'CAM04'
@@ -2082,7 +2082,7 @@ anomalies:
     overlay_origin: '(54,229)'
     dimensions: '48x130'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。要つまみ調整。ポスターは縦長の赤黄の色面として描かれた。元の劣化は原寸確認要。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。要つまみ調整。ポスターは縦長の赤黄の色面として描かれた。元の劣化は原寸確認要。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-sign-hollow'
     candidate_id: 'CR-04-09'
     camera_id: 'CAM04'
@@ -2100,7 +2100,7 @@ anomalies:
     overlay_origin: '(386,202)'
     dimensions: '54x66'
     review_status: 'composited'
-    note: '看板面の空洞化は控えめ(円面が灰青色に抜ける程度)。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '看板面の空洞化は控えめ(円面が灰青色に抜ける程度)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-hatch-reflection-extra'
     candidate_id: 'CR-04-10'
     camera_id: 'CAM04'
@@ -2118,7 +2118,7 @@ anomalies:
     overlay_origin: '(191,436)'
     dimensions: '170x97'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-hatch-frame-round'
     candidate_id: 'CR-04-26'
     camera_id: 'CAM04'
@@ -2136,7 +2136,7 @@ anomalies:
     overlay_origin: '(171,660)'
     dimensions: '275x128'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-pot-duplicate'
     candidate_id: 'CR-04-25'
     camera_id: 'CAM04'
@@ -2154,7 +2154,7 @@ anomalies:
     overlay_origin: '(367,258)'
     dimensions: '70x192'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-sign-colour-blue'
     candidate_id: 'CR-04-20'
     camera_id: 'CAM04'
@@ -2172,7 +2172,7 @@ anomalies:
     overlay_origin: '(94,130)'
     dimensions: '60x56'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-fluorescent-frame-grey'
     candidate_id: 'CR-04-29'
     camera_id: 'CAM04'
@@ -2190,7 +2190,7 @@ anomalies:
     overlay_origin: '(81,60)'
     dimensions: '157x180'
     review_status: 'composited'
-    note: '要つまみ調整。枠の灰色化は小さな灰色パネル状の見え方。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '要つまみ調整。枠の灰色化は小さな灰色パネル状の見え方。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-red-telephone'
     camera_id: 'CAM04'
     element_id: 'CAM04-E07'
@@ -2207,7 +2207,7 @@ anomalies:
     overlay_origin: '(15,174)'
     dimensions: '199x309'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-ceiling-corner-fold'
     candidate_id: 'CR-04-31'
     camera_id: 'CAM04'
@@ -2225,7 +2225,7 @@ anomalies:
     overlay_origin: '(388,77)'
     dimensions: '53x62'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-red-lantern'
     camera_id: 'CAM04'
     element_id: 'CAM04-E14'
@@ -2242,7 +2242,7 @@ anomalies:
     overlay_origin: '(506,242)'
     dimensions: '87x124'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-curtain-open'
     candidate_id: 'CR-SH-09'
     camera_id: 'CAM05'
@@ -2260,7 +2260,7 @@ anomalies:
     overlay_origin: '(299,202)'
     dimensions: '88x332'
     review_status: 'composited'
-    note: '再構成一致・マスク外差分ゼロ(pixels_changed_outside_alpha=0)。変化は中央左寄りのカーテン一枚(x299-387)で、位置は正面ガラス中央。ゲーム未確認。'
+    note: '再構成一致・マスク外差分ゼロ(pixels_changed_outside_alpha=0)。変化は中央左寄りのカーテン一枚(x299-387)で、位置は正面ガラス中央。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-old-woman-in-glass'
     camera_id: 'CAM05'
     element_id: 'CAM05-E09'
@@ -2277,7 +2277,7 @@ anomalies:
     overlay_origin: '(361,237)'
     dimensions: '117x256'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致・マスク外差分ゼロ。位置は指定より左寄り(E09 の x371-558 内、中央右のガラスパネル内、縦枠の左側)。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致・マスク外差分ゼロ。位置は指定より左寄り(E09 の x371-558 内、中央右のガラスパネル内、縦枠の左側)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-film-poster'
     candidate_id: 'CR-05-21'
     camera_id: 'CAM05'
@@ -2295,7 +2295,7 @@ anomalies:
     overlay_origin: '(150,228)'
     dimensions: '68x142'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致・マスク外差分ゼロ。ポスターは黒側面の上部(差分左上 (150,228))。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致・マスク外差分ゼロ。ポスターは黒側面の上部(差分左上 (150,228))。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-sign-in-glass'
     candidate_id: 'CR-05-07'
     camera_id: 'CAM05'
@@ -2313,7 +2313,7 @@ anomalies:
     overlay_origin: '(209,165)'
     dimensions: '196x232'
     review_status: 'composited'
-    note: '再構成一致・マスク外差分ゼロ。複製の丸看板は区画の左側面ガラス寄り(約 (233,235) 付近)に出た。plan の『正面ガラスの左端』より左。差分域 (209,165) 196x232 は広めだが実際の変化は小さな丸看板。ゲーム未確認。'
+    note: '再構成一致・マスク外差分ゼロ。複製の丸看板は区画の左側面ガラス寄り(約 (233,235) 付近)に出た。plan の『正面ガラスの左端』より左。差分域 (209,165) 196x232 は広めだが実際の変化は小さな丸看板。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-joint-into-glass'
     candidate_id: 'CR-05-08'
     camera_id: 'CAM05'
@@ -2331,7 +2331,7 @@ anomalies:
     overlay_origin: '(139,409)'
     dimensions: '349x144'
     review_status: 'composited'
-    note: '再構成一致・マスク外差分ゼロ。床タイルの目地が、角の側面ガラス内部(カーテン下部)にも連続して見える。カーテンの下半分が床に置き換わるため変化域は 349x144 とやや広い。ゲーム未確認。'
+    note: '再構成一致・マスク外差分ゼロ。床タイルの目地が、角の側面ガラス内部(カーテン下部)にも連続して見える。カーテンの下半分が床に置き換わるため変化域は 349x144 とやや広い。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-brick-round'
     candidate_id: 'CR-05-17'
     camera_id: 'CAM05'
@@ -2349,7 +2349,7 @@ anomalies:
     overlay_origin: '(395,505)'
     dimensions: '24x24'
     review_status: 'composited'
-    note: '再構成一致・マスク外差分ゼロ。レンガ1枚が円形の板(24x24)に変化。拡大切り抜きを編集して貼り戻し、要素CAM05-E12の帯の実位置に合わせた箱で切り出した。ゲーム未確認。'
+    note: '再構成一致・マスク外差分ゼロ。レンガ1枚が円形の板(24x24)に変化。拡大切り抜きを編集して貼り戻し、要素CAM05-E12の帯の実位置に合わせた箱で切り出した。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-sign-digit-missing'
     candidate_id: 'CR-05-01'
     camera_id: 'CAM05'
@@ -2367,7 +2367,7 @@ anomalies:
     overlay_origin: '(622,142)'
     dimensions: '28x32'
     review_status: 'composited'
-    note: '再構成一致・マスク外差分ゼロ。『グリーンスペース300』の末尾の0が消え『30』になったのを目視確認(小さな変化 28x32)。生成は拡大切り抜き編集→貼り戻し方式。ゲーム未確認。'
+    note: '再構成一致・マスク外差分ゼロ。『グリーンスペース300』の末尾の0が消え『30』になったのを目視確認(小さな変化 28x32)。生成は拡大切り抜き編集→貼り戻し方式。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-menu-price-old'
     candidate_id: 'CR-SH-10'
     camera_id: 'CAM06'
@@ -2385,7 +2385,7 @@ anomalies:
     overlay_origin: '(256,367)'
     dimensions: '41x43'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-tin-planter'
     candidate_id: 'CR-SH-11'
     camera_id: 'CAM06'
@@ -2403,7 +2403,7 @@ anomalies:
     overlay_origin: '(0,457)'
     dimensions: '156x286'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。副作用: 足元のピンク布の端が一部変わっている(オーバーレイ範囲内)。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。副作用: 足元のピンク布の端が一部変わっている(オーバーレイ範囲内)。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-sign-orange-blue'
     candidate_id: 'CR-06-22'
     camera_id: 'CAM06'
@@ -2421,7 +2421,7 @@ anomalies:
     overlay_origin: '(142,134)'
     dimensions: '108x104'
     review_status: 'composited'
-    note: '再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-far-sign-same'
     candidate_id: 'CR-06-10'
     camera_id: 'CAM06'
@@ -2439,7 +2439,7 @@ anomalies:
     overlay_origin: '(402,252)'
     dimensions: '39x41'
     review_status: 'composited'
-    note: '合成ツールの判定は warn。警告相当: 元の小さな丸看板の置換ではなく、少し左(x約420)に支柱付きの丸看板が追加された形。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '合成ツールの判定は warn。警告相当: 元の小さな丸看板の置換ではなく、少し左(x約420)に支柱付きの丸看板が追加された形。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-wall-puddle'
     candidate_id: 'CR-06-15'
     camera_id: 'CAM06'
@@ -2457,7 +2457,7 @@ anomalies:
     overlay_origin: '(135,432)'
     dimensions: '540x202'
     review_status: 'composited'
-    note: '補足: 描画された水たまりは床の奥寄り(x約420-540,y約520-600)で、オーバーレイ枠は540x202と広めだがマスク外差分はゼロ。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '補足: 描画された水たまりは床の奥寄り(x約420-540,y約520-600)で、オーバーレイ枠は540x202と広めだがマスク外差分はゼロ。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-ceiling-checker'
     candidate_id: 'CR-06-19'
     camera_id: 'CAM06'
@@ -2475,7 +2475,7 @@ anomalies:
     overlay_origin: '(283,98)'
     dimensions: '93x47'
     review_status: 'composited'
-    note: '補足: 変化したのは天井の板ではなく、中央やや左の既存の黒い四角い開口(元は暗色)が市松模様になった形。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '補足: 変化したのは天井の板ではなく、中央やや左の既存の黒い四角い開口(元は暗色)が市松模様になった形。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-lamp-squared'
     candidate_id: 'CR-06-29'
     camera_id: 'CAM06'
@@ -2493,7 +2493,7 @@ anomalies:
     overlay_origin: '(159,75)'
     dimensions: '67x28'
     review_status: 'composited'
-    note: '合成ツールの判定は warn。警告相当: 生成画像では角の丸い長方形だが、切り出しでは差分の小さい縁(右下が平らになる程度)しか拾えず、見た目は丸灯がわずかに歪む程度。subtle 相当を超えて弱い恐れ。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '合成ツールの判定は warn。警告相当: 生成画像では角の丸い長方形だが、切り出しでは差分の小さい縁(右下が平らになる程度)しか拾えず、見た目は丸灯がわずかに歪む程度。subtle 相当を超えて弱い恐れ。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-ceiling-panel-white'
     candidate_id: 'CR-06-31'
     camera_id: 'CAM06'
@@ -2511,7 +2511,7 @@ anomalies:
     overlay_origin: '(536,44)'
     dimensions: '84x73'
     review_status: 'composited'
-    note: '補足: 元の「黒い四角い開口」は斜めの暗い凹み(ソフィット)で、その中ほどに白い粗面の板状の明るい面が出る形。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '補足: 元の「黒い四角い開口」は斜めの暗い凹み(ソフィット)で、その中ほどに白い粗面の板状の明るい面が出る形。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-crt-tv-glow'
     camera_id: 'CAM06'
     element_id: 'CAM06-E08'
@@ -2528,7 +2528,7 @@ anomalies:
     overlay_origin: '(29,233)'
     dimensions: '134x99'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-wet-footprints'
     candidate_id: 'CR-06-11'
     camera_id: 'CAM06'
@@ -2546,7 +2546,7 @@ anomalies:
     overlay_origin: '(396,400)'
     dimensions: '110x473'
     review_status: 'composited'
-    note: '再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム未確認。'
+    note: '再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-07-floor-uphill'
     candidate_id: 'CR-07-09'
     camera_id: 'CAM07'
@@ -2564,7 +2564,7 @@ anomalies:
     overlay_origin: '(84,548)'
     dimensions: '591x352'
     review_status: 'composited'
-    note: '再構成一致・マスク外差分ゼロ。ただし生成は床全体の描き直しで、閾値26で床以外のずれを抑えている(outside_box_changed_frac 0.028)。目地が谷状に湾曲して見えるが、床の粒状模様も平滑化されている。ゲーム未確認。'
+    note: '再構成一致・マスク外差分ゼロ。ただし生成は床全体の描き直しで、閾値26で床以外のずれを抑えている(outside_box_changed_frac 0.028)。目地が谷状に湾曲して見えるが、床の粒状模様も平滑化されている。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-old-man-back'
     candidate_id: 'CR-08-07'
     camera_id: 'CAM08'
@@ -2582,7 +2582,7 @@ anomalies:
     overlay_origin: '(385,205)'
     dimensions: '45x182'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-barber-pole'
     camera_id: 'CAM08'
     element_id: 'CAM08-E08'
@@ -2599,7 +2599,7 @@ anomalies:
     overlay_origin: '(150,226)'
     dimensions: '38x169'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '昭和の物(老人たちの記憶の像)。再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-pillar-second'
     candidate_id: 'CR-08-12'
     camera_id: 'CAM08'
@@ -2617,7 +2617,7 @@ anomalies:
     overlay_origin: '(358,234)'
     dimensions: '54x267'
     review_status: 'composited'
-    note: '再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-floor-reflection-two-tier'
     candidate_id: 'CR-08-10'
     camera_id: 'CAM08'
@@ -2635,7 +2635,7 @@ anomalies:
     overlay_origin: '(252,676)'
     dimensions: '98x197'
     review_status: 'composited'
-    note: '再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-tile-concentric'
     candidate_id: 'CR-08-14'
     camera_id: 'CAM08'
@@ -2653,7 +2653,7 @@ anomalies:
     overlay_origin: '(203,588)'
     dimensions: '132x56'
     review_status: 'composited'
-    note: '全面描き直しで床全体に薄い色差が出るため threshold を16に上げ模様部のみ切り出し。再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '全面描き直しで床全体に薄い色差が出るため threshold を16に上げ模様部のみ切り出し。再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-vent-square'
     candidate_id: 'CR-08-19'
     camera_id: 'CAM08'
@@ -2671,7 +2671,7 @@ anomalies:
     overlay_origin: '(258,10)'
     dimensions: '130x69'
     review_status: 'composited'
-    note: '再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-wall-band-wave'
     candidate_id: 'CR-08-27'
     camera_id: 'CAM08'
@@ -2689,7 +2689,7 @@ anomalies:
     overlay_origin: '(458,245)'
     dimensions: '135x182'
     review_status: 'composited'
-    note: '再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-light-blue-bleed'
     candidate_id: 'CR-08-29'
     camera_id: 'CAM08'
@@ -2707,7 +2707,7 @@ anomalies:
     overlay_origin: '(84,78)'
     dimensions: '83x84'
     review_status: 'composited'
-    note: '要つまみ調整。threshold18で切り出し。再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '要つまみ調整。threshold18で切り出し。再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-fixture-dark-red'
     candidate_id: 'CR-08-32'
     camera_id: 'CAM08'
@@ -2725,7 +2725,7 @@ anomalies:
     overlay_origin: '(366,110)'
     dimensions: '67x95'
     review_status: 'composited'
-    note: '要つまみ調整。再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '要つまみ調整。再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-floor-reflection-no-pillar'
     candidate_id: 'CR-08-09'
     camera_id: 'CAM08'
@@ -2743,4 +2743,4 @@ anomalies:
     overlay_origin: '(123,476)'
     dimensions: '178x116'
     review_status: 'composited'
-    note: '要つまみ調整。再構成一致(最大誤差0)、マスク外差分0px。ゲーム未確認。'
+    note: '要つまみ調整。再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
