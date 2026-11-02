@@ -69,6 +69,9 @@ describe('useSubtitle', () => {
   it('leaves no timers behind after unmount', () => {
     const { unmount } = setup()
     advance(DIALOGUE_CONFIG.openingDelayMs + SUBTITLE_GAP_MS)
+    // The first line shows (and is saved) at this instant; one more ms lets the zero-delay timer
+    // that is still pending run out, so only the hook's own timer is left to be cleaned up.
+    advance(1)
     expect(vi.getTimerCount()).toBeGreaterThan(0)
     unmount()
     expect(vi.getTimerCount()).toBe(0)

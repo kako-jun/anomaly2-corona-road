@@ -1,5 +1,5 @@
 import ledger from 'virtual:dialogue'
-import { newlyRaisedFlags } from './dialogueEngine'
+import { newlyRaisedFlags, storyFlagNames } from './dialogueEngine'
 import { update } from './saveData'
 import type { SaveData } from './saveData'
 
@@ -8,6 +8,8 @@ import type { SaveData } from './saveData'
  * is empty; replace it with the marked ids once the ledger carries the marking.
  */
 const REIWA_IDS: ReadonlySet<string> = new Set()
+
+const STORY_FLAGS = storyFlagNames(ledger)
 
 /** Raise every flag whose condition now holds; the new names go to `out` (definition order). */
 const withRaisedFlags = (cur: SaveData, out: string[]): SaveData => {
@@ -21,7 +23,14 @@ const withRaisedFlags = (cur: SaveData, out: string[]): SaveData => {
   out.push(...raised)
   const flags = { ...cur.flags }
   for (const name of raised) flags[name] = true
-  return { ...cur, flags }
+  // The flag is saved as raised; its story waits (also across a reload) until it has been played.
+  const pendingStories = [
+    ...cur.pendingStories,
+    ...raised.filter(
+      n => STORY_FLAGS.has(n) && !cur.pendingStories.includes(n)
+    ),
+  ]
+  return { ...cur, flags, pendingStories }
 }
 
 /** A correct report: count it, remember the id, save, and return the flags that just rose. */

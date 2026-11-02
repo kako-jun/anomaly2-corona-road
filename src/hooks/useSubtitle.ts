@@ -1,17 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import ledger from 'virtual:dialogue'
-import type {
-  DialogueEntry,
-  MidpointStage,
-  Tone,
-} from '../utils/dialogueLedger'
+import type { MidpointStage, Tone } from '../utils/dialogueLedger'
+import type { SelectedSource } from '../utils/dialogueEngine'
 import {
   LastShown,
   UsedState,
+  applyUsed,
   midpointStage,
   pickClosing,
   pickOpening,
   selectNext,
+  storyFlagNames,
 } from '../utils/dialogueEngine'
 import { DIALOGUE_CONFIG } from '../utils/gameConfig'
 import { load, update } from '../utils/saveData'
@@ -50,18 +49,22 @@ interface Machine {
   end: (result: 'dawn' | 'withdraw') => void
 }
 
-const storyFlags = new Set(
-  ledger.entries.flatMap((e: DialogueEntry) =>
-    e.kind === 'story' ? [e.when.flag] : []
-  )
-)
+const storyFlags = storyFlagNames(ledger)
+
+/** Where a conversation came from (what to settle once its first line is on screen). */
+interface PlayMeta {
+  source?: SelectedSource
+  flag?: string
+}
 
 /**
  * Movie-style subtitles driven by the dialogue ledger: one line at a time, a conversation of 2-4
  * lines, then a silence. Priority at each pick: flag story > false report > midpoint > chatter
  * (`selectNext`). A false report cuts in at once; a raised flag cuts in after the line on screen
  * (the rest of the interrupted conversation is dropped); the midpoint comment waits for the next
- * pick. The timers keep running in a hidden tab, same as the in-game clock (intended).
+ * pick. A story conversation is not cut by a false report or a flag; what it displaces waits. A
+ * conversation counts as used (and a story as played, a midpoint as done) when its first line is
+ * on screen, not before. The timers keep running in a hidden tab, same as the in-game clock (intended).
  */
 export const useSubtitle = (input: SubtitleInput) => {
   const [view, setView] = useState({ text: '', visible: false })
@@ -87,7 +90,14 @@ export const useSubtitle = (input: SubtitleInput) => {
       usedLines: saved.usedLines,
       usedChatter: saved.usedChatter,
     }
-    const pendingFlags: string[] = []
+    // Raised flags whose story has not played yet, including those carried over from an earlier shift.
+    const pendingFlags: string[] = saved.pendingStories.filter(f =>
+      storyFlags.has(f)
+    )
+    let playingStory = false
+    // The drawn conversation's used state, saved when its first line shows.
+    let candidate: { prev: UsedState; next: UsedState; meta: PlayMeta } | null =
+      null
     let pendingFalse: { anomalyId: string | null } | null = null
     let pendingMidpoint: MidpointStage | null = null
     let midpointDone = false
@@ -106,16 +116,19 @@ export const useSubtitle = (input: SubtitleInput) => {
         return
       }
       phase = 'silent'
-      // A raised flag does not wait out the silence.
+      playingStory = false
+      // A raised flag or a false report that waited does not wait out the silence.
       later(
         selectAndPlay,
-        pendingFlags.length > 0 ? SUBTITLE_GAP_MS : cfg.chatterIntervalMs
+        pendingFlags.length > 0 || pendingFalse
+          ? SUBTITLE_GAP_MS
+          : cfg.chatterIntervalMs
       )
     }
 
     const showLine = () => {
       // Line boundary: a raised flag cuts in here.
-      if (!closing && pendingFlags.length > 0) lines = []
+      if (!closing && !playingStory && pendingFlags.length > 0) lines = []
       const text = lines.shift()
       if (text === undefined) {
         endConversation()
@@ -123,21 +136,46 @@ export const useSubtitle = (input: SubtitleInput) => {
       }
       hide()
       later(() => {
+        commit()
         setView({ text, visible: true })
         later(showLine, subtitleHoldMs(text))
       }, SUBTITLE_GAP_MS)
     }
 
+    /** The first line is on screen: now the conversation is used up (saved), a story played, a midpoint done. */
+    const commit = () => {
+      if (!candidate) return
+      const { prev, next, meta } = candidate
+      candidate = null
+      const saved = update(cur => {
+        const merged = applyUsed(cur, prev, next)
+        return {
+          ...cur,
+          ...merged,
+          pendingStories:
+            meta.flag === undefined
+              ? cur.pendingStories
+              : cur.pendingStories.filter(f => f !== meta.flag),
+        }
+      })
+      used = { usedLines: saved.usedLines, usedChatter: saved.usedChatter }
+      if (meta.flag !== undefined) {
+        const i = pendingFlags.indexOf(meta.flag)
+        if (i >= 0) pendingFlags.splice(i, 1)
+      }
+      if (meta.source === 'midpoint') {
+        midpointDone = true
+        pendingMidpoint = null
+      }
+    }
+
     const play = (
       entry: { tone: Tone; lines: { text: string }[] },
-      u: UsedState
+      u: UsedState,
+      meta: PlayMeta = {}
     ) => {
-      used = u
-      update(cur => ({
-        ...cur,
-        usedLines: u.usedLines,
-        usedChatter: u.usedChatter,
-      }))
+      candidate = { prev: used, next: u, meta }
+      playingStory = meta.source === 'flag'
       phase = 'talking'
       tone = entry.tone
       lines = entry.lines.map(l => l.text)
@@ -160,14 +198,9 @@ export const useSubtitle = (input: SubtitleInput) => {
         later(selectAndPlay, GATE_RETRY_MS)
         return
       }
-      if (sel.source === 'flag' && sel.flag !== undefined) {
-        pendingFlags.splice(pendingFlags.indexOf(sel.flag), 1)
-      } else if (sel.source === 'false-report') {
-        pendingFalse = null
-      } else if (sel.source === 'midpoint') {
-        pendingMidpoint = null
-      }
-      play(sel.entry, sel.used)
+      // A flag and the midpoint stay pending until their first line shows (`commit`).
+      if (sel.source === 'false-report') pendingFalse = null
+      play(sel.entry, sel.used, { source: sel.source, flag: sel.flag })
     }
 
     /** Something urgent arrived during the silence: speak soon instead of waiting it out. */
@@ -179,7 +212,8 @@ export const useSubtitle = (input: SubtitleInput) => {
       falseReport: anomalyId => {
         if (closing) return
         pendingFalse = { anomalyId }
-        if (phase === 'pre') return
+        // Before the opening, or inside a story: it waits (the story is not cut).
+        if (phase === 'pre' || playingStory) return
         // Cut in at once: drop what is left of the conversation.
         lines = []
         hide()
@@ -188,19 +222,24 @@ export const useSubtitle = (input: SubtitleInput) => {
       },
       flags: names => {
         if (closing) return
-        for (const n of names) if (storyFlags.has(n)) pendingFlags.push(n)
+        for (const n of names) {
+          if (storyFlags.has(n) && !pendingFlags.includes(n))
+            pendingFlags.push(n)
+        }
         wake()
       },
       checkMidpoint: (elapsedMs, found) => {
         if (closing || midpointDone) return
         if (elapsedMs < cfg.midpointAtSec * 1000) return
-        midpointDone = true
+        // Re-armed on every tick until it has actually played (`commit` sets midpointDone).
+        const fresh = pendingMidpoint === null
         pendingMidpoint = midpointStage(found)
-        wake()
+        if (fresh) wake()
       },
       end: result => {
         if (closing) return
         closing = true
+        // Unplayed stories stay in the save (pendingStories) for the next start.
         pendingFlags.length = 0
         pendingFalse = null
         pendingMidpoint = null

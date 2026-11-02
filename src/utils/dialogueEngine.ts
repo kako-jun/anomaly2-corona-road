@@ -75,6 +75,47 @@ export const drawFromBag = (
   return { entry, used: [...base, entry.id] }
 }
 
+/** Names of the flags that have a story conversation in the ledger. */
+export const storyFlagNames = (ledger: DialogueLedger): Set<string> =>
+  new Set(
+    ledger.entries.flatMap(e => (e.kind === 'story' ? [e.when.flag] : []))
+  )
+
+/**
+ * Save a drawn state on top of the stored one without losing other tabs' additions (docs/save-data.md
+ * rule 7): the union of `cur` and `next`, minus only the ids this draw itself removed (`prev` -> `next`,
+ * a bag refill).
+ */
+export const applyUsed = (
+  cur: UsedState,
+  prev: UsedState,
+  next: UsedState
+): UsedState => {
+  const merge = (
+    c: readonly string[],
+    p: readonly string[],
+    n: readonly string[]
+  ) => {
+    const removed = new Set(p.filter(id => !n.includes(id)))
+    return [...new Set([...c, ...n])].filter(id => !removed.has(id))
+  }
+  const usedLines: Record<string, string[]> = {}
+  for (const k of new Set([
+    ...Object.keys(cur.usedLines),
+    ...Object.keys(next.usedLines),
+  ])) {
+    usedLines[k] = merge(
+      cur.usedLines[k] ?? [],
+      prev.usedLines[k] ?? [],
+      next.usedLines[k] ?? []
+    )
+  }
+  return {
+    usedLines,
+    usedChatter: merge(cur.usedChatter, prev.usedChatter, next.usedChatter),
+  }
+}
+
 const ofKind = (ledger: DialogueLedger, kind: DialogueKind): DialogueEntry[] =>
   ledger.entries.filter(e => e.kind === kind)
 
@@ -241,7 +282,12 @@ export interface LastShown {
   endedAtMs: number
 }
 
-/** Chatter is held back while the last conversation was `serious` and the quiet time has not passed. */
+/**
+ * Chatter is held back while the last conversation was `serious` and the quiet time has not passed.
+ * Note: with the current settings (silence 30 s > quiet 20 s) this gate never holds chatter back in
+ * practice, because chatter only comes after the silence. It starts to bite if the silence
+ * (`chatterIntervalMs`) is shortened below `seriousQuietMs`.
+ */
 export const chatterAllowed = (
   last: LastShown | null,
   nowMs: number,
