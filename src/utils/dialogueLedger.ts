@@ -158,7 +158,10 @@ const parseLines = (raw: unknown): DialogueLine[] => {
     if (!isRecord(l)) throw new Error(`lines[${i}] is not a mapping`)
     onlyKeys(l, ['who', 'text'], `lines[${i}]`)
     const who = oneOf<Who>(str(l, 'who'), WHO, `lines[${i}].who`)
-    const text = str(l, 'text')
+    // Not trimmed: a leading or trailing full-width space is kept as written.
+    const text = l.text
+    if (typeof text !== 'string')
+      throw new Error(`lines[${i}].text is not a string`)
     checkSubtitleText(text)
     return { who, text }
   })
@@ -200,6 +203,9 @@ export const parseEntry = (
     onlyKeys(raw, ['id', 'when', 'tone', 'lines'], 'entry')
     const id = str(raw, 'id')
     const tone = oneOf<Tone>(str(raw, 'tone'), TONES, 'tone')
+    if (kind === 'chatter' && tone !== 'light') {
+      throw new Error('chatter takes only tone "light"')
+    }
     const lines = parseLines(raw.lines)
     const base = { id, tone, lines }
     let entry: DialogueEntry
