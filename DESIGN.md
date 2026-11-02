@@ -230,7 +230,7 @@ What to take from it:
 - Rounded corners on the screen and on the parts.
 - The Report buttons, the camera selector tabs, and every other control use the same retro hardware look (push buttons, switches, lamps), not Material-style buttons. The reference's numbered push buttons (1-4) are the model for the camera selector. Touch-target size and readability stay modern. The §8 components are reskinned to this look.
 - Every knob and button shows a visible label; no hidden operations.
-- Decided (2026-10-30): anomalies that are hard to see unless a knob is adjusted (e.g. brightness) are allowed. They are an option, not a requirement; most anomalies stay visible at the default setting. Which knobs matter and how the ledger marks such anomalies are decided when the knobs are implemented.
+- Decided (2026-11-02, replaces the 2026-10-30 note): every anomaly must be at least slightly visible at the default knob setting; knobs only make an already-visible anomaly easier to see, and an anomaly that is invisible without adjusting a knob is not made. The visibility floor and how it is measured are in `prompts/README.md` ("視認性の基準"); how the ledger marks knob-sensitive anomalies is still decided when the knobs are implemented.
 
 **Implementation:** the retro UI is built into the game (`src/components/`, `src/styles/retro.css`; parts table in §8). The earlier standalone prototype `prototypes/retro-ui/` was removed once integrated (it remains in git history, PR #43). Knobs are operated by horizontal drag, slider-style (right = clockwise = increase), plus arrow keys. Append `?wear=0` (clean) or `?wear=1` (default grime; values in between work) to the game URL to compare the wear overlay A/B.
 

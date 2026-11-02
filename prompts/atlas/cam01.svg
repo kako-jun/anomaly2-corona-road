@@ -177,14 +177,14 @@
       </g>
 
       <g class="element " id="CAM01-E14">
-        <title>CAM01-E14 — 通路奥の白灰色の柱/店舗壁と、その左右にある黒い開口。中央奥は暗い。</title>
-        <rect x="402.6" y="427.0" width="70.9" height="189.0" rx="2" class="bounds" />
-        <circle cx="438.1" cy="521.5" r="10" class="marker" />
-        <text x="438.1" y="525.0" text-anchor="middle" class="marker-number">14</text>
+        <title>CAM01-E14 — 通路奥の白灰色の柱/店舗壁と、その左右にある黒い開口(左の開口は柱の左 x約289-340 まで含む)。中央奥は暗い。</title>
+        <rect x="338.5" y="427.0" width="141.8" height="189.0" rx="2" class="bounds" />
+        <circle cx="409.4" cy="521.5" r="10" class="marker" />
+        <text x="409.4" y="525.0" text-anchor="middle" class="marker-number">14</text>
         <circle cx="945" cy="678" r="10" class="legend-number" />
         <text x="945" y="681.5" text-anchor="middle" class="legend-number-text">14</text>
         <text x="990" y="675" class="legend-id">CAM01-E14</text>
-        <text x="1105" y="675" class="legend-description">通路奥の白灰色の柱/店舗壁と、その左右にある黒い開口。中央奥は暗い。</text>
+        <text x="1105" y="675" class="legend-description">通路奥の白灰色の柱/店舗壁と、その左右にある黒い開口(左の開口は柱の左 x約289-340 まで…</text>
       </g>
 
       <g class="element " id="CAM01-E15">
@@ -243,13 +243,13 @@
       </g>
 
       <g class="element " id="CAM01-E20">
-        <title>CAM01-E20 — 右下寄りの床端に灰色の細長い塊/段差状部分。店先か床置き物かは画像だけで確定しにくい。</title>
-        <rect x="689.5" y="836.5" width="40.5" height="85.5" rx="2" class="bounds" />
-        <circle cx="709.8" cy="879.3" r="10" class="marker" />
-        <text x="709.8" y="882.8" text-anchor="middle" class="marker-number">20</text>
+        <title>CAM01-E20 — 右下寄りの床端(青い桶の手前上)に灰色の細長い塊/段差状部分。店先か床置き物かは画像だけで確定しにくい。</title>
+        <rect x="672.6" y="782.5" width="57.4" height="67.5" rx="2" class="bounds" />
+        <circle cx="701.3" cy="816.3" r="10" class="marker" />
+        <text x="701.3" y="819.8" text-anchor="middle" class="marker-number">20</text>
         <circle cx="945" cy="930" r="10" class="legend-number" />
         <text x="945" y="933.5" text-anchor="middle" class="legend-number-text">20</text>
         <text x="990" y="927" class="legend-id">CAM01-E20</text>
-        <text x="1105" y="927" class="legend-description">右下寄りの床端に灰色の細長い塊/段差状部分。店先か床置き物かは画像だけで確定しにくい。</text>
+        <text x="1105" y="927" class="legend-description">右下寄りの床端(青い桶の手前上)に灰色の細長い塊/段差状部分。店先か床置き物かは画像だけで確定し…</text>
       </g>
 </svg>
