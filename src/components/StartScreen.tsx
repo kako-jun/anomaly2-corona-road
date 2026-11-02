@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import '../styles/start.css'
 import { misreportLampCount, misreportLimitText } from '../utils/startScreen'
 
@@ -6,12 +7,18 @@ interface StartScreenProps {
 }
 
 export const StartScreen = ({ onStart }: StartScreenProps) => {
+  // Lock body scrolling only while this screen is mounted (no :has() dependency).
+  useEffect(() => {
+    document.body.classList.add('start-open')
+    return () => document.body.classList.remove('start-open')
+  }, [])
+
   const lamps = Array.from({ length: misreportLampCount() }, (_, i) => i)
 
   return (
     <main className="start-screen">
       <div className="start-logo">
-        <img src="/images/logo.webp" alt="Anomaly² Corona Road" />
+        <img src="/images/logo.webp" alt="" />
       </div>
       <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
 

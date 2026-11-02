@@ -17,7 +17,8 @@
   display: flex;
   flex-direction: column;
   gap: max(8px, 1.4dvh);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto; /* safety net: the start key stays reachable on very short screens */
   background: #0a0a0a;
   color: #d8d2c0;
   font-family:
@@ -32,12 +33,13 @@
 }
 
 /* The start screen fills exactly one viewport; neutralize the global min-height so no scrollbar appears. */
-body:has(.start-screen),
-body:has(.start-screen) #root {
+body.start-open {
   min-height: 0;
-  height: 100dvh;
   overflow: hidden;
   background: #0a0a0a;
+}
+body.start-open #root {
+  min-height: 0;
 }
 
 .start-sr-only {
@@ -279,4 +281,31 @@ body:has(.start-screen) #root {
 .start-go:focus-visible {
   outline: 2px solid #ffd27a;
   outline-offset: 3px;
+}
+
+/* Short screens (landscape phones, split view): tighten spacing, keep the look. */
+@media (max-height: 560px) {
+  .start-screen {
+    padding-top: 6px;
+    padding-bottom: 8px;
+    gap: 6px;
+  }
+  .start-logo {
+    min-height: 40px;
+  }
+  .start-panel {
+    padding: 6px 10px 7px;
+  }
+  .start-plate {
+    margin-bottom: 3px;
+  }
+  .start-row {
+    padding: 2px 0;
+  }
+  .start-keys {
+    margin-top: 1px;
+  }
+  .start-go {
+    min-height: 48px;
+  }
 }
