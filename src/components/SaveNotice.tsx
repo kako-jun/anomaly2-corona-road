@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { canPersist, load } from '../utils/saveData'
+import { canPersist, load, probe } from '../utils/saveData'
 
 /**
  * Always-on notice when progress cannot be stored (private browsing, blocked site data). Never
@@ -7,8 +7,12 @@ import { canPersist, load } from '../utils/saveData'
  * while the shift runs, so a write that fails mid-shift shows it too.
  */
 export const SaveNotice = () => {
-  // A first read decides whether storage works at all (a failed read flips canPersist()).
-  useMemo(() => load(), [])
+  // A first read and a probe write decide whether storage works at all (a failure flips
+  // canPersist()), so the start screen already knows before anything is saved.
+  useMemo(() => {
+    load()
+    probe()
+  }, [])
   if (canPersist()) return null
   return (
     <div className="save-notice" role="status">

@@ -6,6 +6,7 @@
 export const SAVE_VERSION = 1
 export const SAVE_KEY = 'corona-road:save'
 export const BROKEN_KEY = 'corona-road:save:broken'
+export const PROBE_KEY = 'corona-road:save:probe'
 
 export interface SaveSettings {
   brightness: number
@@ -160,6 +161,8 @@ export interface SaveStoreOptions {
   requestPersist?: () => void
   key?: string
   brokenKey?: string
+  /** Scratch key for `probe()`; never the save key. */
+  probeKey?: string
 }
 
 export interface SaveStore {
@@ -169,11 +172,17 @@ export interface SaveStore {
   update: (fn: (current: SaveData) => SaveData) => SaveData
   /** False once a read or write has failed: progress lives in memory only (show a notice). */
   canPersist: () => boolean
+  /**
+   * Try a write now (scratch key, then removed) so a storage that rejects writes (quota, some
+   * private modes) is known before the first save. Failure flips `canPersist()` to false.
+   */
+  probe: () => void
 }
 
 export const createSaveStore = (opts: SaveStoreOptions): SaveStore => {
   const key = opts.key ?? SAVE_KEY
   const brokenKey = opts.brokenKey ?? BROKEN_KEY
+  const probeKey = opts.probeKey ?? PROBE_KEY
   let memory: SaveData | null = null
   let persistable = true
   let persistRequested = false
@@ -267,6 +276,19 @@ export const createSaveStore = (opts: SaveStoreOptions): SaveStore => {
       return next
     },
     canPersist: () => persistable,
+    probe: () => {
+      const s = storage()
+      if (!s) {
+        persistable = false
+        return
+      }
+      try {
+        s.setItem(probeKey, '1')
+        s.removeItem(probeKey)
+      } catch {
+        persistable = false
+      }
+    },
   }
 }
 
@@ -282,3 +304,4 @@ const defaultStore = createSaveStore({
 export const load = defaultStore.load
 export const update = defaultStore.update
 export const canPersist = defaultStore.canPersist
+export const probe = defaultStore.probe
