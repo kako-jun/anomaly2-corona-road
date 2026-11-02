@@ -1291,7 +1291,7 @@ anomalies:
     overlay_origin: "(149,656)"
     dimensions: "165x91"
     review_status: "composited"
-    note: "既存 AR-02-tile-color とは別カメラの反復。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: '既存 AR-02-tile-color とは別カメラの反復。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。'
   - id: "AR-07-purple-floor-tile"
     candidate_id: "CR-07-16"
     camera_id: "CAM07"
@@ -1309,7 +1309,7 @@ anomalies:
     overlay_origin: "(267,703)"
     dimensions: "166x146"
     review_status: "composited"
-    note: "AR-02-tile-colorは別カメラで異なる色。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: 'AR-02-tile-colorは別カメラで異なる色。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。'
   - id: "AR-02-duplicate-coffee-sign"
     candidate_id: "CR-02-11"
     camera_id: "CAM02"
@@ -1399,7 +1399,7 @@ anomalies:
     overlay_origin: "(405,0)"
     dimensions: "111x55"
     review_status: "composited"
-    note: "白い灯具はマスクから除外。E03の実位置は上端 x≈430–490px で既存台帳座標と食い違う。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: '白い灯具はマスクから除外。E03の実位置は上端 x≈430–490px で既存台帳座標と食い違う。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。'
   - id: "AR-03-coffee-text-missing"
     candidate_id: "CR-03-02"
     camera_id: "CAM03"
@@ -1417,7 +1417,7 @@ anomalies:
     overlay_origin: "(337,275)"
     dimensions: "65x39"
     review_status: "composited"
-    note: "看板上段の文字のみ消去、下段の架空店名を保護。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: '看板上段の文字のみ消去、下段の架空店名を保護。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。'
   - id: "AR-03-walking-cat"
     candidate_id: "CR-03-26"
     camera_id: "CAM03"
@@ -1435,7 +1435,7 @@ anomalies:
     overlay_origin: "(409,315)"
     dimensions: "70x40"
     review_status: "composited"
-    note: "既存 AR-02/08-cat は座る猫、AR-07-stairs-cat は横たわる猫。こちらは白猫が歩く。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: '既存 AR-02/08-cat は座る猫、AR-07-stairs-cat は横たわる猫。こちらは白猫が歩く。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。'
   - id: "AR-03-round-puddle"
     candidate_id: "CR-03-13"
     camera_id: "CAM03"
@@ -1453,7 +1453,7 @@ anomalies:
     overlay_origin: "(298,543)"
     dimensions: "76x36"
     review_status: "composited"
-    note: "初回は水たまりが大きく波立ち位置もずれたため不採用。v2を使用。AR-02-puddle・AR-04-puddleとの背景別反復。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: '初回は水たまりが大きく波立ち位置もずれたため不採用。v2を使用。AR-02-puddle・AR-04-puddleとの背景別反復。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。'
   - id: "AR-07-diamond-tile"
     candidate_id: "CR-07-17"
     camera_id: "CAM07"
@@ -1471,7 +1471,7 @@ anomalies:
     overlay_origin: "(348,617)"
     dimensions: "138x90"
     review_status: "composited"
-    note: "ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: 'ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。'
   - id: "AR-07-floor-puddle"
     candidate_id: "CR-07-18"
     camera_id: "CAM07"
@@ -1489,7 +1489,7 @@ anomalies:
     overlay_origin: "(393,647)"
     dimensions: "173x127"
     review_status: "composited"
-    note: "初版はE18範囲外で不採用。v2はE18範囲内だが光沢が強い。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: '初版はE18範囲外で不採用。v2はE18範囲内だが光沢が強い。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。'
   - id: "AR-07-stair-figures"
     candidate_id: "CR-07-11"
     camera_id: "CAM07"
@@ -1507,7 +1507,7 @@ anomalies:
     overlay_origin: "(588,190)"
     dimensions: "38x135"
     review_status: "composited"
-    note: "2人の衣服と姿は近いが完全一致は原寸では判定困難。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: '2人の衣服と姿は近いが完全一致は原寸では判定困難。ゲーム画面とライブ blink での確認は未了。 再構成一致、マスク外差分ゼロ。'
   - id: "AR-04-leaf-hole"
     candidate_id: "CR-04-37"
     camera_id: "CAM04"
@@ -1813,7 +1813,7 @@ anomalies:
     overlay_origin: '(289,405)'
     dimensions: '47x130'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。人物が要素箱(347-419)の左外(x289-336)に出たため margin50で抽出。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
+    note: '昭和の物(老人たちの記憶の像)。人物は通路奥の左の暗い開口(x289-336)に出た。目録 CAM01-E14 をこの開口まで含むよう直した。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-cat-in-frosted-window'
     candidate_id: 'CR-01-24'
     camera_id: 'CAM01'
@@ -1938,7 +1938,7 @@ anomalies:
     overlay_origin: '(619,690)'
     dimensions: '56x154'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。margin 24 で抽出(変化が要素箱を満たす)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
+    note: 'プール外の新案。昭和の物(老人たちの記憶の像)。margin 24 で抽出(変化が要素箱を満たす)。目録 CAM01-E20 を実位置(青い桶の手前上の灰色の塊)に直した。変化域は下の青い桶(E19)にも及ぶ。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-shutter-stripe-break'
     candidate_id: 'CR-01-03'
     camera_id: 'CAM01'
@@ -2207,7 +2207,7 @@ anomalies:
     overlay_origin: '(15,174)'
     dimensions: '199x309'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
+    note: 'プール外の新案。昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-ceiling-corner-fold'
     candidate_id: 'CR-04-31'
     camera_id: 'CAM04'
@@ -2242,7 +2242,7 @@ anomalies:
     overlay_origin: '(506,242)'
     dimensions: '87x124'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
+    note: 'プール外の新案。昭和の物(老人たちの記憶の像)。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-curtain-open'
     candidate_id: 'CR-SH-09'
     camera_id: 'CAM05'
@@ -2277,7 +2277,7 @@ anomalies:
     overlay_origin: '(361,237)'
     dimensions: '117x256'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致・マスク外差分ゼロ。位置は指定より左寄り(E09 の x371-558 内、中央右のガラスパネル内、縦枠の左側)。ゲーム画面とライブ blink での確認は未了。'
+    note: 'プール外の新案。昭和の物(老人たちの記憶の像)。再構成一致・マスク外差分ゼロ。位置は指定より左寄り(E09 の x371-558 内、中央右のガラスパネル内、縦枠の左側)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-film-poster'
     candidate_id: 'CR-05-21'
     camera_id: 'CAM05'
@@ -2299,21 +2299,21 @@ anomalies:
   - id: 'AR-05-sign-in-glass'
     candidate_id: 'CR-05-07'
     camera_id: 'CAM05'
-    element_id: 'CAM05-E06'
+    element_id: 'CAM05-E07'
     base_photo: 'public/images/cam5.webp'
     category: 'object'
     anomaly_type: 'duplicate'
     phase: 'mid'
     subtlety: 'medium'
     mask_box_1000: '(243,191)–(833,699)'
-    location: 'CAM05-E06、差分左上 (209,165) px'
+    location: 'CAM05-E07(複製元は CAM05-E06 の小型丸看板)、差分左上 (209,165) px'
     detail: '左奥通路の小さな丸看板が、ガラス区画の内側(左端)にも同じ大きさで現れる'
     generation_prompt: 'Edit the attached surveillance camera photo (an empty underground shopping arcade, cool blue-grey tones). Make ONLY this single change: - Duplicate an existing element. The small round sign hanging under the ceiling in the far-left corridor (at about x=15, y=210 in a 676x900 frame; a small circular sign with a white face and dark rim, about 25 px across) stays exactly where it is. A second identical round sign, same size, same white face and dark rim, now also appears inside the glass wall of the shop block, hanging just behind the glass in the top-left of the first tall curtain panel at x=290-320, y=225-250, clearly visible as a bright round disc against the dark curtain, just right of the thick grey corner pillar (x~265). CRITICAL: keep everything else PIXEL-IDENTICAL to the source image: camera angle, framing, aspect ratio, all buildings, signs, walls, glass, floor tiles, ceiling lights, lighting, shadows, film grain, low-fi surveillance look. Do not regenerate or redraw the scene. Only the single added round sign.'
     overlay: 'assets/anomaly-overlays/cam05/sign-in-glass.webp'
     overlay_origin: '(209,165)'
     dimensions: '196x232'
     review_status: 'composited'
-    note: '再構成一致・マスク外差分ゼロ。複製の丸看板は区画の左側面ガラス寄り(約 (233,235) 付近)に出た。plan の『正面ガラスの左端』より左。差分域 (209,165) 196x232 は広めだが実際の変化は小さな丸看板。ゲーム画面とライブ blink での確認は未了。'
+    note: '再構成一致・マスク外差分ゼロ。複製の丸看板は区画の左側面ガラス寄り(約 (233,235) 付近)に出た。変化域 (209,165) 196x232 は E06 の箱と重ならず、区画全体 E07 に含まれるため element_id を E07 にした。変化域は広めだが実際の変化は小さな丸看板。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-joint-into-glass'
     candidate_id: 'CR-05-08'
     camera_id: 'CAM05'
@@ -2428,18 +2428,18 @@ anomalies:
     element_id: 'CAM06-E14'
     base_photo: 'public/images/cam6.webp'
     category: 'object'
-    anomaly_type: 'state_change'
+    anomaly_type: 'add_object'
     phase: 'late'
     subtlety: 'obvious'
-    mask_box_1000: '(532,261)–(683,529)'
+    mask_box_1000: '(596,280)–(653,326)'
     location: 'CAM06-E14、差分左上 (402,252) px'
-    detail: '通路奥に赤橙枠・白円・小さなロゴの丸い吊り看板が現れ、手前の店名看板と同じ図柄になる(元の小さな吊り物はそのまま残る)。'
+    detail: '通路奥の暗い開口の上方、元の小さな吊り物の左隣に、赤橙枠・白円・小さなロゴの丸い吊り看板が一つ現れ、手前の店名看板と同じ図柄に見える(元の小さな吊り物はそのまま残る)。'
     generation_prompt: 'Edit the attached surveillance camera photo (a shopping arcade corridor, low-fi CCTV look, 675x900 frame). Make ONLY this single change: - State change: far down the aisle there is one tiny white hanging sign/lamp (about 8x10 px, centered at approx x=449, y=276, hanging just below the dark ceiling line above the distant dark shop doorway on the right side of the far wall). Change ONLY this tiny distant sign into a slightly bigger (about 16x18 px) round sign with a red-orange frame, a white circle in the middle and a tiny dark shrimp-and-leaf mark in the circle - the same design as the large square sign at the upper left (x=148-331, y=99-306), shrunk to far distance, blurry as a distant object. Same position (hanging from the ceiling at x~449,y~268-286). Nothing else in the far wall or ceiling changes; the large upper-left sign, fluorescent lights, round lamps and the ceiling sensor stay exactly as they are. Do NOT add any other sign. CRITICAL - keep everything else PIXEL-IDENTICAL to the source image: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, film grain, JPEG artifacts, low-fi surveillance look, and every object and text already present. Do not regenerate or redraw the scene. Only inject this one change. No real shop names; any text must be illegible or fictional.'
     overlay: 'assets/anomaly-overlays/cam06/far-sign-same.webp'
     overlay_origin: '(402,252)'
     dimensions: '39x41'
     review_status: 'composited'
-    note: '合成ツールの判定は warn。警告相当: 元の小さな丸看板の置換ではなく、少し左(x約420)に支柱付きの丸看板が追加された形。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
+    note: '合成ツールの判定は warn。元の小さな丸看板の置換ではなく、少し左(x約402-441)に支柱付きの丸看板が追加された形。追加された看板は目録のどの要素にも含まれないため、近傍の CAM06-E14(重なりは約15%)のまま記録した。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-wall-puddle'
     candidate_id: 'CR-06-15'
     camera_id: 'CAM06'
@@ -2528,7 +2528,7 @@ anomalies:
     overlay_origin: '(29,233)'
     dimensions: '134x99'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
+    note: 'プール外の新案。昭和の物(老人たちの記憶の像)。再構成一致(recon_max_abs_err=0)、マスク外差分ゼロ(pixels_changed_outside_alpha=0)。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-06-wet-footprints'
     candidate_id: 'CR-06-11'
     camera_id: 'CAM06'
@@ -2599,7 +2599,7 @@ anomalies:
     overlay_origin: '(150,226)'
     dimensions: '38x169'
     review_status: 'composited'
-    note: '昭和の物(老人たちの記憶の像)。再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
+    note: 'プール外の新案。昭和の物(老人たちの記憶の像)。再構成一致(最大誤差0)、マスク外差分0px。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-08-pillar-second'
     candidate_id: 'CR-08-12'
     camera_id: 'CAM08'
@@ -2760,4 +2760,4 @@ anomalies:
     overlay_origin: '(439,28)'
     dimensions: '160x53'
     review_status: 'composited'
-    note: 'CAM05 の不足を補う面状の変化(天井全体は ceiling-grid の点状が検出不能で失敗したため差し替え)。拡大切り抜きを編集して元写真へ貼り戻し、閾値18で切り出し。alpha内の差分は最大78・平均22.3。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
+    note: 'プール外の新案。CAM05 の不足を補う面状の変化(天井全体は ceiling-grid の点状が検出不能で失敗したため差し替え)。拡大切り抜きを編集して元写真へ貼り戻し、閾値18で切り出し。alpha内の差分は最大78・平均22.3。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
