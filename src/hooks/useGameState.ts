@@ -66,6 +66,8 @@ export const useGameState = () => {
   const flagSeqRef = useRef(0)
   // Set when the shift is over (the closing conversation is playing); blocks further reports and a second end.
   const endedRef = useRef(false)
+  // Set when the false-report limit is reached: reports stop being accepted while the withdraw ending is pending.
+  const misreportCapRef = useRef(false)
   const endingRef = useRef<Ending | null>(null)
   // Set once every ledger entry has been used: spawning stops for the rest of the shift.
   const ledgerExhaustedRef = useRef(false)
@@ -96,6 +98,7 @@ export const useGameState = () => {
     setFeedback(null)
     setEnding(null)
     endedRef.current = false
+    misreportCapRef.current = false
     endingRef.current = null
     // Flags that became true between shifts (loop-based ones) cut in once the shift is running.
     const raised = raiseFlagsAtStart()
@@ -164,7 +167,7 @@ export const useGameState = () => {
   // freshly-rendered `cameras` / `activeAnomalies` props inside the callback.
   const reportAnomaly = useCallback(
     (category: AnomalyCategory) => {
-      if (endedRef.current) return
+      if (endedRef.current || misreportCapRef.current) return
       const currentCamera = CAMERAS[currentIndexRef.current]
       const anomalyOnCamera = activeAnomaliesRef.current.find(
         a => a.cameraId === currentCamera.id && !a.detectedAt
@@ -202,6 +205,7 @@ export const useGameState = () => {
         anomalyOnCamera?.id ?? null
       )
       if (newMisreports >= DEFAULT_CONFIG.maxMisreports) {
+        misreportCapRef.current = true
         // Brief delay so the result OSD is visible before the game-over screen.
         window.setTimeout(() => endShift('withdraw', 'lose'), TOAST_MS)
       }

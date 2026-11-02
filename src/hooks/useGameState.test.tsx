@@ -41,6 +41,7 @@ const INTERVAL = DEFAULT_CONFIG.anomalyIntervalMs
 
 beforeEach(() => {
   vi.useFakeTimers()
+  localStorage.clear()
   ledger.length = 0
 })
 afterEach(() => {
