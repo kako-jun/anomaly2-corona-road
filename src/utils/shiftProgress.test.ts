@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import type { DialogueLedger } from './dialogueLedger'
 
 const story = (id: string, flag: string) => ({
@@ -33,10 +33,6 @@ const fresh = async () => {
   const saveData = await import('./saveData')
   return { ...progress, load: saveData.load }
 }
-
-beforeEach(() => {
-  vi.doUnmock('virtual:dialogue')
-})
 
 describe('recordFound', () => {
   it('adds 1 to foundTotal even for a duplicate report', async () => {
