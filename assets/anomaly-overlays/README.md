@@ -81,9 +81,11 @@ CAM03 は喫茶看板をノスタルジックに更新したマスターを使�
 
 | 差分                             | 基準  | 左上      | サイズ |
 | -------------------------------- | ----- | --------- | ------ |
-| `cam01/power-bank.webp`          | CAM01 | (590,723) | 45×38  |
+| `cam01/power-bank.webp`          | CAM01 | (27,746)  | 68×50  |
 | `cam02/smartphone-facedown.webp` | CAM02 | (261,698) | 76×66  |
+| `cam03/silver-can.webp`          | CAM03 | (403,686) | 89×59  |
 | `cam04/earbud-single.webp`       | CAM04 | (301,809) | 47×40  |
-| `cam05/pet-bottle.webp`          | CAM05 | (274,573) | 52×74  |
+| `cam05/pet-bottle.webp`          | CAM05 | (321,641) | 54×117 |
+| `cam07/mask-on-floor.webp`       | CAM07 | (269,447) | 73×48  |
 
 これらは再構成が検証用合成と全画素一致し、alpha 外の差分はゼロ。ライブ blink とゲーム画面での確認は未了。
