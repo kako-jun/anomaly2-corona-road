@@ -1325,25 +1325,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: 床の小物（`AR-03-round-puddle` `AR-03-silver-can` `AR-03-kerosene-heater` `AR-03-tile-diagonal` `AR-03-blue-floor-tile`）は畳の上に載る形になるので、水たまり・タイル色変えの 3 件は排他（畳の上に水たまり・タイルは成立しない）。石油ストーブ・缶は併存可。
 - **生成枚数の最小見積り**: 全景 3 テイク。
 
-### CR-LG-04-01 窓の外の昭和の路地（右壁）
-
-- **ID / camera / element_id**: CR-LG-04-01 / CAM04 / CAM04-E14
-- **面**: box 450,120,675,750（141,750 px²、23.3%）。右壁（ガラス窓と漆喰壁）の遠近台形。
-- **物と変化**: 右の黒い店舗ガラスの壁が、白い窓枠が連続する壁に変わり、窓の外に夕焼けの昭和の路地（木造の軒、電柱、瓦屋根、細い路地）が広がる。地下街に窓はない。
-- **不気味さの狙い**: 地下にないはずの夕焼けが窓の外にある。説明がつかないが優しい。「外へ帰りたい」気持ちの象徴（老人の記憶）。
-- **保持するもの**: 床・天井・柱縁・奥の扉と鉢植え・左壁。窓枠は元の縦枠位置を踏襲し、ガラスの反射は一部残す。
-- **生成プロンプト全文**（外景を別生成し、壁へ遠近ワープする。**これが主ルート 1 つ**で、壁の全景生成は行わない）:
-  ```
-  $imagegen Create a flat, straight-on view of what is seen through a window: a narrow Showa-era Japanese back alley at sunset, warm orange and pink evening sky, wooden eaves of old houses with plain cloth awnings (noren) that are completely blank, tiled roofs, a utility pole with wires, a narrow lane receding into the distance, long soft shadows. No signs, no shop names, no lettering, no logos, no people. Slightly hazy, faded film look, fine grain.
-  Output 1536x1024 (3:2). No watermark.
-  ```
-- **作り方**: ①外景素材 3 テイク（人間が選ぶ）。②割付図: 右壁の消失点に合わせた窓の遠近台形 5〜6 枠（縦枠の位置は元写真から取る）。③外景を各枠へ遠近ワープ。④白い窓枠・反射ハイライトは元画像から戻す（桟は必ず元から）。⑤ポリゴン alpha で切り出す。
-- **難所と没基準**: 遠近が右壁の消失点と合わない・看板や電柱に文字が出る・暖色が床へ漏れる（別異変になる）のは没。壁の粒状感を維持。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳案**: category `surreal` / anomaly_type `surreal` / detail 「右の壁一面が窓になり、窓の外に夕焼けの昭和の路地が見える」。note に「大面積。CAM04-E14」を書く。
-- **排他**: `AR-04-red-lantern`（(506,242) 87x124、同じ右ガラス内）は窓の外景に隠れるため排他。`AR-04-puddle` は床で併存可。
-- **生成枚数の最小見積り**: 外景素材 3 テイク（全景生成なし）。
-
 ### CR-LG-04-02 左ガラス店先の曇りと手形
 
 - **ID / camera / element_id**: CR-LG-04-02 / CAM04 / CAM04-E07

@@ -3235,3 +3235,21 @@ anomalies:
     dimensions: '82x86'
     review_status: 'composited'
     note: "最近傍の既存は AR-01-floor-sign-reflection-inverted（32.0px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）。 overlay を生成位置から (0,-14) px ずらして配置。標準でも見える（最大差分224・平均差分76.0・n25=3230、check-visibility 実測）。つまみでさらに見やすくなる。ゲーム画面とライブ blink での確認は未了。"
+  - id: 'AR-04-window-alley'
+    candidate_id: 'CR-LG-04-01'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E14'
+    base_photo: 'public/images/cam4.webp'
+    category: 'surreal'
+    anomaly_type: 'surreal'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(684,0)–(1000,861)'
+    location: 'CAM04-E14、右壁一面、差分左上 (462,0) px'
+    detail: '右の壁一面が白い窓枠の連なる窓になり、窓の外に夕焼けの昭和の路地が見える'
+    generation_prompt: "Method: the outside view was generated separately with $imagegen (prompt below), cut into 6 vertical slices with white window frames added, and warped onto the right wall plane with scripts/composite-polygon.py tile (quad 462,190 675,-66 675,776 462,456, shade 0.4), then cut out with composite-polygon.py cutout (the dark pillar strip kept as a hole). Prompt: Create a flat, straight-on view of what is seen through a window: a narrow Showa-era Japanese back alley at sunset, warm orange and pink evening sky, wooden eaves of old houses with plain cloth awnings (noren) that are completely blank, tiled roofs, a utility pole with wires, a narrow lane receding into the distance, long soft shadows. No signs, no shop names, no lettering, no logos, no people. Slightly hazy, faded film look, fine grain."
+    overlay: 'assets/anomaly-overlays/cam04/window-alley.webp'
+    overlay_origin: '(462,0)'
+    dimensions: '213x775'
+    review_status: 'composited'
+    note: "大面積。CAM04-E14。alpha bbox 213x775=165,075 px²（画像比 27%）。排他（同プレイ非共存）: AR-04-red-lantern（bbox 重なり 10,788。同じ右ガラスで外景に隠れる）・AR-04-ceiling-balloon（bbox 重なり 7,452。窓の上辺が天井際で風船の右下に触れる）。併存可: AR-04-puddle（bbox 重なり 11,424 だが窓ポリゴンは右壁のみで床にかからない）。それ以外の既存は最近傍 AR-04-newspaper（15px）・AR-04-hatch-frame-round（16px）・AR-04-paper-cup（17px）。生成物は 2 テイクから 1 つ採用。外景を遠近ワープした面で、窓ごとの景色は 1 枚の路地を縦に切った断片。ゲーム画面とライブ blink での確認は未了。"
