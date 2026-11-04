@@ -769,7 +769,7 @@ anomalies:
     overlay_origin: '(655,773)'
     dimensions: '20x24'
     review_status: 'composited'
-    note: 'AR-07-craneは天井の折り鶴で、こちらは画面端の容器内。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
+    note: 'AR-07-craneは天井の折り鶴で、こちらは画面端の容器内。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。'
   - id: 'AR-05-lamp-dot'
     candidate_id: 'CR-05-30'
     camera_id: 'CAM05'
@@ -1201,7 +1201,7 @@ anomalies:
     overlay_origin: "(126,787)"
     dimensions: "120x48"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。生成位置は指示より手前だが対象の床タイル一枚に限定。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。生成位置は指示より手前だが対象の床タイル一枚に限定。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。"
   - id: "AR-04-orange-tile"
     candidate_id: "CR-04-13"
     camera_id: "CAM04"
@@ -1849,7 +1849,7 @@ anomalies:
     overlay_origin: '(425,688)'
     dimensions: '66x66'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。'
   - id: 'AR-01-floor-puddle-light'
     candidate_id: 'CR-01-15'
     camera_id: 'CAM01'
@@ -1867,7 +1867,7 @@ anomalies:
     overlay_origin: '(220,737)'
     dimensions: '132x116'
     review_status: 'composited'
-    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
+    note: '再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。'
   - id: 'AR-01-vent-hole-triangle'
     candidate_id: 'CR-01-29'
     camera_id: 'CAM01'
@@ -1938,7 +1938,7 @@ anomalies:
     overlay_origin: '(619,690)'
     dimensions: '56x154'
     review_status: 'composited'
-    note: 'プール外の新案。昭和の物(老人たちの記憶の像)。margin 24 で抽出(変化が要素箱を満たす)。目録 CAM01-E20 を実位置(青い桶の手前上の灰色の塊)に直した。変化域は下の青い桶(E19)にも及ぶ。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 排他: AR-01-right-wall-lattice-doors（右壁一面の大面積。同プレイで共存させない）。'
+    note: 'プール外の新案。昭和の物(老人たちの記憶の像)。margin 24 で抽出(変化が要素箱を満たす)。目録 CAM01-E20 を実位置(青い桶の手前上の灰色の塊)に直した。変化域は下の青い桶(E19)にも及ぶ。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積）・AR-01-right-wall-lattice-doors（右壁一面の大面積）（どちらとも同プレイで共存させない）。'
   - id: 'AR-01-shutter-stripe-break'
     candidate_id: 'CR-01-03'
     camera_id: 'CAM01'
@@ -2814,7 +2814,7 @@ anomalies:
     overlay_origin: '(27,746)'
     dimensions: '68x50'
     review_status: 'composited'
-    note: '令和（CR-RZ-01）。最近傍の既存は AR-01-lattice-tile（31px）、次点 AR-01-floor-puddle-light（125px）。標準で見える（max143.9/mean18.2/n25=738、自前計測）。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
+    note: '令和（CR-RZ-01）。最近傍の既存は AR-01-lattice-tile（31px）、次点 AR-01-floor-puddle-light（125px）。標準で見える（max143.9/mean18.2/n25=738、自前計測）。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。'
   - id: 'AR-03-silver-can'
     candidate_id: 'CR-RZ-03'
     camera_id: 'CAM03'
@@ -3028,7 +3028,7 @@ anomalies:
     overlay_origin: '(494,800)'
     dimensions: '90x92'
     review_status: 'composited'
-    note: '最近傍の既存は AR-01-milk-bottle-crate（35px、矩形距離の実測、重なりなし）。標準でも見える（最大差分227・平均差分59.6・n25=4128、check-visibility 実測）。つまみでさらに見やすくなる。ゲーム画面とライブ blink での確認は未了。'
+    note: '最近傍の既存は AR-01-milk-bottle-crate（35px、矩形距離の実測、重なりなし）。標準でも見える（最大差分227・平均差分59.6・n25=4128、check-visibility 実測）。つまみでさらに見やすくなる。ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。'
   - id: 'AR-02-chalk-hopscotch'
     camera_id: 'CAM02'
     element_id: 'CAM02-E20'
@@ -3505,7 +3505,7 @@ anomalies:
     overlay_origin: "(383,822)"
     dimensions: "80x61"
     review_status: 'composited'
-    note: "最寄りの既存は AR-01-floor-puddle-light と AR-01-red-rubber-ball（どちらも 31px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の帽子 AR-03-white-cap は別カメラ・別物。 麦わら帽子は生成結果から切り出し、約0.72倍に縮めて左へ寄せて貼った（元の配置では近傍の赤いゴムボールと30px未満になるため）。 ゲーム画面とライブ blink での確認は未了。"
+    note: "最寄りの既存は AR-01-floor-puddle-light と AR-01-red-rubber-ball（どちらも 31px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の帽子 AR-03-white-cap は別カメラ・別物。 麦わら帽子は生成結果から切り出し、約0.72倍に縮めて左へ寄せて貼った（元の配置では近傍の赤いゴムボールと30px未満になるため）。 ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。"
   - id: 'AR-06-wall-same-poster'
     candidate_id: 'CR-LG-06-01'
     camera_id: 'CAM06'
@@ -3577,7 +3577,7 @@ anomalies:
     overlay_origin: "(84,641)"
     dimensions: "65x75"
     review_status: 'composited'
-    note: "最寄りの小物は AR-01-power-bank（30px）・AR-01-bamboo-broom（31px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の籠・手提げ系は無し。 生成されたかごは box（46x56）より大きかったため、0.68倍に縮めて box 中心へ置き直した。最終 box は (80,630,160,725)。重なりを許す大面積: AR-01-wall-faces（壁一面の顔写真、小物との重なりは基準で許容）。 ゲーム画面とライブ blink での確認は未了。"
+    note: "最寄りの小物は AR-01-power-bank（30px）・AR-01-bamboo-broom（31px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の籠・手提げ系は無し。 生成されたかごは box（46x56）より大きかったため、0.68倍に縮めて box 中心へ置き直した。最終 box は (80,630,160,725)。重なりを許す大面積: AR-01-wall-faces（壁一面の顔写真、小物との重なりは基準で許容）。 ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。"
   - id: "AR-01-bubble-tea-cup"
     candidate_id: "CR-NEW-01-06"
     camera_id: "CAM01"
@@ -3595,7 +3595,7 @@ anomalies:
     overlay_origin: "(527,693)"
     dimensions: "49x77"
     review_status: 'composited'
-    note: "最寄りの既存は AR-01-red-rubber-ball（30px）・AR-01-floor-sign-reflection-inverted（36px）・AR-01-yellow-boots（37px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の飲み物カップ系の兄弟は別カメラ・別物。 カップは生成結果から切り出し、0.8倍に縮めて box 内へ置き直した（最終 box (522,688,586,772)）。 ゲーム画面とライブ blink での確認は未了。"
+    note: "最寄りの既存は AR-01-red-rubber-ball（30px）・AR-01-floor-sign-reflection-inverted（36px）・AR-01-yellow-boots（37px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の飲み物カップ系の兄弟は別カメラ・別物。 カップは生成結果から切り出し、0.8倍に縮めて box 内へ置き直した（最終 box (522,688,586,772)）。 ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。"
   - id: "AR-02-maroon-cushion"
     candidate_id: "CR-NEW-02-01"
     camera_id: "CAM02"
@@ -4136,6 +4136,27 @@ anomalies:
     dimensions: '64x73'
     review_status: 'composited'
     note: '小物。CAM06-E08。alpha bbox 64x73。最近傍の非大面積 overlay は AR-06-ceiling-balloons と AR-06-crt-tv-glow がともに 36.0px、次点 AR-06-sign-orange-blue 56.0px（alpha bbox 基準の実測）。生成した雨合羽は 3 テイクとも仕様 box (5,120,110,200) 80px 高より大きく、そのまま貼ると crt-tv-glow まで 11px・ceiling-balloons まで 16px になるため、合成後の overlay を 0.62 倍に縮小（104x118→64x73）し (22,124) に置いた。縮小前の合成で雨合羽の右下に紛れた壁の灰色の小片は、当初は黄色以外の画素のアルファを 0 にして除去したが、壁の影が水平線と垂直線で黒く切れる副作用が出た（レビュー指摘）。そのため後処理で作り直した: 合羽（黄色の最大連結成分＋フック）だけを抜き出して縁を羽毛化し、影は合羽のシルエットを右下へ 3px・2px ずらしてガウスぼかし（σ3.5、不透明度 0.65）した柔らかい影に置き換え、壁由来の画素は一切残さない。明度を持ち上げた合成でも直線的な縁が見えないことを目視確認済み。大面積 AR-06-ceiling-umbrellas とは座標が重なる（大面積は小物と重なってよい例外）。3 テイク中 3 を採用（最も小さく収まり、フック・ボタン・光沢が明瞭。文字・反射帯なし）。相互参照: 同系の黄色い雨具 CAM01 の黄色い長靴（別カメラ・別の物）。'
+  - id: 'AR-01-floor-crosswalk'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E17'
+    base_photo: 'public/images/cam1.webp'
+    category: 'surreal'
+    anomaly_type: 'surreal'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(0,783)–(1000,1000)'
+    location: 'CAM01-E17、手前の床一面、差分左上 (0,705) px'
+    detail: '手前の床一面に、屋外の道路のような白い横断歩道の縞が奥の消失点へ向かって並ぶ（文字・矢印なし）'
+    generation_prompt: 'Method: the 3:2 window (0,450)-(675,900) of cam1 (scale 2.2756, 1536x1024) was edited with $imagegen (3 takes, take 1 chosen: bars run along the corridor and converge; the other two came back as horizontal bars and were rejected), pasted back with composite-polygon.py restore, then cut out with composite-polygon.py cutout using the floor trapezoid (34,705) (631,705) (675,753) (675,900) (0,900) (0,736), feather 2. Prompt (VARIANT 1 = The bars are bright and crisp white, about the width of one floor tile each): Edit the attached surveillance camera photo of an underground shopping arcade corridor (cropped to a 3:2 window; the lower part of the frame is the glossy tiled floor).
+Make ONLY this change: on the floor of the lower part of the frame, from about 57% of the frame height down to the bottom edge and across the full width wall to wall, paint a pedestrian zebra crossing: nine or ten wide plain white road-paint bars that run along the direction of the corridor and converge toward the vanishing point (bars are long strips parallel to the side walls, with equal gaps between them), as on an outdoor road crossing. The paint is slightly worn and matte, the grain and joint lines of the tiles show faintly through it, and the existing long white light reflections on the floor still lie on top of the bars. The bars are bright and crisp white, about the width of one floor tile each.
+Keep the walls, the ceiling, the shopfronts, the far end of the corridor, the upper part of the floor and every fixture exactly unchanged. Paint no arrows, no other markings, no text and no objects.
+Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
+'
+    overlay: 'assets/anomaly-overlays/cam01/floor-crosswalk.webp'
+    overlay_origin: '(0,705)'
+    dimensions: '675x195'
+    review_status: 'composited'
+    note: '大面積。CAM01-E17。alpha bbox 675x195=131,625 px²（画像比 21.7%）。同カメラの大面積 AR-01-wall-faces（左壁）とは 5px 離れ重ならず、AR-01-ceiling-lanterns（天井）とも重ならない。排他（同プレイ非共存。床の手前の帯が縞で覆われる）: AR-01-floor-puddle-light・AR-01-lattice-tile・AR-01-power-bank・AR-01-red-rubber-ball・AR-01-straw-hat・AR-01-bamboo-basket・AR-01-bubble-tea-cup・AR-01-floor-sign-reflection-inverted・AR-01-milk-bottle-crate・AR-01-container-origami・AR-01-floor-light-orphan。bbox が接するだけの AR-01-bamboo-broom は縞の上に載らない（床 y705 より上）ため併存可。ポリゴンは床の台形で壁・巾木・敷居の上へは出ない。縞の上にも床の白い反射帯が残る（生成結果のまま）。バケツは元写真のまま縞の上に載っている。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-right-wall-lattice-doors'
     camera_id: 'CAM01'
     element_id: 'CAM01-E12'

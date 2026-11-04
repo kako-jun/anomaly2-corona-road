@@ -140,7 +140,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 
 | ID | 種別 | category / anomaly_type | 面・位置 | 概要 |
 | --- | --- | --- | --- | --- |
-| AR-01-floor-crosswalk | 大面積 | surreal / surreal | 手前の床一面 (0,705,675,900) | 床一面に横断歩道の白線が敷かれる |
 | AR-01-ceiling-lamp-off | 小物 | environment / state_change | 左天井 (60,168,128,222) | 左の丸い埋め込み灯が消えて黒い円になる |
 | AR-01-ceiling-tile-drop | 小物 | object / displace | 右上天井 (405,122,479,198) | 天井板が一枚、片側だけ外れて垂れ下がる |
 | AR-01-ceiling-wet-stain | 小物 | environment / state_change | 中央天井 (290,212,370,248) | 天井に濡れた丸い染みが広がり水滴が垂れかける |
@@ -156,32 +155,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 
 ### 大面積
 
-#### AR-01-floor-crosswalk — 床一面の横断歩道
-
-- **camera / element_id**: CAM01 / CAM01-E17（床タイル。E18 の反射帯も面に含まれる）
-- **面**: box `0,705,675,900`（131,625 px²、画像の 21.7%）。手前の床の全幅の帯。地下街の廊下の床が、屋外の道路の横断歩道に変わる。
-- **物と変化**: 手前の床に、白い塗装の太い縞（横断歩道）が 9〜10 本、**廊下の奥行き方向に走って消失点へ収束**するように並ぶ。縞は左右の壁際まで全幅に続き、各縞の間には元の床タイルと目地が見える。塗装はかすれ、タイルの粒と目地が縞を透かす。屋外の舗装の模様が屋内にあるだけで、他の物・人・文字はない。
-- **不気味さの狙い**: 屋内の床なのに道路の印だけが敷かれ、「渡る」先が見えない。同じ縞が床一面に繰り返される、反復空間の違和感。story の「懐かしい昭和のまま帰りたくない老人」と、4 人目の子供が渡れなかった道（令和の通学路）の両方に読める（意味づけは台詞側で決める）。
-- **保持するもの**: 壁・天井・店先・床の奥側（y705 より上）、床の白い反射帯の位置と明るさ（縞の上にも反射が乗る）、タイル目地、床上の既存の異変（排他にした物を除く）。
-- **3:2 の窓**: 1 枚、`composite-polygon.py crop --base public/images/cam1.webp --crop 0,450,675,900 --out <PNG>`（縮尺 1536/675 ≈ 2.2756。box は窓内の y 580〜1024）。復元は `restore --crop 0,450,675,900`。差分抽出は床の台形ポリゴン（左は壁際の巾木の線、右は敷居の手前、上は y705 の水平線）を `cutout` に渡す。
-- **生成プロンプト全文**（3 テイクとも `VARIANT` 行だけ差し替え）:
-
-  ```text
-  $imagegen Edit the attached surveillance camera photo of an underground shopping arcade corridor (cropped to a 3:2 window; the lower part of the frame is the glossy tiled floor).
-  Make ONLY this change: on the floor of the lower part of the frame, from about 57% of the frame height down to the bottom edge and across the full width wall to wall, paint a pedestrian zebra crossing: nine or ten wide plain white road-paint bars that run along the direction of the corridor and converge toward the vanishing point (bars are long strips parallel to the side walls, with equal gaps between them), as on an outdoor road crossing. The paint is slightly worn and matte, the grain and joint lines of the tiles show faintly through it, and the existing long white light reflections on the floor still lie on top of the bars. VARIANT.
-  Keep the walls, the ceiling, the shopfronts, the far end of the corridor, the upper part of the floor and every fixture exactly unchanged. Paint no arrows, no other markings, no text and no objects.
-  Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-
-  - VARIANT 1: `The bars are bright and crisp white, about the width of one floor tile each`
-  - VARIANT 2: `The bars are slightly yellowish-white and heavily worn, with chipped edges`
-  - VARIANT 3: `The bars are narrower, ten of them, with the tile joints clearly visible through the paint`
-- **作り方**: ①割付図: 消失点（奥の開口付近、おおよそ (355,480)）へ向かう流線に沿って、縞の左右の縁を `uv run --with pillow python3` で描いて確定（向きは文章でなく図）。②窓 1 枚を 3 テイク。③ポリゴン内の差分だけを `cutout`（閾値を使わない）。縞が y705 より上へ漏れたら没。④床の反射帯が縞の上に残っていることを原寸で確認（`blend --mode screen --layer <baseline>` で反射を戻す）。
-- **難所と没基準**: 縞が床の奥行き方向でなく手前—奥の逆（横向き）になったら没。縞が 6 本未満・太さが不揃いなら没。矢印・文字・車線の白線などが出たら没。縞が壁・巾木に乗ったら没。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳登録案**: id `AR-01-floor-crosswalk` / `element_id: CAM01-E17` / `category: surreal` / `anomaly_type: surreal` / `location`: 手前の床一面 / `detail`: 「手前の床一面に、屋外の道路のような白い横断歩道の縞が奥の消失点へ向かって並ぶ（文字・矢印なし）」 / phase late / obvious。note に「大面積。CAM01-E17」「box と既存 overlay の重なり表（機械出力）」「排他: 下記」を書く。
-- **排他**: 床の手前の帯（y705〜900）に載る小物は縞に覆われる。**`AR-01-floor-puddle-light`・`AR-01-lattice-tile`・`AR-01-power-bank`・`AR-01-red-rubber-ball`・`AR-01-straw-hat`・`AR-01-bamboo-basket`・`AR-01-bubble-tea-cup`・`AR-01-floor-sign-reflection-inverted`・`AR-01-milk-bottle-crate`・`AR-01-container-origami`・本節の `AR-01-floor-light-orphan`** は同プレイで共存させない（台帳 note に「同プレイで共存させない」と書く。ゲームは 1 カメラ 1 件しか同時に出さないので運用上の保証）。
-- **相互参照 / 重複精査**: 同カメラの大面積（左壁の顔写真・天井の提灯）とは別の面。他カメラの床の大面積（`AR-02-floor-footprints` 足跡、CAM03 の畳、CAM05 の折り鶴、CAM08 の水鏡）とは**型が別**（道路標示）。台帳の「横断歩道」は他になし（`candidate-pool.md` の 3 節にも該当なし）。
 
 ### 小物
 
