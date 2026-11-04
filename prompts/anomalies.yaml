@@ -3721,4 +3721,4 @@ anomalies:
     overlay_origin: '(391,775)'
     dimensions: '144x120'
     review_status: 'composited'
-    note: '最近傍の既存は AR-03-silver-can（30.0px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）、次点 AR-03-kerosene-heater（30.4px）。大面積 AR-03-floor-tatami の bbox 内（小物は重なってよい）。相互参照: AR-02-tricycle（CAM02・色褪せた赤）の反復シリーズで、こちらは鮮やかな赤の金属フレーム。画像の出来: 赤フレーム・黒い座面とタイヤ・強い接地影。文字なし。ゲーム画面とライブ blink での確認は未了。'
+    note: '最近傍の既存は AR-03-silver-can（30.0px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）、次点 AR-03-kerosene-heater（33px）。大面積 AR-03-floor-tatami の bbox 内（小物は重なってよい）。相互参照: AR-02-tricycle（CAM02・色褪せた赤）の反復シリーズで、こちらは鮮やかな赤の金属フレーム。画像の出来: 赤フレーム・黒い座面とタイヤ・強い接地影。文字なし。ゲーム画面とライブ blink での確認は未了。'
