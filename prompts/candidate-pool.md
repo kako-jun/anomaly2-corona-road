@@ -659,7 +659,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
 | ID | category | anomaly_type | 変化 | 大小 |
 | --- | --- | --- | --- | --- |
 | AR-03-floor-shadows | person | add_person | 壁の向こうに立つ人の影だけが床に並ぶ（大面積） | 大面積 |
-| AR-03-shutter-fingers | person | add_person | 左シャッターの横縞の隙間から白い指が数本だけ覗く | 小物 |
 | AR-03-floor-line-break | environment | state_change | 床のタイル目地の線が一本だけ途中で途切れる | 小物 |
 | AR-03-tube-light-bent | environment | state_change | 右上の蛍光灯の光が、床の反射と違う向きへ折れ曲がる | 小物 |
 | AR-03-ceiling-eye | surreal | surreal | 天井の暗い隙間から白い目が一つ覗く | 小物 |
@@ -702,35 +701,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
   ```
 - **相互参照 / 重複精査**: 同型は CAM08 の AR-08-old-man-back などの『人の姿』だが、本件は姿を描かず影だけで、面（床）一面の大面積。CR-03-42（床の反射に傘の影）・CR-03-35（吊り器具の影）は物の影で別物。CR-01-06（奥の人影）は CAM01。既存の CAM03 台帳に影・人物の異変はない。
 - **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-dark-tile / AR-03-floor-line-break（同じ床の面）。併存可=壁面・看板・既存の床小物（影は物の接地部で止める）。既存 overlay との重なり px²（box 基準）: AR-03-sign-glow-blue 13,081 / AR-03-slipper-single 3,074 / AR-03-walking-cat 2,800 / AR-03-coffee-text-missing 2,535 / AR-03-crate-duplicate 2,508 / AR-03-face-ornament 1,600 / AR-03-sunken-opening-floor 972 / AR-03-shutter-faded-poster 896 / AR-03-white-cap 660 / AR-03-pink-ornament 140。本節の新規小物との重なり: AR-03-dark-tile 3,150 / AR-03-floor-line-break 1,892（ともに排他）、AR-03-roll-vanish 840 / AR-03-shutter-raised 1,176（併存可）。
-
-### AR-03-shutter-fingers — 左シャッターの横縞の隙間から白い指が数本だけ覗く
-
-- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E06
-- **物と変化**: 左の大きな横縞シャッターの、横縞の間の隙間に、内側から板の縁をつかむように青白い指が数本だけ現れる（手のひら・腕・顔は写らない。指だけ）。閉店後の店の中に誰かがいる。
-- **box (x1,y1,x2,y2)**: (104,380,160,422)（56x42）
-- **最寄り既存 overlay と実測距離**: AR-03-shutter-wave (71.0)、次点 AR-03-newspaper (72.0)。大面積 AR-03-shutter-blank-papers の alpha（貼り紙・シャッター面）と box が重なる（alpha 重なり 2,083 px²。小物と大面積の重なりは README の例外）。
-- **6倍クロップ範囲**: 6倍クロップ (36,311)–(292,482)（256x171）。box は窓内で (408,414)–(744,666)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: four pale, slender, slightly curled human fingers (index to little finger, only the first two joints, no palm, hand, wrist or arm) pushed out through the dark gap between two horizontal slats of the grey roll-up shutter, as if someone behind the shutter is gripping the edge of the slat. They sit across one slat gap, about x=408 to 744 and y=414 to 666 in the 1536x1024 frame, with a thin dark shadow under them. Plain bare skin in cold blue-grey light, no rings, no nail polish, no marks. Do not change the slats, the stains, the screw head or anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: three pale fingers (only the tips and first joints, slightly bent, no hand visible) hooked over the lower edge of one horizontal slat of the grey roll-up shutter, coming out of the dark slat gap, at about x=420 to 730, y=420 to 660 in the 1536x1024 frame, with a soft shadow below. Plain skin, no rings, no marks, no nails decoration. Everything else stays identical. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: a pair of pale, thin human fingers (two fingers only, slightly curled, fingertips only) poking out through the gap between two shutter slats from the dark behind, at about x=430 to 720, y=430 to 650 in the 1536x1024 frame, slightly lit by the cold light, a thin dark shadow beneath. No hand, no arm, no face. Do not alter the shutter, the stains or anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-03-shutter-fingers'
-    candidate_id: 'AR-03-shutter-fingers'
-    camera_id: 'CAM03'
-    element_id: 'CAM03-E06'
-    base_photo: 'public/images/cam3.webp'
-    category: 'person'
-    anomaly_type: 'add_person'
-    location: 'CAM03-E06 の左シャッター中ほど、差分左上 (104,380) 付近（貼り込み後に再計測）'
-    detail: '左の横縞シャッターの隙間から、内側から縁をつかむように白い指が数本だけ覗く（手のひら・腕・顔は写らない）。'
-    overlay: 'assets/anomaly-overlays/cam03/shutter-fingers.webp'
-    # phase / 目立ち度: early / medium
-    note: '最寄り既存 overlay は AR-03-shutter-wave（box 距離 71px）。大面積 AR-03-shutter-blank-papers と同じシャッター面で alpha が重なるため排他（同プレイで共存させない）。小さな指だけで視認性下限が厳しいので、check-visibility を必ず通す（通らなければ指を増やすか太くする）。'
-  ```
-- **相互参照 / 重複精査**: 同型の人物は CAM01 AR-01-back-view-paper-bag・CAM05 AR-05-old-woman-in-glass・CAM06 AR-06-worker・CAM08 AR-08-old-man-back（いずれも全身の後ろ姿）で、本件は指だけ・シャッターの内側から。CAM04 AR-04-glass-fog-handprints（ガラスの手形）とは面も表現も別。台帳に CAM03 の人物の異変は無い。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-shutter-blank-papers（同じシャッター面）。併存可=床・看板・天井の異変。新規小物どうしの最寄りは AR-03-roll-vanish で 300px 以上。
 
 ### AR-03-floor-line-break — 床のタイル目地の線が一本だけ途中で途切れる
 
