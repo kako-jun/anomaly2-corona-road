@@ -3416,3 +3416,21 @@ anomalies:
     dimensions: '165x541'
     review_status: 'composited'
     note: '大面積（bbox 165x541=89,265px²、画像の14.7%）。CAM02-E07。排他（同プレイで共存させない。同じ店先の面を覆う）: AR-02-shop-reopens (41,250) / AR-02-open-sign (8,064) / AR-02-newspaper (6,298) / AR-02-cat (6,305) / AR-02-wrapping-paper (1,026)。併存可（床。画用紙はシャッター下端の接地線で止める）: AR-02-puddle (16,874) / AR-02-cigarette (2,294) / AR-02-receipt (2,420) / AR-02-tile (896) / AR-02-tile-color (1,118)（重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-02-01（床一面の足跡）とは bbox が重なるが面は別（床とシャッター）。画用紙は縦枠の線上にも貼らず、枠で止めた。画像の出来: 1 枚の絵の複製（人型 4・赤い家・太陽）。ゲーム画面とライブ blink での確認は未了。同カメラの大面積 CR-LG-02-01（AR-02-floor-footprints）とは bbox が重なる（165x260）が面は床とシャッターで別。alpha 重なりは 267 px² と小さく、併存可。画像の調整: 画用紙は彩度を落として黄ばませ、シャッターの明暗に合わせて暗くした。人型の顔は黒く塗りつぶし、数枚の紙に欠け（シャッターが覗く穴）と剥がれの縁を足した。'
+  - id: "AR-02-tanabata-paper-chain"
+    candidate_id: "CR-NEW-02-04"
+    camera_id: "CAM02"
+    element_id: "CAM02-E01"
+    base_photo: "public/images/cam2.webp"
+    category: "environment"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(709,0)–(889,46)"
+    location: "CAM02-E01、差分左上 (479,0) px"
+    detail: "天井の上端から色紙の輪つなぎ飾りが弧を描いて垂れる（昭和の行事の記憶。文字なし）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the garland was moved up 8 px (both ends already ran off the top edge; at the generated position its lower edge came within 23 px of the smoke), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: at the very top of the frame on the dark ceiling, one chain of interlocking paper rings (a wa-tsunagi garland of about six plain rings in saturated red, yellow, blue and green colored paper) is draped in a shallow U-shaped swag, with both ends running off the top edge of the frame, completely plain with no writing and no pattern. Make it about 1.4x larger than real scale and highly saturated. Add a faint soft shadow on the ceiling behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark ceiling panel, the round light, the red sign on the right or the dark wall edge. Place the object, including its shadow, centered at about 50% from the left and 12% from the top of the image, occupying roughly 37% of the image width and 23% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam02/tanabata-paper-chain.webp"
+    overlay_origin: "(479,0)"
+    dimensions: "122x41"
+    review_status: 'composited'
+    note: "最寄りの既存は AR-02-smoke（33px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。吊り飾り系の兄弟 CR-NEW-01-04（万国旗・CAM01）・CR05N-5・CR06N-5・AR-07-crane は別カメラ・別物。 輪つなぎは生成位置から約8px上へ寄せた（両端はもともと上端の外へ出る構図。そのままだと下端が AR-02-smoke に23pxまで近づくため）。最終 box (484,0,598,40)。 ゲーム画面とライブ blink での確認は未了。"
