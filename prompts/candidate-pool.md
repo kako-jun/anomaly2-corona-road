@@ -1286,25 +1286,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: `AR-02-shop-reopens`（(0,308) 199x250、同じ店先）・`AR-02-newspaper`・`AR-02-open-sign`・`AR-02-wrapping-paper`・`AR-02-cat`（同じ面を覆う）。変化の種類は別だが画面が潰し合うので同プレイ非共存。
 - **生成枚数の最小見積り**: 素材 3 テイク。
 
-### CR-LG-03-01 シャッター一面の無地の白い紙
-
-- **ID / camera / element_id**: CR-LG-03-01 / CAM03 / CAM03-E06
-- **面**: box 0,100,268,670（152,760 px²、25.1%）。左の大きな横縞シャッターの台形（手前左端〜中央左の柱まで）。
-- **物と変化**: シャッター一面に、**文字のまったくない無地の白い紙**（A4 前後）が隙間なく貼られる。紙は 1 枚ずつ微妙に傾き、角が浮き、テープ止めの跡がある。横板の段差は紙の下に透ける。
-- **不気味さの狙い**: 尋ね人の貼り紙の「書かれる前」。誰の貼り紙かは分からないが、貼られた量だけが行方不明の多さ（1 人増えるたびに異変が増えた）を語る。
-- **保持するもの**: 横板の凹凸・影・汚れ・右の柱・床・天井。
-- **生成プロンプト全文**（紙素材を 1 枚別生成）:
-  ```
-  $imagegen Create one flat, straight-on photo of a single plain sheet of white copier paper (portrait orientation, slightly curled corners, tiny creases, a faint grey dust cast) fixed to a wall with a short strip of clear tape at the top two corners. The paper is completely blank: no writing, no printing, no letters, no numbers, no lines, no logo, no photo. Soft even low-light surveillance-camera lighting, fine film grain, mild JPEG compression, plain dark grey shutter-metal background visible around the sheet.
-  Output 1536x1024 (3:2). No watermark.
-  ```
-- **作り方**: ①素材 2 テイクから 1 枚選ぶ。②割付図: シャッター台形に紙格子（7 列×13 行前後。手前ほど大きい）、各枚 ±3 度回転・縮尺 ±5%・明度 ±8%・角の浮きを変える。紙の隙間はゼロ（隙間なく）。③横板の段差を multiply で紙に反映（紙の下に縞が透ける）。④ポリゴン alpha で切り出し、柱・床の境で止める。
-- **難所と没基準**: 紙面に文字風の汚れ・線が出たら没。隙間なく貼ると単色の白面になり「何が違う」が分かりにくいので、紙の傾きと影で格子を見せる。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳案**: category `object` / anomaly_type `duplicate` / detail 「左のシャッター一面に、無地の白い紙が隙間なく貼られる」。note に「大面積。CAM03-E06」を書く。
-- **排他**: `AR-03-newspaper`・`AR-03-paper-bag`・`AR-03-shutter-wave`（同じシャッターの小物。面を覆うので同プレイ非共存）。CR-LG-02-02（CAM02 の画用紙）・06-01（ポスター）とは型が「無地の紙／絵柄」で別。
-- **生成枚数の最小見積り**: 素材 2 テイク。
-
 ### CR-LG-03-02 床一面の畳
 
 - **ID / camera / element_id**: CR-LG-03-02 / CAM03 / CAM03-E16
