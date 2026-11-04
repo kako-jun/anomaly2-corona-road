@@ -4152,4 +4152,4 @@ anomalies:
     overlay_origin: '(0,833)'
     dimensions: '94x66'
     review_status: 'composited'
-    note: '最近傍の既存の小物は AR-01-lattice-tile（32.0px）・AR-01-power-bank（37.0px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。床一面の AR-01-floor-crosswalk と排他（同プレイで共存させない。縞が光だまりを覆う）。仕様の box（2,832,92,898）より広く生成された光だまり（122x86）が AR-01-lattice-tile に 4px まで寄ったため、0.77 倍に縮めて原点 (0,833) へ置き直した（94x66）。 ゲーム画面とライブ blink での確認は未了。'
+    note: '最近傍の既存の小物は AR-01-lattice-tile（32.0px）・AR-01-power-bank（37.0px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。床一面の AR-01-floor-crosswalk と排他（同プレイで共存させない。縞が光だまりを覆う）。仕様の box（2,832,92,898）より広く生成された光だまり（122x86）が AR-01-lattice-tile に 4px まで寄ったため、0.77 倍に縮めて原点 (0,833) へ置き直した（94x66）。右端・下端・上端の alpha を後処理で羽毛状にぼかし、矩形の切れ目が見えないようにした。 ゲーム画面とライブ blink での確認は未了。'
