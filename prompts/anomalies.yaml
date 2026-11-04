@@ -3252,7 +3252,7 @@ anomalies:
     overlay_origin: '(29,457)'
     dimensions: '647x443'
     review_status: 'composited'
-    note: '大面積（bbox 647x443、画像の47%）。CAM03-E16。生成された畳の左縁がタイル目地の斜線に沿って床の手前左まで伸びたため、仕様の box（x290〜）より左へ広がった（縁は生成物の実際の畳の縁で止めた。左の床タイルは保持）。上端は畳の継ぎ目（y457）で切った。排他（同プレイで共存させない。畳の上に成立しない）: AR-03-round-puddle (2,736) / AR-03-tile-diagonal (14,534) / AR-03-blue-floor-tile (15,015)。併存可: AR-03-kerosene-heater (15,750) / AR-03-silver-can (5,251)（畳の上に載る形。ゲームは1カメラ1件制）/ AR-03-newspaper (7,884) / AR-03-paper-bag (2,964)（シャッター前。重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-03-01（AR-03-shutter-blank-papers、シャッター面）とは bbox が重ならない。畳の目の向き・へりは地面の遠近に沿い、反射は残った。ゲーム画面とライブ blink での確認は未了。'
+    note: '大面積（bbox 647x443、画像の47%）。CAM03-E16。生成された畳の左縁がタイル目地の斜線に沿って床の手前左まで伸びたため、仕様の box（x290〜）より左へ広がった（縁は生成物の実際の畳の縁で止めた。左の床タイルは保持）。上端は畳の継ぎ目（y457）で切った。排他（同プレイで共存させない。畳の上に成立しない）: AR-03-round-puddle (2,736) / AR-03-tile-diagonal (14,534) / AR-03-blue-floor-tile (15,015)。併存可: AR-03-kerosene-heater (15,750) / AR-03-silver-can (5,251)（畳の上に載る形。ゲームは1カメラ1件制）/ AR-03-newspaper (7,884) / AR-03-paper-bag (2,964)（シャッター前。重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-03-01（AR-03-shutter-blank-papers、シャッター面）とは bbox は重なる（229x193、x29〜229・y457〜650）が、面（床とシャッター）は別で alpha 重なりは 0。併存可。畳の目の向き・へりは地面の遠近に沿い、反射は残った。ゲーム画面とライブ blink での確認は未了。画像の調整: 畳の黄緑を少し落とし（彩度を約 8 割に、青灰色寄りに）画面の色に馴染ませた。'
   - id: 'AR-05-curtains-open-cafe'
     candidate_id: 'CR-LG-05-01'
     camera_id: 'CAM05'
