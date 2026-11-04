@@ -677,24 +677,6 @@
 - **視認性の注意**: 暗床に暗緑は沈む。明るめの黄緑寄りの緑で、金属のハイライトを強く入れる。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '手前中央の暗い床に、無地の緑色のブリキのじょうろが一つ横たわる'` / `candidate_id: 'CR05N-3'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 
-#### CR05N-5 — 白い紙の吹き流し
-
-- **camera / element_id**: CAM05 / CAM05-E01
-- **物と変化**: 暗い天井の左寄りに、七夕飾りの無地の白い紙の吹き流しが、張った紐から横に連なって垂れる。※box が横長(165x40)なので「一本」を「一本の紐から細い紙帯が連なる」に変更
-- **最終 box**（baseline px）: `135,10,300,50`（165x40）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `90,0,346,171`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (45,10)-(210,50)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark ceiling at the upper left, from one taut thin string, plain white paper streamers hang down: about eight thin white paper strips of slightly different lengths (up to 40 pixels), a tanabata streamer decoration, completely plain with no writing, no tanzaku tag and no pattern. Make the strips about 1.4x wider than real scale and brightly white. Add a faint soft shadow on the ceiling behind the strips. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark ceiling panel seams, the round light at the top left corner, the camera dome or the glass shop front below. Place the object, including its shadow, centered at about 50% from the left and 18% from the top of the image, occupying roughly 64% of the image width and 23% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 暗い天井の継ぎ目・左上隅の丸灯・カメラドーム・下のガラス店舗。
-- **最寄り既存 overlay と実測距離**: AR-05-brown-column まで 32.0px（box 基準・矩形間のユークリッド距離、次点 AR-05-duplicate-light 35.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / late / subtle
-- **視認性の注意**: 天井は暗く帯が狭い（高さ40px）。純白で明度差を稼ぎ、紙帯を太めにする。暗い天井の黒潰れ部分には掛けない。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '暗い天井の左寄りに、七夕飾りの無地の白い紙の吹き流しが垂れる'` / `candidate_id: 'CR05N-5'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: **近い既存: AR-05-white-ribbon（CAM05・左端の蛍光灯から小さな白いリボンが下がる）。** 別位置（左上の暗い天井）・七夕モチーフの吊り飾りシリーズとして扱い、制作前に見比べる。兄弟: CR-NEW-01-04・CR-NEW-02-04・CR06N-5・AR-05-wind-chime（透明風鈴と短冊）。
-
 #### CR05N-6 — 茶色い野球グローブ
 
 - **camera / element_id**: CAM05 / CAM05-E13
