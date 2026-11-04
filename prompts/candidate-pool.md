@@ -1480,27 +1480,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: `AR-07-crane`（(325,0) 79x240、天井から吊る折り鶴。本件と同じ面）・`AR-07-ceiling-string`・`AR-07-paper-tag-lamp`・`AR-07-paper-airplane-ceiling`・`AR-07-lamp-off`（天井の小物）。
 - **生成枚数の最小見積り**: 全景 3 テイク。
 
-### CR-LG-08-01 床一面の水鏡（映るのは昭和の夕焼けの商店街）
-
-- **ID / camera / element_id**: CR-LG-08-01 / CAM08 / CAM08-E16（E17/E18 を含む床一面）
-- **面**: box 0,265,675,900（428,625 px²、70.6%）。**床の全面**。旧案の box 0,430,675,900 は床の上半分（柱の左の床、通路入口、ガラス戸の前）を残し、y430 に水平な継ぎ目ができるため、床の上縁まで広げた。実測（`public/images/cam8.webp`）: 床は左の通路入口で y≈265（x≈250）、ガラス戸の足元 y≈330（x0〜128）、壁の巾木 y≈320（x128〜180）、柱の根元 y≈400〜425、右壁の巾木は (452,400)→(540,660)→(675,720) の斜線から始まる。
-- **水面の境**: 水平な直線で切らない。**壁・柱・ガラス戸・右の黒い柱の足元の接地線（巾木）**と、奥の通路（柱の右、x≳395・y≲420 の細い通路）の入口の床目地に沿わせる。通路内の床は元のまま（ポリゴンの外）。
-- **物と変化**: 床全面が薄く水を張ったような鏡面になる。水面に映るのは本来の天井でなく、夕焼けの空・電線・昭和の商店街の屋根と無地の吊り看板（逆さ）。柱の根元の影と柱そのものの反射は正しく映り、床の目地は水の下に薄く透ける。夕焼けの方向は右奥。さざ波は弱く。
-- **不気味さの狙い**: 現実の天井は変わらないのに、床だけが「上に昭和の空がある」ように見える。老人の記憶が作る像（story）。
-- **保持するもの**: 柱 E11 と根元、右の壁／パネル E14/E15 の足元、奥の通路、左のガラス戸とその枠、既存の床反射の白い光点（上からかぶせる）。床の目地格子は multiply 30% で透けさせる。
-- **生成プロンプト全文**（窓 A: y255〜705。窓 B: y450〜900 は「the floor continues down to the bottom edge of the frame」に差し替え、窓 A の貼り戻し済み全画面から切り出す）:
-  ```
-  $imagegen Edit the attached surveillance camera photo of a large tiled underground hall.
-  Make ONLY this change: the entire visible floor, from the base of the walls and the pillar down to the bottom edge of the frame, becomes a thin, perfectly calm sheet of water acting as a mirror. The water edge follows the wall bases, the pillar base and the base of the glass door, never a straight horizontal line. In the water we see, mirrored, not the real ceiling but a warm orange-pink sunset sky with thin clouds, overhead wires, tiled roofs of a Showa-era Japanese shopping street and hanging signboards that are completely blank white (reflected upside-down), the sun low in the far right. The pillar and the bottom of the right-hand wall are reflected correctly in the water, with their contact lines continuing seamlessly into their mirror images; faint tile joints remain visible beneath the water. The existing white lamp reflections on the floor remain as bright spots. The ripples are very weak.
-  Do not touch the ceiling, pillar, walls, the glass door of the left shopfront, or the far corridor beyond the pillar (its floor stays dry). There must be no letters on the reflected signboards, no logos, no shop names. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-- **作り方**: ①割付図: 反射の幾何（画面を水平な鏡面で垂直反転した像の位置）を先に決め、柱の接地線を軸にした鏡像と、夕焼けの方向（右奥）を図示。**窓 A・B で同じ割付図を使う**。②窓 A を 3 テイク生成して採用 → A を貼り戻した全画面から窓 B を切り出し 3 テイク（共通手順の 3 を参照）。③床のポリゴン（上の「水面の境」）内を採用し、元の床の明暗階調を multiply で一部乗せる。④`--box 0,265,675,900 --threshold 24` と高めにし、広範囲の粒状ノイズを拾わない。**下絵に `flip` を使う場合の軸と範囲**（`flip` は反射元が画像外になる画素を変更しない）: `--axis-y Y` で行 y は行 2Y−1−y を映す。範囲の全画素が反射元を持つ条件は 0 ≤ 2Y−1−y ≤ 899、すなわち **y ≤ 2Y−1 かつ y ≥ 2Y−900**。床が y899 まで続くので、1 回で全域（y265〜899）を覆うには **450 ≤ Y ≤ 582**（Y ≥ 450 で y899 が、Y ≤ (900+265)/2 で y265 が反射元を持つ）。ただし柱の接地線（y≈400〜425）を軸にすると鏡像が連続する反面、軸 Y=420 では y≤839 しか覆えない（実測例: axis-y 400・範囲 y420〜900 だと y≥800 が未変更）。そこで **2 回に分ける**: ①`--axis-y 420 --region <床のポリゴンのうち y265〜839>`（柱の根元と鏡像が連続）、②`--axis-y 450 --region <y840〜899>`（行 899−y を映す。全域が反射元を持つ）。②は下端の帯で、窓 B の生成結果で上書きしてよい。`--brightness`（水は暗い）と `--blur` で水面らしくし、最終の夕焼けの色は窓 A・B の生成結果から採用する。
-- **難所と没基準**: 面積が最大で作り物感が出やすい。柱の接地線が鏡像と連続しない・看板に文字・夕焼けの色相が弱く「何が違う」か不明・水面の上縁が水平な直線になる・窓 A/B の継ぎ目で夕焼けの向きがずれるのは没。既存の足元反射の光点を消さない。
-- **フェーズ / 目立ち度**: mid〜late / obvious。
-- **台帳案**: category `surreal` / anomaly_type `reflection` / detail 「床全面が水鏡になり、映るのは天井でなく昭和の夕焼けの商店街」。note に「大面積。CAM08-E16。08-02 とは排他」を書く。
-- **排他**: **`CR-LG-08-02`（積まれたテレビの山。同じ床を使い、水面に積まれたテレビには接地反射が要るため）**。床の小物 `AR-08-floor-reflection-two-tier`・`AR-08-floor-reflection-no-pillar`・`AR-08-tile-concentric`・`AR-08-floor-ramune-marbles`・`AR-08-cat`・`AR-08-barber-pole`、柱の鏡像が合わなくなる `AR-08-pillar-second`、パネルの光が鏡像と食い違う `AR-08-panel`・`AR-08-panel-off`・`AR-08-blue-panel`。壁・柱・ガラス戸の面の物（`AR-08-wall-band-wave` `AR-08-suit` `AR-08-pillar-notice` `AR-08-bag` ほか）は併存可（全件は「box と既存 overlay の重なり」の表）。
-- **生成枚数の最小見積り**: 全景 6 テイク（窓 A 3＋窓 B 3。素材の別生成なし）。
-
 ### CR-LG-08-02 左のショーウィンドウに積まれた白黒テレビ
 
 - **ID / camera / element_id**: CR-LG-08-02 / CAM08 / CAM08-E06・E07（左の店先ガラス戸一面）
