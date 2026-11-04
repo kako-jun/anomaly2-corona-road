@@ -1325,25 +1325,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: 床の小物（`AR-03-round-puddle` `AR-03-silver-can` `AR-03-kerosene-heater` `AR-03-tile-diagonal` `AR-03-blue-floor-tile`）は畳の上に載る形になるので、水たまり・タイル色変えの 3 件は排他（畳の上に水たまり・タイルは成立しない）。石油ストーブ・缶は併存可。
 - **生成枚数の最小見積り**: 全景 3 テイク。
 
-### CR-LG-04-01 窓の外の昭和の路地（右壁）
-
-- **ID / camera / element_id**: CR-LG-04-01 / CAM04 / CAM04-E14
-- **面**: box 450,120,675,750（141,750 px²、23.3%）。右壁（ガラス窓と漆喰壁）の遠近台形。
-- **物と変化**: 右の黒い店舗ガラスの壁が、白い窓枠が連続する壁に変わり、窓の外に夕焼けの昭和の路地（木造の軒、電柱、瓦屋根、細い路地）が広がる。地下街に窓はない。
-- **不気味さの狙い**: 地下にないはずの夕焼けが窓の外にある。説明がつかないが優しい。「外へ帰りたい」気持ちの象徴（老人の記憶）。
-- **保持するもの**: 床・天井・柱縁・奥の扉と鉢植え・左壁。窓枠は元の縦枠位置を踏襲し、ガラスの反射は一部残す。
-- **生成プロンプト全文**（外景を別生成し、壁へ遠近ワープする。**これが主ルート 1 つ**で、壁の全景生成は行わない）:
-  ```
-  $imagegen Create a flat, straight-on view of what is seen through a window: a narrow Showa-era Japanese back alley at sunset, warm orange and pink evening sky, wooden eaves of old houses with plain cloth awnings (noren) that are completely blank, tiled roofs, a utility pole with wires, a narrow lane receding into the distance, long soft shadows. No signs, no shop names, no lettering, no logos, no people. Slightly hazy, faded film look, fine grain.
-  Output 1536x1024 (3:2). No watermark.
-  ```
-- **作り方**: ①外景素材 3 テイク（人間が選ぶ）。②割付図: 右壁の消失点に合わせた窓の遠近台形 5〜6 枠（縦枠の位置は元写真から取る）。③外景を各枠へ遠近ワープ。④白い窓枠・反射ハイライトは元画像から戻す（桟は必ず元から）。⑤ポリゴン alpha で切り出す。
-- **難所と没基準**: 遠近が右壁の消失点と合わない・看板や電柱に文字が出る・暖色が床へ漏れる（別異変になる）のは没。壁の粒状感を維持。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳案**: category `surreal` / anomaly_type `surreal` / detail 「右の壁一面が窓になり、窓の外に夕焼けの昭和の路地が見える」。note に「大面積。CAM04-E14」を書く。
-- **排他**: `AR-04-red-lantern`（(506,242) 87x124、同じ右ガラス内）は窓の外景に隠れるため排他。`AR-04-puddle` は床で併存可。
-- **生成枚数の最小見積り**: 外景素材 3 テイク（全景生成なし）。
-
 ### CR-LG-04-02 左ガラス店先の曇りと手形
 
 - **ID / camera / element_id**: CR-LG-04-02 / CAM04 / CAM04-E07
@@ -1401,26 +1382,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: **`AR-06-wall-puddle`（bbox が 35,350 px² 重なる大面積。排他。1 カメラ 1 件制で同時には出ない）**、`AR-06-wall-stripes`（壁面の模様で、ポスターに覆われる）。`AR-06-tilted-notice`（額入り掲示。**保持物**なので格子から抜き、併存可）、`AR-06-ceiling-panel-white` は天井側で併存可。`AR-06-wet-footprints` は床で併存可。CR-LG-01-02（顔写真の格子）・03-01（無地の白紙）とは型が別で、顔は出さない。
 - **生成枚数の最小見積り**: 素材 3 テイク。
 
-### CR-LG-06-02 天井一面の傘（逆さに吊られる）
-
-- **ID / camera / element_id**: CR-LG-06-02 / CAM06 / CAM06-E01
-- **面**: box 0,0,495,255（126,225 px²、20.8%）。天井一面。
-- **物と変化**: 天井から、無数の無地の傘が**逆さ**（曲がり柄を上、開いた傘面の頂点を下、お椀を伏せた形）に吊られる。色は黒・透明（ビニール）・赤の 3 種。奥へ遠近で小さく密に連なる。
-- **不気味さの狙い**: 地下街は雨宿りの場所。持ち主が消えて傘だけが戻ってきて、天井に吊られている。傘が全部「逆さ」なので静かに気味が悪い。
-- **保持するもの**: 天井の板継ぎ目・点状汚れ、蛍光灯（E03）、丸灯、吊り看板「まちがいサラダ」（x約145-235, y約140-215）、左壁との境、壁面以下の全て。傘は看板の矩形（x142〜250, y134〜238）に重ねない。下端は、`AR-06-reopened` の上端（y192）に当たる x253〜362 では y≤190、その他の x では y≤225（店先ガラスの奥の `AR-06-crt-tv-glow` を覆わない）。
-- **生成プロンプト全文**:
-  ```
-  $imagegen Edit the attached surveillance camera photo of an underground shopping arcade corridor (the ceiling occupies the upper part of the frame).
-  Make ONLY this change: hang many dozens of plain, open umbrellas upside down from the ceiling on thin cords: each umbrella is hung by its curved handle clipped to the cord, the open canopy hangs below like an inverted bowl with its tip pointing down. Umbrellas are completely plain in three kinds only: solid black, clear transparent vinyl with visible metal ribs, and solid red; no prints, no tags, no brand marks, no lettering. They recede toward the far end of the corridor with correct perspective, big near the camera and small and dense far away, hanging at slightly different heights but all above the hanging sign that stays visible. The existing ceiling fluorescent tubes, round lamps and the hanging sign stay visible between the umbrellas and the fluorescent light stays on.
-  Do not touch the floor, walls, plants, shopfronts or anything below the ceiling line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-- **作り方**: ①割付図: 消失点（奥の通路）への流線に傘の位置・サイズ（手前 55px → 奥 10px）・色（黒・透明・赤の比 5:3:2）を割り付け、吊り看板と蛍光灯の矩形を避ける。②全景 3 テイク（窓 y0〜450 の 1 枚。天井以外は元画像で上書き）。③ポリゴン（天井の台形）内で傘＋吊り紐だけを差分抽出（`--box 0,0,495,255 --threshold 20`）。bbox が 126,225 → 1/8 を割らないよう右端・奥側まで傘を配置する。
-- **難所と没基準**: 傘が正立（柄が下）になるテイクは没。透明傘は背景が透けて破綻しやすい。傘に柄・文字が出たら没。看板と交差・重なりは没。
-- **フェーズ / 目立ち度**: mid / obvious。
-- **台帳案**: category `environment` / anomaly_type `add_object` / detail 「天井一面に、無地の黒・透明・赤の傘が逆さに無数に吊られる」。note に「大面積。CAM06-E01。近傍: AR-06-ceiling-balloons（(0,1) 108x87、同じ天井）」を書く。
-- **排他**: `AR-06-ceiling-balloons`・`AR-06-ceiling-checker`・`AR-06-lamp-squared`・`AR-06-fluorescent-tag`（天井の小物で同じ面）。傘の近縁 `AR-06-umbrella`（店先の畳んだ傘）・`AR-06-reflected-umbrella`（ガラスの赤い傘）は box（0,0,495,255）と重ならない（umbrella は (208,360)・61x141、reflected-umbrella は (277,313)・41x94 で、どちらも y≥313）ため上の表に出ないが、同カメラで傘が重なるので併存させない運用を推奨（同じ「傘」と数えられる）。`AR-06-sign-orange-blue`（吊り看板の枠色。看板は保持物で傘は矩形を避けるため併存可）と `AR-06-reopened`（左店先の灯り。傘の下端を y≤190 に収めるため併存可）とは整合する。CR-01-37・CR-04-17 は別カメラの小物。
-- **生成枚数の最小見積り**: 全景 3 テイク。
-
 ### CR-LG-07-02 天井から垂れる白いシーツ
 
 - **ID / camera / element_id**: CR-LG-07-02 / CAM07 / CAM07-E01
@@ -1440,27 +1401,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **台帳案**: category `environment` / anomaly_type `add_object` / detail 「天井から無地の白いシーツが何枚も垂れ下がる（蛍光灯と換気口は残る）」。note に「大面積。CAM07-E01。bbox 面積が余裕小なので貼り込み後に必ず再計測」を書く。
 - **排他**: `AR-07-crane`（(325,0) 79x240、天井から吊る折り鶴。本件と同じ面）・`AR-07-ceiling-string`・`AR-07-paper-tag-lamp`・`AR-07-paper-airplane-ceiling`・`AR-07-lamp-off`（天井の小物）。
 - **生成枚数の最小見積り**: 全景 3 テイク。
-
-### CR-LG-08-01 床一面の水鏡（映るのは昭和の夕焼けの商店街）
-
-- **ID / camera / element_id**: CR-LG-08-01 / CAM08 / CAM08-E16（E17/E18 を含む床一面）
-- **面**: box 0,265,675,900（428,625 px²、70.6%）。**床の全面**。旧案の box 0,430,675,900 は床の上半分（柱の左の床、通路入口、ガラス戸の前）を残し、y430 に水平な継ぎ目ができるため、床の上縁まで広げた。実測（`public/images/cam8.webp`）: 床は左の通路入口で y≈265（x≈250）、ガラス戸の足元 y≈330（x0〜128）、壁の巾木 y≈320（x128〜180）、柱の根元 y≈400〜425、右壁の巾木は (452,400)→(540,660)→(675,720) の斜線から始まる。
-- **水面の境**: 水平な直線で切らない。**壁・柱・ガラス戸・右の黒い柱の足元の接地線（巾木）**と、奥の通路（柱の右、x≳395・y≲420 の細い通路）の入口の床目地に沿わせる。通路内の床は元のまま（ポリゴンの外）。
-- **物と変化**: 床全面が薄く水を張ったような鏡面になる。水面に映るのは本来の天井でなく、夕焼けの空・電線・昭和の商店街の屋根と無地の吊り看板（逆さ）。柱の根元の影と柱そのものの反射は正しく映り、床の目地は水の下に薄く透ける。夕焼けの方向は右奥。さざ波は弱く。
-- **不気味さの狙い**: 現実の天井は変わらないのに、床だけが「上に昭和の空がある」ように見える。老人の記憶が作る像（story）。
-- **保持するもの**: 柱 E11 と根元、右の壁／パネル E14/E15 の足元、奥の通路、左のガラス戸とその枠、既存の床反射の白い光点（上からかぶせる）。床の目地格子は multiply 30% で透けさせる。
-- **生成プロンプト全文**（窓 A: y255〜705。窓 B: y450〜900 は「the floor continues down to the bottom edge of the frame」に差し替え、窓 A の貼り戻し済み全画面から切り出す）:
-  ```
-  $imagegen Edit the attached surveillance camera photo of a large tiled underground hall.
-  Make ONLY this change: the entire visible floor, from the base of the walls and the pillar down to the bottom edge of the frame, becomes a thin, perfectly calm sheet of water acting as a mirror. The water edge follows the wall bases, the pillar base and the base of the glass door, never a straight horizontal line. In the water we see, mirrored, not the real ceiling but a warm orange-pink sunset sky with thin clouds, overhead wires, tiled roofs of a Showa-era Japanese shopping street and hanging signboards that are completely blank white (reflected upside-down), the sun low in the far right. The pillar and the bottom of the right-hand wall are reflected correctly in the water, with their contact lines continuing seamlessly into their mirror images; faint tile joints remain visible beneath the water. The existing white lamp reflections on the floor remain as bright spots. The ripples are very weak.
-  Do not touch the ceiling, pillar, walls, the glass door of the left shopfront, or the far corridor beyond the pillar (its floor stays dry). There must be no letters on the reflected signboards, no logos, no shop names. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-- **作り方**: ①割付図: 反射の幾何（画面を水平な鏡面で垂直反転した像の位置）を先に決め、柱の接地線を軸にした鏡像と、夕焼けの方向（右奥）を図示。**窓 A・B で同じ割付図を使う**。②窓 A を 3 テイク生成して採用 → A を貼り戻した全画面から窓 B を切り出し 3 テイク（共通手順の 3 を参照）。③床のポリゴン（上の「水面の境」）内を採用し、元の床の明暗階調を multiply で一部乗せる。④`--box 0,265,675,900 --threshold 24` と高めにし、広範囲の粒状ノイズを拾わない。**下絵に `flip` を使う場合の軸と範囲**（`flip` は反射元が画像外になる画素を変更しない）: `--axis-y Y` で行 y は行 2Y−1−y を映す。範囲の全画素が反射元を持つ条件は 0 ≤ 2Y−1−y ≤ 899、すなわち **y ≤ 2Y−1 かつ y ≥ 2Y−900**。床が y899 まで続くので、1 回で全域（y265〜899）を覆うには **450 ≤ Y ≤ 582**（Y ≥ 450 で y899 が、Y ≤ (900+265)/2 で y265 が反射元を持つ）。ただし柱の接地線（y≈400〜425）を軸にすると鏡像が連続する反面、軸 Y=420 では y≤839 しか覆えない（実測例: axis-y 400・範囲 y420〜900 だと y≥800 が未変更）。そこで **2 回に分ける**: ①`--axis-y 420 --region <床のポリゴンのうち y265〜839>`（柱の根元と鏡像が連続）、②`--axis-y 450 --region <y840〜899>`（行 899−y を映す。全域が反射元を持つ）。②は下端の帯で、窓 B の生成結果で上書きしてよい。`--brightness`（水は暗い）と `--blur` で水面らしくし、最終の夕焼けの色は窓 A・B の生成結果から採用する。
-- **難所と没基準**: 面積が最大で作り物感が出やすい。柱の接地線が鏡像と連続しない・看板に文字・夕焼けの色相が弱く「何が違う」か不明・水面の上縁が水平な直線になる・窓 A/B の継ぎ目で夕焼けの向きがずれるのは没。既存の足元反射の光点を消さない。
-- **フェーズ / 目立ち度**: mid〜late / obvious。
-- **台帳案**: category `surreal` / anomaly_type `reflection` / detail 「床全面が水鏡になり、映るのは天井でなく昭和の夕焼けの商店街」。note に「大面積。CAM08-E16。08-02 とは排他」を書く。
-- **排他**: **`CR-LG-08-02`（積まれたテレビの山。同じ床を使い、水面に積まれたテレビには接地反射が要るため）**。床の小物 `AR-08-floor-reflection-two-tier`・`AR-08-floor-reflection-no-pillar`・`AR-08-tile-concentric`・`AR-08-floor-ramune-marbles`・`AR-08-cat`・`AR-08-barber-pole`、柱の鏡像が合わなくなる `AR-08-pillar-second`、パネルの光が鏡像と食い違う `AR-08-panel`・`AR-08-panel-off`・`AR-08-blue-panel`。壁・柱・ガラス戸の面の物（`AR-08-wall-band-wave` `AR-08-suit` `AR-08-pillar-notice` `AR-08-bag` ほか）は併存可（全件は「box と既存 overlay の重なり」の表）。
-- **生成枚数の最小見積り**: 全景 6 テイク（窓 A 3＋窓 B 3。素材の別生成なし）。
 
 ### CR-LG-08-02 左のショーウィンドウに積まれた白黒テレビ
 
