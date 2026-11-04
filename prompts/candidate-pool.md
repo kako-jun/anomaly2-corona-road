@@ -598,44 +598,14 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 
   | ID | 要素 | category / anomaly_type | 規模 | 変化 |
   | --- | --- | --- | --- | --- |
-  | AR-08-wall-drawers | E14 | surreal / multiply | **大面積** | 右の壁と柱の面が、同じ小さな引き出しの壁になる（百味箪笥） |
 
 - **配置の実測**（2026-11-05、`uv run --with pyyaml --with numpy --with pillow python3`。台帳の CAM08 全 overlay の alpha bbox を実測。台帳は日々増えるので、登録時に必ず測り直す）: 小物 5 件の box は、大面積 2 件（`AR-08-floor-water-mirror`・`AR-08-stacked-crt-tvs`）を除く既存の全 overlay の alpha bbox から**矩形間距離 30px 以上**（最小 32.0px。各項に最寄りを書く）。小物どうしも 30px 以上離れる（tile-groove・sparrow・ceiling-light-inverse・door・hanten の box は互いに 100px 以上）。**30px 前後の余裕の小物（tile-groove 32.0px・sparrow 32.0px・hanten 33.0px・ceiling-light-inverse 35.0px）は、台帳に載る最終 overlay（羽・布・暈・溝で box より広がる）の alpha bbox で測り直し、30px を割ったら動かす。** 各項にも書く。
 - **大面積の実測**: 画像 675x900=607,500 px² の 1/8 は 75,938 px²。
-  - AR-08-wall-drawers: 面ポリゴン `462,134 600,134 600,140 675,140 675,720 600,696 540,660 500,514 462,417`。実面積 106,068 px²・外接矩形 213x586=124,818 px²（20.5%）。
   - 2 件の面は重ならない（ポリゴンの重なり 0 px²。x462〜600 では天井の下端 y131 と壁の上端 y134 で 2 行離れ、x600〜675 では y131〜135 と y140）。外接矩形は x462〜675・y134〜141 で重なるが、画素は 0 px²。既存の大面積との**画素（alpha）の重なりは 0 px²**: `AR-08-floor-water-mirror`（床）・`AR-08-stacked-crt-tvs`（左 x0〜248・y145〜518）のどちらとも 0。ただし水鏡の外接矩形（0,270,675,630）は壁の外接矩形と重なる（壁の下端が床の接地線 y≈420〜720 まで届くため。画素は重ならない）。壁の件は水鏡と**排他**にする（水面なら壁の引き出しも映り込むはずで、昭和の夕焼けだけを映す水鏡と矛盾するため。「同プレイで共存させない」を台帳 note に書く）。
 - **共通手順**（小物。SKILL.md の手順 5〜8 と同じ）: ①各項の「6倍クロップ」を `public/images/cam8.webp` から切り出して 1536x1024 へ拡大する（webp は PNG に変換してから渡す）。②明示的な `$imagegen` で 3 テイクを生成し目視で選ぶ（0 バイトや数 KB の壊れた PNG は撮り直す。文字・ロゴらしき刻印が出たテイクは捨てる）。③選んだ結果を元のクロップ寸法へ縮小して baseline の PNG の同じ位置へ貼り戻し、その全体画像を `scripts/composite-anomaly.py --gen` に渡す（`--box` は各項の最終 box。FAIL は再生成でなく `--threshold` / `--margin` を 8/12/16/18 で試す）。④最終 overlay の alpha bbox で既存との距離を測り直し、30px を割ったら動かす。台帳へ登録し `uv run scripts/check-visibility.py --id <ledger id>` を通す。通らなければ大きく・暗く・平らな場所へ強めて作り直す。⑤登録・コミットしたら `experiments/` の作業物を即削除する。
 - **共通手順**（大面積。この節の各項の窓）: 大面積は `scripts/composite-polygon.py` を使う（`crop` で全幅 675x450 の 3:2 窓を切り出し、生成結果を `restore` で元寸へ貼り戻し、面のポリゴンで `cutout --polygon … --feather 2`。複数窓は `restore --blend-px 100 --blend-edges t`）。窓は 1536/675≈2.2756 倍。生成は 1 件ずつ、生成画像は見ずに合成まで進め、採否は人間が決める運用。
 - **共通プロンプト末尾**（各プロンプトに全文を含めてある。小物は「クロップ」、大面積は「窓」の意味）: `Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
 - **共通の禁止**: 文字・数字・ロゴ・実在の店名・家紋の混入（出たテイクは没）。人の顔・体は描かない（人の気配は影・服・足元だけ）。性的・不適切の独自判定はしない（生成物はそのまま報告）。
-
-### AR-08-wall-drawers — 右壁と柱一面の小さな引き出し（百味箪笥）（大面積）
-
-- **ID / camera / element_id**: AR-08-wall-drawers / CAM08 / CAM08-E14（右の長い壁。柱 E15 の前面も同じ面）
-- **面**: ポリゴン `462,134 600,134 600,140 675,140 675,720 600,696 540,660 500,514 462,417`。実面積 106,068 px²・外接矩形 213x586（124,818 px²、20.5%）。右の壁の面（E14）と右端の黒い柱の前面（E15）を 1 枚の面として扱う。
-- **物と変化**: 右の壁と柱の面が、昭和の薬屋の百味箪笥（小さな引き出しがびっしり並ぶ木箱）の壁に変わる。同じ形・同じ大きさの小さな引き出し（中央に小さな丸い真鍮の取手）が、縦横の格子で壁と柱の面を隙間なく覆い、遠近に沿って奥へ行くほど小さくなる。ラベル・文字・数字は一切ない。既存の 2 枚の光る乳白パネルは、引き出しの壁の前に埋め込まれたままそのまま見える。
-- **不気味さの狙い**: 昭和の薬屋の懐かしい箪笥が、警備室の壁一面になる。どれも同じで、どの引き出しにも何が入っているかわからない（老人たちの記憶の引き出し）。開ける者がいない。
-- **保持するもの**: 天井との境（y≈134）、右奥のドーム（E03・x≥614、y≤140）、床との接地線（ポリゴンの下辺。水鏡の画素と重ならない）、左の黒い細い柱（x445〜462）、2 枚の光る乳白パネル（引き出しの壁の上でそのまま光る）、床。
-- **窓**: **2 枚**（全幅 675x450）。A は `crop --crop 0,110,675,560`、B は `crop --crop 0,280,675,730`（重なり 280px。box 上端 134 に 24px の余裕、下端 720 に 10px の余裕）。先に A を生成・採用して `restore` で貼り戻し、B の入力はその全画面から `crop` で切り出す（依存する絵は直列）。B の結果は A の貼り戻し済み全画面を `--base` にして `restore --blend-px 100 --blend-edges t` で貼る。窓内の位置は元画像の実寸 px ×2.2756。
-- **生成プロンプト**（窓 A・B とも同じ文で、3 テイク。T1 は濃い茶の木・真鍮の取手、T2 は黒漆・淡い取手、T3 は淡い木・小さな黒い取手。窓 B のときは「the upper part」を「the lower part」に読み替える）:
-
-  T1:
-  ```text
-  $imagegen Edit the attached surveillance camera photo of an underground shopping arcade corridor (the dark right wall and the black square pillar at the right edge occupy the right third of the frame).
-  Make ONLY this change: cover the entire surface of the right wall and the front face of the black pillar at the right with a wall of small identical wooden drawers, like a traditional Japanese apothecary herb chest: a regular grid of dark brown wooden drawer fronts, each with one small round brass knob in its centre, packed together with thin dark gaps and no space between them, following the perspective of the wall (the drawers are large near the camera and become smaller toward the far end of the corridor, and follow the slanting plane of the wall). All drawers are completely identical: no labels, no paper tags, no numbers, no writing, no marks, no carvings. The two existing glowing cream rectangular panels on the pillar stay exactly as they are, as if embedded in the front of the drawer wall, and keep glowing.
-  Do not touch the ceiling, the dome camera at the upper right, the floor, the thin black post at the left edge of the wall, the pillar in the centre of the frame, the shop at the far end or anything at the left half of the frame. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-
-  T2: T1 の "dark brown wooden drawer fronts, each with one small round brass knob" を "black lacquered drawer fronts, each with one small round pale-grey metal knob" に置き換え、他は同じ（全文）。
-
-  T3: T1 の "dark brown wooden drawer fronts, each with one small round brass knob" を "pale unfinished wooden drawer fronts, each with one small round black knob" に置き換え、他は同じ（全文）。
-- **作り方**: ①割付図: 壁面（E14）の台形と柱前面（E15）の長方形を別の面として描き、引き出しの格子（壁面は消失点へ向かう縦線・斜めの横線、柱前面は正面の格子）と、2 枚の光る乳白パネルの矩形（柱前面の x≈570〜650・y≈245〜350 と y≈460〜565）を避ける・埋め込む位置を決める。向きは文章でなく図。②窓 A→B の順に各 3 テイク。③`cutout --polygon "462,134 600,134 600,140 675,140 675,720 600,696 540,660 500,514 462,417" --feather 2`（生成を採用した全画面を `--gen` に渡す。下辺は接地線に沿わせ、床へはみ出さない）。差分抽出（`--threshold`）は壁の粒状を拾うので使わない。引き出しが単調に見えて破綻する場合は、素材（引き出し 1 ブロック）を別生成して `tile` で敷き詰める。④alpha bbox を実測し ≥75,938 px² を確認する。
-- **難所と没基準**: 引き出しに文字風の模様・ラベルが出たら没。引き出しの大きさが遠近と合わない（壁が平面に見える）テイク、天井・ドーム・床を覆うテイク、左の黒い細い柱を覆うテイクは没。光る乳白パネルが消える・位置がずれるテイクは没。A と B の継ぎ目で引き出しの格子がずれる場合は、B の `--blend-px` を増やすか B を撮り直す。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳案**: `id: 'AR-08-wall-drawers'` / `element_id: 'CAM08-E14'` / `category: 'surreal'` / `anomaly_type: 'multiply'` / `location: 'CAM08-E14/E15（右の壁と柱の前面）、差分左上 (462,134) px'` / `detail: '右の壁と柱の面が、同じ小さな引き出しがびっしり並ぶ百味箪笥の壁になる'` / `phase: 'late'` / 目立ち度 `obvious` / note に「大面積。CAM08-E14/E15。alpha bbox WxH=…px²（実測値）。排他（同プレイで共存させない）: AR-08-floor-water-mirror（外接矩形が重なる。水面なら壁も映るため）・AR-08-column-door-ajar・AR-08-panel・AR-08-panel-off・AR-08-blue-panel・AR-08-wall-band-wave・AR-08-suit（同じ壁・柱の面）。」
-- **排他**: **同じ壁・柱の面を覆う小物**は併存させない: AR-08-panel（ポリゴンと 12,115 px² 重なる）・AR-08-panel-off（6,708 px²）・AR-08-blue-panel（6,708 px²）・AR-08-suit（13,528 px²）・AR-08-wall-band-wave（12,234 px²）・新規 AR-08-column-door-ajar。さらに AR-08-floor-water-mirror（上の大面積の実測を参照。画素は 0 だが外接矩形が重なり、水鏡が壁の引き出しを映すべきかの矛盾があるため）。候補 CR-08-06（右壁の白帯が柱の裏にも連続）・CR-08-11（柱の第三の発光パネル）も同じ面なので併存させない。AR-08-ceiling-light-grid とは 2px 離れ、重ならない。
-- **相互参照 / 重複精査**: 壁一面の反復は CR-LG-06-01（CAM06・右壁一面の同じポスター）・CR-LG-01-02（CAM01・左壁一面の顔写真）・CR-LG-04-01（CAM04・右壁の窓の外）で、いずれも「貼る・窓」で、本件は**壁の面そのものが同じ箪笥になる**（質感の置換）。CAM08 内の大面積は AR-08-stacked-crt-tvs（左のガラス戸にテレビ）と AR-08-floor-water-mirror（床）で別の面。
-- **生成枚数の最小見積り**: 窓 A・B の各 3 テイク（計 6 枚）。
 
 ## 追加候補 — 各要素の状態・関係（CR-XX-28〜42）
 
