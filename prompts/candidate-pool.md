@@ -367,24 +367,6 @@
 
 ### CAM03 — South Exit
 
-#### AR-03-sake-bottle — 茶色い一升瓶(ラベルなし・無地)
-
-- **camera / element_id**: CAM03 / CAM03-E16
-- **物と変化**: 床中央の手前寄りに、ラベルの無い茶色い一升瓶が一本立つ
-- **最終 box**（baseline px）: `410,578,480,655`（70x77）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `317,531,573,702`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (93,47)-(163,124)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles in the center, stand one tall brown glass sake bottle (a Japanese isshobin of about 1.8 liters) upright, with a plain smooth body, a plain cap and no label at all, no text, no print. Make it about 1.3x larger than real scale. Give it a strong elongated dark shadow on the floor and a thin bright highlight along the glass. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white light reflection patch behind it, the tile joints or the floor grain. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 27% of the image width and 45% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 背後の白い反射・タイル目地・床の粒状感。
-- **最寄り既存 overlay と実測距離**: AR-03-silver-can まで 31.0px（box 基準・矩形間のユークリッド距離、次点 AR-03-round-puddle 36.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 明るい床に濃茶で対比。細長いので影を強く伸ばし、ガラスの縦ハイライトを入れる。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '床中央の手前寄りに、ラベルの無い茶色い一升瓶が一本立つ（無地）'` / `candidate_id: 'AR-03-sake-bottle'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 ### CAM04 — Underground Junction
 
 #### AR-04-thermos — 花柄の魔法瓶(柄のみ・文字なし)
