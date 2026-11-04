@@ -397,7 +397,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
 | ID | category | anomaly_type | 変化 | 大小 |
 | --- | --- | --- | --- | --- |
 | AR-03-floor-line-break | environment | state_change | 床のタイル目地の線が一本だけ途中で途切れる | 小物 |
-| AR-03-tube-light-bent | environment | state_change | 右上の蛍光灯の光が、床の反射と違う向きへ折れ曲がる | 小物 |
 | AR-03-ceiling-eye | surreal | surreal | 天井の暗い隙間から白い目が一つ覗く | 小物 |
 | AR-03-dark-tile | object | state_change | 通路中央の床に座布団ほどの暗いタイルが一枚だけ混じる | 小物 |
 | AR-03-shutter-raised | environment | state_change | 右のシャッターの裾が少し上がる | 小物 |
@@ -437,35 +436,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
   ```
 - **相互参照 / 重複精査**: 床の穴・沈み（AR-03-sunken-opening-floor）やタイルの向き・色（AR-03-tile-diagonal / AR-03-blue-floor-tile）とは別で、物は増減せず『目地の線が消える』だけ。CR-03-30/04 系の灯の候補とは無関係。台帳に目地の連続性を崩す異変は無い。
 - **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-floor-shadows（同じ床の面）/ AR-03-dark-tile（同じ床の面・近接）。併存可=壁・天井・シャッターの異変。
-
-### AR-03-tube-light-bent — 右上の蛍光灯の光が、床の反射と違う向きへ折れ曲がる
-
-- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E04
-- **物と変化**: 右上から斜めに下がる長い白色蛍光灯の光の帯が、中ほどで折れ、先の半分が元と違う急な向きへ曲がって伸びる。床の白い反射（E17）は元の向きのまま残るので、光源と反射の向きが食い違う。灯の消失（AR-07-lamp-off など）ではなく、光の向きだけが狂う。
-- **box (x1,y1,x2,y2)**: (604,60,676,150)（72x90）
-- **最寄り既存 overlay と実測距離**: AR-03-shutter-faded-poster (36.0)、次点 AR-03-sunken-opening-floor (62.0)。新規小物との最寄りは AR-03-ceiling-eye (30.0)。
-- **6倍クロップ範囲**: 6倍クロップ (420,20)–(676,191)（256x171）。box は窓内で (1104,240)–(1536,780)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the long bright white fluorescent tube in the upper right (about x=1100 to 1536, y=280 to 740 in the 1536x1024 frame) is bent: its straight diagonal strip kinks at its middle, and the outer half swings up toward the top-right corner at a steeper angle than the original diagonal, like a bent glowing bar, with its glow and the faint halo on the ceiling following the new direction. The ceiling board, the right wall and the shutter below do not change. The bright floor reflection far below is not part of this edit and stays as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the diagonal white fluorescent light at the top right (about x=1100 to 1536, y=280 to 740 in the 1536x1024 frame) changes direction half way along its length: the lower-left half stays as it is, the upper-right half is rotated about 30 degrees upward so that the light strip forms a clear obtuse angle, with a soft glow along both parts. Nothing else in the frame changes, including the shutter, the wall and the ceiling. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the long fluorescent tube light in the upper right corner (x about 1100 to 1536, y about 280 to 740 in the 1536x1024 frame) is bent into a shallow V shape at the middle, its two halves pointing in different directions, the glow and ceiling halo following the shape. Preserve every other pixel, including the right shutter and the wall below. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-03-tube-light-bent'
-    candidate_id: 'AR-03-tube-light-bent'
-    camera_id: 'CAM03'
-    element_id: 'CAM03-E04'
-    base_photo: 'public/images/cam3.webp'
-    category: 'environment'
-    anomaly_type: 'state_change'
-    location: 'CAM03-E04 の右上の蛍光灯、差分左上 (604,60) 付近（貼り込み後に再計測）'
-    detail: '右上の長い蛍光灯の光の帯が中ほどで折れ、床の反射と違う向きへ曲がる。'
-    overlay: 'assets/anomaly-overlays/cam03/tube-light-bent.webp'
-    # phase / 目立ち度: mid / medium
-    note: '最寄り既存 overlay は AR-03-shutter-faded-poster（box 距離 36px。ぼかしで広がるので制作後に再測）。床反射 E17 は元のまま残す（光源の向きと反射がずれる違和感が狙い）。灯は消えない（AR-07-lamp-off・AR-08-panel-off とは別）。'
-  ```
-- **相互参照 / 重複精査**: 灯が消える型（台帳 AR-07-lamp-off・AR-08-panel-off、プール CR-03-04・CR-03-30）とは別で、本件は灯は点いたまま向きだけ変わる。CAM03 の天井灯の異変は台帳に無い（AR-03-amber-lamp-glow は色）。
-- **同カメラ内の排他と併存**: 排他なし（天井の光の変化。床の異変とは別の面）。併存可=床・壁・シャッターの異変。ただし AR-03-ceiling-eye とは box が 30px しか離れないので、同プレイで共存させないほうが読み取りやすい。
 
 ### AR-03-ceiling-eye — 天井の暗い隙間から白い目が一つ覗く
 
