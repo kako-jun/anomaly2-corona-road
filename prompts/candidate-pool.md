@@ -598,7 +598,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 
   | ID | 要素 | category / anomaly_type | 規模 | 変化 |
   | --- | --- | --- | --- | --- |
-  | AR-08-ceiling-light-inverse | E01 | surreal / state_change | 小物 | 右上の天井の丸い天井灯が、光る代わりに周りの天井へ黒い影の暈を広げる |
   | AR-08-column-door-ajar | E15 | environment / state_change | 小物 | 右の黒い柱の下の暗い帯の引き戸が、指一本ぶん開いて細い光が漏れる |
   | AR-08-hanten-floor | E16 | object / add_object | 小物 | 左の床に、藍色の半纏が脱ぎ捨てたように丸まっている |
   | AR-08-ceiling-light-grid | E01 | environment / multiply | **大面積** | 天井一面に、同じ丸い天井灯が格子状にびっしり並ぶ |
@@ -613,31 +612,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 - **共通手順**（大面積。この節の各項の窓）: 大面積は `scripts/composite-polygon.py` を使う（`crop` で全幅 675x450 の 3:2 窓を切り出し、生成結果を `restore` で元寸へ貼り戻し、面のポリゴンで `cutout --polygon … --feather 2`。複数窓は `restore --blend-px 100 --blend-edges t`）。窓は 1536/675≈2.2756 倍。生成は 1 件ずつ、生成画像は見ずに合成まで進め、採否は人間が決める運用。
 - **共通プロンプト末尾**（各プロンプトに全文を含めてある。小物は「クロップ」、大面積は「窓」の意味）: `Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
 - **共通の禁止**: 文字・数字・ロゴ・実在の店名・家紋の混入（出たテイクは没）。人の顔・体は描かない（人の気配は影・服・足元だけ）。性的・不適切の独自判定はしない（生成物はそのまま報告）。
-
-### AR-08-ceiling-light-inverse — 光らずに影を放つ天井灯
-
-- **camera / element_id**: CAM08 / CAM08-E01（天井面。E04 の丸い天井灯と同じ形を右上に置く）
-- **物と変化**: 画面右上の天井に、既存の丸い天井灯（E04）と同じ白い円盤が一つだけある。ただし周りへ光を放つ代わりに、円盤を中心に真っ黒な影の暈が天井へ広がる（灯のそばほど濃く、縁へ向けて薄れる）。円盤自体は白いまま。光と影の向きが逆になった灯。
-- **不気味さの狙い**: 見ているのに明るくならない灯が、天井を暗く染めている。理由が説明できない。出河さんが「あの灯、周りだけ暗くないですか」と聞く。
-- **差し替えの経緯**: 旧案（天井板がずれ落ちる）は AR-01-ceiling-tile-drop と実質同一（台帳 AR-04-ceiling-corner-fold も近い）のため差し替え。指示の既定案「天井の丸い天井灯の一つだけが、影を床へ落とす向きが逆になる」は、フレーム内に天井灯の影を床へ落とす空き枠が無く（床の空き枠は AR-08-floor-tile-groove が使う）、天井灯の真下は既存 overlay に重なるため、**天井側で光と影を逆にする**同じ発想へ具体化した。
-- **最終 box**（baseline px）: `602,2,674,68`（72x66）。
-- **6倍クロップ**（baseline px）: `419,0,675,171`（256x171）。box はクロップ内の (183,2)-(255,68)。
-- **生成プロンプト**（3 テイク。T1 は基本、T2 は暈をより濃く広く、T3 は円盤をやや大きく）:
-
-  T1:
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object exactly unchanged. Make ONLY this single change: in the upper right corner of the frame, on the pale speckled ceiling, place one round flush-mounted ceiling light that works backwards: a small plain white disc with a thin grey rim, and instead of a soft glow of light around it, a wide soft halo of deep black shadow spreads outward over the pale ceiling around the disc, darkest next to the disc and fading toward its edge, as if the light were casting darkness onto the ceiling. The disc itself stays bright white. The ceiling keeps exactly the same speckled surface pattern outside the halo. Make the disc and halo about 1.3x larger than real scale so they read clearly. Do not touch the hanging dome camera near the bottom right of the crop, the existing ceiling lights, the dark band at the bottom or the ceiling tiles elsewhere. Place the light, including its dark halo, centred at about 86% from the left and 20% from the top of the image, occupying roughly 28% of the image width and 39% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  T2: T1 の "a wide soft halo of deep black shadow" を "a very wide soft halo of pure black shadow, nearly opaque next to the disc," に置き換え、他は同じ（全文を渡す）。
-
-  T3: T1 の "a small plain white disc" を "a plain white disc about twice the size of an ordinary ceiling light" に置き換え、他は同じ（全文を渡す）。
-- **保持するもの**: 天井の点状汚れ・光の勾配・右奥のドーム（E03。AR-08-vent-paper-plug が占める）・天井の下端の暗い帯。
-- **最寄り既存 overlay と実測距離**: AR-08-n6（天井の凧）まで 35.0px、AR-08-vent-paper-plug 35.0px（box 基準・alpha bbox。2026-11-05 実測）。暈が box を超えて広がる分、制作後に最終 overlay の alpha bbox で測り直す（30px 未満は暈を小さくする）。
-- **分類 / フェーズ / 目立ち度**: surreal / mid / medium
-- **視認性の注意**: 天井は明るい灰で、黒い暈は十分に対比する。暈を淡くしすぎない（T2 が有力）。登録後に `uv run scripts/check-visibility.py --id AR-08-ceiling-light-inverse` を必ず通す。
-- **台帳登録時**: `id: 'AR-08-ceiling-light-inverse'` / `candidate_id: 'AR-08-ceiling-light-inverse'` / `element_id: 'CAM08-E01'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM08-E01、右上の天井。差分左上 (x,y) px'` / `detail: '右上の天井の丸い天井灯が、光る代わりに周りの天井へ黒い影の暈を広げる'` / `phase: 'mid'` / 目立ち度 `medium` / note「小物。CAM08-E01。最近傍の既存は AR-08-n6・AR-08-vent-paper-plug（どちらも 35.0px）。大面積 AR-08-ceiling-light-grid とは同じ天井面なので排他（同プレイで共存させない）。」
-- **相互参照 / 重複精査**: 天井灯の変化は AR-08-light-blue-bleed・AR-08-fixture-dark-red（CAM08・灯の色）・候補 CR-03-04（CAM03・天井灯が消える）で、本件は灯が増え、光と影が逆になる別の変化。影が光源と逆を向く系は runtime 在庫の wrong shadow と同系だが、画像の異変としては未制作。別カメラの天井板系（AR-01-ceiling-tile-drop・AR-04-ceiling-corner-fold）とは観察対象が別。
 
 ### AR-08-column-door-ajar — 黒い柱の下の引き戸が開く
 
