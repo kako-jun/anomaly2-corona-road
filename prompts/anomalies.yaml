@@ -3324,7 +3324,7 @@ anomalies:
     overlay_origin: '(104,128)'
     dimensions: '467x215'
     review_status: 'composited'
-    note: "大面積。CAM07-E12 ほか。昭和テーマ節の『時計は候補にしない』は既存時計の改変の話で、本件は足す案（kako-jun 指示 2026-11-04）。alpha bbox 467x215=100,405 px²（画像比 16.5%）。時計 31 個（直径 約22〜36px。小 22〜26px は左壁と扉上の 11 個、大は白壁 12 個。右の斜めの壁面は幅 20x高さ 27px の 6 個で、暗い階段の奥には置かず壁面だけに限定。文字盤は壁の陰影に合わせて暗く青みを乗せた）。排他（同プレイ非共存）: AR-07-notice（重なり 2,891）・AR-07-reopened（22,848）・AR-07-wall-grid（3,060）。併存可（旧版は右面の時計が AR-07-duplicate-green-sign を覆っていたが、右面を壁面だけにしたため alpha 重なり 0・最短 5px で併存可）: AR-07-duplicate-green-sign・ AR-07-stairs・AR-07-white-step・AR-07-stairs-cat・AR-07-ticket・AR-07-shoe-v2（階段・床側。時計は階段壁より上）・AR-07-crane（吊り鶴は時計の手前）・AR-07-pictogram-flip・AR-07-blue-push-plate・AR-07-warm-light・AR-07-opening-paper（扉・開口・非常灯は保持。時計の quad はこれらを避ける）・AR-07-ceiling-string。最近傍の非重なりは AR-07-stair-figures（21px）・AR-07-paper-tag-lamp（40px）・AR-07-lamp-off（45px）。同カメラの 07-02（シーツ）は未制作。2 テイクの文字盤から 1 つ採用。ゲーム画面とライブ blink での確認は未了。"
+    note: "大面積。CAM07-E12 ほか。昭和テーマ節の『時計は候補にしない』は既存時計の改変の話で、本件は足す案（kako-jun 指示 2026-11-04）。alpha bbox 467x215=100,405 px²（画像比 16.5%）。時計 31 個（直径 約22〜36px。小 22〜26px は左壁と扉上の 11 個、大は白壁 12 個。右の斜めの壁面は幅 20x高さ 27px の 6 個で、暗い階段の奥には置かず壁面だけに限定。文字盤は壁の陰影に合わせて暗く青みを乗せた）。排他（同プレイ非共存）: AR-07-notice（重なり 2,891）・AR-07-reopened（22,848）・AR-07-wall-grid（3,060）。併存可（旧版は右面の時計が AR-07-duplicate-green-sign を覆っていたが、右面を壁面だけにしたため alpha 重なり 0・最短 5px で併存可）: AR-07-duplicate-green-sign・ AR-07-stairs・AR-07-white-step・AR-07-stairs-cat・AR-07-ticket・AR-07-shoe-v2（階段・床側。時計は階段壁より上）・AR-07-crane（吊り鶴は時計の手前）・AR-07-pictogram-flip・AR-07-blue-push-plate・AR-07-warm-light・AR-07-opening-paper（扉・開口・非常灯は保持。時計の quad はこれらを避ける）・AR-07-ceiling-string。最近傍の非重なりは AR-07-stair-figures（21px）・AR-07-paper-tag-lamp（40px）・AR-07-lamp-off（45px）。同カメラの 07-02（AR-07-ceiling-white-sheets。制作済み）とは bbox の重なり 0・最短 3px で併存可。2 テイクの文字盤から 1 つ採用。ゲーム画面とライブ blink での確認は未了。"
   - id: 'AR-06-ceiling-umbrellas'
     candidate_id: 'CR-LG-06-02'
     camera_id: 'CAM06'
@@ -3342,7 +3342,7 @@ anomalies:
     overlay_origin: '(0,0)'
     dimensions: '598x204'
     review_status: 'composited'
-    note: "大面積。CAM06-E01。alpha bbox 598x204=121,992 px²（画像比 20.1%）。排他（同プレイ非共存）: AR-06-ceiling-balloons（重なり 9,396）・AR-06-ceiling-panel-white（4,526。alpha でも 559 px 重なる）・AR-06-ceiling-checker（4,371）・AR-06-lamp-squared（1,876）・AR-06-fluorescent-tag（3,200）は同じ天井面。傘の近縁 AR-06-umbrella・AR-06-reflected-umbrella も同じ「傘」と数えられるため併存させない運用。併存可: AR-06-sign-orange-blue（bbox 重なり 7,560。吊り看板の矩形はポリゴンから除外）・AR-06-reopened（1,308。傘の下端は y≤190）。最近傍の非排他は AR-06-crt-tv-glow（28px）・AR-06-tilted-notice（30px）・AR-06-far-sign-same（48px）。ポリゴンは右壁と天井の境の線（(500,188)→(597,0)）まで広げ、傘は壁の手前で自然に終わる（旧版の右端の半透明の溶け込みは廃止）。色は天井の地の部分だけから求めた低周波ゲインで元画像に合わせ、蛍光灯の管は元画像のまま。2 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。"
+    note: "大面積。CAM06-E01。alpha bbox 598x204=121,992 px²（画像比 20.1%）。排他（同プレイ非共存）: AR-06-ceiling-balloons（重なり 9,396）・AR-06-ceiling-panel-white（4,526。alpha でも 559 px 重なる）・AR-06-ceiling-checker（4,371）・AR-06-lamp-squared（1,876）・AR-06-fluorescent-tag（3,200）は同じ天井面。傘の近縁 AR-06-umbrella・AR-06-reflected-umbrella も同じ「傘」と数えられるため併存させない運用。併存可: AR-06-sign-orange-blue（bbox 重なり 7,560。吊り看板の矩形はポリゴンから除外）・AR-06-reopened（1,308。傘の下端は y≤190）。最近傍の非排他は AR-06-crt-tv-glow（28px）・AR-06-tilted-notice（30px）・AR-06-far-sign-same（48px）。ポリゴンは右壁と天井の境の線（(500,188)→(597,0)）まで広げ、傘は壁の手前で自然に終わる（旧版の右端の半透明の溶け込みは廃止）。色は天井の地の部分だけから求めた低周波ゲインで元画像に合わせ、蛍光灯の管は元画像のまま。2 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。 排他（追記）: AR-06-wall-same-poster（CR-LG-06-01。bbox が重なる大面積）。"
   - id: 'AR-04-window-alley'
     candidate_id: 'CR-LG-04-01'
     camera_id: 'CAM04'
@@ -3378,7 +3378,7 @@ anomalies:
     overlay_origin: '(0,270)'
     dimensions: '675x630'
     review_status: 'composited'
-    note: "大面積。CAM08-E16。alpha bbox 675x630=425,250 px²（画像比 70%）。排他（同プレイ非共存）: CR-LG-08-02（積まれたテレビの山。未制作の候補。同じ床を使い、水面の積み物には接地反射が要る）、AR-08-floor-reflection-two-tier（重なり 19,306）・AR-08-floor-reflection-no-pillar（20,648）・AR-08-tile-concentric（7,392）・AR-08-floor-ramune-marbles（13,209）・AR-08-cat（1,785）・AR-08-barber-pole（4,750）・AR-08-pillar-second（12,474。柱の鏡像が合わなくなる）・AR-08-panel（12,768）・AR-08-panel-off（5,124）・AR-08-blue-panel（5,124）（パネルの光が水面の鏡像と食い違う）。併存可（bbox の重なりのみで、水面ポリゴンは壁・柱・ガラス戸の面にかからない）: AR-08-wall-band-wave（21,195）・AR-08-suit（10,640）・AR-08-pillar-notice（4,347）・AR-08-bag（3,948）・AR-08-old-man-back（5,265。奥の通路はポリゴンの外）。近接: AR-08-fixture-duplicate（天井の照明の複製。最終 overlay のアルファ領域の最短距離 5px、bbox では 3px まで近いが重なり 0 のため併存可。水面ポリゴンは天井にかからない）。窓 A・B を各 2 テイク生成し、A は a2（夕焼けの商店街の像が濃いほう）、B は二重の鏡像を作らず夕焼けの空が続くほうを採用（B の最初の 2 テイクは A の鏡像を再度反転して水平の地平線ができたため没）。ゲーム画面とライブ blink での確認は未了。"
+    note: "大面積。CAM08-E16。alpha bbox 675x630=425,250 px²（画像比 70%）。排他（同プレイ非共存）: AR-08-stacked-crt-tvs（CR-LG-08-02。積まれたテレビの山。制作済み。同じ床を使い、水面の積み物には接地反射が要る）、AR-08-floor-reflection-two-tier（重なり 19,306）・AR-08-floor-reflection-no-pillar（20,648）・AR-08-tile-concentric（7,392）・AR-08-floor-ramune-marbles（13,209）・AR-08-cat（1,785）・AR-08-barber-pole（4,750）・AR-08-pillar-second（12,474。柱の鏡像が合わなくなる）・AR-08-panel（12,768）・AR-08-panel-off（5,124）・AR-08-blue-panel（5,124）（パネルの光が水面の鏡像と食い違う）。併存可（bbox の重なりのみで、水面ポリゴンは壁・柱・ガラス戸の面にかからない）: AR-08-wall-band-wave（21,195）・AR-08-suit（10,640）・AR-08-pillar-notice（4,347）・AR-08-bag（3,948）・AR-08-old-man-back（5,265。奥の通路はポリゴンの外）。近接: AR-08-fixture-duplicate（天井の照明の複製。最終 overlay のアルファ領域の最短距離 5px、bbox では 3px まで近いが重なり 0 のため併存可。水面ポリゴンは天井にかからない）。窓 A・B を各 2 テイク生成し、A は a2（夕焼けの商店街の像が濃いほう）、B は二重の鏡像を作らず夕焼けの空が続くほうを採用（B の最初の 2 テイクは A の鏡像を再度反転して水平の地平線ができたため没）。ゲーム画面とライブ blink での確認は未了。 排他（追記）: AR-08-stacked-crt-tvs（CR-LG-08-02。床へこぼれるテレビの山が床と重なる。bbox 重なり 62,496）。"
 
   - id: 'AR-05-curtains-open-cafe'
     candidate_id: 'CR-LG-05-01'
@@ -3398,6 +3398,60 @@ anomalies:
     dimensions: '264x427'
     review_status: 'composited'
     note: "大面積。CAM05-E08。alpha bbox 264x427=112,728 px²（画像比 18.5%）。排他（同プレイ非共存。いずれも同じガラス面の部分変化・反射で、本件の全面開放＋店内に上書きされる）: AR-05-glass-light・AR-05-old-woman-in-glass・AR-05-curtain-open・AR-05-sign-in-glass・AR-05-amber-pane・AR-05-joint-into-glass・AR-05-chair-reflection・AR-05-curtain-mend・AR-05-wind-chime。併存可: AR-05-duplicate-light（天井。重なり 1,899 は bbox のみ）・AR-05-brick-round・AR-05-blue-brick（レンガ帯は保持）・AR-05-brown-column（隣接 0px、角柱は保持）。最近傍の非排他は AR-05-hatch-stain（28px）。2 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。"
+  - id: 'AR-04-glass-fog-handprints'
+    candidate_id: 'CR-LG-04-02'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E07'
+    base_photo: 'public/images/cam4.webp'
+    category: 'environment'
+    anomaly_type: 'add_object'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(19,48)–(296,666)'
+    location: 'CAM04-E07、左ガラス店先の全パネル、差分左上 (13,43) px'
+    detail: '左のガラス店先が内側から曇り、大小の手形と指で描いた絵が付く'
+    generation_prompt: 'Method: the handprint material was generated 3 takes with $imagegen (prompt below, no source image, no baseline edit), strips of the three takes were warped onto the six glass panes (white frames, mullions, green sign and floor excluded) with composite-polygon.py tile (cols 1 rows 1, one material per pane, quads along the pane edges), laid over the baseline with composite-polygon.py blend (normal, opacity 0.78, pane polygons), and cut out with composite-polygon.py cutout (feather 1.5). Prompt: Create a flat, straight-on photo of a pane of cold glass fogged with condensation, seen from the outside, with many handprints and palm prints pressed on the inside surface: some large adult hands, some small child hands, in varied sizes, all with exactly five fingers and natural proportions, smeared where the hand slid. In three places a finger has drawn a very simple child-like doodle in the fog (a small umbrella, a sun, a cat face, a house) as clear lines. No writing, no numbers, no letters, no logos. The fog is milky white-grey and translucent over a dark blue-black interior, with fine droplets and a faint warm glow far behind. Output 1536x1024 (3:2). No watermark.'
+    overlay: 'assets/anomaly-overlays/cam04/fogged-glass-handprints.webp'
+    overlay_origin: '(13,43)'
+    dimensions: '185x557'
+    review_status: 'composited'
+    note: '大面積。CAM04-E07。alpha bbox 185x557=103,045 px²（画像比 17.0%）。重なりは bbox / alpha の実画素の順に記す。排他（同プレイ非共存。ガラス内の小物で曇りに覆われる）: AR-04-red-telephone（56,547 / 6,611）・AR-04-basket（8,832 / 4,303）・AR-04-poster-colour-restore（6,240 / 4,441）・AR-04-poster（3,185 / 1,526）。併存可（枠・看板・床は保持。bbox のみ重なり、ポリゴンはガラス 6 枚だけ）: AR-04-fluorescent-frame-grey（20,124〜21,060 / 155。bbox の数え方で 20,124 と 21,060 の差が出る）・AR-04-sign-colour-blue（3,360 / 0）・AR-04-hatch-reflection-extra（679 / 47）。上の窓（欄間 2 枚）は旧版では硬い長方形で上端が窓の途中で浮いていたため、左は窓の上端（暗い庇の下）まで約 25px 上へ広げ、左右とも上端を約 22px かけてぼかした（旧 bbox は 185x532 で origin (13,68)）。同カメラの大面積 CR-LG-04-01（右壁の窓）とは x が離れ重ならない。最近傍の非重なりは AR-04-orange-tile（32px）。素材 3 テイクの手形・絵（傘・太陽・猫）を使用、指の数は目視で 5 本。子供の手形が混ざるため late（4 人目の気配とも読める）。ゲーム画面とライブ blink での確認は未了。'
+  - id: 'AR-05-floor-white-cranes'
+    candidate_id: 'CR-LG-05-02'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E13'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'multiply'
+    phase: 'early'
+    subtlety: 'obvious'
+    mask_box_1000: '(0,667)–(1000,1000)'
+    location: 'CAM05-E13、前景の床一面、差分左上 (0,600) px'
+    detail: '床一面に、無地の白い折り鶴が敷き詰められる'
+    generation_prompt: 'Method: the crane material was generated 3 takes with $imagegen (prompt below, no source image, no baseline edit); 23 cranes were cut out of the takes by a brightness threshold into transparent sprites, then about 400 of them were scattered over the floor (y>=603) by a work script (random rotation/flip, wingspan 26px far to 60px near by y, vertical foreshortening 0.72, density tapering at the far edge, contact shadow, brightness following the baseline''s low-frequency floor light, grain), and the floor rectangle was cut out with composite-polygon.py cutout (feather 2). Prompt: Create a flat top-down photo of about twelve plain white origami paper cranes of varied orientation (some seen from above, some from the side, wings spread) lying close together on a dark grey stone tile floor, casting short soft dark shadows. The paper is completely blank, matte white with subtle fold creases, no printing, no writing, no patterns, no colours, no logos. Each crane is distinct and well formed with a clear head, tail and two wings. Even low-light surveillance-style lighting, fine film grain, slight blur. Output 1536x1024 (3:2). No watermark.'
+    overlay: 'assets/anomaly-overlays/cam05/floor-white-cranes.webp'
+    overlay_origin: '(0,600)'
+    dimensions: '676x300'
+    review_status: 'composited'
+    note: '大面積。CAM05-E13。alpha bbox 676x300=202,800 px²（画像比 33.4%）。実測: 元画像との差分 bbox は y603〜、alpha は y600〜（y600〜602 の 3 行は baseline と同一）。alpha 202,800 px のうち実際に元画像と異なる画素（RGB の最大チャンネル差が 3 超）は 143,111 px（差が 1 でもあれば 163,168 px）。排他（同プレイ非共存。床の小物で鶴に覆われる）: AR-05-floor-glare-backside（重なり 12,882）・AR-05-marbles-scattered（11,312）・AR-05-pet-bottle（6,318）。併存可: AR-05-brown-column（189 は bbox のみ。角柱根元 y600〜607 の 7px）。AR-05-joint-into-glass は y409〜553 で重ならず（05-01 側の排他）。折り鶴系の近縁 AR-07-crane（CAM07 天井 1 羽）・AR-01-container-origami・CR-02-21・CR-08-20 は別カメラ・別規模で併存可（型は「床一面」でここだけ）。同カメラの大面積 AR-05-curtains-open-cafe（ガラス区画）とは 64px 離れ重ならない。最近傍の非重なりは AR-05-joint-into-glass（47px）。素材は 3 テイクから切り出した 23 羽（同じ羽の反復は回転・反転・縮尺で散らした）。ゲーム画面とライブ blink での確認は未了。'
+  - id: 'AR-01-ceiling-lanterns'
+    candidate_id: 'CR-LG-01-01'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E01'
+    base_photo: 'public/images/cam1.webp'
+    category: 'environment'
+    anomaly_type: 'add_object'
+    phase: 'mid'
+    subtlety: 'obvious'
+    mask_box_1000: '(321,0)–(1000,422)'
+    location: 'CAM01-E01、天井の右〜中央一面、差分左上 (217,0) px'
+    detail: '通路天井の右〜中央一面に、無地の赤白の提灯が飾り紐とともに数十個吊られる（蛍光灯は点いたまま）'
+    generation_prompt: 'Method: a 675x450 window (y0-450) of the baseline was edited with $imagegen (prompt below, 3 takes, take 1 adopted), pasted back with scripts/composite-polygon.py restore, then only a hand-drawn ceiling polygon (x>=217, y<=340 plus the far-end chain to y380, signs and shopfront excluded) was cut out with composite-polygon.py cutout (feather 2). Prompt: Edit the attached surveillance camera photo of an underground shopping arcade corridor (the ceiling occupies the upper part of the frame). Make ONLY this change: on the ceiling of the right and centre part of the corridor, hang several dozen completely blank paper lanterns (red and white, round, no characters, no crests, no logos, no stripes of writing), linked by thin plain cords, in neat rows (no paper-chain garlands, no streamers) receding toward the far end of the corridor. Lanterns get smaller and denser toward the vanishing point and follow the strong perspective of the ceiling. Each lantern hangs on a thin cord about 25-40 cm below the ceiling plane. Existing ceiling fixtures (round lamps, the large concentric vent, the square access panel, the long fluorescent tube) stay visible between the lanterns and the fluorescent tube stays lit. Lanterns glow faintly warm only at their own surface; the corridor floor and walls stay cold blue-grey. Do not touch the floor, walls, shopfronts, hanging signs or anything below the ceiling line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source.'
+    overlay: 'assets/anomaly-overlays/cam01/lantern-ceiling.webp'
+    overlay_origin: '(217,0)'
+    dimensions: '458x380'
+    review_status: 'composited'
+    note: '排他（同プレイ非共存。どちらも天井の吊り飾り）: AR-01-bunting-flags（旗 alpha 4,100 px² が提灯 bbox 内に収まる。bbox 重なり 5,590 px²）。 大面積。CAM01-E01。alpha bbox 458x380=174,040 px²（画像比 28.6%）。排他（同プレイ非共存。天井の同じ面・飾りで上書きされる）: AR-01-ceiling-fan-showa（重なり 8,322）・AR-01-ceiling-panel-round（9,017）・AR-01-vent-hole-triangle（1,376）・AR-01-ceiling-seam-circle（1,925）・AR-01-tube-end（6,300。本件は蛍光灯が点いたままの前提と矛盾）。併存可（bbox のみ重なり、ポリゴンは y≤340〜380・x≤439 で止まり吊り看板・店先は含まない）: AR-01-sign-rim（3,080）・AR-01-sign-old-shop（1,927）・AR-01-noren（8,580）・AR-01-door-ajar（8,720）・AR-01-shutter-stripe-break（483）。同カメラの大面積 CR-LG-01-02（左壁、box 0,215,208,725）とは x が離れ重ならない。最近傍の非重なりは AR-01-back-view-paper-bag（25px。重なり 0・床側の小物で、天井の提灯とは別の面なので併存可）。仕様 box からの逸脱: 仕様は y≤340 だが、提灯列は消失点側の遠端で y380 まで伸びている（遠端のチェーンを足したため）。そのため奥の吊り看板 E16（y373 付近）と近く、遠端の提灯が看板の上端に近接する（7px 差）。看板そのものはポリゴンから除外して保持している。紙の輪つなぎは CR-NEW-02-04（CAM02）と近いので使っていない。3 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-shutter-crayon-drawings'
     candidate_id: 'CR-LG-02-02'
     camera_id: 'CAM02'
@@ -3416,6 +3470,258 @@ anomalies:
     dimensions: '165x541'
     review_status: 'composited'
     note: '大面積（bbox 165x541=89,265px²、画像の14.7%）。CAM02-E07。排他（同プレイで共存させない。同じ店先の面を覆う）: AR-02-shop-reopens (41,250) / AR-02-open-sign (8,064) / AR-02-newspaper (6,298) / AR-02-cat (6,305) / AR-02-wrapping-paper (1,026)。併存可（床。画用紙はシャッター下端の接地線で止める）: AR-02-puddle (16,874) / AR-02-cigarette (2,294) / AR-02-receipt (2,420) / AR-02-tile (896) / AR-02-tile-color (1,118)（重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-02-01（床一面の足跡）とは bbox が重なるが面は別（床とシャッター）。画用紙は縦枠の線上にも貼らず、枠で止めた。画像の出来: 1 枚の絵の複製（人型 4・赤い家・太陽）。ゲーム画面とライブ blink での確認は未了。同カメラの大面積 CR-LG-02-01（AR-02-floor-footprints）とは bbox が重なる（165x260）が面は床とシャッターで別。alpha 重なりは 267 px² と小さく、併存可。画像の調整: 画用紙は彩度を落として黄ばませ、シャッターの明暗に合わせて暗くした。人型の顔は黒く塗りつぶし、数枚の紙に欠け（シャッターが覗く穴）と剥がれの縁を足した。'
+  - id: "AR-01-bunting-flags"
+    candidate_id: "CR-NEW-01-04"
+    camera_id: "CAM01"
+    element_id: "CAM01-E01"
+    base_photo: "public/images/cam1.webp"
+    category: "environment"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(493,34)–(686,82)"
+    location: "CAM01-E01、差分左上 (333,31) px"
+    detail: "天井に無地の色褪せた三角旗の連（万国旗）が一本垂れる（運動会の記憶）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the garland was moved about 20 px right (it started within 30 px of the ceiling fan), pasted into the baseline and cut out with scripts/composite-anomaly.py (--threshold 12 --dilate 1 --feather 2, low threshold to keep the thin string). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the ceiling in the upper center, one single strand of plain faded triangular pennant flags (a bunting of about seven small triangular flags in muted red, yellow, blue and green, each completely plain with no letters, marks or patterns, strung on a thin dark string) sags in a shallow curve, seen from below. Make the flags about 1.4x larger than real scale and slightly more saturated than faded paper, so that they read clearly on the ceiling. Add a faint soft shadow of the string and flags on the ceiling surface. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the black speckles and panel seams of the ceiling, the round vent below, the ceiling lights or the fan area at the upper left. Place the object, including its shadow, centered at about 50% from the left and 23% from the top of the image, occupying roughly 35% of the image width and 29% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam01/bunting-flags.webp"
+    overlay_origin: "(333,31)"
+    dimensions: "130x43"
+    review_status: 'composited'
+    note: "排他（同プレイで共存させない。どちらも天井の吊り飾りなので同時に出さない）: AR-01-ceiling-lanterns（大面積。旗の bbox は提灯の領域内で距離 0。重なり: 旗 alpha 4,100 px² がすべて提灯 bbox 内、bbox 重なり 5,590 px²）。それ以外の最寄りの既存は AR-01-ceiling-fan-showa（43px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。標準でも見える（最大差分145・平均差分24.2・n25=1594、check-visibility 実測）。画像の調整: 赤と黄が暗い天井に溶けるため、旗の彩度×1.5・コントラスト×1.15・明るさ×1.12 を後処理で足した（alpha は不変）。吊り飾り系の兄弟 CR-NEW-02-04（七夕輪つなぎ）・CR05N-5・CR06N-5・AR-07-crane は別カメラ・別物。 最終 box は alpha bbox (333,31,463,74)（旧 (335,15,425,65) から変更）。生成された旗の連が box より長く、左端が天井ファンに30px未満だったため右へ約20px寄せた。 ゲーム画面とライブ blink での確認は未了。"
+  - id: "AR-01-straw-hat"
+    candidate_id: "CR-NEW-01-03"
+    camera_id: "CAM01"
+    element_id: "CAM01-E17"
+    base_photo: "public/images/cam1.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(567,913)–(686,981)"
+    location: "CAM01-E17、差分左上 (383,822) px"
+    detail: "床に無地の麦わら帽子が伏せて置かれる（夏の記憶）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the chosen hat was cut out of the take, scaled to 0.72 and moved about 30 px left (the model placed it too far right, onto the neighbouring ball's 30 px margin), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark foreground floor tiles, place one plain woven straw hat lying crown-up with its wide brim flat on the floor, natural pale straw color, completely plain with no ribbon, no band and no print. Make it about 1.3x larger than real scale. Give it a strong dark contact shadow around the brim. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the puddle-like light patch near it or the blue container at the right edge. Place the object, including its shadow, centered at about 50% from the left and 71% from the top of the image, occupying roughly 29% of the image width and 41% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam01/straw-hat.webp"
+    overlay_origin: "(383,822)"
+    dimensions: "80x61"
+    review_status: 'composited'
+    note: "最寄りの既存は AR-01-floor-puddle-light と AR-01-red-rubber-ball（どちらも 31px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の帽子 AR-03-white-cap は別カメラ・別物。 麦わら帽子は生成結果から切り出し、約0.72倍に縮めて左へ寄せて貼った（元の配置では近傍の赤いゴムボールと30px未満になるため）。 ゲーム画面とライブ blink での確認は未了。"
+  - id: 'AR-06-wall-same-poster'
+    candidate_id: 'CR-LG-06-01'
+    camera_id: 'CAM06'
+    element_id: 'CAM06-E15'
+    base_photo: 'public/images/cam6.webp'
+    category: 'object'
+    anomaly_type: 'duplicate'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(741,44)–(995,901)'
+    location: 'CAM06-E15、右壁一面（扉と額入り掲示は保持）、差分左上 (500,40) px'
+    detail: '右の壁一面に、手を振る子供の後ろ姿の同じポスターが隙間なく並ぶ'
+    generation_prompt: 'Method: the poster material was generated 2 takes (take 1 small figure, take 2 large bold figure, take 2 adopted) with $imagegen (prompt below, no source image, no baseline edit); the poster was cropped, desaturated and cooled, laid on the right wall plane by a work script (perspective quad along the ceiling line (500,188)-(675,-151) and the skirting line (500,483)-(675,880), 5 columns x 2 rows of identical posters, sized in world units so the near ones are large), shaded with the baseline''s low-frequency light and multiplied by its high-pass wall relief, and cut out with the door and the framed notice (with margin) as holes, limited to the spec box (x>=500, y40-860). Prompt: Create one flat, straight-on photo of a single plain rectangular poster (portrait orientation, 3:4, nearly white paper with a faint cool grey cast, one small piece of clear tape at each top corner), showing a very simple bold illustration of one small child seen from behind, standing on a plain ground line and waving one raised hand, wearing a plain dark navy T-shirt and dark shorts, black hair, drawn as large flat shapes with strong contrast against a mostly empty white poster, filling most of the poster height, very simple almost silhouette-like. Exactly one raised arm, five-finger open hand, the child''s face is not visible. The poster has no title, no caption, no writing, no numbers, no letters, no logos anywhere and no border text. The whole poster is fully visible, centred, with a margin around it, on a plain dark grey surface. Even low-light surveillance-style lighting, fine film grain. Output 1536x1024 (3:2). No watermark.'
+    overlay: 'assets/anomaly-overlays/cam06/wall-same-poster.webp'
+    overlay_origin: '(500,40)'
+    dimensions: '172x771'
+    review_status: 'composited'
+    note: '大面積（bbox 基準）。CAM06-E15。alpha bbox 172x771=132,612 px²（画像比 21.8%）。仕様 box（500,40,675,860）の内側に収めた（旧版は画像の上下端 y0〜900 まで届いていた）。ただし alpha>0 の画素は 65,292 px で、大面積の目安 75,938 px² には実面積では届かない（bbox では満たす。右壁は視線にほぼ平行で、扉と額を抜くと面が細い）。排他（同プレイ非共存。実測は bbox / alpha の実画素の順）: AR-06-wall-puddle（大面積。34,744 / 806。1 カメラ 1 件制で同時には出ない）・AR-06-wall-stripes（3,685 / 3,216。壁面の模様がポスターに覆われる）・AR-06-ceiling-panel-white（6,132 / 2,917。ポスターの上端が天井パネルの端に掛かるため排他に変更。旧版は併存可と書いていた）・AR-06-ceiling-umbrellas（大面積。bbox 16,072 / alpha 0。壁上端の斜線で止めているが、大面積どうしなので念のため排他。同ファイルの note にも追記）。併存可: AR-06-tilted-notice（3,034 / 0。額入り掲示は余白つきで穴にして保持。旧版は羽毛縁が 686px 重なっていたが、穴を広げて 0 にした）・AR-06-wet-footprints（2,466 / 0。床）。扉（x566〜614）も保持。最近傍の非重なりは AR-06-fluorescent-tag（20px。重なり 0・天井の蛍光灯のタグなので壁のポスターとは別の面で併存可）。右壁は視線にほぼ平行（扉の幅 45px・高さ約 600px）のため、ポスターは細い短冊状に縮む。そこで枚数を 5 列×2 行に減らして大きくし、絵を余白の白と高コントラストの人物（濃紺の服・黒髪）にして、扉の右の近景では子供の後ろ姿がシルエットとして読める。奥（扉の左）の列は細く、人物は縦線にしか見えない。ポスターは仕様の 5 列×10〜12 行より少ない。壁の粗いレリーフは multiply で残し、色は冷たい青緑寄りに落とした。4 人目のフラグ後（late）に限り、後ろ姿が 4 人目の子供と読める。CR-LG-01-02（顔写真）・03-01（無地の白紙）とは型が別。ゲーム画面とライブ blink での確認は未了。'
+  - id: 'AR-07-ceiling-white-sheets'
+    candidate_id: 'CR-LG-07-02'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E01'
+    base_photo: 'public/images/cam7.webp'
+    category: 'environment'
+    anomaly_type: 'add_object'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(30,0)–(1000,139)'
+    location: 'CAM07-E01、天井一面、差分左上 (20,0) px'
+    detail: '天井から無地の白いシーツが何枚も垂れ下がる（蛍光灯と換気口は残る）'
+    generation_prompt: 'Method: the sheet material was generated 3 times with $imagegen (no source image, no baseline edit; plain white bed sheet hanging from two clips on flat chroma-key green; takes: wide, tall, near-square), keyed to transparent sprites, and 19 sprites were hung by a work script in three depth rows across the whole ceiling width (far row W66-74px, middle W90-104px, near W100-150px; every hem aligned to y<=119 so the lowest hem stays above the back wall top y125 and out of the AR-07-wall-clocks box; slight rotation/flip, depth shading, cool tint, soft drop shadow). Only the sprites and their shadows are in the overlay (alpha 0 elsewhere; no baseline-identical padding). The fluorescent tubes and most of the round vent are left uncovered. Prompt: Create a flat, straight-on photo of a single plain white bed sheet hanging straight down from two small plain metal clips at its top edge, like a loose rectangular curtain of fabric with soft vertical folds and a straight, slightly wavy hem at the bottom. The sheet is wider than tall (about 4 units wide by 3 units tall), completely plain matte white linen, no print, no stripes, no stains, no holes, not shaped like a person or a ghost, no text or logos. Cool dim surveillance-style lighting, fine film grain. The whole sheet including its top clips is fully visible, centred, with a generous margin on all sides, on a plain, flat, uniform bright chroma-key green (#00FF00) background with no shadow on the background. Output 1536x1024 (3:2). No watermark.'
+    overlay: 'assets/anomaly-overlays/cam07/ceiling-white-sheets.webp'
+    overlay_origin: '(20,0)'
+    dimensions: '655x125'
+    review_status: 'composited'
+    note: '大面積（bbox 基準）。CAM07-E01。alpha bbox 655x125=81,875 px²（画像比 13.5%。大面積の目安 1/8=75,938 は bbox では満たす）。ただし実際に元画像と異なる画素は alpha>0 で 63,444 px・差が 3 超で 63,021 px（不透明のシーツ画素は 57,993 px）で、75,938 px² には届かない。大面積基準を実差分では満たさない（天井全幅に 19 枚吊っても、蛍光灯と換気口を残す仕様のため。これ以上増やすと灯りを覆う）。旧版は alpha を baseline 同一画素で水増ししていたので、今版は alpha をシーツと影の画素だけに限った。裾は全シーツ y≤119（仕様の y≤120 を満たし、後壁の上端 y125 と AR-07-wall-clocks の box に入らない）。AR-07-wall-clocks とは bbox の重なり 0・最短 3px で併存可に変更（旧版の排他を解除）。排他（同プレイ非共存。天井の同じ面・吊り物）: AR-07-crane（bbox 9,875 / alpha 2,173）・AR-07-paper-airplane-ceiling（3,286 / 2,728）・AR-07-paper-tag-lamp（2,208 / 1,708）・AR-07-lamp-off（1,440 / 1,436）・AR-07-ceiling-string（492 / 468）。併存可（重なり 0）: AR-07-reopened（最短 33px）・AR-07-wall-grid（59px）・AR-07-pictogram-flip・AR-07-notice（77px）など壁より下の物。人型・幽霊型には見えない（無地の四角い布、小さなクリップ付き）。シーツは 19 枚（仕様 8〜12 枚より多い。全幅に実被覆を出すため）。素材 3 テイクから切り出し、並びは作業スクリプトで決めた（生成画像の全景編集ではない）。ゲーム画面とライブ blink での確認は未了。'
+  - id: 'AR-08-stacked-crt-tvs'
+    candidate_id: 'CR-LG-08-02'
+    camera_id: 'CAM08'
+    element_id: 'CAM08-E06'
+    base_photo: 'public/images/cam8.webp'
+    category: 'camera'
+    anomaly_type: 'duplicate'
+    phase: 'mid'
+    subtlety: 'obvious'
+    mask_box_1000: '(0,161)–(367,580)'
+    location: 'CAM08-E06/E07（左のガラス戸と通路入口〜床の手前）、差分左上 (0,145) px'
+    detail: '左のショーウィンドウに白黒テレビが積まれ、全画面が同じ無人の通路を映す'
+    generation_prompt: 'Method: the TV case material was generated 2 takes with $imagegen (prompt below; background changed from plain dark grey to flat chroma-key green so the case can be keyed out; no baseline edit), keyed to transparent sprites, the screens were filled with a grayscale/scanline crop of the baseline''s own corridor (cam8.webp x230-530, y135-360), and 25 sprites (random rotation/flip, size 44-82px by y, contact shadow, body brightness following the baseline''s low-frequency light, screens emissive) were piled up in a heap by a work script; the rectangle x0-248, y145-492 was then cut out with composite-polygon.py cutout (feather 2), every pixel except the TVs equals the baseline. Prompt: Create a flat, straight-on photo of a single old black-and-white CRT television set with its screen switched off (dark glass), rounded plastic case in grey and cream, bulging glass screen, two small plain knobs without any lettering, slightly aged with a faint grey dust cast, on a plain, flat, uniform bright chroma-key green (#00FF00) background with no shadow on the background. The whole set is fully visible, centred, with generous margin around it. No brand, no text, no numbers, no logos, no labels anywhere on the set. Even low-light surveillance-style lighting, fine film grain. Output 1536x1024 (3:2). No watermark.'
+    overlay: 'assets/anomaly-overlays/cam08/stacked-crt-tvs.webp'
+    overlay_origin: '(0,145)'
+    dimensions: '248x377'
+    review_status: 'composited'
+    note: '大面積。CAM08-E06/E07。alpha bbox 248x377=93,496 px²（画像比 15.4%。テレビの実範囲は x0〜244・y159〜486。y145〜492 の長方形はテレビ以外が baseline と同一で、y492〜522 は接地影だけの半透明の黒）。仕様の下端 y470 は、床へ崩れたテレビの回転で y486 まで出たため y492 に広げ、さらに接地影のため y522 まで広げた（影の濃さが実質ある範囲は y≈507 まで）。見た目の後処理（レビュー指摘: 貼り付けに見える）: 筐体を彩度 0.38 倍に落として青緑の色かぶりを乗せ（茶色の暖色を除去）、画面は明るい部分を約 0.42 倍に暗くし、輪郭と山の下側に ambient occlusion を足し、床へ強い接地影（接触影 σ4＋広い影 σ9）を落とした。右端は影を柱の手前で x244→248 へ消す。仕様確認の事実: 本件の山は仕様どおりガラス戸（E06）の外へこぼれ、扉 E06 と通路入口 E08（x約 170〜255）を覆う拡張をしている。これは仕様 CR-LG-08-02 に「kako-jun の確認が要る判断点」と書かれた項目で、確認は未了。右端は柱（x≈250）の手前 x244 で止めた。排他（同プレイ非共存）: AR-08-floor-water-mirror（CR-LG-08-01。大面積。bbox 重なり 62,496。水面に積まれたテレビには接地反射が要り「映るのは昭和の夕焼けだけ」と矛盾する。同ファイルの note にも追記）・AR-08-bag（12,502 / alpha 3,917）・AR-08-barber-pole（6,422 / 5,858）・AR-08-cat（1,785 / 1,502）・AR-08-notice-residue（950 / 922。左ガラス・通路入口の小物で山に覆われる）・AR-08-floor-reflection-no-pillar（bbox 5,750 / alpha 1,091。山の裾と接地影が床の反射帯 y476〜に掛かる）。併存可: AR-08-light-blue-bleed（bbox 1,411 / alpha 845 だがテレビ画素との重なりは 0。山の頂点 y159 は天井灯の列の下）・AR-08-fixture-duplicate（隣接 3px）。最近傍の非重なりは AR-08-pillar-notice（34px）。山は 25 台。全画面が同じ無人の通路（baseline 自身の縮小。人も文字もなし。赤い丸看板が小さく写るが判読不能）。近縁（別規模）: CR-NEW-02-05（CAM02 の小物 1 台）・AR-06-crt-tv-glow（CAM06 の小物 1 台）。ガラス戸の枠は山の隙間と左端に残る。ゲーム画面とライブ blink での確認は未了。'
+  - id: "AR-01-bamboo-basket"
+    candidate_id: "CR-NEW-01-05"
+    camera_id: "CAM01"
+    element_id: "CAM01-E17"
+    base_photo: "public/images/cam1.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(124,712)–(221,796)"
+    location: "CAM01-E17、差分左上 (84,641) px"
+    detail: "左の壁際の床に竹編みの買い物かごが置かれる（昭和の買い物。無地）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the basket generated larger than the box was cut out of the take, scaled to 0.68 and moved to the box centre, pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles at the left side, next to the base of the left wall, place one plain woven bamboo shopping basket (a rounded rectangular basket of tightly woven pale tan bamboo strips with one arched bamboo handle folded upright), standing on the floor, completely plain with no tag and no print. Make it about 1.4x larger than real scale, because the free area is narrow. Give it a strong dark contact shadow on the floor tiles. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark baseboard and the rough wall at the upper left, the tile joints or the reflections. Place the object, including its shadow, centered at about 48% from the left and 50% from the top of the image, occupying roughly 18% of the image width and 33% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam01/bamboo-basket.webp"
+    overlay_origin: "(84,641)"
+    dimensions: "65x75"
+    review_status: 'composited'
+    note: "最寄りの小物は AR-01-power-bank（30px）・AR-01-bamboo-broom（31px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の籠・手提げ系は無し。 生成されたかごは box（46x56）より大きかったため、0.68倍に縮めて box 中心へ置き直した。最終 box は (80,630,160,725)。重なりを許す大面積: AR-01-wall-faces（壁一面の顔写真、小物との重なりは基準で許容）。 ゲーム画面とライブ blink での確認は未了。"
+  - id: "AR-01-bubble-tea-cup"
+    candidate_id: "CR-NEW-01-06"
+    camera_id: "CAM01"
+    element_id: "CAM01-E17"
+    base_photo: "public/images/cam1.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(781,770)–(853,856)"
+    location: "CAM01-E17、差分左上 (527,693) px"
+    detail: "床にミルクティー色のカップと太いストローが置かれる（令和の若者の持ち物。無地・ロゴなし）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the cup with its shadow was cut out of the take, scaled to 0.8 and moved up-left (at full size it came within 18-27 px of the red ball, the milk-bottle crate and the yellow boots), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles in the lower right of the frame, place one half-drunk bubble tea cup standing upright: a clear plastic cup filled to about the middle with opaque milk-tea beige drink and a layer of black tapioca pearls at the bottom, a thick wide black straw sticking out of a plain flat lid, completely plain with no logo, no text and no printed pattern on the cup or the lid. Make it about 1.5x larger than real scale. Give it a strong dark contact shadow and a small glossy highlight on the cup. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the metal threshold strip and the blue container at the right edge, the light pool or the tile joints. Place the object, including its shadow, centered at about 53% from the left and 50% from the top of the image, occupying roughly 23% of the image width and 40% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam01/bubble-tea-cup.webp"
+    overlay_origin: "(527,693)"
+    dimensions: "49x77"
+    review_status: 'composited'
+    note: "最寄りの既存は AR-01-red-rubber-ball（30px）・AR-01-floor-sign-reflection-inverted（36px）・AR-01-yellow-boots（37px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の飲み物カップ系の兄弟は別カメラ・別物。 カップは生成結果から切り出し、0.8倍に縮めて box 内へ置き直した（最終 box (522,688,586,772)）。 ゲーム画面とライブ blink での確認は未了。"
+  - id: "AR-02-maroon-cushion"
+    candidate_id: "CR-NEW-02-01"
+    camera_id: "CAM02"
+    element_id: "CAM02-E20"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(21,690)–(204,808)"
+    location: "CAM02-E20、差分左上 (14,621) px"
+    detail: "床に無地の臙脂色の座布団が一枚置かれる（昭和の居間・喫茶店の記憶）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2; box (16,622,132,722), the generated cushion is slightly right of the original box). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the gray floor tiles at the left, place one plain square floor cushion (zabuton) in a saturated deep crimson-maroon cotton fabric, lying flat and slightly plump, with plain stitched corners and no pattern, no piping print and no tag. Keep it near real scale (the box is already large). Give it a soft but clearly visible dark contact shadow along its lower edges. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white light reflection band on the floor, the tile joints or the shutter at the left edge. Place the object, including its shadow, centered at about 27% from the left and 50% from the top of the image, occupying roughly 39% of the image width and 56% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam02/maroon-cushion.webp"
+    overlay_origin: "(14,621)"
+    dimensions: "124x106"
+    review_status: 'composited'
+    note: "最寄りの小物は AR-02-receipt（31px）・AR-02-cigarette（34px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。 box は (20,625,120,720) から (16,622,132,722) へ広げた（生成された座布団が右へ寄ったため）。重なりを許す大面積: AR-02-floor-footprints・AR-02-shutter-crayon-drawings（どちらも大面積、小物との重なりは基準で許容。後者は 23px 離れる）。 ゲーム画面とライブ blink での確認は未了。"
+  - id: "AR-02-navy-handy-fan"
+    candidate_id: "CR-NEW-02-02"
+    camera_id: "CAM02"
+    element_id: "CAM02-E20"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(309,687)–(416,742)"
+    location: "CAM02-E20、差分左上 (209,618) px"
+    detail: "床に濃い青の小型携帯扇風機が横倒しで置かれる（令和の夏の持ち物。無地・ロゴなし）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the fan with its shadow was cut out of the take, scaled to 0.5 (at full size it was about 118x72 px and came within 20-28 px of the phone and the tile anomalies), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 0 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles, lay one small handheld portable fan on its side, with its round plain blade guard facing right and its short handle at the left, in dark navy blue plastic, completely plain with no logo, no text, no button labels and no printed marks. Make it about 1.5x larger than real scale. Give it a strong dark contact shadow and a small bright highlight along the plastic edge. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place it so that the handle end and the left part of the body overlap the white light reflection band on the floor, and the blade guard extends onto the gray floor to the right of the band; the dark navy body and its shadow must contrast clearly against the pale band. Do not touch the tile joints. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 43% of the image width and 27% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam02/navy-handy-fan.webp"
+    overlay_origin: "(209,618)"
+    dimensions: "72x50"
+    review_status: 'composited'
+    note: "最寄りの小物は AR-02-smartphone-facedown（30px）・AR-02-tile-color（30px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の携帯扇風機は無し。 ファンは生成結果から切り出し、0.5倍に縮めて box 内へ置き直した（最終 box (208,621,286,664)）。生成物は box より大きく、そのままでは近傍と30px未満になるため。重なりを許す大面積: AR-02-floor-footprints（小物との重なりは基準で許容）。 ゲーム画面とライブ blink での確認は未了。"
+  - id: "AR-02-jump-rope"
+    candidate_id: "CR-NEW-02-03"
+    camera_id: "CAM02"
+    element_id: "CAM02-E20"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(362,883)–(555,991)"
+    location: "CAM02-E20、差分左上 (245,795) px"
+    detail: "床に赤い木製グリップの縄跳びが輪になって置かれる（昭和の子供の遊び）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the rope was cut out of the take, scaled to 0.8 and moved to the box centre (at full size it came within 20 px of the phone), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark foreground floor tiles, lay one children's jump rope in a loose ring on the floor: a thin cream-colored rope forming a loop, with two plain red wooden handles lying beside the loop, no text and no print. Make it about 1.3x larger than real scale, with a slightly thicker rope so that it reads clearly. Give the rope and the handles a strong dark contact shadow. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the grain of the floor or the shadow areas around it. Place the object, including its shadow, centered at about 50% from the left and 66% from the top of the image, occupying roughly 47% of the image width and 50% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam02/jump-rope.webp"
+    overlay_origin: "(245,795)"
+    dimensions: "130x97"
+    review_status: 'composited'
+    note: "最寄りの小物は AR-02-smartphone-facedown（31px）・AR-02-leather-footprints（34px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。 縄は生成結果から切り出し、0.8倍に縮めて box 中心へ置き直した（最終 box (245,798,375,888)。縄の輪の内側の床も再粒状化されて overlay に含まれる）。重なりを許す大面積: AR-02-floor-footprints（小物との重なりは基準で許容）。 ゲーム画面とライブ blink での確認は未了。"
+  - id: "AR-02-tanabata-paper-chain"
+    candidate_id: "CR-NEW-02-04"
+    camera_id: "CAM02"
+    element_id: "CAM02-E01"
+    base_photo: "public/images/cam2.webp"
+    category: "environment"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(709,0)–(889,46)"
+    location: "CAM02-E01、差分左上 (479,0) px"
+    detail: "天井の上端から色紙の輪つなぎ飾りが弧を描いて垂れる（昭和の行事の記憶。文字なし）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the garland was moved up 8 px (both ends already ran off the top edge; at the generated position its lower edge came within 23 px of the smoke), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: at the very top of the frame on the dark ceiling, one chain of interlocking paper rings (a wa-tsunagi garland of about six plain rings in saturated red, yellow, blue and green colored paper) is draped in a shallow U-shaped swag, with both ends running off the top edge of the frame, completely plain with no writing and no pattern. Make it about 1.4x larger than real scale and highly saturated. Add a faint soft shadow on the ceiling behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark ceiling panel, the round light, the red sign on the right or the dark wall edge. Place the object, including its shadow, centered at about 50% from the left and 12% from the top of the image, occupying roughly 37% of the image width and 23% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam02/tanabata-paper-chain.webp"
+    overlay_origin: "(479,0)"
+    dimensions: "122x41"
+    review_status: 'composited'
+    note: "最寄りの既存は AR-02-smoke（33px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。吊り飾り系の兄弟 CR-NEW-01-04（万国旗・CAM01）・CR05N-5・CR06N-5・AR-07-crane は別カメラ・別物。 輪つなぎは生成位置から約8px上へ寄せた（両端はもともと上端の外へ出る構図。そのままだと下端が AR-02-smoke に23pxまで近づくため）。最終 box (484,0,598,40)。 ゲーム画面とライブ blink での確認は未了。"
+  - id: "AR-02-bw-television"
+    candidate_id: "CR-NEW-02-05"
+    camera_id: "CAM02"
+    element_id: "CAM02-E09"
+    base_photo: "public/images/cam2.webp"
+    category: "environment"
+    anomaly_type: "add_object"
+    phase: "late"
+    subtlety: "medium"
+    mask_box_1000: "(296,217)–(398,309)"
+    location: "CAM02-E09、差分左上 (200,195) px"
+    detail: "奥の暗い店内の床に小さな白黒テレビが点き、淡い砂嵐の光を放つ（失われた日常の気配）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the set with its glow was moved up about 24 px with a soft-edged patch (at the generated position it came within 12 px of AR-02-shop-reopens), pasted into the baseline and cut out with scripts/composite-anomaly.py (--threshold 10 to keep the thin antennas, --dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: inside the dark shop opening at the back of the corridor, place one small old black-and-white portable television set (a rounded boxy dark case with a small square screen, two plain round knobs and short antennas, no brand text) standing on the floor of the shop and turned on, its screen showing pale bluish-white static snow and spilling a faint cool glow onto the floor in front of it. Make it about 1.4x larger than real scale. Instead of a heavy shadow, add a soft pale glow spill on the dark floor in front of the set. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the surrounding dark shop interior, the door frames, the pillar on the right or the signs above. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 27% of the image width and 47% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam02/bw-television.webp"
+    overlay_origin: "(200,195)"
+    dimensions: "69x83"
+    review_status: 'composited'
+    note: "最寄りの既存は AR-02-shop-reopens（30px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種のテレビ系: AR-06-crt-tv-glow（CAM06・別カメラ）。 テレビは生成位置から約24px上へ寄せた（そのままだと AR-02-shop-reopens に12pxまで近づくため）。最終 box (196,188,276,276)。浮いて見える既知の欠点（意図あり）: 奥の暗い開口で、テレビは実際の床（y 約320 より下）より約50〜60px 上の空中にある。台や接地影で床まで降ろすと overlay の alpha bbox が下へ伸び、AR-02-shop-reopens（x 0〜199、y 308 から）との距離が30px を割る（旗の逆で、x が重なるため）。距離基準を優先して台・影は足していない。「点いたまま宙に浮く」ことは異変の怪しさとして許容する意図。 画面の砂嵐と床の淡い光は暗い店内の床より上の面にあるように見える（やや浮いて見える）。重なりを許す大面積: AR-02-shutter-crayon-drawings（35px 離れ、重ならない）。 ゲーム画面とライブ blink での確認は未了。"
+  - id: "AR-02-mint-suitcase"
+    candidate_id: "CR-NEW-02-06"
+    camera_id: "CAM02"
+    element_id: "CAM02-E20"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "obvious"
+    mask_box_1000: "(96,892)–(194,968)"
+    location: "CAM02-E20、差分左上 (65,803) px"
+    detail: "床にミントグリーンの小型スーツケースが倒れず立っている（令和の旅の持ち物。無地・ロゴなし）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen), pasted into the baseline and cut out with scripts/composite-anomaly.py (box (58,794,140,878), --dilate 1 --feather 2; the generated suitcase is smaller than the original box (160x120), so the box was narrowed to it). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles in the lower left foreground, place one small plain mint-green hard-shell cabin suitcase standing upright on its wheels with the telescopic handle retracted, glossy plain shell with faint ribbed lines only, completely plain with no logo, no tag, no sticker and no text. Keep it near real scale (the box is already large). Give it a strong dark contact shadow on the floor and a soft highlight on the shell. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white light reflection band on the right of it, the tile joints or the shutter at the left edge. Place the object, including its shadow, centered at about 43% from the left and 53% from the top of the image, occupying roughly 62% of the image width and 70% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam02/mint-suitcase.webp"
+    overlay_origin: "(65,803)"
+    dimensions: "66x68"
+    review_status: 'composited'
+    note: "最寄りの小物は、未マージの CR-NEW-02-01（AR-02-maroon-cushion）まで 76px、マージ済みでは AR-02-smartphone-facedown まで 135.7px（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。余裕あり。 box は (30,760,190,880) から (58,794,140,878) へ絞った（生成されたスーツケースは元 box より小さい）。重なりを許す大面積: AR-02-floor-footprints（小物との重なりは基準で許容）。 ゲーム画面とライブ blink での確認は未了。"
+  - id: 'AR-03-tricycle'
+    candidate_id: 'AR-03-tricycle'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E16'
+    base_photo: 'public/images/cam3.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(578,861)–(791,994)'
+    location: 'CAM03-E16、手前右寄りの床、差分左上 (391,775) px'
+    detail: '手前右寄りの床に、昭和の赤い三輪車が一台置かれる（無地・文字なし）'
+    generation_prompt: '$imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the wide floor tiles in the lower right foreground, place one vintage children''s tricycle with a bright red metal frame, a black seat, black rubber tires and plain black handlebar grips, with no bell, no decal and no text, seen in the same perspective as the floor tiles. Keep it near real scale (the box is already large). Give it a strong dark contact shadow under the three wheels. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the dark patchy shadow of the floor or the edge of the shutter. Place the object, including its shadow, centered at about 50% from the left and 62% from the top of the image, occupying roughly 51% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
+    overlay: 'assets/anomaly-overlays/cam03/tricycle.webp'
+    overlay_origin: '(391,775)'
+    dimensions: '144x120'
+    review_status: 'composited'
+    note: '最近傍の既存は AR-03-silver-can（30.0px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）、次点 AR-03-kerosene-heater（33px）。大面積 AR-03-floor-tatami の bbox 内（小物は重なってよい）。相互参照: AR-02-tricycle（CAM02・色褪せた赤）の反復シリーズで、こちらは鮮やかな赤の金属フレーム。画像の出来: 赤フレーム・黒い座面とタイヤ・強い接地影。文字なし。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-03-wash-tub'
     candidate_id: 'AR-03-wash-tub'
     camera_id: 'CAM03'
