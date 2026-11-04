@@ -301,38 +301,24 @@ CAM02（Main Corridor）の画像異変 8 件（小物 7 件・大面積 1 件�
   ```
 
 
-#### AR-02-floor-seam-glow — 柱と看板の間の床で、奥へ伸びるタイル目地の一本が、細い光の線になる
 
 - **camera / element_id**: CAM02 / CAM02-E20
-- **物と変化**: 柱と看板の間の床で、奥へ伸びるタイル目地の一本が、床の下から光が漏れているように細く白く光る。物も人も足さない（既存の目地が光るだけ）。
-- **最終 box**（baseline px、x0,y0,x1,y1）: `368,352,408,426`（40x74）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `257,304,513,475`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (111,48)-(151,122)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに光の色と強弱の描き方だけを変えてある）:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the gray floor between the pillar and the green standing sign, exactly one of the tile joint lines running from the near side toward the far end of the corridor glows as a thin, steady cool-white line of light, as if light were leaking up through the crack. The line follows the existing joint exactly, does not bend or branch, and has a faint soft halo on the two neighboring tiles. No light source, no object and no person is visible. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any glow, centered at about 51% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 43% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the gray floor between the pillar and the green standing sign, exactly one of the tile joint lines running from the near side toward the far end of the corridor glows as a thin pale warm-yellow line of light, brightest at the near end and fading out toward the far end, as if light were leaking up through the crack. The line follows the existing joint exactly and does not bend or branch. The neighboring tiles stay as they are apart from a very faint warm tint right beside the line. No light source, no object and no person is visible. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any glow, centered at about 51% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 43% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the gray floor between the pillar and the green standing sign, exactly one of the tile joint lines running from the near side toward the far end of the corridor glows as a thin pale blue-white line of light that widens slightly into two soft beads of brighter light along its length, and the line continues thinly between them. The line follows the existing joint exactly and does not bend or branch, with a faint soft halo on the neighboring tiles. No light source, no object and no person is visible. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any glow, centered at about 51% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 43% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 柱・自立看板（箱と干渉しない）・看板の台座・石蹴り跡（左隣）・床の他の目地とタイルの斑点・遠景。光るのは目地 1 本だけで、目地の位置・向きは動かさない。
-- **最寄り既存 overlay と実測距離**: AR-02-chalk-hopscotch まで 37.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-duplicate-coffee-sign 80.0px。台帳の overlay_origin/dimensions と 2026-11-05 に実測し、overlay webp の alpha>0 の外接矩形とも一致を確認。大面積の AR-02-floor-footprints / AR-02-shutter-crayon-drawings は除く）。**最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: surreal / mid / medium（anomaly_type: state_change）
-- **視認性の注意**: box は縦長（40x74）で、奥行き方向に走る目地 1 本を中心に収める。線が細く見落とされやすいので、目地の両脇のタイルに薄い光のにじみ（幅 6〜8px 程度）を出して差分を確保する。ただし光の面を床全体へ広げない。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: 同カメラの床の異変（AR-02-tile・AR-02-tile-color は点検口左のタイル 1 枚の模様・色、AR-02-puddle は水たまり、AR-02-floor-ripple は波紋）は別の場所・別の見え方で、目地そのものが光る異変は無い。CR-02-13・14・15・16（床タイル 1 枚・水たまり。E20）は床の同じ面を使うが小さな変化なので、同プレイで共存させない（排他）。AR-02-floor-footprints（床一面の足跡・大面積）は box が重なるので同プレイで共存させない（排他）。AR-02-chalk-hopscotch（左隣の石蹴り跡）・AR-02-floor-ripple・AR-02-hatch-ajar とは box が 30px 以上離れ、共存できる。他カメラの CR-06-41（床の目地の交点が光る）は別カメラ。
-- **台帳登録案**: `id: 'AR-02-floor-seam-glow'` / `element_id: 'CAM02-E20'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM02-E20 の周辺、差分左上 (368,352) px'` / `detail: '柱と看板の間の床で、奥へ伸びるタイル目地の一本が細い光の線になる'` / `phase: mid`/ `subtlety: 'medium'` / `candidate_id: 'AR-02-floor-seam-glow'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 
 #### AR-02-wall-bird-triplet — 右壁の黒い店舗ガラスにある白い鳥の装飾の一羽が、同じ向き・同じ大きさで三羽に増える
 
