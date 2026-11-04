@@ -876,29 +876,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 - **台帳登録時**: `id: 'AR-08-column-door-ajar'` / `candidate_id: 'AR-08-column-door-ajar'` / `element_id: 'CAM08-E15'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `detail: '右の黒い柱の下の暗い帯にある引き戸が、指一本ぶん開き、細い暖色の光が漏れる'` / `phase: 'mid'` / 目立ち度 `medium` / note「小物。CAM08-E15。最近傍の既存は AR-08-n5（58.0px）。大面積 AR-08-wall-drawers とは同じ柱の面なので排他（同プレイで共存させない）。AR-06-door-gap-light（CAM06）と近縁なので同プレイで両方出さない。」
 - **相互参照 / 重複精査**: **AR-06-door-gap-light（CAM06・右の扉の下の隙間から暖かい光が漏れる）と近縁**（どちらも戸の隙間から漏れる暖色の細い光）。別カメラ・別の面（本件は柱の暗い帯に隠れていた引き戸の縦の隙間、CAM06 は床の近くの扉の下の隙間）として台帳には両方載せてよいが、**同じプレイで両方は出さない**（観察対象が同じ「戸の隙間の光」で、2 件目が間違い探しとして重複して見えるため）。この節にだけ書く。CAM06 側の案は別担当が修正中なので、そちらの節には書かない。「閉じた扉やシャッターが開いて光が漏れる」昭和テーマの CAM01〜04 の既存（AR-01-shutter-light 系）は別カメラ・店のシャッターで、本件は柱の暗い帯に隠れていた戸。CAM08 の E15 は光る柱で、既存の AR-08-panel（パネルが増える）・panel-off（上が消灯）・blue-panel（色）はパネルの変化、本件は下の暗い帯の戸で別の面。候補 CR-08-11（第三の発光パネル）は上下パネルの間で別の面。
 
-### AR-08-hanten-floor — 脱ぎ捨てられた半纏
-
-- **camera / element_id**: CAM08 / CAM08-E16（床タイル）
-- **物と変化**: 左の床に、無地の藍色の木綿の半纏が、たった今袖を抜いて脱いだように丸まって落ちている（片袖が床へ伸びる。服だけで持ち主の姿はない）。行方不明のテーマ（人が消えて服だけが残る）に沿う。
-- **最終 box**（baseline px）: `4,486,90,574`（86x88）。
-- **6倍クロップ**（baseline px）: `0,445,256,616`（256x171）。box はクロップ内の (4,41)-(90,129)。
-- **生成プロンプト**（3 テイク。T1 は丸まった山、T2 は袖を長く広げて落ちる、T3 は襟を上に向けて畳み損ねたような形）:
-
-  T1:
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the gray floor tiles at the left of the frame, place one plain indigo-blue cotton hanten work jacket lying crumpled on the floor, as if someone had just slipped out of it: a loose heap of fabric with the collar showing on top and one sleeve stretched out along the floor. Completely plain indigo cloth with no pattern, no emblem, no crest, no print and no writing, with ordinary visible folds. Make it about 1.3x larger than real scale. Give it a strong dark contact shadow on the floor and a clear tone difference from the grey floor. No person, no body, no hands, no face. Do not touch the bright floor reflection at the right of the crop, the tile joints or the wall. Place the jacket, including its shadow, centred at about 18% from the left and 50% from the top of the image, occupying roughly 34% of the image width and 51% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  T2: T1 の "one sleeve stretched out along the floor" を "both sleeves flung out wide along the floor" に置き換え、他は同じ（全文）。
-
-  T3: T1 の "a loose heap of fabric with the collar showing on top and one sleeve stretched out along the floor" を "a half-folded bundle of fabric with the collar turned up, one sleeve folded under and the other hanging off the heap" に置き換え、他は同じ（全文）。
-- **保持するもの**: 床の目地・光の斑・左端の暗い店先との境。
-- **最寄り既存 overlay と実測距離**: AR-08-floor-reflection-no-pillar まで 33.0px、次点 AR-08-n2（床の傘）35.0px（box 基準）。n3（赤いゴムまり）は 39.0px。余裕が薄い（30px との差は 3px）ので、制作後に台帳に載る最終 overlay の alpha bbox で再測定する（袖・接地影で広がる。30px を割ったら動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 藍色（暗い青）は暗い床に沈みやすい。明るい床タイル（左手前の床は中間灰）に対し、襟や折り目の縁に明るい線を入れ、接地影を濃くする。登録後に `check-visibility.py` を通す。
-- **台帳登録時**: `id: 'AR-08-hanten-floor'` / `candidate_id: 'AR-08-hanten-floor'` / `element_id: 'CAM08-E16'` / `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左の床に、藍色の半纏が脱ぎ捨てられたように丸まって落ちている（持ち主はいない）'` / `phase: 'mid'` / 目立ち度 `medium` / note「小物。CAM08-E16。最近傍の既存は AR-08-floor-reflection-no-pillar（33.0px）。昭和の服（行方不明のテーマ）。」
-- **相互参照 / 重複精査**: 床の置き物系の既存（AR-08-n1 洗濯板・n2 傘・n3 ゴムまり・n5 段ボール箱）は「物」で、服は無い。服系は AR-08-bag（暗いガラスに映る紙袋）・AR-08-suit（壁に映る背広の後ろ姿）・AR-05-old-woman-in-glass（CAM05・割烹着姿の老婆の後ろ姿）・CAM07 の下駄・CR06N-6 の雨合羽（別カメラ・別の物）。本件は「服だけが床に残る」で、人の姿そのものは出さない点が別。add_object は本節で唯一（偏り是正の対象外の 1 件）。
-
 ### AR-08-ceiling-light-grid — 天井一面の同じ丸い天井灯（大面積）
 
 - **ID / camera / element_id**: AR-08-ceiling-light-grid / CAM08 / CAM08-E01（天井面。E04 の丸い天井灯を増殖）
