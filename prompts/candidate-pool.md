@@ -437,24 +437,6 @@
 
 ### CAM02 — Main Corridor
 
-#### CR-NEW-02-01 — 臙脂色の座布団
-
-- **camera / element_id**: CAM02 / CAM02-E20
-- **物と変化**: 床に無地の臙脂色の座布団が一枚（昭和の居間・喫茶店の記憶）
-- **最終 box**（baseline px）: `20,625,120,720`（100x95）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,587,256,758`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (20,38)-(120,133)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the gray floor tiles at the left, place one plain square floor cushion (zabuton) in a saturated deep crimson-maroon cotton fabric, lying flat and slightly plump, with plain stitched corners and no pattern, no piping print and no tag. Keep it near real scale (the box is already large). Give it a soft but clearly visible dark contact shadow along its lower edges. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white light reflection band on the floor, the tile joints or the shutter at the left edge. Place the object, including its shadow, centered at about 27% from the left and 50% from the top of the image, occupying roughly 39% of the image width and 56% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 床の白い反射帯・タイル目地・左端のシャッター。
-- **最寄り既存 overlay と実測距離**: AR-02-receipt まで 35.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-cigarette 38.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 彩度の高い赤は灰色の床と強く対比。右隣の明るい反射帯を食わない位置で、座布団の右端が反射帯に触れないようにする。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '床に無地の臙脂色の座布団が一枚置かれる（昭和の居間・喫茶店の記憶）'` / `candidate_id: 'CR-NEW-02-01'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### CR-NEW-02-02 — 濃青のハンディファン
 
 - **camera / element_id**: CAM02 / CAM02-E20
