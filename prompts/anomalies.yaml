@@ -3252,4 +3252,23 @@ anomalies:
     overlay_origin: '(0,270)'
     dimensions: '675x630'
     review_status: 'composited'
-    note: "大面積。CAM08-E16。alpha bbox 675x630=425,250 px²（画像比 70%）。排他（同プレイ非共存）: CR-LG-08-02（積まれたテレビの山。未制作の候補。同じ床を使い、水面の積み物には接地反射が要る）、AR-08-floor-reflection-two-tier（重なり 19,306）・AR-08-floor-reflection-no-pillar（20,648）・AR-08-tile-concentric（7,392）・AR-08-floor-ramune-marbles（13,209）・AR-08-cat（1,785）・AR-08-barber-pole（4,750）・AR-08-pillar-second（12,474。柱の鏡像が合わなくなる）・AR-08-panel（12,768）・AR-08-panel-off（5,124）・AR-08-blue-panel（5,124）（パネルの光が水面の鏡像と食い違う）。併存可（bbox の重なりのみで、水面ポリゴンは壁・柱・ガラス戸の面にかからない）: AR-08-wall-band-wave（21,195）・AR-08-suit（10,640）・AR-08-pillar-notice（4,347）・AR-08-bag（3,948）・AR-08-old-man-back（5,265。奥の通路はポリゴンの外）。窓 A・B を各 2 テイク生成し、A は a2（夕焼けの商店街の像が濃いほう）、B は二重の鏡像を作らず夕焼けの空が続くほうを採用（B の最初の 2 テイクは A の鏡像を再度反転して水平の地平線ができたため没）。ゲーム画面とライブ blink での確認は未了。"
+    note: "大面積。CAM08-E16。alpha bbox 675x630=425,250 px²（画像比 70%）。排他（同プレイ非共存）: CR-LG-08-02（積まれたテレビの山。未制作の候補。同じ床を使い、水面の積み物には接地反射が要る）、AR-08-floor-reflection-two-tier（重なり 19,306）・AR-08-floor-reflection-no-pillar（20,648）・AR-08-tile-concentric（7,392）・AR-08-floor-ramune-marbles（13,209）・AR-08-cat（1,785）・AR-08-barber-pole（4,750）・AR-08-pillar-second（12,474。柱の鏡像が合わなくなる）・AR-08-panel（12,768）・AR-08-panel-off（5,124）・AR-08-blue-panel（5,124）（パネルの光が水面の鏡像と食い違う）。併存可（bbox の重なりのみで、水面ポリゴンは壁・柱・ガラス戸の面にかからない）: AR-08-wall-band-wave（21,195）・AR-08-suit（10,640）・AR-08-pillar-notice（4,347）・AR-08-bag（3,948）・AR-08-old-man-back（5,265。奥の通路はポリゴンの外）。近接: AR-08-fixture-duplicate（天井の照明の複製。最終 overlay のアルファ領域の最短距離 5px、bbox では 3px まで近いが重なり 0 のため併存可。水面ポリゴンは天井にかからない）。窓 A・B を各 2 テイク生成し、A は a2（夕焼けの商店街の像が濃いほう）、B は二重の鏡像を作らず夕焼けの空が続くほうを採用（B の最初の 2 テイクは A の鏡像を再度反転して水平の地平線ができたため没）。ゲーム画面とライブ blink での確認は未了。"
+
+  - id: 'AR-05-curtains-open-cafe'
+    candidate_id: 'CR-LG-05-01'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E08'
+    base_photo: 'public/images/cam5.webp'
+    category: 'surreal'
+    anomaly_type: 'state_change'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(417,121)–(808,596)'
+    location: 'CAM05-E08、正面ガラス区画、差分左上 (282,109) px'
+    detail: '正面ガラスのカーテンが全て開き、無人の昭和の喫茶店の暖かい店内が見える'
+    generation_prompt: "Method: a 676x450 window (y100-550) of the baseline was edited with $imagegen (prompt below), pasted back with scripts/composite-polygon.py restore, then only the six glass panes (mullions, brick band, green sign, door glass excluded) were cut out with composite-polygon.py cutout. Prompt: Edit the attached surveillance camera photo of an underground shop front with a large glass facade covered by grey curtains. Make ONLY this change: all grey curtains behind the glass are drawn open, and through the glass we see the warm interior of an old Showa-era Japanese coffee shop with nobody in it: warm amber lamps, a wooden counter, round stools upholstered in red vinyl (one stool pulled slightly out), a shelf lined with plain unlabeled cream-soda glasses. The interior is clearly warmer and brighter than the corridor. The metal window mullions and transoms stay exactly where they are, and the existing faint reflections on the glass stay visible. The corridor floor, ceiling, green sign, black side panel and brick band remain cold blue-grey and untouched; the warm light must not spill onto the floor. No menus, signs, shop names, lettering or logos. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source."
+    overlay: 'assets/anomaly-overlays/cam05/curtains-open-cafe.webp'
+    overlay_origin: '(282,109)'
+    dimensions: '264x427'
+    review_status: 'composited'
+    note: "大面積。CAM05-E08。alpha bbox 264x427=112,728 px²（画像比 18.5%）。排他（同プレイ非共存。いずれも同じガラス面の部分変化・反射で、本件の全面開放＋店内に上書きされる）: AR-05-glass-light・AR-05-old-woman-in-glass・AR-05-curtain-open・AR-05-sign-in-glass・AR-05-amber-pane・AR-05-joint-into-glass・AR-05-chair-reflection・AR-05-curtain-mend・AR-05-wind-chime。併存可: AR-05-duplicate-light（天井。重なり 1,899 は bbox のみ）・AR-05-brick-round・AR-05-blue-brick（レンガ帯は保持）・AR-05-brown-column（隣接 0px、角柱は保持）。最近傍の非排他は AR-05-hatch-stain（28px）。2 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。"
