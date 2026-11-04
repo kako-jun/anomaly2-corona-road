@@ -144,7 +144,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 | AR-01-right-wall-lattice-doors | 大面積 | surreal / multiply | 右の店先の壁一面 (422,225,675,668) | 同じ木格子戸が、奥へ向かって1枚ずつ大きくなりながら連なる |
 | AR-01-ceiling-lamp-off | 小物 | environment / state_change | 左天井 (60,168,128,222) | 左の丸い埋め込み灯が消えて黒い円になる |
 | AR-01-ceiling-tile-drop | 小物 | object / displace | 右上天井 (405,122,479,198) | 天井板が一枚、片側だけ外れて垂れ下がる |
-| AR-01-ceiling-wet-stain | 小物 | environment / state_change | 中央天井 (290,212,370,248) | 天井に濡れた丸い染みが広がり水滴が垂れかける |
 | AR-01-floor-light-orphan | 小物 | surreal / state_change | 手前左の床 (2,832,92,898) | 光源のない場所に、床の光だまりがもう一つ落ちる |
 | AR-01-crouching-silhouette | 小物 | person / add_person | 奥の床 (385,484,440,538) | 奥の床にうずくまる黒い人影が一つ |
 | AR-01-threshold-pigeon | 小物 | object / add_creature | 右の敷居 (575,598,675,655) | 右の店先の敷居に白い鳩が一羽とまる |
@@ -254,28 +253,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 - **視認性の注意**: 黒い隙間と垂れた板の影で差分を作る。灰色の天井に溶けないよう隙間は真っ黒に。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: id `AR-01-ceiling-tile-drop` / `category: object` / `anomaly_type: displace` / `detail: '右上の天井板が一枚、片側だけ外れて斜めに垂れ下がり、暗い天井裏の隙間が見える'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 - **相互参照 / 重複精査**: 近い既存: `AR-04-ceiling-corner-fold`（台帳・CAM04・換気口の隣の天井板の角が折れて垂れる）。**別カメラで、本件は板が外れて暗い隙間と配線が見える（天井裏が覗く）点が違う**が、同じ「天井板が垂れる」型なので、制作前に見比べ、実質同じと感じたら取り下げる。「天井板が垂れる」型は、CAM08 側の同名の案が別担当で差し替えられるため、本件が CAM01 で残す唯一の案（他カメラとは重ねない）。CR-01-19（点検板の隣に同じ板が増える）は増やす案で別。
-
-#### AR-01-ceiling-wet-stain — 天井に濡れた丸い染みが広がり水滴が垂れかける
-
-- **camera / element_id**: CAM01 / CAM01-E01（天井面の中央、大きな換気口 E03 の下）
-- **物と変化**: 通路中央の天井に、遠近で横に潰れた**丸い濡れ染み**（黒っぽい茶灰色の輪、縁は濃く中は薄い）が現れ、その中央下で**一滴の水が光って垂れかかる**（落ちる前）。染みは粒状の天井に沿い、無地。
-- **最終 box**（baseline px）: `290,212,370,248`（80x36）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `202,144,458,315`（256x171）。box はクロップ内の (88,68)-(168,104)
-- **生成プロンプト**（3 テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the plain speckled ceiling in the middle of the frame, below the large round vent, a wet water stain appears: one roundish dark brown-grey ring, flattened sideways by the ceiling perspective, darker at its rim and paler inside, following the speckled texture of the ceiling, and a single drop of water hangs from the lowest point of the stain, glossy with a small bright highlight, about to fall. VARIANT. Do not touch the large round vent above, the dark ceiling fixtures further down, the lamps or anything else. Place the object, including the drop, centered at about 51% from the left and 52% from the top of the image, occupying roughly 31% of the image width and 21% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  - VARIANT 1: `The stain is a clean round ring with a soft edge`
-  - VARIANT 2: `The stain is an irregular blotch with a darker lower edge`
-  - VARIANT 3: `The stain has a faint second ring inside it, like a tide mark`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 上の大きな同心円の換気口・下の暗い天井の小型器具。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-vent-hole-triangle まで 32.0px、次点 AR-01-tube-end 47.4px、AR-01-ceiling-seam-circle 48.0px、本節の AR-01-ceiling-tile-drop まで 37.7px（右隣）。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（染みと水滴を上へ広げない。30px 割れなら下端を下げる）。
-- **分類 / フェーズ / 目立ち度**: environment / early / medium（medium 以上。登録時に subtle にしない。視認性の基準を通すため染みを濃く、輪を太く）
-- **視認性の注意**: 明るい天井に対し暗い茶灰の輪で差分を作る。薄いと下限未満。水滴の白い光点を面積比の足しにする。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-ceiling-wet-stain` / `category: environment` / `anomaly_type: state_change` / `detail: '天井の中央に、濡れた丸い染みが広がり、その下に水滴が一つ垂れかかる'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: 近い既存・候補: `AR-01-ceiling-seam-circle`（同カメラ・板継ぎ目の輪。**輪の形は近いが、あちらは継ぎ目の線で、本件は濡れた色面と水滴**。距離は 80px 以上）、CR-02-28・CR-06-28（別カメラの天井の染みの候補）、CR-08-31（別カメラ・丸灯の下の水滴）、`AR-05-hatch-stain`（別カメラ・点検口の色）。型が重なるので制作前に見比べる。
 
 #### AR-01-floor-light-orphan — 光源のない場所に、床の光だまりがもう一つ落ちる
 
