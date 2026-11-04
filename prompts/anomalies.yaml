@@ -4153,4 +4153,4 @@ anomalies:
     overlay_origin: '(330,152)'
     dimensions: '50x37'
     review_status: 'composited'
-    note: '最近傍の既存の小物は AR-02-pillar-notice（35.0px）・AR-02-bw-television（61.3px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。テイク B（白っぽい四角い跡に留め具の点が二つ残る）を採用。box は仕様（330,153,380,188）から（330,152,382,187）へ。下端を上げて AR-02-pillar-notice と 30px 以上空けるため --dilate 0 --feather 1 で絞った。CR-02-35（柱の小看板群）とは排他（同プレイで共存させない）。 ゲーム画面とライブ blink での確認は未了。 排他: AR-02-ceiling-starry-sky（天井一面の大面積。box が天井の下端と重なるため同プレイで共存させない）。'
+    note: '最近傍の既存の小物は AR-02-shutter-shadow（30px、境界）、次いで AR-02-pillar-notice（35.0px）・AR-02-bw-television（61.3px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。看板跡の白飛びは後処理で壁の明るさ・色味に馴染ませ、右端に残った元の枠の黒い縦の残りは壁色へ溶かして目立たなくした。テイク B（白っぽい四角い跡に留め具の点が二つ残る）を採用。box は仕様（330,153,380,188）から（330,152,382,187）へ。下端を上げて AR-02-pillar-notice と 30px 以上空けるため --dilate 0 --feather 1 で絞った。CR-02-35（柱の小看板群）とは排他（同プレイで共存させない）。 ゲーム画面とライブ blink での確認は未了。 排他: AR-02-ceiling-starry-sky（天井一面の大面積。box が天井の下端と重なるため同プレイで共存させない）。'
