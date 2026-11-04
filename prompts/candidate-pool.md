@@ -365,24 +365,6 @@
 
 ### CAM02 — Main Corridor
 
-#### CR-NEW-02-02 — 濃青のハンディファン
-
-- **camera / element_id**: CAM02 / CAM02-E20
-- **物と変化**: 床に濃い青の小型携帯扇風機が横倒しで置かれている（令和の夏の持ち物。無地・ロゴなし）。※設計補正: box が横長(110x47)なので「立てて」を「横に寝かせて」に変更
-- **最終 box**（baseline px）: `190,618,300,665`（110x47）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `117,556,373,727`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (73,62)-(183,109)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles, lay one small handheld portable fan on its side, with its round plain blade guard facing right and its short handle at the left, in dark navy blue plastic, completely plain with no logo, no text, no button labels and no printed marks. Make it about 1.5x larger than real scale. Give it a strong dark contact shadow and a small bright highlight along the plastic edge. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place it so that the handle end and the left part of the body overlap the white light reflection band on the floor, and the blade guard extends onto the gray floor to the right of the band; the dark navy body and its shadow must contrast clearly against the pale band. Do not touch the tile joints. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 43% of the image width and 27% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地（床の白い反射帯は保持対象でなく、扇風機を重ねる場所）。
-- **最寄り既存 overlay と実測距離**: AR-02-tile-color まで 30.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-tile 31.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 暗い青は明るい反射帯の上では強く出るが、帯の外の灰色床では差が小さい。box の左約1/3（取っ手側）が反射帯に重なることを6倍クロップで実測確認済み（帯はクロップ内 x≈73〜110、box は x=73〜183）。本体は帯に重ね、暗色の本体と濃い影で対比させ、ガードの縁にハイライトを入れる。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '床に濃い青の小型携帯扇風機が横倒しで置かれる（令和の夏の持ち物。無地・ロゴなし）'` / `candidate_id: 'CR-NEW-02-02'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### CR-NEW-02-03 — 縄跳びの縄
 
 - **camera / element_id**: CAM02 / CAM02-E20
