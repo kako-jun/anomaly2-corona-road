@@ -4153,4 +4153,4 @@ anomalies:
     overlay_origin: '(409,198)'
     dimensions: '43x96'
     review_status: 'composited'
-    note: '最近傍の既存の小物は AR-02-duplicate-coffee-sign（36.0px）・AR-02-smoke（37.0px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。大面積の AR-02-floor-footprints とは 44px。テイク A（立つ人の影）を採用。box は仕様（410,205,452,290）から生成された影に合わせて（411,200,450,292）へ、右の AR-02-duplicate-coffee-sign・AR-02-smoke と 30px 以上空けるため --dilate 0 --feather 1 で絞った。CR-02-12（右奥シャッターが壁と同じ色になる）とは排他（同じ面。同プレイで共存させない）。 ゲーム画面とライブ blink での確認は未了。'
+    note: '最近傍の既存の小物は AR-02-pillar-sign-gone（30px、境界）、次いで AR-02-duplicate-coffee-sign（36.0px）・AR-02-smoke（37.0px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。大面積の AR-02-floor-footprints とは 44px。テイク A（立つ人の影）を採用。box は仕様（410,205,452,290）から生成された影に合わせて（411,200,450,292）へ、右の AR-02-duplicate-coffee-sign・AR-02-smoke と 30px 以上空けるため --dilate 0 --feather 1 で絞った。CR-02-12（右奥シャッターが壁と同じ色になる）とは排他（同じ面。同プレイで共存させない）。 ゲーム画面とライブ blink での確認は未了。'
