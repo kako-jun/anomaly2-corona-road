@@ -598,7 +598,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 
   | ID | 要素 | category / anomaly_type | 規模 | 変化 |
   | --- | --- | --- | --- | --- |
-  | AR-08-floor-tile-groove | E16 | environment / state_change | 小物 | 柱の右の床のタイル一枚が一段沈み、四辺の目地が黒い溝になる |
   | AR-08-pillar-sparrow | E11 | object / add_creature | 小物 | 柱の根元の角に、雀が一羽とまっている |
   | AR-08-ceiling-light-inverse | E01 | surreal / state_change | 小物 | 右上の天井の丸い天井灯が、光る代わりに周りの天井へ黒い影の暈を広げる |
   | AR-08-column-door-ajar | E15 | environment / state_change | 小物 | 右の黒い柱の下の暗い帯の引き戸が、指一本ぶん開いて細い光が漏れる |
@@ -615,31 +614,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 - **共通手順**（大面積。この節の各項の窓）: 大面積は `scripts/composite-polygon.py` を使う（`crop` で全幅 675x450 の 3:2 窓を切り出し、生成結果を `restore` で元寸へ貼り戻し、面のポリゴンで `cutout --polygon … --feather 2`。複数窓は `restore --blend-px 100 --blend-edges t`）。窓は 1536/675≈2.2756 倍。生成は 1 件ずつ、生成画像は見ずに合成まで進め、採否は人間が決める運用。
 - **共通プロンプト末尾**（各プロンプトに全文を含めてある。小物は「クロップ」、大面積は「窓」の意味）: `Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
 - **共通の禁止**: 文字・数字・ロゴ・実在の店名・家紋の混入（出たテイクは没）。人の顔・体は描かない（人の気配は影・服・足元だけ）。性的・不適切の独自判定はしない（生成物はそのまま報告）。
-
-### AR-08-floor-tile-groove — 床タイル一枚が一段沈み、四辺が黒い溝になる
-
-- **camera / element_id**: CAM08 / CAM08-E16（床タイル）
-- **物と変化**: 柱の右の床の、タイル一枚だけが一段沈み、その四辺の目地が太い真っ黒な溝になって一周する。沈んだタイルの表面は元の石目のまま（少し暗い）。人も物もない。「床が静かに下がっている」という、誰も触れていない変化。
-- **不気味さの狙い**: 誰も歩いていないのに、床の一枚だけが下がって縁が黒く口を開けている。出河さんが「そこだけ、床が下がってません？」と聞き、樫原くんが「いや、前からじゃ…」と自信なく返す、地味で長く残る違和感。
-- **差し替えの経緯**: 旧案（床に伸びる人影）は他カメラの人影系と型が重複するため差し替え。第一案の「柱の台座が沈み、境に黒い溝が一周」は、台座まわりが AR-08-pillar-sparrow の box と AR-08-pillar-second の alpha bbox（x358〜411）に重なり 30px 離せないため見送り、同じ「沈んで黒い溝が一周する」型を、旧人影案が測定済みの床の空き枠（下の最終 box）へ移した。
-- **最終 box**（baseline px）: `448,460,524,542`（76x82）。`composite-anomaly.py --box` にはこの値を渡す。
-- **6倍クロップ**（baseline px）: `358,416,614,587`（256x171）。box はクロップ内の (90,44)-(166,126)。下端はラムネ瓶の玉（AR-08-floor-ramune-marbles、y575〜）の上辺にわずかに触れるので「触らない」を明記する。
-- **生成プロンプト**（3 テイク。T1 は基本、T2 は溝をより太く、T3 は沈んだタイルをさらに暗く）:
-
-  T1:
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other tile, joint line, light pool and wall exactly unchanged. Make ONLY this single change: on the gray floor tiles at the centre of the frame, pick one single floor tile and make it sink one step below its neighbours: the whole tile is lowered, and the joint lines on all four sides of that tile become one thick groove of pure black that runs all the way around it, with a thin pale edge on the near rim of the groove where it catches the light. The sunken tile keeps exactly the same speckled stone surface and the same gray tone as the other tiles, only slightly darker. Draw the tile in the floor's perspective as a parallelogram, with its groove continuing into the neighbouring joint lines. Make the groove about 1.3x thicker than real scale so it reads clearly. Do not touch the pillar, the wall at the right, the other tiles, or the small round balls at the very bottom edge of the frame. Place the sunken tile, including its groove, centred at about 50% from the left and 50% from the top of the image, occupying roughly 30% of the image width and 48% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  T2: T1 の "thick groove of pure black" を "very thick groove of pure black, about as wide as a finger" に置き換え、他は同じ（全文を渡す）。
-
-  T3: T1 の "only slightly darker" を "clearly darker, as if lying in shade" に置き換え、他は同じ（全文を渡す）。
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の床タイル・光の斑・右の壁。
-- **最寄り既存 overlay と実測距離**: AR-08-panel まで 32.0px、次点 AR-08-floor-ramune-marbles 33.0px、AR-08-wall-band-wave 34.0px（box 基準・矩形間のユークリッド距離。台帳 CAM08 の alpha bbox を 2026-11-05 に実測、大面積 2 件を除く）。溝が box を超えて広がる分、制作後に最終 overlay の alpha bbox で測り直す（30px 未満は動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / mid / medium
-- **視認性の注意**: 床は中間灰で、真っ黒な溝は十分に対比する。光の斑（白飛び）の上は避ける。溝が細いと面積比で通りにくいので T2 が有力。登録後に `uv run scripts/check-visibility.py --id AR-08-floor-tile-groove` を必ず通す。
-- **台帳登録時**: `id: 'AR-08-floor-tile-groove'` / `candidate_id: 'AR-08-floor-tile-groove'` / `element_id: 'CAM08-E16'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `location: 'CAM08-E16、柱の右の床。差分左上 (x,y) px'` / `detail: '柱の右の床のタイル一枚が一段沈み、四辺の目地が黒い溝になる'` / `phase: 'mid'` / 目立ち度 `medium` / note「小物。CAM08-E16。最近傍の既存は AR-08-panel（32.0px、alpha bbox 基準）。」
-- **相互参照 / 重複精査**: 床の沈みは候補 CR-01-40（CAM01・タイル一枚が隣より少し沈む。溝なし・subtle で別カメラ）と近縁だが、本件は四辺が黒い溝になる強い変化で、別カメラなので許容。AR-08-tile-concentric（CAM08・タイルの模様）は模様の変化で別物。床の置き物系（AR-08-n1〜n5）は「物」で別。
 
 ### AR-08-pillar-sparrow — 柱の根元の雀
 
