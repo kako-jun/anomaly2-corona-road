@@ -572,31 +572,8 @@ CAM 07（Maintenance Corridor、`cam7.webp` 675x900）に足す画像異変 7 �
 
 | ID | 対象 | category / anomaly_type | box（x1,y1,x2,y2） | phase / 目立ち度 |
 | --- | --- | --- | --- | --- |
-| AR-07-exit-sign-gone | E14 緑の非常灯 | object / remove_object | `592,128,618,158`（26x30） | late / medium |
 | AR-07-ceiling-tile-yellow | E01 天井板（昇格 CR-07-21） | environment / color_shift | `440,12,500,46`（60x34） | early / subtle |
 
-### AR-07-exit-sign-gone
-
-- **カメラ**: CAM07、対象 CAM07-E14（右奥の上り階段。右壁の上部の小さな緑色発光表示＝非常灯）。
-- **物と変化**: 緑の非常灯が消えて取り付け跡だけが残る（object / remove_object）。緑の発光が暗い壁に戻り、「出口の表示が無い」ことが報告される。3 テイクは痕跡の濃さ違い（薄い長方形の跡＋ビス穴／空の窪みと垂れた配線／何の跡も無い）。物語では「出口が無くなる」ことが、帰りたくない老人たちの優しい異変の裏返しになる。
-- **box**: `592,128,618,158`（26x30。非常灯は約 x595〜615・y135〜157 なので、box の上端を 2px 上げて下端を 158 で止め、全体を階段の人影から遠ざけた）。最寄り既存 overlay（最終 alpha bbox）は AR-07-stair-figures（588,190–626,325）まで **32.0px**（旧 box は 30.0px ちょうどだった）、次点 AR-07-lamp-off（536,51–581,83）46.3px、AR-07-paper-airplane-ceiling 58.0px。**制作後に alpha bbox で再測定**（非常灯の画素だけなら実 bbox は box より小さく、距離はさらに伸びる。羽毛ぼかしで広がって 30px を割ったら `--margin` を小さくする）。
-- **6倍クロップ**: 原画像 `(417,60)–(675,232)`（258x172。右端に接する）。box は窓内で `(1041,405)–(1196,583)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, remove the small green emergency exit sign light at about x 1041-1196, y 405-583 (frame pixels), next to the dark staircase on the right, and fill the place with the plain dark wall surface that would be behind it, leaving only a faint slightly paler rectangular outline where the sign used to hang and two tiny dark screw holes. No green glow anywhere. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, remove the small green emergency exit sign light at about x 1041-1196, y 405-583 (frame pixels), next to the dark staircase on the right, leaving an empty dark rectangular recess in the wall where the sign was mounted, with two short loose dark wires hanging from its top edge. No green glow anywhere. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, remove the small green emergency exit sign light at about x 1041-1196, y 405-583 (frame pixels), next to the dark staircase on the right, and make the wall look as if nothing had ever been mounted there: plain dark wall surface, no outline, no marks. No green glow anywhere. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 緑の発光（周囲の暗い壁との差が大きい）が消えるので max 差は 40 を超える見込み。**下限を割りそうな点**は、非常灯が約 20x22px と小さく、overlay の面積が小さいので強い差の画素が 100 に届かないこと（その場合は 25% 以上の比率条件で通るかを見る）。消した後の壁が周囲より明るく浮くと別の差が出るので、壁は周囲の暗さに合わせる。登録後に `uv run scripts/check-visibility.py --id AR-07-exit-sign-gone` を通す。
-- **台帳登録案**: `id: 'AR-07-exit-sign-gone'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E14'` / `category: 'object'` / `anomaly_type: 'remove_object'` / `location: 'CAM07-E14、差分左上 (592,128) px'` / `detail: '右奥の階段の上の緑の非常灯が消え、取り付け跡だけが残る'` / `phase: late` / `subtlety: 'medium'` / `candidate_id: 'AR-07-exit-sign-gone'`。note に最寄り AR-07-stair-figures と最終 alpha bbox 実測距離、「overlay は非常灯の画素（と取り付け跡）だけで、消した後の壁は周囲の暗さに合わせる」を書く。
-- **相互参照 / 重複精査**: 近縁は AR-07-duplicate-green-sign（同じ緑の表示が階段の下側にも現れる）。あちらは増える複製、本件は消える remove_object。非常灯の消失は台帳にも候補にも無い。AR-07-lamp-off（右上の丸灯が消える）は別の灯具・別の位置（物は丸い白色灯で、緑の非常灯ではない）。
 ### AR-07-ceiling-tile-yellow（昇格: CR-07-21）
 
 - **カメラ**: CAM07、対象 CAM07-E01（青灰色の天井。細かな斑点/汚れ、天井板の線）。
