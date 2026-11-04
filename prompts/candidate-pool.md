@@ -675,24 +675,6 @@
 - **視認性の注意**: 壁と生成りの明度差が小さい。縫い目の濃い茶と、膨らみの影・フックの影で補強する（白に寄せない）。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '右端の漆喰壁のフックに、令和の無地の生成りトートバッグが一つ掛かる'` / `candidate_id: 'AR-04-tote-bag'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 袋系: AR-08-bag（CAM08・暗いガラスに映る古い紙袋）・AR-03-paper-bag。別カメラ・別物。
 
-#### AR-04-tin-robot — ブリキのロボット(ロゴ・文字なし)
-
-- **camera / element_id**: CAM04 / CAM04-E15
-- **物と変化**: 床左寄りの広い面に、昭和のブリキのぜんまいロボットが一体立つ（ロゴ・文字なし）
-- **最終 box**（baseline px）: `250,568,340,625`（90x57）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `167,511,423,682`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (83,57)-(173,114)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the bright floor tiles to the left of the center, stand one vintage wind-up tin toy robot upright: a boxy body in solid saturated blue and red tin with black outlines, a square head with a small antenna, two arms and two short legs, no silver or chrome parts, no printed text, no logo and no letters. Make it about 1.5x larger than real scale. Give it a strong dark contact shadow, and keep its tones darker than the glare around it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white glare reflections on the floor, the tile joints or the small lights reflected in the floor. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 35% of the image width and 33% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 床の白い反射・タイル目地・床に映る小さな灯り。
-- **最寄り既存 overlay と実測距離**: AR-04-orange-tile まで 32.8px（box 基準・矩形間のユークリッド距離、次点 AR-04-hatch-frame-round 35.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 床が白い反射で飛んでいる場所なので、銀・白・淡色のロボットは必ず溶ける。濃い青と赤で彩度と暗さを稼ぎ、1.5倍に誇張する。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '床左寄りの広い面に、昭和のブリキのぜんまいロボットが一体立つ（ロゴ・文字なし）'` / `candidate_id: 'AR-04-tin-robot'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 ### CAM05 — Emergency Stairwell
 
 #### CR05N-1 — 黄色と青のビーチボール
