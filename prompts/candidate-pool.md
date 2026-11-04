@@ -367,24 +367,6 @@
 
 ### CAM03 — South Exit
 
-#### AR-03-wash-tub — 黄色い無地の洗面桶(銭湯風、ロゴなし)
-
-- **camera / element_id**: CAM03 / CAM03-E16
-- **物と変化**: 左手前の暗い床に、昭和の黄色いプラスチック洗面桶が一つ伏せて置かれる
-- **最終 box**（baseline px）: `30,795,140,875`（110x80）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,729,256,900`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (30,66)-(140,146)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark floor tiles in the lower left foreground, place one plain bright yellow plastic wash basin (a bathhouse-style round basin) lying upside down on the floor, completely plain with no logo, no embossed letters and no print. Make it about 1.3x larger than real scale. Give it a strong dark contact shadow and a soft highlight on the rounded plastic. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the floor grain or the light patches nearby. Place the object, including its shadow, centered at about 33% from the left and 62% from the top of the image, occupying roughly 43% of the image width and 47% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地・床の粒状感・近くの光の斑。
-- **最寄り既存 overlay と実測距離**: AR-03-blue-floor-tile まで 48.8px（box 基準・矩形間のユークリッド距離、次点 AR-03-tile-diagonal 49.5px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 暗い床に鮮黄で強く対比。縁のハイライトで輪郭を出す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左手前の暗い床に、昭和の黄色いプラスチック洗面桶が一つ伏せて置かれる（無地）'` / `candidate_id: 'AR-03-wash-tub'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### AR-03-sake-bottle — 茶色い一升瓶(ラベルなし・無地)
 
 - **camera / element_id**: CAM03 / CAM03-E16
