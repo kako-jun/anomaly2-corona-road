@@ -4146,7 +4146,7 @@ anomalies:
     phase: 'mid'
     subtlety: 'medium'
     mask_box_1000: '(806,333)–(910,383)'
-    location: 'CAM03-E16 の床右寄り、差分左上 (542,297) px'
+    location: 'CAM03-E16 の床右寄り、差分左上 (536,299) px'
     detail: '床の右寄りで、タイル一枚だけが炭のように暗い黒灰色に変わる（平らで穴ではない）。'
     generation_prompt: 'Method: 6x enlarged crop edited with $imagegen (take 1), resized back and pasted into the baseline, then cut with scripts/composite-anomaly.py. Prompt: $imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: one floor tile in the marked area (about x=750 to 1170, y=288 to 558 in the 1536x1024 frame) has turned deep charcoal black-grey, about the size of a floor cushion. It is perfectly flat, not a hole, its edges aligned with the tile joints and the perspective, its surface slightly glossy so the soft white reflections of the lights still show faintly across it. The neighbouring tiles, their speckles, joints and reflections stay exactly as they are. Add no object. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.'
     overlay: 'assets/anomaly-overlays/cam03/dark-tile.webp'
