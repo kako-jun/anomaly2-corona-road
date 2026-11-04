@@ -527,24 +527,6 @@
 - **視認性の注意**: 暗所で発光するので視認しやすいが小さい。画面の明るさを白く強め、周囲の暗部を落とさない（黒潰れの部分は黒のまま）。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'environment'` / `anomaly_type: 'add_object'` / `detail: '奥の暗い店内の床に小さな白黒テレビが点き、淡い砂嵐の光を放つ（失われた日常の気配）'` / `candidate_id: 'CR-NEW-02-05'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: **同種: AR-06-crt-tv-glow（CAM06・左端の暗い店先の窓の奥に青白く砂嵐を放つ小さなブラウン管テレビ）。** 意図的な反復シリーズ（別カメラ・別の置き場所）として扱い、制作前に見比べて重複と判断したら取り下げる。反復に価値がある理由: 「消えたはずの店のテレビが、別の場所でも点いている」という同じ気配が複数の画面で繰り返されると、プレイヤーは見つけた1件目を手がかりに2件目を探す楽しみが生まれる。差分は、AR-06-crt-tv-glow が窓の奥の店先・左端の暗所、こちらは通路奥の店内の床に置かれた小型の白黒機。
 
-#### CR-NEW-02-06 — 小型スーツケース
-
-- **camera / element_id**: CAM02 / CAM02-E20
-- **物と変化**: 床にミントグリーンの小型スーツケースが倒れず立っている（令和の旅の持ち物。無地・ロゴなし）
-- **最終 box**（baseline px）: `30,760,190,880`（160x120）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,729,256,900`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (30,31)-(190,151)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles in the lower left foreground, place one small plain mint-green hard-shell cabin suitcase standing upright on its wheels with the telescopic handle retracted, glossy plain shell with faint ribbed lines only, completely plain with no logo, no tag, no sticker and no text. Keep it near real scale (the box is already large). Give it a strong dark contact shadow on the floor and a soft highlight on the shell. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white light reflection band on the right of it, the tile joints or the shutter at the left edge. Place the object, including its shadow, centered at about 43% from the left and 53% from the top of the image, occupying roughly 62% of the image width and 70% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 右の白い反射帯・タイル目地・左端のシャッター。
-- **最寄り既存 overlay と実測距離**: CR-NEW-02-01 まで 40.0px（box 基準・矩形間のユークリッド距離、次点 CR-NEW-02-03 60.0px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / mid / obvious
-- **視認性の注意**: 大きな物体で見えやすい。明るい反射帯の中に入ると薄い緑が溶けるので、反射帯の左の暗い灰色床に置く。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '床にミントグリーンの小型スーツケースが倒れず立っている（令和の旅の持ち物。無地・ロゴなし）'` / `candidate_id: 'CR-NEW-02-06'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 ### CAM03 — South Exit
 
 #### AR-03-tricycle — 赤い三輪車(無地・文字なし)

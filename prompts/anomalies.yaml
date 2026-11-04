@@ -3506,3 +3506,21 @@ anomalies:
     dimensions: '248x377'
     review_status: 'composited'
     note: '大面積。CAM08-E06/E07。alpha bbox 248x377=93,496 px²（画像比 15.4%。テレビの実範囲は x0〜244・y159〜486。y145〜492 の長方形はテレビ以外が baseline と同一で、y492〜522 は接地影だけの半透明の黒）。仕様の下端 y470 は、床へ崩れたテレビの回転で y486 まで出たため y492 に広げ、さらに接地影のため y522 まで広げた（影の濃さが実質ある範囲は y≈507 まで）。見た目の後処理（レビュー指摘: 貼り付けに見える）: 筐体を彩度 0.38 倍に落として青緑の色かぶりを乗せ（茶色の暖色を除去）、画面は明るい部分を約 0.42 倍に暗くし、輪郭と山の下側に ambient occlusion を足し、床へ強い接地影（接触影 σ4＋広い影 σ9）を落とした。右端は影を柱の手前で x244→248 へ消す。仕様確認の事実: 本件の山は仕様どおりガラス戸（E06）の外へこぼれ、扉 E06 と通路入口 E08（x約 170〜255）を覆う拡張をしている。これは仕様 CR-LG-08-02 に「kako-jun の確認が要る判断点」と書かれた項目で、確認は未了。右端は柱（x≈250）の手前 x244 で止めた。排他（同プレイ非共存）: AR-08-floor-water-mirror（CR-LG-08-01。大面積。bbox 重なり 62,496。水面に積まれたテレビには接地反射が要り「映るのは昭和の夕焼けだけ」と矛盾する。同ファイルの note にも追記）・AR-08-bag（12,502 / alpha 3,917）・AR-08-barber-pole（6,422 / 5,858）・AR-08-cat（1,785 / 1,502）・AR-08-notice-residue（950 / 922。左ガラス・通路入口の小物で山に覆われる）・AR-08-floor-reflection-no-pillar（bbox 5,750 / alpha 1,091。山の裾と接地影が床の反射帯 y476〜に掛かる）。併存可: AR-08-light-blue-bleed（bbox 1,411 / alpha 845 だがテレビ画素との重なりは 0。山の頂点 y159 は天井灯の列の下）・AR-08-fixture-duplicate（隣接 3px）。最近傍の非重なりは AR-08-pillar-notice（34px）。山は 25 台。全画面が同じ無人の通路（baseline 自身の縮小。人も文字もなし。赤い丸看板が小さく写るが判読不能）。近縁（別規模）: CR-NEW-02-05（CAM02 の小物 1 台）・AR-06-crt-tv-glow（CAM06 の小物 1 台）。ガラス戸の枠は山の隙間と左端に残る。ゲーム画面とライブ blink での確認は未了。'
+  - id: "AR-02-mint-suitcase"
+    candidate_id: "CR-NEW-02-06"
+    camera_id: "CAM02"
+    element_id: "CAM02-E20"
+    base_photo: "public/images/cam2.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "obvious"
+    mask_box_1000: "(96,892)–(194,968)"
+    location: "CAM02-E20、差分左上 (65,803) px"
+    detail: "床にミントグリーンの小型スーツケースが倒れず立っている（令和の旅の持ち物。無地・ロゴなし）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen), pasted into the baseline and cut out with scripts/composite-anomaly.py (box (58,794,140,878), --dilate 1 --feather 2; the generated suitcase is smaller than the original box (160x120), so the box was narrowed to it). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles in the lower left foreground, place one small plain mint-green hard-shell cabin suitcase standing upright on its wheels with the telescopic handle retracted, glossy plain shell with faint ribbed lines only, completely plain with no logo, no tag, no sticker and no text. Keep it near real scale (the box is already large). Give it a strong dark contact shadow on the floor and a soft highlight on the shell. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white light reflection band on the right of it, the tile joints or the shutter at the left edge. Place the object, including its shadow, centered at about 43% from the left and 53% from the top of the image, occupying roughly 62% of the image width and 70% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam02/mint-suitcase.webp"
+    overlay_origin: "(65,803)"
+    dimensions: "66x68"
+    review_status: 'composited'
+    note: "最寄りの小物は、未マージの CR-NEW-02-01（AR-02-maroon-cushion）まで 76px、マージ済みでは AR-02-smartphone-facedown まで 135.7px（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。余裕あり。 box は (30,760,190,880) から (58,794,140,878) へ絞った（生成されたスーツケースは元 box より小さい）。重なりを許す大面積: AR-02-floor-footprints（小物との重なりは基準で許容）。 ゲーム画面とライブ blink での確認は未了。"
