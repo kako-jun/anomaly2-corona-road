@@ -738,7 +738,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
 
 | ID | タイプ | カテゴリ | 規模 | 変化 |
 | --- | --- | --- | --- | --- |
-| AR-06-floor-tile-rotated | state_change | surreal | 大面積（床一面） | 前景の床一面のタイルが全部同じ向きに45度回り、目地が斜めのひし形の格子になる |
 | AR-06-door-gap-light | state_change | environment | 小物 | 右の扉の下の隙間から暖かい橙色の光が漏れる |
 | AR-06-floor-light-slant | state_change | environment | 小物 | 床の中ほど左に、右の反射帯と逆向きに斜めへ傾く白い光の帯が一本映る |
 | AR-06-wall-gecko | add_creature | object | 小物 | 右の粗い壁にヤモリが一匹張り付く |
@@ -756,41 +755,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
   4. 最終 overlay の alpha bbox で既存との距離を測り直す。台帳へ登録し `check-visibility.py` を通す。通らなければ強めて作り直すか、この節へ戻す。
   5. 登録・コミットしたら `experiments/` 配下の作業物を即削除する。
 - **大面積の手順**: 後述の AR-06-floor-tile-rotated を参照（`scripts/composite-polygon.py` の `crop` → imagegen → `restore` → `cutout`）。
-
-### AR-06-floor-tile-rotated — 前景の床一面のタイルが全部45度回って市松の向きが変わる（大面積）
-
-- **camera / element_id**: CAM06 / CAM06-E16
-- **物と変化**: 前景の床（灰色の正方形タイル面）の一面で、タイルが全部同じ向きに45度回り、目地が通路の奥行き方向ではなく斜め（ひし形の格子）に走る。タイルの色・質感・大きさ・光の当たり方は元のまま。何も置かず、足すものもない（床の「向き」だけが一面で変わる state_change。物や人は一切写さない）
-- **面**（baseline px。polygon）: `165,668 585,668 645,900 0,900 0,750 156,750`（床の前景。左は観葉植物の鉢 AR-06-tin-planter の下端 y743 を避けて y750 から、右は壁の巾木の線、奥は y668）。実測（2026-11-05、shoelace）: polygon 面積 129,519 px²（画像 607,500 px² の 21.3%）、polygon の bbox 645x232=149,640 px²。どちらも大面積の目安（約90,000 px² 以上、README の基準）を満たす。`composite-polygon.py cutout --polygon` にこの値を渡す
-- **3:2 窓**（baseline px）: `0,450,675,900`（675x450 ちょうど3:2。1536x1024 へ拡大して imagegen に渡し、`restore --crop 0,450,675,900` で貼り戻す。1窓で足りる）
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  テイク1:
-
-  ```text
-  $imagegen Edit the attached image, which is a 3:2 (1536x1024) crop of a low-fi surveillance camera photo showing the lower half of a shop corridor. Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every wall, plant, shop front, shadow and the long white fluorescent reflection band exactly unchanged. Make ONLY this single change: rotate the whole grid of grey granite floor tiles in the near part of the frame (the floor in the lower 55% of the image, from the bottom edge up to roughly the middle) by 45 degrees, so that every tile becomes a diamond and all the joint lines run diagonally instead of along the corridor, with the same perspective convergence, the same tile size, the same granite speckle, the same grey colour and the same lighting and shadows on the floor as before. The tiles are only turned, nothing is added to or removed from the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the left plant and its pot, the walls, the baseboard on the right, the door, the metal strips or the long white fluorescent reflection band (its brightness stays, only the joint lines under it turn). No person, object or foot is visible on the floor. Place the changed floor so that it covers the lower 55% of the image. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク2:
-
-  ```text
-  $imagegen Edit the attached image, which is a 3:2 (1536x1024) crop of a low-fi surveillance camera photo showing the lower half of a shop corridor. Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every wall, plant, shop front, shadow and the long white fluorescent reflection band exactly unchanged. Make ONLY this single change: turn the pattern of the floor tiles in the near half of the frame into a diamond layout: every grey granite tile there is rotated by exactly 45 degrees in the floor plane, all in the same direction, so the joint lines form a clear diagonal lattice receding toward the far end of the corridor. Keep the tile colour, granite texture, tile size, and every light pool and shadow lying on the floor the same as before. Nothing is placed on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the left plant and its pot, the walls, the baseboard on the right, the door, the metal strips or the long white fluorescent reflection band (its brightness stays, only the joint lines under it turn). No person, object or foot is visible on the floor. Place the changed floor so that it covers the lower 55% of the image. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク3:
-
-  ```text
-  $imagegen Edit the attached image, which is a 3:2 (1536x1024) crop of a low-fi surveillance camera photo showing the lower half of a shop corridor. Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every wall, plant, shop front, shadow and the long white fluorescent reflection band exactly unchanged. Make ONLY this single change: re-lay the foreground floor, from the bottom edge up to about the middle of the frame, as if all the square grey tiles had been rotated by 45 degrees together: the joints now form a diagonal checker (diamond) lattice that follows the floor perspective, with crisp dark joint lines about 1.3x more visible than natural so that the change reads at a glance. Same tile material, same colour, same granite speckle, same light and shadow on the floor. Nothing is added to the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the left plant and its pot, the walls, the baseboard on the right, the door, the metal strips or the long white fluorescent reflection band (its brightness stays, only the joint lines under it turn). No person, object or foot is visible on the floor. Place the changed floor so that it covers the lower 55% of the image. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・壁・植物・店先・蛍光灯の反射帯・床の光だまりと影。polygon の外（奥の床・壁・植物の鉢）には回転した目地を出させない（出たら polygon が切り落とす）。
-- **合成**: `restore` で貼り戻した全体画像を `--gen` に、上の polygon を `cutout`（`--feather 2`）へ。生成が polygon の外へ延びても polygon が正。生成が目地を斜めに並べきれない・歪む場合は、`tile` で別生成の45度回転タイル1枚の素材を polygon に敷く方法に切り替える（`--layout grid`）。
-- **最寄り既存 overlay と実測距離**: 既存の大面積 AR-06-wall-puddle（(135,432)-(675,634)）とは 34px 空ける（polygon 上端 y668）。alpha bbox は polygon の bbox (0,668,645,900) と一致する見込み。最終 overlay の alpha bbox で測り直す。小物とは重なってよい（AR-06-wet-footprints・AR-06-red-bucket・AR-06-styrofoam-box と本節の AR-06-leaf-shadows-aligned）。同じ面の複数の異変は同時に出ない。
-- **排他（同プレイ非共存）**: AR-06-wall-same-poster（大面積。bbox 重なり 20,735 px²。実測: 本案 bbox (0,668,645,900) と poster bbox (500,40,672,811) の交差。床と壁の面は違うが、大面積どうしなので念のため排他）・AR-06-wall-puddle（大面積。重ならないが同じ「床」を扱う大面積）・AR-06-ceiling-umbrellas（大面積。重ならない）。本節の AR-06-leaf-shadows-aligned は polygon の内側に入るので排他。
-- **分類 / フェーズ / 目立ち度**: surreal / late / obvious
-- **視認性の注意**: 目地の向きが変わるだけで、色・明るさの差は小さい。標準状態での差分は、目地線の位置が全面で入れ替わる量（max 差分 40 以上・平均 3.0 以上）で通る見込みだが、確証はない。登録後に `uv run scripts/check-visibility.py --id AR-06-floor-tile-rotated` を必ず通し、下限を割れば目地線の暗さを強める（テイク3 の指定）か、タイルの色を回転後だけ少し明るくして作り直す。
-- **台帳登録案**: `id: 'AR-06-floor-tile-rotated'` / `element_id: 'CAM06-E16'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM06-E16 の前景の床一面、差分左上 (0,668) px（polygon 165,668 585,668 645,900 0,900 0,750 156,750）'` / `detail: '前景の床一面のタイルが全部同じ向きに45度回り、目地が斜めのひし形の格子になる'` / `phase: late` / `subtlety: 'obvious'` / `candidate_id: 'AR-06-floor-tile-rotated'`。note に「大面積。排他（同プレイ非共存）: AR-06-wall-same-poster（bbox 重なり 20,735）・AR-06-wall-puddle・AR-06-ceiling-umbrellas・AR-06-leaf-shadows-aligned。最寄りの既存大面積 AR-06-wall-puddle と 34px」と最終 alpha bbox の実測を書く。
-- **相互参照 / 重複精査**: AR-03-tile-diagonal（CAM03。床タイル1枚に斜めの目地が入り三角形に割れる小物）は1枚・割れる変化、本案は面一面・向きが回る変化で、カメラも規模も違う。AR-06-ceiling-checker（CAM06 の天井パネルの市松）は天井。CR-06-13/14（床タイル1枚の水玉・淡い緑）は1枚の模様・色。CR-02-14（床の一枚だけ市松）は1枚。CAM05 の床一面の白い折り鶴・CAM04 の AR-04-floor-shoes-rows のように物を床に敷く案とは違い、本案は物を足さない。
 
 ### AR-06-door-gap-light — 右の扉の下の隙間から漏れる暖かい光
 
