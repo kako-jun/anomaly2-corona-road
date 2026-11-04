@@ -634,8 +634,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
 
 | ID | タイプ | カテゴリ | 規模 | 変化 |
 | --- | --- | --- | --- | --- |
-| AR-06-door-gap-light | state_change | environment | 小物 | 右の扉の下の隙間から暖かい橙色の光が漏れる |
-| AR-06-floor-light-slant | state_change | environment | 小物 | 床の中ほど左に、右の反射帯と逆向きに斜めへ傾く白い光の帯が一本映る |
 | AR-06-wall-gecko | add_creature | object | 小物 | 右の粗い壁にヤモリが一匹張り付く |
 | AR-06-tile-sky | surreal | surreal | 小物 | 床タイル1枚が抜けて青空が見える |
 | AR-06-leaf-shadows-aligned | state_change | object | 小物 | 前景左下の床の植物の影が、全部同じ一方向へ平行に揃う |
@@ -651,72 +649,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
   4. 最終 overlay の alpha bbox で既存との距離を測り直す。台帳へ登録し `check-visibility.py` を通す。通らなければ強めて作り直すか、この節へ戻す。
   5. 登録・コミットしたら `experiments/` 配下の作業物を即削除する。
 - **大面積の手順**: 後述の AR-06-floor-tile-rotated を参照（`scripts/composite-polygon.py` の `crop` → imagegen → `restore` → `cutout`）。
-
-### AR-06-door-gap-light — 右の扉の下の隙間から漏れる暖かい光
-
-- **camera / element_id**: CAM06 / CAM06-E15
-- **物と変化**: 右壁の黒枠の扉の下の隙間から、暖かい橙色の光が細く漏れて、扉の足元の床に光の筋が広がる（扉の向こうに灯りの点いた部屋がある。人は写さない）
-- **最終 box**（baseline px）: `548,596,620,672`（72x76）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,548,675,719`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (129,48)-(201,124)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  テイク1:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the right side of the frame, at the bottom of the dark brown door set in the right rough wall, a thin strip of warm orange incandescent light leaks out from the gap under the door and spreads as a soft glowing wedge onto the floor right in front of the door and along the skirting board. The door itself, its frame and handle stay closed and unchanged. The light should clearly read as warm orange against the cold blue-grey scene, about 1.5x stronger than natural. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the long white fluorescent reflection band on the floor, the tile joints, the rough wall texture or the door handles. Place the object, including its shadow, centered at about 64% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 44% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク2:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: at the foot of the closed dark brown door on the right wall, make a bright warm amber glow seep through the narrow gap between the door and the floor, casting a long soft orange light trail across the floor tiles and the skirting board. No one is visible, no shadow of a person, the door stays shut. Make the glow vivid so it is clearly visible at CCTV quality. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the long white fluorescent reflection band on the floor, the tile joints, the rough wall texture or the door handles. Place the object, including its shadow, centered at about 64% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 44% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク3:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: the closed dark door on the right wall now has a warm yellow-orange light shining from beneath it, as if a lit room lay behind the door: a bright thin line under the door and a fan-shaped orange light pool on the floor and skirting board in front of it. Keep the door closed. Give the light pool a soft gradient that fades into the cold grey tiles, strong enough to be seen at a glance. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the long white fluorescent reflection band on the floor, the tile joints, the rough wall texture or the door handles. Place the object, including its shadow, centered at about 64% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 44% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe long white fluorescent reflection band on the floor, the tile joints, the rough wall texture or the door handles（英語プロンプトの Do not touch に同じ）。
-- **最寄り既存 overlay と実測距離**: AR-06-wet-footprints まで 42.0px（box 基準・矩形間のユークリッド距離。次点: AR-06-red-bucket 47.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / mid / medium
-- **視認性の注意**: 暖色の橙は青灰色の床と強く対比する。光だまりを淡くしすぎない（標準状態で差分25以上の画素が100以上になる程度の濃さ）。つまみは明るさを下げると光の筋が際立つ。 登録後に `uv run scripts/check-visibility.py --id AR-06-door-gap-light` を必ず通す。
-- **台帳登録案**: `id: 'AR-06-door-gap-light'` / `element_id: 'CAM06-E15'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `location: 'CAM06-E15 の周辺、差分左上 (548,596) px'` / `detail: '右の黒枠の扉の下の隙間から暖かい橙色の光が漏れ、足元の床に光の筋が広がる（扉は閉じたまま）'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-06-door-gap-light'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く（昭和の「閉店後も誰かが残っている」気配。人は写さない）。
-- **相互参照 / 重複精査**: AR-06-reopened（CAM06 左の店先ガラスの向こうに喫茶店の灯りが戻る）は同じ「暖かい灯り」だが、場所（左のガラス vs 右の扉の足元）・見え方（ガラス奥の灯り vs 床に漏れる光の筋）・タイプが違う。CAM03 の CR-03-12（シャッターの隙間が真っ暗）は暗部で逆の方向。CR-06-18（扉の取手の左右）とは別。同一カメラで AR-06-wet-footprints の反射帯と見間違えないよう、扉の足元の局所の光にとどめる。
-
-### AR-06-floor-light-slant — 床の光の帯が一本だけ実物と逆向きに傾く
-
-- **camera / element_id**: CAM06 / CAM06-E16（光の帯の基準は CAM06-E17 の床中央右の白い反射帯）
-- **物と変化**: 床の中ほど左（タイルの上）に、右の長い白い反射帯と同じ質感の白い光の細い帯が一本だけ映る。右の反射帯が通路の奥行きに沿って縦に伸びるのに対し、この帯だけは遠近に逆らって斜めに傾く（天井の灯りの映り込みの向きが一本だけ実物と合わない。物も人も写さない）
-- **最終 box**（baseline px）: `215,624,355,672`（140x48）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `157,563,413,734`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (58,61)-(198,109)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  テイク1:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the grey floor tiles in the middle of the frame, add one thin, soft-edged band of white light, like the reflection of a fluorescent tube on the polished floor, lying across the tiles diagonally, leaning the opposite way to the perspective lines of the corridor and to the long white reflection band on the right (which runs along the corridor). The band is about 1.5x brighter than the floor, with slightly blurred ends, and the tile joints faintly continue through it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the long white fluorescent reflection band on the right, the tile joints, the plant shadows on the left, the A-frame menu board, or the box below. No person or object is visible. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 55% of the image width and 28% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク2:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: make the floor reflect one more fluorescent light, but wrongly: a single slender band of pale white light, lying slanted across the floor tiles at about 40 degrees to the corridor direction, as if it were reflected from a tube hanging the other way. Soft glow, brighter than the surrounding tiles by about 1.5x, with the tile joints still visible through it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the long white fluorescent reflection band on the right, the tile joints, the plant shadows on the left, the A-frame menu board, or the box below. No person or object is visible. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 55% of the image width and 28% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク3:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: paint a single bright, narrow reflection streak on the floor tiles that tilts against the floor perspective (its far end leaning to the left while the real reflection band on the right leans the other way), pale white with a soft edge, clearly lighter than the grey tiles so that it reads at a glance, with the joint lines continuing faintly across it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the long white fluorescent reflection band on the right, the tile joints, the plant shadows on the left, the A-frame menu board, or the box below. No person or object is visible. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 55% of the image width and 28% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe long white fluorescent reflection band on the right, the tile joints, the plant shadows on the left, the A-frame menu board, or the box below（英語プロンプトの Do not touch に同じ）。
-- **最寄り既存 overlay と実測距離**: AR-06-tile-sky（本節）まで 31.0px（box を各辺+2px した、最終 alpha bbox の見込みの矩形で測定。矩形間のユークリッド距離。次点: AR-06-styrofoam-box 32.0px / AR-06-wet-footprints 39.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / mid / medium
-- **視認性の注意**: 灰色の床に白い帯なので差分は出やすいが、床の光だまりと紛れないよう帯は細長く、右の反射帯より明るくしすぎない（床の明るさ1.5倍程度）。つまみは明るさを上げると帯が際立つ。 登録後に `uv run scripts/check-visibility.py --id AR-06-floor-light-slant` を必ず通す。
-- **台帳登録案**: `id: 'AR-06-floor-light-slant'` / `element_id: 'CAM06-E16'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `location: 'CAM06-E16 の床中ほど左、差分左上 (215,624) px'` / `detail: '床の中ほど左に、右の反射帯と逆向きに斜めへ傾いた白い光の帯が一本だけ映る'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-06-floor-light-slant'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: AR-06-wet-footprints（反射帯の濡れた裸足の足跡）は反射帯そのものの上の足跡で、本案は帯の外に現れる別の帯。AR-06-wall-puddle（床の水たまりが蛍光灯と壁を映す大面積）は水面の映り込み、本案は細い1本の帯の向きだけ。AR-06-reflected-umbrella・AR-06-reflection（ガラスの映り込み）とは面が違う。本案は反射帯を直接改変しない（反射帯の上は AR-06-wet-footprints の領域で、30px の距離基準を満たせないため、帯の外の床に置く）。
 
 ### AR-06-wall-gecko — 右壁に張り付くヤモリ
 
