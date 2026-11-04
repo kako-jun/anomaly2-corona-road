@@ -1344,25 +1344,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: `AR-04-red-telephone`・`AR-04-basket`・`AR-04-poster`・`AR-04-poster-colour-restore`（ガラス内の小物。曇りで隠れるので排他）。`AR-04-fluorescent-frame-grey` `AR-04-sign-colour-blue` は枠・看板で併存可。
 - **生成枚数の最小見積り**: 素材 3 テイク。
 
-### CR-LG-05-02 床一面の白い折り鶴
-
-- **ID / camera / element_id**: CR-LG-05-02 / CAM05 / CAM05-E13
-- **面**: box 0,610,675,900（195,750 px²、32.2%）。前景の床一面。
-- **物と変化**: 床一面に、無地の白い折り鶴が敷き詰められる。大きさは遠近で手前が約 60px、奥（y610 付近）が約 25px。向きは様々で互いに少し重なり、隙間から床が少しだけ覗く程度に密。
-- **不気味さの狙い**: 千羽鶴＝無事を祈る品。行方不明 4 人の「帰ってきますように」が誰も居ない通路に積もっている。白い鶴の海。
-- **保持するもの**: 天井・正面ガラス区画・手前以外の面。床の照明反射は折り鶴の上でも薄く残す（screen）。
-- **生成プロンプト全文**（折り鶴素材を別生成）:
-  ```
-  $imagegen Create a flat top-down photo of about twelve plain white origami paper cranes of varied orientation (some seen from above, some from the side, wings spread) lying close together on a dark grey stone tile floor, casting short soft dark shadows. The paper is completely blank, matte white with subtle fold creases, no printing, no writing, no patterns, no colours, no logos. Each crane is distinct and well formed with a clear head, tail and two wings. Even low-light surveillance-style lighting, fine film grain, slight blur.
-  Output 1536x1024 (3:2). No watermark.
-  ```
-- **作り方**: ①素材 3 テイクから最良を選び、鶴を 1 羽ずつ切り出して 8〜12 種のスプライトにする。②割付図: 床の消失点へ向かう流線に沿った散布（スケール s = f(y)、手前 60px → 奥 25px）、位置はポアソン円板で重なり少なめ。③各羽に接地影（multiply）、床の反射は screen で戻す。④全面均一を避け、密度は帯ごとに変える。⑤ポリゴンは床の全面（柱・正面ガラスの接地線で止める）。
-- **難所と没基準**: 折り鶴が不格好（頭・羽が判別不能）なスプライトは使わない。紙に文字が出たら没。コピペ感（同じ羽の反復）が見えたら回転・反転・縮尺を増やす。
-- **フェーズ / 目立ち度**: early〜mid / obvious（白が暗い床で強く、視認性 floor は余裕）。
-- **台帳案**: category `object` / anomaly_type `multiply` / detail 「床一面に、無地の白い折り鶴が敷き詰められる」。note に「大面積。CAM05-E13」を書く。
-- **排他**: `AR-05-pet-bottle`・`AR-05-marbles-scattered`・`AR-05-floor-glare-backside`（床の小物で、鶴に覆われる。`AR-05-joint-into-glass` は y409〜553 で 05-02 の box と重ならず、05-01 側の排他）。折り鶴系の近縁 `AR-07-crane`（CAM07 の天井 1 羽）・`AR-01-container-origami`・CR-02-21・CR-08-20 は別カメラ・別規模で併存可（型は「床一面」でここだけ）。
-- **生成枚数の最小見積り**: 素材 3 テイク。
-
 ### CR-LG-06-01 右壁一面の同じポスター（手を振る子供の後ろ姿）
 
 - **ID / camera / element_id**: CR-LG-06-01 / CAM06 / CAM06-E15
