@@ -547,7 +547,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
 | CR-07-14 | CAM07-E14 | 右階段の段が一段増え、手すりはそのまま残る。       | environment / mid / medium   |
 | CR-07-15 | CAM07-E14 | 右階段の段が一段減り、最上部の高さは変わらない。   | environment / mid / medium   |
 | CR-07-20 | CAM07-E12 | 白壁に小さな掲示が一枚増える。                     | object / early / medium      |
-| CR-07-21 | CAM07-E01 | 天井板の一枚だけ淡い黄色になる。                   | environment / early / subtle |
 | CR-07-22 | CAM07-E03 | 丸型設備の隣に同じ設備が増える。                   | environment / mid / medium   |
 | CR-07-24 | CAM07-E13 | 丸い扉の取手が四角い取手になる。                   | object / early / subtle      |
 | CR-07-25 | CAM07-E13 | 扉上部の小窓が二つに増える。                       | object / mid / medium        |
@@ -572,170 +571,7 @@ CAM 07（Maintenance Corridor、`cam7.webp` 675x900）に足す画像異変 7 �
 
 | ID | 対象 | category / anomaly_type | box（x1,y1,x2,y2） | phase / 目立ち度 |
 | --- | --- | --- | --- | --- |
-| AR-07-floor-frost | E16 床の中段 | surreal / state_change | **大面積** `76,352,675,537`（599x185） | late / obvious |
-| AR-07-reflection-cut | E17 床左の白い反射 | surreal / state_change | `125,580,190,670`（65x90） | mid / medium |
-| AR-07-tile-mirror | E16 床の左下 | surreal / state_change | `96,770,206,842`（110x72） | early / medium |
-| AR-07-mini-door | E16（扉 E13 の縮小コピー） | surreal / duplicate | `240,560,286,638`（46x78） | mid / medium |
-| AR-07-glass-crack | E06 左のガラス | environment / state_change | `2,570,46,680`（44x110） | mid / medium |
-| AR-07-exit-sign-gone | E14 緑の非常灯 | object / remove_object | `592,128,618,158`（26x30） | late / medium |
-| AR-07-ceiling-tile-yellow | E01 天井板（昇格 CR-07-21） | environment / color_shift | `440,12,500,46`（60x34） | early / subtle |
 
-### AR-07-floor-frost（大面積）
-
-- **カメラ**: CAM07、対象 CAM07-E16（広い灰色タイル床の奥〜中段。目地が格子状に並ぶ）。
-- **物と変化**: 床の中段一面を、同じ高さまで薄い霜（白い微細な結晶の面）が覆う（surreal / state_change）。閉店した地下で床だけが凍っている不穏さ。霜の上端と下端は床の横線に沿って水平に揃い、「同じ高さまで」という人工的な線が異変の核になる。目地と照明の反射は霜の下／上に残り、壁・階段・扉は触らない。白い面は暗い床との差が大きく、視認性は十分。
-- **box**: `76,352,675,537`（599x185）。台形（床の左縁に沿う）は `96,352 675,352 675,536 76,536`。**実測**（2026-11-05、PIL でこの台形を rasterize）: polygon 実面積 **108,963 px²**、alpha bbox 76,352–675,537（bbox 面積 110,815 px²、画像 675x900 の 18.2%）。どちらも大面積の目安 約 90,000 px² 以上。登録時は貼り込み後の alpha で再計測し、90,000 を割ったら登録しない。
-- **最寄り既存の大面積と実測距離**（大面積どうしは重ねない）: AR-07-floor-uphill（alpha bbox 84,548–675,900）まで 11px、AR-07-wall-clocks（104,128–571,343）まで 9px、AR-07-ceiling-white-sheets（20,0–675,125）まで 227px。いずれも bbox は重ならない。AR-07-stairs（84,235–271,344）まで 8px、AR-07-stair-figures（588,190–626,325）まで 27px（どちらも壁・階段側で重ならない）。
-- **排他（同プレイで共存させない。台帳 note に書く）**: 同じ床面に載る小物 AR-07-mask-on-floor（bbox 重なり）・AR-07-n1（下駄）・AR-07-n4（スマホ）、床へ光が漏れる AR-07-reopened（bbox 重なり）。併存可: 床下側の AR-07-floor-uphill・AR-07-purple-floor-tile・AR-07-tile-mirror・AR-07-mini-door 等、AR-07-wall-clocks、扉・階段。**AR-07-reflection-cut とは反射の見え方が競合するので同プレイでは片方だけ**（box は重ならないが排他）。
-- **6倍ではなく 3:2 窓**: 全面を一度に見せるため `composite-polygon.py crop --base public/images/cam7.webp --crop 0,290,675,740`（675x450。y 290〜740。box を上下に含む。倍率は約 2.276）を 1536x1024 へ拡大して渡す。窓内の box は `(173,141)–(1536,560)`、台形は `(218,141) (1536,141) (1536,560) (173,560)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, cover the whole middle band of the grey tile floor with a thin layer of white frost at about x 173-1536, y 141-560 (frame pixels): the frost is a dense carpet of fine white ice crystals and feathery frost patterns, brighter than the floor, with a clean, nearly horizontal upper edge near y 141 where the frost stops, and a lower edge near y 560 where it stops, both edges slightly ragged. The floor joint grid stays faintly visible under the frost and the lamp reflections stay as soft highlights on top of it. No snow drifts, no footprints, no objects. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, make a thin rime of white frost cover the whole middle band of the grey tile floor at about x 173-1536, y 141-560 (frame pixels): fine granular white crystals like sugar frost, an even pale-white layer that lets the tile joints show through as thin dark lines, a level upper edge near y 141 and a level lower edge near y 560, as if the cold stopped at the same height everywhere. Reflections stay as soft highlights. No objects, no footprints. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, cover the whole middle band of the grey tile floor with white frost at about x 173-1536, y 141-560 (frame pixels): large fern-like white ice crystals growing across the tiles, denser and whiter toward the middle of the band and thinner toward its upper and lower edges, the edges at about y 141 and y 560 clearly level. Tile joints remain faintly visible and the lamp reflections stay on top. No objects, no footprints. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **仕上げ**: 選んだ結果を窓寸法へ縮小して貼り戻し、`composite-polygon.py cutout --base public/images/cam7.webp --gen <全画面.png> --polygon <台形のjson> --feather 2 --out assets/anomaly-overlays/cam07/floor-frost.webp`（台形の外は alpha 0 のまま）。
-- **台帳登録案**: `id: 'AR-07-floor-frost'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E16'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM07-E16 の中段、差分左上 (76,352) px'` / `detail: '床の中段一面が、同じ高さまで薄い霜（白い結晶の面）で覆われる'` / `phase: late` / `subtlety: 'obvious'` / `candidate_id: 'AR-07-floor-frost'`。note に大面積である旨、実測した polygon 実面積と alpha bbox、排他の列挙（上記）、同カメラの box 重なり表（登録時に出し直し）を書く。
-- **相互参照 / 重複精査**: 大面積の近縁は AR-07-floor-uphill（床下側が坂になる）・AR-05-floor-white-cranes（CAM05・床一面の折り鶴）・AR-02-floor-footprints（CAM02・床一面の足跡）・AR-03-floor-tatami（CAM03・床が畳）。霜（結晶の薄膜・床の質感の変化）は台帳に無い。床にビー玉が散らばる案は台帳に AR-05-marbles-scattered と AR-08-floor-ramune-marbles が既にあり 3 件目になるため、この霜に差し替えた。CAM07 内に床の質感・温度の変化は無い。
-### AR-07-reflection-cut
-
-- **カメラ**: CAM07、対象 CAM07-E17（床左側の長い白色蛍光灯反射。`(115,462)–(200,748)` 付近。元画像で x 135〜185 の細長い白い帯）。
-- **物と変化**: 床左の白い反射の帯の一部が、辺の真っ直ぐな四角形に切り取られ、その中だけタイル色（灰色の床と暗い目地）に戻る（surreal / state_change）。反射は物理的には四角く切れないので、「画像を切り抜いたような」違和感になる。切り抜きの縁は鋭く、軸に平行にそろえる。
-- **box**: `125,580,190,670`（65x90）。帯の幅 約 40〜50px に左右の余白を足した範囲で、帯の高さ 90px ぶんを切る。最寄り既存 overlay（最終 alpha bbox）は AR-07-purple-floor-tile（267,703–433,849）まで **83.8px**、次点 AR-07-mask-on-floor 116.0px、AR-07-n1 131.0px。大面積 AR-07-floor-uphill とは bbox が重なる（小物と大面積。併存可）。大面積 AR-07-floor-frost の下端 y537 から 43px 離れるが、反射の見え方が競合するので**同プレイでは排他**。この節の他の box とは AR-07-mini-door まで 50.0px、AR-07-glass-crack まで 79.0px。
-- **6倍クロップ**: 原画像 `(60,500)–(318,672)`（258x172）。box は窓内で `(387,476)–(774,1011)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, cut one clean rectangular piece out of the long white fluorescent floor reflection on the left part of the floor at about x 387-774, y 476-1011 (frame pixels): inside a sharp-edged rectangle with perfectly straight horizontal and vertical edges, the bright reflection is gone and the plain grey floor tiles with their dark joints show instead, as if a rectangle of the reflection had been cropped away; above and below the rectangle the white reflection continues unchanged, and the rectangle's edges are hard, not blurred. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, remove a rectangular window out of the long white fluorescent floor reflection on the left part of the floor at about x 387-774, y 476-1011 (frame pixels): the rectangle is slightly taller than wide, with razor-sharp straight edges, and shows the plain grey tiles and dark tile joints exactly as the floor looks away from the reflection; the reflection stays bright and continuous above and below the rectangle. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, make the long white fluorescent floor reflection on the left part of the floor lose one rectangular section at about x 387-774, y 476-1011 (frame pixels): in that rectangle the glare is replaced by the plain grey floor with its tile joints, the rectangle has hard straight edges that are not parallel to the tile joints' perspective but perfectly axis-aligned in the frame, and the rest of the reflection stays bright. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 反射の白（輝度 200 超）をタイルの灰（90 前後）へ戻すので max 差は 100 以上、平均差も 3.0 を十分超える見込み。下限を割りそうなのは、切り抜きが小さすぎて「ただの反射の途切れ」に見える点（box の高さ 90px を縮めない）と、羽毛ぼかしで縁が甘くなり四角さが消える点（`--margin` は 8 から試し、縁が丸まるなら小さく）。登録後に `uv run scripts/check-visibility.py --id AR-07-reflection-cut` を通す。
-- **台帳登録案**: `id: 'AR-07-reflection-cut'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E17'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM07-E17 の周辺、差分左上 (125,580) px'` / `detail: '床左の白い反射の一部が四角く切り取られ、タイル色に戻る'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-07-reflection-cut'`。note に最寄り既存 id と最終 alpha bbox 実測距離（制作後に再計測）、「人・動物は描かない。縁は鋭く軸に平行」を書く。
-- **相互参照 / 重複精査**: 床の反射を扱う既存・候補は CR-07-10（左の長い反射が階段の壁面へ垂直に折れて上る。E17・surreal/late）。あちらは反射が壁へ**折れる**形の変化で、本件は反射が**四角く欠ける**形で、見る場所も発見の仕方も違う。同プレイで共存させない（排他。CR-07-10 を制作したら box が重ならないか再確認）。人の影の案（旧 AR-07-long-shadow）は他カメラの影の型と重なるため、この項に差し替えた。
-### AR-07-tile-mirror
-
-- **カメラ**: CAM07、対象 CAM07-E16（床の左下。反射の帯の左外にある暗いタイル）。
-- **物と変化**: 床のタイル一枚だけが鏡になり、天井の照明を逆さに映す（surreal / state_change）。「目地の向きが他と逆になるタイルが 1 枚ある」案を検討したが、御影石の石目と目地の向きだけでは差が小さく視認性が下限を割る恐れが強いので、同じ型（床のタイル 1 枚の状態変化）でずっと大きく見える鏡のタイルに変えた。目地の格子と縁は周囲に揃えたまま、その 1 枚の中身だけが違う。
-- **box**: `96,770,206,842`（110x72。手前寄りのタイル 1 枚。透視で平行四辺形になる）。最寄り既存 overlay（最終 alpha bbox）は AR-07-purple-floor-tile（267,703–433,849）まで **61.0px**、次点 AR-07-diamond-tile 155.3px、AR-07-floor-puddle 187.0px。大面積 AR-07-floor-uphill（bbox 重なり。小物と大面積。併存可）。この節の他の box とは 100px 以上離れる。**制作後に alpha bbox で再計測**。
-- **6倍クロップ**: 原画像 `(60,700)–(318,872)`（258x172）。box は窓内で `(214,417)–(869,845)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, turn exactly one floor tile at about x 214-869, y 417-845 (frame pixels) into a mirror: the single tile surface becomes glossy black glass-like stone that reflects a bright inverted white fluorescent ceiling lamp (a bright white rectangle) and a little of the ceiling, while all the surrounding tiles stay the normal speckled grey. The tile's own edges and the dark joints around it stay exactly aligned with the grid, so only that one tile looks like a mirror. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, make exactly one floor tile at about x 214-869, y 417-845 (frame pixels) mirror-like: it reflects a large soft white ceiling light as a clear bright shape and a dim blue-grey ceiling, much brighter and cleaner than the speckled grey tiles around it, its edges and the dark joints aligned with the normal tile grid. Nothing else on the floor changes. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, change exactly one floor tile at about x 214-869, y 417-845 (frame pixels) so that it shows a clear upside-down reflection of the bright ceiling lamps as two bright white rectangles on a dark glossy surface, like a polished mirror inset into the floor, with its edges and the dark joints aligned to the normal tile grid. The neighbouring tiles stay speckled grey. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 暗い床の上の白い映り込みなので max 差は 100 以上の見込み。平均差も、タイル 1 枚の面積全部が変わるので 3.0 を超える。下限を割りそうなのは、映り込みが暗くて「ただの黒いタイル」に見える場合（テイク 1 の黒御影寄り）で、そのときは映る照明を大きく・明るくして作り直す。登録後に `uv run scripts/check-visibility.py --id AR-07-tile-mirror` を通す。
-- **台帳登録案**: `id: 'AR-07-tile-mirror'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E16'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM07-E16 の左下、差分左上 (96,770) px'` / `detail: '床のタイル一枚だけが鏡になり、天井の照明を逆さに映す'` / `phase: early` / `subtlety: 'medium'` / `candidate_id: 'AR-07-tile-mirror'`。note に最寄り既存 id と最終 alpha bbox 実測距離（制作後に再計測）、「目地の向きが逆のタイル案は視認性が低く差し替えた」を書く。
-- **相互参照 / 重複精査**: 床のタイル 1 枚を扱う既存は AR-07-purple-floor-tile（淡い紫に変色）・AR-07-diamond-tile（菱形になる）。色が変わるのでも形が変わるのでもなく、**質が鏡に変わる**点で別物。同じ床の下側にあるので、制作後に 3 枚が隣り合って見えないか確認する。他カメラに同型は無い。鳩の案（旧 AR-07-dove）は他カメラの生き物の型と重なるため、この項に差し替えた。
-### AR-07-mini-door
-
-- **カメラ**: CAM07、対象 CAM07-E16（床の左中段。複製元は中央右の灰色の金属扉 CAM07-E13）。
-- **物と変化**: 奥の壁にある灰色の金属扉（灰色の扉板・暗い枠・横長の押し板・左の丸い取手・上部の細い小窓）と同じ扉が、4 分の 1 ほどの大きさで床に自立している。ドールハウスの扉のように、後ろに壁は無く、床に接地影が落ちる。「奥の扉へ行けない子供のための扉」という物語の裏読みが効く、サイズの違和感の surreal（duplicate）。
-- **box**: `240,560,286,638`（46x78。扉の幅 約 32px・高さ 約 78px に影を含む）。最寄り既存 overlay（最終 alpha bbox）は AR-07-diamond-tile（348,617–486,707）まで **62.0px**、次点 AR-07-mask-on-floor 65.0px、AR-07-purple-floor-tile 65.0px。大面積 AR-07-floor-uphill とは bbox が重なる（小物と大面積。併存可）。この節の他の box とは AR-07-reflection-cut まで 50.0px。
-- **6倍クロップ**: 原画像 `(134,513)–(392,685)`（258x172）。box は窓内で `(631,280)–(904,744)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, add one miniature copy of the grey metal door seen on the back wall (same grey panel, dark metal frame, one horizontal pale push-bar across the middle, a small round knob on the left side, a narrow horizontal window slit near the top) standing upright and free-standing on the grey floor tiles at about x 631-904, y 280-744 (frame pixels), with a visible thin dark frame depth and a soft dark contact shadow falling to the right on the floor. It is about a quarter of the size a real door would have at that distance, like a doll-house door, closed, with nothing leaning on it and no wall behind it. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, add one miniature copy of the grey metal door seen on the back wall (same grey panel, dark metal frame, one horizontal pale push-bar across the middle, a small round knob on the left side, a narrow horizontal window slit near the top) standing upright and free-standing on the grey floor tiles at about x 631-904, y 280-744 (frame pixels), seen slightly from the left so a thin side edge of the frame is visible, a soft dark contact shadow falling to the right. It is about a quarter of the size a real door would have at that distance, closed, with no wall behind it, and it must look physically standing on the floor. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, add one miniature copy of the grey metal door seen on the back wall (same grey panel, dark metal frame, one horizontal pale push-bar across the middle, a small round knob on the left side) standing upright and free-standing on the grey floor tiles at about x 631-904, y 280-744 (frame pixels), a soft dark contact shadow falling to the right, slightly brighter than its surroundings as if it caught the floor reflection. It is about a quarter of the size a real door would have at that distance, closed, no wall behind it. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 灰色の扉と暗い枠・押し板の白が暗いタイルの上に立つので max 差は 40 を超える見込み。**下限を割りそうな点**は、扉板の灰色が床の灰色に近く、縮小コピーが床に溶けて差が出ないこと。暗い枠の太さと接地影の濃さで輪郭を出す（テイク 3 は反射を拾って少し明るくする案）。割れたら扉を明るく・枠を濃くして作り直す。登録後に `uv run scripts/check-visibility.py --id AR-07-mini-door` を通す。
-- **台帳登録案**: `id: 'AR-07-mini-door'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E16'` / `category: 'surreal'` / `anomaly_type: 'duplicate'` / `location: 'CAM07-E16 の左中段、差分左上 (240,560) px（複製元 CAM07-E13）'` / `detail: '床に、奥の扉と同じ灰色の扉が小さく自立している'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-07-mini-door'`。note に最寄り既存 id と最終 alpha bbox 実測距離（制作後に再計測）、複製元は E13、排他は無し、を書く。
-- **相互参照 / 重複精査**: 扉の近縁は CR-07-03（取手が反対側へ）・CR-07-12（横帯が通路になり奥に同じ扉）・CR-07-07（黒い開口に灰色扉が立つ）・CR-07-24/25（取手・小窓）・AR-07-reopened（扉が少し開く）・AR-07-blue-push-plate・CR-07-08（扉の取手の形の影）。いずれも**壁に付いた扉本体の変化**で、本件は「同じ扉が小さなコピーとして床に自立する」ため、観察対象も発見の仕方も違う。CR-07-12 は奥の通路の先の扉（壁の中）で、床の自立物ではない。採用前に見比べる。
-### AR-07-glass-crack
-
-- **カメラ**: CAM07、対象 CAM07-E06（左端のガラス/店先境界。縦金属枠と暗いガラス面）。
-- **物と変化**: 左の暗いガラス 1 枚に、細いひび割れが走る（ガラスは外れず、破片も落ちない）。薄い白灰色の細線なので暗いガラスの上で映える。ひびは金属枠を越えない。割れ目が一点から放射する形（着弾を連想させる表現）は避け、3 テイクはひびの形違い（枝分かれの網目／対角の長い 1 本／縦に長い数本）にする。
-- **box**: `2,570,46,680`（44x110。ガラス面）。最寄り既存 overlay（最終 alpha bbox）は AR-07-n1（97,381–199,449）まで **131.3px**、次点 AR-07-purple-floor-tile 222.2px。他の overlay との接近は無し。大面積とは重ならない。この節の他の box とは AR-07-reflection-cut まで 79.0px。
-- **6倍クロップ**: 原画像 `(0,539)–(258,711)`（258x172。左端に接する）。box は窓内で `(12,184)–(274,839)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, add one network of hairline cracks to the dark glass pane of the shop-front window on the left edge, at about x 12-274, y 184-839 (frame pixels): thin, jagged, bright white-grey cracks that branch irregularly in several directions across the pane like crazed glass, some long, some short, with no common centre; the cracks stop at the pane edges and never cross the metal frame. The glass stays in place, no hole, no shards on the floor. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, add one long diagonal crack to the dark glass pane of the shop-front window on the left edge, at about x 12-274, y 184-839 (frame pixels): one main thin bright white-grey hairline crack running from the upper corner to the lower corner with three or four short side branches, the crack stops at the pane edges and never crosses the metal frame. The glass stays in place, no hole, no shards on the floor. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, add several long, roughly vertical hairline cracks to the dark glass pane of the shop-front window on the left edge, at about x 12-274, y 184-839 (frame pixels): four or five thin bright white-grey jagged cracks running down the pane from its upper part, forking once or twice, like a pane that has settled under stress; the cracks stop at the pane edges and never cross the metal frame. The glass stays in place, no hole, no shards on the floor. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 暗いガラス（輝度 20〜40）に白灰色の線が乗るので max 差は 40 を超える見込み。**下限を割りそうな点**は、線が細く、縮小して貼り戻すと線が溶けて alpha が薄くなり、強い差の画素が 100 に届かないこと（その場合は overlay の 25% 以上という比率条件に頼ることになる）。割れたらひびを太く・長く・本数を増やして作り直す。登録後に `uv run scripts/check-visibility.py --id AR-07-glass-crack` を通す。
-- **台帳登録案**: `id: 'AR-07-glass-crack'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E06'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `location: 'CAM07-E06、差分左上 (2,570) px'` / `detail: '左端の暗いガラス1枚に、細いひび割れが走る'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-07-glass-crack'`。note に最寄り既存 id と最終 alpha bbox 実測距離（制作後に再計測）、視認性は check-visibility.py で実測した値を書く。
-- **相互参照 / 重複精査**: ガラスの既存・候補は CR-07-26（現実にいない猫がガラスに映る）のみ。ひびは物の状態変化で、映り込みではなく、別の発見の仕方。AR-04-glass-fog-handprints（CAM04・ガラスが曇って手形）とは別カメラ・別の変化（曇り＋手形 ≠ ひび）。
-### AR-07-exit-sign-gone
-
-- **カメラ**: CAM07、対象 CAM07-E14（右奥の上り階段。右壁の上部の小さな緑色発光表示＝非常灯）。
-- **物と変化**: 緑の非常灯が消えて取り付け跡だけが残る（object / remove_object）。緑の発光が暗い壁に戻り、「出口の表示が無い」ことが報告される。3 テイクは痕跡の濃さ違い（薄い長方形の跡＋ビス穴／空の窪みと垂れた配線／何の跡も無い）。物語では「出口が無くなる」ことが、帰りたくない老人たちの優しい異変の裏返しになる。
-- **box**: `592,128,618,158`（26x30。非常灯は約 x595〜615・y135〜157 なので、box の上端を 2px 上げて下端を 158 で止め、全体を階段の人影から遠ざけた）。最寄り既存 overlay（最終 alpha bbox）は AR-07-stair-figures（588,190–626,325）まで **32.0px**（旧 box は 30.0px ちょうどだった）、次点 AR-07-lamp-off（536,51–581,83）46.3px、AR-07-paper-airplane-ceiling 58.0px。**制作後に alpha bbox で再測定**（非常灯の画素だけなら実 bbox は box より小さく、距離はさらに伸びる。羽毛ぼかしで広がって 30px を割ったら `--margin` を小さくする）。
-- **6倍クロップ**: 原画像 `(417,60)–(675,232)`（258x172。右端に接する）。box は窓内で `(1041,405)–(1196,583)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, remove the small green emergency exit sign light at about x 1041-1196, y 405-583 (frame pixels), next to the dark staircase on the right, and fill the place with the plain dark wall surface that would be behind it, leaving only a faint slightly paler rectangular outline where the sign used to hang and two tiny dark screw holes. No green glow anywhere. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, remove the small green emergency exit sign light at about x 1041-1196, y 405-583 (frame pixels), next to the dark staircase on the right, leaving an empty dark rectangular recess in the wall where the sign was mounted, with two short loose dark wires hanging from its top edge. No green glow anywhere. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, remove the small green emergency exit sign light at about x 1041-1196, y 405-583 (frame pixels), next to the dark staircase on the right, and make the wall look as if nothing had ever been mounted there: plain dark wall surface, no outline, no marks. No green glow anywhere. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 緑の発光（周囲の暗い壁との差が大きい）が消えるので max 差は 40 を超える見込み。**下限を割りそうな点**は、非常灯が約 20x22px と小さく、overlay の面積が小さいので強い差の画素が 100 に届かないこと（その場合は 25% 以上の比率条件で通るかを見る）。消した後の壁が周囲より明るく浮くと別の差が出るので、壁は周囲の暗さに合わせる。登録後に `uv run scripts/check-visibility.py --id AR-07-exit-sign-gone` を通す。
-- **台帳登録案**: `id: 'AR-07-exit-sign-gone'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E14'` / `category: 'object'` / `anomaly_type: 'remove_object'` / `location: 'CAM07-E14、差分左上 (592,128) px'` / `detail: '右奥の階段の上の緑の非常灯が消え、取り付け跡だけが残る'` / `phase: late` / `subtlety: 'medium'` / `candidate_id: 'AR-07-exit-sign-gone'`。note に最寄り AR-07-stair-figures と最終 alpha bbox 実測距離、「overlay は非常灯の画素（と取り付け跡）だけで、消した後の壁は周囲の暗さに合わせる」を書く。
-- **相互参照 / 重複精査**: 近縁は AR-07-duplicate-green-sign（同じ緑の表示が階段の下側にも現れる）。あちらは増える複製、本件は消える remove_object。非常灯の消失は台帳にも候補にも無い。AR-07-lamp-off（右上の丸灯が消える）は別の灯具・別の位置（物は丸い白色灯で、緑の非常灯ではない）。
-### AR-07-ceiling-tile-yellow（昇格: CR-07-21）
-
-- **カメラ**: CAM07、対象 CAM07-E01（青灰色の天井。細かな斑点/汚れ、天井板の線）。
-- **物と変化**: 天井板の 1 枚だけが淡く黄ばんだ色（古い煙草の染みのような淡黄色）になる。天井板の継ぎ目と細かな斑点は黄色の下から見える。3 テイクは色の質違い（均一な黄／隅から濃くなる水染み風／すっきりしたレモン色）。
-- **box**: `440,12,500,46`（60x34。旧 box より 5px 右へ寄せて天井の吊り物から離した。天井板の継ぎ目に合わせて数 px 動かしてよい）。最寄り既存 overlay（最終 alpha bbox）は AR-07-crane（325,0–404,240）まで **36.0px**、次点 AR-07-lamp-off（536,51–581,83）36.3px、AR-07-ceiling-string 103.2px。天井の大面積 AR-07-ceiling-white-sheets とは bbox が重なる。**同じ天井面を覆う物は排他**: AR-07-ceiling-white-sheets・AR-07-crane・AR-07-paper-airplane-ceiling・AR-07-ceiling-string とは同プレイで共存させない（台帳 note に書く）。**制作後に alpha bbox で再計測**。
-- **6倍クロップ**: 原画像 `(336,0)–(594,172)`（258x172。上端に接する）。box は窓内で `(619,71)–(976,274)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, tint exactly one rectangular ceiling panel at about x 619-976, y 71-274 (frame pixels) to an even, pale, slightly dingy warm yellow, like an old nicotine-stained ceiling board, following the panel's own seams and perspective so the panel edges stay sharp and the seam lines of its neighbours stay visible. The fine speckle texture of the ceiling stays visible through the yellow. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, tint exactly one rectangular ceiling panel at about x 619-976, y 71-274 (frame pixels) to a pale warm yellow that is slightly deeper toward one corner, like a faint water stain, following the panel's own seams and perspective so the panel edges stay sharp and the seam lines of its neighbours stay visible. The fine speckle texture of the ceiling stays visible through the yellow. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, tint exactly one rectangular ceiling panel at about x 619-976, y 71-274 (frame pixels) to a soft clean lemon yellow, slightly brighter than the panels around it, following the panel's own seams and perspective so the panel edges stay sharp and the seam lines of its neighbours stay visible. The fine speckle texture of the ceiling stays visible through the yellow. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 色相の変化（青灰→黄）が主で、輝度差は小さい。**下限を割りそうな点**は、max 差 40 と平均差 3.0 の両方。天井が暗く、淡い黄色だと輝度の差が足りない恐れがある（候補の `subtle` どおり最も難しい 1 件）。割れたら黄色を濃く・明るくして作り直す（テイク 3 のレモン色が最も通りやすい）。登録後に `uv run scripts/check-visibility.py --id AR-07-ceiling-tile-yellow` を通す。
-- **台帳登録案**: `id: 'AR-07-ceiling-tile-yellow'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E01'` / `category: 'environment'` / `anomaly_type: 'color_shift'` / `location: 'CAM07-E01、差分左上 (440,12) px'` / `detail: '天井板の1枚だけが淡い黄色になる'` / `phase: early` / `subtlety: 'subtle'` / `candidate_id: 'AR-07-ceiling-tile-yellow'`（CR-07-21 の昇格）。note に最寄り既存 id と最終 alpha bbox 実測距離、天井面の排他の列挙、視認性は check-visibility.py で実測した値で書く。登録時に **CR-07-21 の行（「追加候補 — CAM 07」節）を削除**する。
-- **相互参照 / 重複精査**: 本件は CR-07-21 の昇格で、既存の別 ID は無い。近縁は AR-07-purple-floor-tile（床タイル 1 枚が淡い紫。床と天井の別の面・別の色）、AR-04-ceiling-corner-fold・AR-07-ceiling-string など天井の他の異変（物の増減で、色の変化ではない）。
 ### 既存との重複精査（共通）
 
 - 7 件とも、`anomalies.yaml` の CAM07 全 28 件と `candidate-pool.md` の CAM07 候補（CR-07-02〜28）に、同じ対象と同じ変化（出現・消失・移動・複製・色・形・反射）の組が無いことを確認した。例外の昇格（CR-07-21）は AR-07-ceiling-tile-yellow の項に書いた。近縁の差は各項の「相互参照」に書いた。制作前に見比べ、実質同じと判断したら取り下げる。
@@ -762,8 +598,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 
   | ID | 要素 | category / anomaly_type | 規模 | 変化 |
   | --- | --- | --- | --- | --- |
-  | AR-08-floor-tile-groove | E16 | environment / state_change | 小物 | 柱の右の床のタイル一枚が一段沈み、四辺の目地が黒い溝になる |
-  | AR-08-pillar-sparrow | E11 | object / add_creature | 小物 | 柱の根元の角に、雀が一羽とまっている |
   | AR-08-ceiling-light-inverse | E01 | surreal / state_change | 小物 | 右上の天井の丸い天井灯が、光る代わりに周りの天井へ黒い影の暈を広げる |
   | AR-08-column-door-ajar | E15 | environment / state_change | 小物 | 右の黒い柱の下の暗い帯の引き戸が、指一本ぶん開いて細い光が漏れる |
   | AR-08-hanten-floor | E16 | object / add_object | 小物 | 左の床に、藍色の半纏が脱ぎ捨てたように丸まっている |
@@ -779,31 +613,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 - **共通手順**（大面積。この節の各項の窓）: 大面積は `scripts/composite-polygon.py` を使う（`crop` で全幅 675x450 の 3:2 窓を切り出し、生成結果を `restore` で元寸へ貼り戻し、面のポリゴンで `cutout --polygon … --feather 2`。複数窓は `restore --blend-px 100 --blend-edges t`）。窓は 1536/675≈2.2756 倍。生成は 1 件ずつ、生成画像は見ずに合成まで進め、採否は人間が決める運用。
 - **共通プロンプト末尾**（各プロンプトに全文を含めてある。小物は「クロップ」、大面積は「窓」の意味）: `Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
 - **共通の禁止**: 文字・数字・ロゴ・実在の店名・家紋の混入（出たテイクは没）。人の顔・体は描かない（人の気配は影・服・足元だけ）。性的・不適切の独自判定はしない（生成物はそのまま報告）。
-
-### AR-08-floor-tile-groove — 床タイル一枚が一段沈み、四辺が黒い溝になる
-
-- **camera / element_id**: CAM08 / CAM08-E16（床タイル）
-- **物と変化**: 柱の右の床の、タイル一枚だけが一段沈み、その四辺の目地が太い真っ黒な溝になって一周する。沈んだタイルの表面は元の石目のまま（少し暗い）。人も物もない。「床が静かに下がっている」という、誰も触れていない変化。
-- **不気味さの狙い**: 誰も歩いていないのに、床の一枚だけが下がって縁が黒く口を開けている。出河さんが「そこだけ、床が下がってません？」と聞き、樫原くんが「いや、前からじゃ…」と自信なく返す、地味で長く残る違和感。
-- **差し替えの経緯**: 旧案（床に伸びる人影）は他カメラの人影系と型が重複するため差し替え。第一案の「柱の台座が沈み、境に黒い溝が一周」は、台座まわりが AR-08-pillar-sparrow の box と AR-08-pillar-second の alpha bbox（x358〜411）に重なり 30px 離せないため見送り、同じ「沈んで黒い溝が一周する」型を、旧人影案が測定済みの床の空き枠（下の最終 box）へ移した。
-- **最終 box**（baseline px）: `448,460,524,542`（76x82）。`composite-anomaly.py --box` にはこの値を渡す。
-- **6倍クロップ**（baseline px）: `358,416,614,587`（256x171）。box はクロップ内の (90,44)-(166,126)。下端はラムネ瓶の玉（AR-08-floor-ramune-marbles、y575〜）の上辺にわずかに触れるので「触らない」を明記する。
-- **生成プロンプト**（3 テイク。T1 は基本、T2 は溝をより太く、T3 は沈んだタイルをさらに暗く）:
-
-  T1:
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other tile, joint line, light pool and wall exactly unchanged. Make ONLY this single change: on the gray floor tiles at the centre of the frame, pick one single floor tile and make it sink one step below its neighbours: the whole tile is lowered, and the joint lines on all four sides of that tile become one thick groove of pure black that runs all the way around it, with a thin pale edge on the near rim of the groove where it catches the light. The sunken tile keeps exactly the same speckled stone surface and the same gray tone as the other tiles, only slightly darker. Draw the tile in the floor's perspective as a parallelogram, with its groove continuing into the neighbouring joint lines. Make the groove about 1.3x thicker than real scale so it reads clearly. Do not touch the pillar, the wall at the right, the other tiles, or the small round balls at the very bottom edge of the frame. Place the sunken tile, including its groove, centred at about 50% from the left and 50% from the top of the image, occupying roughly 30% of the image width and 48% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  T2: T1 の "thick groove of pure black" を "very thick groove of pure black, about as wide as a finger" に置き換え、他は同じ（全文を渡す）。
-
-  T3: T1 の "only slightly darker" を "clearly darker, as if lying in shade" に置き換え、他は同じ（全文を渡す）。
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の床タイル・光の斑・右の壁。
-- **最寄り既存 overlay と実測距離**: AR-08-panel まで 32.0px、次点 AR-08-floor-ramune-marbles 33.0px、AR-08-wall-band-wave 34.0px（box 基準・矩形間のユークリッド距離。台帳 CAM08 の alpha bbox を 2026-11-05 に実測、大面積 2 件を除く）。溝が box を超えて広がる分、制作後に最終 overlay の alpha bbox で測り直す（30px 未満は動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / mid / medium
-- **視認性の注意**: 床は中間灰で、真っ黒な溝は十分に対比する。光の斑（白飛び）の上は避ける。溝が細いと面積比で通りにくいので T2 が有力。登録後に `uv run scripts/check-visibility.py --id AR-08-floor-tile-groove` を必ず通す。
-- **台帳登録時**: `id: 'AR-08-floor-tile-groove'` / `candidate_id: 'AR-08-floor-tile-groove'` / `element_id: 'CAM08-E16'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `location: 'CAM08-E16、柱の右の床。差分左上 (x,y) px'` / `detail: '柱の右の床のタイル一枚が一段沈み、四辺の目地が黒い溝になる'` / `phase: 'mid'` / 目立ち度 `medium` / note「小物。CAM08-E16。最近傍の既存は AR-08-panel（32.0px、alpha bbox 基準）。」
-- **相互参照 / 重複精査**: 床の沈みは候補 CR-01-40（CAM01・タイル一枚が隣より少し沈む。溝なし・subtle で別カメラ）と近縁だが、本件は四辺が黒い溝になる強い変化で、別カメラなので許容。AR-08-tile-concentric（CAM08・タイルの模様）は模様の変化で別物。床の置き物系（AR-08-n1〜n5）は「物」で別。
 
 ### AR-08-ceiling-light-inverse — 光らずに影を放つ天井灯
 
