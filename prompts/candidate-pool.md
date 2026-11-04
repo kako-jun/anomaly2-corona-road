@@ -1228,26 +1228,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: `AR-01-ceiling-fan-showa`・`AR-01-ceiling-panel-round`・`AR-01-vent-hole-triangle`・`AR-01-ceiling-seam-circle`（天井の飾りで同じ面に重なる）は同プレイ非共存を推奨。**`AR-01-tube-end`（蛍光灯の片端が切れる。5,040）も排他**（本件は蛍光灯が点いたままの前提）。`CR-NEW-02-04`（CAM02 の七夕の輪つなぎ飾り）とは紙の輪つなぎを使わないことで型を分けた。
 - **生成枚数の最小見積り**: 全景 3 テイク（素材の別生成なし）。
 
-### CR-LG-02-01 床一面の足跡（奥の角へ向かう列）
-
-- **ID / camera / element_id**: CR-LG-02-01 / CAM02 / CAM02-E20
-- **面**: box 176,340,675,900（279,440 px²、46.0%）。通路の中央〜右〜手前の床。
-- **物と変化**: 床タイル一面に、乾いた砂埃の足跡が無数に付き、全部が通路奥の暗い角（柱の左の開口）へ向かって列をなす。靴は昭和の革靴・草履・小さな子供のスニーカー（無地、ロゴなし）、大小混在、手前ほど大きい。人は居ない。足跡の上でも照明反射（E22）と緑の光（E23）を保つ。
-- **不気味さの狙い**: 「シャッターの向こうへ行ったまま戻っていない」4 人（作業仮説）。行きの足跡だけで帰りが無い。子供の小さな足跡で 4 人目を示す。
-- **保持するもの**: 看板・木箱・黒板・椅子・点検口（E21）・左のシャッター壁・天井、床の目地と反射。
-- **生成プロンプト全文**:
-  ```
-  $imagegen Edit the attached surveillance camera photo of a tiled underground corridor floor.
-  Make ONLY this change: add hundreds of dusty dry footprints on the floor tiles in the centre, right and foreground area. All footprints walk toward the same place, the dark opening at the far end of the corridor beside the pillar, forming many parallel trails. Mix four kinds of soles: old leather dress shoes, flat straw sandals (zori), small children's sneakers with a plain smooth sole, and bare-ish small feet. The soles are completely plain with no tread lettering, no logos, no marks. Sizes follow perspective: large near the camera, shrinking toward the vanishing point, and they follow the diagonal lines of the tile joints. Footprints are grey-brown dust, clearly darker than the floor so they are visible, and there is no person in the frame. Keep the existing white lamp reflections and the green glow on the floor visible on top of the footprints.
-  Do not touch the signboard, wooden crate, easel blackboard, chair, floor hatch, left shutter wall or the ceiling. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-- **作り方**: ①割付図: 床の消失点＝奥の開口へ向かう流線 5〜6 本を引き、4 種の靴を帯状に分けて密度を変える（全面均一は禁止＝コピペ感）。②窓 A（y250〜700。奥の暗い角 E09 の下部を含む）を 3 テイク生成して 1 枚採用 → A を貼り戻した全画面から窓 B（y450〜900）を切り出して 3 テイク（B のプロンプトは「the dark opening at the far end of the corridor beside the pillar」を「the same trails keep running toward the upper part of the frame」に差し替える）。box の高さ 560 は 3:2 の窓（高さ 450）に収まらないため 2 枚に分け、重なり帯（y450〜700）は線形ブレンドで継ぐ。③床の台形ポリゴンから木箱・黒板・椅子・点検口・看板の接地部を抜き、足跡の暗部だけを差分抽出（`--box 176,340,675,900 --threshold 18` ＋ `--dilate` で足跡群をまとめる）。④反射帯は screen 合成で元の光を戻す。
-- **難所と没基準**: 遠近が目地と合わない・足跡が床を描き直して目地がずれる・靴底に文字風模様が出る・帯の向きが奥の角を向かないテイクは没。反射帯内は消えやすいので濃くする。砂埃は低コントラストになりがちなので、視認性 floor を `check-visibility.py` で先に確認する。
-- **フェーズ / 目立ち度**: late / medium（子供の小さな足跡で 4 人目を示すため、4 人目のフラグ後に限る。story の「4 人目の子供の記憶」は未決で、フラグ後の読みの一つとして添える）。
-- **台帳案**: category `person` / anomaly_type `add_object` / detail 「床一面に、昭和の靴・草履・子供の靴の足跡が無数に付き、全て奥の暗い角へ向かう（帰りの足跡は無い）」。note に「大面積。CAM02-E20。AR-02-leather-footprints の拡大版ではなく、多人数・子供混在の別物。排他」を書く。
-- **既存との関係（差分と排他）**: `AR-02-leather-footprints`（(409,732) 92x149、革靴 1 列）は本件の床の内側に完全に入る。差分: 本件は床一面・4 種の履物・奥の角へ収束・子供混在。**排他**（同プレイで共存させない。本件を採用するなら leather-footprints は台帳に残すが、台帳 note に互いを書く）。同じ床面を使う `AR-02-stool`（**37,590**。台が通路側へ動く）・`AR-02-chalk-hopscotch`・`AR-02-puddle`・`AR-02-tile`・`AR-02-tile-color` も**排他**。床に立つ小物（`AR-02-tricycle` `AR-02-smartphone-facedown` ほか。全件は「box と既存 overlay の重なり」の表）は併存可で、足跡が小物の上を通らないよう接地部はマスクで抜く。`AR-06-wet-footprints`（CAM06）は別カメラの別物で、この型は CAM02 だけに限る。
-- **生成枚数の最小見積り**: 全景 6 テイク（窓 A 3＋窓 B 3）。
-
 ### CR-LG-02-02 左シャッター一面の子供のクレヨン画
 
 - **ID / camera / element_id**: CR-LG-02-02 / CAM02 / CAM02-E07
