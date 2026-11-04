@@ -3216,7 +3216,7 @@ anomalies:
     overlay_origin: '(180,596)'
     dimensions: '171x109'
     review_status: 'composited'
-    note: '最近傍の既存は AR-01-floor-puddle-light（32px、alpha bbox の矩形距離の実測、重なりなし）。'
+    note: '最近傍の既存は AR-01-floor-puddle-light（32px、alpha bbox の矩形距離の実測、重なりなし）。視認性: max 226 / mean 38.6 / n25 3241 / area 8066 / share 0.40（check-visibility ok）。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-yellow-boots'
     candidate_id: 'CR-NEW-01-02'
     camera_id: 'CAM01'
