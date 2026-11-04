@@ -373,24 +373,6 @@
 
 ### CAM06 — Shop Front Row
 
-#### CR06N-2 — 白い発泡スチロール箱
-
-- **camera / element_id**: CAM06 / CAM06-E16
-- **物と変化**: 左中央手前の床に、無地の白い発泡スチロールの箱が一つ置かれている
-- **最終 box**（baseline px）: `190,700,340,800`（150x100）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `137,664,393,835`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (53,36)-(203,136)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark floor tiles in the left center foreground, place one plain white expanded polystyrene (styrofoam) fish box with its lid on, rectangular with slightly rounded edges and a faint rough beaded texture, completely plain with no printed text and no label. Keep it near real scale (the box is already large). Give it a strong dark contact shadow and keep its white slightly gray so that it does not blow out. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the bright light spot on the floor or the shadows of the plants. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 59% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地・床の明るい光点・植物の影。
-- **最寄り既存 overlay と実測距離**: AR-06-tin-planter まで 34.0px（box 基準・矩形間のユークリッド距離、次点 AR-06-wet-footprints 56.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / early / obvious
-- **視認性の注意**: 暗床に白で高コントラスト。白飛びさせず、側面に灰色の影と発泡の粒状感を残す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左中央手前の床に、無地の白い発泡スチロールの箱が一つ置かれる'` / `candidate_id: 'CR06N-2'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### CR06N-4 — 青い風車(かざぐるま)
 
 - **camera / element_id**: CAM06 / CAM06-E15
