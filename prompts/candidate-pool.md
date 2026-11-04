@@ -397,7 +397,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
 | ID | category | anomaly_type | 変化 | 大小 |
 | --- | --- | --- | --- | --- |
 | AR-03-floor-line-break | environment | state_change | 床のタイル目地の線が一本だけ途中で途切れる | 小物 |
-| AR-03-ceiling-eye | surreal | surreal | 天井の暗い隙間から白い目が一つ覗く | 小物 |
 | AR-03-dark-tile | object | state_change | 通路中央の床に座布団ほどの暗いタイルが一枚だけ混じる | 小物 |
 | AR-03-shutter-raised | environment | state_change | 右のシャッターの裾が少し上がる | 小物 |
 | AR-03-roll-vanish | object | remove_object | 壁際の銀白色の巻いた物が消える | 小物 |
@@ -436,35 +435,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
   ```
 - **相互参照 / 重複精査**: 床の穴・沈み（AR-03-sunken-opening-floor）やタイルの向き・色（AR-03-tile-diagonal / AR-03-blue-floor-tile）とは別で、物は増減せず『目地の線が消える』だけ。CR-03-30/04 系の灯の候補とは無関係。台帳に目地の連続性を崩す異変は無い。
 - **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-floor-shadows（同じ床の面）/ AR-03-dark-tile（同じ床の面・近接）。併存可=壁・天井・シャッターの異変。
-
-### AR-03-ceiling-eye — 天井の暗い隙間から白い目が一つ覗く
-
-- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E01
-- **物と変化**: 右奥寄りの暗い天井板の一枚が、縦に細く抜けて黒い隙間になり、その奥から人の目が一つだけこちらを見ている（目だけ。顔・まつげ・ほかの部位は無い）。閉店後の地下街の天井裏に誰かがいる。
-- **box (x1,y1,x2,y2)**: (548,66,574,120)（26x54）
-- **最寄り既存 overlay と実測距離**: AR-03-amber-lamp-glow (33.8)、次点 AR-03-sign-frame-square (59.1)。新規小物との最寄りは AR-03-tube-light-bent (30.0)。
-- **6倍クロップ範囲**: 6倍クロップ (420,20)–(676,191)（256x171）。box は窓内で (768,276)–(924,600)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: in the dark ceiling panel (about x=768 to 924, y=276 to 600 in the 1536x1024 frame) one ceiling board is missing, leaving a narrow vertical black gap with straight edges that follow the ceiling perspective. Inside the gap a single open human eye is visible, white sclera and a dark iris, looking straight at the camera, lit very faintly by cold light; only the eye, no face, no eyelashes detail, no other features. Everything else on the ceiling, the light fixtures and the signs stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: a narrow, dark rectangular opening in the ceiling (about x=770 to 920, y=280 to 595 in the 1536x1024 frame), as if a ceiling tile has been slid aside, and a single pale eye with a dark iris peering out of the darkness toward the camera. No face is visible around the eye, just the eye. Do not change anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: a thin vertical slit in the dark ceiling (x about 775 to 915, y about 285 to 590 in the 1536x1024 frame) with a single bloodless-white human eye with a small dark iris looking out of it toward the viewer. The slit is dark with a faint cold rim light on its edges. Only the eye, nothing else changes. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-03-ceiling-eye'
-    candidate_id: 'AR-03-ceiling-eye'
-    camera_id: 'CAM03'
-    element_id: 'CAM03-E01'
-    base_photo: 'public/images/cam3.webp'
-    category: 'surreal'
-    anomaly_type: 'surreal'
-    location: 'CAM03-E01 の右奥寄りの天井、差分左上 (548,66) 付近（貼り込み後に再計測）'
-    detail: '右奥寄りの暗い天井板が縦に細く抜けて黒い隙間になり、そこから白い目が一つだけ覗く。'
-    overlay: 'assets/anomaly-overlays/cam03/ceiling-eye.webp'
-    # phase / 目立ち度: late / medium
-    note: '最寄り既存 overlay は AR-03-amber-lamp-glow（box 距離 34px。ぼかしで広がるので制作後に再測）。新規小物との最寄りは AR-03-tube-light-bent（30px）。目だけで顔・体は描かない。'
-  ```
-- **相互参照 / 重複精査**: 人の姿の異変（CAM01 AR-01-back-view-paper-bag・CAM05 AR-05-old-woman-in-glass・CAM06 AR-06-worker・CAM08 AR-08-old-man-back）は全身の後ろ姿で、本件は天井から覗く目だけ。CR-03-20（天井の器具から細いリボン）とは別物。台帳・候補に『目』の異変は無い（grep 済み）。
-- **同カメラ内の排他と併存**: 排他なし。併存可=床・壁・シャッターの異変。AR-03-tube-light-bent とは box が 30px しか離れないので、同プレイで共存させないほうが読み取りやすい。
 
 ### AR-03-dark-tile — 通路中央の床に座布団ほどの暗いタイルが一枚だけ混じる
 
