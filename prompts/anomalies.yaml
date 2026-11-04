@@ -3235,6 +3235,25 @@ anomalies:
     dimensions: '82x86'
     review_status: 'composited'
     note: "最近傍の既存は AR-01-floor-sign-reflection-inverted（32.0px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）。 overlay を生成位置から (0,-14) px ずらして配置。標準でも見える（最大差分224・平均差分76.0・n25=3230、check-visibility 実測）。つまみでさらに見やすくなる。ゲーム画面とライブ blink での確認は未了。"
+  - id: 'AR-08-floor-water-mirror'
+    candidate_id: 'CR-LG-08-01'
+    camera_id: 'CAM08'
+    element_id: 'CAM08-E16'
+    base_photo: 'public/images/cam8.webp'
+    category: 'surreal'
+    anomaly_type: 'reflection'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(0,300)–(1000,1000)'
+    location: 'CAM08-E16（E17/E18 を含む床一面）、差分左上 (0,270) px'
+    detail: '床全面が水鏡になり、映るのは天井でなく昭和の夕焼けの商店街'
+    generation_prompt: "Method: window A (y255-705) and window B (y450-900, cut from the baseline with window A already pasted back) were edited with $imagegen, pasted back with scripts/composite-polygon.py restore (B with --blend-px 100 --blend-edges t), then the floor polygon (wall, pillar, glass-door and right-column base lines; the corridor beyond the pillar stays dry) was cut out with composite-polygon.py cutout. Window A prompt: Edit the attached surveillance camera photo of a large tiled underground hall. Make ONLY this change: the entire visible floor, from the base of the walls and the pillar down to the bottom edge of the frame, becomes a thin, perfectly calm sheet of water acting as a mirror. The water edge follows the wall bases, the pillar base and the base of the glass door, never a straight horizontal line. In the water we see, mirrored, not the real ceiling but a warm orange-pink sunset sky with thin clouds, overhead wires, tiled roofs of a Showa-era Japanese shopping street and hanging signboards that are completely blank white (reflected upside-down), the sun low in the far right. The pillar and the bottom of the right-hand wall are reflected correctly in the water, with their contact lines continuing seamlessly into their mirror images; faint tile joints remain visible beneath the water. The existing white lamp reflections on the floor remain as bright spots. The ripples are very weak. Do not touch the ceiling, pillar, walls, the glass door of the left shopfront, or the far corridor beyond the pillar (its floor stays dry). No letters, logos or shop names. Window B prompt: the same, plus 'the top 57 percent already shows the water mirror, do not change it; turn the dry floor in the bottom 43 percent into the same calm water continuing the sunset-sky reflection seamlessly, no second mirrored copy, no horizon line, no new mirror axis'."
+    overlay: 'assets/anomaly-overlays/cam08/floor-water-mirror.webp'
+    overlay_origin: '(0,270)'
+    dimensions: '675x630'
+    review_status: 'composited'
+    note: "大面積。CAM08-E16。alpha bbox 675x630=425,250 px²（画像比 70%）。排他（同プレイ非共存）: CR-LG-08-02（積まれたテレビの山。未制作の候補。同じ床を使い、水面の積み物には接地反射が要る）、AR-08-floor-reflection-two-tier（重なり 19,306）・AR-08-floor-reflection-no-pillar（20,648）・AR-08-tile-concentric（7,392）・AR-08-floor-ramune-marbles（13,209）・AR-08-cat（1,785）・AR-08-barber-pole（4,750）・AR-08-pillar-second（12,474。柱の鏡像が合わなくなる）・AR-08-panel（12,768）・AR-08-panel-off（5,124）・AR-08-blue-panel（5,124）（パネルの光が水面の鏡像と食い違う）。併存可（bbox の重なりのみで、水面ポリゴンは壁・柱・ガラス戸の面にかからない）: AR-08-wall-band-wave（21,195）・AR-08-suit（10,640）・AR-08-pillar-notice（4,347）・AR-08-bag（3,948）・AR-08-old-man-back（5,265。奥の通路はポリゴンの外）。近接: AR-08-fixture-duplicate（天井の照明の複製。最終 overlay のアルファ領域の最短距離 5px、bbox では 3px まで近いが重なり 0 のため併存可。水面ポリゴンは天井にかからない）。窓 A・B を各 2 テイク生成し、A は a2（夕焼けの商店街の像が濃いほう）、B は二重の鏡像を作らず夕焼けの空が続くほうを採用（B の最初の 2 テイクは A の鏡像を再度反転して水平の地平線ができたため没）。ゲーム画面とライブ blink での確認は未了。"
+
   - id: 'AR-05-curtains-open-cafe'
     candidate_id: 'CR-LG-05-01'
     camera_id: 'CAM05'
