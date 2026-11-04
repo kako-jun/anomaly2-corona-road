@@ -371,24 +371,6 @@
 
 ### CAM05 — Emergency Stairwell
 
-#### CR05N-6 — 茶色い野球グローブ
-
-- **camera / element_id**: CAM05 / CAM05-E13
-- **物と変化**: 右手前の床に、使い込まれた茶色の革の野球グローブが一つ置かれている
-- **最終 box**（baseline px）: `590,660,665,750`（75x90）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,620,675,791`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (171,40)-(246,130)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark gray floor tiles at the right, lay one worn brown leather baseball glove, palm side up with the fingers slightly curled, dark brown laces, scuffed leather, with no stamped text, no logo and no marks. Make it about 1.3x larger than real scale. Give it a strong dark contact shadow along its lower edge. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the soft white patch of reflection on the lower floor or the floor grain. Place the object, including its shadow, centered at about 81% from the left and 50% from the top of the image, occupying roughly 29% of the image width and 53% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地・下の白い反射・床の粒状感。
-- **最寄り既存 overlay と実測距離**: AR-05-floor-glare-backside まで 37.0px（box 基準・矩形間のユークリッド距離、次点 CR05N-1 40.0px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 灰床に茶色は中程度の対比。革の明部（ハイライト）と濃い影、白っぽい紐の縫い目で輪郭を出す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '右手前の床に、使い込まれた茶色の革の野球グローブが一つ置かれる'` / `candidate_id: 'CR05N-6'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 ### CAM06 — Shop Front Row
 
 #### CR06N-1 — 赤いポリバケツ
