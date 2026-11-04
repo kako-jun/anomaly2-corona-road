@@ -3415,7 +3415,7 @@ anomalies:
     overlay_origin: '(217,0)'
     dimensions: '458x380'
     review_status: 'composited'
-    note: '大面積。CAM01-E01。alpha bbox 458x380=174,040 px²（画像比 28.6%）。排他（同プレイ非共存。天井の同じ面・飾りで上書きされる）: AR-01-ceiling-fan-showa（重なり 8,322）・AR-01-ceiling-panel-round（9,017）・AR-01-vent-hole-triangle（1,376）・AR-01-ceiling-seam-circle（1,925）・AR-01-tube-end（6,300。本件は蛍光灯が点いたままの前提と矛盾）。併存可（bbox のみ重なり、ポリゴンは y≤340〜380・x≤439 で止まり吊り看板・店先は含まない）: AR-01-sign-rim（3,080）・AR-01-sign-old-shop（1,927）・AR-01-noren（8,580）・AR-01-door-ajar（8,720）・AR-01-shutter-stripe-break（483）。同カメラの大面積 CR-LG-01-02（左壁、box 0,215,208,725）とは x が離れ重ならない。最近傍の非重なりは AR-01-back-view-paper-bag（25px）。紙の輪つなぎは CR-NEW-02-04（CAM02）と近いので使っていない。3 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。'
+    note: '大面積。CAM01-E01。alpha bbox 458x380=174,040 px²（画像比 28.6%）。排他（同プレイ非共存。天井の同じ面・飾りで上書きされる）: AR-01-ceiling-fan-showa（重なり 8,322）・AR-01-ceiling-panel-round（9,017）・AR-01-vent-hole-triangle（1,376）・AR-01-ceiling-seam-circle（1,925）・AR-01-tube-end（6,300。本件は蛍光灯が点いたままの前提と矛盾）。併存可（bbox のみ重なり、ポリゴンは y≤340〜380・x≤439 で止まり吊り看板・店先は含まない）: AR-01-sign-rim（3,080）・AR-01-sign-old-shop（1,927）・AR-01-noren（8,580）・AR-01-door-ajar（8,720）・AR-01-shutter-stripe-break（483）。同カメラの大面積 CR-LG-01-02（左壁、box 0,215,208,725）とは x が離れ重ならない。最近傍の非重なりは AR-01-back-view-paper-bag（25px。重なり 0・床側の小物で、天井の提灯とは別の面なので併存可）。仕様 box からの逸脱: 仕様は y≤340 だが、提灯列は消失点側の遠端で y380 まで伸びている（遠端のチェーンを足したため）。そのため奥の吊り看板 E16（y373 付近）と近く、遠端の提灯が看板の上端に近接する（7px 差）。看板そのものはポリゴンから除外して保持している。紙の輪つなぎは CR-NEW-02-04（CAM02）と近いので使っていない。3 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-shutter-crayon-drawings'
     candidate_id: 'CR-LG-02-02'
     camera_id: 'CAM02'
