@@ -547,7 +547,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
 | CR-07-14 | CAM07-E14 | 右階段の段が一段増え、手すりはそのまま残る。       | environment / mid / medium   |
 | CR-07-15 | CAM07-E14 | 右階段の段が一段減り、最上部の高さは変わらない。   | environment / mid / medium   |
 | CR-07-20 | CAM07-E12 | 白壁に小さな掲示が一枚増える。                     | object / early / medium      |
-| CR-07-21 | CAM07-E01 | 天井板の一枚だけ淡い黄色になる。                   | environment / early / subtle |
 | CR-07-22 | CAM07-E03 | 丸型設備の隣に同じ設備が増える。                   | environment / mid / medium   |
 | CR-07-24 | CAM07-E13 | 丸い扉の取手が四角い取手になる。                   | object / early / subtle      |
 | CR-07-25 | CAM07-E13 | 扉上部の小窓が二つに増える。                       | object / mid / medium        |
@@ -572,30 +571,7 @@ CAM 07（Maintenance Corridor、`cam7.webp` 675x900）に足す画像異変 7 �
 
 | ID | 対象 | category / anomaly_type | box（x1,y1,x2,y2） | phase / 目立ち度 |
 | --- | --- | --- | --- | --- |
-| AR-07-ceiling-tile-yellow | E01 天井板（昇格 CR-07-21） | environment / color_shift | `440,12,500,46`（60x34） | early / subtle |
 
-### AR-07-ceiling-tile-yellow（昇格: CR-07-21）
-
-- **カメラ**: CAM07、対象 CAM07-E01（青灰色の天井。細かな斑点/汚れ、天井板の線）。
-- **物と変化**: 天井板の 1 枚だけが淡く黄ばんだ色（古い煙草の染みのような淡黄色）になる。天井板の継ぎ目と細かな斑点は黄色の下から見える。3 テイクは色の質違い（均一な黄／隅から濃くなる水染み風／すっきりしたレモン色）。
-- **box**: `440,12,500,46`（60x34。旧 box より 5px 右へ寄せて天井の吊り物から離した。天井板の継ぎ目に合わせて数 px 動かしてよい）。最寄り既存 overlay（最終 alpha bbox）は AR-07-crane（325,0–404,240）まで **36.0px**、次点 AR-07-lamp-off（536,51–581,83）36.3px、AR-07-ceiling-string 103.2px。天井の大面積 AR-07-ceiling-white-sheets とは bbox が重なる。**同じ天井面を覆う物は排他**: AR-07-ceiling-white-sheets・AR-07-crane・AR-07-paper-airplane-ceiling・AR-07-ceiling-string とは同プレイで共存させない（台帳 note に書く）。**制作後に alpha bbox で再計測**。
-- **6倍クロップ**: 原画像 `(336,0)–(594,172)`（258x172。上端に接する）。box は窓内で `(619,71)–(976,274)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, tint exactly one rectangular ceiling panel at about x 619-976, y 71-274 (frame pixels) to an even, pale, slightly dingy warm yellow, like an old nicotine-stained ceiling board, following the panel's own seams and perspective so the panel edges stay sharp and the seam lines of its neighbours stay visible. The fine speckle texture of the ceiling stays visible through the yellow. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, tint exactly one rectangular ceiling panel at about x 619-976, y 71-274 (frame pixels) to a pale warm yellow that is slightly deeper toward one corner, like a faint water stain, following the panel's own seams and perspective so the panel edges stay sharp and the seam lines of its neighbours stay visible. The fine speckle texture of the ceiling stays visible through the yellow. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, tint exactly one rectangular ceiling panel at about x 619-976, y 71-274 (frame pixels) to a soft clean lemon yellow, slightly brighter than the panels around it, following the panel's own seams and perspective so the panel edges stay sharp and the seam lines of its neighbours stay visible. The fine speckle texture of the ceiling stays visible through the yellow. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 色相の変化（青灰→黄）が主で、輝度差は小さい。**下限を割りそうな点**は、max 差 40 と平均差 3.0 の両方。天井が暗く、淡い黄色だと輝度の差が足りない恐れがある（候補の `subtle` どおり最も難しい 1 件）。割れたら黄色を濃く・明るくして作り直す（テイク 3 のレモン色が最も通りやすい）。登録後に `uv run scripts/check-visibility.py --id AR-07-ceiling-tile-yellow` を通す。
-- **台帳登録案**: `id: 'AR-07-ceiling-tile-yellow'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E01'` / `category: 'environment'` / `anomaly_type: 'color_shift'` / `location: 'CAM07-E01、差分左上 (440,12) px'` / `detail: '天井板の1枚だけが淡い黄色になる'` / `phase: early` / `subtlety: 'subtle'` / `candidate_id: 'AR-07-ceiling-tile-yellow'`（CR-07-21 の昇格）。note に最寄り既存 id と最終 alpha bbox 実測距離、天井面の排他の列挙、視認性は check-visibility.py で実測した値で書く。登録時に **CR-07-21 の行（「追加候補 — CAM 07」節）を削除**する。
-- **相互参照 / 重複精査**: 本件は CR-07-21 の昇格で、既存の別 ID は無い。近縁は AR-07-purple-floor-tile（床タイル 1 枚が淡い紫。床と天井の別の面・別の色）、AR-04-ceiling-corner-fold・AR-07-ceiling-string など天井の他の異変（物の増減で、色の変化ではない）。
 ### 既存との重複精査（共通）
 
 - 7 件とも、`anomalies.yaml` の CAM07 全 28 件と `candidate-pool.md` の CAM07 候補（CR-07-02〜28）に、同じ対象と同じ変化（出現・消失・移動・複製・色・形・反射）の組が無いことを確認した。例外の昇格（CR-07-21）は AR-07-ceiling-tile-yellow の項に書いた。近縁の差は各項の「相互参照」に書いた。制作前に見比べ、実質同じと判断したら取り下げる。
