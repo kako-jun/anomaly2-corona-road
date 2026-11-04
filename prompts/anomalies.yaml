@@ -68,7 +68,7 @@ anomalies:
     overlay_origin: '(86,389)'
     dimensions: '65x97'
     review_status: 'composited'
-    note: 'ゲーム画面とライブ blink での確認は未了。'
+    note: 'ゲーム画面とライブ blink での確認は未了。排他（同プレイで共存させない）: AR-02-shutter-crayon-drawings（CR-LG-02-02、左シャッター一面のクレヨン画。同じ店先の面で、box 重なり 6,305 px²・alpha 重なり 1,579 px²）。'
   - id: 'AR-02-cigarette'
     camera_id: 'CAM02'
     element_id: 'CAM02-E20'
@@ -107,7 +107,7 @@ anomalies:
     overlay_origin: '(36,491)'
     dimensions: '94x67'
     review_status: 'composited'
-    note: 'ゲーム画面とライブ blink での確認は未了。'
+    note: 'ゲーム画面とライブ blink での確認は未了。排他（同プレイで共存させない）: AR-02-shutter-crayon-drawings（CR-LG-02-02、左シャッター一面のクレヨン画。同じ店先の面で、box 重なり 6,298 px²・alpha 重なり 904 px²）。'
   - id: 'AR-02-open-sign'
     camera_id: 'CAM02'
     element_id: 'CAM02-E07'
@@ -120,7 +120,7 @@ anomalies:
     overlay_origin: '(38,190)'
     dimensions: '72x112'
     review_status: 'composited'
-    note: 'ゲーム画面とライブ blink での確認は未了。'
+    note: 'ゲーム画面とライブ blink での確認は未了。排他（同プレイで共存させない）: AR-02-shutter-crayon-drawings（CR-LG-02-02、左シャッター一面のクレヨン画。同じ店先の面で、box 重なり 8,064 px²・alpha 重なり 6,080 px²）。'
   - id: 'AR-02-pot-duplicate'
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
@@ -172,7 +172,7 @@ anomalies:
     overlay_origin: '(0,308)'
     dimensions: '199x250'
     review_status: 'composited'
-    note: 'ゲーム画面とライブ blink での確認は未了。'
+    note: 'ゲーム画面とライブ blink での確認は未了。排他（同プレイで共存させない）: AR-02-shutter-crayon-drawings（CR-LG-02-02、左シャッター一面のクレヨン画。同じ店先の面で、box 重なり 41,250 px²・alpha 重なり 22,646 px²）。'
   - id: 'AR-02-smoke'
     camera_id: 'CAM02'
     element_id: 'CAM02-E17'
@@ -1273,7 +1273,7 @@ anomalies:
     overlay_origin: "(45,512)"
     dimensions: "38x27"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。排他（同プレイで共存させない）: AR-02-shutter-crayon-drawings（CR-LG-02-02、左シャッター一面のクレヨン画。同じ店先の面で、box 重なり 1,026 px²・alpha 重なり 223 px²）。"
   - id: "AR-03-blue-floor-tile"
     candidate_id: "CR-03-15"
     camera_id: "CAM03"
@@ -3252,7 +3252,7 @@ anomalies:
     overlay_origin: '(0,57)'
     dimensions: '165x541'
     review_status: 'composited'
-    note: '大面積（bbox 165x541=89,265px²、画像の14.7%）。CAM02-E07。排他（同プレイで共存させない。同じ店先の面を覆う）: AR-02-shop-reopens (41,250) / AR-02-open-sign (8,064) / AR-02-newspaper (6,298) / AR-02-cat (6,305) / AR-02-wrapping-paper (1,026)。併存可（床。画用紙はシャッター下端の接地線で止める）: AR-02-puddle (16,874) / AR-02-cigarette (2,294) / AR-02-receipt (2,420) / AR-02-tile (896) / AR-02-tile-color (1,118)（重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-02-01（床一面の足跡）とは bbox が重なるが面は別（床とシャッター）。画用紙は縦枠の線上にも貼らず、枠で止めた。画像の出来: 1 枚の絵の複製（人型 4・赤い家・太陽）。ゲーム画面とライブ blink での確認は未了。'
+    note: '大面積（bbox 165x541=89,265px²、画像の14.7%）。CAM02-E07。排他（同プレイで共存させない。同じ店先の面を覆う）: AR-02-shop-reopens (41,250) / AR-02-open-sign (8,064) / AR-02-newspaper (6,298) / AR-02-cat (6,305) / AR-02-wrapping-paper (1,026)。併存可（床。画用紙はシャッター下端の接地線で止める）: AR-02-puddle (16,874) / AR-02-cigarette (2,294) / AR-02-receipt (2,420) / AR-02-tile (896) / AR-02-tile-color (1,118)（重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-02-01（床一面の足跡）とは bbox が重なるが面は別（床とシャッター）。画用紙は縦枠の線上にも貼らず、枠で止めた。画像の出来: 1 枚の絵の複製（人型 4・赤い家・太陽）。ゲーム画面とライブ blink での確認は未了。同カメラの大面積 CR-LG-02-01（AR-02-floor-footprints）とは bbox が重なる（165x260）が面は床とシャッターで別。alpha 重なりは 267 px² と小さく、併存可。画像の調整: 画用紙は彩度を落として黄ばませ、シャッターの明暗に合わせて暗くした。人型の顔は黒く塗りつぶし、数枚の紙に欠け（シャッターが覗く穴）と剥がれの縁を足した。'
   - id: 'AR-05-curtains-open-cafe'
     candidate_id: 'CR-LG-05-01'
     camera_id: 'CAM05'
