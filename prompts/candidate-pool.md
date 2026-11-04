@@ -399,24 +399,6 @@
 - **視認性の注意**: 天井面は青灰色で小さいので、旗は大きめ・高彩度（赤と黄を多め）にする。青・緑は天井に溶けやすいので少数に。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'environment'` / `anomaly_type: 'add_object'` / `detail: '天井に無地の色褪せた三角旗の連（万国旗）が一本垂れる（運動会の記憶）'` / `candidate_id: 'CR-NEW-01-04'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 吊り飾り系の兄弟: CR-NEW-02-04（七夕輪つなぎ）・CR05N-5（吹き流し）・CR06N-5（てるてる坊主）・AR-07-crane（折り鶴）。
 
-#### CR-NEW-01-05 — 竹の手提げかご
-
-- **camera / element_id**: CAM01 / CAM01-E17
-- **物と変化**: 床に竹編みの買い物かごが一つ置かれる（昭和の買い物。無地）。※設計やり直し: 旧案は左壁の釘に掛けるものだったが、壁は異変が密集し竹ぼうきとも近接するため、左床の空きへ移して床置きに変更
-- **最終 box**（baseline px）: `100,657,146,713`（46x56）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,600,256,771`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (100,57)-(146,113)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles at the left side, next to the base of the left wall, place one plain woven bamboo shopping basket (a rounded rectangular basket of tightly woven pale tan bamboo strips with one arched bamboo handle folded upright), standing on the floor, completely plain with no tag and no print. Make it about 1.4x larger than real scale, because the free area is narrow. Give it a strong dark contact shadow on the floor tiles. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark baseboard and the rough wall at the upper left, the tile joints or the reflections. Place the object, including its shadow, centered at about 48% from the left and 50% from the top of the image, occupying roughly 18% of the image width and 33% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左上の暗い巾木と粗い壁・タイル目地・反射。
-- **最寄り既存 overlay と実測距離**: AR-01-power-bank まで 33.4px（box 基準・矩形間のユークリッド距離、次点 PR97-broom-alpha 34.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 箱の幅が46pxと狭い。縦長に見えるよう取っ手を立てる。淡い竹色は暗めの床に対比するが、壁際の暗い巾木に溶けないよう、巾木から離して床の中央側に置く。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左の壁際の床に竹編みの買い物かごが置かれる（昭和の買い物。無地）'` / `candidate_id: 'CR-NEW-01-05'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 同種の買い物かご: AR-04-basket（CAM04・赤い買い物かごがガラスに映る）。別カメラ・別物（竹・実物）。
-
 #### CR-NEW-01-06 — タピオカドリンクのカップ
 
 - **camera / element_id**: CAM01 / CAM01-E17
