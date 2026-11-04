@@ -598,46 +598,16 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 
   | ID | 要素 | category / anomaly_type | 規模 | 変化 |
   | --- | --- | --- | --- | --- |
-  | AR-08-ceiling-light-grid | E01 | environment / multiply | **大面積** | 天井一面に、同じ丸い天井灯が格子状にびっしり並ぶ |
   | AR-08-wall-drawers | E14 | surreal / multiply | **大面積** | 右の壁と柱の面が、同じ小さな引き出しの壁になる（百味箪笥） |
 
 - **配置の実測**（2026-11-05、`uv run --with pyyaml --with numpy --with pillow python3`。台帳の CAM08 全 overlay の alpha bbox を実測。台帳は日々増えるので、登録時に必ず測り直す）: 小物 5 件の box は、大面積 2 件（`AR-08-floor-water-mirror`・`AR-08-stacked-crt-tvs`）を除く既存の全 overlay の alpha bbox から**矩形間距離 30px 以上**（最小 32.0px。各項に最寄りを書く）。小物どうしも 30px 以上離れる（tile-groove・sparrow・ceiling-light-inverse・door・hanten の box は互いに 100px 以上）。**30px 前後の余裕の小物（tile-groove 32.0px・sparrow 32.0px・hanten 33.0px・ceiling-light-inverse 35.0px）は、台帳に載る最終 overlay（羽・布・暈・溝で box より広がる）の alpha bbox で測り直し、30px を割ったら動かす。** 各項にも書く。
 - **大面積の実測**: 画像 675x900=607,500 px² の 1/8 は 75,938 px²。
-  - AR-08-ceiling-light-grid: 面ポリゴン `0,0 675,0 675,135 600,131 462,131 250,137 0,141`（天井の粒状の面と、その下の一段下がった面＝折り上げの下の面まで含める）。実面積 91,626 px²（1/8 の 75,938 px² に対し余裕 21%。旧案は 78,520 px² で余裕 3% しかなく広げた）・外接矩形 675x142=95,850 px²（15.8%）。
   - AR-08-wall-drawers: 面ポリゴン `462,134 600,134 600,140 675,140 675,720 600,696 540,660 500,514 462,417`。実面積 106,068 px²・外接矩形 213x586=124,818 px²（20.5%）。
   - 2 件の面は重ならない（ポリゴンの重なり 0 px²。x462〜600 では天井の下端 y131 と壁の上端 y134 で 2 行離れ、x600〜675 では y131〜135 と y140）。外接矩形は x462〜675・y134〜141 で重なるが、画素は 0 px²。既存の大面積との**画素（alpha）の重なりは 0 px²**: `AR-08-floor-water-mirror`（床）・`AR-08-stacked-crt-tvs`（左 x0〜248・y145〜518）のどちらとも 0。ただし水鏡の外接矩形（0,270,675,630）は壁の外接矩形と重なる（壁の下端が床の接地線 y≈420〜720 まで届くため。画素は重ならない）。壁の件は水鏡と**排他**にする（水面なら壁の引き出しも映り込むはずで、昭和の夕焼けだけを映す水鏡と矛盾するため。「同プレイで共存させない」を台帳 note に書く）。
 - **共通手順**（小物。SKILL.md の手順 5〜8 と同じ）: ①各項の「6倍クロップ」を `public/images/cam8.webp` から切り出して 1536x1024 へ拡大する（webp は PNG に変換してから渡す）。②明示的な `$imagegen` で 3 テイクを生成し目視で選ぶ（0 バイトや数 KB の壊れた PNG は撮り直す。文字・ロゴらしき刻印が出たテイクは捨てる）。③選んだ結果を元のクロップ寸法へ縮小して baseline の PNG の同じ位置へ貼り戻し、その全体画像を `scripts/composite-anomaly.py --gen` に渡す（`--box` は各項の最終 box。FAIL は再生成でなく `--threshold` / `--margin` を 8/12/16/18 で試す）。④最終 overlay の alpha bbox で既存との距離を測り直し、30px を割ったら動かす。台帳へ登録し `uv run scripts/check-visibility.py --id <ledger id>` を通す。通らなければ大きく・暗く・平らな場所へ強めて作り直す。⑤登録・コミットしたら `experiments/` の作業物を即削除する。
 - **共通手順**（大面積。この節の各項の窓）: 大面積は `scripts/composite-polygon.py` を使う（`crop` で全幅 675x450 の 3:2 窓を切り出し、生成結果を `restore` で元寸へ貼り戻し、面のポリゴンで `cutout --polygon … --feather 2`。複数窓は `restore --blend-px 100 --blend-edges t`）。窓は 1536/675≈2.2756 倍。生成は 1 件ずつ、生成画像は見ずに合成まで進め、採否は人間が決める運用。
 - **共通プロンプト末尾**（各プロンプトに全文を含めてある。小物は「クロップ」、大面積は「窓」の意味）: `Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
 - **共通の禁止**: 文字・数字・ロゴ・実在の店名・家紋の混入（出たテイクは没）。人の顔・体は描かない（人の気配は影・服・足元だけ）。性的・不適切の独自判定はしない（生成物はそのまま報告）。
-
-### AR-08-ceiling-light-grid — 天井一面の同じ丸い天井灯（大面積）
-
-- **ID / camera / element_id**: AR-08-ceiling-light-grid / CAM08 / CAM08-E01（天井面。E04 の丸い天井灯を増殖）
-- **面**: ポリゴン `0,0 675,0 675,135 600,131 462,131 250,137 0,141`（粒状の面と、その下の一段下がった面の下端まで。2026-11-05 に numpy で実測。手元の画像で下端は y≈141（左端）・y≈131（x462〜600）・y≈135（右端））。実面積 91,626 px²・外接矩形 675x142（95,850 px²、15.8%）。**制作後の alpha bbox と実面積は約 90,000 px² 以上（alpha bbox は高さ 134 以上＝ 675x134=90,450 px² 以上）になるよう、左下の一段下がった面（x≤250・y 125〜137）まで灯を置く**。
-- **物と変化**: 天井全面に、既存の右寄りの白い丸い天井灯（E04）と同じ形の灯が、遠近に沿って等間隔の格子状に、びっしりと並んで点灯する（奥へ行くほど小さく密になる。手前の天井ほど大きい）。灯は全部まったく同じで、数は数十〜百個。
-- **不気味さの狙い**: 無人の警備室の天井が、数えきれない同じ丸い目に見張られているように見える（同じ物がどこまでも反復する空間の不気味さ）。丸灯は 1 個なら普通だが、全面だと不気味。
-- **保持するもの**: 柱・左のガラス戸・右壁・店先・既存の灯と器具（E02 の左奥の短い白い灯の列、E04 の丸い天井灯、E03 の右奥のドーム。面の内側にあるが、そのまま残して新しい灯を重ねない）・面の下の暗い隙間。灯は天井面（ポリゴン）の外へはみ出さない。下端は、左端 x0 で y≤139、x250 で y≤135、x462〜600 で y≤129、右端 x675 で y≤133（ポリゴンの 2px 内側）。
-- **窓**: 1 枚。`crop --crop 0,0,675,450`（box は y0〜141 で窓の上端に接する。画像上端なので余裕不要）。窓内の位置は元画像の実寸 px ×2.2756。
-- **生成プロンプト**（3 テイク。T1 は暖白色・中密度、T2 は寒色の白・中密度、T3 は暖白色でさらに密）:
-
-  T1:
-  ```text
-  $imagegen Edit the attached surveillance camera photo of an underground shopping arcade corridor (the ceiling occupies the top 16% of the frame, from the top edge down to the line where it meets the shop fronts and the walls: the pale speckled upper part and the slightly darker lower step beneath it).
-  Make ONLY this change: fill the entire visible ceiling surface, including its darker lower step, with a regular perspective grid of identical small round flush-mounted white ceiling lights, all switched on, each exactly like the one existing round white ceiling light near the centre of the lower step (a plain white disc with a thin grey rim). The grid is regular and evenly spaced, in about 4 rows running toward the far end of the corridor, with correct perspective: the discs are large and sparse near the camera (top of the frame) and become smaller and denser toward the far end, so that about 60 to 100 discs are visible in total. Each disc emits a soft white glow onto the ceiling around it, but the corridor below does not get brighter. All discs are completely identical: no numbers, no marks, no text. The pale speckled ceiling texture and its panel joints stay visible between the discs.
-  Do not touch the floor, the walls, the pillar, the shop fronts, the dark gap under the ceiling's lower step, the existing short row of white lights, the existing round white light and the dome camera, or anything below the ceiling line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-
-  T2: T1 の "a plain white disc" を "a plain cold-white disc" に、"a soft white glow" を "a soft cold blue-white glow" に置き換え、他は同じ（全文）。
-
-  T3: T1 の "about 4 rows" を "about 6 rows" に、"about 60 to 100 discs" を "about 120 to 180 discs" に置き換え、他は同じ（全文）。
-- **作り方**: ①割付図: 天井の台形（ポリゴン）に、奥の通路の消失点へ向かう流線と、灯の位置・サイズ（手前 28px → 奥 5px）の格子を先に描く。向きは文章でなく図。②窓 1 枚で 3 テイク（天井以外は元画像で上書きして `restore`）。③`cutout --polygon "0,0 675,0 675,135 600,131 462,131 250,137 0,141" --feather 2 --out assets/anomaly-overlays/cam08/ceiling-light-grid.webp`。差分抽出（`--threshold`）は天井の粒状を拾って巨大化するので使わない。④alpha bbox と alpha の実面積を実測し、約 90,000 px² 以上（alpha bbox は高さ 134 以上）を確認する（割ったら登録しない。実測値を台帳 note に書く）。既存の灯（E02・E03・E04）の画素を覆っていないことも確認する。
-- **難所と没基準**: 灯が文字・数字・模様になるテイク、灯の大きさが遠近と合わない（手前が小さい等）テイク、面の下の暗い隙間・蛍光灯の列・丸い天井灯・ドームを覆うテイク、灯が壁や柱に出るテイクは没。灯が 1 種類に揃っていないテイク（形・色が混ざる）は没。
-- **フェーズ / 目立ち度**: mid / obvious。
-- **台帳案**: `id: 'AR-08-ceiling-light-grid'` / `element_id: 'CAM08-E01'` / `category: 'environment'` / `anomaly_type: 'multiply'` / `location: 'CAM08-E01（天井一面）、差分左上 (0,0) px'` / `detail: '天井一面に、同じ丸い天井灯が遠近に沿って格子状にびっしり並んで点灯する'` / `phase: 'mid'` / 目立ち度 `obvious` / note に「大面積。CAM08-E01。alpha bbox WxH=…px²（実測値）。排他（同プレイで共存させない。どちらも天井の面）: AR-08-ceiling-light-inverse・AR-08-vent-square・AR-08-light-blue-bleed・AR-08-fixture-dark-red・AR-08-vent-paper-plug・AR-08-n6（凧）。」
-- **排他**: 天井の既存の小物（上の note の列挙。面を広げた新ポリゴンの画素が重なるのは vent-square 8,306 px²・n6 5,431 px²・light-blue-bleed 4,362 px²・fixture-dark-red 1,369 px²・vent-paper-plug 1,188 px²）。新規の AR-08-ceiling-light-inverse は同じ天井面なので併存させない。大面積どうしは重ならない（AR-08-wall-drawers と 2px 離れる）。**共存可**: 床・左ガラス・右壁・柱の小物と大面積（床の水鏡は天井と画素が重ならない）。
-- **相互参照 / 重複精査**: 別カメラの天井一面は CR-LG-01-01（CAM01・提灯と紙飾り）・CR-LG-06-02（CAM06・逆さの傘）・CR-LG-07-02（CAM07・白いシーツ）。いずれも「物を吊る」で、本件は**天井自体の灯の増殖**（吊らない・同じ丸灯が格子）で観察対象が別。CAM08 内の近縁は AR-08-light-blue-bleed・AR-08-fixture-dark-red（E02・E05 の灯の色）で、本件は E04 の形の増殖。候補 CR-03-04（CAM03・天井灯の一つが消える）は別カメラ・減る側。
-- **生成枚数の最小見積り**: 全景 3 テイク。
 
 ### AR-08-wall-drawers — 右壁と柱一面の小さな引き出し（百味箪笥）（大面積）
 
