@@ -365,24 +365,6 @@
 
 ### CAM02 — Main Corridor
 
-#### CR-NEW-02-04 — 七夕の輪つなぎ飾り
-
-- **camera / element_id**: CAM02 / CAM02-E01
-- **物と変化**: 天井の上端から色紙の輪つなぎ飾りが弧を描いて垂れる（昭和の行事の記憶。文字なし）。※設計補正: box が横長(95x40)なので「垂れる一本」を「弧を描くたるみ」に変更。右の看板から少し離すため box を10px左へ
-- **最終 box**（baseline px）: `495,0,590,40`（95x40）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `414,0,670,171`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (81,0)-(176,40)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: at the very top of the frame on the dark ceiling, one chain of interlocking paper rings (a wa-tsunagi garland of about six plain rings in saturated red, yellow, blue and green colored paper) is draped in a shallow U-shaped swag, with both ends running off the top edge of the frame, completely plain with no writing and no pattern. Make it about 1.4x larger than real scale and highly saturated. Add a faint soft shadow on the ceiling behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark ceiling panel, the round light, the red sign on the right or the dark wall edge. Place the object, including its shadow, centered at about 50% from the left and 12% from the top of the image, occupying roughly 37% of the image width and 23% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 暗い天井パネル・丸い灯・右の赤い看板・暗い壁の縁。
-- **最寄り既存 overlay と実測距離**: AR-02-smoke まで 34.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-rusty-vent 109.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / mid / medium
-- **視認性の注意**: 暗い天井では高彩度の赤と黄が効く。青・緑は暗さに沈むので少なめ。右の赤い看板に近いので、看板へ色を滲ませない。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'environment'` / `anomaly_type: 'add_object'` / `detail: '天井の上端から色紙の輪つなぎ飾りが弧を描いて垂れる（昭和の行事の記憶。文字なし）'` / `candidate_id: 'CR-NEW-02-04'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 吊り飾り系の兄弟: CR-NEW-01-04・CR05N-5・CR06N-5・AR-07-crane。
-
 #### CR-NEW-02-05 — 白黒テレビ
 
 - **camera / element_id**: CAM02 / CAM02-E09
