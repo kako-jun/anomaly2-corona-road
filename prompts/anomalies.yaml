@@ -3415,7 +3415,7 @@ anomalies:
     overlay_origin: '(0,600)'
     dimensions: '676x300'
     review_status: 'composited'
-    note: '大面積。CAM05-E13。alpha bbox 676x300=202,800 px²（画像比 33.4%）。排他（同プレイ非共存。床の小物で鶴に覆われる）: AR-05-floor-glare-backside（重なり 12,882）・AR-05-marbles-scattered（11,312）・AR-05-pet-bottle（6,318）。併存可: AR-05-brown-column（189 は bbox のみ。角柱根元 y600〜607 の 7px）。AR-05-joint-into-glass は y409〜553 で重ならず（05-01 側の排他）。折り鶴系の近縁 AR-07-crane（CAM07 天井 1 羽）・AR-01-container-origami・CR-02-21・CR-08-20 は別カメラ・別規模で併存可（型は「床一面」でここだけ）。同カメラの大面積 AR-05-curtains-open-cafe（ガラス区画）とは 64px 離れ重ならない。最近傍の非重なりは AR-05-joint-into-glass（47px）。素材は 3 テイクから切り出した 23 羽（同じ羽の反復は回転・反転・縮尺で散らした）。ゲーム画面とライブ blink での確認は未了。'
+    note: '大面積。CAM05-E13。alpha bbox 676x300=202,800 px²（画像比 33.4%）。実測: 元画像との差分 bbox は y603〜、alpha は y600〜（y600〜602 の 3 行は baseline と同一）。alpha 202,800 px のうち実際に元画像と異なる画素（RGB の最大チャンネル差が 3 超）は 143,111 px（差が 1 でもあれば 163,168 px）。排他（同プレイ非共存。床の小物で鶴に覆われる）: AR-05-floor-glare-backside（重なり 12,882）・AR-05-marbles-scattered（11,312）・AR-05-pet-bottle（6,318）。併存可: AR-05-brown-column（189 は bbox のみ。角柱根元 y600〜607 の 7px）。AR-05-joint-into-glass は y409〜553 で重ならず（05-01 側の排他）。折り鶴系の近縁 AR-07-crane（CAM07 天井 1 羽）・AR-01-container-origami・CR-02-21・CR-08-20 は別カメラ・別規模で併存可（型は「床一面」でここだけ）。同カメラの大面積 AR-05-curtains-open-cafe（ガラス区画）とは 64px 離れ重ならない。最近傍の非重なりは AR-05-joint-into-glass（47px）。素材は 3 テイクから切り出した 23 羽（同じ羽の反復は回転・反転・縮尺で散らした）。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-shutter-crayon-drawings'
     candidate_id: 'CR-LG-02-02'
     camera_id: 'CAM02'
