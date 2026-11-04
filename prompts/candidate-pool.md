@@ -1344,25 +1344,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: `AR-05-pet-bottle`・`AR-05-marbles-scattered`・`AR-05-floor-glare-backside`（床の小物で、鶴に覆われる。`AR-05-joint-into-glass` は y409〜553 で 05-02 の box と重ならず、05-01 側の排他）。折り鶴系の近縁 `AR-07-crane`（CAM07 の天井 1 羽）・`AR-01-container-origami`・CR-02-21・CR-08-20 は別カメラ・別規模で併存可（型は「床一面」でここだけ）。
 - **生成枚数の最小見積り**: 素材 3 テイク。
 
-### CR-LG-06-01 右壁一面の同じポスター（手を振る子供の後ろ姿）
-
-- **ID / camera / element_id**: CR-LG-06-01 / CAM06 / CAM06-E15
-- **面**: box 500,40,675,860（143,500 px²、23.6%）。右側の粗い壁の遠近台形。
-- **物と変化**: 右の壁一面に、**完全に同じ絵柄**（手を振る子供の後ろ姿の無地の絵、文字なし）のポスターが隙間なく縦横に並ぶ。既存の額入り掲示と扉は残す。
-- **不気味さの狙い**: 同じ絵が数百枚並ぶ説明のつかなさ。手を振って遠ざかる後ろ姿は、**4 人目のフラグ後（late）に限り**、シャッターの向こうへ行ったまま戻らない 4 人目の子供とも読める（story の未決: 4 人目の子供の記憶が異変を作るか。確定ではなく読みの一つ）。後ろ姿なので顔は無く、誰の子かも分からない。
-- **保持するもの**: 壁の粗い質感、扉、取手、額入り掲示、天井・床との境、手前の影。
-- **生成プロンプト全文**（ポスター素材を 1 枚別生成）:
-  ```
-  $imagegen Create one flat, straight-on photo of a single plain poster printed on cream paper (portrait orientation, slightly faded, one small piece of tape at each top corner), showing a simple gentle illustration of a small child seen from behind, standing in a quiet empty corridor and waving one hand, wearing a plain T-shirt and shorts, with soft muted watercolour colours and a lot of empty space around the figure. The child's face is not visible. The poster has no title, no caption, no writing, no numbers, no letters, no logos anywhere, and no border text. Even low-light surveillance-style lighting, fine film grain, a plain dark grey wall visible around the poster.
-  Output 1536x1024 (3:2). No watermark.
-  ```
-- **作り方**: ①素材 3 テイクから 1 枚を選ぶ（指は 5 本、腕は 1 本だけ上げているか目視）。②割付図: 右壁の消失点へ向かう台形に格子（手前 5 列→奥ほど細く、縦 10〜12 行）。扉・額・取手は格子から抜く（共通手順 6: quad を分けて抜く）。③遠近ワープ＋壁の粗面を multiply／displace で反映。④ポリゴン alpha で切り出す。
-- **難所と没基準**: 絵に文字が出る・子供が複数／顔が見える・腕が崩れるテイクは没。完全同一の複製なので 1 枚の品質がすべて。壁の粗面にマスクが追従しにくいので境は巾木・天井線で止める。
-- **フェーズ / 目立ち度**: late / obvious（4 人目のフラグ後）。
-- **台帳案**: category `object` / anomaly_type `duplicate` / detail 「右の壁一面に、手を振る子供の後ろ姿の同じポスターが隙間なく並ぶ」。note に「大面積。CAM06-E15。AR-06-wall-puddle と排他」を書く。
-- **排他**: **`AR-06-wall-puddle`（bbox が 35,350 px² 重なる大面積。排他。1 カメラ 1 件制で同時には出ない）**、`AR-06-wall-stripes`（壁面の模様で、ポスターに覆われる）。`AR-06-tilted-notice`（額入り掲示。**保持物**なので格子から抜き、併存可）、`AR-06-ceiling-panel-white` は天井側で併存可。`AR-06-wet-footprints` は床で併存可。CR-LG-01-02（顔写真の格子）・03-01（無地の白紙）とは型が別で、顔は出さない。
-- **生成枚数の最小見積り**: 素材 3 テイク。
-
 ### CR-LG-07-02 天井から垂れる白いシーツ
 
 - **ID / camera / element_id**: CR-LG-07-02 / CAM07 / CAM07-E01
