@@ -373,24 +373,6 @@
 
 ### CAM06 — Shop Front Row
 
-#### CR06N-5 — てるてる坊主
-
-- **camera / element_id**: CAM06 / CAM06-E01
-- **物と変化**: 天井中央左寄りから、無地(顔なし)の白いてるてる坊主が一つ吊られている
-- **最終 box**（baseline px）: `300,8,410,65`（110x57）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `227,0,483,171`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (73,8)-(183,65)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: from the gray-blue ceiling at the upper center-left, hang one plain white cloth teru-teru-bozu (a round head with a smooth cloth skirt, tied at the neck with a thin string, hanging from a short thin string), with no face drawn, no text and no pattern. Make it about 1.3x larger than real scale. Add soft gray shading on the folds of the cloth and a faint soft shadow on the ceiling behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the long fluorescent light at the right edge of the ceiling, the dark ceiling vent or the ceiling seams. Place the object, including its shadow, centered at about 50% from the left and 21% from the top of the image, occupying roughly 43% of the image width and 33% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 天井右端の長い蛍光灯・暗い天井換気口・天井の継ぎ目。
-- **最寄り既存 overlay と実測距離**: AR-06-fluorescent-tag まで 30.0px（box 基準・矩形間のユークリッド距離、次点 AR-06-ceiling-checker 33.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / late / subtle
-- **視認性の注意**: 天井は暗めの灰青で白が出る。蛍光灯の光に近い右端は白飛びに溶けるので避け、布のひだに灰色の陰影を入れて輪郭を出す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '天井中央左寄りから、無地（顔なし）の白いてるてる坊主が一つ吊られる'` / `candidate_id: 'CR06N-5'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 吊り飾り系の兄弟: CR-NEW-01-04・CR-NEW-02-04・CR05N-5。
-
 #### CR06N-6 — 黄色い雨合羽
 
 - **camera / element_id**: CAM06 / CAM06-E08
