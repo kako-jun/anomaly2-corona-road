@@ -3505,4 +3505,4 @@ anomalies:
     overlay_origin: '(392,520)'
     dimensions: '67x87'
     review_status: 'composited'
-    note: '最近傍の小物は AR-04-puddle（32.0px）、次点 AR-04-hatch-reflection-extra（31.0px。いずれも最終overlayのalpha bboxの矩形距離の実測、重なりなし）、AR-04-hatch-frame-round（53px）。大面積 AR-04-window-alley の bbox（6px）は小物のため重なってよい。仕様の box（床左寄り 250-340, 568-625）は hatch-frame-round との間が 67px しかなくロボットが入らないため、床中央寄りの (392,520) に移した（hatch-reflection-extra・puddle との間隔で決定。生成は別クロップ 330,462,586,633 で1.0倍スケールに変更）。生成直後の overlay (389,520) を (+3,0) px ずらして配置。画像の出来: 青と赤のブリキロボット、無地、ゼンマイ巻きと接地影。ゲーム画面とライブ blink での確認は未了。'
+    note: '最近傍の小物は AR-04-puddle（32.0px）、次点 AR-04-hatch-reflection-extra（31.0px。いずれも最終overlayのalpha bboxの矩形距離の実測、重なりなし）、AR-04-hatch-frame-round（53px）。大面積 AR-04-window-alley の bbox（3px）は小物のため重なってよい。仕様の box（床左寄り 250-340, 568-625）は hatch-frame-round との間が 67px しかなくロボットが入らないため、床中央寄りの (392,520) に移した（hatch-reflection-extra・puddle との間隔で決定。生成は別クロップ 330,462,586,633 で1.0倍スケールに変更）。生成直後の overlay (389,520) を (+3,0) px ずらして配置。画像の出来: 青と赤のブリキロボット、無地、ゼンマイ巻きと接地影。ゲーム画面とライブ blink での確認は未了。'
