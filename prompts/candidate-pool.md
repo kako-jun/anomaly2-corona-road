@@ -830,7 +830,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 | AR-05-aisle-goldfish | CAM05-E14 | object / add_creature | 小物 | `60,520,104,562`（44x42） | mid / medium |
 | AR-05-door-fingers | CAM05-E09 | person / add_person | 小物（CR-05-05 の昇格） | `562,230,596,330`（34x100） | mid / medium |
 | AR-05-ceiling-shirt | CAM05-E01 | object / add_object | 小物 | `243,8,303,50`（60x42） | mid / medium |
-| AR-05-floor-child-shadow | CAM05-E13 | person / reflection | 小物 | `597,598,672,752`（75x154） | late / medium |
 
 - **配置の実測**（2026-11-05、`uv run --with pyyaml python3`。台帳 CAM05 の全 overlay の `overlay_origin` / `dimensions` を矩形化し、矩形間のユークリッド距離を測った）: 小物 6 件はすべて既存の全 overlay（大面積 2 件を除く）と**30px 以上**、かつ本節の他の項とも 30px 以上離れる（各項に最寄りを書く）。box 基準なので、羽毛ぼかしで広がる分、制作後に alpha bbox で測り直す。**37px 未満の項（silhouette 33.2px・light-streak 31.0px・goldfish 30.0px〜35.0px・shirt 31.0px・floor-child-shadow 35.0px）は、制作後の再測定が特に必須**（最終 overlay の alpha bbox で測る。台帳の最終 overlay を基準に、30px 割れなら各項の指示どおり動かす）。
 - **既存の大面積との関係**: 台帳の CAM05 の大面積は `AR-05-curtains-open-cafe`（282,109,546,536、112,728 px²）と `AR-05-floor-white-cranes`（0,600,676,900、202,800 px²）の 2 件。大面積の本件 `AR-05-morning-glory-wall` は x を 280 までに止め（cafe まで 2px）、y を 598 までに止めて（cranes まで 2px）、**どちらとも box が重ならない**ことを実測した。余裕が 2px しか無いので、`cutout` の羽毛ぼかし（内向き）で外へ広がらないこと、最終 overlay の alpha bbox が cafe・cranes と重ならないことを登録時に必ず測り直す。`AR-05-floor-child-shadow`（小物）は cranes と座標が重なる（大面積の例外）が、同じ床面を覆う件どうしなので**排他**（同プレイで共存させない）。
@@ -1051,39 +1050,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 - **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '暗い天井から、小さな無地の白いシャツがハンガーで吊るされている（洗濯物。服だけ）'` / `candidate_id: 'AR-05-ceiling-shirt'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 天井から吊る既存 `AR-05-paper-streamers`（CAM05・同じ天井左寄りの白い紙の吹き流し。31px 隣で型が近い。**制作前に見比べ、実質同じ（白い紙の垂れ物）と見えたら取り下げ、シャツの袖と肩の形を強調する。距離 31px は box 基準なので、制作後に台帳の最終 overlay の alpha bbox で再測定し、30px 割れなら右へ動かす**）。なお本件の box は大面積 `AR-05-morning-glory-wall` の天井の帯に重なるので、同プレイ非共存・`AR-05-wind-chime`（CAM05・風鈴）・`AR-06-ceiling-balloons`・てるてる坊主（CAM06）。服だけの吊り物は他に無い。
 
 ---
-
-### AR-05-floor-child-shadow — 手前の床に、立つ子供の影だけ
-
-- **camera / element_id**: CAM05 / CAM05-E13
-- **物と変化**: 右手前の床のタイルに、**小さな子供が立っているような影だけ**が長く落ちている（本体はない。頭の丸みと肩、細い足の影。服・顔・手の細部は無い）。床の光が右から差している向きで、影は画面の手前左へ伸びる
-- **最終 box**（baseline px）: `597,598,672,752`（75x154）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `420,590,676,761`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (177,8)-(252,162)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark grey floor tiles at the right side of this frame, cast the long dark shadow of one small child standing upright, a simple flat shadow shape on the floor only (a rounded head, narrow shoulders and two thin legs), stretching toward the lower left of the frame across several tile joints, with NO child, NO body, NO clothing and NO other object present, only the shadow. Make the shadow about 1.3x larger than real scale and clearly darker than the surrounding floor, with a soft edge and the tile joints continuing through it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the other floor tiles, the light patches, the reflections or the objects on the floor at the upper left. Place the object, including its shadow, centered at about 84% from the left and 50% from the top of the image, occupying roughly 29% of the image width and 90% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark grey floor tiles at the right side of this frame, cast the long dark shadow of one small child standing upright with the head tilted slightly to one side and the arms hanging a little away from the body, a simple flat shadow shape on the floor only, stretching toward the lower left of the frame across several tile joints, with NO child, NO body, NO clothing and NO other object present, only the shadow. Make the shadow about 1.3x larger than real scale and clearly darker than the surrounding floor, with a soft edge and the tile joints continuing through it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the other floor tiles, the light patches, the reflections or the objects on the floor at the upper left. Place the object, including its shadow, centered at about 84% from the left and 50% from the top of the image, occupying roughly 29% of the image width and 90% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark grey floor tiles at the right side of this frame, cast the dark shadow of one small child standing with the legs a little apart, a simple flat shadow shape on the floor only (a rounded head with a bobbed outline, narrow shoulders and two thin legs), shorter and denser than a sunset shadow but still stretching toward the lower left across a few tile joints, with NO child, NO body, NO clothing and NO other object present, only the shadow. Make the shadow about 1.3x larger than real scale and clearly darker than the surrounding floor, with a soft edge and the tile joints continuing through it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the other floor tiles, the light patches, the reflections or the objects on the floor at the upper left. Place the object, including its shadow, centered at about 84% from the left and 50% from the top of the image, occupying roughly 29% of the image width and 90% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地（影の中も目地が続く）・床の光の斑・左上の既存の物。
-- **最寄り既存 overlay と実測距離**: AR-05-floor-glare-backside まで 35.0px（box 基準、次点 AR-05-beach-ball 37.0px）。本節の他の項では AR-05-door-fingers まで 268.0px。 **余裕が小さい（37px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで広がる。30px 割れたら上へ動かす）。
-- **分類 / フェーズ / 目立ち度**: person / late / medium
-- **視認性の注意**: 中間グレーの床に黒い影。影を十分に暗く（床より 2 段階暗く）、頭と肩の丸みを大きく取って人の形と分かるようにする。影が薄いと床の汚れに見えるので強める。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'person'` / `anomaly_type: 'reflection'` / `detail: '右手前の床に、立っている小さな子供の影だけが長く落ちている（本体はいない）'` / `candidate_id: 'AR-05-floor-child-shadow'`。note に「大面積 `AR-05-floor-white-cranes`（床一面）と同じ床面を覆う件どうしなので排他（同プレイで共存させない）」・最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 影・反射の既存は `AR-05-chair-reflection`（E08・椅子がガラスに映る）・`AR-05-floor-glare-backside`（E15・床反射にガラス裏側）。床に落ちる影だけ、は台帳に無い（2026-11-05 の grep）。story の 4 人目（子供）の気配に寄る（令和の異変の印付けは story.md 未決）。
-
 
 ## 追加候補 — CAM 06
 
