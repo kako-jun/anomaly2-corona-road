@@ -471,27 +471,12 @@ CAM 04（Underground Junction）の新規の画像異変 8 件（小物 7・大�
 
 | 候補ID | 対象ID | 変化 | category / anomaly_type | box (x1,y1,x2,y2) | 最寄り既存と距離（alpha bbox +2px 基準） |
 | --- | --- | --- | --- | --- | --- |
-| AR-04-shadow-behind-camera | CAM04-E15 | カメラの背後の人の影 | person / add_person | `(176,824,264,900)` | AR-04-hatch-frame-round 34.0px |
 | AR-04-glass-umbrella-reflection | CAM04-E14 | 右の黒いガラスにだけ映る傘 | surreal / reflection | `(482,402,542,486)` | AR-04-red-lantern 34.0px |
 | AR-04-wall-plaster-peel | CAM04-E14 | 漆喰壁の剥落 | environment / state_change | `(625,120,676,220)` | AR-04-red-lantern 36.1px |
 | AR-04-floor-reflection-gap | CAM04-E17 | 白い反射の中の一枚だけ映らないタイル | environment / state_change | `(256,571,344,621)` | AR-04-orange-tile 36.0px |
 | AR-04-wall-panel-fallen | CAM04-E14 | 腰壁の板が外れて倒れかかる | object / displace | `(500,520,560,605)` | AR-04-puddle 32.0px |
 | AR-04-left-edge-eyes | CAM04-E18 | 左端の暗がりに光る目 | surreal / add_creature | `(0,630,50,692)` | AR-04-randoseru-red 34.0px |
 | AR-04-floor-shoes-rows（大面積） | CAM04-E15 | 床の通路帯に整然と並ぶ無人の靴 | object / multiply | `(202,380,458,900)` = 実面積 127,515 px²（画像の 21.0%） | 大面積どうしの距離 3px・4px（window-alley / glass-fog。重ならない） |
-
-### AR-04-shadow-behind-camera — カメラの背後の人の影
-
-- **カメラ / 対象**: CAM04 / CAM04-E15（物の説明・座標はインベントリが正本）
-- **物と変化**: 手前の床の下端に、カメラの真後ろに誰かが立っているかのような、頭と肩の長い影だけが画面の下から伸びて落ちる（人は写らない。影のみ）。影だけ。人体・顔・手足は描かない。床タイルの目地と反射は保つ。
-- **box (x1,y1,x2,y2)**: `(176,824,264,900)`（88x76。画面下端に接する）。
-- **最寄り既存 overlay と実測距離**: AR-04-hatch-frame-round 34.0px、次点 AR-04-earbud-single 35.0px（台帳 overlay の alpha bbox を各辺 +2px した矩形との距離・2026-11-05 実測）。
-- **6倍クロップ**: `(92,729)–(348,900)`（256x171 を 1536x1024 へ拡大。影は crop 内 x 504〜1032 / y 570〜1024（画面下端から立ち上がる））。
-- **生成プロンプト（3 テイク）**: 3 テイクは表現を振った別案。目視で選ぶ。
-  - テイク1: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). On the floor at the very bottom of this frame (x 504-1032, y 570-1024), add a dark soft shadow of a person's head and shoulders, as if someone is standing right behind the camera and the shadow falls forward onto the floor tiles, running off the bottom edge of the frame. Only the shadow is visible; no person, no face, no limbs. The shadow is elongated along the floor perspective, soft-edged, about 60 percent darker than the tiles, and follows the tile joints naturally. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). At the bottom of the frame on the grey floor tiles (x 504-1032, y 570-1024), add the long soft shadow of a standing person cast forward from behind the camera: a rounded head shape on a broad shoulder shape, widening toward the bottom edge. Shadow only, no body, no face. Dark blue-black, soft penumbra, tile joints still visible through it. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). Cast onto the floor at the lower middle of this frame (x 504-1032, y 570-1024) the shadow of a person with slightly bowed head standing just behind the viewpoint, extending upward from the bottom edge of the frame. Only a flat dark head-and-shoulders shadow; absolutely no person, no face, no details. Keep the white floor reflection to its right unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**: `id: AR-04-shadow-behind-camera` / `element_id: CAM04-E15` / `category: person` / `anomaly_type: add_person` / `location: 'CAM04-E15 の周辺（手前左の床の下端）、差分左上 (176,824) px'` / `detail: '手前の床の下端に、カメラの背後に立つ人の頭と肩の影だけが落ちる(人は写らない)'` / `phase: late` / `subtlety: 'medium'` / `candidate_id: 'AR-04-shadow-behind-camera'` / `note: 最近傍の既存 AR-04-hatch-frame-round 34px / AR-04-earbud-single 35px（alpha bbox +2px 基準）。影のみで人は描かない。AR-04-floor-shoes-rows（大面積）の床と box が重なるため同プレイで共存させない。要つまみ調整ではなく標準でも見える暗さに作る。`
-- **相互参照・重複精査**（制作スキル「追加前の類似チェック」。台帳と candidate-pool を CAM04 だけでなく全カメラで照合）: 既存の床の人影系（CAM02 床の足跡・CAM06 濡れた足跡）は「通った跡」で、本案は「今そこにいる者の影」。CR-04-11 とは見え方が違う（反射か床の影か）。stock 表の「shadow appears」の CAM04 具体化。
 
 ### AR-04-glass-umbrella-reflection — 右の黒いガラスにだけ映る傘
 
