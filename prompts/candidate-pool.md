@@ -361,40 +361,23 @@ CAM02（Main Corridor）の画像異変 8 件（小物 7 件・大面積 1 件�
 
 ### 大面積（3:2 の窓）
 
-#### AR-02-ceiling-starry-sky — 天井一面の暗い青灰が、一面の星空に変わる（大面積）
 
-- **camera / element_id**: CAM02 / CAM02-E01（天井面）
-- **物と変化**: 天井一面の暗い青灰の天井板が、細かな星が散る夜空に変わる。蛍光灯・丸型設備・小さな丸灯・カメラ・吊り器具はそのまま残り、天井と壁・シャッター・看板の境も動かさない（昭和の子供の記憶。文字なし・星座線なし）。
-- **面（box と実面積）**: box `0,0,600,162`（600x162 = 97,200 px²。画像 676x900 = 608,400 px² の 1/8 = 76,050 px² 以上、約16.0%）。天井は台形で box より実面積が小さいため、ポリゴン `(0,0) (600,0) (600,25) (575,50) (500,100) (415,122) (410,135) (340,162) (275,162) (220,155) (170,140) (0,45)` を cam2.webp に重ねて天井の縁（左はシャッター上端・右は暗い壁と赤い看板・下は吊り器具の下端）に沿うことを目視し、**ポリゴンの実面積 69,865 px²（画像の約11.5%）、外接矩形 x0〜600・y0〜162（= 97,200 px²）**を実測した。登録時は貼り込み後の alpha bbox を再計測し、**bbox が約 90,000 px² を割ったら登録せず、面を作り直す**（実面積は台形なので 90,000 を割ってもこの値より小さくはならない）。
-- **大面積どうしの重なり**（2026-11-05 実測）: AR-02-floor-footprints（0,338,676x562）とは y 方向に 176px 離れる。AR-02-shutter-crayon-drawings（0,57,165x541）とは外接矩形が x0〜164・y57〜162 で重なるが、面が別（シャッター面と天井）で、台帳 webp の alpha 画素とこのポリゴンの重なりは **0 px**（左下の縁をシャッター上端に沿った `(0,45)-(170,140)` に置いた場合）。矩形さえ重ねたくない場合は面を x165 以降に絞るしかなく、それでは約 70,000 px² で足りないため、面の別と画素の重なり 0 を根拠にこの形で置く。
-- **排他**: 天井面そのものを変えるので、同じ面の異変とは同プレイで共存させない。AR-02-fluorescent-half-off（蛍光灯の一区画が消灯。星空の下で灯の状態が食い違う）・AR-02-tanabata-paper-chain・AR-02-rusty-vent（天井の吊り飾りと丸型設備）・AR-02-smoke（右上へ重なる）・AR-02-pillar-sign-gone（柱上方の box が天井の下端と重なる）・CR-02-19・CR-02-28（天井板の変化。E01）・CR-02-20（丸い設備の形。E03）・CR-02-21・CR-02-31（吊り器具の変化。E05）。
-- **3:2 の窓**（共通手順の正本は過去の制作仕様節 = git 履歴 253db1d の「3:2 の窓と元画像への復元」）: `composite-polygon.py crop --base public/images/cam2.webp --crop 0,0,676,450 --out <PNG>`（box の高さ 162 は 450 以下なので窓 1 枚。box は窓の上端に接するが、画像の上端なので余裕は不要）。復元は `restore --crop 0,0,676,450`。
-- **作り方**: 窓を 1 回編集して天井だけを星空にし、**`cutout --polygon` で上のポリゴンの内側だけを貼り込む**（ポリゴン外の alpha は厳密に 0。器具の位置が窓の編集でずれたテイクは没）。星は小さな点の集まりなので、顔崩れ・文字風の模様の心配は小さい。素材の別生成と `tile` は使わない。
-- **生成プロンプト（窓の 3 テイク。テイクごとに星の密度と描き方だけを変えてある）**:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 3:2 window (1536x1024) cut from a low-fi surveillance camera photo. Keep exactly the same framing, zoom, perspective and aspect ratio: do not recompose, re-crop, rotate or zoom. Keep the low-fi CCTV look, film grain, compression artifacts, lighting, color grade and every wall, pillar, shutter, sign and floor exactly unchanged. Make ONLY this single change: the whole dark blue-grey ceiling surface of the corridor, from the near edge to the far end, turns into a clear night sky full of small white stars, as if the ceiling panels had opened to the sky. Dense fine stars of varied brightness, a faint pale band of the Milky Way running along the length of the corridor in the ceiling's perspective, deep navy-black sky tone. No ceiling panel seams remain on the sky. The fluorescent tube, the round vent, the small round ceiling lights, the camera and the hanging fixtures stay exactly as they are, in the same places and still lit, and the edges where the ceiling meets the walls, shutters and signs stay exactly where they are. Do not touch the floor, the shutters, the pillar, the standing sign, the walls or anything below the ceiling line. Completely plain and unmarked: no text, letters, numbers, logos or constellation lines anywhere. Do not add anything else. Output 3:2 1536x1024. Keep the camera angle exactly as the source. Match the original look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 3:2 window (1536x1024) cut from a low-fi surveillance camera photo. Keep exactly the same framing, zoom, perspective and aspect ratio: do not recompose, re-crop, rotate or zoom. Keep the low-fi CCTV look, film grain, compression artifacts, lighting, color grade and every wall, pillar, shutter, sign and floor exactly unchanged. Make ONLY this single change: the whole dark blue-grey ceiling surface of the corridor, from the near edge to the far end, turns into a calm clear night sky with fewer, larger stars: about forty soft white stars of clearly different sizes scattered evenly over a flat deep midnight-blue sky, each with a small gentle glint. No Milky Way, no moon, no clouds. No ceiling panel seams remain on the sky. The fluorescent tube, the round vent, the small round ceiling lights, the camera and the hanging fixtures stay exactly as they are, in the same places and still lit, and the edges where the ceiling meets the walls, shutters and signs stay exactly where they are. Do not touch the floor, the shutters, the pillar, the standing sign, the walls or anything below the ceiling line. Completely plain and unmarked: no text, letters, numbers, logos or constellation lines anywhere. Do not add anything else. Output 3:2 1536x1024. Keep the camera angle exactly as the source. Match the original look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 3:2 window (1536x1024) cut from a low-fi surveillance camera photo. Keep exactly the same framing, zoom, perspective and aspect ratio: do not recompose, re-crop, rotate or zoom. Keep the low-fi CCTV look, film grain, compression artifacts, lighting, color grade and every wall, pillar, shutter, sign and floor exactly unchanged. Make ONLY this single change: the whole dark blue-grey ceiling surface of the corridor, from the near edge to the far end, turns into a vast starry night sky: many small stars tinted faintly pale cyan to match the cold colour grading, a few brighter stars with soft cross-shaped glints, and a slightly lighter indigo glow toward the far end of the corridor. No moon, no clouds, no ceiling panel seams on the sky. The fluorescent tube, the round vent, the small round ceiling lights, the camera and the hanging fixtures stay exactly as they are, in the same places and still lit, and the edges where the ceiling meets the walls, shutters and signs stay exactly where they are. Do not touch the floor, the shutters, the pillar, the standing sign, the walls or anything below the ceiling line. Completely plain and unmarked: no text, letters, numbers, logos or constellation lines anywhere. Do not add anything else. Output 3:2 1536x1024. Keep the camera angle exactly as the source. Match the original look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
   ```
 
-- **保持するもの**: 蛍光灯・丸型設備・小さな丸灯・カメラ・吊り器具・柱・シャッター・看板・壁・床のすべて。天井の下（y>162）には何も足さない。
-- **分類 / フェーズ / 目立ち度**: surreal / late / obvious（anomaly_type: state_change）。大面積。
-- **視認性の注意**: 暗い青灰色の天井が濃紺と白い星に変わり、面積が大きいので差分は出る。器具（特に左上の白い蛍光灯）を残すため、ポリゴン内でも差分が一様にならない。星空が暗すぎて元の天井と見分けにくいテイクは、星を明るく増やす方向で選ぶ。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: 同カメラの天井の変化は小物のみ（折り鶴・点検板・設備の形・板の木目・染み）で、天井一面の別の物に置き換わる異変は無い。台帳の大面積の天井の吊り飾り（AR-01-ceiling-lanterns・AR-06-ceiling-umbrellas・AR-07-ceiling-white-sheets）は「天井から物が垂れる」型で、これは天井面そのものが別の景色になる型で、足す物が無い。AR-06-teru-teru-bozu（CAM06）とは物が別。
-- **台帳登録案**: `id: 'AR-02-ceiling-starry-sky'` / `element_id: 'CAM02-E01'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM02-E01 の天井一面、差分左上 (0,0) px'` / `detail: '天井一面の暗い青灰の天井板が、一面の星空に変わる'` / `phase: late` / `subtlety: 'obvious'` / `candidate_id: 'AR-02-ceiling-starry-sky'`。note の先頭に「大面積」と書き、ポリゴン実面積と alpha bbox、排他の相手（上記）と、登録前に出し直した同カメラの box 重なり表を貼る。
 
 ## 追加候補 — CAM 03
 

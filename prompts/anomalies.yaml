@@ -185,7 +185,7 @@ anomalies:
     overlay_origin: '(489,74)'
     dimensions: '116x247'
     review_status: 'composited'
-    note: '静止画のみ、煙の動きは未実装'
+    note: '静止画のみ、煙の動きは未実装 排他: AR-02-ceiling-starry-sky（天井一面の大面積。同プレイで共存させない）。'
   - id: 'AR-02-square-pot'
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
@@ -1255,7 +1255,7 @@ anomalies:
     overlay_origin: "(256,43)"
     dimensions: "130x38"
     review_status: "composited"
-    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。"
+    note: "再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 排他: AR-02-ceiling-starry-sky（天井一面の大面積。同プレイで共存させない）。"
   - id: "AR-02-wrapping-paper"
     candidate_id: "CR-02-32"
     camera_id: "CAM02"
@@ -3469,7 +3469,7 @@ anomalies:
     overlay_origin: '(0,57)'
     dimensions: '165x541'
     review_status: 'composited'
-    note: '大面積（bbox 165x541=89,265px²、画像の14.7%）。CAM02-E07。排他（同プレイで共存させない。同じ店先の面を覆う）: AR-02-shop-reopens (41,250) / AR-02-open-sign (8,064) / AR-02-newspaper (6,298) / AR-02-cat (6,305) / AR-02-wrapping-paper (1,026)。併存可（床。画用紙はシャッター下端の接地線で止める）: AR-02-puddle (16,874) / AR-02-cigarette (2,294) / AR-02-receipt (2,420) / AR-02-tile (896) / AR-02-tile-color (1,118)（重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-02-01（床一面の足跡）とは bbox が重なるが面は別（床とシャッター）。画用紙は縦枠の線上にも貼らず、枠で止めた。画像の出来: 1 枚の絵の複製（人型 4・赤い家・太陽）。ゲーム画面とライブ blink での確認は未了。同カメラの大面積 CR-LG-02-01（AR-02-floor-footprints）とは bbox が重なる（165x260）が面は床とシャッターで別。alpha 重なりは 267 px² と小さく、併存可。画像の調整: 画用紙は彩度を落として黄ばませ、シャッターの明暗に合わせて暗くした。人型の顔は黒く塗りつぶし、数枚の紙に欠け（シャッターが覗く穴）と剥がれの縁を足した。'
+    note: '大面積（bbox 165x541=89,265px²、画像の14.7%）。CAM02-E07。排他（同プレイで共存させない。同じ店先の面を覆う）: AR-02-shop-reopens (41,250) / AR-02-open-sign (8,064) / AR-02-newspaper (6,298) / AR-02-cat (6,305) / AR-02-wrapping-paper (1,026)。併存可（床。画用紙はシャッター下端の接地線で止める）: AR-02-puddle (16,874) / AR-02-cigarette (2,294) / AR-02-receipt (2,420) / AR-02-tile (896) / AR-02-tile-color (1,118)（重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-02-01（床一面の足跡）とは bbox が重なるが面は別（床とシャッター）。画用紙は縦枠の線上にも貼らず、枠で止めた。排他（同プレイで共存させない。同カメラの大面積どうしで外接矩形が x0〜164・y57〜162 で重なるため。画素の重なりは 0）: AR-02-ceiling-starry-sky（天井一面の大面積）。画像の出来: 1 枚の絵の複製（人型 4・赤い家・太陽）。ゲーム画面とライブ blink での確認は未了。同カメラの大面積 CR-LG-02-01（AR-02-floor-footprints）とは bbox が重なる（165x260）が面は床とシャッターで別。alpha 重なりは 267 px² と小さく、併存可。画像の調整: 画用紙は彩度を落として黄ばませ、シャッターの明暗に合わせて暗くした。人型の顔は黒く塗りつぶし、数枚の紙に欠け（シャッターが覗く穴）と剥がれの縁を足した。'
   - id: "AR-01-bunting-flags"
     candidate_id: "CR-NEW-01-04"
     camera_id: "CAM01"
@@ -3667,7 +3667,7 @@ anomalies:
     overlay_origin: "(479,0)"
     dimensions: "122x41"
     review_status: 'composited'
-    note: "最寄りの既存は AR-02-smoke（33px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。吊り飾り系の兄弟 CR-NEW-01-04（万国旗・CAM01）・CR05N-5・CR06N-5・AR-07-crane は別カメラ・別物。 輪つなぎは生成位置から約8px上へ寄せた（両端はもともと上端の外へ出る構図。そのままだと下端が AR-02-smoke に23pxまで近づくため）。最終 box (484,0,598,40)。 ゲーム画面とライブ blink での確認は未了。"
+    note: "最寄りの既存は AR-02-smoke（33px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。吊り飾り系の兄弟 CR-NEW-01-04（万国旗・CAM01）・CR05N-5・CR06N-5・AR-07-crane は別カメラ・別物。 輪つなぎは生成位置から約8px上へ寄せた（両端はもともと上端の外へ出る構図。そのままだと下端が AR-02-smoke に23pxまで近づくため）。最終 box (484,0,598,40)。 ゲーム画面とライブ blink での確認は未了。 排他: AR-02-ceiling-starry-sky（天井一面の大面積。同プレイで共存させない）。"
   - id: "AR-02-bw-television"
     candidate_id: "CR-NEW-02-05"
     camera_id: "CAM02"
@@ -4404,3 +4404,22 @@ The door has no handle plate, no sign, no sticker, no paper, no curtain, no shop
     dimensions: '62x52'
     review_status: 'composited'
     note: '最近傍の既存の小物は AR-02-smartphone-facedown（33.0px）・AR-02-stool（49.0px）・AR-02-navy-handy-fan（64.0px）（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同時に作った AR-02-hatch-ajar（bbox 332,523,385,582）とは 32px。大面積の AR-02-floor-footprints とは bbox が重なる（小物との重なりは基準で許容）。テイク A（細い同心円の波紋）を採用。生成された波紋（90x74）だと AR-02-smartphone-facedown に 21px、AR-02-hatch-ajar に 17px まで寄ったため、0.64 倍（62x52）に縮めて原点 (345,614) へ置き直した。波紋の外は濡れた表現にしていない。AR-02-puddle とは排他（水が出る系。同プレイで共存させない）。 ゲーム画面とライブ blink での確認は未了。'
+  - id: 'AR-02-ceiling-starry-sky'
+    candidate_id: 'AR-02-ceiling-starry-sky'
+    camera_id: 'CAM02'
+    element_id: 'CAM02-E01'
+    base_photo: 'public/images/cam2.webp'
+    category: 'surreal'
+    anomaly_type: 'state_change'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(0,0)–(888,180)'
+    location: 'CAM02-E01 の天井一面、差分左上 (0,0) px'
+    detail: '天井一面の暗い青灰の天井板が、一面の星空に変わる'
+    generation_prompt: 'Method: the 3:2 window (0,0)-(676,450) of cam2 (1536x1024) was edited with $imagegen (3 takes, take A chosen: dense stars with a faint Milky Way; fixtures kept), pasted back with composite-polygon.py restore, then cut out with composite-polygon.py cutout using the ceiling polygon (0,0) (600,0) (600,25) (575,50) (500,100) (415,122) (410,135) (340,162) (275,162) (220,155) (170,140) (0,45), feather 2. Prompt: Edit the attached image, which is a 3:2 window (1536x1024) cut from a low-fi surveillance camera photo. Keep exactly the same framing, zoom, perspective and aspect ratio: do not recompose, re-crop, rotate or zoom. Keep the low-fi CCTV look, film grain, compression artifacts, lighting, color grade and every wall, pillar, shutter, sign and floor exactly unchanged. Make ONLY this single change: the whole dark blue-grey ceiling surface of the corridor, from the near edge to the far end, turns into a clear night sky full of small white stars, as if the ceiling panels had opened to the sky. Dense fine stars of varied brightness, a faint pale band of the Milky Way running along the length of the corridor in the ceiling''s perspective, deep navy-black sky tone. No ceiling panel seams remain on the sky. The fluorescent tube, the round vent, the small round ceiling lights, the camera and the hanging fixtures stay exactly as they are, in the same places and still lit, and the edges where the ceiling meets the walls, shutters and signs stay exactly where they are. Do not touch the floor, the shutters, the pillar, the standing sign, the walls or anything below the ceiling line. Completely plain and unmarked: no text, letters, numbers, logos or constellation lines anywhere. Do not add anything else. Output 3:2 1536x1024. Keep the camera angle exactly as the source. Match the original look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
+'
+    overlay: 'assets/anomaly-overlays/cam02/ceiling-starry-sky.webp'
+    overlay_origin: '(0,0)'
+    dimensions: '600x162'
+    review_status: 'composited'
+    note: '大面積。CAM02-E01（天井面）。ポリゴン実面積 69,506 px²（画像の 11.4%）、alpha bbox 600x162=97,200 px²（画像比 16.0%）で 90,000 px² 以上。同カメラの大面積 AR-02-floor-footprints（y338 以降）とは 176px 離れる。AR-02-shutter-crayon-drawings（左シャッター面）とは外接矩形が x0〜164・y57〜162 で重なる（画素の重なりは 0。ただし同カメラの大面積どうしは排他明記なき限り重ねない基準に従い、排他にした）。排他（天井面そのものを変えるため同プレイ非共存）: AR-02-shutter-crayon-drawings・AR-02-fluorescent-half-off・AR-02-tanabata-paper-chain・AR-02-rusty-vent・AR-02-smoke・AR-02-pillar-sign-gone・CR-02-19・CR-02-28・CR-02-20・CR-02-21・CR-02-31。生成は器具（蛍光灯・丸型設備・丸灯・カメラ・吊り器具）をそのまま残した。ゲーム画面とライブ blink での確認は未了。'
