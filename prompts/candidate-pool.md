@@ -773,24 +773,6 @@
 - **視認性の注意**: 暗い床に赤で強く出る。箱が60x60と小さいので1.2倍にし、ハイライトと影を強める。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左手前の暗い床に、無地の赤いゴムまりが一つ置かれる'` / `candidate_id: 'AR-08-n3'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: **同モチーフ: AR-01-red-rubber-ball（CAM01・最前景右寄りの赤いゴムまり）。** 反復シリーズ（別カメラ）として扱い、制作前に見比べる。丸い玩具系: CR05N-1（ビーチボール）。
 
-#### AR-08-n5 — 段ボール箱
-
-- **camera / element_id**: CAM08 / CAM08-E16
-- **物と変化**: 右手前の床に、無地の小さな段ボール箱が一つ置かれる（伝票・ロゴなし）
-- **最終 box**（baseline px）: `400,735,560,885`（160x150）。`composite-anomaly.py --box` にはこの値を渡す
-- **5倍クロップ**（baseline px）: `326,695,633,900`（307x205。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (74,40)-(234,190)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 5x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the gray floor tiles at the lower right foreground, place one small plain brown corrugated cardboard box, closed and sealed with plain brown tape, completely plain with no shipping label, no printed text, no logo and no arrows. Keep it near real scale (the box is already large). Give it a strong large dark contact shadow on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark wall base and the glowing panel on the right, the tile joints or the floor grain. Place the object, including its shadow, centered at about 50% from the left and 56% from the top of the image, occupying roughly 52% of the image width and 73% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 右の暗い壁際と光るパネル・タイル目地・床の粒状感。
-- **最寄り既存 overlay と実測距離**: AR-08-floor-ramune-marbles まで 41.0px（box 基準・矩形間のユークリッド距離、次点 AR-08-floor-reflection-two-tier 50.0px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / late / obvious
-- **視認性の注意**: 大きく暗い影が出る。茶色い箱は灰色の床に中程度の対比、上面を明るく、側面を暗くして立体感を出す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '右手前の床に、無地の小さな段ボール箱が一つ置かれる（伝票・ロゴなし）'` / `candidate_id: 'AR-08-n5'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### AR-08-n6 — 紙の角凧
 
 - **camera / element_id**: CAM08 / CAM08-E01
