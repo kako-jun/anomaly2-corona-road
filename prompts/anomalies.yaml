@@ -4440,4 +4440,4 @@ The door has no handle plate, no sign, no sticker, no paper, no curtain, no shop
     overlay_origin: '(620,288)'
     dimensions: '54x59'
     review_status: 'composited'
-    note: '小物。CAM06-E15。alpha bbox 54x59（--dilate 0 --feather 1。box 全体を使う warn は想定内で、ヤモリ本体の尾の先が box の左縁で薄く切れる）。最近傍の非大面積 overlay は AR-06-tilted-notice まで 49.0px、次点 AR-06-blue-pinwheel 51.0px（alpha bbox 基準の実測）。大面積 AR-06-wall-same-poster とは座標が重なるが大面積は小物と重なってよい例外（同じ右壁なので同プレイ非共存が望ましい）。仕様の位置から動かしていない。3 テイク中 2（壁を横に這う姿で box に収まる）を採用（テイク 1・3 は縦に長く box をはみ出す）。文字なし。相互参照: 壁面の小動物は台帳に無い。'
+    note: '小物。CAM06-E15。alpha bbox 54x59（--dilate 0 --feather 1。box 全体を使う warn は想定内で、ヤモリ本体の尾の先が box の左縁で薄く切れる）。最近傍の非大面積 overlay は AR-06-tilted-notice まで 49.0px、次点 AR-06-blue-pinwheel 51.0px（alpha bbox 基準の実測）。大面積 AR-06-wall-same-poster とは座標が重なるが大面積は小物と重なってよい例外（同じ右壁なので同プレイ非共存が望ましい）。仕様の位置から動かしていない。3 テイク中 2（壁を横に這う姿で box に収まる）を採用（テイク 1・3 は縦に長く box をはみ出す）。文字なし。相互参照: 壁面の小動物は台帳に無い。後処理（レビュー指摘）: 尾の先が overlay 左縁で垂直に切れていたため、左縁 11px を羽毛状にフェードさせて尾が壁に溶けるように終わる形にした（alpha 範囲は 52x59。overlay の寸法は 54x59 のまま）。残る欠点: 尾が元より少し短く見える。'
