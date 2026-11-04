@@ -619,7 +619,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
 
 | ID | タイプ | カテゴリ | 規模 | 変化 |
 | --- | --- | --- | --- | --- |
-| AR-06-wall-gecko | add_creature | object | 小物 | 右の粗い壁にヤモリが一匹張り付く |
 | AR-06-tile-sky | surreal | surreal | 小物 | 床タイル1枚が抜けて青空が見える |
 | AR-06-leaf-shadows-aligned | state_change | object | 小物 | 前景左下の床の植物の影が、全部同じ一方向へ平行に揃う |
 | AR-06-wall-height-marks | add_object | object | 小物 | 右壁に子供の背比べのような色鉛筆の横線が刻まれる |
@@ -634,39 +633,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
   4. 最終 overlay の alpha bbox で既存との距離を測り直す。台帳へ登録し `check-visibility.py` を通す。通らなければ強めて作り直すか、この節へ戻す。
   5. 登録・コミットしたら `experiments/` 配下の作業物を即削除する。
 - **大面積の手順**: 後述の AR-06-floor-tile-rotated を参照（`scripts/composite-polygon.py` の `crop` → imagegen → `restore` → `cutout`）。
-
-### AR-06-wall-gecko — 右壁に張り付くヤモリ
-
-- **camera / element_id**: CAM06 / CAM06-E15
-- **物と変化**: 右の粗い壁に、淡い灰茶色のヤモリが一匹、壁を這うように張り付く（小さな爬虫類。無地の模様）
-- **最終 box**（baseline px）: `622,290,672,345`（50x55）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,232,675,403`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (203,58)-(253,113)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  テイク1:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the rough gray wall at the right edge of the frame, place one pale grey-brown house gecko clinging flat to the wall, head pointing diagonally up, all four splayed toes and the tail visible. Make it about 2x larger than real scale so that it reads clearly, with a short soft dark contact shadow under its body on the textured wall. Plain skin, no pattern or markings. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the framed notice on the wall, the pinwheel or the rough wall texture elsewhere. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク2:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: a single Japanese house gecko (yamori) with a beige-grey body and splayed fingers is crawling horizontally across the rough wall at the right edge of the frame, tail curling slightly. About 2x the natural size, with a clear dark outline against the lighter wall texture and a thin cast shadow below it. No pattern, no markings. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the framed notice on the wall, the pinwheel or the rough wall texture elsewhere. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク3:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: one gecko with a light brownish-grey body rests on the coarse wall surface at the right edge, body slightly twisted, head turned toward the camera, toes spread. About 2x bigger than real life, strong contrast against the wall and a defined dark shadow beneath it. Plain, unmarked skin. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the framed notice on the wall, the pinwheel or the rough wall texture elsewhere. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe dark door and its frame, the framed notice on the wall, the pinwheel or the rough wall texture elsewhere（英語プロンプトの Do not touch に同じ）。
-- **最寄り既存 overlay と実測距離**: AR-06-tilted-notice まで 51.0px（box 基準・矩形間のユークリッド距離。次点: AR-06-blue-pinwheel 53.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 壁の粗いテクスチャに紛れやすいので、実寸の2倍大・暗い輪郭・短く濃い影で。色は壁より少し暗い灰茶。 登録後に `uv run scripts/check-visibility.py --id AR-06-wall-gecko` を必ず通す。
-- **台帳登録案**: `id: 'AR-06-wall-gecko'` / `element_id: 'CAM06-E15'` / `category: 'object'` / `anomaly_type: 'add_creature'` / `location: 'CAM06-E15 の周辺、差分左上 (622,290) px'` / `detail: '右の粗い壁に、灰茶色のヤモリが一匹張り付く'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-06-wall-gecko'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く（壁面の小動物。物の置き物と区別）。
-- **相互参照 / 重複精査**: CAM06 の AR-06-blue-pinwheel（壁に貼る小物）とは別物。生き物の案は既存の猫・鳥系（CR-06-25/26 は猫）と種が違う。他カメラの生き物（猫・鳥など）と見比べ、ヤモリは台帳に未登録（2026-11 時点で grep 済み）。
 
 ### AR-06-tile-sky — 床タイルが抜けて青空が見える
 
