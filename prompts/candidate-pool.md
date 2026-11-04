@@ -136,22 +136,22 @@
 
 ## 制作仕様（未制作）— CAM 01
 
-CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕様**（#47。台帳 240 件→目標約 300 件の偏り是正）。台帳は `object` / `add_object` に偏る（add_object 105・object 137）ため、今回は **add_object と color_shift を 0 件**にし、surreal / multiply / state_change / displace / reflection / add_person / add_creature で組んだ。画像はまだ生成していない。採用して制作に進む時は、この節の該当項を**削除**して `anomalies.yaml` へ一度だけ登録する（二重に残さない）。手順・座標・合成の正本は制作スキル（`.agents/skills/corona-road-anomaly/SKILL.md`）と [`README.md`](./README.md) の「配置の基準」。物の説明・座標の正本は [`camera-element-inventory.md`](./camera-element-inventory.md)。画像は 675x900。
+CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕様**（#47。台帳 240 件→目標約 300 件の偏り是正）。台帳は `object` / `add_object` に偏る（add_object 105・object 137）ため、今回は **add_object と color_shift を 0 件**にし、surreal / multiply / state_change / displace / add_person / add_creature で組んだ。画像はまだ生成していない。採用して制作に進む時は、この節の該当項を**削除**して `anomalies.yaml` へ一度だけ登録する（二重に残さない）。手順・座標・合成の正本は制作スキル（`.agents/skills/corona-road-anomaly/SKILL.md`）と [`README.md`](./README.md) の「配置の基準」。物の説明・座標の正本は [`camera-element-inventory.md`](./camera-element-inventory.md)。画像は 675x900。
 
 | ID | 種別 | category / anomaly_type | 面・位置 | 概要 |
 | --- | --- | --- | --- | --- |
 | AR-01-floor-crosswalk | 大面積 | surreal / surreal | 手前の床一面 (0,705,675,900) | 床一面に横断歩道の白線が敷かれる |
-| AR-01-right-wall-lattice-doors | 大面積 | surreal / multiply | 右の店先の壁一面 (422,228,675,700) | 同じ木格子戸が壁一面に隙間なく連なる |
+| AR-01-right-wall-lattice-doors | 大面積 | surreal / multiply | 右の店先の壁一面 (422,225,675,668) | 同じ木格子戸が、奥へ向かって1枚ずつ大きくなりながら連なる |
 | AR-01-ceiling-lamp-off | 小物 | environment / state_change | 左天井 (60,168,128,222) | 左の丸い埋め込み灯が消えて黒い円になる |
 | AR-01-ceiling-tile-drop | 小物 | object / displace | 右上天井 (405,122,479,198) | 天井板が一枚、片側だけ外れて垂れ下がる |
 | AR-01-ceiling-wet-stain | 小物 | environment / state_change | 中央天井 (290,212,370,248) | 天井に濡れた丸い染みが広がり水滴が垂れかける |
-| AR-01-shadow-behind-camera | 小物 | person / reflection | 手前左の床 (0,866,175,900) | 画面外（カメラ側）に立つ人の影だけが床に伸びる |
+| AR-01-floor-light-orphan | 小物 | surreal / state_change | 手前左の床 (2,832,92,898) | 光源のない場所に、床の光だまりがもう一つ落ちる |
 | AR-01-crouching-silhouette | 小物 | person / add_person | 奥の床 (385,484,440,538) | 奥の床にうずくまる黒い人影が一つ |
 | AR-01-threshold-pigeon | 小物 | object / add_creature | 右の敷居 (575,598,675,655) | 右の店先の敷居に白い鳩が一羽とまる |
 
-- **方針の充足**: (a) add_object / color_shift は 0 件。8 件のうち surreal・multiply・state_change×2・displace・add_person・add_creature の 7 件が指定の型で、残る 1 件は reflection（影の異常）。(b) 大面積は床一面と右壁一面の 2 件。(d) 人・生き物は影・遠景のシルエット・小さな鳥だけで、顔・肌・指・服は描かない。(e) 文字・数字・ロゴ・実在名は出さない。
+- **方針の充足**: (a) add_object / color_shift は 0 件。8 件は surreal・multiply・state_change×3・displace・add_person・add_creature のすべて指定の型（reflection は使わない）。(b) 大面積は床一面と右壁一面の 2 件。(d) 人・生き物は遠景のシルエット・小さな鳥だけで、顔・肌・指・服は描かない。(e) 文字・数字・ロゴ・実在名は出さない。
 - **台帳の現況**（2026-11-05、`prompts/anomalies.yaml`）: CAM01 は 31 件で、うち大面積は `AR-01-wall-faces`（origin (0,216)・202x484 = 左壁）と `AR-01-ceiling-lanterns`（origin (217,0)・458x380 = 天井）の 2 件。残る広い面は**床**と**右の店先の壁**で、本節の大面積 2 件がそれ。
-- **配置の実測**: 小物 6 件の box は、台帳の CAM01 の**小物 29 件**（大面積 2 件を除く）の alpha bbox と、本節の他の小物の box から、**矩形間距離 30px 以上**を `uv run --with pyyaml python3` で実測した（各項に最寄りと距離）。余裕が 36px 未満の項は、制作後の最終 alpha bbox で測り直す（羽毛ぼかしで広がる）。大面積は小物と重なってよい（README の例外）。大面積 2 件どうし、および既存の大面積 2 件とは box が重ならない: 床 y705〜900／右壁 y228〜700／左壁 x0〜202（y216〜700）／天井 y0〜380。右壁（x422〜675, y228〜380）と天井の bbox は重なるが別の面で、下の「排他」に書いて同プレイで共存させない。
+- **配置の実測**: 小物 6 件の box は、台帳の CAM01 の**小物 29 件**（大面積 2 件を除く）の alpha bbox と、本節の他の小物の box から、**矩形間距離 30px 以上**を `uv run --with pyyaml --with numpy --with pillow python3` で実測した（各項に最寄りと距離。台帳の各 overlay は `overlay_origin` + overlay の alpha>0 の bbox で測った。2026-11-05）。余裕が 36px 未満の項は、制作後の最終 alpha bbox で測り直す（羽毛ぼかしで広がる）。特に天井の小物 3 件（lamp-off・tile-drop・wet-stain）は、どれも既存の天井の物と 32.0px しか空いていない（互いは 37.7px 以上）ので、制作後の再測定を必須とする。30.0px ちょうどになったら数 px 動かす。大面積は小物と重なってよい（README の例外）。大面積 2 件どうし、および既存の大面積 2 件とは box が重ならない: 床 y705〜900／右壁 y225〜668／左壁 x0〜202（y216〜700）／天井 y0〜380。右壁（x422〜675, y225〜380）と天井の bbox は重なるが別の面で、下の「排他」に書いて同プレイで共存させない。
 - **共通手順**（小物。スキル手順 5〜8）: ①各項の「6倍クロップ」を `public/images/cam1.webp` から切り出して 1536x1024 へ拡大（webp は PNG に変換）。②先頭に `$imagegen` を明示し、各項のプロンプトを 3 テイク生成して目視で選ぶ（0 バイト・数 KB の壊れた PNG は撮り直す。文字やロゴらしき刻印が出たら没）。テイク 1〜3 は、各項のプロンプトの `VARIANT` 行だけを差し替える（プロンプト全文は VARIANT を入れた形で使う）。③選んだ結果を元のクロップ寸法へ縮小して baseline の PNG の同じ位置へ貼り戻し、その全画面を `scripts/composite-anomaly.py --gen` に渡す（`--box` は各項の最終 box。FAIL は再生成でなく `--threshold` / `--margin` を 8/12/16/18 で試す）。④最終 overlay の alpha bbox で既存との距離を測り直し、`check-visibility.py` を通す。⑤登録・コミットしたら `experiments/` の作業物を即削除。
 - **共通プロンプト冒頭（小物）**: `$imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged.` 末尾は `Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.`（以下の各プロンプトには、冒頭と末尾を含めて全文を書いてある）。
 
@@ -162,7 +162,7 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 - **camera / element_id**: CAM01 / CAM01-E17（床タイル。E18 の反射帯も面に含まれる）
 - **面**: box `0,705,675,900`（131,625 px²、画像の 21.7%）。手前の床の全幅の帯。地下街の廊下の床が、屋外の道路の横断歩道に変わる。
 - **物と変化**: 手前の床に、白い塗装の太い縞（横断歩道）が 9〜10 本、**廊下の奥行き方向に走って消失点へ収束**するように並ぶ。縞は左右の壁際まで全幅に続き、各縞の間には元の床タイルと目地が見える。塗装はかすれ、タイルの粒と目地が縞を透かす。屋外の舗装の模様が屋内にあるだけで、他の物・人・文字はない。
-- **不気味さの狙い**: 屋内の床なのに道路の印だけが敷かれ、「渡る」先が見えない。Exit 8 のように、同じ縞が床一面に繰り返される。story の「懐かしい昭和のまま帰りたくない老人」と、4 人目の子供が渡れなかった道（令和の通学路）の両方に読める（意味づけは台詞側で決める）。
+- **不気味さの狙い**: 屋内の床なのに道路の印だけが敷かれ、「渡る」先が見えない。同じ縞が床一面に繰り返される、反復空間の違和感。story の「懐かしい昭和のまま帰りたくない老人」と、4 人目の子供が渡れなかった道（令和の通学路）の両方に読める（意味づけは台詞側で決める）。
 - **保持するもの**: 壁・天井・店先・床の奥側（y705 より上）、床の白い反射帯の位置と明るさ（縞の上にも反射が乗る）、タイル目地、床上の既存の異変（排他にした物を除く）。
 - **3:2 の窓**: 1 枚、`composite-polygon.py crop --base public/images/cam1.webp --crop 0,450,675,900 --out <PNG>`（縮尺 1536/675 ≈ 2.2756。box は窓内の y 580〜1024）。復元は `restore --crop 0,450,675,900`。差分抽出は床の台形ポリゴン（左は壁際の巾木の線、右は敷居の手前、上は y705 の水平線）を `cutout` に渡す。
 - **生成プロンプト全文**（3 テイクとも `VARIANT` 行だけ差し替え）:
@@ -181,15 +181,15 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 - **難所と没基準**: 縞が床の奥行き方向でなく手前—奥の逆（横向き）になったら没。縞が 6 本未満・太さが不揃いなら没。矢印・文字・車線の白線などが出たら没。縞が壁・巾木に乗ったら没。
 - **フェーズ / 目立ち度**: late / obvious。
 - **台帳登録案**: id `AR-01-floor-crosswalk` / `element_id: CAM01-E17` / `category: surreal` / `anomaly_type: surreal` / `location`: 手前の床一面 / `detail`: 「手前の床一面に、屋外の道路のような白い横断歩道の縞が奥の消失点へ向かって並ぶ（文字・矢印なし）」 / phase late / obvious。note に「大面積。CAM01-E17」「box と既存 overlay の重なり表（機械出力）」「排他: 下記」を書く。
-- **排他**: 床の手前の帯（y705〜900）に載る小物は縞に覆われる。**`AR-01-floor-puddle-light`・`AR-01-lattice-tile`・`AR-01-power-bank`・`AR-01-red-rubber-ball`・`AR-01-straw-hat`・`AR-01-bamboo-basket`・`AR-01-bubble-tea-cup`・`AR-01-floor-sign-reflection-inverted`・`AR-01-milk-bottle-crate`・`AR-01-container-origami`・本節の `AR-01-shadow-behind-camera`** は同プレイで共存させない（台帳 note に「同プレイで共存させない」と書く。ゲームは 1 カメラ 1 件しか同時に出さないので運用上の保証）。
+- **排他**: 床の手前の帯（y705〜900）に載る小物は縞に覆われる。**`AR-01-floor-puddle-light`・`AR-01-lattice-tile`・`AR-01-power-bank`・`AR-01-red-rubber-ball`・`AR-01-straw-hat`・`AR-01-bamboo-basket`・`AR-01-bubble-tea-cup`・`AR-01-floor-sign-reflection-inverted`・`AR-01-milk-bottle-crate`・`AR-01-container-origami`・本節の `AR-01-floor-light-orphan`** は同プレイで共存させない（台帳 note に「同プレイで共存させない」と書く。ゲームは 1 カメラ 1 件しか同時に出さないので運用上の保証）。
 - **相互参照 / 重複精査**: 同カメラの大面積（左壁の顔写真・天井の提灯）とは別の面。他カメラの床の大面積（`AR-02-floor-footprints` 足跡、CAM03 の畳、CAM05 の折り鶴、CAM08 の水鏡）とは**型が別**（道路標示）。台帳の「横断歩道」は他になし（`candidate-pool.md` の 3 節にも該当なし）。
 
-#### AR-01-right-wall-lattice-doors — 右の店先一面に同じ木格子戸が連なる
+#### AR-01-right-wall-lattice-doors — 右の店先に同じ木格子戸が、奥へ向かって1枚ずつ大きくなりながら連なる
 
 - **camera / element_id**: CAM01 / CAM01-E12（右側の店先。起点の木格子戸）
-- **面**: box `422,228,675,700`（253x472 = 119,416 px²、19.7%）。右壁の店先の面（金属シャッター・ガラス窓・白い太枠・木格子戸が重なる面）。壁と床の接線（巾木・敷居の手前）で止め、敷居は面の外。
-- **物と変化**: 右の店先の壁全面が、**同じ形の木格子戸**（白い太枠の中に縦の木格子、下に濃い青灰の腰板）の隙間のない連続に置き換わる。戸は 6〜7 枚が壁に沿って奥へ小さくなりながら並び、どれも閉じて無人。元の窓・シャッター・暖簾の位置は戸に覆われる。吊り看板（E16）と蛍光灯（E07）は壁の手前にあるので面の外（`--hole`）。
-- **不気味さの狙い**: 入口が全部同じで、どれが店なのかわからない。Exit 8 のように「同じものが一面に並ぶ」違和感。昭和の店先が増殖する、優しい異変（story: 老人の記憶が作る像）の暗い側面。
+- **面**: quad `(422,345) (675,225) (675,668) (422,500)`（左上・右上・右下・左下。原寸の写真で壁の天井線・床線に合わせて確定）。polygon 実面積 **75,647 px²**（画像の 12.5%）、alpha bbox（box `422,225,675,668`）は 253x443 = **112,079 px²**（18.4%）。大面積の判定は台帳の既存大面積（`AR-01-wall-faces` の alpha bbox 97,768 px²）と同じく alpha bbox で行い、約 90,000 px² 以上を満たす（polygon 実面積は壁の遠近で細く、90,000 を下回る）。右壁の店先の面（金属シャッター・ガラス窓・白い太枠・木格子戸が重なる面）。壁と床の接線（腰板の下端）で止め、敷居は面の外。ただし鳩の box（575,598,675,655）が面の下端に掛かるので、下の排他に入れる。
+- **物と変化**: 右の店先の壁全面が、**同じ形の木格子戸**（白い太枠の中に縦の木格子、下に濃い青灰の腰板）の連続に置き換わる。戸は 6 枚が壁に沿って並び、**奥の戸ほど画面上の幅が手前の戸と同じに近く（遠近で細くならず）、1 枚ずつ相対的に大きく見える**。どれも閉じて無人。元の窓・シャッター・暖簾の位置は戸に覆われる。吊り看板（E16）と蛍光灯（E07）は壁の手前にあるので面の外（`--hole`）。
+- **不気味さの狙い**: 入口が全部同じで、どれが店なのかわからない。奥へ行くほど戸が遠ざからず、通路が終わらない違和感。昭和の店先が増殖する、優しい異変（story: 老人の記憶が作る像）の暗い側面。
 - **保持するもの**: 天井・床・左壁・奥の柱・通路奥の開口、吊り看板（E16 の大小）、蛍光灯（E07）、壁と天井・床の接線。戸の隙間の細い縦枠だけが壁に残る。
 - **素材の別生成（全景生成はしない）**: 参照に元写真の木格子戸（`public/images/cam1.webp` の約 (560,235)-(675,595)）を渡し、**正面から見た 1 枚の戸の立面**を 3:2（1536x1024）の中央に 1 枚だけ生成する。繰り返しの絵を 1 回で多数描かせると文字風の模様・格子の崩れが出るため。
 - **生成プロンプト全文**（素材用。3 テイクとも `VARIANT` 行だけ差し替え）:
@@ -202,12 +202,12 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
   - VARIANT 1: `The slats are tightly spaced and the wood is mid-brown`
   - VARIANT 2: `The slats are slightly wider apart and the wood is darker`
   - VARIANT 3: `The frame paint is cream-white with light chipping at the corners`
-- **作り方**: ①割付図: 壁面の四隅（目安 左上 (422,384)・右上 (672,236)・右下 (672,700)・左下 (422,500)。**原寸で壁の天井線・床線・左右の縁に合わせて確定**）と、戸の継ぎ目（消失点へ向かう縦線）を描く。②素材を 3 テイク生成して 1 枚を選ぶ（採否は人間）。③`composite-polygon.py tile --base public/images/cam1.webp --material <door.png> --quad "<tl> <tr> <br> <bl>" --cols 6 --rows 1 --gap 0 --shade 0.6 --polygon-out poly.json --out <full.png>`。遠近の縮み（奥の戸ほど狭い）が quad と一致するか原寸で確認。④`cutout --polygon poly.json --hole <吊り看板 E16 のポリゴン> --hole <蛍光灯 E07 のポリゴン> --feather 2`。壁面の明暗は `--shade` と `blend --mode multiply --layer <baseline> --layer-norm` で乗せる。
-- **難所と没基準**: 戸の格子が崩れる・文字風の模様が出る・戸の縦横比が元の戸と違うものは没。奥の戸が手前より大きい（遠近の逆）は没。吊り看板・蛍光灯が戸に隠れたら没（hole の取り直し）。
+- **作り方**: ①割付図: 壁面の四隅（目安 左上 (422,345)・右上 (675,225)・右下 (675,668)・左下 (422,500)。**原寸で壁の天井線・床線・左右の縁に合わせて確定**）を描き、戸の継ぎ目は x=422・464・506・548・591・633・675 の等間隔（画面上の幅を遠近で縮めない。奥の戸ほど縦横比が横に広がるのが狙い）に置く。②素材を 3 テイク生成して 1 枚を選ぶ（採否は人間）。③`composite-polygon.py tile --base public/images/cam1.webp --material <door.png> --quad "<tl> <tr> <br> <bl>" --cols 1 --rows 1 --gap 0 --shade 0.6 --polygon-out poly.json --out <full.png>` を、継ぎ目の x で切った 6 つの quad（各戸）ごとに順に実行して重ねる。各戸の quad の上辺・下辺が壁の天井線・床線に沿い、継ぎ目が揃っているか原寸で確認。④`cutout --polygon poly.json --hole <吊り看板 E16 のポリゴン> --hole <蛍光灯 E07 のポリゴン> --feather 2`。壁面の明暗は `--shade` と `blend --mode multiply --layer <baseline> --layer-norm` で乗せる。
+- **難所と没基準**: 戸の格子が崩れる・文字風の模様が出る・戸の高さ方向が壁の天井線・床線からはみ出すものは没（縦横比は quad 由来の変形のみ許す）。奥の戸が手前より細く縮む（元の遠近どおり）は没（本件の狙いが消える）。吊り看板・蛍光灯が戸に隠れたら没（hole の取り直し）。
 - **フェーズ / 目立ち度**: late / obvious。
 - **台帳登録案**: id `AR-01-right-wall-lattice-doors` / `element_id: CAM01-E12` / `category: surreal` / `anomaly_type: multiply` / `location`: 右の店先の壁一面 / `detail`: 「右の店先の壁一面が、同じ形の無人の木格子戸の連続に置き換わる（吊り看板と蛍光灯は元のまま。文字なし）」 / phase late / obvious。note に「大面積。CAM01-E12」「重なり表」「排他: 下記」を書く。
-- **排他**: 同じ店先の物を使う **`AR-01-noren`・`AR-01-door-ajar`**（戸が連続に置き換わると暖簾・戸の開閉の前提が消える）、天井と bbox が重なる **`AR-01-ceiling-lanterns`**（壁 x422〜675・y228〜380 が天井 box（217,0,458,380）と重なる。別の面だが、同じ画面の上半分に大面積が二つ重なると読めなくなるため同プレイ非共存）、壁の下端を使う **`AR-01-milk-bottle-crate`**（敷居・床。box が y700 付近で触れる）は同プレイで共存させない。吊り看板系（`AR-01-sign-rim`・`AR-01-sign-old-shop`）と `AR-01-tube-end` は面の手前の物なので併存可（hole で戸の手前に残す）。
-- **相互参照 / 重複精査**: 同カメラの `AR-01-wall-faces`（左壁に顔写真を敷き詰め）と**敷き詰めの型が近い**が、素材が違い（実在の戸の立面 vs 顔写真）、面が反対側の壁で、「同じ物が一面に並ぶ」型は 1 カメラ内に 2 件ある構造の反復になる。排他の対ではないので同プレイには出うる。**制作前に見比べ、型の反復が気になるなら本件は「戸が壁一面に並ぶ」でなく「戸が奥へ向かって 1 枚ずつ大きくなる」に振る**（kako-jun 判断）。他カメラの面の敷き詰め（`AR-06-*` ポスター・CAM07 の時計・CAM03 の白紙）とは素材が別。
+- **排他**: 同じ店先の物を使う **`AR-01-noren`・`AR-01-door-ajar`**（戸が連続に置き換わると暖簾・戸の開閉の前提が消える）、面の下端に掛かる **`AR-01-threshold-pigeon`**（鳩の box が面の下端と重なり、戸の腰板に覆われる）、天井と bbox が重なる **`AR-01-ceiling-lanterns`**（壁 x422〜675・y225〜380 が天井 box（217,0,458,380）と重なり、bbox の重なりは 253x155 = 39,215 px²。別の面だが、同じ画面の上半分に大面積が二つ重なると読めなくなるため同プレイ非共存）、壁の下端を使う **`AR-01-milk-bottle-crate`**（敷居・床。box が y700 付近で触れる）は同プレイで共存させない。吊り看板系（`AR-01-sign-rim`・`AR-01-sign-old-shop`）と `AR-01-tube-end` は面の手前の物なので併存可（hole で戸の手前に残す）。
+- **相互参照 / 重複精査**: 同カメラの `AR-01-wall-faces`（左壁に顔写真を敷き詰め）は「同じ物を一面に敷き詰める」型。**本件は敷き詰めを避け、「戸が奥へ向かって 1 枚ずつ大きく見える（遠近が効かない）」型に振った**ので、素材（戸の立面 vs 顔写真）・面（反対側の壁）・型（敷き詰め vs 遠近の破れ）のどれも別。同プレイに出うる（排他の対ではない）。他カメラの面の敷き詰め（`AR-06-*` ポスター・CAM07 の時計・CAM03 の白紙）とは素材が別。
 
 ### 小物
 
@@ -227,8 +227,8 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
   - VARIANT 2: `The unlit disc is mid-dark grey with a faint highlight on its rim`
   - VARIANT 3: `The unlit disc shows a faint reflection of the ceiling in its glossy lens`
 - **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左下の暗い壁の角・天井の粒状・他の灯。
-- **最寄り既存 overlay と実測距離**: AR-01-ceiling-seam-circle まで 32.0px（box 基準・矩形間のユークリッド距離）。**余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**。次点は本節の AR-01-ceiling-wet-stain まで 162.0px。
-- **分類 / フェーズ / 目立ち度**: environment / early / medium
+- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測・矩形間のユークリッド距離）: AR-01-ceiling-seam-circle まで 32.0px、次点 AR-01-ceiling-fan-showa 53.0px、本節の AR-01-ceiling-wet-stain まで 162.0px。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（30px 割れなら box の右端を左へ動かす）。
+- **分類 / フェーズ / 目立ち度**: environment / early / medium（medium 以上。subtle にしない）
 - **視認性の注意**: 白（約 240）から暗灰（約 60）へ落ちるので差分は大きいが、元の灯は 40x14px と小さい。にじみまで消すと overlay が約 70x54 に広がり面積比で通る。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: id `AR-01-ceiling-lamp-off` / `category: environment` / `anomaly_type: state_change` / `detail: '左上寄りの小さな丸い埋め込み灯が消えて、黒っぽい丸い穴になる（周囲のにじみも消える）'` / `candidate_id` は付けない（本節が出典）。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 - **相互参照 / 重複精査**: `candidate-pool.md` の CR-01-28（同じ灯の「にじみだけ消える」）は**灯が点いたままにじみだけ変わる別案**。本件を制作したら CR-01-28 は実質同じ物の変化になるので削除する。CR-01-30・31（別の丸灯 E05・E06）とは対象が別。他カメラの丸灯（CR-04-32・CR-06-04・CR-02-30）は別カメラ。
@@ -249,11 +249,11 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
   - VARIANT 2: `The loose edge hangs down toward the right`
   - VARIANT 3: `The tile hangs by one corner only, with the gap wider`
 - **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左の大きな同心円の換気口・右端の四角い点検板・右下の灯。
-- **最寄り既存 overlay と実測距離**: AR-01-ceiling-panel-round まで 32.0px（box 基準）。**余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（30px 割れなら右端を左へ動かす）。次点は本節の AR-01-ceiling-wet-stain まで 37.7px。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
+- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-ceiling-panel-round（右）まで 32.0px、AR-01-vent-hole-triangle（左）まで 32.0px、次点 AR-01-bunting-flags 48.0px、本節の AR-01-ceiling-wet-stain まで 37.7px。**左右の既存に挟まれ、余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（垂れた縁を左右に広げない。30px 割れなら box を幅の中央側へ寄せる）。
+- **分類 / フェーズ / 目立ち度**: object / mid / medium（medium 以上。subtle にしない）
 - **視認性の注意**: 黒い隙間と垂れた板の影で差分を作る。灰色の天井に溶けないよう隙間は真っ黒に。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: id `AR-01-ceiling-tile-drop` / `category: object` / `anomaly_type: displace` / `detail: '右上の天井板が一枚、片側だけ外れて斜めに垂れ下がり、暗い天井裏の隙間が見える'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: 近い既存: `AR-04-ceiling-corner-fold`（CAM04・換気口の隣の天井板の角が折れて垂れる）。**別カメラで、本件は板が外れて暗い隙間と配線が見える（天井裏が覗く）点が違う**が、同じ「天井板が垂れる」型なので、制作前に見比べ、実質同じと感じたら取り下げる。CR-01-19（点検板の隣に同じ板が増える）は増やす案で別。
+- **相互参照 / 重複精査**: 近い既存: `AR-04-ceiling-corner-fold`（台帳・CAM04・換気口の隣の天井板の角が折れて垂れる）。**別カメラで、本件は板が外れて暗い隙間と配線が見える（天井裏が覗く）点が違う**が、同じ「天井板が垂れる」型なので、制作前に見比べ、実質同じと感じたら取り下げる。「天井板が垂れる」型は、CAM08 側の同名の案が別担当で差し替えられるため、本件が CAM01 で残す唯一の案（他カメラとは重ねない）。CR-01-19（点検板の隣に同じ板が増える）は増やす案で別。
 
 #### AR-01-ceiling-wet-stain — 天井に濡れた丸い染みが広がり水滴が垂れかける
 
@@ -271,33 +271,33 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
   - VARIANT 2: `The stain is an irregular blotch with a darker lower edge`
   - VARIANT 3: `The stain has a faint second ring inside it, like a tide mark`
 - **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 上の大きな同心円の換気口・下の暗い天井の小型器具。
-- **最寄り既存 overlay と実測距離**: AR-01-vent-hole-triangle まで 32.0px（box 基準）。**余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**。次点は本節の AR-01-ceiling-tile-drop まで 37.7px（右隣）。
-- **分類 / フェーズ / 目立ち度**: environment / early / medium（登録時に subtle にしない。視認性の基準を通すため染みを濃く、輪を太く）
+- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-vent-hole-triangle まで 32.0px、次点 AR-01-tube-end 47.4px、AR-01-ceiling-seam-circle 48.0px、本節の AR-01-ceiling-tile-drop まで 37.7px（右隣）。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（染みと水滴を上へ広げない。30px 割れなら下端を下げる）。
+- **分類 / フェーズ / 目立ち度**: environment / early / medium（medium 以上。登録時に subtle にしない。視認性の基準を通すため染みを濃く、輪を太く）
 - **視認性の注意**: 明るい天井に対し暗い茶灰の輪で差分を作る。薄いと下限未満。水滴の白い光点を面積比の足しにする。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: id `AR-01-ceiling-wet-stain` / `category: environment` / `anomaly_type: state_change` / `detail: '天井の中央に、濡れた丸い染みが広がり、その下に水滴が一つ垂れかかる'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 - **相互参照 / 重複精査**: 近い既存・候補: `AR-01-ceiling-seam-circle`（同カメラ・板継ぎ目の輪。**輪の形は近いが、あちらは継ぎ目の線で、本件は濡れた色面と水滴**。距離は 80px 以上）、CR-02-28・CR-06-28（別カメラの天井の染みの候補）、CR-08-31（別カメラ・丸灯の下の水滴）、`AR-05-hatch-stain`（別カメラ・点検口の色）。型が重なるので制作前に見比べる。
 
-#### AR-01-shadow-behind-camera — カメラ側に立つ人の影だけが床に伸びる
+#### AR-01-floor-light-orphan — 光源のない場所に、床の光だまりがもう一つ落ちる
 
 - **camera / element_id**: CAM01 / CAM01-E17（床タイル。手前左の隅）
-- **物と変化**: 画面の**下端の外（カメラの背後）に誰かが立っている**ように、手前左の床の下端から、**人の頭と肩の影だけ**が奥へ向かって伸びて画面に入る。影は輪郭のはっきりした黒（床の光だまりに落ちる影）で、頭の丸みと肩の線がわかるが、顔・服・手の描写はない。
-- **最終 box**（baseline px）: `0,866,175,900`（175x34）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,729,256,900`（256x171）。box はクロップ内の (0,137)-(175,171)。画像の下端に接するため box は下端で切れる
+- **物と変化**: 手前左の暗い床に、**楕円の光だまりがもう一つ**現れる。通路の床には天井灯が落とす白い光だまりが縦に並んでいるが、その真上にも近くにも灯・窓・反射する物がなく、どこからの光かわからない。遠近で横に潰れた淡い青白の楕円で、縁はやわらかく、中心が明るい。タイル目地が光を透かす。物・人・影・文字はない。
+- **最終 box**（baseline px）: `2,832,92,898`（90x66）。`composite-anomaly.py --box` にはこの値を渡す
+- **6倍クロップ**（baseline px）: `0,729,256,900`（256x171）。box はクロップ内の (2,103)-(92,169)
 - **生成プロンプト**（3 テイク作って目視で選ぶ）:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles in the lower left of the frame, the top of a person's cast shadow reaches in from the bottom edge of the frame, as if someone were standing just behind the camera: a solid, dark, sharp-edged silhouette showing only the rounded head and the sloping shoulders, pointing up the frame toward the far end of the corridor, cut off by the bottom edge. It is only a shadow on the floor: no person, no body, no face, no clothes, no hands, no feet, no object. The shadow is very dark, nearly black, and slightly softer at its tip. VARIANT. Do not touch the white light reflections on the floor, the grey tile joints, the object-free floor tiles to the right or anything else. Place the shadow centered at about 34% from the left and 92% from the top of the image, occupying roughly 68% of the image width and 20% of its height, cut off by the bottom edge. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark floor tiles in the lower left of the frame, add one soft elliptical pool of pale cold blue-white light lying on the floor, flattened sideways by perspective (about 1.4 times wider than tall), brightest at its centre and fading smoothly into the dark floor at its edge, like the existing pools of light under the ceiling lamps, but with no lamp, window or other light source anywhere near it and no object that casts or catches it. The grey tile joints show through the light. VARIANT. Do not touch the other white light reflections on the floor, the tile joints, the floor to the right or anything else. Place the pool centered at about 18% from the left and 80% from the top of the image, occupying roughly 35% of the image width and 39% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-  - VARIANT 1: `The head is slightly tilted toward the right`
-  - VARIANT 2: `The head is turned and slightly raised, as if looking up the corridor`
-  - VARIANT 3: `The silhouette is a little broader at the shoulders and the head sits low`
+  - VARIANT 1: `The pool is a clean ellipse with a soft edge`
+  - VARIANT 2: `The pool is brighter, nearly white at its centre`
+  - VARIANT 3: `The pool has a fainter, smaller second ellipse of light inside it`
 - **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 床の白い反射・タイル目地。
-- **最寄り既存 overlay と実測距離**: AR-01-lattice-tile まで 31.0px（box 基準）。**余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（30px 割れなら上端を下げる）。次点は AR-01-floor-puddle-light（x 220 以降、右へ 45px 超）。
-- **分類 / フェーズ / 目立ち度**: person / late / medium
-- **視認性の注意**: 手前左の床は暗く、影が黒でも差が小さくなりうる。影の縁に床の明るい光だまりの反射を残して対比を作り、縁を濃くする。細く薄いと下限未満。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通し、通らなければ影を大きく・黒くして作り直す。
-- **台帳登録時**: id `AR-01-shadow-behind-camera` / `category: person` / `anomaly_type: reflection` / `detail: '手前左の床の下端から、画面の外に立つ人の頭と肩の影だけが奥へ伸びて入ってくる'`。note に最寄り既存 id と最終 alpha bbox 実測距離、「床一面の AR-01-floor-crosswalk と排他」を書く。
-- **相互参照 / 重複精査**: 影の既存案: `candidate-pool.md` の汎用タイプ「shadow appears（物体なしの影）」・CR-03-42・CR-06-42（別カメラの床反射に小さな傘・紙袋の影）・CR-04-11（別カメラのガラス反射に黒い人影）は**写っている物の影・ガラスの反射**で、本件は**画面の外にいる誰かの影**が違う。story の秘密（プレイヤーが警備員室で 2 人を後ろから見ている）の「見られている側」の反転として読めるが、意味づけは台詞側で決める。
+- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-lattice-tile まで 34.0px、AR-01-power-bank まで 36.0px、次点 AR-01-bamboo-basket 116.0px。**余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（30px 割れなら右端を左へ動かす）。
+- **分類 / フェーズ / 目立ち度**: surreal / late / medium（medium 以上。subtle にしない）
+- **視認性の注意**: 手前左の床は暗く、明るい楕円との差は大きい。ただし 90x66 と小さいので、中心を明るく縁をはっきり出す。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通し、通らなければ明るさを上げる。それでも通らなければ本件は取り下げ、別案に差し替える（影を細い帯で出す案には戻さない）。
+- **台帳登録時**: id `AR-01-floor-light-orphan` / `category: surreal` / `anomaly_type: state_change` / `detail: '手前左の暗い床に、光源のない場所から落ちた白い光だまりがもう一つ現れる'`。note に最寄り既存 id と最終 alpha bbox 実測距離、「床一面の AR-01-floor-crosswalk と排他」を書く。
+- **相互参照 / 重複精査**: 台帳の `AR-01-floor-puddle-light`（床の水たまりが灯を映す。**水の物**）は水たまりと反射、本件は**光だけが物なしで落ちる**点が違う。同カメラの床の白い光だまり自体は元写真の既存要素（E18 の反射帯）で、それを増やす（`CR-01-*` の反射の複製案があれば）型とは、光源の説明がつかない位置に出る点で別。他カメラの床の光（CAM03・CAM06 の反射の候補）とは別の面・別の構図。意味づけは台詞側で決める。
 
 #### AR-01-crouching-silhouette — 奥の床にうずくまる黒い人影
 
@@ -312,10 +312,10 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
   ```
 
   - VARIANT 1: `The figure squats with the knees up and the arms wrapped around them`
-  - VARIANT 2: `The figure is crouched low, leaning forward with the head almost at floor level`
-  - VARIANT 3: `The figure kneels on the floor with the upper body folded forward`
+  - VARIANT 2: `The figure is crouched low, leaning slightly forward with the head down`
+  - VARIANT 3: `The figure squats upright on its heels with the head raised, looking down the corridor`
 - **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 白い柱・暗い開口とその掲示板・左の床のマット・右のシャッター。
-- **最寄り既存 overlay と実測距離**: AR-01-yellow-boots まで 32.2px（box 基準）。**余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（30px 割れなら下端を上げる）。次点は AR-01-back-view-paper-bag（49px）・AR-01-sign-rim（90px）。
+- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-yellow-boots まで 32.2px、次点 AR-01-back-view-paper-bag 49.0px、AR-01-bamboo-broom 67.2px。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（30px 割れなら下端を上げる）。
 - **分類 / フェーズ / 目立ち度**: person / mid / medium
 - **視認性の注意**: 奥の床は中間の灰青で、黒い塊との差は十分。ただし 55x54 と小さいので、縮小で潰れないよう大きめ（1.4 倍）・縁をはっきり。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: id `AR-01-crouching-silhouette` / `category: person` / `anomaly_type: add_person` / `detail: '通路の突き当たり右寄りの床に、うずくまった小さな黒い人影が一つ現れる（顔・服の描写なし）'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
@@ -337,10 +337,10 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
   - VARIANT 2: `The pigeon faces the camera with its head raised`
   - VARIANT 3: `The pigeon has its head tucked low, puffed up as if sleeping`
 - **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左の床タイル・右上の壁・敷居の金属帯の傾き・暗い腰板。
-- **最寄り既存 overlay と実測距離**: AR-01-milk-bottle-crate まで 35.0px（box 基準、次点 AR-01-door-ajar 38.0px）。**余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**。
+- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-milk-bottle-crate まで 35.0px、次点 AR-01-bubble-tea-cup・AR-01-door-ajar が 38.0px。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**。
 - **分類 / フェーズ / 目立ち度**: object / mid / medium
 - **視認性の注意**: 敷居は暗い灰色なので白い鳩は強く対比する（明るい面に白だと溶ける問題の逆。暗い面に置いた）。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-threshold-pigeon` / `category: object`（README のとおり小動物は暫定で `object`）/ `anomaly_type: add_creature` / `detail: '右の店先の金属の敷居に、白い鳩が一羽とまっている（無人の地下街に迷い込んだ鳥）'`。note に最寄り既存 id と最終 alpha bbox 実測距離、「右壁一面の AR-01-right-wall-lattice-doors とは敷居が面の外なので併存可」を書く。
+- **台帳登録時**: id `AR-01-threshold-pigeon` / `category: object`（README のとおり小動物は暫定で `object`）/ `anomaly_type: add_creature` / `detail: '右の店先の金属の敷居に、白い鳩が一羽とまっている（無人の地下街に迷い込んだ鳥）'`。note に最寄り既存 id と最終 alpha bbox 実測距離、「右壁一面の AR-01-right-wall-lattice-doors と排他（鳩の box が戸の面の下端に掛かるため、同プレイで共存させない）」を書く。
 - **相互参照 / 重複精査**: 台帳に鳩・鳥の異変は他になし（add_creature は台帳に 4 件。猫は `AR-01-cat-in-frosted-window` が影のみ）。候補 CR-01-25（開口の手前に猫）とは別の生き物・別の位置。同じ右店先の `AR-01-noren`・`AR-01-door-ajar`（戸・暖簾）とは 38px 以上離れ、物も別。
 
 ## 追加候補 — CAM 02
