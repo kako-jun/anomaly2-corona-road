@@ -363,24 +363,6 @@
 
 ### CAM01 — North Entrance
 
-#### CR-NEW-01-04 — 万国旗
-
-- **camera / element_id**: CAM01 / CAM01-E01
-- **物と変化**: 天井に無地の色褪せた三角旗の連が一本、たるんで垂れる（運動会の記憶。文字・図柄なし）。※設計やり直し: 旧box (280,215,370,265) は竹ぼうき・長靴の追加で余裕が無くなり、明るい天井上部へ移した
-- **最終 box**（baseline px）: `335,15,425,65`（90x50）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `252,0,508,171`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (83,15)-(173,65)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the ceiling in the upper center, one single strand of plain faded triangular pennant flags (a bunting of about seven small triangular flags in muted red, yellow, blue and green, each completely plain with no letters, marks or patterns, strung on a thin dark string) sags in a shallow curve, seen from below. Make the flags about 1.4x larger than real scale and slightly more saturated than faded paper, so that they read clearly on the ceiling. Add a faint soft shadow of the string and flags on the ceiling surface. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the black speckles and panel seams of the ceiling, the round vent below, the ceiling lights or the fan area at the upper left. Place the object, including its shadow, centered at about 50% from the left and 23% from the top of the image, occupying roughly 35% of the image width and 29% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 天井の黒い斑点と板継ぎ目・下の丸い換気口・天井灯・左上のファン周辺。
-- **最寄り既存 overlay と実測距離**: AR-01-ceiling-fan-showa まで 45.0px（box 基準・矩形間のユークリッド距離、次点 AR-01-vent-hole-triangle 83.0px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: environment / mid / medium
-- **視認性の注意**: 天井面は青灰色で小さいので、旗は大きめ・高彩度（赤と黄を多め）にする。青・緑は天井に溶けやすいので少数に。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'environment'` / `anomaly_type: 'add_object'` / `detail: '天井に無地の色褪せた三角旗の連（万国旗）が一本垂れる（運動会の記憶）'` / `candidate_id: 'CR-NEW-01-04'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 吊り飾り系の兄弟: CR-NEW-02-04（七夕輪つなぎ）・CR05N-5（吹き流し）・CR06N-5（てるてる坊主）・AR-07-crane（折り鶴）。
-
 #### CR-NEW-01-05 — 竹の手提げかご
 
 - **camera / element_id**: CAM01 / CAM01-E17

@@ -3451,7 +3451,7 @@ anomalies:
     overlay_origin: '(217,0)'
     dimensions: '458x380'
     review_status: 'composited'
-    note: '大面積。CAM01-E01。alpha bbox 458x380=174,040 px²（画像比 28.6%）。排他（同プレイ非共存。天井の同じ面・飾りで上書きされる）: AR-01-ceiling-fan-showa（重なり 8,322）・AR-01-ceiling-panel-round（9,017）・AR-01-vent-hole-triangle（1,376）・AR-01-ceiling-seam-circle（1,925）・AR-01-tube-end（6,300。本件は蛍光灯が点いたままの前提と矛盾）。併存可（bbox のみ重なり、ポリゴンは y≤340〜380・x≤439 で止まり吊り看板・店先は含まない）: AR-01-sign-rim（3,080）・AR-01-sign-old-shop（1,927）・AR-01-noren（8,580）・AR-01-door-ajar（8,720）・AR-01-shutter-stripe-break（483）。同カメラの大面積 CR-LG-01-02（左壁、box 0,215,208,725）とは x が離れ重ならない。最近傍の非重なりは AR-01-back-view-paper-bag（25px。重なり 0・床側の小物で、天井の提灯とは別の面なので併存可）。仕様 box からの逸脱: 仕様は y≤340 だが、提灯列は消失点側の遠端で y380 まで伸びている（遠端のチェーンを足したため）。そのため奥の吊り看板 E16（y373 付近）と近く、遠端の提灯が看板の上端に近接する（7px 差）。看板そのものはポリゴンから除外して保持している。紙の輪つなぎは CR-NEW-02-04（CAM02）と近いので使っていない。3 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。'
+    note: '排他（同プレイ非共存。どちらも天井の吊り飾り）: AR-01-bunting-flags（旗 alpha 4,100 px² が提灯 bbox 内に収まる。bbox 重なり 5,590 px²）。 大面積。CAM01-E01。alpha bbox 458x380=174,040 px²（画像比 28.6%）。排他（同プレイ非共存。天井の同じ面・飾りで上書きされる）: AR-01-ceiling-fan-showa（重なり 8,322）・AR-01-ceiling-panel-round（9,017）・AR-01-vent-hole-triangle（1,376）・AR-01-ceiling-seam-circle（1,925）・AR-01-tube-end（6,300。本件は蛍光灯が点いたままの前提と矛盾）。併存可（bbox のみ重なり、ポリゴンは y≤340〜380・x≤439 で止まり吊り看板・店先は含まない）: AR-01-sign-rim（3,080）・AR-01-sign-old-shop（1,927）・AR-01-noren（8,580）・AR-01-door-ajar（8,720）・AR-01-shutter-stripe-break（483）。同カメラの大面積 CR-LG-01-02（左壁、box 0,215,208,725）とは x が離れ重ならない。最近傍の非重なりは AR-01-back-view-paper-bag（25px。重なり 0・床側の小物で、天井の提灯とは別の面なので併存可）。仕様 box からの逸脱: 仕様は y≤340 だが、提灯列は消失点側の遠端で y380 まで伸びている（遠端のチェーンを足したため）。そのため奥の吊り看板 E16（y373 付近）と近く、遠端の提灯が看板の上端に近接する（7px 差）。看板そのものはポリゴンから除外して保持している。紙の輪つなぎは CR-NEW-02-04（CAM02）と近いので使っていない。3 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-shutter-crayon-drawings'
     candidate_id: 'CR-LG-02-02'
     camera_id: 'CAM02'
@@ -3470,6 +3470,24 @@ anomalies:
     dimensions: '165x541'
     review_status: 'composited'
     note: '大面積（bbox 165x541=89,265px²、画像の14.7%）。CAM02-E07。排他（同プレイで共存させない。同じ店先の面を覆う）: AR-02-shop-reopens (41,250) / AR-02-open-sign (8,064) / AR-02-newspaper (6,298) / AR-02-cat (6,305) / AR-02-wrapping-paper (1,026)。併存可（床。画用紙はシャッター下端の接地線で止める）: AR-02-puddle (16,874) / AR-02-cigarette (2,294) / AR-02-receipt (2,420) / AR-02-tile (896) / AR-02-tile-color (1,118)（重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-02-01（床一面の足跡）とは bbox が重なるが面は別（床とシャッター）。画用紙は縦枠の線上にも貼らず、枠で止めた。画像の出来: 1 枚の絵の複製（人型 4・赤い家・太陽）。ゲーム画面とライブ blink での確認は未了。同カメラの大面積 CR-LG-02-01（AR-02-floor-footprints）とは bbox が重なる（165x260）が面は床とシャッターで別。alpha 重なりは 267 px² と小さく、併存可。画像の調整: 画用紙は彩度を落として黄ばませ、シャッターの明暗に合わせて暗くした。人型の顔は黒く塗りつぶし、数枚の紙に欠け（シャッターが覗く穴）と剥がれの縁を足した。'
+  - id: "AR-01-bunting-flags"
+    candidate_id: "CR-NEW-01-04"
+    camera_id: "CAM01"
+    element_id: "CAM01-E01"
+    base_photo: "public/images/cam1.webp"
+    category: "environment"
+    anomaly_type: "add_object"
+    phase: "mid"
+    subtlety: "medium"
+    mask_box_1000: "(493,34)–(686,82)"
+    location: "CAM01-E01、差分左上 (333,31) px"
+    detail: "天井に無地の色褪せた三角旗の連（万国旗）が一本垂れる（運動会の記憶）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the garland was moved about 20 px right (it started within 30 px of the ceiling fan), pasted into the baseline and cut out with scripts/composite-anomaly.py (--threshold 12 --dilate 1 --feather 2, low threshold to keep the thin string). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the ceiling in the upper center, one single strand of plain faded triangular pennant flags (a bunting of about seven small triangular flags in muted red, yellow, blue and green, each completely plain with no letters, marks or patterns, strung on a thin dark string) sags in a shallow curve, seen from below. Make the flags about 1.4x larger than real scale and slightly more saturated than faded paper, so that they read clearly on the ceiling. Add a faint soft shadow of the string and flags on the ceiling surface. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the black speckles and panel seams of the ceiling, the round vent below, the ceiling lights or the fan area at the upper left. Place the object, including its shadow, centered at about 50% from the left and 23% from the top of the image, occupying roughly 35% of the image width and 29% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam01/bunting-flags.webp"
+    overlay_origin: "(333,31)"
+    dimensions: "130x43"
+    review_status: 'composited'
+    note: "排他（同プレイで共存させない。どちらも天井の吊り飾りなので同時に出さない）: AR-01-ceiling-lanterns（大面積。旗の bbox は提灯の領域内で距離 0。重なり: 旗 alpha 4,100 px² がすべて提灯 bbox 内、bbox 重なり 5,590 px²）。それ以外の最寄りの既存は AR-01-ceiling-fan-showa（43px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。標準でも見える（最大差分145・平均差分24.2・n25=1594、check-visibility 実測）。画像の調整: 赤と黄が暗い天井に溶けるため、旗の彩度×1.5・コントラスト×1.15・明るさ×1.12 を後処理で足した（alpha は不変）。吊り飾り系の兄弟 CR-NEW-02-04（七夕輪つなぎ）・CR05N-5・CR06N-5・AR-07-crane は別カメラ・別物。 最終 box は alpha bbox (333,31,463,74)（旧 (335,15,425,65) から変更）。生成された旗の連が box より長く、左端が天井ファンに30px未満だったため右へ約20px寄せた。 ゲーム画面とライブ blink での確認は未了。"
   - id: "AR-01-straw-hat"
     candidate_id: "CR-NEW-01-03"
     camera_id: "CAM01"
