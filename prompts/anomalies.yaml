@@ -3235,3 +3235,21 @@ anomalies:
     dimensions: '82x86'
     review_status: 'composited'
     note: "最近傍の既存は AR-01-floor-sign-reflection-inverted（32.0px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）。 overlay を生成位置から (0,-14) px ずらして配置。標準でも見える（最大差分224・平均差分76.0・n25=3230、check-visibility 実測）。つまみでさらに見やすくなる。ゲーム画面とライブ blink での確認は未了。"
+  - id: 'AR-07-wall-clocks'
+    candidate_id: 'CR-LG-07-01'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E12'
+    base_photo: 'public/images/cam7.webp'
+    category: 'surreal'
+    anomaly_type: 'multiply'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(154,142)–(855,389)'
+    location: 'CAM07-E12 ほか（後壁一面: E07/E08/E11/E12）、差分左上 (104,128) px'
+    detail: '後ろの壁一面に、針だけの無地の時計が無数に並び、全部が違う時刻を指す'
+    generation_prompt: "Method: one clock dial was generated with $imagegen (prompt below), cut into a circular sprite, and 35 sprites were made with PIL, each with its own hour and minute hand angles (all 35 times differ); the sprites were laid onto six wall quads with scripts/composite-polygon.py tile (--fit contain, shade 0.5-0.9) and cut out with composite-polygon.py cutout. The door (E13), the black opening, the round sign (E08), the door notice and pictogram (E07) were kept by choosing quads that avoid them. Prompt: Create a flat, straight-on photo of a single plain round wall clock face: a smooth matte white dial with a thin black round bezel and NO hands, NO numerals, NO tick marks, NO dots, NO brand, NO lettering of any kind; only a small black centre cap in the middle. Slightly aged, with a faint grey dust cast and a very soft shadow on a plain pale-grey wall around it. Even low-light surveillance-style lighting, fine film grain."
+    overlay: 'assets/anomaly-overlays/cam07/wall-clocks.webp'
+    overlay_origin: '(104,128)'
+    dimensions: '473x222'
+    review_status: 'composited'
+    note: "大面積。CAM07-E12 ほか。昭和テーマ節の『時計は候補にしない』は既存時計の改変の話で、本件は足す案（kako-jun 指示 2026-11-04）。alpha bbox 473x222=105,006 px²（画像比 17.3%）。時計 35 個（直径 約22〜36px。小 22〜26px は左壁と扉上の 11 個、大は白壁 12 個と右面 10 個）。排他（同プレイ非共存）: AR-07-notice（重なり 2,891）・AR-07-reopened（22,848）・AR-07-wall-grid（3,060）・AR-07-duplicate-green-sign（1,015。右面の時計に覆われる）。併存可: AR-07-stairs・AR-07-white-step・AR-07-stairs-cat・AR-07-ticket・AR-07-shoe-v2（階段・床側。時計は階段壁より上）・AR-07-crane（吊り鶴は時計の手前）・AR-07-pictogram-flip・AR-07-blue-push-plate・AR-07-warm-light・AR-07-opening-paper（扉・開口・非常灯は保持。時計の quad はこれらを避ける）・AR-07-ceiling-string。最近傍の非重なりは AR-07-stair-figures（11px）・AR-07-paper-tag-lamp（40px）・AR-07-lamp-off（45px）。同カメラの 07-02（シーツ）は未制作。時計は白一色の文字盤で、実壁より少し浮いて見える。2 テイクの文字盤から 1 つ採用。ゲーム画面とライブ blink での確認は未了。"

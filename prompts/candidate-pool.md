@@ -1441,25 +1441,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: `AR-06-ceiling-balloons`・`AR-06-ceiling-checker`・`AR-06-lamp-squared`・`AR-06-fluorescent-tag`（天井の小物で同じ面）。傘の近縁 `AR-06-umbrella`（店先の畳んだ傘）・`AR-06-reflected-umbrella`（ガラスの赤い傘）は box（0,0,495,255）と重ならない（umbrella は (208,360)・61x141、reflected-umbrella は (277,313)・41x94 で、どちらも y≥313）ため上の表に出ないが、同カメラで傘が重なるので併存させない運用を推奨（同じ「傘」と数えられる）。`AR-06-sign-orange-blue`（吊り看板の枠色。看板は保持物で傘は矩形を避けるため併存可）と `AR-06-reopened`（左店先の灯り。傘の下端を y≤190 に収めるため併存可）とは整合する。CR-01-37・CR-04-17 は別カメラの小物。
 - **生成枚数の最小見積り**: 全景 3 テイク。
 
-### CR-LG-07-01 後壁一面の針だけの時計（全部が違う時刻）
-
-- **ID / camera / element_id**: CR-LG-07-01 / CAM07 / CAM07-E12 ほか（後壁一面: E07/E08/E11/E12）
-- **面**: box 88,126,585,352（112,322 px²、18.5%）。後壁の面（階段奥の壁・中央白壁・右壁面）。
-- **物と変化**: 後ろの壁一面に、**数字も目盛りも文字もない無地の丸い時計**（白い文字盤に細い黒縁、針だけ）が 24〜36 個、隙間少なく並び、全部が違う時刻を指す。大きさは 2〜3 種。
-- **不気味さの狙い**: 閉店した地下街の時間が、ばらばらに止まっている。老人 3 人と子供の「戻りたい時間」が別々だという暗示（story: 異変の数は行方不明の数で増える）。針だけで目印がないため、何時かも読めない。
-- **保持するもの**: 灰色扉（E13）と取手・押し板、黒い縦開口、丸看板（E08）・扉の貼り紙（E07）・ピクトグラム、緑の非常灯、天井・床・階段、柱と壁の境の影と陰影。時計は扉枠・開口枠の手前で止まる。
-- **生成プロンプト全文**（文字盤素材を別生成。針はスクリプトで描く）:
-  ```
-  $imagegen Create a flat, straight-on photo of a single plain round wall clock face: a smooth matte white dial with a thin black round bezel and NO hands, NO numerals, NO tick marks, NO dots, NO brand, NO lettering of any kind; only a small black centre cap in the middle. Slightly aged, with a faint grey dust cast and a very soft shadow on a plain pale-grey wall around it. Even low-light surveillance-style lighting, fine film grain.
-  Output 1536x1024 (3:2). No watermark.
-  ```
-- **作り方**: ①素材 2 テイクから文字盤を 1 枚選び、切り出して円形スプライト化。②**針は `uv run --with pillow python3` のスクリプトで時・分針を個別に描く**（太さ・長さの比を固定、角度は乱数で全件異なる時刻、針の影を薄く）。モデルに針を描かせない（時刻が揃う・数字が混ざるため）。③割付図: 壁の正面度が高い中央〜右は正面グリッド（大 34px・中 26px。針は時針 2px・分針 1.5px 以上の太さで描く）、左の階段壁は遠近ワープ（奥でも直径 22px 未満にしない）。扉・開口・看板・ピクトグラムは格子から抜く（共通手順 6: quad を分けて抜く）。④壁の明暗を multiply で乗せる。⑤ポリゴン alpha で切り出す。
-- **難所と没基準**: 針の角度が全て異なること（同時刻の重複は没）、文字盤に数字・目盛りが出たら没、扉枠にはみ出したら没。針が潰れないよう直径は 22px 以上（大 34px・中 26px）にし、個数は 24〜36 のうち壁に入る数でよい（旧案の大 22px・中 16px は「大きめに」と食い違い、針が潰れるため上げた）。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳案**: category `surreal` / anomaly_type `multiply` / detail 「後ろの壁一面に、針だけの無地の時計が無数に並び、全部が違う時刻を指す」。note に「大面積。CAM07-E12 ほか。昭和テーマ節の『時計は候補にしない』は既存時計の改変の話で、本件は足す案（kako-jun 指示 2026-11-04）」を書く。
-- **排他**: `AR-07-notice`・`AR-07-reopened`・`AR-07-wall-grid`（壁の面で覆われる）。`AR-07-pictogram-flip`・`AR-07-blue-push-plate` など扉・開口の保持物の変化と、`AR-07-crane`・階段上の小物は併存可（全件は「box と既存 overlay の重なり」の表）。同カメラの 07-02（シーツ）とは box が 4px 離れていて併存可。
-- **生成枚数の最小見積り**: 素材 2 テイク（針はスクリプト）。
-
 ### CR-LG-07-02 天井から垂れる白いシーツ
 
 - **ID / camera / element_id**: CR-LG-07-02 / CAM07 / CAM07-E01
