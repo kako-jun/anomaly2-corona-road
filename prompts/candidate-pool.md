@@ -547,24 +547,6 @@
 
 ### CAM03 — South Exit
 
-#### AR-03-tricycle — 赤い三輪車(無地・文字なし)
-
-- **camera / element_id**: CAM03 / CAM03-E16
-- **物と変化**: 手前右寄りの広い床に、昭和の赤い金属フレームの三輪車が一台置かれる（黒い座面、黒いタイヤ、強い接地影）
-- **最終 box**（baseline px）: `395,785,525,885`（130x100）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `332,729,588,900`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (63,56)-(193,156)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the wide floor tiles in the lower right foreground, place one vintage children's tricycle with a bright red metal frame, a black seat, black rubber tires and plain black handlebar grips, with no bell, no decal and no text, seen in the same perspective as the floor tiles. Keep it near real scale (the box is already large). Give it a strong dark contact shadow under the three wheels. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the dark patchy shadow of the floor or the edge of the shutter. Place the object, including its shadow, centered at about 50% from the left and 62% from the top of the image, occupying roughly 51% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地・床の暗い斑状の影・シャッターの縁。
-- **最寄り既存 overlay と実測距離**: AR-03-silver-can まで 40.0px（box 基準・矩形間のユークリッド距離、次点 AR-03-kerosene-heater 42.7px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 赤いフレームと黒いタイヤで床に対比。暗い影の床に黒いタイヤが溶けやすいので、赤フレームの面積を大きく見せる角度にする。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '手前右寄りの床に、昭和の赤い三輪車が一台置かれる（無地・文字なし）'` / `candidate_id: 'AR-03-tricycle'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: **同モチーフ: AR-02-tricycle（CAM02・右手前の床の色褪せた赤い子供用三輪車）。** 子供の記憶の反復シリーズ（別カメラ。こちらは鮮やかな赤の金属フレーム）として扱い、制作前に見比べる。反復に価値がある理由: 同じ三輪車が別の場所にも現れると「子供が通った跡」が連続して読め、子供の記憶の筋が強まる。差分は、AR-02-tricycle が右手前の色褪せた赤、こちらは手前右寄りの広い床にある鮮やかな赤の金属フレームで、カメラと色の鮮やかさ・置き場所が違う。
-
 #### AR-03-wash-tub — 黄色い無地の洗面桶(銭湯風、ロゴなし)
 
 - **camera / element_id**: CAM03 / CAM03-E16
