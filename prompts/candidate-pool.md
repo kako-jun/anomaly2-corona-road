@@ -365,24 +365,6 @@
 
 ### CAM02 — Main Corridor
 
-#### CR-NEW-02-03 — 縄跳びの縄
-
-- **camera / element_id**: CAM02 / CAM02-E20
-- **物と変化**: 床に赤い木製グリップの縄跳びが輪になって置かれている（昭和の子供の遊び）
-- **最終 box**（baseline px）: `250,800,370,885`（120x85）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `182,729,438,900`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (68,71)-(188,156)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark foreground floor tiles, lay one children's jump rope in a loose ring on the floor: a thin cream-colored rope forming a loop, with two plain red wooden handles lying beside the loop, no text and no print. Make it about 1.3x larger than real scale, with a slightly thicker rope so that it reads clearly. Give the rope and the handles a strong dark contact shadow. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the grain of the floor or the shadow areas around it. Place the object, including its shadow, centered at about 50% from the left and 66% from the top of the image, occupying roughly 47% of the image width and 50% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地・床の粒状感・周囲の影。
-- **最寄り既存 overlay と実測距離**: AR-02-smartphone-facedown まで 36.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-leather-footprints 39.0px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 手前の暗い床に、赤いグリップとクリーム色の縄で対比。縄は細いので、1.3倍と太めで明部を作る。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '床に赤い木製グリップの縄跳びが輪になって置かれる（昭和の子供の遊び）'` / `candidate_id: 'CR-NEW-02-03'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### CR-NEW-02-04 — 七夕の輪つなぎ飾り
 
 - **camera / element_id**: CAM02 / CAM02-E01
