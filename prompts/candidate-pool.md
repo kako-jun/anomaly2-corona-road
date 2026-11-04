@@ -471,7 +471,6 @@ CAM 04（Underground Junction）の新規の画像異変 8 件（小物 7・大�
 
 | 候補ID | 対象ID | 変化 | category / anomaly_type | box (x1,y1,x2,y2) | 最寄り既存と距離（alpha bbox +2px 基準） |
 | --- | --- | --- | --- | --- | --- |
-| AR-04-glass-silhouette | CAM04-E10 | 奥左のガラス越しの人影 | person / add_person | `(264,296,294,388)` | AR-04-door-gap 34.0px |
 | AR-04-shadow-behind-camera | CAM04-E15 | カメラの背後の人の影 | person / add_person | `(176,824,264,900)` | AR-04-hatch-frame-round 34.0px |
 | AR-04-glass-umbrella-reflection | CAM04-E14 | 右の黒いガラスにだけ映る傘 | surreal / reflection | `(482,402,542,486)` | AR-04-red-lantern 34.0px |
 | AR-04-wall-plaster-peel | CAM04-E14 | 漆喰壁の剥落 | environment / state_change | `(625,120,676,220)` | AR-04-red-lantern 36.1px |
@@ -479,20 +478,6 @@ CAM 04（Underground Junction）の新規の画像異変 8 件（小物 7・大�
 | AR-04-wall-panel-fallen | CAM04-E14 | 腰壁の板が外れて倒れかかる | object / displace | `(500,520,560,605)` | AR-04-puddle 32.0px |
 | AR-04-left-edge-eyes | CAM04-E18 | 左端の暗がりに光る目 | surreal / add_creature | `(0,630,50,692)` | AR-04-randoseru-red 34.0px |
 | AR-04-floor-shoes-rows（大面積） | CAM04-E15 | 床の通路帯に整然と並ぶ無人の靴 | object / multiply | `(202,380,458,900)` = 実面積 127,515 px²（画像の 21.0%） | 大面積どうしの距離 3px・4px（window-alley / glass-fog。重ならない） |
-
-### AR-04-glass-silhouette — 奥左のガラス越しの人影
-
-- **カメラ / 対象**: CAM04 / CAM04-E10（物の説明・座標はインベントリが正本）
-- **物と変化**: 奥正面の扉の左隣にある淡い緑灰色のガラス面（E10 の左パネル）の向こうに、こちらへ背を向けて立つ大人の黒い影が一人現れる（顔・服の柄なし。ガラス越しなので輪郭はやや柔らかい）。影が足を乗せる床は写真のまま。人は影のみ。顔・肌・服の柄は描かない。扉や取手には触れない。
-- **box (x1,y1,x2,y2)**: `(264,296,294,388)`（30x92。ガラスパネル x 264〜298 の左寄りに収め、右側の扉との距離を取る）。
-- **最寄り既存 overlay と実測距離**: AR-04-door-gap 34.0px、次点 AR-04-handle 49.0px（台帳 overlay の alpha bbox を各辺 +2px した矩形との距離・2026-11-05 実測）。
-- **6倍クロップ**: `(153,256)–(409,427)`（256x171 を 1536x1024 へ拡大。物は crop 内 x 666〜846 / y 240〜792（縦長の淡いパネルの中））。
-- **生成プロンプト（3 テイク）**: 3 テイクは表現を振った別案。目視で選ぶ。
-  - テイク1: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). Inside the pale grey-green glass panel just left of the double door at the far end of the corridor (about x 666-846, y 240-792 of this frame), add one adult person seen from behind as a soft dark silhouette standing still and facing away from the camera, head and shoulders and long coat shape only, as if behind frosted glass. No face, no skin, no clothing pattern, no hands visible. The silhouette is dark navy-black with slightly blurred edges and fills the panel height about 90 percent. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). Behind the pale glass panel to the left of the far double door (x 666-846, y 240-792 of this frame), add a single standing human silhouette, back turned, arms hanging, wearing a plain dark hat and long overcoat, rendered as a flat dark shape with softly blurred outline as seen through frosted glass. No facial features, no pattern. It stands still, centred in the panel. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). In the glass panel left of the far door (x 666-846, y 240-792 of this frame), add a tall thin dark human shape standing very still with its back to us, shoulders slightly rounded, outline softened by the glass; slightly stronger contrast than the surroundings so it reads clearly even in the dim light. No face, no details, no light of its own. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**: `id: AR-04-glass-silhouette` / `element_id: CAM04-E10` / `category: person` / `anomaly_type: add_person` / `location: 'CAM04-E10 の周辺（奥の両開き扉の左隣のガラスパネル）、差分左上 (264,296) px'` / `detail: '奥の扉の左隣のガラス越しに、こちらに背を向けて立つ黒い人影が一人現れる(影のみ・顔なし)'` / `phase: late` / `subtlety: 'medium'` / `candidate_id: 'AR-04-glass-silhouette'` / `note: 最近傍の既存 AR-04-door-gap 34px（alpha bbox +2px 基準）。CR-04-11（左ガラス店先の「反射」に映る人影・pool 内）とは、映る物が反射か実体の向こうか・位置（左手前の店先と奥の扉脇）が違う。CR-01-06（CAM01 の小さすぎる人影）とは別カメラ。`
-- **相互参照・重複精査**（制作スキル「追加前の類似チェック」。台帳と candidate-pool を CAM04 だけでなく全カメラで照合）: CR-04-11 は左の店先ガラスの反射内で、人影が「映っているだけ」。本案は奥の扉脇のガラスの向こうに立つ。差は位置・見え方（反射か透過か）で別異変として残す（ただし同プレイで両方は出さない運用が望ましい。台帳 note に併記）。AR-04-door-gap / AR-04-handle と距離 30px 以上（34px）で、扉本体には触れない。
 
 ### AR-04-shadow-behind-camera — カメラの背後の人の影
 
