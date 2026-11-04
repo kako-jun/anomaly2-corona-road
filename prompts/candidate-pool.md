@@ -471,26 +471,11 @@ CAM 04（Underground Junction）の新規の画像異変 8 件（小物 7・大�
 
 | 候補ID | 対象ID | 変化 | category / anomaly_type | box (x1,y1,x2,y2) | 最寄り既存と距離（alpha bbox +2px 基準） |
 | --- | --- | --- | --- | --- | --- |
-| AR-04-glass-umbrella-reflection | CAM04-E14 | 右の黒いガラスにだけ映る傘 | surreal / reflection | `(482,402,542,486)` | AR-04-red-lantern 34.0px |
 | AR-04-wall-plaster-peel | CAM04-E14 | 漆喰壁の剥落 | environment / state_change | `(625,120,676,220)` | AR-04-red-lantern 36.1px |
 | AR-04-floor-reflection-gap | CAM04-E17 | 白い反射の中の一枚だけ映らないタイル | environment / state_change | `(256,571,344,621)` | AR-04-orange-tile 36.0px |
 | AR-04-wall-panel-fallen | CAM04-E14 | 腰壁の板が外れて倒れかかる | object / displace | `(500,520,560,605)` | AR-04-puddle 32.0px |
 | AR-04-left-edge-eyes | CAM04-E18 | 左端の暗がりに光る目 | surreal / add_creature | `(0,630,50,692)` | AR-04-randoseru-red 34.0px |
 | AR-04-floor-shoes-rows（大面積） | CAM04-E15 | 床の通路帯に整然と並ぶ無人の靴 | object / multiply | `(202,380,458,900)` = 実面積 127,515 px²（画像の 21.0%） | 大面積どうしの距離 3px・4px（window-alley / glass-fog。重ならない） |
-
-### AR-04-glass-umbrella-reflection — 右の黒いガラスにだけ映る傘
-
-- **カメラ / 対象**: CAM04 / CAM04-E14（物の説明・座標はインベントリが正本）
-- **物と変化**: 右の黒い店舗ガラスの、通路が映り込む面に、通路にも壁にも無い黒い洋傘が一本、先を下にして真っすぐ立っているように映る（反射像だけ。傘の実物も持ち主も、どこにも無い）。無地の黒で、石突きと柄だけが冷たい白でわずかに光る。手・人・顔は描かない。ガラスの枠と他の反射は触らない。
-- **box (x1,y1,x2,y2)**: `(482,402,542,486)`（60x84 = 5,040 px²）。
-- **最寄り既存 overlay と実測距離**: AR-04-tin-robot 38.0px、次点 AR-04-red-lantern 34.0px（台帳 overlay の alpha bbox を各辺 +2px した矩形との距離・2026-11-05 実測）。AR-04-wall-panel-fallen（本節の box y1=520）とは y 方向に 34px。
-- **6倍クロップ**: `(420,350)–(676,521)`（256x171 を 1536x1024 へ拡大。物は crop 内 x 372〜732 / y 312〜816（右の黒いガラス窓の中程））。
-- **生成プロンプト（3 テイク）**: 3 テイクは表現を振った別案。目視で選ぶ。
-  - テイク1: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). Inside the black storefront glass window on the right side of the frame (x 372-732, y 312-816), where the corridor is faintly mirrored, add the reflection of one plain black closed umbrella standing upright with its tip on the floor and its curved handle at the top, reflected only in the glass. There is no umbrella anywhere in the corridor itself. Solid black canopy folded shut, thin cool-white glint on the metal tip and the handle. No hand, no person, no text. The window frame and the other reflections stay unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). In the dark glass of the right-hand shop window (x 372-732, y 312-816) add one reflected black umbrella leaning slightly against an unseen wall, folded, hooked handle upward, seen only as a mirror image in the glass with the same softness as the other reflections. Nothing in the real corridor casts it. No hand, no person, no markings. The rest of the glass and the frame are unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). Reflected in the black window glass on the right (x 372-732, y 312-816) show a single opened black umbrella resting upside down on the floor like a bowl, visible only as a faint mirror image with a pale rim light on its ribs; the real floor in front of the window is empty. No hand, no person, no text, no logo. Frame and other reflections unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**: `id: 'AR-04-glass-umbrella-reflection'` / `element_id: 'CAM04-E14'` / `category: 'surreal'` / `anomaly_type: 'reflection'` / `location: 'CAM04-E14 の周辺、差分左上 (482,402) px'` / `detail: '右の黒い店舗ガラスにだけ、通路にはない黒い傘が立って映る'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-04-glass-umbrella-reflection'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照・重複精査**（制作スキル「追加前の類似チェック」。台帳と candidate-pool を CAM04 だけでなく全カメラで照合）: CR-04-17（店舗ガラスに傘だけが映る・pool 内）を昇格する案。登録時にその行を pool から削除する。AR-02-shutter-shadow は人影の反射で、本案は物の反射（別の物・別カメラ）。CAM04 の既存に反射系の異変はなく、AR-04-window-alley（右壁一面が窓）とは同じ壁面のため排他。AR-04-hatch-reflection-extra は床の点検口の反射で別物。
 
 ### AR-04-wall-plaster-peel — 漆喰壁の剥落
 
