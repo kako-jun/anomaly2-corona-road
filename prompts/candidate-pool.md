@@ -537,24 +537,6 @@
 
 ### CAM07 — Maintenance Corridor
 
-#### AR-07-n1 — 下駄一足
-
-- **camera / element_id**: CAM07 / CAM07-E16
-- **物と変化**: 左手前の床に、無地の木の下駄が一足そろえて置かれる
-- **最終 box**（baseline px）: `100,378,200,440`（100x62）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `22,324,278,495`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (78,54)-(178,116)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the wide gray floor tiles at the left foreground, place one pair of plain wooden geta sandals neatly side by side: flat pale wood boards with two wooden teeth under each and plain black thong straps, no text and no print. Make them about 1.4x larger than real scale. Give them a strong dark contact shadow under the teeth and along the boards. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white fluorescent reflections on the floor, the tile joints or the stair area above. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 39% of the image width and 36% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 床の白い蛍光灯反射・タイル目地・上の階段。
-- **最寄り既存 overlay と実測距離**: AR-07-stairs まで 34.0px（box 基準・矩形間のユークリッド距離、次点 AR-07-mask-on-floor 69.4px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 明るい床反射に白木が溶けやすい。反射の縁の暗い部分に置き、鼻緒の黒と影で輪郭を出す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左手前の床に、無地の木の下駄が一足そろえて置かれる'` / `candidate_id: 'AR-07-n1'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 履物系: AR-07-shoe-v2（CAM07・左階段の片方の子供靴）・台帳の黄色い長靴（CAM01。PR #97 で登録）。別物・別の置き場所（床の広い面）。
-
 #### AR-07-n4 — 点灯スマホ
 
 - **camera / element_id**: CAM07 / CAM07-E16
