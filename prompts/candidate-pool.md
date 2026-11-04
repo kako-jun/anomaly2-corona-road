@@ -1267,25 +1267,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **既存との関係（差分と排他）**: `AR-02-leather-footprints`（(409,732) 92x149、革靴 1 列）は本件の床の内側に完全に入る。差分: 本件は床一面・4 種の履物・奥の角へ収束・子供混在。**排他**（同プレイで共存させない。本件を採用するなら leather-footprints は台帳に残すが、台帳 note に互いを書く）。同じ床面を使う `AR-02-stool`（**37,590**。台が通路側へ動く）・`AR-02-chalk-hopscotch`・`AR-02-puddle`・`AR-02-tile`・`AR-02-tile-color` も**排他**。床に立つ小物（`AR-02-tricycle` `AR-02-smartphone-facedown` ほか。全件は「box と既存 overlay の重なり」の表）は併存可で、足跡が小物の上を通らないよう接地部はマスクで抜く。`AR-06-wet-footprints`（CAM06）は別カメラの別物で、この型は CAM02 だけに限る。
 - **生成枚数の最小見積り**: 全景 6 テイク（窓 A 3＋窓 B 3）。
 
-### CR-LG-02-02 左シャッター一面の子供のクレヨン画
-
-- **ID / camera / element_id**: CR-LG-02-02 / CAM02 / CAM02-E07
-- **面**: box 0,50,172,600（94,600 px²、15.6%）。左の横縞シャッター面（E07）とガラス店先（E08）の台形。
-- **物と変化**: シャッターとガラスの全体に、子供のクレヨン画の画用紙がテープ止めで隙間なく貼られる。どの絵も同じ構図（大きな人型と小さな人型が手をつなぐ 4 人家族、赤い家、黄色い太陽）。画用紙は少し傾き、昭和風のセロハンテープ。文字・名前なし。
-- **不気味さの狙い**: 老人たちの記憶が作る像と読める。**4 人目のフラグ後（late）に限り**、子供の記憶が作った像とも読める（story の未決: 4 人目の子供の記憶が異変を作るか。確定ではなく、フラグ後の読みの一つ）。令和の子供が昭和のシャッターに貼るという時代の混ざり（story の「現代人と昭和の建物」）。優しいが数が多くて怖い。
-- **保持するもの**: シャッターの縦枠・上下の縁・床との接地・右のガラス枠の位置、横縞の線（絵の隙間と周囲に残す）。
-- **生成プロンプト全文**（絵素材を 1 枚別生成）:
-  ```
-  $imagegen Create one flat, straight-on scan of a single sheet of off-white drawing paper (landscape, slightly wrinkled, with a small piece of old yellowed cellophane tape at each top corner) carrying a naive child's crayon and coloured-pencil drawing: two big stick-like human figures and two small stick-like human figures holding hands in a row (a family of four), a red house with a triangular roof on the left, and a big yellow sun in the top right corner. The drawing is clumsy, with thick waxy crayon strokes and visible paper texture. It contains absolutely no writing: no letters, no numbers, no names, no signature, no logo. The sheet is evenly lit and fills most of the frame on a plain neutral dark-grey background.
-  Output 1536x1024 (3:2). No watermark.
-  ```
-- **作り方**: ①素材 3 テイクから 1 枚を人間が選ぶ。②割付図: シャッター台形（上辺 0,50 → 下辺 0,600 の遠近）に格子（4 列×9 行前後）、各枚を ±4 度回転・±6% 縮尺・明度ゆらぎ・テープ位置変化で敷き詰める（完全な複製感を避ける）。③横縞の凹凸は multiply で重ね、縦枠のライン上は貼らない（枠で止める）。④ポリゴン alpha から overlay を切り出す。
-- **難所と没基準**: クレヨン画に文字風の筆致が混ざったら没。人型の本数が 4 でない素材は没。ガラス面と金属シャッターで反射が違うので、ガラス部は反射を元画像から screen で戻す。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳案**: category `object` / anomaly_type `duplicate` / detail 「左のシャッターとガラス店先一面に、同じ家族のクレヨン画の画用紙が隙間なく貼られる」。note に「大面積。CAM02-E07」を書く。
-- **排他**: `AR-02-shop-reopens`（(0,308) 199x250、同じ店先）・`AR-02-newspaper`・`AR-02-open-sign`・`AR-02-wrapping-paper`・`AR-02-cat`（同じ面を覆う）。変化の種類は別だが画面が潰し合うので同プレイ非共存。
-- **生成枚数の最小見積り**: 素材 3 テイク。
-
 ### CR-LG-03-01 シャッター一面の無地の白い紙
 
 - **ID / camera / element_id**: CR-LG-03-01 / CAM03 / CAM03-E06
