@@ -621,24 +621,6 @@
 
 ### CAM04 — Underground Junction
 
-#### AR-04-thermos — 花柄の魔法瓶(柄のみ・文字なし)
-
-- **camera / element_id**: CAM04 / CAM04-E15
-- **物と変化**: 右手前の広い床に、昭和の赤い花柄の魔法瓶が一本立つ（柄のみ・文字なし）
-- **最終 box**（baseline px）: `530,830,650,895`（120x65）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,729,675,900`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (111,101)-(231,166)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles in the lower right foreground, stand one vintage vacuum flask (a Showa-era thermos) upright: a red body decorated with a simple stylized flower pattern, a metal screw cap and a small carrying loop, with the pattern consisting of flowers only and no text, no logo and no letters. Make it about 1.2x larger than real scale. Give it a strong dark contact shadow and a glossy highlight on the red body and the metal cap. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image; the only pattern allowed anywhere is the flower pattern on the thermos body. Do not touch the tile joints, the soft light patches on the floor or the wall base on the right. Place the object, including its shadow, centered at about 67% from the left and 78% from the top of the image, occupying roughly 47% of the image width and 38% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地・床の淡い光の斑・右の壁際。
-- **最寄り既存 overlay と実測距離**: AR-04-puddle まで 43.0px（box 基準・矩形間のユークリッド距離、次点 AR-04-hatch-frame-round 93.9px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 赤と銀の対比は床に強い。銀の金属蓋は明るい反射に溶けやすいので、蓋の影と縁の黒を入れる。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '右手前の床に、昭和の赤い花柄の魔法瓶が一本立つ（柄のみ・文字なし）'` / `candidate_id: 'AR-04-thermos'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### AR-04-flypaper — 蝿取りリボン(黄褐色のらせん)
 
 - **camera / element_id**: CAM04 / CAM04-E01
