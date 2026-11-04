@@ -367,24 +367,6 @@
 
 ### CAM03 — South Exit
 
-#### AR-03-insect-cage — 竹の虫かご(草と無地の紙片なし)
-
-- **camera / element_id**: CAM03 / CAM03-E16
-- **物と変化**: 左手前の影の床に、昭和の竹編みの丸い虫かごが一つ置かれる
-- **最終 box**（baseline px）: `10,640,110,740`（100x100）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,604,256,775`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (10,36)-(110,136)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the shadowed floor tiles at the left foreground, place one round dome-shaped woven bamboo insect cage (pale bamboo strips woven into a dome with a small round plain bamboo base, a few blades of green grass visible inside), completely plain with no paper tag and no text. Make it about 1.4x larger than real scale. Give it a strong dark contact shadow beneath. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the shutter wall at the upper left, the tile joints or the floor grain. Place the object, including its shadow, centered at about 23% from the left and 50% from the top of the image, occupying roughly 39% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左上のシャッター壁・タイル目地・床の粒状感。
-- **最寄り既存 overlay と実測距離**: AR-03-paper-bag まで 32.0px（box 基準・矩形間のユークリッド距離、次点 AR-03-tile-diagonal 37.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 影の暗い床に淡い竹色で対比する。壁（シャッター）の下端に溶けないよう、シャッターから離して置く。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左手前の影の床に、昭和の竹編みの丸い虫かごが一つ置かれる（無地）'` / `candidate_id: 'AR-03-insect-cage'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### AR-03-sake-bottle — 茶色い一升瓶(ラベルなし・無地)
 
 - **camera / element_id**: CAM03 / CAM03-E16
