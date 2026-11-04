@@ -75,7 +75,6 @@
 | CR-05-02 | CAM05-E08 | 正面カーテンの一枚だけ、裾が隣より少し高い。                 | object / early / subtle      |
 | CR-05-03 | CAM05-E12 | レンガ帯の一つだけ目地が上下にずれている。                   | environment / early / subtle |
 | CR-05-04 | CAM05-E02 | 左上の丸灯は点灯しているのに、店舗のガラス反射には映らない。 | environment / early / subtle |
-| CR-05-05 | CAM05-E09 | 右端のカーテンの隙間に、細い指のような影が一本見える。       | person / mid / medium        |
 | CR-05-06 | CAM05-E07 | 正面の金属枠の縦桟が一本だけガラスの手前に重なっている。     | surreal / mid / medium       |
 | CR-05-09 | CAM05-E11 | 黒い側面に、正面カーテンの縦模様が透けて現れる。             | surreal / late / obvious     |
 | CR-05-10 | CAM05-E08 | 中央のカーテン一枚だけが内側へ膨らみ、人の肩幅の形になる。   | person / late / obvious      |
@@ -824,7 +823,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 
 | ID | 要素 | category / anomaly_type | 種別 | box（baseline px） | フェーズ / 目立ち度 |
 | --- | --- | --- | --- | --- | --- |
-| AR-05-door-fingers | CAM05-E09 | person / add_person | 小物（CR-05-05 の昇格） | `562,230,596,330`（34x100） | mid / medium |
 | AR-05-ceiling-shirt | CAM05-E01 | object / add_object | 小物 | `243,8,303,50`（60x42） | mid / medium |
 | AR-05-floor-child-shadow | CAM05-E13 | person / reflection | 小物 | `597,598,672,752`（75x154） | late / medium |
 
@@ -839,40 +837,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 - 型の重複回避: 猫は他カメラに既存（`AR-02-cat` / `AR-08-cat` / `AR-07-stairs-cat` / `AR-03-walking-cat` ほか台帳に 5 件）で、これ以上は足さない（本節では猫の案を `AR-05-aisle-light-streak` に差し替えた）。**植物・蔓・花、金魚、ハンガーの服、床の子供の影だけ**は台帳・候補プールのどちらにも無いことを `grep` で確認した（2026-11-05）。ケンパ・ランドセル・水たまり・靴は既存と型が被るので使わない。
 - **remove_object / displace / text_change / multiply を入れなかった理由**（2026-11-05 に左通路・天井・右上を原寸で見直した）: 候補にした左通路の天井の丸い通気口は `AR-05-white-ribbon`（box 重なり）、左店先の丸い看板は白いリボンまで 12px、右上の防犯ドームは `AR-05-duplicate-light` の box 内で、いずれも 30px の空きが取れない。左通路は小物 3 件（silhouette・light-streak・goldfish）で 30px 余白を使い切っており、これ以上は足せない。文字を含む看板の変更は、架空化済みの基準画像ができるまで具体化しない。この 4 種は別カメラ側で補う。
 - **構造の偏り是正**: 7 件の分類は surreal 1・person 3（add_person 2 + reflection 1）・add_creature 1（金魚）・environment/state_change 1（光の帯）・add_object 1。台帳の偏り（object 137 / add_object 105）に足すのは add_object の 1 件だけ。
-
----
-
-### AR-05-door-fingers — 扉の内側のカーテンの合わせ目に子供の指の影（CR-05-05 の昇格）
-
-- **camera / element_id**: CAM05 / CAM05-E09
-- **物と変化**: 右側ガラス扉の左の戸の暗い隙間（細長く立てかけた物の右側）で、カーテンの端が内側から小さくつままれたように寄り、そのまわりに**指の形をした暗いぼんやりした影**が落ちる。体の部位そのものは描かず、つまみ寄せた折り目と淡い影だけで人の気配を示す（手・腕・顔・肌・爪は無い）。※昇格元: CR-05-05（右端のカーテンの隙間に細い指のような影。制作時に候補行を削除）
-- **最終 box**（baseline px）: `562,230,596,330`（34x100）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `420,190,676,361`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (142,40)-(176,140)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: inside the dark glass of the left leaf of the glass door (the dark vertical gap with the curtain), the edge of the curtain is gathered and pinched in one narrow fold and drawn slightly aside, as if something small behind it were pulling it, with a few narrow soft dark finger-shaped shadows on the fabric around the pinched fold. Only the pinched fold and the vague soft dark shadows, no hand, no arm, no face, no skin detail. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Make the shadows slightly lighter than the dark gap so that they read clearly, with the curtain fold catching a thin pale highlight. Do not touch the metal door frame, the handle, the green sign above, the other glass panels, the curtains elsewhere or the leaning object in the gap. Place the object, including its shadow, centered at about 62% from the left and 53% from the top of the image, occupying roughly 13% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: inside the dark glass of the left leaf of the glass door (the dark vertical gap with the curtain), the edge of the curtain is pinched into a small tight pleat near its middle, with the cloth pulled slightly toward the inside, and a soft dark elongated shadow in the shape of narrow tips lies right behind the pleat, as if the curtain were being held by something small. Only the pleat and the vague soft dark shadow, no hand, no arm, no face, no skin detail. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Make the shadows slightly lighter than the dark gap so that they read clearly, with the curtain fold catching a thin pale highlight. Do not touch the metal door frame, the handle, the green sign above, the other glass panels, the curtains elsewhere or the leaning object in the gap. Place the object, including its shadow, centered at about 62% from the left and 53% from the top of the image, occupying roughly 13% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: inside the dark glass of the left leaf of the glass door (the dark vertical gap with the curtain), the edge of the curtain is lifted and pinched at its upper part, hanging in a slight diagonal fold, with a thin pale highlight along the fold and soft dark finger-shaped smudges of shadow just behind it. Only the lifted fold and the vague soft dark shadows, no hand, no arm, no face, no skin detail. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Make the shadows slightly lighter than the dark gap so that they read clearly, with the curtain fold catching a thin pale highlight. Do not touch the metal door frame, the handle, the green sign above, the other glass panels, the curtains elsewhere or the leaning object in the gap. Place the object, including its shadow, centered at about 62% from the left and 53% from the top of the image, occupying roughly 13% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 扉の金属枠・取手・上の緑看板・他のガラス面。
-- **最寄り既存 overlay と実測距離**: AR-05-glass-light まで 51.0px（box 基準、次点 AR-05-sign-digit-missing 59.5px）。本節の他の項では AR-05-floor-child-shadow まで 268.0px。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: person / mid / medium
-- **視認性の注意**: 暗い隙間に黒い影は沈みやすい。影をやや灰色に、つまんだカーテンの折り目に細い白い明部を付けて、**影の本体より折り目の明暗で見せる**。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す（通らなければ折り目を大きく、明部を強く）。
-- **台帳登録時**: `category: 'person'` / `anomaly_type: 'add_person'` / `detail: '右の扉の暗い隙間で、カーテンの端が内側からつままれたように寄り、指の形の暗い影が落ちている'` / `candidate_id: 'AR-05-door-fingers'`（昇格元 CR-05-05 を note に）。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 同じ要素の `AR-05-old-woman-in-glass`（E08・正面ガラスの内側の老婆の後ろ姿）とは別のガラス・別の人物の気配（子供・体の一部だけ）。story の 4 人目（子供）の気配に寄る（令和の異変の印付けは story.md 未決）。
 
 ---
 
