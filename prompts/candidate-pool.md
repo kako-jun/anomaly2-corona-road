@@ -1112,7 +1112,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
 | AR-06-wall-gecko | add_creature | object | 小物 | 右の粗い壁にヤモリが一匹張り付く |
 | AR-06-tile-sky | surreal | surreal | 小物 | 床タイル1枚が抜けて青空が見える |
 | AR-06-leaf-shadows-aligned | state_change | object | 小物 | 前景左下の床の植物の影が、全部同じ一方向へ平行に揃う |
-| AR-06-wall-height-marks | add_object | object | 小物 | 右壁に子供の背比べのような色鉛筆の横線が刻まれる |
 
 - **配分**: 7件中 add_object は1件（AR-06-wall-height-marks）、add_person・multiply・color_shift・reflection は0件（台帳の偏り是正）。state_change が4件（AR-06-floor-tile-rotated・AR-06-door-gap-light・AR-06-floor-light-slant・AR-06-leaf-shadows-aligned）、surreal・add_creature・add_object が各1件。大面積は1件（AR-06-floor-tile-rotated）。
 - **配置の実測**（2026-11-05）: 小物の box は、`anomalies.yaml` の CAM06 全 overlay の**実際の alpha bbox**（overlay 画像の alpha>0 の範囲）から**矩形間距離 30px 以上**あることを `uv run --with pyyaml --with numpy --with pillow python3` で実測した（README「配置の基準」）。本節の小物どうしも 30px 以上。実測は各 box を各辺 +2px した矩形（最終 overlay の alpha bbox の見込み）で行い、すべて 31.0px 以上の余裕を持たせた（最小は AR-06-floor-light-slant と AR-06-tile-sky の相互 31.0px、AR-06-tile-sky と AR-06-umbrella の 31.1px。ちょうど 30.0px の組は残していない）。台帳には最終 alpha bbox で測り直した値を書く。AR-06-tile-sky は距離を確保するため旧案の (300,515,366,580) から (294,524,360,589) へ動かした。既存の大面積（AR-06-wall-puddle・AR-06-ceiling-umbrellas・AR-06-wall-same-poster）は小物の距離計算から除いた（大面積とは重なってよい）。
@@ -1324,39 +1323,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
 - **視認性の注意**: 暗い床の影どうしの差は小さく、下限を割りやすい。影は元より濃く（炭色）、葉先を細長く揃えて輪郭を立てる。下限未満なら本数を減らして太くする。 登録後に `uv run scripts/check-visibility.py --id AR-06-leaf-shadows-aligned` を必ず通す。通らなければ同じ型（state_change）の別案にして節へ戻す。
 - **台帳登録案**: `id: 'AR-06-leaf-shadows-aligned'` / `element_id: 'CAM06-E16'` / `category: 'object'` / `anomaly_type: 'state_change'` / `location: 'CAM06-E16 の前景左下の床、差分左上 (22,782) px'` / `detail: '前景左下の床に落ちる植物の葉の影が、全部同じ一方向（通路の奥）へ平行に揃って伸びる'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-06-leaf-shadows-aligned'`。note に「大面積 AR-06-floor-tile-rotated の polygon の内側に入るので排他」と最寄り既存 id・最終 alpha bbox の実測距離を書く。
 - **相互参照 / 重複精査**: CR-06-05（大きな葉の影が葉の向きと逆側へ伸びる。候補のまま）は影が葉と逆向き、本案は影どうしが全部同じ向きに揃う。同じ元の植物の影なので、CR-06-05 を採用する場合は本案と同プレイで共存させない。CR-06-26（茶トラ猫が植物の足元に座る）・CR-06-12（葉の陰の人形のような生物）とは別。
-
-### AR-06-wall-height-marks — 右壁に刻まれた背比べの線
-
-- **camera / element_id**: CAM06 / CAM06-E15
-- **物と変化**: 右の粗い壁に、子供の背比べの印のような短い横線が何本か、下から上へ間隔をあけて刻まれる（赤鉛筆・青鉛筆の横線のみ。数字・文字なし）
-- **最終 box**（baseline px）: `622,410,672,560`（50x150）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,400,675,571`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (203,10)-(253,160)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  テイク1:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the rough gray wall at the right edge of the frame, draw a column of six short horizontal pencil marks, like a child's height chart, evenly spaced from bottom to top, each about 30 percent of the wall strip's width, alternating red colored pencil and dark graphite. The lines should be about 2x thicker than a real pencil line so that they read clearly, following the slightly slanted perspective of the wall. Only plain tick marks: no numbers, no letters, no writing. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the gecko position above, the framed notice or the wall texture outside the marked strip. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 88% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク2:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: add a vertical set of seven short hand-drawn horizontal tick marks on the coarse wall at the right edge of the frame, like the growth marks of a child measured against a wall, in red and blue colored pencil, spaced about 20 px apart in the original photo scale and following the wall perspective. The lines are bold and clearly visible. No digits, no letters. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the gecko position above, the framed notice or the wall texture outside the marked strip. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 88% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク3:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the rough wall strip at the right edge, scratch several short horizontal colored pencil lines (red, blue and graphite) stacked upward at slightly uneven spacing, like a record of a child growing taller. Make the lines thick and high contrast so they stand out from the wall texture. No numbers or characters, only the bare tick lines. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the gecko position above, the framed notice or the wall texture outside the marked strip. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 88% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe dark door and its frame, the gecko position above, the framed notice or the wall texture outside the marked strip（英語プロンプトの Do not touch に同じ）。
-- **最寄り既存 overlay と実測距離**: AR-06-wall-stripes まで 59.0px（box 基準・矩形間のユークリッド距離。次点: AR-06-tilted-notice 106.9px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
-- **分類 / フェーズ / 目立ち度**: object / late / medium
-- **視認性の注意**: 粗い壁の凹凸に紛れやすい細線は下限未満になりやすい。赤・青の鉛筆を2倍太に、明度差を付ける。下限未満なら本数を減らして太くする。 登録後に `uv run scripts/check-visibility.py --id AR-06-wall-height-marks` を必ず通す。
-- **台帳登録案**: `id: 'AR-06-wall-height-marks'` / `element_id: 'CAM06-E15'` / `category: 'object'` / `anomaly_type: 'add_object'` / `location: 'CAM06-E15 の周辺、差分左上 (622,410) px'` / `detail: '右の粗い壁に、子供の背比べのような色鉛筆の横線が何本か刻まれる（数字・文字なし）'` / `phase: late` / `subtlety: 'medium'` / `candidate_id: 'AR-06-wall-height-marks'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く（子供の気配。add_object 枠は本節でこの1件のみ）。
-- **相互参照 / 重複精査**: CR-06-17（額入り掲示の横に紙が増える）は紙。CAM05 以降の壁の貼り紙・落書き系（制作済みの『古い貼り紙の剥がし跡』等）とは違い、本案は子供の背比べの線。4人目（子供）の気配として物語に沿う（story.md「4人目の子供」）が、令和テーマの印は付けない。
 
 ## 追加候補 — CAM 07
 
