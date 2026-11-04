@@ -371,24 +371,6 @@
 
 ### CAM05 — Emergency Stairwell
 
-#### CR05N-3 — 緑のブリキのじょうろ
-
-- **camera / element_id**: CAM05 / CAM05-E16
-- **物と変化**: 手前中央の暗い床に、無地の緑色のブリキのじょうろが一つ横たわる
-- **最終 box**（baseline px）: `280,815,400,885`（120x70）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `212,729,468,900`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (68,86)-(188,156)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark foreground floor tiles in the lower center, lay one plain green tin watering can on its side: a cylindrical body in mid green metal, a long spout with a plain rose, one arched handle, no label, no text and no print. Make it about 1.3x larger than real scale. Give it a strong dark contact shadow and a bright thin highlight along the metal. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the dark floor grain or the scattered small objects elsewhere. Place the object, including its shadow, centered at about 50% from the left and 71% from the top of the image, occupying roughly 47% of the image width and 41% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地・暗い床の粒状感・他の散らばる小物。
-- **最寄り既存 overlay と実測距離**: AR-05-marbles-scattered まで 43.0px（box 基準・矩形間のユークリッド距離、次点 AR-05-pet-bottle 57.0px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 暗床に暗緑は沈む。明るめの黄緑寄りの緑で、金属のハイライトを強く入れる。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '手前中央の暗い床に、無地の緑色のブリキのじょうろが一つ横たわる'` / `candidate_id: 'CR05N-3'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### CR05N-5 — 白い紙の吹き流し
 
 - **camera / element_id**: CAM05 / CAM05-E01
