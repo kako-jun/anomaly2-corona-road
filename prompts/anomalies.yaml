@@ -3253,3 +3253,22 @@ anomalies:
     dimensions: '473x222'
     review_status: 'composited'
     note: "大面積。CAM07-E12 ほか。昭和テーマ節の『時計は候補にしない』は既存時計の改変の話で、本件は足す案（kako-jun 指示 2026-11-04）。alpha bbox 473x222=105,006 px²（画像比 17.3%）。時計 35 個（直径 約22〜36px。小 22〜26px は左壁と扉上の 11 個、大は白壁 12 個と右面 10 個）。排他（同プレイ非共存）: AR-07-notice（重なり 2,891）・AR-07-reopened（22,848）・AR-07-wall-grid（3,060）・AR-07-duplicate-green-sign（1,015。右面の時計に覆われる）。併存可: AR-07-stairs・AR-07-white-step・AR-07-stairs-cat・AR-07-ticket・AR-07-shoe-v2（階段・床側。時計は階段壁より上）・AR-07-crane（吊り鶴は時計の手前）・AR-07-pictogram-flip・AR-07-blue-push-plate・AR-07-warm-light・AR-07-opening-paper（扉・開口・非常灯は保持。時計の quad はこれらを避ける）・AR-07-ceiling-string。最近傍の非重なりは AR-07-stair-figures（11px）・AR-07-paper-tag-lamp（40px）・AR-07-lamp-off（45px）。同カメラの 07-02（シーツ）は未制作。時計は白一色の文字盤で、実壁より少し浮いて見える。2 テイクの文字盤から 1 つ採用。ゲーム画面とライブ blink での確認は未了。"
+
+  - id: 'AR-05-curtains-open-cafe'
+    candidate_id: 'CR-LG-05-01'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E08'
+    base_photo: 'public/images/cam5.webp'
+    category: 'surreal'
+    anomaly_type: 'state_change'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(417,121)–(808,596)'
+    location: 'CAM05-E08、正面ガラス区画、差分左上 (282,109) px'
+    detail: '正面ガラスのカーテンが全て開き、無人の昭和の喫茶店の暖かい店内が見える'
+    generation_prompt: "Method: a 676x450 window (y100-550) of the baseline was edited with $imagegen (prompt below), pasted back with scripts/composite-polygon.py restore, then only the six glass panes (mullions, brick band, green sign, door glass excluded) were cut out with composite-polygon.py cutout. Prompt: Edit the attached surveillance camera photo of an underground shop front with a large glass facade covered by grey curtains. Make ONLY this change: all grey curtains behind the glass are drawn open, and through the glass we see the warm interior of an old Showa-era Japanese coffee shop with nobody in it: warm amber lamps, a wooden counter, round stools upholstered in red vinyl (one stool pulled slightly out), a shelf lined with plain unlabeled cream-soda glasses. The interior is clearly warmer and brighter than the corridor. The metal window mullions and transoms stay exactly where they are, and the existing faint reflections on the glass stay visible. The corridor floor, ceiling, green sign, black side panel and brick band remain cold blue-grey and untouched; the warm light must not spill onto the floor. No menus, signs, shop names, lettering or logos. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source."
+    overlay: 'assets/anomaly-overlays/cam05/curtains-open-cafe.webp'
+    overlay_origin: '(282,109)'
+    dimensions: '264x427'
+    review_status: 'composited'
+    note: "大面積。CAM05-E08。alpha bbox 264x427=112,728 px²（画像比 18.5%）。排他（同プレイ非共存。いずれも同じガラス面の部分変化・反射で、本件の全面開放＋店内に上書きされる）: AR-05-glass-light・AR-05-old-woman-in-glass・AR-05-curtain-open・AR-05-sign-in-glass・AR-05-amber-pane・AR-05-joint-into-glass・AR-05-chair-reflection・AR-05-curtain-mend・AR-05-wind-chime。併存可: AR-05-duplicate-light（天井。重なり 1,899 は bbox のみ）・AR-05-brick-round・AR-05-blue-brick（レンガ帯は保持）・AR-05-brown-column（隣接 0px、角柱は保持）。最近傍の非排他は AR-05-hatch-stain（28px）。2 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。"
