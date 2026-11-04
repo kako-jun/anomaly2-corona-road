@@ -28,5 +28,11 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Selftest composite-polygon.py
+        run: uv run --script scripts/composite-polygon.py --selftest
+
       - name: Type check & Build
         run: npm run build
