@@ -598,7 +598,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 
   | ID | 要素 | category / anomaly_type | 規模 | 変化 |
   | --- | --- | --- | --- | --- |
-  | AR-08-column-door-ajar | E15 | environment / state_change | 小物 | 右の黒い柱の下の暗い帯の引き戸が、指一本ぶん開いて細い光が漏れる |
   | AR-08-hanten-floor | E16 | object / add_object | 小物 | 左の床に、藍色の半纏が脱ぎ捨てたように丸まっている |
   | AR-08-ceiling-light-grid | E01 | environment / multiply | **大面積** | 天井一面に、同じ丸い天井灯が格子状にびっしり並ぶ |
   | AR-08-wall-drawers | E14 | surreal / multiply | **大面積** | 右の壁と柱の面が、同じ小さな引き出しの壁になる（百味箪笥） |
@@ -612,29 +611,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 - **共通手順**（大面積。この節の各項の窓）: 大面積は `scripts/composite-polygon.py` を使う（`crop` で全幅 675x450 の 3:2 窓を切り出し、生成結果を `restore` で元寸へ貼り戻し、面のポリゴンで `cutout --polygon … --feather 2`。複数窓は `restore --blend-px 100 --blend-edges t`）。窓は 1536/675≈2.2756 倍。生成は 1 件ずつ、生成画像は見ずに合成まで進め、採否は人間が決める運用。
 - **共通プロンプト末尾**（各プロンプトに全文を含めてある。小物は「クロップ」、大面積は「窓」の意味）: `Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
 - **共通の禁止**: 文字・数字・ロゴ・実在の店名・家紋の混入（出たテイクは没）。人の顔・体は描かない（人の気配は影・服・足元だけ）。性的・不適切の独自判定はしない（生成物はそのまま報告）。
-
-### AR-08-column-door-ajar — 黒い柱の下の引き戸が開く
-
-- **camera / element_id**: CAM08 / CAM08-E15（右端手前の黒い四角柱。下の暗い帯）
-- **物と変化**: 右の黒い柱の、下側のパネル（光る長方形の下）の暗い帯に、元は壁と同じ黒だった目立たない引き戸が、指一本ぶん開いている。細い縦の枠と、開いた隙間から漏れる細い暖色の白い光が見える。柱に扉があるはずがない。
-- **最終 box**（baseline px）: `566,574,638,672`（72x98）。
-- **6倍クロップ**（baseline px）: `419,538,675,709`（256x171）。box はクロップ内の (147,36)-(219,134)。
-- **生成プロンプト**（3 テイク。T1 は暖色の細い隙間、T2 は隙間をやや太く、T3 は光が床側にも薄くこぼれる）:
-
-  T1:
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object exactly unchanged. Make ONLY this single change: in the dark lower band of the black square pillar at the right of the frame, below the lower glowing cream panel, one narrow plain sliding door is slightly open by about the width of a finger: a thin dark-wood vertical frame, and through the opening a thin vertical strip of warm white light from inside, with a faint warm glow on the dark surface right beside it. The door has no handle plate, no sign and no marking. Make the door and the strip of light clearly visible at about 1.3x real scale. Do not touch the two glowing cream panels, the black middle band between them, the floor, the wall at the left or the edges of the pillar. Place the door, including its glow, centred at about 71% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 57% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  T2: T1 の "by about the width of a finger" を "by about the width of a hand" に置き換え、他は同じ（全文）。
-
-  T3: T1 の末尾の "faint warm glow on the dark surface right beside it" の後に ", and a thin trail of the same warm light spilling onto the floor at its foot" を足し、他は同じ（全文）。
-- **保持するもの**: 上下 2 枚の光る乳白パネル（AR-08-panel / AR-08-panel-off / AR-08-blue-panel が手を入れる物）、柱の縁、右の壁との境。
-- **最寄り既存 overlay と実測距離**: AR-08-n5（床の段ボール箱）まで 58.0px、次点 AR-08-floor-ramune-marbles 62.0px（box 基準）。同じ柱の光るパネル系（AR-08-panel y339〜472）とは 100px 以上離れる。
-- **分類 / フェーズ / 目立ち度**: environment / mid / medium
-- **視認性の注意**: 黒い面の上の光る細線は差分が強く出る。細すぎると面積比で通りにくいので、隙間は T2 の幅（手の幅）が有力。登録後に `check-visibility.py` を通す。
-- **台帳登録時**: `id: 'AR-08-column-door-ajar'` / `candidate_id: 'AR-08-column-door-ajar'` / `element_id: 'CAM08-E15'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `detail: '右の黒い柱の下の暗い帯にある引き戸が、指一本ぶん開き、細い暖色の光が漏れる'` / `phase: 'mid'` / 目立ち度 `medium` / note「小物。CAM08-E15。最近傍の既存は AR-08-n5（58.0px）。大面積 AR-08-wall-drawers とは同じ柱の面なので排他（同プレイで共存させない）。AR-06-door-gap-light（CAM06）と近縁なので同プレイで両方出さない。」
-- **相互参照 / 重複精査**: **AR-06-door-gap-light（CAM06・右の扉の下の隙間から暖かい光が漏れる）と近縁**（どちらも戸の隙間から漏れる暖色の細い光）。別カメラ・別の面（本件は柱の暗い帯に隠れていた引き戸の縦の隙間、CAM06 は床の近くの扉の下の隙間）として台帳には両方載せてよいが、**同じプレイで両方は出さない**（観察対象が同じ「戸の隙間の光」で、2 件目が間違い探しとして重複して見えるため）。この節にだけ書く。CAM06 側の案は別担当が修正中なので、そちらの節には書かない。「閉じた扉やシャッターが開いて光が漏れる」昭和テーマの CAM01〜04 の既存（AR-01-shutter-light 系）は別カメラ・店のシャッターで、本件は柱の暗い帯に隠れていた戸。CAM08 の E15 は光る柱で、既存の AR-08-panel（パネルが増える）・panel-off（上が消灯）・blue-panel（色）はパネルの変化、本件は下の暗い帯の戸で別の面。候補 CR-08-11（第三の発光パネル）は上下パネルの間で別の面。
 
 ### AR-08-hanten-floor — 脱ぎ捨てられた半纏
 
