@@ -142,7 +142,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 | --- | --- | --- | --- | --- |
 | AR-01-floor-crosswalk | 大面積 | surreal / surreal | 手前の床一面 (0,705,675,900) | 床一面に横断歩道の白線が敷かれる |
 | AR-01-right-wall-lattice-doors | 大面積 | surreal / multiply | 右の店先の壁一面 (422,225,675,668) | 同じ木格子戸が、奥へ向かって1枚ずつ大きくなりながら連なる |
-| AR-01-ceiling-lamp-off | 小物 | environment / state_change | 左天井 (60,168,128,222) | 左の丸い埋め込み灯が消えて黒い円になる |
 | AR-01-ceiling-tile-drop | 小物 | object / displace | 右上天井 (405,122,479,198) | 天井板が一枚、片側だけ外れて垂れ下がる |
 | AR-01-ceiling-wet-stain | 小物 | environment / state_change | 中央天井 (290,212,370,248) | 天井に濡れた丸い染みが広がり水滴が垂れかける |
 | AR-01-floor-light-orphan | 小物 | surreal / state_change | 手前左の床 (2,832,92,898) | 光源のない場所に、床の光だまりがもう一つ落ちる |
@@ -210,28 +209,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 - **相互参照 / 重複精査**: 同カメラの `AR-01-wall-faces`（左壁に顔写真を敷き詰め）は「同じ物を一面に敷き詰める」型。**本件は敷き詰めを避け、「戸が奥へ向かって 1 枚ずつ大きく見える（遠近が効かない）」型に振った**ので、素材（戸の立面 vs 顔写真）・面（反対側の壁）・型（敷き詰め vs 遠近の破れ）のどれも別。同プレイに出うる（排他の対ではない）。他カメラの面の敷き詰め（`AR-06-*` ポスター・CAM07 の時計・CAM03 の白紙）とは素材が別。
 
 ### 小物
-
-#### AR-01-ceiling-lamp-off — 左の丸い埋め込み灯が消える
-
-- **camera / element_id**: CAM01 / CAM01-E02
-- **物と変化**: 左上寄りの小さな丸い埋め込み灯（白く発光し、周囲がピンク/紫ににじむ）が、**消えて黒っぽい丸い穴**になる。にじみも消え、天井の粒状だけが残る。他の灯は点いたまま。
-- **最終 box**（baseline px）: `60,168,128,222`（68x54）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,109,256,280`（256x171）。box はクロップ内の (60,59)-(128,113)
-- **生成プロンプト**（3 テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: the small bright round recessed ceiling lamp in the left part of the ceiling is switched off: its glowing white face becomes a dull dark grey disc (the unlit lens, slightly glossy), and the soft pink-purple glow around it disappears completely so the rough speckled ceiling surface around it is plain. VARIANT. Do not touch the dark wall corner at the lower left, the ceiling fan area at the top right of this crop, the other lamps or anything else. Place the object centered at about 37% from the left and 54% from the top of the image, occupying roughly 27% of the image width and 32% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  - VARIANT 1: `The unlit disc is very dark, almost black`
-  - VARIANT 2: `The unlit disc is mid-dark grey with a faint highlight on its rim`
-  - VARIANT 3: `The unlit disc shows a faint reflection of the ceiling in its glossy lens`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左下の暗い壁の角・天井の粒状・他の灯。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測・矩形間のユークリッド距離）: AR-01-ceiling-seam-circle まで 32.0px、次点 AR-01-ceiling-fan-showa 53.0px、本節の AR-01-ceiling-wet-stain まで 162.0px。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（30px 割れなら box の右端を左へ動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / early / medium（medium 以上。subtle にしない）
-- **視認性の注意**: 白（約 240）から暗灰（約 60）へ落ちるので差分は大きいが、元の灯は 40x14px と小さい。にじみまで消すと overlay が約 70x54 に広がり面積比で通る。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-ceiling-lamp-off` / `category: environment` / `anomaly_type: state_change` / `detail: '左上寄りの小さな丸い埋め込み灯が消えて、黒っぽい丸い穴になる（周囲のにじみも消える）'` / `candidate_id` は付けない（本節が出典）。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: `candidate-pool.md` の CR-01-28（同じ灯の「にじみだけ消える」）は**灯が点いたままにじみだけ変わる別案**。本件を制作したら CR-01-28 は実質同じ物の変化になるので削除する。CR-01-30・31（別の丸灯 E05・E06）とは対象が別。他カメラの丸灯（CR-04-32・CR-06-04・CR-02-30）は別カメラ。
 
 #### AR-01-ceiling-tile-drop — 天井板が一枚、片側だけ外れて垂れ下がる
 
@@ -2041,7 +2018,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 
 | 候補ID   | 対象ID    | 変化案                                             | 分類 / フェーズ / 目立ち度   |
 | -------- | --------- | -------------------------------------------------- | ---------------------------- |
-| CR-01-28 | CAM01-E02 | 小さな丸灯の周囲の色にじみだけ消える。             | environment / early / subtle |
 | CR-01-30 | CAM01-E05 | 画面端の丸灯が半分だけ点灯する。                   | environment / early / subtle |
 | CR-01-31 | CAM01-E06 | 奥の丸灯が一回り小さくなる。                       | environment / early / subtle |
 | CR-01-32 | CAM01-E08 | 奥へ並ぶ小型器具の一つだけ天井面から少し浮く。     | surreal / mid / medium       |
