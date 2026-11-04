@@ -11,7 +11,7 @@ prompts/
 ├── README.md                    根。全体の地図・enum・ワークフロー
 ├── camera-element-inventory.md  [正本] 写真8枚の写り込み要素・固定ID・座標
 │   └── atlas/cam01〜08.svg      [派生物] 上の台帳から `npm run build:camera-atlas` で生成する視覚ガイド
-├── candidate-pool.md            [正本] 未採用の異変案（写真固有・昭和テーマ・制作仕様が確定した未制作の小物・runtime/音/UI/ルール在庫・配分目安）
+├── candidate-pool.md            [正本] 未採用の異変案（写真固有・昭和・令和テーマ・runtime/音/UI/ルール在庫・配分目安）
 ├── anomalies.yaml               [正本] 制作済み/試作した画像異変の台帳（制作状態・配置・差分画像のパス）
 │   └── queue/index.html         [派生物] 上の台帳（のみ）から `npm run build:prompts` で生成するコピペUI
 ├── base-template.md             [正本] 共通プロンプト（背景保持の定型文）

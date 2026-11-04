@@ -1,11 +1,11 @@
 # 異変候補プール
 
-まだ採用・生成した異変ではなく、写真の写り込みから発想を広げる写真固有案、昭和テーマ案、令和テーマ案（4人目の子供の記憶）、写真に紐づかない runtime 在庫、制作仕様まで確定した未制作の小物をまとめた候補。
+まだ採用・生成した異変ではなく、写真の写り込みから発想を広げる写真固有案、昭和テーマ案、令和テーマ案（4人目の子供の記憶）、写真に紐づかない runtime 在庫をまとめた候補。
 
 ## 正本と昇格ルール
 
 - 写っている物の説明・座標・カメラ写真の正本は [`camera-element-inventory.md`](./camera-element-inventory.md)。写真固有の候補ではここでは要素IDだけ参照し、物体説明や座標を複製しない。
-- 「制作仕様（確定済み・未制作の小物）」の節は、box・生成プロンプトまで確定した未制作案。制作して台帳へ移したら、その項を丸ごと削除する。
+- 制作仕様の節（小物・大面積）は全件制作済みのため撤去した。制作済みの真実は台帳（`anomalies.yaml`）。
 - 末尾の「Runtime / 背景非依存の異変在庫」は写真に紐づかず、昇格しても `anomalies.yaml` には載せない（実装タスクとして別管理）。
 - 候補の正本はこのファイル。採用候補を生成工程へ移す時は、この行を削除し、`anomalies.yaml` に一件だけ登録する。候補と制作データを二重に残さない。
 - カテゴリは `camera` / `object` / `environment` / `person` / `surreal`、フェーズは `early` / `mid` / `late`。目立ち度は `subtle` / `medium` / `obvious`。
@@ -321,7 +321,7 @@
 
 未制作。旧・昭和案メモから、`anomalies.yaml` に同等の試作が無く、対象要素を特定できるものだけを移した。候補IDは `CR-SH-NN`。方針（核となる変化・小道具を主役にしない・修復は元写真で破損が確認できる箇所だけ）は制作スキルの「昭和の時間が戻る異変」を参照。着手前に通常どおり類似照合する（近縁: AR-01-shutter-light / AR-08-notice-residue / CR-08-17 / AR-02-duplicate-coffee-sign）。
 
-時計の針は写真に時計が写っていないため候補にしない（例外あり: 大面積 `CR-LG-07-01` は時計を**足す**案で、kako-jun 指示 2026-11-04。「制作仕様（確定済み・未制作の大面積）」参照）。
+時計の針は写真に時計が写っていないため候補にしない（例外あり: 大面積 `CR-LG-07-01` は時計を**足す**案で、kako-jun 指示 2026-11-04。制作済みで台帳が真実）。
 
 2026-11-04: CR-SH-01（CAM02-E07）は CAM02-E07 に既存5件が集中している。左シャッターに重ねず、別のシャッター/壁面で作り直す（要再選定）。
 
@@ -346,34 +346,6 @@
 | CR-RZ-07 | 無作為（音） | 遠くから、無名の一般的なスマホ通知音が一度だけ鳴る。       | environment / mid / subtle  |
 | CR-RZ-08 | 無作為（音） | ワイヤレスイヤホンから漏れるような、小さな無名のビート音。 | environment / mid / subtle  |
 | CR-RZ-09 | 無作為（音） | 誰もいない通路で、自撮りのシャッター音が一度だけ鳴る。     | environment / late / medium |
-
-## 制作仕様（確定済み・未制作の小物）
-
-小物の画像異変（CAM01〜08）の**制作仕様**。物・変化・配置（box）・生成プロンプトまで確定済みで、まだ生成していない。これは候補の正本の一部で、採用して制作に進む時は、その項を削除して `anomalies.yaml` に一度だけ登録する（`candidate_id` に見出しの ID を入れる。候補と制作データを二重に残さない）。物の説明・座標の正本は [`camera-element-inventory.md`](./camera-element-inventory.md) のままで、ここの box は作業用の最終値（ledger には最終 overlay の alpha bbox から出た `overlay_origin` / `dimensions` を入れる）。
-
-- **配置の実測**（2026-11-04）: 各 box は、`anomalies.yaml` の同じ `camera_id` の全 overlay（`overlay_origin` と `dimensions`）、および本節の他の項の box から、**矩形間の距離が 30px 以上**あることを `uv run --with pyyaml python3` の実測で確認した（README「配置の基準」）。CAM01 だけは、PR #97 で台帳に登録する竹ぼうき・黄色い長靴（マージ前）の実際の alpha bbox も既存扱いにして測った。各項の「最寄り既存 overlay と実測距離」は box 基準なので、羽毛ぼかしで overlay が広がる分、制作後に alpha bbox で測り直す（36px 未満の項は特に必須）。
-- **box の見直し**: 6倍クロップで物と影が収まるか全件を目視し、次の項は場所か形を直した。いずれも各項の「物と変化」に ※ で理由を書いてある。やり直し: CR-NEW-01-04 / CR-NEW-01-05 / CR-NEW-01-06 / AR-04-flypaper / AR-08-n1 / AR-08-n3。寸法補正: CR-NEW-02-04 / AR-04-tote-bag / CR06N-1。box の形に合わせて変化の描き方を変更: CR-NEW-02-02 / CR-NEW-02-04 / CR05N-5。
-- **共通手順**（`.agents/skills/corona-road-anomaly/SKILL.md` の手順 5〜8 と同じ）:
-  1. 各項の「6倍クロップ」の範囲を `public/images/camN.webp` から切り出し、1536x1024 へ拡大する（baseline の webp は PNG に変換してから渡す）。
-  2. 明示的な `$imagegen` で、各項のプロンプトを3テイク生成し、目視で選ぶ。0バイトや数KBの壊れた PNG は撮り直す。文字やロゴらしき刻印が出たテイクは捨てる。
-  3. 選んだ結果を元のクロップ寸法へ縮小して baseline の PNG の同じ位置へ貼り戻し、その貼り戻した全体画像を `scripts/composite-anomaly.py --gen` に渡す（`--box` は各項の最終 box。FAIL は再生成でなく `--threshold` / `--margin` を 8/12/16/18 で試す）。
-  4. 最終 overlay の alpha bbox で既存との距離を測り直し、30px を割ったら動かす。台帳へ登録し、`check-visibility.py` を通す。通らなければ大きく・暗く・平らな場所へ強めて作り直すか、この節へ戻す。
-  5. 登録・コミットしたら `experiments/` 配下の作業物を即削除する。
-- 同種があるもの（吊り飾り・赤い丸い玩具・黄色い雨具・飲み物カップ・TV・三輪車など）は、各項の「相互参照」に既存 ID と差を書いた。制作前に見比べ、実質同じと判断したら取り下げる。
-
-### CAM01 — North Entrance
-
-### CAM02 — Main Corridor
-
-### CAM03 — South Exit
-
-### CAM04 — Underground Junction
-
-### CAM05 — Emergency Stairwell
-
-### CAM06 — Shop Front Row
-
-### CAM07 — Maintenance Corridor
 
 ## Runtime / 背景非依存の異変在庫
 
@@ -482,140 +454,3 @@
 | intruder seated     | ベンチや床に座る人影                           | `add_person`                 |
 | fast figure         | 画像では残像、runtime で一瞬横切る             | `add_person`                 |
 | forbidden object    | 屋内に場違いな物（濡れた道路標識など）         | `add_object`                 |
-
-## 制作仕様（確定済み・未制作の大面積）
-
-大面積（面積が画像 675x900 = 607,500 px² の 1/8 = 75,938 px² 以上）の画像異変 16 件（8 カメラ × 2）の制作仕様。**候補ではなく、制作に入る手順書**（kako-jun 指示 2026-11-04）。方針の正本は [`README.md`](./README.md) の「配置の基準」の大面積の例外、手順の正本は制作スキル（`.agents/skills/corona-road-anomaly/SKILL.md`）。ここには重ねて書かない。
-
-- **昇格**: 制作に採用した件は、この節の該当項を**削除**して `anomalies.yaml` へ一度だけ登録する（二重に残さない）。ID は台帳の `candidate_id` 相当として note に残す。**登録前に、同カメラの box 重なり表を機械出力して台帳 note に貼る**（下の「box と既存 overlay の重なり」のコマンド。台帳は日々増えるので、この節の表は 2026-11-04 時点の値で、登録時に必ず出し直す）。
-- **座標**: すべて baseline px（675x900）。`box` は面の外接矩形で、台帳の `overlay_origin` / `dimensions` は**貼り込み後の alpha bbox で再計測**して書く（羽毛化で変わる）。bbox が 1/8 を割ったら登録しない（面を足して作り直す）。同カメラの 2 件は、**CAM08 の 2 件（排他。下の表の注）を除き box が重ならない**ことを 2026-11-04 に再計測済み（下の表）。
-- **大面積どうしの重なり**: 同カメラの大面積は重ねない。ただしゲームは 1 カメラにつき未検出の異変を 1 件しか同時に出さない（`src/hooks/useGameState.ts` の `spawnAnomaly` は、未検出の異変があるカメラを候補から外す）ので、同じ面を使い物語上も両立しない対は**「排他」と明記すれば box が重なってよい**（例: CAM08 の 08-01 と 08-02。床と床へこぼれるテレビの山が重なる）。台帳 note の「同プレイで共存させない」は、この仕様上の保証として書いてよい。既存台帳の大面積（`AR-06-wall-puddle` 540x202 / `AR-07-floor-uphill` 591x352）との重なりは項ごとに書く。小物とは座標が重なってよい（大面積の例外）。ただし**同じ面を覆い隠す小物は排他**（項の「排他」に列挙。同プレイで共存させない運用を台帳 note に書く）。
-- **生成の共通方針**: 入力は baseline を PNG 化した 3:2（1536x1024）の**窓**（下の「3:2 の窓と元画像への復元」）。先頭に `$imagegen` を明示。**1 件ずつ生成し生成画像は見ずに合成まで進め、採否は人間が決める**運用（kako-jun 指示）。生成物は作業物で `experiments/<件名>/` に置き、登録後に即削除する。
-- **3:2 の窓と元画像への復元（共通手順）**: 台帳画像は 675x900 の縦長で、`composite-anomaly.py` は縦横比が ±0.02 を超えると fail する。3:2 の生成結果をそのまま `--gen` に渡さず、必ず元画像の寸法へ戻す。
-  1. **窓**: `composite-polygon.py crop --base public/images/camN.webp --crop 0,y0,W,y0+450 --out <PNG>`（既定の出力は 1536x1024）で、baseline から**全幅 W × 高さ 450** の横長を切り出して生成に渡す。**W は画像幅に合わせる: cam1・cam6〜cam8 は 675、cam2〜cam5 は 676**（`--crop 0,y0,676,y0+450`。676x450 の縦横比 1.502 は `crop`・`restore` の許容 ±0.02 に収まる。675 のままだと最右 1 列が restore の対象外になる）。縮尺は 1536/W ≈ 2.27 倍。窓は幅を削らない（縮尺と位置を y0 の 1 値で決めるため）。box の高さが 450 以下なら窓 1 枚、**450 を超える件は上下 2 枚**（重なり 100px 以上）に分ける。窓は box を上下に含み、画像の上端・下端に接する場合以外は 5px 以上の余裕を取る。なお cam2〜cam5 の box の x2=675 は右端の 1 列手前だが、`cutout` のポリゴンは x=676 まで引いてよい（box の面積差は 0.2% 未満。1/8 の判定は登録時に alpha bbox で再測定する）。
-  2. **復元**: `composite-polygon.py restore --base <baseline、または前回の restore 出力> --gen <生成結果 1536x1024> --crop 0,y0,W,y0+450 --out <全画面 PNG>` で、生成結果を W x450 へ縮小して `(0, y0)` へ貼り戻した全画面 PNG（cam2〜cam5 は 676x900、他は 675x900）を作る。**ツール `scripts/composite-polygon.py`（crop / restore / tile / cutout / blend / flip）は PR #100 で main にマージ済み**。引数名は `uv run scripts/composite-polygon.py <サブコマンド> --help` で確認した現行のものを書いている。
-  3. **2 枚の窓**: 先に上の窓 A を生成・採用して `restore` で貼り戻し、窓 B の入力はその全画面から `crop` で切り出す（依存する絵は直列）。B の結果は A の貼り戻し済み全画面を `--base` にして `restore --blend-px 100 --blend-edges t` で貼る（B の上端 100px が A の既存内容の上へ線形に溶け込む）。
-  4. **差分抽出**: 復元した全画面を `composite-anomaly.py --gen` へ渡す、または `composite-polygon.py cutout --base <baseline> --gen <restore 出力> --polygon <面のポリゴン（複数指定可。1 枚に併合される）> [--hole <抜く物のポリゴン>] --feather 2 --out <overlay.webp>` でポリゴン内を採用する（ポリゴン外の alpha は厳密に 0）。縦横比は画像と同じまま。明暗の乗せ・光の戻しは `blend --base <全画面> --layer <baseline> --mode multiply|screen|overlay|normal --opacity <0-1> [--polygon ...] [--hole ...] [--layer-blur <σ>] [--layer-norm] [--layer-brightness <倍率>]`（例: 反射帯の光を `--mode screen` で戻す、壁の粒状を `--layer-norm` の multiply で乗せる）。上下反転は `flip`（08-01 の鏡像。範囲の制約は 08-01 の項）。
-  5. **素材だけを別生成する件**（顔・絵・紙・折り鶴・手形・ポスター・時計の文字盤・テレビ筐体・外景）の 3:2 は貼り込みスプライトの採取用で、復元は不要。割付図に沿う遠近の敷き詰めは `composite-polygon.py tile --base <baseline> --material <素材> --quad "tl tr br bl" --cols N --rows M --gap G --polygon-out <JSON>`（`--layout scatter` は散布、`--shade 0-1` は壁・床の明暗の乗せ、`--seed` で再現）で全画面 PNG を作り、`--polygon-out` の JSON をそのまま `cutout --polygon` へ渡す。複数の面は、`--polygon-append` で同じ JSON に面を足しながら `tile` を連鎖する（前の出力 PNG を次の `--base` にする）。
-  6. **敷き詰めから扉・額・窓を抜く件**（01-02 の窓、06-01 の額と扉、07-01 の扉・開口・看板）: `tile` にセル除外の指定は無く、`cutout --hole` で抜くと境界のセルが**半分切れる**。そこで、除外領域を避けるように面を**複数の quad に分け**（除外物の上・下・左・右の隙間ごとに 1 quad。各 quad の格子は除外物の縁でちょうど終わるよう列・行数を合わせる）、`--polygon-append` で連鎖して 1 つの JSON にまとめてから `cutout` する。`--hole` は quad に含まれてしまう細かい物（取手など）だけに使う。
-  各件の窓（y0〜y0+450）:
-
-  | 件 | box 高さ | 窓 |
-  | --- | ---: | --- |
-  | 01-01 | 340 | 1 枚: y0〜450 |
-  | 02-01 | 560 | **2 枚**: A y250〜700（奥の暗い角 E09 の下部を含める）／B y450〜900 |
-  | 03-02 | 450 | 1 枚: y450〜900（箱が窓にちょうど収まる。画像下端なので余裕不要） |
-  | 05-01 | 430 | 1 枚: y100〜550 |
-  | 06-02 | 255 | 1 枚: y0〜450 |
-  | 07-02 | 122 | 1 枚: y0〜450 |
-  | 08-01 | 635 | **2 枚**: A y255〜705／B y450〜900（重なり 255。box 上端 265 に 10px の余裕） |
-  | 04-01 ほか素材のみの件 | — | 全景生成なし（上の 5.） |
-
-  プロンプト中の「frame」はこの 3:2 の窓を指す。位置や高さを「画面高さの何 %」で書かず、**元画像の実寸 px**（窓内では ×2.2756）で書く。
-- **繰り返し絵柄は 1 素材を別生成 → スクリプトで遠近ワープして敷き詰め**。1 回の生成で多数を描かせると文字風の模様・顔崩れ・指崩れが出る。割付図（消失点に向かう流線と格子）を**先に作る**（向きは文章でなく図）。
-- **合成の共通方針**: `scripts/composite-anomaly.py` は並進位置合わせ前提で、大面積は低い `--threshold` だと床や壁の粒状まで拾って巨大化する。大面積は**手描きポリゴンマスク（面の台形）を主**にし、ツールは `--box` を面の外接矩形に絞り `--threshold` を高め（16〜24）で使うか、ポリゴン外を元画像で上書きした全画面を `--gen` に渡す。マスク外の alpha は厳密に 0、境界は 1〜2 px の羽毛化。接地線・巾木・枠・柱際はマスクを止める線として使う。壁・床の明暗は貼り込み素材へ multiply で乗せる。
-- **共通の禁止**: 文字・数字・ロゴ・実在店名・家紋・紋様の混入（出たテイクは没）。人の顔は 01-02 以外では出さない。性的・不適切の独自判定はしない（生成物はそのまま報告）。
-- **共通プロンプト末尾**（各項のプロンプトに全文を含めてある）: `Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-
-### 面の再計測（2026-11-04、`uv run --with pyyaml python3`）
-
-| ID | box (x1,y1,x2,y2) | 面積 px² | 画像比 | 1/8 |
-| --- | --- | ---: | ---: | --- |
-| CR-LG-01-01 | 212,0,675,340 | 157,420 | 25.9% | 可 |
-| CR-LG-01-02 | 0,215,208,725 | 106,080 | 17.5% | 可 |
-| CR-LG-02-01 | 176,340,675,900 | 279,440 | 46.0% | 可 |
-| CR-LG-02-02 | 0,50,172,600 | 94,600 | 15.6% | 可 |
-| CR-LG-03-01 | 0,100,268,670 | 152,760 | 25.1% | 可 |
-| CR-LG-03-02 | 290,450,675,900 | 173,250 | 28.5% | 可 |
-| CR-LG-04-01 | 450,120,675,750 | 141,750 | 23.3% | 可 |
-| CR-LG-04-02 | 0,10,215,740 | 156,950 | 25.8% | 可 |
-| CR-LG-05-01 | 280,108,555,538 | 118,250 | 19.5% | 可 |
-| CR-LG-05-02 | 0,610,675,900 | 195,750 | 32.2% | 可 |
-| CR-LG-06-01 | 500,40,675,860 | 143,500 | 23.6% | 可 |
-| CR-LG-06-02 | 0,0,495,255 | 126,225 | 20.8% | 可 |
-| CR-LG-07-01 | 88,126,585,352 | 112,322 | 18.5% | 可 |
-| CR-LG-07-02 | 0,0,675,122 | 82,350 | 13.6% | 可（余裕小。alpha bbox は幅 ≥640 かつ裾 ≥ y119 = 640×119=76,160 ≥ 75,938 を満たす） |
-| CR-LG-08-01 | 0,265,675,900 | 428,625 | 70.6% | 可（床全面。旧 box 0,430,675,900 から上へ広げた） |
-| CR-LG-08-02 | 0,130,248,470 | 84,320 | 13.9% | 可（柱の左縁 x≈250 の 2px 手前 x248 で止め、下へ床側 y470 まで広げた） |
-
-同カメラの 2 件の隙間（x または y の空き px）: 01=4(x) / 02=4(x) / 03=22(x) / 04=235(x) / 05=72(y) / 06=5(x) / 07=4(y)。いずれも重なり 0。**08 だけは box が 248x205（50,840 px²）重なる**（08-01 の水面が床全面に広がり、08-02 のテレビの山が床へこぼれる部分と同じ床を使うため）。この 2 件は**同プレイ排他**にして、重なりを許す（水面に積まれたテレビには接地反射が要り、08-01 の「映るのは昭和の夕焼けだけ」と矛盾するため。併存させない運用を台帳 note に書く）。
-
-### box と既存 overlay の重なり（2026-11-04、機械出力）
-
-各 box と、台帳の既存 overlay の bbox（`overlay_origin` + `dimensions`）の重なり px² を機械で出し、全件を「排他」「併存可」に振った。**排他**は同プレイで共存させない（台帳 note に互いを書く）。**併存可**は、大面積のポリゴンが当該物の**接地部・枠・保持物の輪郭で止まる**（マスクで抜く）ことを条件にする。括弧内の数字は重なり px²。
-
-```
-# 台帳登録時の出し直し（pyyaml）。boxes は登録する件の box に書き換える
-uv run --with pyyaml python3 - <<'EOF'
-import re, yaml
-d = yaml.safe_load(open('prompts/anomalies.yaml'))['anomalies']
-boxes = {'CAM08': [('08-01', 0, 265, 675, 900), ('08-02', 0, 130, 248, 470)]}  # (名, x1, y1, x2, y2)
-for cam, bl in boxes.items():
-    for n, x1, y1, x2, y2 in bl:
-        print(cam, n, 'area', (x2 - x1) * (y2 - y1))
-    for e in d:
-        if e['camera_id'] != cam: continue
-        x, y = map(int, re.search(r'\((\d+),(\d+)\)', e['overlay_origin']).groups())
-        w, h = map(int, e['dimensions'].split('x'))
-        for n, x1, y1, x2, y2 in bl:
-            ox, oy = min(x + w, x2) - max(x, x1), min(y + h, y2) - max(y, y1)
-            if ox > 0 and oy > 0: print(' ', n, e['id'], ox * oy)
-EOF
-```
-
-| 件 | 排他（同プレイ非共存） | 併存可（接地部・枠で止める） |
-| --- | --- | --- |
-| 01-01 | ceiling-fan-showa (8,892) / ceiling-panel-round (9,017) / vent-hole-triangle (1,376) / ceiling-seam-circle (2,310) / **tube-end (5,040。蛍光灯は点いたままの前提と矛盾)** | noren (4,180) / door-ajar (4,360)（提灯は y≤300 に収める）/ sign-rim (840) / sign-old-shop (47)（吊り看板は保持物） |
-| 01-02 | notice (4,462) / wall-repaint-patch (2,790) | wiped-window (441) / cat-in-frosted-window (3,384)（窓 E10 は保持）/ ceiling-seam-circle (1,680)（天井側。壁ポリゴンの外）/ bamboo-broom (3,052。床。壁の接地線で止める） |
-| 02-01 | stool (**37,590**) / leather-footprints (13,708) / chalk-hopscotch (5,890) / tile-color (6,536) / tile (4,672) / puddle (8,866) | tricycle (18,209) / smartphone-facedown (5,016) / bag (10,922) / pot-duplicate (7,007) / blue-pot (3,843) / square-pot (4,347) / ashtray (3,055) / coffee (2,650)（足跡は各物の接地部を避ける）/ duplicate-coffee-sign (11,676。看板は保持）/ shop-reopens (5,014。左シャッター側。x176〜199 だけ） |
-| 02-02 | shop-reopens (**43,000**) / open-sign (8,064) / newspaper (6,298) / cat (6,305) / wrapping-paper (1,026) | puddle (**17,875**。床。画用紙はシャッター下端の接地線で止め、水たまりは覆わない）/ cigarette (2,294) / receipt (2,420) / tile (1,344) / tile-color (1,720) |
-| 03-01 | shutter-wave (15,450) / newspaper (7,884) / paper-bag (2,964) | tile-diagonal (1,210) / blue-floor-tile (1,666)（床。シャッターの接地線で止める）/ pendant-lamp (164) |
-| 03-02 | round-puddle (2,736) / tile-diagonal (2,236) / blue-floor-tile (2,184) | kerosene-heater (15,750) / silver-can (5,251)（畳の上に載る形。接地部を抜く） |
-| 04-01 | red-lantern (10,788) | puddle (10,656。床。窓ポリゴンは右壁だけ） |
-| 04-02 | red-telephone (**61,491**) / basket (8,832) / poster-colour-restore (6,240) / poster (3,185) | fluorescent-frame-grey (24,120) / sign-colour-blue (3,360)（枠・看板は保持）/ orange-tile (5,760) / hatch-frame-round (3,520) / hatch-reflection-extra (2,328) / randoseru-red (1,632)（床。ガラス下端で止める） |
-| 05-01 | glass-light (62,832) / old-woman-in-glass (29,952) / curtain-open (29,216) / sign-in-glass (29,000) / amber-pane (27,740) / **joint-into-glass (26,832)** / chair-reflection (7,980) / curtain-mend (2,108) / wind-chime (1,975) | duplicate-light (2,200。天井）/ brick-round (1,892) / blue-brick (208)（レンガ帯は保持）/ brown-column (860。角柱は保持） |
-| 05-02 | floor-glare-backside (12,769) / marbles-scattered (11,312) / pet-bottle (6,318) | なし（重なるのはこの 3 件だけ。joint-into-glass は y409〜553 で 05-02 の box と重ならない） |
-| 06-01 | wall-puddle (**35,350**。排他。1 カメラ 1 件制で同時には出ない）/ wall-stripes (3,685) | tilted-notice (3,034。額入り掲示そのものが保持物で、格子から抜く）/ ceiling-panel-white (6,132。天井側）/ wet-footprints (2,760。床） |
-| 06-02 | ceiling-balloons (9,396) / ceiling-checker (4,371) / lamp-squared (1,876) / fluorescent-tag (3,200) | sign-orange-blue (11,232。看板 x142〜250・y134〜238 は保持。傘は看板の矩形を避ける）/ reopened (6,867。傘の下端は x253〜362 で y≤190）/ far-sign-same (117) / crt-tv-glow (2,948。店先の窓の奥。傘の下端は y≤225） |
-| 07-01 | reopened (23,086) / wall-grid (3,060) / notice (2,891) | stairs (19,947) / white-step (1,974) / stairs-cat (1,908) / ticket (1,568) / shoe-v2 (1,116)（階段は保持。時計は階段壁の手前で止める）/ crane (9,006。吊り鶴は時計の手前）/ pictogram-flip (1,224) / blue-push-plate (1,196) / duplicate-green-sign (1,015) / warm-light (900) / opening-paper (432)（扉・開口・非常灯は保持）/ ceiling-string (24) |
-| 07-02 | crane (9,638) / paper-airplane-ceiling (3,286) / paper-tag-lamp (2,208) / lamp-off (1,440) / ceiling-string (456) | なし |
-| 08-01 | floor-reflection-two-tier (19,306) / floor-reflection-no-pillar (20,648) / tile-concentric (7,392) / floor-ramune-marbles (13,209) / **pillar-second (12,744。柱の鏡像が合わない）** / panel (12,768) / panel-off (5,429) / blue-panel (5,429)（パネルの光の状態が水面の鏡像と食い違う）/ cat (1,785) / barber-pole (4,940)（床の物は接地反射が要る）/ **08-02（box 248x205）** | wall-band-wave (21,870) / suit (11,020) / pillar-notice (4,662) / bag (4,418) / fixture-duplicate (98)（壁・柱・ガラス戸の面。水面は壁と柱の接地線より下だけで、鏡像は元の壁・柱を映す）/ old-man-back (5,490。奥の通路はポリゴンの外） |
-| 08-02 | bag (12,502) / barber-pole (6,422) / cat (1,785) / notice-residue (950) / **08-01** | light-blue-bleed (2,656。天井の灯列は保持。山の頂点は y≥145） |
-
-CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢・袋・灰皿・コーヒー・看板などの小物は台の元の位置のまま併存でき、足跡はそれらの接地部を避ける。CAM08 の 08-01 の旧 box（y430〜）で 3,834 だった `pillar-second` は、box を床全面（y265〜）に広げたため 12,744 になり、排他に加えた。
-
-### 既存との重複精査（共通）
-
-- 台帳の既存大面積は 2 件のみ。`AR-06-wall-puddle`（CAM06 (135,432) 540x202）は **CR-LG-06-01 の box と 35,350 px² 重なる**（puddle の bbox が右壁の中段にかかる）。→ 06-01 は puddle と**排他**と明記する（ゲームは 1 カメラにつき未検出の異変を 1 件しか同時に出さないので、同時には出ない。bbox が重なってよく、kako-jun への確認は不要。台帳 note に「排他」を書く）。`AR-07-floor-uphill`（CAM07 (84,548) 591x352）は 07-01/02 と重ならない。
-- 型の重複回避: 01-02（顔写真の格子・CAM01 のみ）／02-01（足跡・CAM02 のみ）／02-02（クレヨン画・CAM02 のみ）／04-01・04-02・05-01・08-01・01-01 も各 1 カメラのみ。他カメラで同じ型を作らない（kako-jun 指示）。他 8 件はこれらと型が被らないよう中身を差し替え済み（無地の白紙・畳・折り鶴・同じポスター・傘・時計・シーツ・テレビの山）。テレビは小物の `CR-NEW-02-05`（CAM02）・`AR-06-crt-tv-glow`（CAM06）が既にあるため、08-02 は「積まれた山」に限定した。紙の輪つなぎは `CR-NEW-02-04`（CAM02）にあるため、01-01 は提灯だけにした。
-- **構造の反復**（レビュー指摘 N2）: 面に同じ素材を敷き詰める件が 5（01-02 顔・02-02 クレヨン画・03-01 白紙・06-01 ポスター・07-01 時計）、天井から吊る件が 3（01-01 提灯・06-02 傘・07-02 シーツ）ある。一方で床の件は 4（02-01 足跡・03-02 畳・05-02 折り鶴・08-01 水鏡）、積む・ガラス越しの件は 4（08-02 テレビの山・04-01 窓・04-02 曇り・05-01 店内）で、すべて別カメラ・別の面・別の物語（老人の昭和／子供／行方不明）に割れている。「面を覆う」大面積は必然的に反復の見た目になる（kako-jun 指示の型）ため、**型は変えない**。予備案として、03-01 を「シャッターの前に無地の白い段ボール箱が積み上がる」立体物に振る手はあるが、全景 2 窓・排他増・box 再設計を伴うので採らなかった。
-- 近い既存: 吊り物の天井（`AR-01-ceiling-fan-showa` / `AR-06-ceiling-balloons` / `AR-07-crane` / CR-02-21・CR-08-20 の折り鶴）、傘（`AR-06-umbrella` / `AR-06-reflected-umbrella` / CR-01-37 / CR-04-17）、折り鶴（`AR-07-crane`・`AR-01-container-origami`）。型が「面一面」で別物と整理し、各項の note に近傍を書く。
-- 昭和テーマ節の「時計の針は写真に時計が写っていないため候補にしない」は、**既存の時計を改変する案**の話。07-01 は時計を**足す**ので抵触しないが、方針の例外に当たるため kako-jun 指示（2026-11-04）に基づく旨を台帳 note に書く。
-
----
-
-### 生成枚数の総見積り（枠が限られるため最小）
-
-窓の数は共通手順の表（02-01 と 08-01 は 2 枚、他の全景件は 1 枚）。窓 B は窓 A の採用後に直列で生成する。**04-01 は全景を生成しない**（外景素材を窓ポリゴンへ遠近ワープする主ルート 1 つ）。
-
-| 件 | 素材テイク | 全景テイク |
-| --- | ---: | ---: |
-| 01-01 | 0 | 3 |
-| 01-02 | 3 | 0 |
-| 02-01 | 0 | 6（窓 A 3＋窓 B 3） |
-| 02-02 | 3 | 0 |
-| 03-01 | 2 | 0 |
-| 03-02 | 0 | 3 |
-| 04-01 | 3 | 0 |
-| 04-02 | 3 | 0 |
-| 05-01 | 0 | 3 |
-| 05-02 | 3 | 0 |
-| 06-01 | 3 | 0 |
-| 06-02 | 0 | 3 |
-| 07-01 | 2 | 0 |
-| 07-02 | 0 | 3 |
-| 08-01 | 0 | 6（窓 A 3＋窓 B 3） |
-| 08-02 | 2 | 0 |
-| **計** | **24** | **27** |
-
-合計 51 生成。全景を使う件は、1 テイクだけ試して採用可能なら残りを省く運用もできる（下限は素材 24 ＋ 全景の窓数 9 = 33 生成）。生成は**1 件ずつ**、依存する絵は直列。
