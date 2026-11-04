@@ -589,7 +589,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
 
 | ID | タイプ | カテゴリ | 規模 | 変化 |
 | --- | --- | --- | --- | --- |
-| AR-06-tile-sky | surreal | surreal | 小物 | 床タイル1枚が抜けて青空が見える |
 | AR-06-leaf-shadows-aligned | state_change | object | 小物 | 前景左下の床の植物の影が、全部同じ一方向へ平行に揃う |
 | AR-06-wall-height-marks | add_object | object | 小物 | 右壁に子供の背比べのような色鉛筆の横線が刻まれる |
 
@@ -603,39 +602,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
   4. 最終 overlay の alpha bbox で既存との距離を測り直す。台帳へ登録し `check-visibility.py` を通す。通らなければ強めて作り直すか、この節へ戻す。
   5. 登録・コミットしたら `experiments/` 配下の作業物を即削除する。
 - **大面積の手順**: 後述の AR-06-floor-tile-rotated を参照（`scripts/composite-polygon.py` の `crop` → imagegen → `restore` → `cutout`）。
-
-### AR-06-tile-sky — 床タイルが抜けて青空が見える
-
-- **camera / element_id**: CAM06 / CAM06-E16
-- **物と変化**: 床のタイルが一枚だけ四角く抜け落ち、穴の底に昼の青空と白い雲が見える（空間が反転したような不自然さ）
-- **最終 box**（baseline px）: `294,524,360,589`（66x65）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `199,471,455,642`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (95,53)-(161,118)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  テイク1:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor of the corridor in the center of the frame, replace exactly one square floor tile with a square hole whose bottom shows a bright daytime blue sky with a few soft white clouds, as if the tile were a window onto the sky. The hole follows the same perspective as the tile and the neighbouring joint lines, with a thin dark edge of depth on the far side. The sky is clearly brighter and bluer than anything else in the scene. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the other tiles, the neighbouring joint lines, the A-frame menu board, the white reflection band to the right or the left-hand shopfront. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 26% of the image width and 38% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク2:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: turn one single grey floor tile at the center of the frame into an opening showing a vivid blue summer sky with a small white cumulus cloud, seen as if looking straight down into the sky. Keep the exact tile outline and perspective, with the neighbouring tiles and joints intact, and a thin dark rim at the inner edge. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the other tiles, the neighbouring joint lines, the A-frame menu board, the white reflection band to the right or the left-hand shopfront. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 26% of the image width and 38% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク3:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: one floor tile in the middle of the corridor disappears and a square patch of clear blue sky with a streak of white cloud is visible instead, bordered by the original tile joints. Make the sky saturated so that it stands out clearly against the cold grey floor, and give the near edge a thin dark depth shadow. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the other tiles, the neighbouring joint lines, the A-frame menu board, the white reflection band to the right or the left-hand shopfront. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 26% of the image width and 38% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe other tiles, the neighbouring joint lines, the A-frame menu board, the white reflection band to the right or the left-hand shopfront（英語プロンプトの Do not touch に同じ）。
-- **最寄り既存 overlay と実測距離**: AR-06-umbrella まで 31.1px（box を各辺+2px した、最終 alpha bbox の見込みの矩形で測定。矩形間のユークリッド距離。次点: AR-06-floor-light-slant（本節）31.0px / AR-06-wet-footprints 34.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
-- **分類 / フェーズ / 目立ち度**: surreal / late / obvious
-- **視認性の注意**: 青空の彩度と明度で差分は十分に出る見込み。タイル1枚分に収める（隣のタイルに広げない）。 登録後に `uv run scripts/check-visibility.py --id AR-06-tile-sky` を必ず通す。
-- **台帳登録案**: `id: 'AR-06-tile-sky'` / `element_id: 'CAM06-E16'` / `category: 'surreal'` / `anomaly_type: 'surreal'` / `location: 'CAM06-E16 の周辺、差分左上 (294,524) px'` / `detail: '床のタイルが一枚だけ四角く抜け、穴の底に青空と白い雲が見える'` / `phase: late` / `subtlety: 'obvious'` / `candidate_id: 'AR-06-tile-sky'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く（昭和の「空の記憶」。1タイル限定）。
-- **相互参照 / 重複精査**: CAM06 の AR-06-wall-puddle（水たまりが蛍光灯と壁を映す、大面積）は床の映り込み、本案は床が『抜ける』。CR-06-13/14（床タイルの水玉・淡い緑）は模様・色の変化で、空が見える穴ではない。他カメラの床の穴・空の案を検索したが、青空の穴は未登録。
 
 ### AR-06-leaf-shadows-aligned — 床の植物の影の葉先が全部同じ一方向へ揃う
 
