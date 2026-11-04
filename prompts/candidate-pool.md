@@ -657,24 +657,6 @@
 - **視認性の注意**: 明るい天井に黄褐色が出る。らせんは細いので幅を1.5倍に。下端の暗い錘（小さな黒い玉）は付けず、色だけで対比する。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'environment'` / `anomaly_type: 'add_object'` / `detail: '天井から昭和の蝿取りリボンが一本、らせん状に垂れ下がる'` / `candidate_id: 'AR-04-flypaper'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 天井の垂れ物の兄弟: AR-03-red-string（赤い紐）・AR-07-ceiling-string・AR-05-white-ribbon。別カメラ・別物。
 
-#### AR-04-tote-bag — 無地の生成りトートバッグ(令和)
-
-- **camera / element_id**: CAM04 / CAM04-E14（漆喰壁そのものは台帳に独立要素が無く、最寄りの CAM04-E14（右の黒い店舗ガラス）を起点IDとする。）
-- **物と変化**: 右端の漆喰壁の小さなフックに、令和の無地の生成りトートバッグが一つ掛かる。※box は右端の画像幅(675)に合わせ x2 を 676→675 に補正
-- **最終 box**（baseline px）: `621,400,675,500`（54x100）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,364,675,535`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (202,36)-(256,136)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the plaster wall at the right edge of the frame, hang one plain unbleached canvas tote bag from a small metal hook: natural off-white canvas with visible darker beige stitched seams, two plain shoulder straps hanging from the hook, slightly plump, completely plain with no print, no logo and no text. Make it about 1.2x larger than real scale. Add a clear soft drop shadow on the wall at the right side and bottom, and a small dark shadow under the hook. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark glass shop front on the left of it, the dark vertical pillar or the plaster texture around it. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 21% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左の黒い店舗ガラス・暗い縦の柱・周囲の漆喰の質感。
-- **最寄り既存 overlay と実測距離**: AR-04-red-lantern まで 44.0px（box 基準・矩形間のユークリッド距離、次点 AR-04-puddle 157.9px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 壁と生成りの明度差が小さい。縫い目の濃い茶と、膨らみの影・フックの影で補強する（白に寄せない）。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '右端の漆喰壁のフックに、令和の無地の生成りトートバッグが一つ掛かる'` / `candidate_id: 'AR-04-tote-bag'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 袋系: AR-08-bag（CAM08・暗いガラスに映る古い紙袋）・AR-03-paper-bag。別カメラ・別物。
-
 #### AR-04-tin-robot — ブリキのロボット(ロゴ・文字なし)
 
 - **camera / element_id**: CAM04 / CAM04-E15
