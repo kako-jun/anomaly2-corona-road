@@ -1228,25 +1228,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: `AR-01-ceiling-fan-showa`・`AR-01-ceiling-panel-round`・`AR-01-vent-hole-triangle`・`AR-01-ceiling-seam-circle`（天井の飾りで同じ面に重なる）は同プレイ非共存を推奨。**`AR-01-tube-end`（蛍光灯の片端が切れる。5,040）も排他**（本件は蛍光灯が点いたままの前提）。`CR-NEW-02-04`（CAM02 の七夕の輪つなぎ飾り）とは紙の輪つなぎを使わないことで型を分けた。
 - **生成枚数の最小見積り**: 全景 3 テイク（素材の別生成なし）。
 
-### CR-LG-01-02 左壁一面の同じ顔写真（行方不明の 4 人）
-
-- **ID / camera / element_id**: CR-LG-01-02 / CAM01 / CAM01-E09
-- **面**: box 0,215,208,725（106,080 px²、17.5%）。左壁の台形から窓（E10: x45-110, y265-600）を除いた面。
-- **物と変化**: 左壁の粗い粒状壁に、額なしの白黒証明写真風の小さな顔写真が格子状に貼られる。顔は 4 種（老人男性 2・老婆 1・子供 1）の繰り返しで、監視カメラ映像のように粗く無表情、全員こちらを向く。文字・氏名・日付なし。窓の外側の壁にだけ貼る。
-- **不気味さの狙い**: story の行方不明 4 人（老人 3 人うち 1 人は老婆、4 人目は子供）を、説明なしに顔だけで示す。誰もいないのに視線だけある。
-- **保持するもの**: 窓（E10）・腰板・巾木・床、壁の粒状質感、上下の輪郭線、奥の柱との境。
-- **生成プロンプト全文**（顔素材を 1 枚の正方グリッドで別生成。本体の全景生成はしない）:
-  ```
-  $imagegen Create a flat, front-facing 2x2 contact sheet of four small black-and-white ID-style photographs, each one a different completely fictional person: (1) an elderly man with short grey hair, (2) another elderly man wearing a plain flat cap, (3) an elderly woman with her hair tied back, (4) a young child with short hair. All four have neutral expressions and look straight into the lens. Style: very coarse, low-resolution black-and-white surveillance-camera still, heavy film grain, slight blur, high contrast, small passport-photo crop with plain mid-grey background. Each photo is a plain rectangle with a thin white border and nothing printed anywhere: no captions, no names, no dates, no numbers, no text, no logos. The faces must not resemble any real person. Evenly lit flat scan on a neutral grey backdrop, each photo occupying one quadrant with equal margin.
-  Output 1536x1024 (3:2). No watermark.
-  ```
-- **作り方**: ①顔素材を 3 テイク生成し、4 種が破綻しないテイクを人間が選ぶ。②4 枚を切り出し、1 枚 22×28 px 前後（手前は 26px、奥は 18px）。③割付図: 壁の台形の 4 隅（天井境界・巾木・奥の柱際・手前端）から格子（縦 9 列×横 6〜8 行）を遠近ワープで作り、顔の並びは 4 種を巡回。窓ポリゴンは格子から抜く（共通手順 6: quad を分けて抜く）。④壁の粒状・明暗を multiply で乗せ、白黒写真の白は 85% に落とす。⑤`composite-anomaly.py` は使わず、ポリゴン alpha から overlay を切り出す（ポリゴン外は alpha 0）。
-- **難所と没基準**: 顔の同一性が崩れる・実在人物に似る・文字風の模様が写真下端に出るテイクは没。顔は粗く小さく（20〜25px）して崩れを目立たせない。
-- **フェーズ / 目立ち度**: late / obvious（4 人目が出た後）。
-- **台帳案**: category `surreal` / anomaly_type `duplicate` / detail 「左壁一面に、4 種の無表情な白黒の顔写真（老人男性 2・老婆 1・子供 1）が格子状に隙間なく貼られる」。note に「大面積。CAM01-E09、窓 E10 は保持」を書く。
-- **排他**: `AR-01-notice`・`AR-01-wall-repaint-patch`（左壁の紙・塗り直し跡で同じ面）。`AR-01-wiped-window`・`AR-01-cat-in-frosted-window` は窓内なので併存可。
-- **生成枚数の最小見積り**: 素材 3 テイク（正方グリッド）。全景生成なし。
-
 ### CR-LG-02-01 床一面の足跡（奥の角へ向かう列）
 
 - **ID / camera / element_id**: CR-LG-02-01 / CAM02 / CAM02-E20
