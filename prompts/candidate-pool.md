@@ -1286,26 +1286,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: `AR-03-newspaper`・`AR-03-paper-bag`・`AR-03-shutter-wave`（同じシャッターの小物。面を覆うので同プレイ非共存）。CR-LG-02-02（CAM02 の画用紙）・06-01（ポスター）とは型が「無地の紙／絵柄」で別。
 - **生成枚数の最小見積り**: 素材 2 テイク。
 
-### CR-LG-03-02 床一面の畳
-
-- **ID / camera / element_id**: CR-LG-03-02 / CAM03 / CAM03-E16
-- **面**: box 290,450,675,900（173,250 px²、28.5%）。右手前の床。**左縁は縦線で切らず、タイル目地の消失点へ向かう斜線に沿わせる**（ポリゴン）。
-- **物と変化**: 地下街の床が昭和の和室の畳に変わる。い草の淡い緑褐色の畳が 2:1 の割りで敷かれ、黒い布の縁（へり）と畳どうしの目地、手前ほど大きい遠近。既存の白い反射帯は畳の上にも残る。
-- **不気味さの狙い**: 老人の記憶が作る昭和の像（優しい異変）。通路の途中から床だけが「家の中」になる。靴で歩いてはいけない床が突然現れる。
-- **保持するもの**: 床の反射・光だまり、奥の階段状開口、シャッター、壁、天井、左の床タイル（ポリゴンの外）。
-- **生成プロンプト全文**:
-  ```
-  $imagegen Edit the attached surveillance camera photo of a tiled underground corridor.
-  Make ONLY this change: replace the floor tiles in the right and foreground part of the floor with a continuous area of old Japanese tatami mats. Mats are pale green-brown woven rush (igusa), laid in the traditional pattern with 2:1 mats, each mat bordered by a narrow black cloth edging (heri) and thin seams between mats. The mat grid follows the perspective of the floor and converges to the same vanishing point as the original tile joints; mats are large near the camera and smaller toward the far end. The existing white lamp reflections and light pools on the floor stay visible on top of the tatami as soft highlights. The left edge of the tatami area follows a tile-joint line running toward the vanishing point.
-  Do not touch the walls, shutters, ceiling, the dark stepped opening at the far end, or the floor to the left of that line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-- **作り方**: ①割付図: 目地の消失点（奥の開口付近）と、畳の長辺・短辺の流線、へりの線を図に描く（向きは図で決める）。②全景 3 テイク生成（窓 y450〜900 の 1 枚。box の高さ 450 が窓にちょうど収まる）。③ポリゴン（床の右半、左縁は目地斜線）を手描き。差分抽出でなくポリゴン内を生成で置換し、反射帯は元画像の高輝度を screen で戻す。④`--box 290,450,675,900` は外接のみ、`--threshold` は高め（20）か不使用。
-- **難所と没基準**: 畳の目の向き・へりが目地と合わず遠近が破綻するテイクは没。畳にい草の文字風模様や家紋が出たら没。左縁が不自然な縦の直線になったら没（斜線に沿わせる）。反射帯が消えて「ただ畳を貼った」ように見えるのは没。
-- **フェーズ / 目立ち度**: mid / obvious。
-- **台帳案**: category `environment` / anomaly_type `surreal` / detail 「右手前の床一面が昭和の和室の畳に変わり、既存の白い反射は畳の上に残る」。note に「大面積。CAM03-E16」を書く。
-- **排他**: 床の小物（`AR-03-round-puddle` `AR-03-silver-can` `AR-03-kerosene-heater` `AR-03-tile-diagonal` `AR-03-blue-floor-tile`）は畳の上に載る形になるので、水たまり・タイル色変えの 3 件は排他（畳の上に水たまり・タイルは成立しない）。石油ストーブ・缶は併存可。
-- **生成枚数の最小見積り**: 全景 3 テイク。
-
 ### CR-LG-04-02 左ガラス店先の曇りと手形
 
 - **ID / camera / element_id**: CR-LG-04-02 / CAM04 / CAM04-E07
