@@ -572,7 +572,6 @@ CAM 07（Maintenance Corridor、`cam7.webp` 675x900）に足す画像異変 7 �
 
 | ID | 対象 | category / anomaly_type | box（x1,y1,x2,y2） | phase / 目立ち度 |
 | --- | --- | --- | --- | --- |
-| AR-07-floor-frost | E16 床の中段 | surreal / state_change | **大面積** `76,352,675,537`（599x185） | late / obvious |
 | AR-07-reflection-cut | E17 床左の白い反射 | surreal / state_change | `125,580,190,670`（65x90） | mid / medium |
 | AR-07-tile-mirror | E16 床の左下 | surreal / state_change | `96,770,206,842`（110x72） | early / medium |
 | AR-07-mini-door | E16（扉 E13 の縮小コピー） | surreal / duplicate | `240,560,286,638`（46x78） | mid / medium |
@@ -580,30 +579,6 @@ CAM 07（Maintenance Corridor、`cam7.webp` 675x900）に足す画像異変 7 �
 | AR-07-exit-sign-gone | E14 緑の非常灯 | object / remove_object | `592,128,618,158`（26x30） | late / medium |
 | AR-07-ceiling-tile-yellow | E01 天井板（昇格 CR-07-21） | environment / color_shift | `440,12,500,46`（60x34） | early / subtle |
 
-### AR-07-floor-frost（大面積）
-
-- **カメラ**: CAM07、対象 CAM07-E16（広い灰色タイル床の奥〜中段。目地が格子状に並ぶ）。
-- **物と変化**: 床の中段一面を、同じ高さまで薄い霜（白い微細な結晶の面）が覆う（surreal / state_change）。閉店した地下で床だけが凍っている不穏さ。霜の上端と下端は床の横線に沿って水平に揃い、「同じ高さまで」という人工的な線が異変の核になる。目地と照明の反射は霜の下／上に残り、壁・階段・扉は触らない。白い面は暗い床との差が大きく、視認性は十分。
-- **box**: `76,352,675,537`（599x185）。台形（床の左縁に沿う）は `96,352 675,352 675,536 76,536`。**実測**（2026-11-05、PIL でこの台形を rasterize）: polygon 実面積 **108,963 px²**、alpha bbox 76,352–675,537（bbox 面積 110,815 px²、画像 675x900 の 18.2%）。どちらも大面積の目安 約 90,000 px² 以上。登録時は貼り込み後の alpha で再計測し、90,000 を割ったら登録しない。
-- **最寄り既存の大面積と実測距離**（大面積どうしは重ねない）: AR-07-floor-uphill（alpha bbox 84,548–675,900）まで 11px、AR-07-wall-clocks（104,128–571,343）まで 9px、AR-07-ceiling-white-sheets（20,0–675,125）まで 227px。いずれも bbox は重ならない。AR-07-stairs（84,235–271,344）まで 8px、AR-07-stair-figures（588,190–626,325）まで 27px（どちらも壁・階段側で重ならない）。
-- **排他（同プレイで共存させない。台帳 note に書く）**: 同じ床面に載る小物 AR-07-mask-on-floor（bbox 重なり）・AR-07-n1（下駄）・AR-07-n4（スマホ）、床へ光が漏れる AR-07-reopened（bbox 重なり）。併存可: 床下側の AR-07-floor-uphill・AR-07-purple-floor-tile・AR-07-tile-mirror・AR-07-mini-door 等、AR-07-wall-clocks、扉・階段。**AR-07-reflection-cut とは反射の見え方が競合するので同プレイでは片方だけ**（box は重ならないが排他）。
-- **6倍ではなく 3:2 窓**: 全面を一度に見せるため `composite-polygon.py crop --base public/images/cam7.webp --crop 0,290,675,740`（675x450。y 290〜740。box を上下に含む。倍率は約 2.276）を 1536x1024 へ拡大して渡す。窓内の box は `(173,141)–(1536,560)`、台形は `(218,141) (1536,141) (1536,560) (173,560)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, cover the whole middle band of the grey tile floor with a thin layer of white frost at about x 173-1536, y 141-560 (frame pixels): the frost is a dense carpet of fine white ice crystals and feathery frost patterns, brighter than the floor, with a clean, nearly horizontal upper edge near y 141 where the frost stops, and a lower edge near y 560 where it stops, both edges slightly ragged. The floor joint grid stays faintly visible under the frost and the lamp reflections stay as soft highlights on top of it. No snow drifts, no footprints, no objects. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, make a thin rime of white frost cover the whole middle band of the grey tile floor at about x 173-1536, y 141-560 (frame pixels): fine granular white crystals like sugar frost, an even pale-white layer that lets the tile joints show through as thin dark lines, a level upper edge near y 141 and a level lower edge near y 560, as if the cold stopped at the same height everywhere. Reflections stay as soft highlights. No objects, no footprints. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, cover the whole middle band of the grey tile floor with white frost at about x 173-1536, y 141-560 (frame pixels): large fern-like white ice crystals growing across the tiles, denser and whiter toward the middle of the band and thinner toward its upper and lower edges, the edges at about y 141 and y 560 clearly level. Tile joints remain faintly visible and the lamp reflections stay on top. No objects, no footprints. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **仕上げ**: 選んだ結果を窓寸法へ縮小して貼り戻し、`composite-polygon.py cutout --base public/images/cam7.webp --gen <全画面.png> --polygon <台形のjson> --feather 2 --out assets/anomaly-overlays/cam07/floor-frost.webp`（台形の外は alpha 0 のまま）。
-- **台帳登録案**: `id: 'AR-07-floor-frost'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E16'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM07-E16 の中段、差分左上 (76,352) px'` / `detail: '床の中段一面が、同じ高さまで薄い霜（白い結晶の面）で覆われる'` / `phase: late` / `subtlety: 'obvious'` / `candidate_id: 'AR-07-floor-frost'`。note に大面積である旨、実測した polygon 実面積と alpha bbox、排他の列挙（上記）、同カメラの box 重なり表（登録時に出し直し）を書く。
-- **相互参照 / 重複精査**: 大面積の近縁は AR-07-floor-uphill（床下側が坂になる）・AR-05-floor-white-cranes（CAM05・床一面の折り鶴）・AR-02-floor-footprints（CAM02・床一面の足跡）・AR-03-floor-tatami（CAM03・床が畳）。霜（結晶の薄膜・床の質感の変化）は台帳に無い。床にビー玉が散らばる案は台帳に AR-05-marbles-scattered と AR-08-floor-ramune-marbles が既にあり 3 件目になるため、この霜に差し替えた。CAM07 内に床の質感・温度の変化は無い。
 ### AR-07-reflection-cut
 
 - **カメラ**: CAM07、対象 CAM07-E17（床左側の長い白色蛍光灯反射。`(115,462)–(200,748)` 付近。元画像で x 135〜185 の細長い白い帯）。
