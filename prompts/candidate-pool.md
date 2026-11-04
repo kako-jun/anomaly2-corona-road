@@ -373,24 +373,6 @@
 
 ### CAM06 — Shop Front Row
 
-#### CR06N-4 — 青い風車(かざぐるま)
-
-- **camera / element_id**: CAM06 / CAM06-E15
-- **物と変化**: 右壁上部の粗い灰白の壁に、無地の青いかざぐるまが一つ貼り付いている
-- **最終 box**（baseline px）: `622,150,672,215`（50x65）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,97,675,268`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (203,53)-(253,118)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the rough gray-white plaster wall at the upper right, stick one plain pinwheel (kazaguruma) with four deep blue paper vanes on a thin pale stick pinned to the wall, completely plain with no text and no print. Make it about 1.5x larger than real scale and deep saturated blue. Add a clear soft drop shadow on the rough wall to the lower right. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark door frame below, the fluorescent light at the upper left or the wall texture around it. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 38% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 下の暗い扉枠・左上の蛍光灯・周囲の壁の質感。
-- **最寄り既存 overlay と実測距離**: AR-06-ceiling-panel-white まで 33.1px（box 基準・矩形間のユークリッド距離、次点 AR-06-tilted-notice 54.4px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / late / medium
-- **視認性の注意**: 約50x65pxと小さい。明るい壁に濃青で対比し、1.5倍に誇張。羽根の縁に暗い輪郭線と壁への影を入れる。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '右壁上部の粗い壁に、無地の青いかざぐるまが一つ貼り付く'` / `candidate_id: 'CR06N-4'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### CR06N-5 — てるてる坊主
 
 - **camera / element_id**: CAM06 / CAM06-E01
