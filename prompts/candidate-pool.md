@@ -1393,7 +1393,6 @@ CAM 07（Maintenance Corridor、`cam7.webp` 675x900）に足す画像異変 7 �
 | --- | --- | --- | --- | --- |
 | AR-07-floor-frost | E16 床の中段 | surreal / state_change | **大面積** `76,352,675,537`（599x185） | late / obvious |
 | AR-07-reflection-cut | E17 床左の白い反射 | surreal / state_change | `125,580,190,670`（65x90） | mid / medium |
-| AR-07-tile-mirror | E16 床の左下 | surreal / state_change | `96,770,206,842`（110x72） | early / medium |
 | AR-07-mini-door | E16（扉 E13 の縮小コピー） | surreal / duplicate | `240,560,286,638`（46x78） | mid / medium |
 | AR-07-glass-crack | E06 左のガラス | environment / state_change | `2,570,46,680`（44x110） | mid / medium |
 | AR-07-exit-sign-gone | E14 緑の非常灯 | object / remove_object | `592,128,618,158`（26x30） | late / medium |
@@ -1445,28 +1444,6 @@ CAM 07（Maintenance Corridor、`cam7.webp` 675x900）に足す画像異変 7 �
 - **視認性の想定**: 反射の白（輝度 200 超）をタイルの灰（90 前後）へ戻すので max 差は 100 以上、平均差も 3.0 を十分超える見込み。下限を割りそうなのは、切り抜きが小さすぎて「ただの反射の途切れ」に見える点（box の高さ 90px を縮めない）と、羽毛ぼかしで縁が甘くなり四角さが消える点（`--margin` は 8 から試し、縁が丸まるなら小さく）。登録後に `uv run scripts/check-visibility.py --id AR-07-reflection-cut` を通す。
 - **台帳登録案**: `id: 'AR-07-reflection-cut'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E17'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM07-E17 の周辺、差分左上 (125,580) px'` / `detail: '床左の白い反射の一部が四角く切り取られ、タイル色に戻る'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-07-reflection-cut'`。note に最寄り既存 id と最終 alpha bbox 実測距離（制作後に再計測）、「人・動物は描かない。縁は鋭く軸に平行」を書く。
 - **相互参照 / 重複精査**: 床の反射を扱う既存・候補は CR-07-10（左の長い反射が階段の壁面へ垂直に折れて上る。E17・surreal/late）。あちらは反射が壁へ**折れる**形の変化で、本件は反射が**四角く欠ける**形で、見る場所も発見の仕方も違う。同プレイで共存させない（排他。CR-07-10 を制作したら box が重ならないか再確認）。人の影の案（旧 AR-07-long-shadow）は他カメラの影の型と重なるため、この項に差し替えた。
-### AR-07-tile-mirror
-
-- **カメラ**: CAM07、対象 CAM07-E16（床の左下。反射の帯の左外にある暗いタイル）。
-- **物と変化**: 床のタイル一枚だけが鏡になり、天井の照明を逆さに映す（surreal / state_change）。「目地の向きが他と逆になるタイルが 1 枚ある」案を検討したが、御影石の石目と目地の向きだけでは差が小さく視認性が下限を割る恐れが強いので、同じ型（床のタイル 1 枚の状態変化）でずっと大きく見える鏡のタイルに変えた。目地の格子と縁は周囲に揃えたまま、その 1 枚の中身だけが違う。
-- **box**: `96,770,206,842`（110x72。手前寄りのタイル 1 枚。透視で平行四辺形になる）。最寄り既存 overlay（最終 alpha bbox）は AR-07-purple-floor-tile（267,703–433,849）まで **61.0px**、次点 AR-07-diamond-tile 155.3px、AR-07-floor-puddle 187.0px。大面積 AR-07-floor-uphill（bbox 重なり。小物と大面積。併存可）。この節の他の box とは 100px 以上離れる。**制作後に alpha bbox で再計測**。
-- **6倍クロップ**: 原画像 `(60,700)–(318,872)`（258x172）。box は窓内で `(214,417)–(869,845)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, turn exactly one floor tile at about x 214-869, y 417-845 (frame pixels) into a mirror: the single tile surface becomes glossy black glass-like stone that reflects a bright inverted white fluorescent ceiling lamp (a bright white rectangle) and a little of the ceiling, while all the surrounding tiles stay the normal speckled grey. The tile's own edges and the dark joints around it stay exactly aligned with the grid, so only that one tile looks like a mirror. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, make exactly one floor tile at about x 214-869, y 417-845 (frame pixels) mirror-like: it reflects a large soft white ceiling light as a clear bright shape and a dim blue-grey ceiling, much brighter and cleaner than the speckled grey tiles around it, its edges and the dark joints aligned with the normal tile grid. Nothing else on the floor changes. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, change exactly one floor tile at about x 214-869, y 417-845 (frame pixels) so that it shows a clear upside-down reflection of the bright ceiling lamps as two bright white rectangles on a dark glossy surface, like a polished mirror inset into the floor, with its edges and the dark joints aligned to the normal tile grid. The neighbouring tiles stay speckled grey. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 暗い床の上の白い映り込みなので max 差は 100 以上の見込み。平均差も、タイル 1 枚の面積全部が変わるので 3.0 を超える。下限を割りそうなのは、映り込みが暗くて「ただの黒いタイル」に見える場合（テイク 1 の黒御影寄り）で、そのときは映る照明を大きく・明るくして作り直す。登録後に `uv run scripts/check-visibility.py --id AR-07-tile-mirror` を通す。
-- **台帳登録案**: `id: 'AR-07-tile-mirror'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E16'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM07-E16 の左下、差分左上 (96,770) px'` / `detail: '床のタイル一枚だけが鏡になり、天井の照明を逆さに映す'` / `phase: early` / `subtlety: 'medium'` / `candidate_id: 'AR-07-tile-mirror'`。note に最寄り既存 id と最終 alpha bbox 実測距離（制作後に再計測）、「目地の向きが逆のタイル案は視認性が低く差し替えた」を書く。
-- **相互参照 / 重複精査**: 床のタイル 1 枚を扱う既存は AR-07-purple-floor-tile（淡い紫に変色）・AR-07-diamond-tile（菱形になる）。色が変わるのでも形が変わるのでもなく、**質が鏡に変わる**点で別物。同じ床の下側にあるので、制作後に 3 枚が隣り合って見えないか確認する。他カメラに同型は無い。鳩の案（旧 AR-07-dove）は他カメラの生き物の型と重なるため、この項に差し替えた。
 ### AR-07-mini-door
 
 - **カメラ**: CAM07、対象 CAM07-E16（床の左中段。複製元は中央右の灰色の金属扉 CAM07-E13）。
