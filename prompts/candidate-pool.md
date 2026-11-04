@@ -443,6 +443,265 @@ CAM02（Main Corridor）の画像異変 8 件（小物 7 件・大面積 1 件�
 | CR-03-22 | CAM03-E14 | 看板の下段の一文字だけ左右反転する。     | object / early / subtle    |
 | CR-03-25 | CAM03-E08 | 実際の通路にない猫だけ店先ガラスに映る。 | surreal / mid / medium     |
 
+## 制作仕様（未制作）— CAM 03
+
+CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47。偏り是正＝person / add_person / surreal / state_change / remove_object を中心に。add_creature・add_object・color_shift は 0 件）。物・変化・配置（box）・生成プロンプトまで確定済みで、まだ生成していない。採用して制作に進む時は、その項を削除して `anomalies.yaml` に一度だけ登録する（`candidate_id` に見出しの ID を入れる。候補と制作データを二重に残さない）。物の説明・座標の正本は [`camera-element-inventory.md`](./camera-element-inventory.md)、手順の正本は制作スキル（`.agents/skills/corona-road-anomaly/SKILL.md`）で、ここには重ねて書かない。box は `x1,y1,x2,y2`（`scripts/composite-anomaly.py` の `--box` と同じ。括弧内は幅x高さ）で書いた作業用の最終値（台帳には貼り込み後の alpha bbox から出した `overlay_origin` / `dimensions` を入れる）。
+
+| ID | category | anomaly_type | 変化 | 大小 |
+| --- | --- | --- | --- | --- |
+| AR-03-floor-shadows | person | add_person | 壁の向こうに立つ人の影だけが床に並ぶ（大面積） | 大面積 |
+| AR-03-shutter-fingers | person | add_person | 左シャッターの横縞の隙間から白い指が数本だけ覗く | 小物 |
+| AR-03-floor-line-break | environment | state_change | 床のタイル目地の線が一本だけ途中で途切れる | 小物 |
+| AR-03-tube-light-bent | environment | state_change | 右上の蛍光灯の光が、床の反射と違う向きへ折れ曲がる | 小物 |
+| AR-03-ceiling-eye | surreal | surreal | 天井の暗い隙間から白い目が一つ覗く | 小物 |
+| AR-03-dark-tile | object | state_change | 通路中央の床に座布団ほどの暗いタイルが一枚だけ混じる | 小物 |
+| AR-03-shutter-raised | environment | state_change | 右のシャッターの裾が少し上がる | 小物 |
+| AR-03-roll-vanish | object | remove_object | 壁際の銀白色の巻いた物が消える | 小物 |
+
+- **配置の実測**（2026-11-05、`uv run --with pyyaml --with numpy --with pillow python3` で台帳の CAM03 全 30 件の `overlay_origin` と overlay の実際の alpha bbox を測定）: 小物 7 件の box は、大面積 2 件（AR-03-shutter-blank-papers (0,102,258,650)・AR-03-floor-tatami (29,457,676,900)）を除く既存 overlay の alpha bbox から**30px 以上**離れ、本節の他の小物 box どうしも 30px 以上離れている（最小は 30.0px で、AR-03-floor-line-break↔AR-03-shutter-raised と AR-03-tube-light-bent↔AR-03-ceiling-eye。最寄りは各項に記載）。羽毛ぼかしやにじみで overlay が広がる分、制作後に alpha bbox で測り直す（36px 未満の項は特に必須）。大面積 AR-03-floor-shadows と小物の box 重なりは項に px² で記載（README の大面積の例外。排他は項に明記）。
+- **偏り是正の内訳**: add_person 2（影・シャッターの指）／surreal 1（天井の目）／state_change 4（床の目地・蛍光灯の向き・暗いタイル・シャッターの裾）／remove_object 1（銀白色の巻いた物）。台帳に CAM03 の add_person・remove_object は無く、person カテゴリも CAM03 にまだ無い。
+- **大面積**: 1 件（AR-03-floor-shadows、box 91,540 px²）。同カメラの既存大面積は AR-03-shutter-blank-papers（左壁）と AR-03-floor-tatami（手前の床）で、本件は奥〜中央の床で box が重ならない（距離は項に記載）。
+- **人・生き物の安全範囲**: 影・指だけ・目だけ。story.md の禁則（実在の企業・商品名、台詞や統計の捏造、勝ち負けの語）に触れない。文字・ロゴは入れない。
+- **共通手順**（制作スキルの手順 5〜8 と同じ）: ① 各項の「6倍クロップ」（大面積は 3:2 の窓）を `public/images/cam3.webp`（676x900）から切り出して 1536x1024 へ拡大（webp は PNG にしてから渡す。大面積の窓は `composite-polygon.py crop --crop 0,225,676,675`）。② 明示的な `$imagegen` で各項のプロンプトを 3 テイク生成し、採否は人間が決める（0 バイト・数 KB の壊れた PNG は撮り直す。文字・ロゴらしき刻印が出たテイクは捨てる）。③ 小物は選んだ結果を元のクロップ寸法へ縮小して baseline の同じ位置へ貼り戻し、`scripts/composite-anomaly.py --gen` に渡す（`--box` は各項の最終 box。FAIL は再生成でなく `--threshold`/`--margin` を 8/12/16/18 で試す）。大面積は `composite-polygon.py restore` → 影のポリゴンを `cutout` する。④ 最終 overlay の alpha bbox で既存との距離を測り直し、台帳へ登録して `uv run scripts/check-visibility.py --id <id>` を通す（通らなければ強めて作り直すか、この節へ戻す）。⑤ 登録・コミットしたら `experiments/` の作業物を即削除する。
+
+### AR-03-floor-shadows — 壁の向こうに立つ人の影だけが床に並ぶ（大面積）
+
+- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E16
+- **物と変化**: 右の壁・シャッターの根元から手前左へ、人の形をした長い影だけが 14 本ほぼ平行に床へ落ちる。本人は写らない（壁の向こうに立つ老人たちの記憶という読み。story.md の「通路に現れていた像は老人3人の記憶」に沿う）。
+- **box (x1,y1,x2,y2)**: (278,226,676,456)（398x230。面積 398x230 = 91,540 px²、画像の 15.0%。1/8 = 76,050 を満たす）
+- **最寄り既存 overlay と実測距離**: 大面積どうし: AR-03-shutter-blank-papers (0,102,258,650) と x で 20px 離れ重ならない。AR-03-floor-tatami (29,457,676,900) とは y で 1px 離れ重ならない（box 下端を 456 で止める。影の先端が 457 を越えたらポリゴンで切る）。小物との重なりは下の表。
+- **窓**: 3:2 の窓 1 枚: `composite-polygon.py crop --base public/images/cam3.webp --crop 0,225,676,675`（676x450、縮尺 2.272 倍）。box は窓内で (632,2)–(1536,525)。窓の下端はたたみの上端 y457 を含むが、貼り戻しは床ポリゴンの内側だけ採用する。
+- **面積の実測**（2026-11-05、`uv run --with pyyaml --with numpy --with pillow python3`）: 影 14 本を、足元が右壁の根元 (612,230)→(676,374)・長さ 170→408px・傾き約 11°・頭は円の仮ポリゴンで描いて測ると、**実面積 約 37,900 px²**（box 91,540 の 41%）、**alpha bbox (278,227)–(676,457) = 398x230 = 91,540 px²**（≥ 約 90,000 を満たす）。実面積は box より大幅に小さいが、README の大面積は `dimensions`（alpha bbox）の面積で判定する。ただし余裕は約 1.7% しかないので、制作後に alpha bbox を測り直し、90,000 を割ったら最も長い 2〜3 本を伸ばす（先端 x≈278・足元 x≈676・y 227〜456 の全域に影が届くこと）。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 2.272x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: on the grey tile floor of the corridor, fourteen long, soft-edged dark shadows of standing people, all nearly parallel and fanned out slightly. Each shadow is a clearly human silhouette (round head, shoulders, torso, two legs) stretched very long in perspective. They all start at the base line where the right-hand wall and the right-hand shutter meet the floor, between roughly x=1390 and x=1536 and y=10 to y=340 in the 1536x1024 frame, and run toward the lower left across the floor and over the tile joints at a gentle slope of about 11 degrees. The farthest (upper) shadows are the shortest, ending around x=1050 to 1150, and the nearest (lower) ones are the longest, their heads reaching about x=640, y=520. Spacing between neighbouring shadows is about 25 to 35 px at the far end and 40 to 55 px at the near end, lengths vary between about 390 and 930 px. Shadows are the same darkness as the existing floor shadow patches, darker where tile joints cross them, with a gentle blurred edge. There is no person, body, or object anywhere; only the shadows. Do not touch the green sign, the wooden crate, the left shutter, the white floor reflections, the ceiling or the far end of the corridor. Do not change the wall or the shutter on the right. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 2.272x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: thirteen tall, thin, long human-shaped dark shadows lying on the grey tile floor, parallel to each other, as if thirteen people stood in a row just behind the right-hand wall, out of the camera's view. Each shadow has a round head, narrow shoulders and legs, stretched far in perspective toward the lower left of the frame at a shallow slope. Their feet ends sit on the wall-to-floor line on the right (x about 1390 to 1536, y about 10 to 340) and the head ends reach from x about 1050 (far, short ones) down to x about 650, y about 520 (near, long ones). Neighbouring shadows are about 30 to 50 px apart; every shadow slightly different in length. Soft, slightly blurred edges, dark grey-blue, tile joints visible through them. No people, no objects, only shadows on the floor. Preserve the green sign, crate, shutter, reflections, ceiling and everything else exactly. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 2.272x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: twelve narrow, elongated shadows of standing adults and two shorter ones of children's height mixed in, lying side by side on the grey tile floor, parallel, all stretching toward the lower left at a shallow slope from the right wall base (x about 1380 to 1536, y about 10 to 345) to heads at about x=640 to 1100, y=250 to 525. The shadows have no detail inside, just clean human outlines (head, shoulders, arms hanging, legs together) with soft edges and low contrast against the tiles, as if cast by a light source far behind the right wall. No person or object is visible, only shadows on the floor. Do not alter the green sign, crate, shutter, reflections or ceiling; do not add anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-03-floor-shadows'
+    candidate_id: 'AR-03-floor-shadows'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E16'
+    base_photo: 'public/images/cam3.webp'
+    category: 'person'
+    anomaly_type: 'add_person'
+    location: 'CAM03-E16 の奥右〜中央の床、差分左上は貼り込み後の alpha bbox で再計測（box 目安 (278,226)）'
+    detail: '右壁の根元から手前左へ、人の形の長い影だけが14本ほぼ平行に床へ落ちる（本人は写らない）。'
+    overlay: 'assets/anomaly-overlays/cam03/floor-shadows.webp'
+    # phase / 目立ち度: mid / obvious
+    note: '大面積（影の先端まで含む alpha bbox が約 90,000 px² 以上、最低でも 1/8 = 76,050 以上であること）。同プレイで共存させない: AR-03-dark-tile / AR-03-floor-line-break（同じ床の面）。併存可: 壁・看板・既存の床小物（影ポリゴンは物の接地部で止め、`cutout --hole` で抜く）。'
+  ```
+- **相互参照 / 重複精査**: 同型は CAM08 の AR-08-old-man-back などの『人の姿』だが、本件は姿を描かず影だけで、面（床）一面の大面積。CR-03-42（床の反射に傘の影）・CR-03-35（吊り器具の影）は物の影で別物。CR-01-06（奥の人影）は CAM01。既存の CAM03 台帳に影・人物の異変はない。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-dark-tile / AR-03-floor-line-break（同じ床の面）。併存可=壁面・看板・既存の床小物（影は物の接地部で止める）。既存 overlay との重なり px²（box 基準）: AR-03-sign-glow-blue 13,081 / AR-03-slipper-single 3,074 / AR-03-walking-cat 2,800 / AR-03-coffee-text-missing 2,535 / AR-03-crate-duplicate 2,508 / AR-03-face-ornament 1,600 / AR-03-sunken-opening-floor 972 / AR-03-shutter-faded-poster 896 / AR-03-white-cap 660 / AR-03-pink-ornament 140。本節の新規小物との重なり: AR-03-dark-tile 3,150 / AR-03-floor-line-break 1,892（ともに排他）、AR-03-roll-vanish 840 / AR-03-shutter-raised 1,176（併存可）。
+
+### AR-03-shutter-fingers — 左シャッターの横縞の隙間から白い指が数本だけ覗く
+
+- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E06
+- **物と変化**: 左の大きな横縞シャッターの、横縞の間の隙間に、内側から板の縁をつかむように青白い指が数本だけ現れる（手のひら・腕・顔は写らない。指だけ）。閉店後の店の中に誰かがいる。
+- **box (x1,y1,x2,y2)**: (104,380,160,422)（56x42）
+- **最寄り既存 overlay と実測距離**: AR-03-shutter-wave (71.0)、次点 AR-03-newspaper (72.0)。大面積 AR-03-shutter-blank-papers の alpha（貼り紙・シャッター面）と box が重なる（alpha 重なり 2,083 px²。小物と大面積の重なりは README の例外）。
+- **6倍クロップ範囲**: 6倍クロップ (36,311)–(292,482)（256x171）。box は窓内で (408,414)–(744,666)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: four pale, slender, slightly curled human fingers (index to little finger, only the first two joints, no palm, hand, wrist or arm) pushed out through the dark gap between two horizontal slats of the grey roll-up shutter, as if someone behind the shutter is gripping the edge of the slat. They sit across one slat gap, about x=408 to 744 and y=414 to 666 in the 1536x1024 frame, with a thin dark shadow under them. Plain bare skin in cold blue-grey light, no rings, no nail polish, no marks. Do not change the slats, the stains, the screw head or anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: three pale fingers (only the tips and first joints, slightly bent, no hand visible) hooked over the lower edge of one horizontal slat of the grey roll-up shutter, coming out of the dark slat gap, at about x=420 to 730, y=420 to 660 in the 1536x1024 frame, with a soft shadow below. Plain skin, no rings, no marks, no nails decoration. Everything else stays identical. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: a pair of pale, thin human fingers (two fingers only, slightly curled, fingertips only) poking out through the gap between two shutter slats from the dark behind, at about x=430 to 720, y=430 to 650 in the 1536x1024 frame, slightly lit by the cold light, a thin dark shadow beneath. No hand, no arm, no face. Do not alter the shutter, the stains or anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-03-shutter-fingers'
+    candidate_id: 'AR-03-shutter-fingers'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E06'
+    base_photo: 'public/images/cam3.webp'
+    category: 'person'
+    anomaly_type: 'add_person'
+    location: 'CAM03-E06 の左シャッター中ほど、差分左上 (104,380) 付近（貼り込み後に再計測）'
+    detail: '左の横縞シャッターの隙間から、内側から縁をつかむように白い指が数本だけ覗く（手のひら・腕・顔は写らない）。'
+    overlay: 'assets/anomaly-overlays/cam03/shutter-fingers.webp'
+    # phase / 目立ち度: early / medium
+    note: '最寄り既存 overlay は AR-03-shutter-wave（box 距離 71px）。大面積 AR-03-shutter-blank-papers と同じシャッター面で alpha が重なるため排他（同プレイで共存させない）。小さな指だけで視認性下限が厳しいので、check-visibility を必ず通す（通らなければ指を増やすか太くする）。'
+  ```
+- **相互参照 / 重複精査**: 同型の人物は CAM01 AR-01-back-view-paper-bag・CAM05 AR-05-old-woman-in-glass・CAM06 AR-06-worker・CAM08 AR-08-old-man-back（いずれも全身の後ろ姿）で、本件は指だけ・シャッターの内側から。CAM04 AR-04-glass-fog-handprints（ガラスの手形）とは面も表現も別。台帳に CAM03 の人物の異変は無い。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-shutter-blank-papers（同じシャッター面）。併存可=床・看板・天井の異変。新規小物どうしの最寄りは AR-03-roll-vanish で 300px 以上。
+
+### AR-03-floor-line-break — 床のタイル目地の線が一本だけ途中で途切れる
+
+- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E16
+- **物と変化**: 通路の右寄りの床で、縦に走るタイルの目地の線が一本だけ途中でぷつんと終わり、その先の左右のタイルが継ぎ目のない一枚板のようにつながる。周りの目地はそのまま。ほかのカメラの床の異変（穴・足跡・畳・タイル色）と違い、『線が消える』変化。
+- **box (x1,y1,x2,y2)**: (575,383,618,427)（43x44）
+- **最寄り既存 overlay と実測距離**: AR-03-walking-cat (100.0)、次点 AR-03-shutter-faded-poster (131.6)。新規小物との最寄りは AR-03-shutter-raised (30.0)・AR-03-dark-tile (38.0)。
+- **6倍クロップ範囲**: 6倍クロップ (420,321)–(676,492)（256x171）。box は窓内で (930,372)–(1188,636)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the vertical tile joint line that runs through the middle of the marked area (the thin dark seam between two floor tiles, at about x=1080 in the 1536x1024 frame, from y=300 to y=720) stops abruptly at about y=470: below that point the two neighbouring tiles continue as one seamless slab of the same grey speckled stone, with the same reflections and speckles, no seam at all, while above that point the seam is unchanged. The edit area is about x=930 to 1188, y=372 to 636. All other joints, speckles and reflections stay exactly as they are. Add nothing. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: one floor tile joint (the long thin vertical seam near x=1080, y=300 to 720 in the 1536x1024 frame) is erased in its lower half, from about y=480 downward over the area x=930 to 1188, y=372 to 636: the stone surface there is continuous across where the seam was, with the same speckle texture and the same soft white reflection. The upper half of the seam and every other joint remain. No new object. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the seam between two floor tiles near x=1080 simply ends mid-floor: from about y=450 down to y=720 in the 1536x1024 frame the seam vanishes and the surface is a smooth continuous stone (area x=930 to 1188, y=372 to 636), looking like a tile that is twice as long. The seam above y=450 is unchanged. Keep the speckles, the reflections and all other joints exactly the same. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-03-floor-line-break'
+    candidate_id: 'AR-03-floor-line-break'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E16'
+    base_photo: 'public/images/cam3.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    location: 'CAM03-E16 の床右寄り、差分左上 (575,383) 付近（貼り込み後に再計測）'
+    detail: '床の縦のタイル目地が一本だけ途中で途切れ、その先のタイルが継ぎ目のない一枚板につながる。'
+    overlay: 'assets/anomaly-overlays/cam03/floor-line-break.webp'
+    # phase / 目立ち度: late / subtle
+    note: '最寄り既存 overlay は AR-03-walking-cat（box 距離 100px）。新規小物との最寄りは AR-03-shutter-raised（30px）。大面積 AR-03-floor-shadows と排他（同じ床の面。同プレイで共存させない）。消える線が薄いので、check-visibility を必ず通す（通らなければ消す区間を長くする）。'
+  ```
+- **相互参照 / 重複精査**: 床の穴・沈み（AR-03-sunken-opening-floor）やタイルの向き・色（AR-03-tile-diagonal / AR-03-blue-floor-tile）とは別で、物は増減せず『目地の線が消える』だけ。CR-03-30/04 系の灯の候補とは無関係。台帳に目地の連続性を崩す異変は無い。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-floor-shadows（同じ床の面）/ AR-03-dark-tile（同じ床の面・近接）。併存可=壁・天井・シャッターの異変。
+
+### AR-03-tube-light-bent — 右上の蛍光灯の光が、床の反射と違う向きへ折れ曲がる
+
+- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E04
+- **物と変化**: 右上から斜めに下がる長い白色蛍光灯の光の帯が、中ほどで折れ、先の半分が元と違う急な向きへ曲がって伸びる。床の白い反射（E17）は元の向きのまま残るので、光源と反射の向きが食い違う。灯の消失（AR-07-lamp-off など）ではなく、光の向きだけが狂う。
+- **box (x1,y1,x2,y2)**: (604,60,676,150)（72x90）
+- **最寄り既存 overlay と実測距離**: AR-03-shutter-faded-poster (36.0)、次点 AR-03-sunken-opening-floor (62.0)。新規小物との最寄りは AR-03-ceiling-eye (30.0)。
+- **6倍クロップ範囲**: 6倍クロップ (420,20)–(676,191)（256x171）。box は窓内で (1104,240)–(1536,780)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the long bright white fluorescent tube in the upper right (about x=1100 to 1536, y=280 to 740 in the 1536x1024 frame) is bent: its straight diagonal strip kinks at its middle, and the outer half swings up toward the top-right corner at a steeper angle than the original diagonal, like a bent glowing bar, with its glow and the faint halo on the ceiling following the new direction. The ceiling board, the right wall and the shutter below do not change. The bright floor reflection far below is not part of this edit and stays as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the diagonal white fluorescent light at the top right (about x=1100 to 1536, y=280 to 740 in the 1536x1024 frame) changes direction half way along its length: the lower-left half stays as it is, the upper-right half is rotated about 30 degrees upward so that the light strip forms a clear obtuse angle, with a soft glow along both parts. Nothing else in the frame changes, including the shutter, the wall and the ceiling. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the long fluorescent tube light in the upper right corner (x about 1100 to 1536, y about 280 to 740 in the 1536x1024 frame) is bent into a shallow V shape at the middle, its two halves pointing in different directions, the glow and ceiling halo following the shape. Preserve every other pixel, including the right shutter and the wall below. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-03-tube-light-bent'
+    candidate_id: 'AR-03-tube-light-bent'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E04'
+    base_photo: 'public/images/cam3.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    location: 'CAM03-E04 の右上の蛍光灯、差分左上 (604,60) 付近（貼り込み後に再計測）'
+    detail: '右上の長い蛍光灯の光の帯が中ほどで折れ、床の反射と違う向きへ曲がる。'
+    overlay: 'assets/anomaly-overlays/cam03/tube-light-bent.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-03-shutter-faded-poster（box 距離 36px。ぼかしで広がるので制作後に再測）。床反射 E17 は元のまま残す（光源の向きと反射がずれる違和感が狙い）。灯は消えない（AR-07-lamp-off・AR-08-panel-off とは別）。'
+  ```
+- **相互参照 / 重複精査**: 灯が消える型（台帳 AR-07-lamp-off・AR-08-panel-off、プール CR-03-04・CR-03-30）とは別で、本件は灯は点いたまま向きだけ変わる。CAM03 の天井灯の異変は台帳に無い（AR-03-amber-lamp-glow は色）。
+- **同カメラ内の排他と併存**: 排他なし（天井の光の変化。床の異変とは別の面）。併存可=床・壁・シャッターの異変。ただし AR-03-ceiling-eye とは box が 30px しか離れないので、同プレイで共存させないほうが読み取りやすい。
+
+### AR-03-ceiling-eye — 天井の暗い隙間から白い目が一つ覗く
+
+- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E01
+- **物と変化**: 右奥寄りの暗い天井板の一枚が、縦に細く抜けて黒い隙間になり、その奥から人の目が一つだけこちらを見ている（目だけ。顔・まつげ・ほかの部位は無い）。閉店後の地下街の天井裏に誰かがいる。
+- **box (x1,y1,x2,y2)**: (548,66,574,120)（26x54）
+- **最寄り既存 overlay と実測距離**: AR-03-amber-lamp-glow (33.8)、次点 AR-03-sign-frame-square (59.1)。新規小物との最寄りは AR-03-tube-light-bent (30.0)。
+- **6倍クロップ範囲**: 6倍クロップ (420,20)–(676,191)（256x171）。box は窓内で (768,276)–(924,600)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: in the dark ceiling panel (about x=768 to 924, y=276 to 600 in the 1536x1024 frame) one ceiling board is missing, leaving a narrow vertical black gap with straight edges that follow the ceiling perspective. Inside the gap a single open human eye is visible, white sclera and a dark iris, looking straight at the camera, lit very faintly by cold light; only the eye, no face, no eyelashes detail, no other features. Everything else on the ceiling, the light fixtures and the signs stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: a narrow, dark rectangular opening in the ceiling (about x=770 to 920, y=280 to 595 in the 1536x1024 frame), as if a ceiling tile has been slid aside, and a single pale eye with a dark iris peering out of the darkness toward the camera. No face is visible around the eye, just the eye. Do not change anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Add only this: a thin vertical slit in the dark ceiling (x about 775 to 915, y about 285 to 590 in the 1536x1024 frame) with a single bloodless-white human eye with a small dark iris looking out of it toward the viewer. The slit is dark with a faint cold rim light on its edges. Only the eye, nothing else changes. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-03-ceiling-eye'
+    candidate_id: 'AR-03-ceiling-eye'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E01'
+    base_photo: 'public/images/cam3.webp'
+    category: 'surreal'
+    anomaly_type: 'surreal'
+    location: 'CAM03-E01 の右奥寄りの天井、差分左上 (548,66) 付近（貼り込み後に再計測）'
+    detail: '右奥寄りの暗い天井板が縦に細く抜けて黒い隙間になり、そこから白い目が一つだけ覗く。'
+    overlay: 'assets/anomaly-overlays/cam03/ceiling-eye.webp'
+    # phase / 目立ち度: late / medium
+    note: '最寄り既存 overlay は AR-03-amber-lamp-glow（box 距離 34px。ぼかしで広がるので制作後に再測）。新規小物との最寄りは AR-03-tube-light-bent（30px）。目だけで顔・体は描かない。'
+  ```
+- **相互参照 / 重複精査**: 人の姿の異変（CAM01 AR-01-back-view-paper-bag・CAM05 AR-05-old-woman-in-glass・CAM06 AR-06-worker・CAM08 AR-08-old-man-back）は全身の後ろ姿で、本件は天井から覗く目だけ。CR-03-20（天井の器具から細いリボン）とは別物。台帳・候補に『目』の異変は無い（grep 済み）。
+- **同カメラ内の排他と併存**: 排他なし。併存可=床・壁・シャッターの異変。AR-03-tube-light-bent とは box が 30px しか離れないので、同プレイで共存させないほうが読み取りやすい。
+
+### AR-03-dark-tile — 通路中央の床に座布団ほどの暗いタイルが一枚だけ混じる
+
+- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E16
+- **物と変化**: 通路の右寄りの床で、タイル一枚（座布団ほどの大きさ）だけが炭のように暗い黒灰色に変わる。穴ではなく平らな面で、目地には揃ったまま、光沢と周りの反射がうっすら残る。
+- **box (x1,y1,x2,y2)**: (545,300,615,345)（70x45）
+- **最寄り既存 overlay と実測距離**: AR-03-shutter-faded-poster (54.4)、次点 AR-03-sunken-opening-floor (56.0)。新規小物との最寄りは AR-03-floor-line-break (38.0)・AR-03-shutter-raised (33.4)。
+- **6倍クロップ範囲**: 6倍クロップ (420,252)–(676,423)（256x171）。box は窓内で (750,288)–(1170,558)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: one floor tile in the marked area (about x=750 to 1170, y=288 to 558 in the 1536x1024 frame) has turned deep charcoal black-grey, about the size of a floor cushion. It is perfectly flat, not a hole, its edges aligned with the tile joints and the perspective, its surface slightly glossy so the soft white reflections of the lights still show faintly across it. The neighbouring tiles, their speckles, joints and reflections stay exactly as they are. Add no object. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: a single floor tile at about x=760 to 1160, y=295 to 550 in the 1536x1024 frame is a much darker slate-black than the grey speckled tiles around it, with crisp edges along the joints and a faint glossy reflection. Flat surface, not a hole, no object on it. Do not change anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: one tile of the grey speckled floor (about x=750 to 1170, y=288 to 558 in the 1536x1024 frame) is replaced by a near-black polished tile of the same size and perspective, aligned with the joints, with a very faint reflection of the ceiling light. The other tiles and everything else are untouched. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-03-dark-tile'
+    candidate_id: 'AR-03-dark-tile'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E16'
+    base_photo: 'public/images/cam3.webp'
+    category: 'object'
+    anomaly_type: 'state_change'
+    location: 'CAM03-E16 の床右寄り、差分左上 (545,300) 付近（貼り込み後に再計測）'
+    detail: '床の右寄りで、タイル一枚だけが炭のように暗い黒灰色に変わる（平らで穴ではない）。'
+    overlay: 'assets/anomaly-overlays/cam03/dark-tile.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-03-shutter-faded-poster（box 距離 54px）。新規小物との最寄りは AR-03-shutter-raised（33px）。大面積 AR-03-floor-shadows と排他（同じ床の面。同プレイで共存させない）。AR-03-floor-line-break とも近いので同プレイで共存させない。'
+  ```
+- **相互参照 / 重複精査**: AR-03-blue-floor-tile（タイルの色が青）・AR-03-tile-diagonal（タイルの向き）とは別の面と色。AR-03-sunken-opening-floor（奥の開口の床が沈む）とは場所も見え方も別。CR-03-xx に暗いタイルの候補は無い。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-floor-shadows / AR-03-floor-line-break（同じ床の面）。併存可=壁・天井・シャッターの異変。
+
+### AR-03-shutter-raised — 右のシャッターの裾が少し上がる
+
+- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E10
+- **物と変化**: 右側の閉じた横縞シャッターの下端が、床から少し持ち上がり、隙間の奥が真っ暗になる。CR-03-12（右側の閉じたシャッターが上がる）の昇格で、中ほどまでは上げず裾だけに絞る。
+- **box (x1,y1,x2,y2)**: (648,350,676,392)（28x42）
+- **最寄り既存 overlay と実測距離**: AR-03-shutter-faded-poster (96.0)、次点 AR-03-sunken-opening-floor (114.0)。新規小物との最寄りは AR-03-floor-line-break (30.0)・AR-03-dark-tile (33.4)
+- **6倍クロップ範囲**: 6倍クロップ (420,286)–(676,457)（256x171）。box は窓内で (1368,384)–(1536,636)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the bottom of the grey horizontal-slat roll-up shutter on the far right edge of the frame (about x=1368 to 1536, y=384 to 636 in the 1536x1024 frame) is lifted off the floor by a gap of about 150 px in this enlarged view. Through the gap there is only pitch black darkness. The slats above are unchanged; the lowest slat edge now hangs in mid-air with a thin bright rim; a dark strip of floor is visible only inside the gap. Do not change the rest of the shutter, the wall, the floor or anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the right-hand shutter, at the lower end only (about x=1368 to 1536, y=384 to 636 in the 1536x1024 frame), is raised so that a black horizontal gap about 120 px high opens between the last slat and the floor. Darkness fills the gap completely, nothing is visible inside. The shutter slats keep their original look. Everything else stays exactly the same. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the bottom edge of the right shutter lifts off the floor, opening a 180 px high very dark gap over its visible width (x=1368 to 1536, y=384 to 636 in the 1536x1024 frame). The gap is black. The raised bottom slat catches a little cold light along its lower edge. Keep the wall, the floor tiles and every other element unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-03-shutter-raised'
+    candidate_id: 'CR-03-12'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E10'
+    base_photo: 'public/images/cam3.webp'
+    category: 'environment'
+    anomaly_type: 'state_change'
+    location: 'CAM03-E10 の右端シャッターの下端、差分左上 (648,350) 付近（貼り込み後に再計測）'
+    detail: '右側の閉じたシャッターの下端が床から持ち上がり、隙間の奥が真っ暗になる。'
+    overlay: 'assets/anomaly-overlays/cam03/shutter-raised.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-03-shutter-faded-poster（box 距離 96px）。CR-03-12 の昇格（採用時は candidate-pool の CR-03-12 の行を削除）。右端で幅が 28px と狭く check-visibility が通らない可能性が高い。制作後に `check-visibility.py --id AR-03-shutter-raised` を必ず通し、下限未満なら隙間を高くして作り直す（それでも通らなければこの節へ戻す）。大面積 AR-03-floor-shadows とは併存可（box 重なり 1,176 px²、影は接地部で止める）。'
+  ```
+- **相互参照 / 重複精査**: CR-03-12（右シャッターが中ほどまで上がる）の昇格案で、裾の隙間だけに絞った変化。CR-03-03（右シャッターの板一枚の間隔が倍）は別の変化。CAM02 の AR-02-shop-reopens（左シャッター）とは別カメラ・別の物。台帳に CAM03 のシャッター開閉は無い。
+
+### AR-03-roll-vanish — 壁際の銀白色の巻いた物が消える
+
+- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E16
+- **物と変化**: 奥の左壁際の床に斜めに横たわる、銀白色の細い巻物が 2 本（原寸 6 倍で確認: 巻いて束ねた薄いシート状の物。養生マットか巻いたシートに見える。細部は不鮮明）が消え、壁の根元と床だけが続く。すぐ奥の暗い木箱はそのまま残る。
+- **box (x1,y1,x2,y2)**: (482,238,508,268)（26x30。幅が狭い）
+- **最寄り既存 overlay と実測距離**: AR-03-sign-frame-square (43.0)、次点 AR-03-sunken-opening-floor (44.0)。
+- **6倍クロップ範囲**: 6倍クロップ (369,167)–(625,338)（256x171）。box は窓内で (678,426)–(834,606)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Remove only this: the two pale, silvery-white thin rolled sheets (like rolled-up foil mats or rolled paper, lying diagonally side by side) at the foot of the left wall with their small shadow (about x=678 to 834, y=426 to 606 in the 1536x1024 frame). In their place, continue the wall base and the glossy grey floor tiles naturally with their reflections. Keep the dark small crate just behind them, the shop front on the left and everything else exactly as is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Remove only this: the pair of white-silver cylindrical rolled sheets lying on the floor along the wall base, near x=678 to 834, y=426 to 606 in the 1536x1024 frame, including their shadow. Fill with plain floor tiles and the wall skirting in the same perspective and the same soft reflections. Do not change the dark crate, the shop window or any other part of the image. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Remove only this: the light grey rolled bundles at the foot of the wall (x=678 to 834, y=426 to 606 in the 1536x1024 frame) and their soft shadow, restoring the floor-wall corner as a clean continuous surface with faint reflections. Everything else must stay identical, including the dark crate behind them. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-03-roll-vanish'
+    candidate_id: 'AR-03-roll-vanish'
+    camera_id: 'CAM03'
+    element_id: 'CAM03-E16'
+    base_photo: 'public/images/cam3.webp'
+    category: 'object'
+    anomaly_type: 'remove_object'
+    location: 'CAM03-E16 の奥の左壁際の床、差分左上 (482,238) 付近（貼り込み後に再計測）'
+    detail: '奥の左壁際の床に斜めに横たわる銀白色の巻いたシートが消え、壁の根元と床だけが続く。'
+    overlay: 'assets/anomaly-overlays/cam03/roll-vanish.webp'
+    # phase / 目立ち度: early / subtle
+    note: '最寄り既存 overlay は AR-03-sign-frame-square（box 距離 43px）。元写真の物は原寸 6 倍で確認済み（銀白色の巻いた細いシート 2 本。木箱の手前）。box 幅 26px と狭い小物の消失で視認性下限が厳しいため、check-visibility を必ず通す（通らなければ取り下げて候補へ戻す）。'
+  ```
+- **相互参照 / 重複精査**: 台帳に CAM03 の remove_object は無い（remove_object 自体が台帳に AR-06-missing-flower のみ）。CR-03-01〜等の物の向き・複製とは別。
+- **同カメラ内の排他と併存**: 排他なし。併存可=床・壁・天井の異変。大面積 AR-03-floor-shadows とは box が 840 px² 重なるが併存可（影は物の接地部で止める）。
+
+### 既存との重複精査（共通）
+
+- 台帳 CAM03 の全 30 件（大面積 2 件を含む）と candidate-pool の CAM03 候補（CR-03-xx と要素の状態・関係の CR-03-28〜42）を、対象要素・変化・見え方で照合した。実質同じものは無い。近いもの（AR-03-tube-light-bent↔CR-03-30/CR-03-04・AR-07-lamp-off・AR-08-panel-off、AR-03-floor-line-break・AR-03-dark-tile↔AR-03-sunken-opening-floor / AR-03-tile-diagonal）は各項に差を書いた。制作前に見比べ、実質同じと判断したら取り下げる。
+- 昇格元: AR-03-shutter-raised は CR-03-12（台帳の `candidate_id` は `CR-03-12`。採用時に candidate-pool の CR-03-12 の行を削除する。この節では他の行を編集していない）。それ以外の 7 件の `candidate_id` は見出しの ID。
+- 他カメラ・台帳との型の重複を避けた経緯: 初稿の『床の鳩』（鳥は無いが生き物の追加）・『床の穴』・『蛍光灯が消える』・『床の脱ぎ捨てたコート』・『うずくまる人影』は、既存の穴・消灯・服・後ろ姿の型と近いため取り下げ、上の別案に差し替えた。看板の脚が床にめり込む案と木箱の蓋が持ち上がる案は、看板・木箱の周りに既存 overlay（AR-03-sign-glow-blue・AR-03-crate-duplicate・AR-03-slipper-single）が密集して 30px の余白が取れないため、同型（surreal / state_change）の別の場所の案に変えた。
+
 ## 追加候補 — CAM 04
 
 | 候補ID   | 対象ID    | 変化案                                                         | 分類 / フェーズ / 目立ち度   |
@@ -1358,7 +1617,7 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 - 内訳: sanitized baseline は全カメラ、画像異変 24、runtime カメラ 6、音 4、UI/メタ 6。
 - フェーズ: early 12（小さな物体・看板・照明・音の違和感）/ mid 16（扉・通路奥・人影・camera lost・画面揺れ）/ late 12（物理崩壊・人物異常・UI 破壊・タイマー異常）。
 - 背景別: 看板が強い背景は signage/text/poster 系、通路奥は intruder/corridor/door/fog 系、シャッター・店先は door/shutter/peek/knock 系、蛍光灯・天井は light/flicker/ceiling/shadow 系、余白・暗部は creature/surreal/reflection 系。camera lost・shake・static・audio・UI/meta はどの背景にも置ける。
-- 方針: 序盤は小さく、中盤は確信でき、終盤はルール自体が壊れる構成にする（Observation Duty / Exit 8 系の反復空間の差分を参考）。
+- 方針: 序盤は小さく、中盤は確信でき、終盤はルール自体が壊れる構成にする（反復空間の間違い探し系ゲームの差分を参考）。
 
 ### 汎用タイプの視点（取りこぼし防止）
 
