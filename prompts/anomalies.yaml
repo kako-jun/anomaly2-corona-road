@@ -3217,3 +3217,21 @@ anomalies:
     dimensions: '171x109'
     review_status: 'composited'
     note: '最近傍の既存は AR-01-floor-puddle-light（32px、alpha bbox の矩形距離の実測、重なりなし）。'
+  - id: 'AR-01-yellow-boots'
+    candidate_id: 'CR-NEW-01-02'
+    camera_id: 'CAM01'
+    element_id: 'CAM01-E17'
+    base_photo: 'public/images/cam1.webp'
+    category: 'object'
+    anomaly_type: 'add_object'
+    phase: 'mid'
+    subtlety: 'medium'
+    mask_box_1000: '(658,633)–(779,729)'
+    location: 'CAM01-E17、差分左上 (444,570) px'
+    detail: "床に黄色い長靴が一足、揃えて立っている（昭和の雨の日の記憶。無地）"
+    generation_prompt: "Method: the crop around the target was edited with $imagegen using the prompt below, pasted back into the baseline, then cut out with scripts/composite-anomaly.py. Keep the same framing and zoom; do not recompose, re-crop or enlarge. Keep the low-fi CCTV look, grain, perspective, lighting and every other object, wall, floor tile and light pool exactly unchanged. Make ONLY this single change: on the floor tiles in the center of the frame, place one pair of bright saturated yellow children's rain boots standing upright side by side, neatly aligned, with glossy highlights and a strong dark contact shadow. Completely plain, no text, logos or patterns. Place the object centered at about 50% from the left and 50% from the top of the image, occupying roughly 23% of the image width and 32% of its height (including shadow). Do not add any text, letters, numbers, logos or labels anywhere."
+    overlay: 'assets/anomaly-overlays/cam01/yellow-boots.webp'
+    overlay_origin: '(444,570)'
+    dimensions: '82x86'
+    review_status: 'composited'
+    note: "最近傍の既存は AR-01-floor-sign-reflection-inverted（32.0px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）。 overlay を生成位置から (0,-14) px ずらして配置。標準でも見える（最大差分224・平均差分76.0・n25=3230、check-visibility 実測）。つまみでさらに見やすくなる。ゲーム画面とライブ blink での確認は未了。"
