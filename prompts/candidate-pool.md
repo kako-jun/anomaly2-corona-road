@@ -537,26 +537,6 @@
 
 ### CAM07 — Maintenance Corridor
 
-#### AR-07-n4 — 点灯スマホ
-
-- **camera / element_id**: CAM07 / CAM07-E16
-- **物と変化**: 右手前の床に、画面を点灯させた無地のスマートフォンが一台置かれる（アプリ・文字なし）
-- **最終 box**（baseline px）: `580,462,670,515`（90x53）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,403,675,574`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (161,59)-(251,112)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the gray floor tiles at the right, place one plain modern smartphone lying flat with its screen lit in a uniform pale white-blue glow, showing no icons, no text, no clock and no app, with a soft glow spilling onto the floor around it. Make it about 2.0x larger than real scale so that it reads clearly. Give it a thin dark shadow along the lower edge and a soft cool glow on the floor around it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white floor reflection next to it, the tile joints or the right wall base. Place the object, including its shadow, centered at about 80% from the left and 50% from the top of the image, occupying roughly 35% of the image width and 31% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 隣の白い床反射・タイル目地・右の壁際。
-- **最寄り既存 overlay と実測距離**: AR-07-floor-uphill まで 33.0px（box 基準・矩形間のユークリッド距離、次点 AR-07-reopened 56.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / late / obvious
-- **視認性の注意**: 発光で目立つが小さい。既存の白い床反射と混同しないよう、画面の青白さを強め、本体の黒い縁を出す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '右手前の床に、画面を点灯させた無地のスマートフォンが一台置かれる（アプリ・文字なし）'` / `candidate_id: 'AR-07-n4'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 同種: AR-02-smartphone-facedown（CAM02・画面を伏せたスマホ）。別カメラ・点灯という別の変化。
-
-### CAM08 — Security Office
-
 #### AR-08-n1 — 木の洗濯板
 
 - **camera / element_id**: CAM08 / CAM08-E16
