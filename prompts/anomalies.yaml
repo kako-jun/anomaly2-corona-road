@@ -4152,4 +4152,4 @@ anomalies:
     overlay_origin: '(66,172)'
     dimensions: '60x44'
     review_status: 'composited'
-    note: '最近傍の既存の小物は AR-01-ceiling-seam-circle（34.0px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。次点 AR-01-ceiling-fan-showa 57.0px。大面積の AR-01-wall-faces とは bbox が接する（小物との重なりは基準で許容）。生成は暗い円盤（周囲のにじみまで消えた）を採用。 ゲーム画面とライブ blink での確認は未了。'
+    note: '最近傍の既存の小物は AR-01-ceiling-seam-circle（34.0px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。次点 AR-01-ceiling-fan-showa 57.0px。大面積の AR-01-wall-faces とは bbox が接する（小物との重なりは基準で許容）。生成は暗い円盤（周囲のにじみまで消えた）を採用し、光沢と立体感を後処理で消して縁を暗くぼかし、艶のない黒っぽい穴にした。 ゲーム画面とライブ blink での確認は未了。'
