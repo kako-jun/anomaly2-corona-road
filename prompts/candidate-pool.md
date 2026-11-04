@@ -823,7 +823,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 
 | ID | 要素 | category / anomaly_type | 種別 | box（baseline px） | フェーズ / 目立ち度 |
 | --- | --- | --- | --- | --- | --- |
-| AR-05-ceiling-shirt | CAM05-E01 | object / add_object | 小物 | `243,8,303,50`（60x42） | mid / medium |
 | AR-05-floor-child-shadow | CAM05-E13 | person / reflection | 小物 | `597,598,672,752`（75x154） | late / medium |
 
 - **配置の実測**（2026-11-05、`uv run --with pyyaml python3`。台帳 CAM05 の全 overlay の `overlay_origin` / `dimensions` を矩形化し、矩形間のユークリッド距離を測った）: 小物 6 件はすべて既存の全 overlay（大面積 2 件を除く）と**30px 以上**、かつ本節の他の項とも 30px 以上離れる（各項に最寄りを書く）。box 基準なので、羽毛ぼかしで広がる分、制作後に alpha bbox で測り直す。**37px 未満の項（silhouette 33.2px・light-streak 31.0px・goldfish 30.0px〜35.0px・shirt 31.0px・floor-child-shadow 35.0px）は、制作後の再測定が特に必須**（最終 overlay の alpha bbox で測る。台帳の最終 overlay を基準に、30px 割れなら各項の指示どおり動かす）。
@@ -837,40 +836,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 - 型の重複回避: 猫は他カメラに既存（`AR-02-cat` / `AR-08-cat` / `AR-07-stairs-cat` / `AR-03-walking-cat` ほか台帳に 5 件）で、これ以上は足さない（本節では猫の案を `AR-05-aisle-light-streak` に差し替えた）。**植物・蔓・花、金魚、ハンガーの服、床の子供の影だけ**は台帳・候補プールのどちらにも無いことを `grep` で確認した（2026-11-05）。ケンパ・ランドセル・水たまり・靴は既存と型が被るので使わない。
 - **remove_object / displace / text_change / multiply を入れなかった理由**（2026-11-05 に左通路・天井・右上を原寸で見直した）: 候補にした左通路の天井の丸い通気口は `AR-05-white-ribbon`（box 重なり）、左店先の丸い看板は白いリボンまで 12px、右上の防犯ドームは `AR-05-duplicate-light` の box 内で、いずれも 30px の空きが取れない。左通路は小物 3 件（silhouette・light-streak・goldfish）で 30px 余白を使い切っており、これ以上は足せない。文字を含む看板の変更は、架空化済みの基準画像ができるまで具体化しない。この 4 種は別カメラ側で補う。
 - **構造の偏り是正**: 7 件の分類は surreal 1・person 3（add_person 2 + reflection 1）・add_creature 1（金魚）・environment/state_change 1（光の帯）・add_object 1。台帳の偏り（object 137 / add_object 105）に足すのは add_object の 1 件だけ。
-
----
-
-### AR-05-ceiling-shirt — 天井から吊るされた子供用の白いシャツ（服だけ）
-
-- **camera / element_id**: CAM05 / CAM05-E01
-- **物と変化**: 天井から細い針金のハンガーで、小さな無地の白い半袖シャツが一枚、袖を垂らして吊るされている（洗濯物。中に人はいない。服だけ。模様・文字・ボタンの刻印なし）
-- **最終 box**（baseline px）: `243,8,303,50`（60x42）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `190,0,446,171`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (53,8)-(113,50)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark ceiling in the upper left of this frame, hang one small plain white short-sleeved child's shirt on a thin wire clothes hanger from a short thin cord attached to the ceiling, the shirt empty and limp with its sleeves hanging down, completely plain with no print, no buttons marked, no label and no pattern. Make it about 1.4x larger than real scale and a clean pale white so that it reads clearly against the dark ceiling. Add a faint soft shadow of the shirt on the ceiling surface behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the ceiling speckles and panel seams, the ceiling lights, the black top frame of the glass shop block below or the grey pillar. Place the object, including its shadow, centered at about 32% from the left and 17% from the top of the image, occupying roughly 23% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark ceiling in the upper left of this frame, hang one small plain white short-sleeved child's shirt by its collar from a tiny hook fixed directly on the ceiling, with no hanger, the shirt empty and limp with the shoulders drooping and the sleeves hanging straight down, completely plain with no print, no buttons marked, no label and no pattern. Make it about 1.4x larger than real scale and a clean pale white so that it reads clearly against the dark ceiling. Add a faint soft shadow of the shirt on the ceiling surface behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the ceiling speckles and panel seams, the ceiling lights, the black top frame of the glass shop block below or the grey pillar. Place the object, including its shadow, centered at about 32% from the left and 17% from the top of the image, occupying roughly 23% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark ceiling in the upper left of this frame, hang one small plain white short-sleeved child's shirt on a thin wire clothes hanger from a short thin cord, the hanger slightly tilted as if swinging, the empty shirt hanging crooked with one sleeve lifted outward and the other hanging down, completely plain with no print, no buttons marked, no label and no pattern. Make it about 1.4x larger than real scale and a clean pale white so that it reads clearly against the dark ceiling. Add a faint soft shadow of the shirt on the ceiling surface behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the ceiling speckles and panel seams, the ceiling lights, the black top frame of the glass shop block below or the grey pillar. Place the object, including its shadow, centered at about 32% from the left and 17% from the top of the image, occupying roughly 23% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 天井の点状汚れと板継ぎ目・天井灯・下の黒い枠と灰色の柱。
-- **最寄り既存 overlay と実測距離**: AR-05-paper-streamers まで 31.0px（box 基準、次点 AR-05-brown-column 32.0px）。 **余裕が小さい（37px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで広がる。30px 割れたら右へ動かす。右の AR-05-duplicate-light までは 32px で、動かせる余裕は 2px しか無い。割れたら box の幅を縮めて作り直す）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 暗い天井に白い小さなシャツなので対比は強い。box が 60x42 と小さいので、袖を広げた T 字の形を大きく取る。ハンガーの針金は細くて消えやすいので、シャツ本体を大きく。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '暗い天井から、小さな無地の白いシャツがハンガーで吊るされている（洗濯物。服だけ）'` / `candidate_id: 'AR-05-ceiling-shirt'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 天井から吊る既存 `AR-05-paper-streamers`（CAM05・同じ天井左寄りの白い紙の吹き流し。31px 隣で型が近い。**制作前に見比べ、実質同じ（白い紙の垂れ物）と見えたら取り下げ、シャツの袖と肩の形を強調する。距離 31px は box 基準なので、制作後に台帳の最終 overlay の alpha bbox で再測定し、30px 割れなら右へ動かす**）。なお本件の box は大面積 `AR-05-morning-glory-wall` の天井の帯に重なるので、同プレイ非共存・`AR-05-wind-chime`（CAM05・風鈴）・`AR-06-ceiling-balloons`・てるてる坊主（CAM06）。服だけの吊り物は他に無い。
 
 ---
 
