@@ -146,7 +146,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 | AR-01-ceiling-tile-drop | 小物 | object / displace | 右上天井 (405,122,479,198) | 天井板が一枚、片側だけ外れて垂れ下がる |
 | AR-01-ceiling-wet-stain | 小物 | environment / state_change | 中央天井 (290,212,370,248) | 天井に濡れた丸い染みが広がり水滴が垂れかける |
 | AR-01-floor-light-orphan | 小物 | surreal / state_change | 手前左の床 (2,832,92,898) | 光源のない場所に、床の光だまりがもう一つ落ちる |
-| AR-01-crouching-silhouette | 小物 | person / add_person | 奥の床 (385,484,440,538) | 奥の床にうずくまる黒い人影が一つ |
 | AR-01-threshold-pigeon | 小物 | object / add_creature | 右の敷居 (575,598,675,655) | 右の店先の敷居に白い鳩が一羽とまる |
 
 - **方針の充足**: (a) add_object / color_shift は 0 件。8 件は surreal・multiply・state_change×3・displace・add_person・add_creature のすべて指定の型（reflection は使わない）。(b) 大面積は床一面と右壁一面の 2 件。(d) 人・生き物は遠景のシルエット・小さな鳥だけで、顔・肌・指・服は描かない。(e) 文字・数字・ロゴ・実在名は出さない。
@@ -298,28 +297,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 - **視認性の注意**: 手前左の床は暗く、明るい楕円との差は大きい。ただし 90x66 と小さいので、中心を明るく縁をはっきり出す。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通し、通らなければ明るさを上げる。それでも通らなければ本件は取り下げ、別案に差し替える（影を細い帯で出す案には戻さない）。
 - **台帳登録時**: id `AR-01-floor-light-orphan` / `category: surreal` / `anomaly_type: state_change` / `detail: '手前左の暗い床に、光源のない場所から落ちた白い光だまりがもう一つ現れる'`。note に最寄り既存 id と最終 alpha bbox 実測距離、「床一面の AR-01-floor-crosswalk と排他」を書く。
 - **相互参照 / 重複精査**: 台帳の `AR-01-floor-puddle-light`（床の水たまりが灯を映す。**水の物**）は水たまりと反射、本件は**光だけが物なしで落ちる**点が違う。同カメラの床の白い光だまり自体は元写真の既存要素（E18 の反射帯）で、それを増やす（`CR-01-*` の反射の複製案があれば）型とは、光源の説明がつかない位置に出る点で別。他カメラの床の光（CAM03・CAM06 の反射の候補）とは別の面・別の構図。意味づけは台詞側で決める。
-
-#### AR-01-crouching-silhouette — 奥の床にうずくまる黒い人影
-
-- **camera / element_id**: CAM01 / CAM01-E14（通路奥の柱の右隣の床。柱・開口は動かさない）
-- **物と変化**: 通路の突き当たり右寄りの床に、**うずくまった（しゃがんだ）小さな黒い人影**が一つ現れる。遠景のシルエットで、背を丸め、床に近い低い姿勢。顔・服・手の描写はなく、輪郭の黒いかたまり。床に薄い接地の影がある。
-- **最終 box**（baseline px）: `385,484,440,538`（55x54）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `284,425,540,596`（256x171）。box はクロップ内の (101,59)-(156,113)
-- **生成プロンプト**（3 テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles at the far end of the corridor, just to the right of the white pillar and below the dark doorway, place one distant crouching human silhouette: a small solid dark charcoal shape of a person squatting low on the floor with a rounded back and the head bowed, seen from the front-side in the distance, with no visible face, no clothes detail, no hands and no feet, only the outline mass. A soft dark contact shadow on the floor tiles under it. Make it about 1.4x larger than real scale because it is far away. VARIANT. Do not touch the white pillar, the dark doorway and its notice plates, the grey floor mat on the floor to the left, the metal shutters to the right or anything else. Place the object, including its shadow, centered at about 61% from the left and 51% from the top of the image, occupying roughly 21% of the image width and 33% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  - VARIANT 1: `The figure squats with the knees up and the arms wrapped around them`
-  - VARIANT 2: `The figure is crouched low, leaning slightly forward with the head down`
-  - VARIANT 3: `The figure squats upright on its heels with the head raised, looking down the corridor`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 白い柱・暗い開口とその掲示板・左の床のマット・右のシャッター。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-yellow-boots まで 32.2px、次点 AR-01-back-view-paper-bag 49.0px、AR-01-bamboo-broom 67.2px。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（30px 割れなら下端を上げる）。
-- **分類 / フェーズ / 目立ち度**: person / mid / medium
-- **視認性の注意**: 奥の床は中間の灰青で、黒い塊との差は十分。ただし 55x54 と小さいので、縮小で潰れないよう大きめ（1.4 倍）・縁をはっきり。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-crouching-silhouette` / `category: person` / `anomaly_type: add_person` / `detail: '通路の突き当たり右寄りの床に、うずくまった小さな黒い人影が一つ現れる（顔・服の描写なし）'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: 同カメラ `AR-01-back-view-paper-bag`（左の暗い開口の手前に**立つ**後ろ姿・約 49px 左）、候補 CR-01-06（開口の人影が小さすぎる）・CR-01-25（開口の手前に猫）。**本件は床の上で姿勢が違う（うずくまる）、位置が柱の右の床**。他カメラの老人の後ろ姿（`AR-08-old-man-back`・`AR-05-old-woman-in-glass`）とは**姿勢（立つ/うずくまる）と持ち物がない**点が違う。story の「通路に現れていた像は老人 3 人の記憶」に合わせた像で、台詞側で「何かを探している」読みもできる。
 
 #### AR-01-threshold-pigeon — 右の店先の敷居に白い鳩が一羽とまる
 
