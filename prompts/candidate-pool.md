@@ -1285,26 +1285,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: **`AR-06-wall-puddle`（bbox が 35,350 px² 重なる大面積。排他。1 カメラ 1 件制で同時には出ない）**、`AR-06-wall-stripes`（壁面の模様で、ポスターに覆われる）。`AR-06-tilted-notice`（額入り掲示。**保持物**なので格子から抜き、併存可）、`AR-06-ceiling-panel-white` は天井側で併存可。`AR-06-wet-footprints` は床で併存可。CR-LG-01-02（顔写真の格子）・03-01（無地の白紙）とは型が別で、顔は出さない。
 - **生成枚数の最小見積り**: 素材 3 テイク。
 
-### CR-LG-07-02 天井から垂れる白いシーツ
-
-- **ID / camera / element_id**: CR-LG-07-02 / CAM07 / CAM07-E01
-- **面**: box 0,0,675,122（82,350 px²、13.6%）。天井一面。**シーツの裾は y118〜120 を下限とし、後壁の 07-01 の box（y126〜）に入らない**。貼り込み後の alpha bbox は**幅 ≥640 かつ 裾 ≥ y119**（640×119=76,160 ≥ 75,938）を満たす。幅の端から端まで（x≲17 〜 x≳657）シーツを配置し、少なくとも数枚は裾が y119〜120 に届くようにする。
-- **物と変化**: 天井から、無地の白いシーツが 8〜12 枚、間隔を変えて垂れ下がる。長さは不揃いでゆるくたわむ。蛍光灯・換気口・丸灯は本物のまま、シーツの間から見える。
-- **不気味さの狙い**: 病室か洗濯場のように、誰も寝ていない清潔な白が天井から並ぶ。人の形は作らない（幽霊の見立てにしない）。老人の記憶の「干してあるシーツ」。
-- **保持するもの**: 蛍光灯・換気口・丸灯・黒い小器具と非常灯、壁・階段・床、天井の黒斑点の質感（シーツの隙間に残す）。
-- **生成プロンプト全文**:
-  ```
-  $imagegen Edit the attached surveillance camera photo of a corridor ceiling (the ceiling occupies the top strip of the frame).
-  Make ONLY this change: hang eight to twelve plain white bed sheets from the ceiling, each draping straight down as a loose rectangular curtain of fabric with soft vertical folds and a hem at the bottom, in uneven spacing and slightly different lengths, a few swaying slightly. The sheets are completely plain white linen, no print, no stripes, no stains forming shapes, no holes, no eyes, not shaped like a person or a ghost, no text or logos. They hang no lower than the top edge of the back wall: the lowest hems end about 269 px below the top edge of the 1536x1024 frame (26 percent of its height, which is 118 px of the 675x900 original photo). The existing fluorescent lights, the vent and the round lamps stay visible between the sheets and the fluorescent lights stay on.
-  Do not touch the wall, stairs, doors, signs, floor or anything below the ceiling line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-- **作り方**: ①割付図: シーツの吊り位置（天井の板継ぎ目沿い）・幅（40〜90px）・裾の高さ（元画像の実寸で 80〜120px。窓内 ×2.2756）を決め、蛍光灯・換気口・丸灯の矩形を避ける。②全景 3 テイク（窓 y0〜450 の 1 枚）。③天井ポリゴン（y0〜122）内で、シーツ本体だけを差分抽出（`--box 0,0,675,122 --threshold 20`）。④裾が y122 を越えたテイクは切らず没（07-01 と重なる）。
-- **難所と没基準**: 人型・幽霊型に見える（目の穴・頭部の盛り上がり）は没。裾が y122 を超える、または蛍光灯を隠すものは没。白が暗い天井で飽和して形が潰れないよう陰影を残す。
-- **フェーズ / 目立ち度**: mid / medium。
-- **台帳案**: category `environment` / anomaly_type `add_object` / detail 「天井から無地の白いシーツが何枚も垂れ下がる（蛍光灯と換気口は残る）」。note に「大面積。CAM07-E01。bbox 面積が余裕小なので貼り込み後に必ず再計測」を書く。
-- **排他**: `AR-07-crane`（(325,0) 79x240、天井から吊る折り鶴。本件と同じ面）・`AR-07-ceiling-string`・`AR-07-paper-tag-lamp`・`AR-07-paper-airplane-ceiling`・`AR-07-lamp-off`（天井の小物）。
-- **生成枚数の最小見積り**: 全景 3 テイク。
-
 ### CR-LG-08-02 左のショーウィンドウに積まれた白黒テレビ
 
 - **ID / camera / element_id**: CR-LG-08-02 / CAM08 / CAM08-E06・E07（左の店先ガラス戸一面）
