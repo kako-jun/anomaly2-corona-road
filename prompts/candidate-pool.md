@@ -509,24 +509,6 @@
 - **視認性の注意**: 暗い天井では高彩度の赤と黄が効く。青・緑は暗さに沈むので少なめ。右の赤い看板に近いので、看板へ色を滲ませない。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'environment'` / `anomaly_type: 'add_object'` / `detail: '天井の上端から色紙の輪つなぎ飾りが弧を描いて垂れる（昭和の行事の記憶。文字なし）'` / `candidate_id: 'CR-NEW-02-04'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 吊り飾り系の兄弟: CR-NEW-01-04・CR05N-5・CR06N-5・AR-07-crane。
 
-#### CR-NEW-02-05 — 白黒テレビ
-
-- **camera / element_id**: CAM02 / CAM02-E09
-- **物と変化**: 奥の暗い店内に小さな昭和の白黒テレビが点き、淡い砂嵐の光を放つ（失われた日常の気配）
-- **最終 box**（baseline px）: `200,195,268,275`（68x80）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `106,150,362,321`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (94,45)-(162,125)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: inside the dark shop opening at the back of the corridor, place one small old black-and-white portable television set (a rounded boxy dark case with a small square screen, two plain round knobs and short antennas, no brand text) standing on the floor of the shop and turned on, its screen showing pale bluish-white static snow and spilling a faint cool glow onto the floor in front of it. Make it about 1.4x larger than real scale. Instead of a heavy shadow, add a soft pale glow spill on the dark floor in front of the set. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the surrounding dark shop interior, the door frames, the pillar on the right or the signs above. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 27% of the image width and 47% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 周囲の暗い店内・扉枠・右の柱・上の看板（黒潰れは黒のまま）。
-- **最寄り既存 overlay と実測距離**: AR-02-shop-reopens まで 33.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-pillar-notice 56.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / late / medium
-- **視認性の注意**: 暗所で発光するので視認しやすいが小さい。画面の明るさを白く強め、周囲の暗部を落とさない（黒潰れの部分は黒のまま）。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'environment'` / `anomaly_type: 'add_object'` / `detail: '奥の暗い店内の床に小さな白黒テレビが点き、淡い砂嵐の光を放つ（失われた日常の気配）'` / `candidate_id: 'CR-NEW-02-05'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: **同種: AR-06-crt-tv-glow（CAM06・左端の暗い店先の窓の奥に青白く砂嵐を放つ小さなブラウン管テレビ）。** 意図的な反復シリーズ（別カメラ・別の置き場所）として扱い、制作前に見比べて重複と判断したら取り下げる。反復に価値がある理由: 「消えたはずの店のテレビが、別の場所でも点いている」という同じ気配が複数の画面で繰り返されると、プレイヤーは見つけた1件目を手がかりに2件目を探す楽しみが生まれる。差分は、AR-06-crt-tv-glow が窓の奥の店先・左端の暗所、こちらは通路奥の店内の床に置かれた小型の白黒機。
-
 #### CR-NEW-02-06 — 小型スーツケース
 
 - **camera / element_id**: CAM02 / CAM02-E20

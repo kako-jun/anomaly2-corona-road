@@ -3452,3 +3452,21 @@ anomalies:
     dimensions: '165x541'
     review_status: 'composited'
     note: '大面積（bbox 165x541=89,265px²、画像の14.7%）。CAM02-E07。排他（同プレイで共存させない。同じ店先の面を覆う）: AR-02-shop-reopens (41,250) / AR-02-open-sign (8,064) / AR-02-newspaper (6,298) / AR-02-cat (6,305) / AR-02-wrapping-paper (1,026)。併存可（床。画用紙はシャッター下端の接地線で止める）: AR-02-puddle (16,874) / AR-02-cigarette (2,294) / AR-02-receipt (2,420) / AR-02-tile (896) / AR-02-tile-color (1,118)（重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-02-01（床一面の足跡）とは bbox が重なるが面は別（床とシャッター）。画用紙は縦枠の線上にも貼らず、枠で止めた。画像の出来: 1 枚の絵の複製（人型 4・赤い家・太陽）。ゲーム画面とライブ blink での確認は未了。同カメラの大面積 CR-LG-02-01（AR-02-floor-footprints）とは bbox が重なる（165x260）が面は床とシャッターで別。alpha 重なりは 267 px² と小さく、併存可。画像の調整: 画用紙は彩度を落として黄ばませ、シャッターの明暗に合わせて暗くした。人型の顔は黒く塗りつぶし、数枚の紙に欠け（シャッターが覗く穴）と剥がれの縁を足した。'
+  - id: "AR-02-bw-television"
+    candidate_id: "CR-NEW-02-05"
+    camera_id: "CAM02"
+    element_id: "CAM02-E09"
+    base_photo: "public/images/cam2.webp"
+    category: "environment"
+    anomaly_type: "add_object"
+    phase: "late"
+    subtlety: "medium"
+    mask_box_1000: "(296,217)–(398,309)"
+    location: "CAM02-E09、差分左上 (200,195) px"
+    detail: "奥の暗い店内の床に小さな白黒テレビが点き、淡い砂嵐の光を放つ（失われた日常の気配）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the set with its glow was moved up about 24 px with a soft-edged patch (at the generated position it came within 12 px of AR-02-shop-reopens), pasted into the baseline and cut out with scripts/composite-anomaly.py (--threshold 10 to keep the thin antennas, --dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: inside the dark shop opening at the back of the corridor, place one small old black-and-white portable television set (a rounded boxy dark case with a small square screen, two plain round knobs and short antennas, no brand text) standing on the floor of the shop and turned on, its screen showing pale bluish-white static snow and spilling a faint cool glow onto the floor in front of it. Make it about 1.4x larger than real scale. Instead of a heavy shadow, add a soft pale glow spill on the dark floor in front of the set. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the surrounding dark shop interior, the door frames, the pillar on the right or the signs above. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 27% of the image width and 47% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam02/bw-television.webp"
+    overlay_origin: "(200,195)"
+    dimensions: "69x83"
+    review_status: 'composited'
+    note: "最寄りの既存は AR-02-shop-reopens（30px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種のテレビ系: AR-06-crt-tv-glow（CAM06・別カメラ）。 テレビは生成位置から約24px上へ寄せた（そのままだと AR-02-shop-reopens に12pxまで近づくため）。最終 box (196,188,276,276)。画面の砂嵐と床の淡い光は暗い店内の床より上の面にあるように見える（やや浮いて見える）。重なりを許す大面積: AR-02-shutter-crayon-drawings（35px 離れ、重ならない）。 ゲーム画面とライブ blink での確認は未了。"
