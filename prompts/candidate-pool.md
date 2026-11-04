@@ -1208,26 +1208,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 
 ---
 
-### CR-LG-01-01 天井一面の提灯・紙飾り
-
-- **ID / camera / element_id**: CR-LG-01-01 / CAM01 / CAM01-E01
-- **面**: box 212,0,675,340（157,420 px²、25.9%）。天井の台形（丸灯・換気口・点検板・蛍光灯のある面）。
-- **物と変化**: 通路天井の右〜中央一面に、赤白の**無地**の提灯が数十個、提灯どうしをつなぐ細い飾り紐とともに列をなして吊られる（紙の輪つなぎは CAM02 の `CR-NEW-02-04` と近いので使わない）。奥ほど小さく密。既存照明は飾りの隙間から見え、蛍光灯は点いたまま。
-- **不気味さの狙い**: 誰もいないのに祭りの準備だけがある。老人の記憶が「祭りの夜の商店街」を天井に再生する、優しい異変（story: 通路に現れていた像は老人 3 人の記憶）。
-- **保持するもの**: 床・左右の壁・店先・奥の吊り看板（E16、y373 付近）、換気口・点検板・丸灯・蛍光灯の本体、天井の色味・粒状・板継ぎ目（飾りの隙間に残す）。
-- **生成プロンプト全文**:
-  ```
-  $imagegen Edit the attached surveillance camera photo of an underground shopping arcade corridor (the ceiling occupies the upper part of the frame).
-  Make ONLY this change: on the ceiling of the right and centre part of the corridor, hang several dozen completely blank paper lanterns (red and white, round, no characters, no crests, no logos, no stripes of writing), linked by thin plain cords, in neat rows (no paper-chain garlands, no streamers) receding toward the far end of the corridor. Lanterns get smaller and denser toward the vanishing point and follow the strong perspective of the ceiling. Each lantern hangs on a thin cord about 25-40 cm below the ceiling plane. Existing ceiling fixtures (round lamps, the large concentric vent, the square access panel, the long fluorescent tube) stay visible between the lanterns and the fluorescent tube stays lit. Lanterns glow faintly warm only at their own surface; the corridor floor and walls stay cold blue-grey.
-  Do not touch the floor, walls, shopfronts, hanging signs or anything below the ceiling line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-- **作り方**: ①割付図: 消失点（奥の開口付近）へ向かう流線 3 本 × 提灯の位置と大きさ（手前 60px → 奥 8px）を `uv run --with pillow python3` で描いて確定。②全景を 3 テイク生成（窓 y0〜450 の 1 枚。天井以外は元画像で上書きする前提）。③天井の台形ポリゴンを手描きし、ポリゴン内のうち「提灯の実体＋吊り紐・飾り紐」だけを差分抽出（`--box 212,0,675,340 --threshold 20`）。吊り看板（y373）には届かない高さに収める。④原寸で蛍光灯が点いたまま・換気口が見えることを確認。
-- **難所と没基準**: 提灯に文字・家紋が出たら没。遠近のスケール崩れ（奥が手前より大きい）は没。消失点付近が潰れるなら奥の提灯を間引く。天井が背景化しやすいので提灯は大きめ・白を強く。
-- **フェーズ / 目立ち度**: mid〜late / obvious。
-- **台帳案**: category `environment` / anomaly_type `add_object` / detail 「通路天井の右〜中央一面に、無地の赤白の提灯が飾り紐とともに数十個吊られる（蛍光灯は点いたまま）」。note に「大面積。CAM01-E01。近傍: AR-01-ceiling-fan-showa（同じ天井の昭和小物）と bbox 重複するが大面積の例外」を書く。
-- **排他**: `AR-01-ceiling-fan-showa`・`AR-01-ceiling-panel-round`・`AR-01-vent-hole-triangle`・`AR-01-ceiling-seam-circle`（天井の飾りで同じ面に重なる）は同プレイ非共存を推奨。**`AR-01-tube-end`（蛍光灯の片端が切れる。5,040）も排他**（本件は蛍光灯が点いたままの前提）。`CR-NEW-02-04`（CAM02 の七夕の輪つなぎ飾り）とは紙の輪つなぎを使わないことで型を分けた。
-- **生成枚数の最小見積り**: 全景 3 テイク（素材の別生成なし）。
-
 ### CR-LG-01-02 左壁一面の同じ顔写真（行方不明の 4 人）
 
 - **ID / camera / element_id**: CR-LG-01-02 / CAM01 / CAM01-E09
