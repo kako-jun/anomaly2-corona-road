@@ -665,7 +665,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
 | AR-03-ceiling-eye | surreal | surreal | 天井の暗い隙間から白い目が一つ覗く | 小物 |
 | AR-03-dark-tile | object | state_change | 通路中央の床に座布団ほどの暗いタイルが一枚だけ混じる | 小物 |
 | AR-03-shutter-raised | environment | state_change | 右のシャッターの裾が少し上がる | 小物 |
-| AR-03-roll-vanish | object | remove_object | 壁際の銀白色の巻いた物が消える | 小物 |
 
 - **配置の実測**（2026-11-05、`uv run --with pyyaml --with numpy --with pillow python3` で台帳の CAM03 全 30 件の `overlay_origin` と overlay の実際の alpha bbox を測定）: 小物 7 件の box は、大面積 2 件（AR-03-shutter-blank-papers (0,102,258,650)・AR-03-floor-tatami (29,457,676,900)）を除く既存 overlay の alpha bbox から**30px 以上**離れ、本節の他の小物 box どうしも 30px 以上離れている（最小は 30.0px で、AR-03-floor-line-break↔AR-03-shutter-raised と AR-03-tube-light-bent↔AR-03-ceiling-eye。最寄りは各項に記載）。羽毛ぼかしやにじみで overlay が広がる分、制作後に alpha bbox で測り直す（36px 未満の項は特に必須）。大面積 AR-03-floor-shadows と小物の box 重なりは項に px² で記載（README の大面積の例外。排他は項に明記）。
 - **偏り是正の内訳**: add_person 2（影・シャッターの指）／surreal 1（天井の目）／state_change 4（床の目地・蛍光灯の向き・暗いタイル・シャッターの裾）／remove_object 1（銀白色の巻いた物）。台帳に CAM03 の add_person・remove_object は無く、person カテゴリも CAM03 にまだ無い。
@@ -875,35 +874,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
     note: '最寄り既存 overlay は AR-03-shutter-faded-poster（box 距離 96px）。CR-03-12 の昇格（採用時は candidate-pool の CR-03-12 の行を削除）。右端で幅が 28px と狭く check-visibility が通らない可能性が高い。制作後に `check-visibility.py --id AR-03-shutter-raised` を必ず通し、下限未満なら隙間を高くして作り直す（それでも通らなければこの節へ戻す）。大面積 AR-03-floor-shadows とは併存可（box 重なり 1,176 px²、影は接地部で止める）。'
   ```
 - **相互参照 / 重複精査**: CR-03-12（右シャッターが中ほどまで上がる）の昇格案で、裾の隙間だけに絞った変化。CR-03-03（右シャッターの板一枚の間隔が倍）は別の変化。CAM02 の AR-02-shop-reopens（左シャッター）とは別カメラ・別の物。台帳に CAM03 のシャッター開閉は無い。
-
-### AR-03-roll-vanish — 壁際の銀白色の巻いた物が消える
-
-- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E16
-- **物と変化**: 奥の左壁際の床に斜めに横たわる、銀白色の細い巻物が 2 本（原寸 6 倍で確認: 巻いて束ねた薄いシート状の物。養生マットか巻いたシートに見える。細部は不鮮明）が消え、壁の根元と床だけが続く。すぐ奥の暗い木箱はそのまま残る。
-- **box (x1,y1,x2,y2)**: (482,238,508,268)（26x30。幅が狭い）
-- **最寄り既存 overlay と実測距離**: AR-03-sign-frame-square (43.0)、次点 AR-03-sunken-opening-floor (44.0)。
-- **6倍クロップ範囲**: 6倍クロップ (369,167)–(625,338)（256x171）。box は窓内で (678,426)–(834,606)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Remove only this: the two pale, silvery-white thin rolled sheets (like rolled-up foil mats or rolled paper, lying diagonally side by side) at the foot of the left wall with their small shadow (about x=678 to 834, y=426 to 606 in the 1536x1024 frame). In their place, continue the wall base and the glossy grey floor tiles naturally with their reflections. Keep the dark small crate just behind them, the shop front on the left and everything else exactly as is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Remove only this: the pair of white-silver cylindrical rolled sheets lying on the floor along the wall base, near x=678 to 834, y=426 to 606 in the 1536x1024 frame, including their shadow. Fill with plain floor tiles and the wall skirting in the same perspective and the same soft reflections. Do not change the dark crate, the shop window or any other part of the image. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Remove only this: the light grey rolled bundles at the foot of the wall (x=678 to 834, y=426 to 606 in the 1536x1024 frame) and their soft shadow, restoring the floor-wall corner as a clean continuous surface with faint reflections. Everything else must stay identical, including the dark crate behind them. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-03-roll-vanish'
-    candidate_id: 'AR-03-roll-vanish'
-    camera_id: 'CAM03'
-    element_id: 'CAM03-E16'
-    base_photo: 'public/images/cam3.webp'
-    category: 'object'
-    anomaly_type: 'remove_object'
-    location: 'CAM03-E16 の奥の左壁際の床、差分左上 (482,238) 付近（貼り込み後に再計測）'
-    detail: '奥の左壁際の床に斜めに横たわる銀白色の巻いたシートが消え、壁の根元と床だけが続く。'
-    overlay: 'assets/anomaly-overlays/cam03/roll-vanish.webp'
-    # phase / 目立ち度: early / subtle
-    note: '最寄り既存 overlay は AR-03-sign-frame-square（box 距離 43px）。元写真の物は原寸 6 倍で確認済み（銀白色の巻いた細いシート 2 本。木箱の手前）。box 幅 26px と狭い小物の消失で視認性下限が厳しいため、check-visibility を必ず通す（通らなければ取り下げて候補へ戻す）。'
-  ```
-- **相互参照 / 重複精査**: 台帳に CAM03 の remove_object は無い（remove_object 自体が台帳に AR-06-missing-flower のみ）。CR-03-01〜等の物の向き・複製とは別。
-- **同カメラ内の排他と併存**: 排他なし。併存可=床・壁・天井の異変。大面積 AR-03-floor-shadows とは box が 840 px² 重なるが併存可（影は物の接地部で止める）。
 
 ### 既存との重複精査（共通）
 
