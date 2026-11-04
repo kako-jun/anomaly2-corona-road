@@ -3252,7 +3252,7 @@ anomalies:
     overlay_origin: '(0,102)'
     dimensions: '258x548'
     review_status: 'composited'
-    note: '大面積（bbox 258x548=141,384px²、画像の23.2%）。CAM03-E06。排他（同プレイで共存させない。同じシャッターを覆う）: AR-03-newspaper (7,884) / AR-03-paper-bag (2,964) / AR-03-shutter-wave (15,450)（重なり px²、box 重なり表の機械出力）。他の同カメラ overlay とは重ならない（床の AR-03-tile-diagonal / AR-03-blue-floor-tile / AR-03-pendant-lamp は bbox 外）。紙どうしの間に細い縫い目（シャッターが見える暗い線）を残した。画像の出来: 紙は実測で十分白く、格子は縫い目と傾きで見える。ゲーム画面とライブ blink での確認は未了。'
+    note: '大面積（bbox 258x548=141,384px²、画像の23.2%）。CAM03-E06。排他（同プレイで共存させない。同じシャッターを覆う）: AR-03-newspaper (7,884) / AR-03-paper-bag (2,964) / AR-03-shutter-wave (15,450)（重なり px²、box 重なり表の機械出力）。30px 未満に近い overlay（bbox 間隔、括弧内は alpha の最近接）: AR-03-pendant-lamp 0px（5px）/ AR-03-blue-floor-tile 6px（約130px）/ AR-03-tile-diagonal 10px（約159px）/ AR-03-striped-sign 17px（18px）/ AR-03-slipper-single 19px（20px）/ AR-03-crate-duplicate 23px（24px）。いずれも alpha は重ならないので併存可。同カメラの大面積 CR-LG-03-02（AR-03-floor-tatami、床一面の畳）とは bbox が重なる（229x193）が面（シャッターと床）は別で alpha 重なり 0、併存可。紙どうしの間に細い縫い目（シャッターが見える暗い線）を残した。画像の出来: 格子は縫い目と傾きで見える。ゲーム画面とライブ blink での確認は未了。画像の調整: 紙の明るさを下のシャッターの明暗に合わせて落とし（発光パネルに見えないようにし）、紙の繊維の質感と斑、破れた縁（4 か所）とテープ跡を足した。'
   - id: 'AR-05-curtains-open-cafe'
     candidate_id: 'CR-LG-05-01'
     camera_id: 'CAM05'
