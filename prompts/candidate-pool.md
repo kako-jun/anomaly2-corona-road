@@ -1208,25 +1208,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 
 ---
 
-### CR-LG-04-02 左ガラス店先の曇りと手形
-
-- **ID / camera / element_id**: CR-LG-04-02 / CAM04 / CAM04-E07
-- **面**: box 0,10,215,740（156,950 px²、25.8%）。左ガラス店先の全面（枠内のガラスのみ）。
-- **物と変化**: ガラスが内側から結露で曇り、子供と大人の手形が大小無数に付き、指で描いた絵（傘・太陽・猫・家）が数か所だけ現れる。文字・数字なし。
-- **不気味さの狙い**: 外側でなく内側から付いた手形。店の中に人がいた痕跡だけが残る。店の中にいた人々（老人たち）の気配。**4 人目のフラグ後（late）に限り**、小さな子供の手形が混ざって 4 人目の気配とも読める（story の未決: 4 人目の子供の記憶が異変を作るか。確定ではなく読みの一つ）。
-- **保持するもの**: 白い金属枠・床・天井・上部の緑看板・奥の通路。曇りは枠線で止める。
-- **生成プロンプト全文**（手形素材を別生成）:
-  ```
-  $imagegen Create a flat, straight-on photo of a pane of cold glass fogged with condensation, seen from the outside, with many handprints and palm prints pressed on the inside surface: some large adult hands, some small child hands, in varied sizes, all with exactly five fingers and natural proportions, smeared where the hand slid. In three places a finger has drawn a very simple child-like doodle in the fog (a small umbrella, a sun, a cat face, a house) as clear lines. No writing, no numbers, no letters, no logos. The fog is milky white-grey and translucent over a dark blue-black interior, with fine droplets and a faint warm glow far behind.
-  Output 1536x1024 (3:2). No watermark.
-  ```
-- **作り方**: ①素材 3 テイクから 2 枚（大人手・子供手が主）を選び、手形を切り出す。②各ガラスパネルのポリゴンを枠内側で作り、曇りは screen、手形は不透明度を変えて 40〜60 個配置（回転・縮尺・不透明度を変える）。③指の数は全数目視（6 本・4 本は没）。④枠は別マスクで元画像を戻す。
-- **難所と没基準**: 指の本数崩れ・絵が文字風記号になる・曇りが枠をまたぐ・暗いガラスが白一色になって情報量が消えるのは没。
-- **フェーズ / 目立ち度**: late / obvious（子供の手形が混ざるため、4 人目のフラグ後に限る）。
-- **台帳案**: category `environment` / anomaly_type `add_object` / detail 「左のガラス店先が内側から曇り、大小の手形と指で描いた絵が付く」。note に「大面積。CAM04-E07」を書く。
-- **排他**: `AR-04-red-telephone`・`AR-04-basket`・`AR-04-poster`・`AR-04-poster-colour-restore`（ガラス内の小物。曇りで隠れるので排他）。`AR-04-fluorescent-frame-grey` `AR-04-sign-colour-blue` は枠・看板で併存可。
-- **生成枚数の最小見積り**: 素材 3 テイク。
-
 ### CR-LG-06-01 右壁一面の同じポスター（手を振る子供の後ろ姿）
 
 - **ID / camera / element_id**: CR-LG-06-01 / CAM06 / CAM06-E15
