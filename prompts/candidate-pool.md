@@ -589,7 +589,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
 
 | ID | タイプ | カテゴリ | 規模 | 変化 |
 | --- | --- | --- | --- | --- |
-| AR-06-leaf-shadows-aligned | state_change | object | 小物 | 前景左下の床の植物の影が、全部同じ一方向へ平行に揃う |
 | AR-06-wall-height-marks | add_object | object | 小物 | 右壁に子供の背比べのような色鉛筆の横線が刻まれる |
 
 - **配分**: 7件中 add_object は1件（AR-06-wall-height-marks）、add_person・multiply・color_shift・reflection は0件（台帳の偏り是正）。state_change が4件（AR-06-floor-tile-rotated・AR-06-door-gap-light・AR-06-floor-light-slant・AR-06-leaf-shadows-aligned）、surreal・add_creature・add_object が各1件。大面積は1件（AR-06-floor-tile-rotated）。
@@ -602,39 +601,6 @@ CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳
   4. 最終 overlay の alpha bbox で既存との距離を測り直す。台帳へ登録し `check-visibility.py` を通す。通らなければ強めて作り直すか、この節へ戻す。
   5. 登録・コミットしたら `experiments/` 配下の作業物を即削除する。
 - **大面積の手順**: 後述の AR-06-floor-tile-rotated を参照（`scripts/composite-polygon.py` の `crop` → imagegen → `restore` → `cutout`）。
-
-### AR-06-leaf-shadows-aligned — 床の植物の影の葉先が全部同じ一方向へ揃う
-
-- **camera / element_id**: CAM06 / CAM06-E16（影の元は CAM06-E09 の左手前の大型観葉植物）
-- **物と変化**: 前景の左下の床に落ちる大きな観葉植物の葉の影が、本来は葉ごとに向きがばらばらに広がるのに、全部同じ一方向（通路の奥）へ、平行に揃って細長く伸びる（葉も植物も元のまま。影だけが揃う。物も人も写さない）
-- **最終 box**（baseline px）: `22,782,150,884`（128x102）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,729,256,900`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (22,53)-(150,155)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  テイク1:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: in the dark foreground floor at the lower left of the frame, redraw the soft shadow of the big plant's leaves so that every leaf shadow becomes a long narrow leaf shape pointing in exactly the same direction, toward the far end of the corridor, all parallel to each other, instead of fanning out in different directions. The shadows are dark charcoal, about 1.3x darker than the floor, with soft edges, and follow the tile joints in perspective. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the plant and its pot, the pink and blue cloth, the box to the right, the tile joints or the walls. No object, leaf or person is added. Place the object, including its shadow, centered at about 34% from the left and 61% from the top of the image, occupying roughly 50% of the image width and 60% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク2:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: change the pattern of the leaf shadows lying on the dark floor tiles at the lower left: all of them now point the same way, like a set of parallel blades stretching toward the back of the corridor, each with a leaf-shaped tip. Dark soft shadow, clearly readable against the grey tiles, with the tile joints continuing across them. No leaf or plant is added. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the plant and its pot, the pink and blue cloth, the box to the right, the tile joints or the walls. No object, leaf or person is added. Place the object, including its shadow, centered at about 34% from the left and 61% from the top of the image, occupying roughly 50% of the image width and 60% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク3:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: make the plant shadows on the dark foreground floor at the lower left all lean in one single direction: five or six narrow leaf-shaped shadows laid parallel to each other, pointing away from the camera toward the far end of the corridor, stronger and darker than natural so that they read at a glance, with the floor tile joints faintly visible through them. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the plant and its pot, the pink and blue cloth, the box to the right, the tile joints or the walls. No object, leaf or person is added. Place the object, including its shadow, centered at about 34% from the left and 61% from the top of the image, occupying roughly 50% of the image width and 60% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe plant and its pot, the pink and blue cloth, the box to the right, the tile joints or the walls（英語プロンプトの Do not touch に同じ）。
-- **最寄り既存 overlay と実測距離**: AR-06-tin-planter まで 37.0px（box を各辺+2px した、最終 alpha bbox の見込みの矩形で測定。矩形間のユークリッド距離。次点: AR-06-styrofoam-box 41.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 暗い床の影どうしの差は小さく、下限を割りやすい。影は元より濃く（炭色）、葉先を細長く揃えて輪郭を立てる。下限未満なら本数を減らして太くする。 登録後に `uv run scripts/check-visibility.py --id AR-06-leaf-shadows-aligned` を必ず通す。通らなければ同じ型（state_change）の別案にして節へ戻す。
-- **台帳登録案**: `id: 'AR-06-leaf-shadows-aligned'` / `element_id: 'CAM06-E16'` / `category: 'object'` / `anomaly_type: 'state_change'` / `location: 'CAM06-E16 の前景左下の床、差分左上 (22,782) px'` / `detail: '前景左下の床に落ちる植物の葉の影が、全部同じ一方向（通路の奥）へ平行に揃って伸びる'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-06-leaf-shadows-aligned'`。note に「大面積 AR-06-floor-tile-rotated の polygon の内側に入るので排他」と最寄り既存 id・最終 alpha bbox の実測距離を書く。
-- **相互参照 / 重複精査**: CR-06-05（大きな葉の影が葉の向きと逆側へ伸びる。候補のまま）は影が葉と逆向き、本案は影どうしが全部同じ向きに揃う。同じ元の植物の影なので、CR-06-05 を採用する場合は本案と同プレイで共存させない。CR-06-26（茶トラ猫が植物の足元に座る）・CR-06-12（葉の陰の人形のような生物）とは別。
 
 ### AR-06-wall-height-marks — 右壁に刻まれた背比べの線
 
