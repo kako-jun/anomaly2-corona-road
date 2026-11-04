@@ -3433,4 +3433,4 @@ anomalies:
     overlay_origin: "(333,31)"
     dimensions: "130x43"
     review_status: 'composited'
-    note: "最寄りの既存は AR-01-ceiling-fan-showa（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。 box は旧 (335,15,425,65) から右へ広げて (336,26,470,84)。生成された旗の連が box より長く、左端が天井ファンに30px未満だったため右へ約20px寄せた。 ゲーム画面とライブ blink での確認は未了。"
+    note: "最寄りの既存は AR-01-ceiling-fan-showa（43px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。標準でも見える（最大差分116・平均差分15.7・n25=1143、check-visibility 実測）。吊り飾り系の兄弟 CR-NEW-02-04（七夕輪つなぎ）・CR05N-5・CR06N-5・AR-07-crane は別カメラ・別物。 box は旧 (335,15,425,65) から右へ広げて (336,26,470,84)。生成された旗の連が box より長く、左端が天井ファンに30px未満だったため右へ約20px寄せた。 ゲーム画面とライブ blink での確認は未了。"
