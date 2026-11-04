@@ -75,7 +75,6 @@
 | CR-05-02 | CAM05-E08 | 正面カーテンの一枚だけ、裾が隣より少し高い。                 | object / early / subtle      |
 | CR-05-03 | CAM05-E12 | レンガ帯の一つだけ目地が上下にずれている。                   | environment / early / subtle |
 | CR-05-04 | CAM05-E02 | 左上の丸灯は点灯しているのに、店舗のガラス反射には映らない。 | environment / early / subtle |
-| CR-05-05 | CAM05-E09 | 右端のカーテンの隙間に、細い指のような影が一本見える。       | person / mid / medium        |
 | CR-05-06 | CAM05-E07 | 正面の金属枠の縦桟が一本だけガラスの手前に重なっている。     | surreal / mid / medium       |
 | CR-05-09 | CAM05-E11 | 黒い側面に、正面カーテンの縦模様が透けて現れる。             | surreal / late / obvious     |
 | CR-05-10 | CAM05-E08 | 中央のカーテン一枚だけが内側へ膨らみ、人の肩幅の形になる。   | person / late / obvious      |
@@ -140,14 +139,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 
 | ID | 種別 | category / anomaly_type | 面・位置 | 概要 |
 | --- | --- | --- | --- | --- |
-| AR-01-floor-crosswalk | 大面積 | surreal / surreal | 手前の床一面 (0,705,675,900) | 床一面に横断歩道の白線が敷かれる |
-| AR-01-right-wall-lattice-doors | 大面積 | surreal / multiply | 右の店先の壁一面 (422,225,675,668) | 同じ木格子戸が、奥へ向かって1枚ずつ大きくなりながら連なる |
-| AR-01-ceiling-lamp-off | 小物 | environment / state_change | 左天井 (60,168,128,222) | 左の丸い埋め込み灯が消えて黒い円になる |
-| AR-01-ceiling-tile-drop | 小物 | object / displace | 右上天井 (405,122,479,198) | 天井板が一枚、片側だけ外れて垂れ下がる |
-| AR-01-ceiling-wet-stain | 小物 | environment / state_change | 中央天井 (290,212,370,248) | 天井に濡れた丸い染みが広がり水滴が垂れかける |
-| AR-01-floor-light-orphan | 小物 | surreal / state_change | 手前左の床 (2,832,92,898) | 光源のない場所に、床の光だまりがもう一つ落ちる |
-| AR-01-crouching-silhouette | 小物 | person / add_person | 奥の床 (385,484,440,538) | 奥の床にうずくまる黒い人影が一つ |
-| AR-01-threshold-pigeon | 小物 | object / add_creature | 右の敷居 (575,598,675,655) | 右の店先の敷居に白い鳩が一羽とまる |
 
 - **方針の充足**: (a) add_object / color_shift は 0 件。8 件は surreal・multiply・state_change×3・displace・add_person・add_creature のすべて指定の型（reflection は使わない）。(b) 大面積は床一面と右壁一面の 2 件。(d) 人・生き物は遠景のシルエット・小さな鳥だけで、顔・肌・指・服は描かない。(e) 文字・数字・ロゴ・実在名は出さない。
 - **台帳の現況**（2026-11-05、`prompts/anomalies.yaml`）: CAM01 は 31 件で、うち大面積は `AR-01-wall-faces`（origin (0,216)・202x484 = 左壁）と `AR-01-ceiling-lanterns`（origin (217,0)・458x380 = 天井）の 2 件。残る広い面は**床**と**右の店先の壁**で、本節の大面積 2 件がそれ。
@@ -157,191 +148,52 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 
 ### 大面積
 
-#### AR-01-floor-crosswalk — 床一面の横断歩道
-
-- **camera / element_id**: CAM01 / CAM01-E17（床タイル。E18 の反射帯も面に含まれる）
-- **面**: box `0,705,675,900`（131,625 px²、画像の 21.7%）。手前の床の全幅の帯。地下街の廊下の床が、屋外の道路の横断歩道に変わる。
-- **物と変化**: 手前の床に、白い塗装の太い縞（横断歩道）が 9〜10 本、**廊下の奥行き方向に走って消失点へ収束**するように並ぶ。縞は左右の壁際まで全幅に続き、各縞の間には元の床タイルと目地が見える。塗装はかすれ、タイルの粒と目地が縞を透かす。屋外の舗装の模様が屋内にあるだけで、他の物・人・文字はない。
-- **不気味さの狙い**: 屋内の床なのに道路の印だけが敷かれ、「渡る」先が見えない。同じ縞が床一面に繰り返される、反復空間の違和感。story の「懐かしい昭和のまま帰りたくない老人」と、4 人目の子供が渡れなかった道（令和の通学路）の両方に読める（意味づけは台詞側で決める）。
-- **保持するもの**: 壁・天井・店先・床の奥側（y705 より上）、床の白い反射帯の位置と明るさ（縞の上にも反射が乗る）、タイル目地、床上の既存の異変（排他にした物を除く）。
-- **3:2 の窓**: 1 枚、`composite-polygon.py crop --base public/images/cam1.webp --crop 0,450,675,900 --out <PNG>`（縮尺 1536/675 ≈ 2.2756。box は窓内の y 580〜1024）。復元は `restore --crop 0,450,675,900`。差分抽出は床の台形ポリゴン（左は壁際の巾木の線、右は敷居の手前、上は y705 の水平線）を `cutout` に渡す。
-- **生成プロンプト全文**（3 テイクとも `VARIANT` 行だけ差し替え）:
-
-  ```text
-  $imagegen Edit the attached surveillance camera photo of an underground shopping arcade corridor (cropped to a 3:2 window; the lower part of the frame is the glossy tiled floor).
-  Make ONLY this change: on the floor of the lower part of the frame, from about 57% of the frame height down to the bottom edge and across the full width wall to wall, paint a pedestrian zebra crossing: nine or ten wide plain white road-paint bars that run along the direction of the corridor and converge toward the vanishing point (bars are long strips parallel to the side walls, with equal gaps between them), as on an outdoor road crossing. The paint is slightly worn and matte, the grain and joint lines of the tiles show faintly through it, and the existing long white light reflections on the floor still lie on top of the bars. VARIANT.
-  Keep the walls, the ceiling, the shopfronts, the far end of the corridor, the upper part of the floor and every fixture exactly unchanged. Paint no arrows, no other markings, no text and no objects.
-  Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-
-  - VARIANT 1: `The bars are bright and crisp white, about the width of one floor tile each`
-  - VARIANT 2: `The bars are slightly yellowish-white and heavily worn, with chipped edges`
-  - VARIANT 3: `The bars are narrower, ten of them, with the tile joints clearly visible through the paint`
-- **作り方**: ①割付図: 消失点（奥の開口付近、おおよそ (355,480)）へ向かう流線に沿って、縞の左右の縁を `uv run --with pillow python3` で描いて確定（向きは文章でなく図）。②窓 1 枚を 3 テイク。③ポリゴン内の差分だけを `cutout`（閾値を使わない）。縞が y705 より上へ漏れたら没。④床の反射帯が縞の上に残っていることを原寸で確認（`blend --mode screen --layer <baseline>` で反射を戻す）。
-- **難所と没基準**: 縞が床の奥行き方向でなく手前—奥の逆（横向き）になったら没。縞が 6 本未満・太さが不揃いなら没。矢印・文字・車線の白線などが出たら没。縞が壁・巾木に乗ったら没。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳登録案**: id `AR-01-floor-crosswalk` / `element_id: CAM01-E17` / `category: surreal` / `anomaly_type: surreal` / `location`: 手前の床一面 / `detail`: 「手前の床一面に、屋外の道路のような白い横断歩道の縞が奥の消失点へ向かって並ぶ（文字・矢印なし）」 / phase late / obvious。note に「大面積。CAM01-E17」「box と既存 overlay の重なり表（機械出力）」「排他: 下記」を書く。
-- **排他**: 床の手前の帯（y705〜900）に載る小物は縞に覆われる。**`AR-01-floor-puddle-light`・`AR-01-lattice-tile`・`AR-01-power-bank`・`AR-01-red-rubber-ball`・`AR-01-straw-hat`・`AR-01-bamboo-basket`・`AR-01-bubble-tea-cup`・`AR-01-floor-sign-reflection-inverted`・`AR-01-milk-bottle-crate`・`AR-01-container-origami`・本節の `AR-01-floor-light-orphan`** は同プレイで共存させない（台帳 note に「同プレイで共存させない」と書く。ゲームは 1 カメラ 1 件しか同時に出さないので運用上の保証）。
-- **相互参照 / 重複精査**: 同カメラの大面積（左壁の顔写真・天井の提灯）とは別の面。他カメラの床の大面積（`AR-02-floor-footprints` 足跡、CAM03 の畳、CAM05 の折り鶴、CAM08 の水鏡）とは**型が別**（道路標示）。台帳の「横断歩道」は他になし（`candidate-pool.md` の 3 節にも該当なし）。
-
-#### AR-01-right-wall-lattice-doors — 右の店先に同じ木格子戸が、奥へ向かって1枚ずつ大きくなりながら連なる
-
-- **camera / element_id**: CAM01 / CAM01-E12（右側の店先。起点の木格子戸）
-- **面**: quad `(422,345) (675,225) (675,668) (422,500)`（左上・右上・右下・左下。原寸の写真で壁の天井線・床線に合わせて確定）。polygon 実面積 **75,647 px²**（画像の 12.5%）、alpha bbox（box `422,225,675,668`）は 253x443 = **112,079 px²**（18.4%）。大面積の判定は台帳の既存大面積（`AR-01-wall-faces` の alpha bbox 97,768 px²）と同じく alpha bbox で行い、約 90,000 px² 以上を満たす（polygon 実面積は壁の遠近で細く、90,000 を下回る）。右壁の店先の面（金属シャッター・ガラス窓・白い太枠・木格子戸が重なる面）。壁と床の接線（腰板の下端）で止め、敷居は面の外。ただし鳩の box（575,598,675,655）が面の下端に掛かるので、下の排他に入れる。
-- **物と変化**: 右の店先の壁全面が、**同じ形の木格子戸**（白い太枠の中に縦の木格子、下に濃い青灰の腰板）の連続に置き換わる。戸は 6 枚が壁に沿って並び、**奥の戸ほど画面上の幅が手前の戸と同じに近く（遠近で細くならず）、1 枚ずつ相対的に大きく見える**。どれも閉じて無人。元の窓・シャッター・暖簾の位置は戸に覆われる。吊り看板（E16）と蛍光灯（E07）は壁の手前にあるので面の外（`--hole`）。
-- **不気味さの狙い**: 入口が全部同じで、どれが店なのかわからない。奥へ行くほど戸が遠ざからず、通路が終わらない違和感。昭和の店先が増殖する、優しい異変（story: 老人の記憶が作る像）の暗い側面。
-- **保持するもの**: 天井・床・左壁・奥の柱・通路奥の開口、吊り看板（E16 の大小）、蛍光灯（E07）、壁と天井・床の接線。戸の隙間の細い縦枠だけが壁に残る。
-- **素材の別生成（全景生成はしない）**: 参照に元写真の木格子戸（`public/images/cam1.webp` の約 (560,235)-(675,595)）を渡し、**正面から見た 1 枚の戸の立面**を 3:2（1536x1024）の中央に 1 枚だけ生成する。繰り返しの絵を 1 回で多数描かせると文字風の模様・格子の崩れが出るため。
-- **生成プロンプト全文**（素材用。3 テイクとも `VARIANT` 行だけ差し替え）:
-
-  ```text
-  $imagegen Using the attached crop as a reference for the style of the door only, create a flat, straight-on front elevation of ONE closed traditional Japanese wooden sliding lattice door, centred in a 3:2 1536x1024 image on a plain mid-grey backdrop: a thick white-painted frame, inside it evenly spaced vertical wooden slats of warm brown wood behind a dark glass pane, and below it a plain dark blue-grey kick panel. The door is slightly weathered, with fine dust and subtle wood grain. VARIANT.
-  The door has no handle plate, no sign, no sticker, no paper, no curtain, no shop name: completely plain and unmarked. Evenly lit flat scan, no perspective, no shadows on the backdrop. Match a low-light surveillance still: cold blue-grey colour grading, fine film grain, mild JPEG compression. No text, no letters, no numbers, no logos, no watermark.
-  ```
-
-  - VARIANT 1: `The slats are tightly spaced and the wood is mid-brown`
-  - VARIANT 2: `The slats are slightly wider apart and the wood is darker`
-  - VARIANT 3: `The frame paint is cream-white with light chipping at the corners`
-- **作り方**: ①割付図: 壁面の四隅（目安 左上 (422,345)・右上 (675,225)・右下 (675,668)・左下 (422,500)。**原寸で壁の天井線・床線・左右の縁に合わせて確定**）を描き、戸の継ぎ目は x=422・464・506・548・591・633・675 の等間隔（画面上の幅を遠近で縮めない。奥の戸ほど縦横比が横に広がるのが狙い）に置く。②素材を 3 テイク生成して 1 枚を選ぶ（採否は人間）。③`composite-polygon.py tile --base public/images/cam1.webp --material <door.png> --quad "<tl> <tr> <br> <bl>" --cols 1 --rows 1 --gap 0 --shade 0.6 --polygon-out poly.json --out <full.png>` を、継ぎ目の x で切った 6 つの quad（各戸）ごとに順に実行して重ねる。各戸の quad の上辺・下辺が壁の天井線・床線に沿い、継ぎ目が揃っているか原寸で確認。④`cutout --polygon poly.json --hole <吊り看板 E16 のポリゴン> --hole <蛍光灯 E07 のポリゴン> --feather 2`。壁面の明暗は `--shade` と `blend --mode multiply --layer <baseline> --layer-norm` で乗せる。
-- **難所と没基準**: 戸の格子が崩れる・文字風の模様が出る・戸の高さ方向が壁の天井線・床線からはみ出すものは没（縦横比は quad 由来の変形のみ許す）。奥の戸が手前より細く縮む（元の遠近どおり）は没（本件の狙いが消える）。吊り看板・蛍光灯が戸に隠れたら没（hole の取り直し）。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳登録案**: id `AR-01-right-wall-lattice-doors` / `element_id: CAM01-E12` / `category: surreal` / `anomaly_type: multiply` / `location`: 右の店先の壁一面 / `detail`: 「右の店先の壁一面が、同じ形の無人の木格子戸の連続に置き換わる（吊り看板と蛍光灯は元のまま。文字なし）」 / phase late / obvious。note に「大面積。CAM01-E12」「重なり表」「排他: 下記」を書く。
-- **排他**: 同じ店先の物を使う **`AR-01-noren`・`AR-01-door-ajar`**（戸が連続に置き換わると暖簾・戸の開閉の前提が消える）、面の下端に掛かる **`AR-01-threshold-pigeon`**（鳩の box が面の下端と重なり、戸の腰板に覆われる）、天井と bbox が重なる **`AR-01-ceiling-lanterns`**（壁 x422〜675・y225〜380 が天井 box（217,0,458,380）と重なり、bbox の重なりは 253x155 = 39,215 px²。別の面だが、同じ画面の上半分に大面積が二つ重なると読めなくなるため同プレイ非共存）、壁の下端を使う **`AR-01-milk-bottle-crate`**（敷居・床。box が y700 付近で触れる）は同プレイで共存させない。吊り看板系（`AR-01-sign-rim`・`AR-01-sign-old-shop`）と `AR-01-tube-end` は面の手前の物なので併存可（hole で戸の手前に残す）。
-- **相互参照 / 重複精査**: 同カメラの `AR-01-wall-faces`（左壁に顔写真を敷き詰め）は「同じ物を一面に敷き詰める」型。**本件は敷き詰めを避け、「戸が奥へ向かって 1 枚ずつ大きく見える（遠近が効かない）」型に振った**ので、素材（戸の立面 vs 顔写真）・面（反対側の壁）・型（敷き詰め vs 遠近の破れ）のどれも別。同プレイに出うる（排他の対ではない）。他カメラの面の敷き詰め（`AR-06-*` ポスター・CAM07 の時計・CAM03 の白紙）とは素材が別。
 
 ### 小物
 
-#### AR-01-ceiling-lamp-off — 左の丸い埋め込み灯が消える
 
-- **camera / element_id**: CAM01 / CAM01-E02
-- **物と変化**: 左上寄りの小さな丸い埋め込み灯（白く発光し、周囲がピンク/紫ににじむ）が、**消えて黒っぽい丸い穴**になる。にじみも消え、天井の粒状だけが残る。他の灯は点いたまま。
-- **最終 box**（baseline px）: `60,168,128,222`（68x54）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,109,256,280`（256x171）。box はクロップ内の (60,59)-(128,113)
 - **生成プロンプト**（3 テイク作って目視で選ぶ）:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: the small bright round recessed ceiling lamp in the left part of the ceiling is switched off: its glowing white face becomes a dull dark grey disc (the unlit lens, slightly glossy), and the soft pink-purple glow around it disappears completely so the rough speckled ceiling surface around it is plain. VARIANT. Do not touch the dark wall corner at the lower left, the ceiling fan area at the top right of this crop, the other lamps or anything else. Place the object centered at about 37% from the left and 54% from the top of the image, occupying roughly 27% of the image width and 32% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-  - VARIANT 1: `The unlit disc is very dark, almost black`
-  - VARIANT 2: `The unlit disc is mid-dark grey with a faint highlight on its rim`
-  - VARIANT 3: `The unlit disc shows a faint reflection of the ceiling in its glossy lens`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左下の暗い壁の角・天井の粒状・他の灯。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測・矩形間のユークリッド距離）: AR-01-ceiling-seam-circle まで 32.0px、次点 AR-01-ceiling-fan-showa 53.0px、本節の AR-01-ceiling-wet-stain まで 162.0px。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（30px 割れなら box の右端を左へ動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / early / medium（medium 以上。subtle にしない）
-- **視認性の注意**: 白（約 240）から暗灰（約 60）へ落ちるので差分は大きいが、元の灯は 40x14px と小さい。にじみまで消すと overlay が約 70x54 に広がり面積比で通る。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-ceiling-lamp-off` / `category: environment` / `anomaly_type: state_change` / `detail: '左上寄りの小さな丸い埋め込み灯が消えて、黒っぽい丸い穴になる（周囲のにじみも消える）'` / `candidate_id` は付けない（本節が出典）。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: `candidate-pool.md` の CR-01-28（同じ灯の「にじみだけ消える」）は**灯が点いたままにじみだけ変わる別案**。本件を制作したら CR-01-28 は実質同じ物の変化になるので削除する。CR-01-30・31（別の丸灯 E05・E06）とは対象が別。他カメラの丸灯（CR-04-32・CR-06-04・CR-02-30）は別カメラ。
 
-#### AR-01-ceiling-tile-drop — 天井板が一枚、片側だけ外れて垂れ下がる
 
-- **camera / element_id**: CAM01 / CAM01-E01（天井面。隣の換気口 E03・点検板 E04 は動かさない）
-- **物と変化**: 右上の天井の板（粒状の天井材の一枚）が、**片側の縁だけ外れて斜めに垂れ下がる**。外れた縁の奥に、真っ暗な四角い隙間と細い配線の端が見える。板は元の天井と同じ粒状の色で、無地。
-- **最終 box**（baseline px）: `405,122,479,198`（74x76）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `314,74,570,245`（256x171）。box はクロップ内の (91,48)-(165,124)
 - **生成プロンプト**（3 テイク作って目視で選ぶ）:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: one ceiling tile in the plain speckled ceiling area to the right of the large round vent has come loose along one edge and hangs down at a slant like an open hatch, showing a pitch-black square gap above it with the cut end of one thin dark cable hanging from the gap. The tile is the same pale blue-grey speckled material as the rest of the ceiling, completely plain. Make it about 1.3x larger than real scale. VARIANT. Do not touch the large round vent at the left of this crop, the square access panel at the right edge, the lamp at the bottom right or anything else. Place the object centered at about 50% from the left and 50% from the top of the image, occupying roughly 29% of the image width and 44% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-  - VARIANT 1: `The loose edge hangs down toward the left`
-  - VARIANT 2: `The loose edge hangs down toward the right`
-  - VARIANT 3: `The tile hangs by one corner only, with the gap wider`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左の大きな同心円の換気口・右端の四角い点検板・右下の灯。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-ceiling-panel-round（右）まで 32.0px、AR-01-vent-hole-triangle（左）まで 32.0px、次点 AR-01-bunting-flags 48.0px、本節の AR-01-ceiling-wet-stain まで 37.7px。**左右の既存に挟まれ、余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（垂れた縁を左右に広げない。30px 割れなら box を幅の中央側へ寄せる）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium（medium 以上。subtle にしない）
-- **視認性の注意**: 黒い隙間と垂れた板の影で差分を作る。灰色の天井に溶けないよう隙間は真っ黒に。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-ceiling-tile-drop` / `category: object` / `anomaly_type: displace` / `detail: '右上の天井板が一枚、片側だけ外れて斜めに垂れ下がり、暗い天井裏の隙間が見える'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: 近い既存: `AR-04-ceiling-corner-fold`（台帳・CAM04・換気口の隣の天井板の角が折れて垂れる）。**別カメラで、本件は板が外れて暗い隙間と配線が見える（天井裏が覗く）点が違う**が、同じ「天井板が垂れる」型なので、制作前に見比べ、実質同じと感じたら取り下げる。「天井板が垂れる」型は、CAM08 側の同名の案が別担当で差し替えられるため、本件が CAM01 で残す唯一の案（他カメラとは重ねない）。CR-01-19（点検板の隣に同じ板が増える）は増やす案で別。
 
-#### AR-01-ceiling-wet-stain — 天井に濡れた丸い染みが広がり水滴が垂れかける
 
-- **camera / element_id**: CAM01 / CAM01-E01（天井面の中央、大きな換気口 E03 の下）
-- **物と変化**: 通路中央の天井に、遠近で横に潰れた**丸い濡れ染み**（黒っぽい茶灰色の輪、縁は濃く中は薄い）が現れ、その中央下で**一滴の水が光って垂れかかる**（落ちる前）。染みは粒状の天井に沿い、無地。
-- **最終 box**（baseline px）: `290,212,370,248`（80x36）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `202,144,458,315`（256x171）。box はクロップ内の (88,68)-(168,104)
 - **生成プロンプト**（3 テイク作って目視で選ぶ）:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the plain speckled ceiling in the middle of the frame, below the large round vent, a wet water stain appears: one roundish dark brown-grey ring, flattened sideways by the ceiling perspective, darker at its rim and paler inside, following the speckled texture of the ceiling, and a single drop of water hangs from the lowest point of the stain, glossy with a small bright highlight, about to fall. VARIANT. Do not touch the large round vent above, the dark ceiling fixtures further down, the lamps or anything else. Place the object, including the drop, centered at about 51% from the left and 52% from the top of the image, occupying roughly 31% of the image width and 21% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-  - VARIANT 1: `The stain is a clean round ring with a soft edge`
-  - VARIANT 2: `The stain is an irregular blotch with a darker lower edge`
-  - VARIANT 3: `The stain has a faint second ring inside it, like a tide mark`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 上の大きな同心円の換気口・下の暗い天井の小型器具。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-vent-hole-triangle まで 32.0px、次点 AR-01-tube-end 47.4px、AR-01-ceiling-seam-circle 48.0px、本節の AR-01-ceiling-tile-drop まで 37.7px（右隣）。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（染みと水滴を上へ広げない。30px 割れなら下端を下げる）。
-- **分類 / フェーズ / 目立ち度**: environment / early / medium（medium 以上。登録時に subtle にしない。視認性の基準を通すため染みを濃く、輪を太く）
-- **視認性の注意**: 明るい天井に対し暗い茶灰の輪で差分を作る。薄いと下限未満。水滴の白い光点を面積比の足しにする。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-ceiling-wet-stain` / `category: environment` / `anomaly_type: state_change` / `detail: '天井の中央に、濡れた丸い染みが広がり、その下に水滴が一つ垂れかかる'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: 近い既存・候補: `AR-01-ceiling-seam-circle`（同カメラ・板継ぎ目の輪。**輪の形は近いが、あちらは継ぎ目の線で、本件は濡れた色面と水滴**。距離は 80px 以上）、CR-02-28・CR-06-28（別カメラの天井の染みの候補）、CR-08-31（別カメラ・丸灯の下の水滴）、`AR-05-hatch-stain`（別カメラ・点検口の色）。型が重なるので制作前に見比べる。
 
-#### AR-01-floor-light-orphan — 光源のない場所に、床の光だまりがもう一つ落ちる
 
-- **camera / element_id**: CAM01 / CAM01-E17（床タイル。手前左の隅）
-- **物と変化**: 手前左の暗い床に、**楕円の光だまりがもう一つ**現れる。通路の床には天井灯が落とす白い光だまりが縦に並んでいるが、その真上にも近くにも灯・窓・反射する物がなく、どこからの光かわからない。遠近で横に潰れた淡い青白の楕円で、縁はやわらかく、中心が明るい。タイル目地が光を透かす。物・人・影・文字はない。
-- **最終 box**（baseline px）: `2,832,92,898`（90x66）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,729,256,900`（256x171）。box はクロップ内の (2,103)-(92,169)
 - **生成プロンプト**（3 テイク作って目視で選ぶ）:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark floor tiles in the lower left of the frame, add one soft elliptical pool of pale cold blue-white light lying on the floor, flattened sideways by perspective (about 1.4 times wider than tall), brightest at its centre and fading smoothly into the dark floor at its edge, like the existing pools of light under the ceiling lamps, but with no lamp, window or other light source anywhere near it and no object that casts or catches it. The grey tile joints show through the light. VARIANT. Do not touch the other white light reflections on the floor, the tile joints, the floor to the right or anything else. Place the pool centered at about 18% from the left and 80% from the top of the image, occupying roughly 35% of the image width and 39% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-  - VARIANT 1: `The pool is a clean ellipse with a soft edge`
-  - VARIANT 2: `The pool is brighter, nearly white at its centre`
-  - VARIANT 3: `The pool has a fainter, smaller second ellipse of light inside it`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 床の白い反射・タイル目地。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-lattice-tile まで 34.0px、AR-01-power-bank まで 36.0px、次点 AR-01-bamboo-basket 116.0px。**余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（30px 割れなら右端を左へ動かす）。
-- **分類 / フェーズ / 目立ち度**: surreal / late / medium（medium 以上。subtle にしない）
-- **視認性の注意**: 手前左の床は暗く、明るい楕円との差は大きい。ただし 90x66 と小さいので、中心を明るく縁をはっきり出す。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通し、通らなければ明るさを上げる。それでも通らなければ本件は取り下げ、別案に差し替える（影を細い帯で出す案には戻さない）。
-- **台帳登録時**: id `AR-01-floor-light-orphan` / `category: surreal` / `anomaly_type: state_change` / `detail: '手前左の暗い床に、光源のない場所から落ちた白い光だまりがもう一つ現れる'`。note に最寄り既存 id と最終 alpha bbox 実測距離、「床一面の AR-01-floor-crosswalk と排他」を書く。
-- **相互参照 / 重複精査**: 台帳の `AR-01-floor-puddle-light`（床の水たまりが灯を映す。**水の物**）は水たまりと反射、本件は**光だけが物なしで落ちる**点が違う。同カメラの床の白い光だまり自体は元写真の既存要素（E18 の反射帯）で、それを増やす（`CR-01-*` の反射の複製案があれば）型とは、光源の説明がつかない位置に出る点で別。他カメラの床の光（CAM03・CAM06 の反射の候補）とは別の面・別の構図。意味づけは台詞側で決める。
 
-#### AR-01-crouching-silhouette — 奥の床にうずくまる黒い人影
 
-- **camera / element_id**: CAM01 / CAM01-E14（通路奥の柱の右隣の床。柱・開口は動かさない）
-- **物と変化**: 通路の突き当たり右寄りの床に、**うずくまった（しゃがんだ）小さな黒い人影**が一つ現れる。遠景のシルエットで、背を丸め、床に近い低い姿勢。顔・服・手の描写はなく、輪郭の黒いかたまり。床に薄い接地の影がある。
-- **最終 box**（baseline px）: `385,484,440,538`（55x54）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `284,425,540,596`（256x171）。box はクロップ内の (101,59)-(156,113)
 - **生成プロンプト**（3 テイク作って目視で選ぶ）:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles at the far end of the corridor, just to the right of the white pillar and below the dark doorway, place one distant crouching human silhouette: a small solid dark charcoal shape of a person squatting low on the floor with a rounded back and the head bowed, seen from the front-side in the distance, with no visible face, no clothes detail, no hands and no feet, only the outline mass. A soft dark contact shadow on the floor tiles under it. Make it about 1.4x larger than real scale because it is far away. VARIANT. Do not touch the white pillar, the dark doorway and its notice plates, the grey floor mat on the floor to the left, the metal shutters to the right or anything else. Place the object, including its shadow, centered at about 61% from the left and 51% from the top of the image, occupying roughly 21% of the image width and 33% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-  - VARIANT 1: `The figure squats with the knees up and the arms wrapped around them`
-  - VARIANT 2: `The figure is crouched low, leaning slightly forward with the head down`
-  - VARIANT 3: `The figure squats upright on its heels with the head raised, looking down the corridor`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 白い柱・暗い開口とその掲示板・左の床のマット・右のシャッター。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-yellow-boots まで 32.2px、次点 AR-01-back-view-paper-bag 49.0px、AR-01-bamboo-broom 67.2px。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（30px 割れなら下端を上げる）。
 - **分類 / フェーズ / 目立ち度**: person / mid / medium
-- **視認性の注意**: 奥の床は中間の灰青で、黒い塊との差は十分。ただし 55x54 と小さいので、縮小で潰れないよう大きめ（1.4 倍）・縁をはっきり。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-crouching-silhouette` / `category: person` / `anomaly_type: add_person` / `detail: '通路の突き当たり右寄りの床に、うずくまった小さな黒い人影が一つ現れる（顔・服の描写なし）'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: 同カメラ `AR-01-back-view-paper-bag`（左の暗い開口の手前に**立つ**後ろ姿・約 49px 左）、候補 CR-01-06（開口の人影が小さすぎる）・CR-01-25（開口の手前に猫）。**本件は床の上で姿勢が違う（うずくまる）、位置が柱の右の床**。他カメラの老人の後ろ姿（`AR-08-old-man-back`・`AR-05-old-woman-in-glass`）とは**姿勢（立つ/うずくまる）と持ち物がない**点が違う。story の「通路に現れていた像は老人 3 人の記憶」に合わせた像で、台詞側で「何かを探している」読みもできる。
 
-#### AR-01-threshold-pigeon — 右の店先の敷居に白い鳩が一羽とまる
 
-- **camera / element_id**: CAM01 / CAM01-E12（右側の店先。敷居の金属帯）
-- **物と変化**: 右の店先の下にある**金属の敷居の上**に、**白い鳩が一羽**、通路側を向いてとまる（羽を畳み、首を少し傾ける）。無人の地下街に迷い込んだ鳥。足輪・札・文字はなし。
-- **最終 box**（baseline px）: `575,598,675,655`（100x57）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,540,675,711`（256x171）。box はクロップ内の (156,58)-(256,115)
 - **生成プロンプト**（3 テイク作って目視で選ぶ）:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the grey metal threshold strip at the lower right of the frame, below the dark shop panel, place one plain white pigeon perched, facing the corridor, with folded wings, a small rounded head slightly tilted, a short pale beak and pale grey-pink feet, no leg ring, no tag, no marking. Make it about 1.5x larger than real scale. Give it a soft dark contact shadow on the metal strip and a small bright highlight on its back. VARIANT. Do not touch the floor tiles at the left of this crop, the wall at the upper right, the dark shop panel above or anything else. Place the object, including its shadow, centered at about 81% from the left and 50% from the top of the image, occupying roughly 36% of the image width and 33% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-  - VARIANT 1: `The pigeon looks toward the left, at the corridor`
-  - VARIANT 2: `The pigeon faces the camera with its head raised`
-  - VARIANT 3: `The pigeon has its head tucked low, puffed up as if sleeping`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左の床タイル・右上の壁・敷居の金属帯の傾き・暗い腰板。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-milk-bottle-crate まで 35.0px、次点 AR-01-bubble-tea-cup・AR-01-door-ajar が 38.0px。**余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**。
 - **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 敷居は暗い灰色なので白い鳩は強く対比する（明るい面に白だと溶ける問題の逆。暗い面に置いた）。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-threshold-pigeon` / `category: object`（README のとおり小動物は暫定で `object`）/ `anomaly_type: add_creature` / `detail: '右の店先の金属の敷居に、白い鳩が一羽とまっている（無人の地下街に迷い込んだ鳥）'`。note に最寄り既存 id と最終 alpha bbox 実測距離、「右壁一面の AR-01-right-wall-lattice-doors と排他（鳩の box が戸の面の下端に掛かるため、同プレイで共存させない）」を書く。
-- **相互参照 / 重複精査**: 台帳に鳩・鳥の異変は他になし（add_creature は台帳に 4 件。猫は `AR-01-cat-in-frosted-window` が影のみ）。候補 CR-01-25（開口の手前に猫）とは別の生き物・別の位置。同じ右店先の `AR-01-noren`・`AR-01-door-ajar`（戸・暖簾）とは 38px 以上離れ、物も別。
 
 ## 追加候補 — CAM 02
 
@@ -372,273 +224,159 @@ CAM02（Main Corridor）の画像異変 8 件（小物 7 件・大面積 1 件�
 
 ### 小物（6倍クロップ）
 
-#### AR-02-hatch-ajar — 床中央寄りの金属製点検口の蓋の右側が横へずれて開き、中に真っ暗な四角い口が覗く
 
-- **camera / element_id**: CAM02 / CAM02-E21
-- **物と変化**: 床中央寄りの金属製点検口の蓋の右側が横へずれて開き、中に真っ暗な四角い口が覗く。
-- **最終 box**（baseline px、x0,y0,x1,y1）: `292,508,404,586`（112x78）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `220,462,476,633`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (72,46)-(184,124)
 - **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the rectangular metal floor access hatch in the middle of the floor, the right two thirds of the hatch cover plate has slid sideways to the left by about one third of its width, uncovering a pitch-black rectangular opening with a thin bright metal rim. The black opening must be clearly darker than the surrounding gray tiles. The left third of the hatch, its frame and the tile joints around it stay as they are. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 44% of the image width and 46% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the rectangular metal floor access hatch in the middle of the floor, the right part of the cover plate is lifted at its far edge and propped open like a lid at a shallow angle, showing a pitch-black rectangular opening underneath and a thin dark shadow on the tiles beside it. The black opening must be clearly darker than the surrounding gray tiles. The left third of the hatch and its frame stay as they are. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 44% of the image width and 46% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the rectangular metal floor access hatch in the middle of the floor, the right part of the cover plate has been removed completely and is not visible anywhere, leaving a clean pitch-black rectangular pit with a thin bright metal frame edge. The black opening must be clearly darker than the surrounding gray tiles. The left third of the hatch and its frame stay as they are. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 44% of the image width and 46% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 点検口の左側の枠・タイル目地・床の反射。蓋を横にずらす案では、元の留め具は動かさず蓋と一緒に移るものとして扱う。
-- **最寄り既存 overlay と実測距離**: AR-02-navy-handy-fan まで 33.8px（box 基準・矩形間のユークリッド距離、次点 AR-02-chalk-hopscotch 39.0px。台帳の overlay_origin/dimensions と 2026-11-05 に実測、大面積の AR-02-floor-footprints / AR-02-shutter-crayon-drawings は除く）。**最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium（anomaly_type: state_change）
-- **視認性の注意**: box は点検口の右約2/3。点検口の左端は既存の AR-02-tile / AR-02-tile-color の box と接するため入れない。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: CR-02-08（点検口の留め具が一つだけ押し上げられる。CAM02-E21・object/mid）と同じ要素。こちらは蓋そのものが開き中が見える大きな変化で、留め具の微細な変化とは別物。同プレイで共存させない（排他）。CR-02-08 を制作したら、この件の box と重ならないか再確認する。AR-02-tile・AR-02-tile-color は左隣の別タイル。
-- **台帳登録案**: `id: 'AR-02-hatch-ajar'` / `element_id: 'CAM02-E21'` / `category: 'object'` / `anomaly_type: 'state_change'` / `location: 'CAM02-E21 の周辺、差分左上 (292,508) px'` / `detail: '床の金属点検口の蓋の右側が横へずれて開き、真っ暗な口が覗く'` / `phase: mid`/ `subtlety: 'medium'` / `candidate_id: 'AR-02-hatch-ajar'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 
-#### AR-02-shutter-shadow — 右奥のシャッター面に、立つ人の暗い影だけが映る
 
-- **camera / element_id**: CAM02 / CAM02-E12
-- **物と変化**: 右奥のシャッター面に、立つ人の暗い影だけが映る。通路には誰もいない。
-- **最終 box**（baseline px、x0,y0,x1,y1）: `410,205,452,290`（42x85）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `303,162,559,333`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (107,43)-(149,128)
 - **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the closed roll-down shutter slats at the far right of the corridor, a soft dark silhouette shadow of one standing person is cast on the slats, seen from behind, arms hanging down, shoulders slightly rounded. It is only a shadow: completely featureless, no face, no clothing detail, no light source visible, and no person standing in the corridor. The slat lines remain visible through the shadow and bend very slightly over the silhouette. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 50% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the closed roll-down shutter slats at the far right of the corridor, a soft dark silhouette shadow of one standing person is cast on the slats, head slightly tilted to one side and one arm raised toward the head. It is only a shadow: completely featureless, no face, no clothing detail, no light source visible, and no person standing in the corridor. The slat lines remain visible through the shadow. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 50% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the closed roll-down shutter slats at the far right of the corridor, a soft dark silhouette shadow of one tall, thin standing person is cast on the slats, facing sideways to the left, hands in front. It is only a shadow: completely featureless, no face, no clothing detail, no light source visible, and no person standing in the corridor. The slat lines remain visible through the shadow. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 50% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に シャッターの横縞・縁・隣の暗い開口・柱・床。影は人の形の暗い面だけ。
-- **最寄り既存 overlay と実測距離**: AR-02-duplicate-coffee-sign まで 36.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-smoke 37.0px。台帳の overlay_origin/dimensions と 2026-11-05 に実測、大面積の AR-02-floor-footprints / AR-02-shutter-crayon-drawings は除く）。**最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: person / late / medium（anomaly_type: reflection）
-- **視認性の注意**: 影の濃さは周囲の暗さに沈まないよう、シャッターの明るい面の上に出す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: CR-02-12（右奥シャッターが壁と同じ色になる。CAM02-E12・surreal/late）と同じ面。同プレイで共存させない（排他）。CR-02-10（床の反射に足だけ二組。person/late）・AR-02-leather-footprints（足跡）は人の痕跡の系統だが、面が違い見え方も別（シャッターの影）。CR-04-11（CAM04 の反射）とは別カメラ。
-- **台帳登録案**: `id: 'AR-02-shutter-shadow'` / `element_id: 'CAM02-E12'` / `category: 'person'` / `anomaly_type: 'reflection'` / `location: 'CAM02-E12 の周辺、差分左上 (410,205) px'` / `detail: '右奥のシャッター面に、立つ人の影だけが映り、通路には誰もいない'` / `phase: late`/ `subtlety: 'medium'` / `candidate_id: 'AR-02-shutter-shadow'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 
-#### AR-02-fluorescent-half-off — 左上から斜めに入る白い蛍光灯の手前側の一区画だけが消えて暗くなる
 
-- **camera / element_id**: CAM02 / CAM02-E02
-- **物と変化**: 左上から斜めに入る白い蛍光灯の手前側の一区画だけが消えて暗くなる。
-- **最終 box**（baseline px、x0,y0,x1,y1）: `50,0,168,105`（118x105）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,0,256,171`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (50,0)-(168,105)
 - **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the wide slanted white fluorescent light at the top left, the near section (the part at the upper left of the frame, about 60% of the visible length) is switched off: it becomes an unlit dull gray diffuser with a faint outline of the tube housing, no glow at all. The far section of the light (toward the lower right) stays brightly lit exactly as it is. The ceiling around the light and the shutter below are not changed. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 43% from the left and 31% from the top of the image, occupying roughly 46% of the image width and 61% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the wide slanted white fluorescent light at the top left, the near section (the part at the upper left of the frame, about 60% of the visible length) is switched off: it becomes an unlit dull gray diffuser with two thin dark tube lines visible inside, and a very faint orange glow only at the end next to the lit section. The far section stays brightly lit exactly as it is. The ceiling and the shutter below are not changed. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 43% from the left and 31% from the top of the image, occupying roughly 46% of the image width and 61% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the wide slanted white fluorescent light at the top left, the near section (the part at the upper left of the frame, about 60% of the visible length) is switched off: it becomes an unlit dark gray diffuser with black end caps visible at the edges of the unlit section. The far section stays brightly lit exactly as it is. The ceiling and the shutter below are not changed. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 43% from the left and 31% from the top of the image, occupying roughly 46% of the image width and 61% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 蛍光灯の奥側の点灯部分・天井・左のシャッター・床の白い反射帯（帯は現状のまま）。
-- **最寄り既存 overlay と実測距離**: AR-02-open-sign まで 85.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-rusty-vent 88.0px。台帳の overlay_origin/dimensions と 2026-11-05 に実測、大面積の AR-02-floor-footprints / AR-02-shutter-crayon-drawings は除く）。**最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / early / medium（anomaly_type: state_change）
-- **視認性の注意**: 明るい面が暗くなるので差分は大きい。点灯部との境は斜めの管に沿って自然に切る。標準状態で強く見えるため、フェーズは early に置く。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: 既存・候補に蛍光灯そのものの変化は無い（AR-02-rusty-vent は CAM02-E03 の丸型設備、AR-02-tanabata-paper-chain は天井の吊り飾り）。他カメラの蛍光灯系は別カメラ。同じ天井面の小物（AR-02-rusty-vent は 88.0px、AR-02-tanabata-paper-chain は box が重ならず離れる）とは共存できる。AR-02-shutter-crayon-drawings（左シャッター面の大面積）は box の下端 y57〜105 で重なるが、面が別（天井の蛍光灯とシャッターの表面）なので共存できる。AR-02-ceiling-starry-sky（天井一面を星空にする大面積）は蛍光灯の灯りの状態が食い違うので同プレイで共存させない（排他）。CR-02-19・CR-02-28（天井板の木目・継ぎ目の染み。E01）は、選ぶ板や継ぎ目が box と重なるときだけ同プレイで共存させない（排他）。
-- **台帳登録案**: `id: 'AR-02-fluorescent-half-off'` / `element_id: 'CAM02-E02'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `location: 'CAM02-E02 の周辺、差分左上 (50,0) px'` / `detail: '左上の斜めの蛍光灯の手前の一区画だけが消灯し、暗い管の形だけが残る'` / `phase: early`/ `subtlety: 'medium'` / `candidate_id: 'AR-02-fluorescent-half-off'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 
-#### AR-02-pillar-sign-gone — 柱の上方に並ぶ小看板のうち、矢印の入った黒枠の看板が消え、壁に四角い日焼け跡だけが残る
 
-- **camera / element_id**: CAM02 / CAM02-E11
-- **物と変化**: 柱の上方に並ぶ小看板のうち、矢印の入った黒枠の看板が消え、壁に四角い日焼け跡だけが残る。
-- **最終 box**（baseline px、x0,y0,x1,y1）: `330,153,380,188`（50x35）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `227,85,483,256`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (103,68)-(153,103)
 - **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the upper part of the white-gray pillar in the center, among the cluster of small signs, remove the small black-framed sign with an arrow. In its place show the bare pillar wall with a clean, slightly paler rectangular patch where the sign used to hang (the wall around it is slightly more yellowed). The other small signs and white small boxes stay exactly as they are. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 20% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the upper part of the white-gray pillar in the center, among the cluster of small signs, remove the small black-framed sign with an arrow. In its place show the bare pillar wall with a paler rectangular patch and two tiny dark screw holes at its upper corners. The other small signs and white small boxes stay exactly as they are. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 20% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the upper part of the white-gray pillar in the center, among the cluster of small signs, remove the small black-framed sign with an arrow. In its place show the bare pillar wall with a faintly paler rectangular patch and four small dull marks at its corners where tape used to be. The other small signs and white small boxes stay exactly as they are. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 20% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 柱の他の小看板・白い小箱・柱の角・天井の吊り器具・奥の暗い通路。
-- **最寄り既存 overlay と実測距離**: AR-02-pillar-notice まで 36.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-bw-television 61.4px。台帳の overlay_origin/dimensions と 2026-11-05 に実測、大面積の AR-02-floor-footprints / AR-02-shutter-crayon-drawings は除く）。**最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / subtle（anomaly_type: remove_object）
-- **視認性の注意**: box が小さい（50x35）ので 6 倍クロップで作る。消した跡（日焼け跡）をはっきり出さないと見落とされる。要つまみ調整の可能性あり（明るさを上げる方向）。登録後に check-visibility を通す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: CR-02-35（柱の小さな掲示が一枚だけ横向き。CAM02-E11・object/early）と同じ小看板群。同プレイで共存させない（排他）。AR-02-pillar-notice（柱の別の高さに紙を足す。E10）は足す異変で、これは消す異変。
-- **台帳登録案**: `id: 'AR-02-pillar-sign-gone'` / `element_id: 'CAM02-E11'` / `category: 'object'` / `anomaly_type: 'remove_object'` / `location: 'CAM02-E11 の周辺、差分左上 (330,153) px'` / `detail: '柱上方の黒枠の矢印看板が消え、壁に四角い日焼け跡だけが残る'` / `phase: mid`/ `subtlety: 'subtle'` / `candidate_id: 'AR-02-pillar-sign-gone'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 
-#### AR-02-floor-seam-glow — 柱と看板の間の床で、奥へ伸びるタイル目地の一本が、細い光の線になる
 
 - **camera / element_id**: CAM02 / CAM02-E20
-- **物と変化**: 柱と看板の間の床で、奥へ伸びるタイル目地の一本が、床の下から光が漏れているように細く白く光る。物も人も足さない（既存の目地が光るだけ）。
-- **最終 box**（baseline px、x0,y0,x1,y1）: `368,352,408,426`（40x74）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `257,304,513,475`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (111,48)-(151,122)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに光の色と強弱の描き方だけを変えてある）:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the gray floor between the pillar and the green standing sign, exactly one of the tile joint lines running from the near side toward the far end of the corridor glows as a thin, steady cool-white line of light, as if light were leaking up through the crack. The line follows the existing joint exactly, does not bend or branch, and has a faint soft halo on the two neighboring tiles. No light source, no object and no person is visible. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any glow, centered at about 51% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 43% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the gray floor between the pillar and the green standing sign, exactly one of the tile joint lines running from the near side toward the far end of the corridor glows as a thin pale warm-yellow line of light, brightest at the near end and fading out toward the far end, as if light were leaking up through the crack. The line follows the existing joint exactly and does not bend or branch. The neighboring tiles stay as they are apart from a very faint warm tint right beside the line. No light source, no object and no person is visible. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any glow, centered at about 51% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 43% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the gray floor between the pillar and the green standing sign, exactly one of the tile joint lines running from the near side toward the far end of the corridor glows as a thin pale blue-white line of light that widens slightly into two soft beads of brighter light along its length, and the line continues thinly between them. The line follows the existing joint exactly and does not bend or branch, with a faint soft halo on the neighboring tiles. No light source, no object and no person is visible. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any glow, centered at about 51% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 43% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 柱・自立看板（箱と干渉しない）・看板の台座・石蹴り跡（左隣）・床の他の目地とタイルの斑点・遠景。光るのは目地 1 本だけで、目地の位置・向きは動かさない。
-- **最寄り既存 overlay と実測距離**: AR-02-chalk-hopscotch まで 37.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-duplicate-coffee-sign 80.0px。台帳の overlay_origin/dimensions と 2026-11-05 に実測し、overlay webp の alpha>0 の外接矩形とも一致を確認。大面積の AR-02-floor-footprints / AR-02-shutter-crayon-drawings は除く）。**最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: surreal / mid / medium（anomaly_type: state_change）
-- **視認性の注意**: box は縦長（40x74）で、奥行き方向に走る目地 1 本を中心に収める。線が細く見落とされやすいので、目地の両脇のタイルに薄い光のにじみ（幅 6〜8px 程度）を出して差分を確保する。ただし光の面を床全体へ広げない。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: 同カメラの床の異変（AR-02-tile・AR-02-tile-color は点検口左のタイル 1 枚の模様・色、AR-02-puddle は水たまり、AR-02-floor-ripple は波紋）は別の場所・別の見え方で、目地そのものが光る異変は無い。CR-02-13・14・15・16（床タイル 1 枚・水たまり。E20）は床の同じ面を使うが小さな変化なので、同プレイで共存させない（排他）。AR-02-floor-footprints（床一面の足跡・大面積）は box が重なるので同プレイで共存させない（排他）。AR-02-chalk-hopscotch（左隣の石蹴り跡）・AR-02-floor-ripple・AR-02-hatch-ajar とは box が 30px 以上離れ、共存できる。他カメラの CR-06-41（床の目地の交点が光る）は別カメラ。
-- **台帳登録案**: `id: 'AR-02-floor-seam-glow'` / `element_id: 'CAM02-E20'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM02-E20 の周辺、差分左上 (368,352) px'` / `detail: '柱と看板の間の床で、奥へ伸びるタイル目地の一本が細い光の線になる'` / `phase: mid`/ `subtlety: 'medium'` / `candidate_id: 'AR-02-floor-seam-glow'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 
-#### AR-02-wall-bird-triplet — 右壁の黒い店舗ガラスにある白い鳥の装飾の一羽が、同じ向き・同じ大きさで三羽に増える
 
-- **camera / element_id**: CAM02 / CAM02-E17
-- **物と変化**: 右壁の黒い店舗ガラスにある白い鳥の装飾の一羽が、同じ向き・同じ大きさで三羽に増える。
-- **最終 box**（baseline px、x0,y0,x1,y1）: `604,356,676,446`（72x90）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `420,316,676,487`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (184,40)-(256,130)
 - **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the nearly black shop glass wall at the right edge, the white decorative bird-shaped decal in this area is multiplied: three identical white bird decals, same direction, same size, evenly spaced along the wall's perspective one below the other, each as bright as the original. The other stars and decals on the glass and the wooden easel in front stay unchanged. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 86% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 53% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the nearly black shop glass wall at the right edge, the white decorative bird-shaped decal in this area is multiplied: three identical white bird decals in a diagonal row, all facing the same direction, same size, each as bright as the original. The other stars and decals on the glass and the wooden easel in front stay unchanged. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 86% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 53% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the nearly black shop glass wall at the right edge, the white decorative bird-shaped decal in this area is multiplied: three identical white bird decals in a tight row, all facing the same direction, same size, nearly touching one another, each as bright as the original. The other stars and decals on the glass and the wooden easel in front stay unchanged. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 86% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 53% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 右壁の他の星形装飾・黒板の木枠・床・看板。
-- **最寄り既存 overlay と実測距離**: AR-02-duplicate-coffee-sign まで 32.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-smoke 35.0px。台帳の overlay_origin/dimensions と 2026-11-05 に実測、大面積の AR-02-floor-footprints / AR-02-shutter-crayon-drawings は除く）。**最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: surreal / mid / medium（anomaly_type: multiply）
-- **視認性の注意**: box の右端は画像の右端（676）。元の鳥の輪郭は暗くて判然としないため、6倍クロップで元の鳥の位置を確認してから三羽の位置を決める。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: AR-02-flower-ornament・AR-02-red-star（同じ壁の別の装飾を変える）・CR-02-07（装飾の向き）・AR-02-smoke（右壁の煙）と同じ壁面。座標は離れているが、同じ装飾を使う件どうしは同プレイで共存させない（排他）。
-- **台帳登録案**: `id: 'AR-02-wall-bird-triplet'` / `element_id: 'CAM02-E17'` / `category: 'surreal'` / `anomaly_type: 'multiply'` / `location: 'CAM02-E17 の周辺、差分左上 (604,356) px'` / `detail: '右壁の黒い店舗ガラスの白い鳥の装飾が、同じ向き・大きさで三羽に増える'` / `phase: mid`/ `subtlety: 'medium'` / `candidate_id: 'AR-02-wall-bird-triplet'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 
-#### AR-02-floor-ripple — 乾いたままの床のタイル数枚に、水面のような同心円の波紋が一つだけ広がる
 
 - **camera / element_id**: CAM02 / CAM02-E20
-- **物と変化**: 乾いたままの床のタイル数枚に、水面のような同心円の波紋が一つだけ広がる。
-- **最終 box**（baseline px、x0,y0,x1,y1）: `366,618,424,668`（58x50）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `267,558,523,729`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (99,60)-(157,110)
 - **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the dry gray floor tiles, a single set of three concentric ripple rings spreads across a few tiles as if the stone floor were a water surface: thin bright rings with a slightly distorted reflection of the ceiling inside them, the tile joints bending smoothly through the rings. The floor around stays dry and unchanged. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 23% of the image width and 29% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the dry gray floor tiles, a single set of four concentric ripple rings spreads across a few tiles as if the stone floor were a water surface, the center slightly darker and the rings thin and bright, the tile joints bending smoothly through the rings. The floor around stays dry and unchanged. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 23% of the image width and 29% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the dry gray floor tiles, a single set of two wide concentric ripple rings spreads across a few tiles as if the stone floor were a water surface, with a small bright highlight on the nearest ring and the tile joints bending smoothly through the rings. The floor around stays dry and unchanged. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 23% of the image width and 29% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地の位置（波紋の内側で曲がるのみ）・周囲の床・点検口・スツール。
-- **最寄り既存 overlay と実測距離**: AR-02-stool まで 32.0px（box 基準・矩形間のユークリッド距離、次点 AR-02-smartphone-facedown 41.7px。台帳の overlay_origin/dimensions と 2026-11-05 に実測、大面積の AR-02-floor-footprints / AR-02-shutter-crayon-drawings は除く）。**最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: surreal / mid / medium（anomaly_type: surreal）
-- **視認性の注意**: 水たまり（AR-02-puddle）と違い、水が溜まっていない床に波紋だけが出る点が核心。波紋の外は一切濡れた表現にしない。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: AR-02-puddle（左の床に水たまり。state_change）・CR-02-16（看板の手前の水たまり）とは別物（水たまり vs 波紋のみ）。水が出る系なので、同プレイで AR-02-puddle と共存させない（排他）。
-- **台帳登録案**: `id: 'AR-02-floor-ripple'` / `element_id: 'CAM02-E20'` / `category: 'surreal'` / `anomaly_type: 'surreal'` / `location: 'CAM02-E20 の周辺、差分左上 (366,618) px'` / `detail: '乾いた床のタイルに、水面のような同心円の波紋が一つだけ広がる'` / `phase: mid`/ `subtlety: 'medium'` / `candidate_id: 'AR-02-floor-ripple'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
 
 ### 大面積（3:2 の窓）
 
-#### AR-02-ceiling-starry-sky — 天井一面の暗い青灰が、一面の星空に変わる（大面積）
 
-- **camera / element_id**: CAM02 / CAM02-E01（天井面）
-- **物と変化**: 天井一面の暗い青灰の天井板が、細かな星が散る夜空に変わる。蛍光灯・丸型設備・小さな丸灯・カメラ・吊り器具はそのまま残り、天井と壁・シャッター・看板の境も動かさない（昭和の子供の記憶。文字なし・星座線なし）。
-- **面（box と実面積）**: box `0,0,600,162`（600x162 = 97,200 px²。画像 676x900 = 608,400 px² の 1/8 = 76,050 px² 以上、約16.0%）。天井は台形で box より実面積が小さいため、ポリゴン `(0,0) (600,0) (600,25) (575,50) (500,100) (415,122) (410,135) (340,162) (275,162) (220,155) (170,140) (0,45)` を cam2.webp に重ねて天井の縁（左はシャッター上端・右は暗い壁と赤い看板・下は吊り器具の下端）に沿うことを目視し、**ポリゴンの実面積 69,865 px²（画像の約11.5%）、外接矩形 x0〜600・y0〜162（= 97,200 px²）**を実測した。登録時は貼り込み後の alpha bbox を再計測し、**bbox が約 90,000 px² を割ったら登録せず、面を作り直す**（実面積は台形なので 90,000 を割ってもこの値より小さくはならない）。
-- **大面積どうしの重なり**（2026-11-05 実測）: AR-02-floor-footprints（0,338,676x562）とは y 方向に 176px 離れる。AR-02-shutter-crayon-drawings（0,57,165x541）とは外接矩形が x0〜164・y57〜162 で重なるが、面が別（シャッター面と天井）で、台帳 webp の alpha 画素とこのポリゴンの重なりは **0 px**（左下の縁をシャッター上端に沿った `(0,45)-(170,140)` に置いた場合）。矩形さえ重ねたくない場合は面を x165 以降に絞るしかなく、それでは約 70,000 px² で足りないため、面の別と画素の重なり 0 を根拠にこの形で置く。
-- **排他**: 天井面そのものを変えるので、同じ面の異変とは同プレイで共存させない。AR-02-fluorescent-half-off（蛍光灯の一区画が消灯。星空の下で灯の状態が食い違う）・AR-02-tanabata-paper-chain・AR-02-rusty-vent（天井の吊り飾りと丸型設備）・AR-02-smoke（右上へ重なる）・AR-02-pillar-sign-gone（柱上方の box が天井の下端と重なる）・CR-02-19・CR-02-28（天井板の変化。E01）・CR-02-20（丸い設備の形。E03）・CR-02-21・CR-02-31（吊り器具の変化。E05）。
-- **3:2 の窓**（共通手順の正本は過去の制作仕様節 = git 履歴 253db1d の「3:2 の窓と元画像への復元」）: `composite-polygon.py crop --base public/images/cam2.webp --crop 0,0,676,450 --out <PNG>`（box の高さ 162 は 450 以下なので窓 1 枚。box は窓の上端に接するが、画像の上端なので余裕は不要）。復元は `restore --crop 0,0,676,450`。
-- **作り方**: 窓を 1 回編集して天井だけを星空にし、**`cutout --polygon` で上のポリゴンの内側だけを貼り込む**（ポリゴン外の alpha は厳密に 0。器具の位置が窓の編集でずれたテイクは没）。星は小さな点の集まりなので、顔崩れ・文字風の模様の心配は小さい。素材の別生成と `tile` は使わない。
-- **生成プロンプト（窓の 3 テイク。テイクごとに星の密度と描き方だけを変えてある）**:
 
   テイク A:
 
   ```text
-  $imagegen Edit the attached image, which is a 3:2 window (1536x1024) cut from a low-fi surveillance camera photo. Keep exactly the same framing, zoom, perspective and aspect ratio: do not recompose, re-crop, rotate or zoom. Keep the low-fi CCTV look, film grain, compression artifacts, lighting, color grade and every wall, pillar, shutter, sign and floor exactly unchanged. Make ONLY this single change: the whole dark blue-grey ceiling surface of the corridor, from the near edge to the far end, turns into a clear night sky full of small white stars, as if the ceiling panels had opened to the sky. Dense fine stars of varied brightness, a faint pale band of the Milky Way running along the length of the corridor in the ceiling's perspective, deep navy-black sky tone. No ceiling panel seams remain on the sky. The fluorescent tube, the round vent, the small round ceiling lights, the camera and the hanging fixtures stay exactly as they are, in the same places and still lit, and the edges where the ceiling meets the walls, shutters and signs stay exactly where they are. Do not touch the floor, the shutters, the pillar, the standing sign, the walls or anything below the ceiling line. Completely plain and unmarked: no text, letters, numbers, logos or constellation lines anywhere. Do not add anything else. Output 3:2 1536x1024. Keep the camera angle exactly as the source. Match the original look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
   ```
 
   テイク B:
 
   ```text
-  $imagegen Edit the attached image, which is a 3:2 window (1536x1024) cut from a low-fi surveillance camera photo. Keep exactly the same framing, zoom, perspective and aspect ratio: do not recompose, re-crop, rotate or zoom. Keep the low-fi CCTV look, film grain, compression artifacts, lighting, color grade and every wall, pillar, shutter, sign and floor exactly unchanged. Make ONLY this single change: the whole dark blue-grey ceiling surface of the corridor, from the near edge to the far end, turns into a calm clear night sky with fewer, larger stars: about forty soft white stars of clearly different sizes scattered evenly over a flat deep midnight-blue sky, each with a small gentle glint. No Milky Way, no moon, no clouds. No ceiling panel seams remain on the sky. The fluorescent tube, the round vent, the small round ceiling lights, the camera and the hanging fixtures stay exactly as they are, in the same places and still lit, and the edges where the ceiling meets the walls, shutters and signs stay exactly where they are. Do not touch the floor, the shutters, the pillar, the standing sign, the walls or anything below the ceiling line. Completely plain and unmarked: no text, letters, numbers, logos or constellation lines anywhere. Do not add anything else. Output 3:2 1536x1024. Keep the camera angle exactly as the source. Match the original look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
   ```
 
   テイク C:
 
   ```text
-  $imagegen Edit the attached image, which is a 3:2 window (1536x1024) cut from a low-fi surveillance camera photo. Keep exactly the same framing, zoom, perspective and aspect ratio: do not recompose, re-crop, rotate or zoom. Keep the low-fi CCTV look, film grain, compression artifacts, lighting, color grade and every wall, pillar, shutter, sign and floor exactly unchanged. Make ONLY this single change: the whole dark blue-grey ceiling surface of the corridor, from the near edge to the far end, turns into a vast starry night sky: many small stars tinted faintly pale cyan to match the cold colour grading, a few brighter stars with soft cross-shaped glints, and a slightly lighter indigo glow toward the far end of the corridor. No moon, no clouds, no ceiling panel seams on the sky. The fluorescent tube, the round vent, the small round ceiling lights, the camera and the hanging fixtures stay exactly as they are, in the same places and still lit, and the edges where the ceiling meets the walls, shutters and signs stay exactly where they are. Do not touch the floor, the shutters, the pillar, the standing sign, the walls or anything below the ceiling line. Completely plain and unmarked: no text, letters, numbers, logos or constellation lines anywhere. Do not add anything else. Output 3:2 1536x1024. Keep the camera angle exactly as the source. Match the original look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
   ```
 
-- **保持するもの**: 蛍光灯・丸型設備・小さな丸灯・カメラ・吊り器具・柱・シャッター・看板・壁・床のすべて。天井の下（y>162）には何も足さない。
-- **分類 / フェーズ / 目立ち度**: surreal / late / obvious（anomaly_type: state_change）。大面積。
-- **視認性の注意**: 暗い青灰色の天井が濃紺と白い星に変わり、面積が大きいので差分は出る。器具（特に左上の白い蛍光灯）を残すため、ポリゴン内でも差分が一様にならない。星空が暗すぎて元の天井と見分けにくいテイクは、星を明るく増やす方向で選ぶ。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: 同カメラの天井の変化は小物のみ（折り鶴・点検板・設備の形・板の木目・染み）で、天井一面の別の物に置き換わる異変は無い。台帳の大面積の天井の吊り飾り（AR-01-ceiling-lanterns・AR-06-ceiling-umbrellas・AR-07-ceiling-white-sheets）は「天井から物が垂れる」型で、これは天井面そのものが別の景色になる型で、足す物が無い。AR-06-teru-teru-bozu（CAM06）とは物が別。
-- **台帳登録案**: `id: 'AR-02-ceiling-starry-sky'` / `element_id: 'CAM02-E01'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM02-E01 の天井一面、差分左上 (0,0) px'` / `detail: '天井一面の暗い青灰の天井板が、一面の星空に変わる'` / `phase: late` / `subtlety: 'obvious'` / `candidate_id: 'AR-02-ceiling-starry-sky'`。note の先頭に「大面積」と書き、ポリゴン実面積と alpha bbox、排他の相手（上記）と、登録前に出し直した同カメラの box 重なり表を貼る。
 
 ## 追加候補 — CAM 03
 
@@ -1054,12 +792,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 
 | ID | 要素 | category / anomaly_type | 種別 | box（baseline px） | フェーズ / 目立ち度 |
 | --- | --- | --- | --- | --- | --- |
-| AR-05-morning-glory-wall | CAM05-E11 | surreal / surreal | **大面積** | `118,8,280,598`（162x590、95,580 px²。矩形） | late / obvious |
-| AR-05-aisle-silhouette | CAM05-E06 | person / add_person | 小物 | `78,338,106,405`（28x67） | mid / medium |
-| AR-05-aisle-light-streak | CAM05-E14 | environment / state_change | 小物 | `4,436,108,490`（104x54） | mid / medium |
-| AR-05-aisle-goldfish | CAM05-E14 | object / add_creature | 小物 | `60,520,104,562`（44x42） | mid / medium |
-| AR-05-door-fingers | CAM05-E09 | person / add_person | 小物（CR-05-05 の昇格） | `562,230,596,330`（34x100） | mid / medium |
-| AR-05-ceiling-shirt | CAM05-E01 | object / add_object | 小物 | `243,8,303,50`（60x42） | mid / medium |
 | AR-05-floor-child-shadow | CAM05-E13 | person / reflection | 小物 | `597,598,672,752`（75x154） | late / medium |
 
 - **配置の実測**（2026-11-05、`uv run --with pyyaml python3`。台帳 CAM05 の全 overlay の `overlay_origin` / `dimensions` を矩形化し、矩形間のユークリッド距離を測った）: 小物 6 件はすべて既存の全 overlay（大面積 2 件を除く）と**30px 以上**、かつ本節の他の項とも 30px 以上離れる（各項に最寄りを書く）。box 基準なので、羽毛ぼかしで広がる分、制作後に alpha bbox で測り直す。**37px 未満の項（silhouette 33.2px・light-streak 31.0px・goldfish 30.0px〜35.0px・shirt 31.0px・floor-child-shadow 35.0px）は、制作後の再測定が特に必須**（最終 overlay の alpha bbox で測る。台帳の最終 overlay を基準に、30px 割れなら各項の指示どおり動かす）。
@@ -1073,212 +805,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 - 型の重複回避: 猫は他カメラに既存（`AR-02-cat` / `AR-08-cat` / `AR-07-stairs-cat` / `AR-03-walking-cat` ほか台帳に 5 件）で、これ以上は足さない（本節では猫の案を `AR-05-aisle-light-streak` に差し替えた）。**植物・蔓・花、金魚、ハンガーの服、床の子供の影だけ**は台帳・候補プールのどちらにも無いことを `grep` で確認した（2026-11-05）。ケンパ・ランドセル・水たまり・靴は既存と型が被るので使わない。
 - **remove_object / displace / text_change / multiply を入れなかった理由**（2026-11-05 に左通路・天井・右上を原寸で見直した）: 候補にした左通路の天井の丸い通気口は `AR-05-white-ribbon`（box 重なり）、左店先の丸い看板は白いリボンまで 12px、右上の防犯ドームは `AR-05-duplicate-light` の box 内で、いずれも 30px の空きが取れない。左通路は小物 3 件（silhouette・light-streak・goldfish）で 30px 余白を使い切っており、これ以上は足せない。文字を含む看板の変更は、架空化済みの基準画像ができるまで具体化しない。この 4 種は別カメラ側で補う。
 - **構造の偏り是正**: 7 件の分類は surreal 1・person 3（add_person 2 + reflection 1）・add_creature 1（金魚）・environment/state_change 1（光の帯）・add_object 1。台帳の偏り（object 137 / add_object 105）に足すのは add_object の 1 件だけ。
-
----
-
-### AR-05-morning-glory-wall — 左の黒い側面一面に朝顔の蔓（大面積）
-
-- **ID / camera / element_id**: AR-05-morning-glory-wall / CAM05 / CAM05-E11（黒い側面。柱の左半分と、根元の床の細い帯を含む）
-- **面**: box `118,8,280,598`（162x590 = 95,580 px²、画像 676x900 = 608,400 px² の 15.7%。1/8 = 76,050 を約 19,500 上回る）。ポリゴンは矩形で、**ポリゴンの実面積 = alpha bbox = 95,580 px²（2026-11-05 に shoelace 式で実測）**。**貼り込み後の alpha bbox が約 90,000 を割ったら登録せず面を足す**。ポリゴン（baseline px）: `(118,8) (280,8) (280,598) (118,598)`。面の内訳は、黒い側面（x 135〜255、y 約 92〜540）・左の細い柱（x 118〜135）・角柱（x 255〜280）・根元の床の帯（y 540〜598）・天井の帯（y 8〜92。蔓が壁から天井へ這い上がり、垂れ下がる）。止め線は、右のガラス区画（x 280。大面積 cafe の x=282 まで 2px）と根元の床（y=598。大面積 cranes の y=600 まで 2px）。元の案は 70,798 px²（黒い側面だけ）で 1/8 を割ったため、左の柱・角柱・天井の帯を足した。
-- **物と変化**: 左の黒い不透明な側面（上は黒、下は暗いカーテン越し）の全面に、細い蔓と無地の朝顔の花が這い上がる。蔓は根元の床の帯から立ち上がって壁の黒い面を覆い、柱の左半分にも絡む。花は淡い水色と白の素朴な朝顔（ラッパ形、無地）が数十輪、ハート形の葉は明るい黄緑にして黒に沈まないようにする。床の帯には蔓の根元と落ちた花が少しだけ散る。
-- **不気味さの狙い**: 閉店して誰もいない地下街なのに、壁が一面だけ夏の庭になっている。小学校の観察日記のような懐かしさが、人のいない場所で静かに育つ。老人の記憶が作る優しい異変（story: 通路に現れていた像は老人 3 人の記憶）で、怖がらせる小道具は使わない。
-- **保持するもの**: 柱の右端（x 280 より右）と金属の枠、右の正面ガラスとカーテン、黒い側面の上端の接線以外の天井（蔓が垂れる帯 y 8〜92 の外）、左の通路・店先・立てスタンド、床の目地、右上の蛍光灯。ガラス面（x>282）には蔓を出さない（大面積 cafe の領域）。
-- **3:2 の窓**（cam5 は 676 幅。`composite-polygon.py crop --crop 0,y0,676,y0+450`。縮尺 1536/676 = 2.2722 倍。box 高さ 590 > 450 なので**上下 2 枚**、直列）:
-  - 窓 A: `0,0,676,450`（box 上端 8 は A の内側）。
-  - 窓 B: `0,300,676,750`（A と 150px 重なる。box 下端 598 は B の内側）。A を生成・採用して `restore` で貼り戻し、B の入力はその全画面から `crop` で切り出す。B の結果は A の貼り戻し済み全画面を `--base` にして `restore --blend-px 140 --blend-edges t` で貼る。
-- **生成プロンプト 窓 A**（3 テイク作って目視で選ぶ。窓内の座標は元画像の px ×2.27）:
-
-  ```text
-  $imagegen Edit the attached image, a 3:2 crop (1536x1024) of a low-light surveillance camera photo of an empty underground shopping arcade. At the left-center there is a dark, opaque black side wall of a glass shop block (roughly x 307-580 px in this frame, its top edge near y 209 px, running down to the bottom of the frame), with a thick grey metal pillar at its right edge (x 580-640 px) and a thin pillar at its left edge (x 268-307 px).
-  Make ONLY this change: the whole black side wall, from its top edge near the ceiling to the bottom of the frame, the thin pillar at its left, and the grey pillar at its right up to x 636 px are covered with climbing morning glory vines, and a few vines also climb past the top edge and hang down from the ceiling above the wall (x 268-636 px, y 18-209 px): thin dark green stems with pale yellow-green heart-shaped leaves, and about forty plain pale blue and white trumpet-shaped morning glory flowers (completely plain, no marks), scattered densely over the black surface like a summer garden grown in one night. Make the flowers about 1.5x larger than real scale and bright so that they stand out clearly against the black wall; leaves lighter than the wall. Give a faint soft shadow under the larger leaves.
-  Do not touch the glass panels and curtains to the right of the pillar (right of x 640 px), the ceiling outside the x 268-636 px strip, the ceiling lights, the left aisle with its shop fronts and the thin-legged stand, the floor tiles and the long fluorescent tube. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-
-- **生成プロンプト 窓 B**（A の貼り戻し済み全画面から切り出した窓を入力にする。窓 B は y0=300。側面の下端は窓の y 約 557 px、床の帯は y 557〜677 px）:
-
-  ```text
-  $imagegen Edit the attached image, a 3:2 crop (1536x1024) of a low-light surveillance camera photo of an empty underground shopping arcade. At the left-center, the lower part of a black side wall (x 307-580 px in this frame, ending at its base at about y 557 px) is already covered with morning glory vines, and a grey metal pillar stands at its right edge (x 580-640 px).
-  Make ONLY this change: continue the same vines and plain pale blue and white morning glory flowers down to the base of the wall and the pillars at both sides, and let the roots and a few fallen flowers spread onto the grey floor tiles in front of the wall, as a narrow band (about x 268-636 px, y 557-677 px). Keep the same vine and flower style, size and brightness as the existing vines in the upper part; the upper 340 px of the frame already holds the vines and must blend continuously.
-  Do not touch the glass panels and curtains to the right of the pillar, the right half of the pillar, the floor tiles elsewhere, the white floor reflections, the left aisle and the thin-legged stand, and the lit floor in front. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-
-- **作り方**: ①窓 A を 3 テイク生成 → 目視で 1 枚選び `restore`。②窓 B を A の貼り戻し済み全画面から `crop` して生成 → `restore --blend-px 100 --blend-edges t`。③上のポリゴンで `cutout --polygon "118,8 280,8 280,598 118,598" --feather 2` し、alpha bbox を測る（約 90,000 を割ったら面を足す。cafe・cranes と重ならないことも測る）。④ガラス面（x>282）に蔓が出ていないこと、柱の右端（x>280）が元のままなことを原寸で確認。
-- **難所と没基準**: 花に文字様の模様、蔓がガラス面へ漏れる、葉が黒に沈む（明るさ不足）、花が小さすぎて均一な緑の面になる、はいずれも没。ポリゴンの外へ蔓が出たら `cutout` が切るので再生成は不要。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳案**: id `AR-05-morning-glory-wall` / element_id `CAM05-E11` / category `surreal` / anomaly_type `surreal` / location 「CAM05-E11 の左の黒い側面、差分左上 (x,y) px」/ detail 「左の黒い側面の全面・左右の柱・天井の帯に、無地の朝顔の蔓と花が一晩で這い上がる（夏の記憶）」/ `candidate_id: 'AR-05-morning-glory-wall'`。note に「大面積。柱の右端（x>280）・ガラス面は不変。同カメラの大面積と bbox が重ならない（cafe まで 2px、cranes まで 2px の実測）」と、登録時に出し直した重なり表を書く。
-- **排他**: `AR-05-film-poster`（黒い側面の上部に貼る件）・`AR-05-brown-column`（同じ角柱を薄茶にする件）・`AR-05-joint-into-glass`（根元の床の帯が重なる）・`AR-05-paper-streamers`（天井の帯が重なる。bbox 重なり 4,104）・`AR-05-sign-in-glass`（bbox 重なり 16,472。ガラス内の看板で、壁の外に出る部分は蔓の下に残らない）・`AR-05-ceiling-shirt`（本節の小物。box が天井の帯に重なる）・候補の CR-05-09 / CR-05-38 は、同じ面を覆うので同プレイ非共存。
-- **相互参照**: 植物の既存は鉢植えの葉の色・花の消失など小さな変化のみで、壁を覆う件は無い（台帳の `detail` を `grep` で確認、2026-11-05）。壁一面に同じ素材を敷き詰める件（CR-LG-01-02 顔写真・CR-LG-06-01 ポスター）は別カメラ・別素材。**型は「面一面」の大面積の例外に従う**。
-- **生成枚数の最小見積り**: 窓 A 3 テイク + 窓 B 3 テイク（素材の別生成なし）。
-
----
-
-### AR-05-aisle-silhouette — 左奥通路の遠景に、虫取り網を担いだ少年の逆光の影
-
-- **camera / element_id**: CAM05 / CAM05-E06
-- **物と変化**: 左奥へ伸びる通路の明るい床に、麦わら帽子をかぶり虫取り網を肩に担いだ少年の**後ろ姿の黒いシルエット**が一つ立つ（夏休みの記憶）。顔・服の模様・肌は描かない（真っ黒に近い影）。通路の奥のほうを向いている
-- **最終 box**（baseline px）: `78,338,106,405`（28x67）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,300,256,471`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (78,38)-(106,105)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the bright, glossy floor of the far aisle, stand one small boy seen from behind as a completely black backlit silhouette (no face, no skin, no clothing pattern visible), wearing a wide-brimmed straw hat and carrying a long thin insect net resting on his shoulder, facing away from the camera toward the end of the aisle. Make him about 1.3x larger than real scale so that the silhouette reads clearly against the bright floor. Add a long soft dark shadow stretching toward the camera on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the shop fronts, the thin-legged stand at the far left, the tile joints, the white floor reflections or the glass shop block at the right. Place the object, including its shadow, centered at about 36% from the left and 42% from the top of the image, occupying roughly 11% of the image width and 39% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the bright, glossy floor of the far aisle, stand one small boy seen from behind as a completely black backlit silhouette (no face, no skin, no clothing pattern visible), wearing a wide-brimmed straw hat and holding a long thin insect net upright like a pole beside him, its round hoop raised high above the hat, facing away from the camera toward the end of the aisle. Make him about 1.3x larger than real scale so that the silhouette reads clearly against the bright floor. Add a long soft dark shadow stretching toward the camera on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the shop fronts, the thin-legged stand at the far left, the tile joints, the white floor reflections or the glass shop block at the right. Place the object, including its shadow, centered at about 36% from the left and 42% from the top of the image, occupying roughly 11% of the image width and 39% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the bright, glossy floor of the far aisle, one small boy seen from behind as a completely black backlit silhouette (no face, no skin, no clothing pattern visible), wearing a wide-brimmed straw hat, crouching slightly with an insect net held low so that its round hoop rests near the floor, as if looking at something on the ground, facing away from the camera. Make him about 1.3x larger than real scale so that the silhouette reads clearly against the bright floor. Add a long soft dark shadow stretching toward the camera on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the shop fronts, the thin-legged stand at the far left, the tile joints, the white floor reflections or the glass shop block at the right. Place the object, including its shadow, centered at about 36% from the left and 42% from the top of the image, occupying roughly 11% of the image width and 39% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 通路の店先・左端のスタンド・床の白い反射・右のガラス区画。
-- **最寄り既存 overlay と実測距離**: AR-05-joint-into-glass まで 33.2px（box 基準・矩形間のユークリッド距離、次点 AR-05-stand-tag 40.0px）。本節の他の項では AR-05-aisle-light-streak まで 31.0px。 **余裕が小さい（37px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで広がる。30px 割れなら左へ動かす）。大面積 `AR-05-morning-glory-wall`（x 118〜）とは 12px で、大面積は距離規則の対象外だが同プレイでの共存は可（別の場所・別の物）。
-- **分類 / フェーズ / 目立ち度**: person / mid / medium
-- **視認性の注意**: 明るい床の光だまりに黒い影なので対比は強い。足元の影を長く濃くして接地させる。細い網の柄は消えやすいので、帽子の幅と網の先の丸い枠を大きめに。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'person'` / `anomaly_type: 'add_person'` / `detail: '左奥の通路の明るい床に、麦わら帽子と虫取り網の少年の後ろ姿の黒い影が一つ立つ（夏休みの記憶）'` / `candidate_id: 'AR-05-aisle-silhouette'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 後ろ姿の人物系の既存は他カメラの通路奥の店員・紙袋の小柄な人物・中折れ帽の老人と、`AR-05-old-woman-in-glass`（CAM05・割烹着の老婆、正面ガラス内）。別人物（少年の影）・別の場所（通路）。麦わら帽子は `CR-NEW-01-03`（CAM01・物）と別。
-
----
-
-### AR-05-aisle-light-streak — 左奥通路の光だまりから、光源の無い左へ細長い光の帯が伸びる
-
-- **camera / element_id**: CAM05 / CAM05-E14
-- **物と変化**: 左奥通路の床の白い光だまりから、光源のない左（壁・店先の側）へ向かって、細長い光の帯が一本、床の上を走るように伸びる。光だまりの形が状況に合わず変わる異変で、新しい物は足さない（猫の案 `AR-05-aisle-cat` は台帳に猫が 5 件あり 7 件目になるため差し替えた。CR-05-25 は候補プールに残す）
-- **最終 box**（baseline px）: `4,436,108,490`（104x54）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,380,256,551`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (4,56)-(108,110)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles at the far left, the bright white pool of light on the floor sends out one long narrow straight band of white light across the tiles toward the left edge of the frame, in a direction where there is no light source above, with soft edges and a brightness equal to the existing pool. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the thin-legged stand, the shop fronts above, the dark wall at the right or the existing light pool itself. Place the changed area, including any soft glow, centered at about 22% from the left and 49% from the top of the image, occupying roughly 41% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles at the far left, the bright white pool of light on the floor stretches out into one long tapered wedge of white light that narrows as it runs across the tiles toward the left edge of the frame, like light leaking through an open door although there is no door and no light source there, with soft edges and a brightness equal to the existing pool. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the thin-legged stand, the shop fronts above, the dark wall at the right or the existing light pool itself. Place the changed area, including any soft glow, centered at about 22% from the left and 49% from the top of the image, occupying roughly 41% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles at the far left, the bright white pool of light on the floor is followed by three separate elongated oval patches of white light lined up one after another across the tiles toward the left edge of the frame, each stretched in the same direction, in a place where there is no light source above, with soft edges and a brightness equal to the existing pool. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the thin-legged stand, the shop fronts above, the dark wall at the right or the existing light pool itself. Place the changed area, including any soft glow, centered at about 22% from the left and 49% from the top of the image, occupying roughly 41% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 元の光だまりの形・タイル目地・左端のスタンド・左上の店先。
-- **最寄り既存 overlay と実測距離**: AR-05-joint-into-glass まで 31.0px（box 基準・矩形間のユークリッド距離、次点 AR-05-film-poster 78.2px、台帳 CAM05 の overlay_origin/dimensions から 2026-11-05 に実測。大面積 2 件は除く）。本節の他の項では AR-05-aisle-silhouette まで 31.0px（上）、AR-05-aisle-goldfish まで 30.0px（下）。 **余裕が小さい（37px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで広がる。30px 割れなら、帯の長さを縮めて box を左右から詰める）。
-- **分類 / フェーズ / 目立ち度**: environment / mid / medium（anomaly_type: state_change）
-- **視認性の注意**: 光だまりの白に対し、帯は暗いグレーの床の上に出るので、帯の縁をはっきり取り、光だまりと同じ明るさにする。薄いと床の反射に溶ける。視認性が下限を割りそうなら、帯を太く短く（box 全体を使う）して作り直す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'environment'` / `anomaly_type: 'state_change'` / `detail: '左奥の通路の床の光だまりから、光源のない左へ向かって細長い光の帯が伸びる'` / `candidate_id: 'AR-05-aisle-light-streak'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 光・反射の既存は `AR-05-floor-glare-backside`（E15・床反射にガラス裏側）・`AR-05-glass-light`（ガラス内の光）。通路の光だまり自体の形を変える件は台帳に無い（2026-11-05 の grep）。silhouette とは 31px 離れた別の場所（同じ光だまりの上下）だが、同プレイで同時に出すと「光だまりの異変」が二重になるので避ける（推奨）。
-
----
-
-### AR-05-aisle-goldfish — 床に置かれた金魚の袋（縁日）
-
-- **camera / element_id**: CAM05 / CAM05-E14
-- **物と変化**: 左奥通路の床に、水を入れた透明なビニール袋が一つ置かれ、赤い金魚が一匹泳いでいる（縁日の金魚すくいの記憶。袋の口は輪ゴムで縛られ、模様・文字はない）
-- **最終 box**（baseline px）: `60,520,104,562`（44x42）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,450,256,621`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (60,70)-(104,112)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles, place one small transparent plastic bag filled with water, its mouth tied with a plain rubber band, sitting upright on the floor, with a single small bright orange-red goldfish swimming inside, completely plain, with no print and no label on the bag. Make it about 1.5x larger than real scale and give the goldfish a strongly saturated orange-red color so that it reads clearly. Add a soft bright highlight on the water bag and a soft dark contact shadow on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the white floor reflections, the black wall at the right or anything else. Place the object, including its shadow, centered at about 32% from the left and 53% from the top of the image, occupying roughly 17% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles, place one small transparent plastic bag filled with water, its mouth tied with a plain rubber band, leaning slightly to one side on the floor, with a single small bright orange-red goldfish near the top of the water seen from the side, completely plain, with no print and no label on the bag. Make it about 1.5x larger than real scale and give the goldfish a strongly saturated orange-red color. Add a bright long highlight along the lower edge of the water bag and a soft dark contact shadow on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the white floor reflections, the black wall at the right or anything else. Place the object, including its shadow, centered at about 32% from the left and 53% from the top of the image, occupying roughly 17% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles, place one small transparent plastic bag filled with water, its mouth tied with a plain rubber band that makes a large visible knot, sitting upright on the floor, with a single small bright orange-red goldfish swimming near the bottom of the bag facing the camera, completely plain, with no print and no label on the bag. Make it about 1.5x larger than real scale and give the goldfish a strongly saturated orange-red color. Add a bright ring-shaped reflection on the water surface and a soft dark contact shadow on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the white floor reflections, the black wall at the right or anything else. Place the object, including its shadow, centered at about 32% from the left and 53% from the top of the image, occupying roughly 17% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 床の白い反射・タイル目地・右の黒い側面。
-- **最寄り既存 overlay と実測距離**: AR-05-joint-into-glass まで 35.0px（box 基準、次点 AR-05-brown-column 151.0px）。本節の他の項では AR-05-aisle-light-streak まで 30.0px。 余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 明るい光だまりに赤橙の小さな魚なので、色の彩度を上げて袋の縁を明るく。透明な袋は背景に溶けやすいので、水面の反射と縛り口を大きめに。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_creature'` / `detail: '左奥の通路の床に、金魚が一匹入った水の袋が置かれている（縁日の記憶。無地）'` / `candidate_id: 'AR-05-aisle-goldfish'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 金魚は台帳・候補プールのどちらにも無い（2026-11-05 の grep）。生き物の既存は猫系のみ（本節では猫を足さない）。
-
----
-
-### AR-05-door-fingers — 扉の内側のカーテンの合わせ目に子供の指の影（CR-05-05 の昇格）
-
-- **camera / element_id**: CAM05 / CAM05-E09
-- **物と変化**: 右側ガラス扉の左の戸の暗い隙間（細長く立てかけた物の右側）で、カーテンの端が内側から小さくつままれたように寄り、そのまわりに**指の形をした暗いぼんやりした影**が落ちる。体の部位そのものは描かず、つまみ寄せた折り目と淡い影だけで人の気配を示す（手・腕・顔・肌・爪は無い）。※昇格元: CR-05-05（右端のカーテンの隙間に細い指のような影。制作時に候補行を削除）
-- **最終 box**（baseline px）: `562,230,596,330`（34x100）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `420,190,676,361`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (142,40)-(176,140)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: inside the dark glass of the left leaf of the glass door (the dark vertical gap with the curtain), the edge of the curtain is gathered and pinched in one narrow fold and drawn slightly aside, as if something small behind it were pulling it, with a few narrow soft dark finger-shaped shadows on the fabric around the pinched fold. Only the pinched fold and the vague soft dark shadows, no hand, no arm, no face, no skin detail. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Make the shadows slightly lighter than the dark gap so that they read clearly, with the curtain fold catching a thin pale highlight. Do not touch the metal door frame, the handle, the green sign above, the other glass panels, the curtains elsewhere or the leaning object in the gap. Place the object, including its shadow, centered at about 62% from the left and 53% from the top of the image, occupying roughly 13% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: inside the dark glass of the left leaf of the glass door (the dark vertical gap with the curtain), the edge of the curtain is pinched into a small tight pleat near its middle, with the cloth pulled slightly toward the inside, and a soft dark elongated shadow in the shape of narrow tips lies right behind the pleat, as if the curtain were being held by something small. Only the pleat and the vague soft dark shadow, no hand, no arm, no face, no skin detail. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Make the shadows slightly lighter than the dark gap so that they read clearly, with the curtain fold catching a thin pale highlight. Do not touch the metal door frame, the handle, the green sign above, the other glass panels, the curtains elsewhere or the leaning object in the gap. Place the object, including its shadow, centered at about 62% from the left and 53% from the top of the image, occupying roughly 13% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: inside the dark glass of the left leaf of the glass door (the dark vertical gap with the curtain), the edge of the curtain is lifted and pinched at its upper part, hanging in a slight diagonal fold, with a thin pale highlight along the fold and soft dark finger-shaped smudges of shadow just behind it. Only the lifted fold and the vague soft dark shadows, no hand, no arm, no face, no skin detail. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Make the shadows slightly lighter than the dark gap so that they read clearly, with the curtain fold catching a thin pale highlight. Do not touch the metal door frame, the handle, the green sign above, the other glass panels, the curtains elsewhere or the leaning object in the gap. Place the object, including its shadow, centered at about 62% from the left and 53% from the top of the image, occupying roughly 13% of the image width and 58% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 扉の金属枠・取手・上の緑看板・他のガラス面。
-- **最寄り既存 overlay と実測距離**: AR-05-glass-light まで 51.0px（box 基準、次点 AR-05-sign-digit-missing 59.5px）。本節の他の項では AR-05-floor-child-shadow まで 268.0px。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: person / mid / medium
-- **視認性の注意**: 暗い隙間に黒い影は沈みやすい。影をやや灰色に、つまんだカーテンの折り目に細い白い明部を付けて、**影の本体より折り目の明暗で見せる**。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す（通らなければ折り目を大きく、明部を強く）。
-- **台帳登録時**: `category: 'person'` / `anomaly_type: 'add_person'` / `detail: '右の扉の暗い隙間で、カーテンの端が内側からつままれたように寄り、指の形の暗い影が落ちている'` / `candidate_id: 'AR-05-door-fingers'`（昇格元 CR-05-05 を note に）。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 同じ要素の `AR-05-old-woman-in-glass`（E08・正面ガラスの内側の老婆の後ろ姿）とは別のガラス・別の人物の気配（子供・体の一部だけ）。story の 4 人目（子供）の気配に寄る（令和の異変の印付けは story.md 未決）。
-
----
-
-### AR-05-ceiling-shirt — 天井から吊るされた子供用の白いシャツ（服だけ）
-
-- **camera / element_id**: CAM05 / CAM05-E01
-- **物と変化**: 天井から細い針金のハンガーで、小さな無地の白い半袖シャツが一枚、袖を垂らして吊るされている（洗濯物。中に人はいない。服だけ。模様・文字・ボタンの刻印なし）
-- **最終 box**（baseline px）: `243,8,303,50`（60x42）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `190,0,446,171`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (53,8)-(113,50)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark ceiling in the upper left of this frame, hang one small plain white short-sleeved child's shirt on a thin wire clothes hanger from a short thin cord attached to the ceiling, the shirt empty and limp with its sleeves hanging down, completely plain with no print, no buttons marked, no label and no pattern. Make it about 1.4x larger than real scale and a clean pale white so that it reads clearly against the dark ceiling. Add a faint soft shadow of the shirt on the ceiling surface behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the ceiling speckles and panel seams, the ceiling lights, the black top frame of the glass shop block below or the grey pillar. Place the object, including its shadow, centered at about 32% from the left and 17% from the top of the image, occupying roughly 23% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark ceiling in the upper left of this frame, hang one small plain white short-sleeved child's shirt by its collar from a tiny hook fixed directly on the ceiling, with no hanger, the shirt empty and limp with the shoulders drooping and the sleeves hanging straight down, completely plain with no print, no buttons marked, no label and no pattern. Make it about 1.4x larger than real scale and a clean pale white so that it reads clearly against the dark ceiling. Add a faint soft shadow of the shirt on the ceiling surface behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the ceiling speckles and panel seams, the ceiling lights, the black top frame of the glass shop block below or the grey pillar. Place the object, including its shadow, centered at about 32% from the left and 17% from the top of the image, occupying roughly 23% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark ceiling in the upper left of this frame, hang one small plain white short-sleeved child's shirt on a thin wire clothes hanger from a short thin cord, the hanger slightly tilted as if swinging, the empty shirt hanging crooked with one sleeve lifted outward and the other hanging down, completely plain with no print, no buttons marked, no label and no pattern. Make it about 1.4x larger than real scale and a clean pale white so that it reads clearly against the dark ceiling. Add a faint soft shadow of the shirt on the ceiling surface behind it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the ceiling speckles and panel seams, the ceiling lights, the black top frame of the glass shop block below or the grey pillar. Place the object, including its shadow, centered at about 32% from the left and 17% from the top of the image, occupying roughly 23% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 天井の点状汚れと板継ぎ目・天井灯・下の黒い枠と灰色の柱。
-- **最寄り既存 overlay と実測距離**: AR-05-paper-streamers まで 31.0px（box 基準、次点 AR-05-brown-column 32.0px）。 **余裕が小さい（37px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで広がる。30px 割れたら右へ動かす。右の AR-05-duplicate-light までは 32px で、動かせる余裕は 2px しか無い。割れたら box の幅を縮めて作り直す）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 暗い天井に白い小さなシャツなので対比は強い。box が 60x42 と小さいので、袖を広げた T 字の形を大きく取る。ハンガーの針金は細くて消えやすいので、シャツ本体を大きく。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '暗い天井から、小さな無地の白いシャツがハンガーで吊るされている（洗濯物。服だけ）'` / `candidate_id: 'AR-05-ceiling-shirt'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 天井から吊る既存 `AR-05-paper-streamers`（CAM05・同じ天井左寄りの白い紙の吹き流し。31px 隣で型が近い。**制作前に見比べ、実質同じ（白い紙の垂れ物）と見えたら取り下げ、シャツの袖と肩の形を強調する。距離 31px は box 基準なので、制作後に台帳の最終 overlay の alpha bbox で再測定し、30px 割れなら右へ動かす**）。なお本件の box は大面積 `AR-05-morning-glory-wall` の天井の帯に重なるので、同プレイ非共存・`AR-05-wind-chime`（CAM05・風鈴）・`AR-06-ceiling-balloons`・てるてる坊主（CAM06）。服だけの吊り物は他に無い。
 
 ---
 
@@ -2010,7 +1536,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 
 | 候補ID   | 対象ID    | 変化案                                             | 分類 / フェーズ / 目立ち度   |
 | -------- | --------- | -------------------------------------------------- | ---------------------------- |
-| CR-01-28 | CAM01-E02 | 小さな丸灯の周囲の色にじみだけ消える。             | environment / early / subtle |
 | CR-01-30 | CAM01-E05 | 画面端の丸灯が半分だけ点灯する。                   | environment / early / subtle |
 | CR-01-31 | CAM01-E06 | 奥の丸灯が一回り小さくなる。                       | environment / early / subtle |
 | CR-01-32 | CAM01-E08 | 奥へ並ぶ小型器具の一つだけ天井面から少し浮く。     | surreal / mid / medium       |
