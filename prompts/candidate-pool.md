@@ -140,7 +140,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 
 | ID | 種別 | category / anomaly_type | 面・位置 | 概要 |
 | --- | --- | --- | --- | --- |
-| AR-01-right-wall-lattice-doors | 大面積 | surreal / multiply | 右の店先の壁一面 (422,225,675,668) | 同じ木格子戸が、奥へ向かって1枚ずつ大きくなりながら連なる |
 | AR-01-ceiling-lamp-off | 小物 | environment / state_change | 左天井 (60,168,128,222) | 左の丸い埋め込み灯が消えて黒い円になる |
 | AR-01-ceiling-tile-drop | 小物 | object / displace | 右上天井 (405,122,479,198) | 天井板が一枚、片側だけ外れて垂れ下がる |
 | AR-01-ceiling-wet-stain | 小物 | environment / state_change | 中央天井 (290,212,370,248) | 天井に濡れた丸い染みが広がり水滴が垂れかける |
@@ -156,30 +155,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 
 ### 大面積
 
-#### AR-01-right-wall-lattice-doors — 右の店先に同じ木格子戸が、奥へ向かって1枚ずつ大きくなりながら連なる
-
-- **camera / element_id**: CAM01 / CAM01-E12（右側の店先。起点の木格子戸）
-- **面**: quad `(422,345) (675,225) (675,668) (422,500)`（左上・右上・右下・左下。原寸の写真で壁の天井線・床線に合わせて確定）。polygon 実面積 **75,647 px²**（画像の 12.5%）、alpha bbox（box `422,225,675,668`）は 253x443 = **112,079 px²**（18.4%）。大面積の判定は台帳の既存大面積（`AR-01-wall-faces` の alpha bbox 97,768 px²）と同じく alpha bbox で行い、約 90,000 px² 以上を満たす（polygon 実面積は壁の遠近で細く、90,000 を下回る）。右壁の店先の面（金属シャッター・ガラス窓・白い太枠・木格子戸が重なる面）。壁と床の接線（腰板の下端）で止め、敷居は面の外。ただし鳩の box（575,598,675,655）が面の下端に掛かるので、下の排他に入れる。
-- **物と変化**: 右の店先の壁全面が、**同じ形の木格子戸**（白い太枠の中に縦の木格子、下に濃い青灰の腰板）の連続に置き換わる。戸は 6 枚が壁に沿って並び、**奥の戸ほど画面上の幅が手前の戸と同じに近く（遠近で細くならず）、1 枚ずつ相対的に大きく見える**。どれも閉じて無人。元の窓・シャッター・暖簾の位置は戸に覆われる。吊り看板（E16）と蛍光灯（E07）は壁の手前にあるので面の外（`--hole`）。
-- **不気味さの狙い**: 入口が全部同じで、どれが店なのかわからない。奥へ行くほど戸が遠ざからず、通路が終わらない違和感。昭和の店先が増殖する、優しい異変（story: 老人の記憶が作る像）の暗い側面。
-- **保持するもの**: 天井・床・左壁・奥の柱・通路奥の開口、吊り看板（E16 の大小）、蛍光灯（E07）、壁と天井・床の接線。戸の隙間の細い縦枠だけが壁に残る。
-- **素材の別生成（全景生成はしない）**: 参照に元写真の木格子戸（`public/images/cam1.webp` の約 (560,235)-(675,595)）を渡し、**正面から見た 1 枚の戸の立面**を 3:2（1536x1024）の中央に 1 枚だけ生成する。繰り返しの絵を 1 回で多数描かせると文字風の模様・格子の崩れが出るため。
-- **生成プロンプト全文**（素材用。3 テイクとも `VARIANT` 行だけ差し替え）:
-
-  ```text
-  $imagegen Using the attached crop as a reference for the style of the door only, create a flat, straight-on front elevation of ONE closed traditional Japanese wooden sliding lattice door, centred in a 3:2 1536x1024 image on a plain mid-grey backdrop: a thick white-painted frame, inside it evenly spaced vertical wooden slats of warm brown wood behind a dark glass pane, and below it a plain dark blue-grey kick panel. The door is slightly weathered, with fine dust and subtle wood grain. VARIANT.
-  The door has no handle plate, no sign, no sticker, no paper, no curtain, no shop name: completely plain and unmarked. Evenly lit flat scan, no perspective, no shadows on the backdrop. Match a low-light surveillance still: cold blue-grey colour grading, fine film grain, mild JPEG compression. No text, no letters, no numbers, no logos, no watermark.
-  ```
-
-  - VARIANT 1: `The slats are tightly spaced and the wood is mid-brown`
-  - VARIANT 2: `The slats are slightly wider apart and the wood is darker`
-  - VARIANT 3: `The frame paint is cream-white with light chipping at the corners`
-- **作り方**: ①割付図: 壁面の四隅（目安 左上 (422,345)・右上 (675,225)・右下 (675,668)・左下 (422,500)。**原寸で壁の天井線・床線・左右の縁に合わせて確定**）を描き、戸の継ぎ目は x=422・464・506・548・591・633・675 の等間隔（画面上の幅を遠近で縮めない。奥の戸ほど縦横比が横に広がるのが狙い）に置く。②素材を 3 テイク生成して 1 枚を選ぶ（採否は人間）。③`composite-polygon.py tile --base public/images/cam1.webp --material <door.png> --quad "<tl> <tr> <br> <bl>" --cols 1 --rows 1 --gap 0 --shade 0.6 --polygon-out poly.json --out <full.png>` を、継ぎ目の x で切った 6 つの quad（各戸）ごとに順に実行して重ねる。各戸の quad の上辺・下辺が壁の天井線・床線に沿い、継ぎ目が揃っているか原寸で確認。④`cutout --polygon poly.json --hole <吊り看板 E16 のポリゴン> --hole <蛍光灯 E07 のポリゴン> --feather 2`。壁面の明暗は `--shade` と `blend --mode multiply --layer <baseline> --layer-norm` で乗せる。
-- **難所と没基準**: 戸の格子が崩れる・文字風の模様が出る・戸の高さ方向が壁の天井線・床線からはみ出すものは没（縦横比は quad 由来の変形のみ許す）。奥の戸が手前より細く縮む（元の遠近どおり）は没（本件の狙いが消える）。吊り看板・蛍光灯が戸に隠れたら没（hole の取り直し）。
-- **フェーズ / 目立ち度**: late / obvious。
-- **台帳登録案**: id `AR-01-right-wall-lattice-doors` / `element_id: CAM01-E12` / `category: surreal` / `anomaly_type: multiply` / `location`: 右の店先の壁一面 / `detail`: 「右の店先の壁一面が、同じ形の無人の木格子戸の連続に置き換わる（吊り看板と蛍光灯は元のまま。文字なし）」 / phase late / obvious。note に「大面積。CAM01-E12」「重なり表」「排他: 下記」を書く。
-- **排他**: 同じ店先の物を使う **`AR-01-noren`・`AR-01-door-ajar`**（戸が連続に置き換わると暖簾・戸の開閉の前提が消える）、面の下端に掛かる **`AR-01-threshold-pigeon`**（鳩の box が面の下端と重なり、戸の腰板に覆われる）、天井と bbox が重なる **`AR-01-ceiling-lanterns`**（壁 x422〜675・y225〜380 が天井 box（217,0,458,380）と重なり、bbox の重なりは 253x155 = 39,215 px²。別の面だが、同じ画面の上半分に大面積が二つ重なると読めなくなるため同プレイ非共存）、壁の下端を使う **`AR-01-milk-bottle-crate`**（敷居・床。box が y700 付近で触れる）は同プレイで共存させない。吊り看板系（`AR-01-sign-rim`・`AR-01-sign-old-shop`）と `AR-01-tube-end` は面の手前の物なので併存可（hole で戸の手前に残す）。
-- **相互参照 / 重複精査**: 同カメラの `AR-01-wall-faces`（左壁に顔写真を敷き詰め）は「同じ物を一面に敷き詰める」型。**本件は敷き詰めを避け、「戸が奥へ向かって 1 枚ずつ大きく見える（遠近が効かない）」型に振った**ので、素材（戸の立面 vs 顔写真）・面（反対側の壁）・型（敷き詰め vs 遠近の破れ）のどれも別。同プレイに出うる（排他の対ではない）。他カメラの面の敷き詰め（`AR-06-*` ポスター・CAM07 の時計・CAM03 の白紙）とは素材が別。
 
 ### 小物
 
