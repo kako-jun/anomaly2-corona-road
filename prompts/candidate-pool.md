@@ -955,7 +955,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 | --- | --- | --- | --- | --- | --- |
 | AR-05-morning-glory-wall | CAM05-E11 | surreal / surreal | **大面積** | `118,8,280,598`（162x590、95,580 px²。矩形） | late / obvious |
 | AR-05-aisle-silhouette | CAM05-E06 | person / add_person | 小物 | `78,338,106,405`（28x67） | mid / medium |
-| AR-05-aisle-light-streak | CAM05-E14 | environment / state_change | 小物 | `4,436,108,490`（104x54） | mid / medium |
 | AR-05-aisle-goldfish | CAM05-E14 | object / add_creature | 小物 | `60,520,104,562`（44x42） | mid / medium |
 | AR-05-door-fingers | CAM05-E09 | person / add_person | 小物（CR-05-05 の昇格） | `562,230,596,330`（34x100） | mid / medium |
 | AR-05-ceiling-shirt | CAM05-E01 | object / add_object | 小物 | `243,8,303,50`（60x42） | mid / medium |
@@ -1042,40 +1041,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 - **分類 / フェーズ / 目立ち度**: person / mid / medium
 - **視認性の注意**: 明るい床の光だまりに黒い影なので対比は強い。足元の影を長く濃くして接地させる。細い網の柄は消えやすいので、帽子の幅と網の先の丸い枠を大きめに。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'person'` / `anomaly_type: 'add_person'` / `detail: '左奥の通路の明るい床に、麦わら帽子と虫取り網の少年の後ろ姿の黒い影が一つ立つ（夏休みの記憶）'` / `candidate_id: 'AR-05-aisle-silhouette'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 後ろ姿の人物系の既存は他カメラの通路奥の店員・紙袋の小柄な人物・中折れ帽の老人と、`AR-05-old-woman-in-glass`（CAM05・割烹着の老婆、正面ガラス内）。別人物（少年の影）・別の場所（通路）。麦わら帽子は `CR-NEW-01-03`（CAM01・物）と別。
-
----
-
-### AR-05-aisle-light-streak — 左奥通路の光だまりから、光源の無い左へ細長い光の帯が伸びる
-
-- **camera / element_id**: CAM05 / CAM05-E14
-- **物と変化**: 左奥通路の床の白い光だまりから、光源のない左（壁・店先の側）へ向かって、細長い光の帯が一本、床の上を走るように伸びる。光だまりの形が状況に合わず変わる異変で、新しい物は足さない（猫の案 `AR-05-aisle-cat` は台帳に猫が 5 件あり 7 件目になるため差し替えた。CR-05-25 は候補プールに残す）
-- **最終 box**（baseline px）: `4,436,108,490`（104x54）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,380,256,551`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (4,56)-(108,110)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles at the far left, the bright white pool of light on the floor sends out one long narrow straight band of white light across the tiles toward the left edge of the frame, in a direction where there is no light source above, with soft edges and a brightness equal to the existing pool. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the thin-legged stand, the shop fronts above, the dark wall at the right or the existing light pool itself. Place the changed area, including any soft glow, centered at about 22% from the left and 49% from the top of the image, occupying roughly 41% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles at the far left, the bright white pool of light on the floor stretches out into one long tapered wedge of white light that narrows as it runs across the tiles toward the left edge of the frame, like light leaking through an open door although there is no door and no light source there, with soft edges and a brightness equal to the existing pool. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the thin-legged stand, the shop fronts above, the dark wall at the right or the existing light pool itself. Place the changed area, including any soft glow, centered at about 22% from the left and 49% from the top of the image, occupying roughly 41% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles at the far left, the bright white pool of light on the floor is followed by three separate elongated oval patches of white light lined up one after another across the tiles toward the left edge of the frame, each stretched in the same direction, in a place where there is no light source above, with soft edges and a brightness equal to the existing pool. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the thin-legged stand, the shop fronts above, the dark wall at the right or the existing light pool itself. Place the changed area, including any soft glow, centered at about 22% from the left and 49% from the top of the image, occupying roughly 41% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 元の光だまりの形・タイル目地・左端のスタンド・左上の店先。
-- **最寄り既存 overlay と実測距離**: AR-05-joint-into-glass まで 31.0px（box 基準・矩形間のユークリッド距離、次点 AR-05-film-poster 78.2px、台帳 CAM05 の overlay_origin/dimensions から 2026-11-05 に実測。大面積 2 件は除く）。本節の他の項では AR-05-aisle-silhouette まで 31.0px（上）、AR-05-aisle-goldfish まで 30.0px（下）。 **余裕が小さい（37px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで広がる。30px 割れなら、帯の長さを縮めて box を左右から詰める）。
-- **分類 / フェーズ / 目立ち度**: environment / mid / medium（anomaly_type: state_change）
-- **視認性の注意**: 光だまりの白に対し、帯は暗いグレーの床の上に出るので、帯の縁をはっきり取り、光だまりと同じ明るさにする。薄いと床の反射に溶ける。視認性が下限を割りそうなら、帯を太く短く（box 全体を使う）して作り直す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'environment'` / `anomaly_type: 'state_change'` / `detail: '左奥の通路の床の光だまりから、光源のない左へ向かって細長い光の帯が伸びる'` / `candidate_id: 'AR-05-aisle-light-streak'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 光・反射の既存は `AR-05-floor-glare-backside`（E15・床反射にガラス裏側）・`AR-05-glass-light`（ガラス内の光）。通路の光だまり自体の形を変える件は台帳に無い（2026-11-05 の grep）。silhouette とは 31px 離れた別の場所（同じ光だまりの上下）だが、同プレイで同時に出すと「光だまりの異変」が二重になるので避ける（推奨）。
 
 ---
 
