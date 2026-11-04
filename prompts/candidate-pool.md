@@ -537,24 +537,6 @@
 
 ### CAM07 — Maintenance Corridor
 
-#### AR-08-n6 — 紙の角凧
-
-- **camera / element_id**: CAM08 / CAM08-E01
-- **物と変化**: 天井に、無地の赤い紙の角凧が一枚引っかかり、糸が垂れる
-- **最終 box**（baseline px）: `440,12,580,78`（140x66）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `382,0,638,171`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (58,12)-(198,78)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the bright gray ceiling at the top, one plain red paper rectangular kite (a flat diamond-shaped kite of plain red paper on a thin bamboo frame) is caught against the ceiling, with a thin string dangling down from one corner, completely plain with no drawing, no text and no pattern. Make it about 1.3x larger than real scale. Add a faint soft shadow of the kite and the string on the ceiling. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the black speckles and seams of the ceiling, the round dark fixture near it or the pillar below. Place the object, including its shadow, centered at about 50% from the left and 26% from the top of the image, occupying roughly 55% of the image width and 39% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 天井の黒い斑点と継ぎ目・近くの丸い暗い器具・下の柱。
-- **最寄り既存 overlay と実測距離**: AR-08-fixture-dark-red まで 32.8px（box 基準・矩形間のユークリッド距離、次点 AR-08-vent-paper-plug 43.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 天井は明るい灰色で、赤が強く出る。糸は細いので暗く太めに。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '天井に、無地の赤い紙の角凧が一枚引っかかり糸が垂れる'` / `candidate_id: 'AR-08-n6'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 天井に引っかかる紙物: AR-07-paper-airplane-ceiling（CAM07・白い紙飛行機）。別カメラ・赤い角凧。
-
 ## Runtime / 背景非依存の異変在庫
 
 画像差分を作らず、CSS / Canvas / Web Audio / 状態管理で出す異変の在庫（旧・異変在庫メモから移設）。写真要素に紐づかないため要素IDは持たない。採用時は画像異変と別の実装タスクにし、`anomalies.yaml`（画像差分台帳）には載せない。
