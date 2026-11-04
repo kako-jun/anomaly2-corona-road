@@ -4153,4 +4153,4 @@ anomalies:
     overlay_origin: '(365,357)'
     dimensions: '44x75'
     review_status: 'composited'
-    note: '最近傍の既存の小物は AR-02-chalk-hopscotch（34.0px）。次点 AR-02-stool 約74px（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。大面積の AR-02-floor-footprints とは bbox が重なる（排他。仕様どおり同プレイで共存させない）。テイク A（青白い細い光の線）を採用。box は仕様（368,352,408,426）から（367,350,412,430）へ。左の AR-02-chalk-hopscotch と 30px 以上空けるため --dilate 0 --feather 1 で絞った（目地の上端の一部は切れる）。CR-02-13・14・15・16（床タイル 1 枚・水たまり）とは排他。 ゲーム画面とライブ blink での確認は未了。'
+    note: '最近傍の既存の小物は AR-02-chalk-hopscotch（34.0px）。次点 AR-02-stool 約74px（最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。大面積の AR-02-floor-footprints とは bbox が重なる（排他。仕様どおり同プレイで共存させない）。テイク A（青白い細い光の線）を採用。box は仕様（368,352,408,426）から（367,350,412,430）へ。左の AR-02-chalk-hopscotch と 30px 以上空けるため --dilate 0 --feather 1 で絞った（目地の上端の一部は切れる）。CR-02-13・14・15・16（床タイル 1 枚・水たまり）とは排他。併存可（bbox が重ならず面か物が別）: AR-02-hatch-ajar（91px、床の点検口の蓋）・AR-02-floor-ripple（182px、同じ床の別の位置で水の表現とも別物）・AR-02-wall-bird-triplet（217px、壁の装飾で面が別）。 ゲーム画面とライブ blink での確認は未了。'
