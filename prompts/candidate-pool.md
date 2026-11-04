@@ -417,24 +417,6 @@
 - **視認性の注意**: 箱の幅が46pxと狭い。縦長に見えるよう取っ手を立てる。淡い竹色は暗めの床に対比するが、壁際の暗い巾木に溶けないよう、巾木から離して床の中央側に置く。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左の壁際の床に竹編みの買い物かごが置かれる（昭和の買い物。無地）'` / `candidate_id: 'CR-NEW-01-05'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 同種の買い物かご: AR-04-basket（CAM04・赤い買い物かごがガラスに映る）。別カメラ・別物（竹・実物）。
 
-#### CR-NEW-01-06 — タピオカドリンクのカップ
-
-- **camera / element_id**: CAM01 / CAM01-E17
-- **物と変化**: 床に半分飲みかけのミルクティー色のカップと太いストローが置かれている（令和の若者の持ち物。無地・ロゴなし）。※設計やり直し: 旧box (110,660,185,715) は竹ぼうきと重なるため、右前景の空きへ移した
-- **最終 box**（baseline px）: `525,700,585,768`（60x68）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `419,648,675,819`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (106,52)-(166,120)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles in the lower right of the frame, place one half-drunk bubble tea cup standing upright: a clear plastic cup filled to about the middle with opaque milk-tea beige drink and a layer of black tapioca pearls at the bottom, a thick wide black straw sticking out of a plain flat lid, completely plain with no logo, no text and no printed pattern on the cup or the lid. Make it about 1.5x larger than real scale. Give it a strong dark contact shadow and a small glossy highlight on the cup. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the metal threshold strip and the blue container at the right edge, the light pool or the tile joints. Place the object, including its shadow, centered at about 53% from the left and 50% from the top of the image, occupying roughly 23% of the image width and 40% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 右の金属の敷居帯と青い容器・光だまり・タイル目地。
-- **最寄り既存 overlay と実測距離**: AR-01-red-rubber-ball まで 32.0px（box 基準・矩形間のユークリッド距離、次点 AR-01-floor-sign-reflection-inverted 34.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 透明カップは床に溶けるので、不透明寄りのミルクティー色と底の黒い粒、黒い太ストローで対比を作る。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '床にミルクティー色のカップと太いストローが置かれる（令和の若者の持ち物。無地・ロゴなし）'` / `candidate_id: 'CR-NEW-01-06'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 飲み物系: AR-02-coffee（CAM02・台のコーヒーカップ）・AR-04-paper-cup（CAM04）。別カメラ・令和の物。
-
 ### CAM02 — Main Corridor
 
 #### CR-NEW-02-01 — 臙脂色の座布団
