@@ -664,7 +664,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
 | AR-03-tube-light-bent | environment | state_change | 右上の蛍光灯の光が、床の反射と違う向きへ折れ曲がる | 小物 |
 | AR-03-ceiling-eye | surreal | surreal | 天井の暗い隙間から白い目が一つ覗く | 小物 |
 | AR-03-dark-tile | object | state_change | 通路中央の床に座布団ほどの暗いタイルが一枚だけ混じる | 小物 |
-| AR-03-shutter-raised | environment | state_change | 右のシャッターの裾が少し上がる | 小物 |
 | AR-03-roll-vanish | object | remove_object | 壁際の銀白色の巻いた物が消える | 小物 |
 
 - **配置の実測**（2026-11-05、`uv run --with pyyaml --with numpy --with pillow python3` で台帳の CAM03 全 30 件の `overlay_origin` と overlay の実際の alpha bbox を測定）: 小物 7 件の box は、大面積 2 件（AR-03-shutter-blank-papers (0,102,258,650)・AR-03-floor-tatami (29,457,676,900)）を除く既存 overlay の alpha bbox から**30px 以上**離れ、本節の他の小物 box どうしも 30px 以上離れている（最小は 30.0px で、AR-03-floor-line-break↔AR-03-shutter-raised と AR-03-tube-light-bent↔AR-03-ceiling-eye。最寄りは各項に記載）。羽毛ぼかしやにじみで overlay が広がる分、制作後に alpha bbox で測り直す（36px 未満の項は特に必須）。大面積 AR-03-floor-shadows と小物の box 重なりは項に px² で記載（README の大面積の例外。排他は項に明記）。
@@ -847,34 +846,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
   ```
 - **相互参照 / 重複精査**: AR-03-blue-floor-tile（タイルの色が青）・AR-03-tile-diagonal（タイルの向き）とは別の面と色。AR-03-sunken-opening-floor（奥の開口の床が沈む）とは場所も見え方も別。CR-03-xx に暗いタイルの候補は無い。
 - **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-floor-shadows / AR-03-floor-line-break（同じ床の面）。併存可=壁・天井・シャッターの異変。
-
-### AR-03-shutter-raised — 右のシャッターの裾が少し上がる
-
-- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E10
-- **物と変化**: 右側の閉じた横縞シャッターの下端が、床から少し持ち上がり、隙間の奥が真っ暗になる。CR-03-12（右側の閉じたシャッターが上がる）の昇格で、中ほどまでは上げず裾だけに絞る。
-- **box (x1,y1,x2,y2)**: (648,350,676,392)（28x42）
-- **最寄り既存 overlay と実測距離**: AR-03-shutter-faded-poster (96.0)、次点 AR-03-sunken-opening-floor (114.0)。新規小物との最寄りは AR-03-floor-line-break (30.0)・AR-03-dark-tile (33.4)
-- **6倍クロップ範囲**: 6倍クロップ (420,286)–(676,457)（256x171）。box は窓内で (1368,384)–(1536,636)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the bottom of the grey horizontal-slat roll-up shutter on the far right edge of the frame (about x=1368 to 1536, y=384 to 636 in the 1536x1024 frame) is lifted off the floor by a gap of about 150 px in this enlarged view. Through the gap there is only pitch black darkness. The slats above are unchanged; the lowest slat edge now hangs in mid-air with a thin bright rim; a dark strip of floor is visible only inside the gap. Do not change the rest of the shutter, the wall, the floor or anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the right-hand shutter, at the lower end only (about x=1368 to 1536, y=384 to 636 in the 1536x1024 frame), is raised so that a black horizontal gap about 120 px high opens between the last slat and the floor. Darkness fills the gap completely, nothing is visible inside. The shutter slats keep their original look. Everything else stays exactly the same. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the bottom edge of the right shutter lifts off the floor, opening a 180 px high very dark gap over its visible width (x=1368 to 1536, y=384 to 636 in the 1536x1024 frame). The gap is black. The raised bottom slat catches a little cold light along its lower edge. Keep the wall, the floor tiles and every other element unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-03-shutter-raised'
-    candidate_id: 'CR-03-12'
-    camera_id: 'CAM03'
-    element_id: 'CAM03-E10'
-    base_photo: 'public/images/cam3.webp'
-    category: 'environment'
-    anomaly_type: 'state_change'
-    location: 'CAM03-E10 の右端シャッターの下端、差分左上 (648,350) 付近（貼り込み後に再計測）'
-    detail: '右側の閉じたシャッターの下端が床から持ち上がり、隙間の奥が真っ暗になる。'
-    overlay: 'assets/anomaly-overlays/cam03/shutter-raised.webp'
-    # phase / 目立ち度: mid / medium
-    note: '最寄り既存 overlay は AR-03-shutter-faded-poster（box 距離 96px）。CR-03-12 の昇格（採用時は candidate-pool の CR-03-12 の行を削除）。右端で幅が 28px と狭く check-visibility が通らない可能性が高い。制作後に `check-visibility.py --id AR-03-shutter-raised` を必ず通し、下限未満なら隙間を高くして作り直す（それでも通らなければこの節へ戻す）。大面積 AR-03-floor-shadows とは併存可（box 重なり 1,176 px²、影は接地部で止める）。'
-  ```
-- **相互参照 / 重複精査**: CR-03-12（右シャッターが中ほどまで上がる）の昇格案で、裾の隙間だけに絞った変化。CR-03-03（右シャッターの板一枚の間隔が倍）は別の変化。CAM02 の AR-02-shop-reopens（左シャッター）とは別カメラ・別の物。台帳に CAM03 のシャッター開閉は無い。
 
 ### AR-03-roll-vanish — 壁際の銀白色の巻いた物が消える
 
