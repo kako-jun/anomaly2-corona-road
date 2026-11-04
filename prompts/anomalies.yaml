@@ -3235,3 +3235,21 @@ anomalies:
     dimensions: '82x86'
     review_status: 'composited'
     note: "最近傍の既存は AR-01-floor-sign-reflection-inverted（32.0px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）。 overlay を生成位置から (0,-14) px ずらして配置。標準でも見える（最大差分224・平均差分76.0・n25=3230、check-visibility 実測）。つまみでさらに見やすくなる。ゲーム画面とライブ blink での確認は未了。"
+  - id: 'AR-05-curtains-open-cafe'
+    candidate_id: 'CR-LG-05-01'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E08'
+    base_photo: 'public/images/cam5.webp'
+    category: 'surreal'
+    anomaly_type: 'state_change'
+    phase: 'late'
+    subtlety: 'obvious'
+    mask_box_1000: '(417,121)–(808,596)'
+    location: 'CAM05-E08、正面ガラス区画、差分左上 (282,109) px'
+    detail: '正面ガラスのカーテンが全て開き、無人の昭和の喫茶店の暖かい店内が見える'
+    generation_prompt: "Method: a 676x450 window (y100-550) of the baseline was edited with $imagegen (prompt below), pasted back with scripts/composite-polygon.py restore, then only the six glass panes (mullions, brick band, green sign, door glass excluded) were cut out with composite-polygon.py cutout. Prompt: Edit the attached surveillance camera photo of an underground shop front with a large glass facade covered by grey curtains. Make ONLY this change: all grey curtains behind the glass are drawn open, and through the glass we see the warm interior of an old Showa-era Japanese coffee shop with nobody in it: warm amber lamps, a wooden counter, round stools upholstered in red vinyl (one stool pulled slightly out), a shelf lined with plain unlabeled cream-soda glasses. The interior is clearly warmer and brighter than the corridor. The metal window mullions and transoms stay exactly where they are, and the existing faint reflections on the glass stay visible. The corridor floor, ceiling, green sign, black side panel and brick band remain cold blue-grey and untouched; the warm light must not spill onto the floor. No menus, signs, shop names, lettering or logos. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source."
+    overlay: 'assets/anomaly-overlays/cam05/curtains-open-cafe.webp'
+    overlay_origin: '(282,109)'
+    dimensions: '264x427'
+    review_status: 'composited'
+    note: "大面積。CAM05-E08。alpha bbox 264x427=112,728 px²（画像比 18.5%）。排他（同プレイ非共存。いずれも同じガラス面の部分変化・反射で、本件の全面開放＋店内に上書きされる）: AR-05-glass-light・AR-05-old-woman-in-glass・AR-05-curtain-open・AR-05-sign-in-glass・AR-05-amber-pane・AR-05-joint-into-glass・AR-05-chair-reflection・AR-05-curtain-mend・AR-05-wind-chime。併存可: AR-05-duplicate-light（天井。重なり 1,899 は bbox のみ）・AR-05-brick-round・AR-05-blue-brick（レンガ帯は保持）・AR-05-brown-column（隣接 0px、角柱は保持）。最近傍の非排他は AR-05-hatch-stain（28px）。2 テイクから 1 つ採用。ゲーム画面とライブ blink での確認は未了。"
