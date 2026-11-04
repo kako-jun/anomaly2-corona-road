@@ -805,29 +805,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 - **台帳登録時**: `id: 'AR-08-floor-tile-groove'` / `candidate_id: 'AR-08-floor-tile-groove'` / `element_id: 'CAM08-E16'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `location: 'CAM08-E16、柱の右の床。差分左上 (x,y) px'` / `detail: '柱の右の床のタイル一枚が一段沈み、四辺の目地が黒い溝になる'` / `phase: 'mid'` / 目立ち度 `medium` / note「小物。CAM08-E16。最近傍の既存は AR-08-panel（32.0px、alpha bbox 基準）。」
 - **相互参照 / 重複精査**: 床の沈みは候補 CR-01-40（CAM01・タイル一枚が隣より少し沈む。溝なし・subtle で別カメラ）と近縁だが、本件は四辺が黒い溝になる強い変化で、別カメラなので許容。AR-08-tile-concentric（CAM08・タイルの模様）は模様の変化で別物。床の置き物系（AR-08-n1〜n5）は「物」で別。
 
-### AR-08-pillar-sparrow — 柱の根元の雀
-
-- **camera / element_id**: CAM08 / CAM08-E11（中央の大きな四角柱。根元の台座の角）
-- **物と変化**: 柱の根元の左前の角、床と台座の境に、茶色い雀が一羽とまっている。地下街に鳥がいるはずのない、小さな違和感（昭和の店先では雀が入り込んで巣を作った記憶と結びつく）。
-- **最終 box**（baseline px）: `256,380,326,442`（70x62）。
-- **6倍クロップ**（baseline px）: `163,326,419,497`（256x171）。box はクロップ内の (93,54)-(163,116)。
-- **生成プロンプト**（3 テイク。T1 は正面向き、T2 は横向きで頭を傾ける、T3 は一回り大きく羽を少し広げる）:
-
-  T1:
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, the pillar, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: at the front-left corner where the pale floor meets the base of the square pillar, place one small brown house sparrow standing on the floor facing the camera, with a chestnut-brown back, a pale grey belly and a dark bib under the beak. Make it about 1.5x larger than real scale so it reads clearly. Give it a strong dark contact shadow on the floor. Draw it as a natural bird photographed by a dim surveillance camera: no text, no tag, no ring, nothing in its beak. Do not touch the pillar, the electrical outlet on the pillar, the wall, the bright floor reflection or the tile joints. Place the bird, including its shadow, centred at about 50% from the left and 50% from the top of the image, occupying roughly 27% of the image width and 36% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  T2: T1 の "standing on the floor facing the camera" を "standing on the floor in side view, head turned and tilted slightly toward the camera" に置き換え、他は同じ（全文）。
-
-  T3: T1 の "about 1.5x larger" を "about 2x larger" に、"standing on the floor facing the camera" を "standing on the floor facing the camera with both wings held slightly open" に置き換え、他は同じ（全文）。
-- **保持するもの**: 柱の面・台座の面取り・コンセント（E13）・床の光（E17）。
-- **最寄り既存 overlay と実測距離**: AR-08-pillar-second まで 32.0px、次点 AR-08-floor-reflection-no-pillar 34.0px（box 基準）。余裕が薄い（30px との差は 2px）ので、制作後に台帳に載る最終 overlay の alpha bbox で再測定する（羽毛・接地影で広がる。30px を割ったら動かす）。
-- **分類 / フェーズ / 目立ち度**: object（生き物は README の暫定でこの分類）/ early / medium
-- **視認性の注意**: 台座の足元は白い床反射（E17）に近く白飛びしやすい。茶色の背と暗い接地影で沈めないようにする。小さい（約 50x40px）ので 1.5〜2 倍に誇張する。**check-visibility の想定**（README の視認性基準・scripts/check-visibility.py。標準つまみで最大差 40 以上・平均差 3.0 以上、差分 25 以上の画素が 100 個以上または overlay の alpha 面積の 25% 以上）: 雀は誇張後 約 75x60px（alpha 面積 数千 px²）で、茶色の背・暗い接地影が白い床反射との差を出すので通る見込みだが、羽毛の縁が床に溶けると平均差が 3.0 に届かないので、登録後に `uv run scripts/check-visibility.py --id AR-08-pillar-sparrow` を必ず通す。通らなければ T3（2 倍・羽を開く）を採用する。
-- **台帳登録時**: `id: 'AR-08-pillar-sparrow'` / `candidate_id: 'AR-08-pillar-sparrow'` / `element_id: 'CAM08-E11'` / `category: 'object'` / `anomaly_type: 'add_creature'` / `detail: '中央の柱の根元の左前の角に、茶色い雀が一羽とまっている'` / `phase: 'early'` / 目立ち度 `medium` / note「小物。CAM08-E11。最近傍の既存は AR-08-pillar-second（32.0px）。」
-- **相互参照 / 重複精査**: 生き物系は AR-08-cat（CAM08・左の店先の猫。別の位置・別の生き物。猫と鳥なので観察対象が別）・AR-02-cat など猫の反復モチーフ。柱まわりの既存は AR-08-pillar-notice（正面の貼り紙）・AR-08-pillar-second（裏の二本目の柱）で、いずれも別の面・別の変化。
-
 ### AR-08-ceiling-light-inverse — 光らずに影を放つ天井灯
 
 - **camera / element_id**: CAM08 / CAM08-E01（天井面。E04 の丸い天井灯と同じ形を右上に置く）
