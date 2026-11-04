@@ -363,24 +363,6 @@
 
 ### CAM01 — North Entrance
 
-#### CR-NEW-01-03 — 麦わら帽子
-
-- **camera / element_id**: CAM01 / CAM01-E17
-- **物と変化**: 床に無地の麦わら帽子が伏せて置かれている（夏の記憶）
-- **最終 box**（baseline px）: `385,815,460,885`（75x70）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `294,729,550,900`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (91,86)-(166,156)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark foreground floor tiles, place one plain woven straw hat lying crown-up with its wide brim flat on the floor, natural pale straw color, completely plain with no ribbon, no band and no print. Make it about 1.3x larger than real scale. Give it a strong dark contact shadow around the brim. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the puddle-like light patch near it or the blue container at the right edge. Place the object, including its shadow, centered at about 50% from the left and 71% from the top of the image, occupying roughly 29% of the image width and 41% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に タイル目地・近くの光だまり・右端の青い容器。
-- **最寄り既存 overlay と実測距離**: AR-01-floor-puddle-light まで 33.0px（box 基準・矩形間のユークリッド距離、次点 AR-01-red-rubber-ball 34.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 淡い麦わら色は手前の暗いタイルと強く対比。つばの縁を明るく、影を濃く。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '床に無地の麦わら帽子が伏せて置かれる（夏の記憶）'` / `candidate_id: 'CR-NEW-01-03'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 同種の帽子: AR-03-white-cap（CAM03・奥の開口の床の小さな白い帽子）。別カメラ・別物（麦わら・手前の前景）。
-
 #### CR-NEW-01-04 — 万国旗
 
 - **camera / element_id**: CAM01 / CAM01-E01

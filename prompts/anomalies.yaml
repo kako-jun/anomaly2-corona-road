@@ -3416,3 +3416,21 @@ anomalies:
     dimensions: '165x541'
     review_status: 'composited'
     note: '大面積（bbox 165x541=89,265px²、画像の14.7%）。CAM02-E07。排他（同プレイで共存させない。同じ店先の面を覆う）: AR-02-shop-reopens (41,250) / AR-02-open-sign (8,064) / AR-02-newspaper (6,298) / AR-02-cat (6,305) / AR-02-wrapping-paper (1,026)。併存可（床。画用紙はシャッター下端の接地線で止める）: AR-02-puddle (16,874) / AR-02-cigarette (2,294) / AR-02-receipt (2,420) / AR-02-tile (896) / AR-02-tile-color (1,118)（重なり px²、box 重なり表の機械出力）。同カメラの大面積 CR-LG-02-01（床一面の足跡）とは bbox が重なるが面は別（床とシャッター）。画用紙は縦枠の線上にも貼らず、枠で止めた。画像の出来: 1 枚の絵の複製（人型 4・赤い家・太陽）。ゲーム画面とライブ blink での確認は未了。同カメラの大面積 CR-LG-02-01（AR-02-floor-footprints）とは bbox が重なる（165x260）が面は床とシャッターで別。alpha 重なりは 267 px² と小さく、併存可。画像の調整: 画用紙は彩度を落として黄ばませ、シャッターの明暗に合わせて暗くした。人型の顔は黒く塗りつぶし、数枚の紙に欠け（シャッターが覗く穴）と剥がれの縁を足した。'
+  - id: "AR-01-straw-hat"
+    candidate_id: "CR-NEW-01-03"
+    camera_id: "CAM01"
+    element_id: "CAM01-E17"
+    base_photo: "public/images/cam1.webp"
+    category: "object"
+    anomaly_type: "add_object"
+    phase: "early"
+    subtlety: "medium"
+    mask_box_1000: "(567,913)–(686,981)"
+    location: "CAM01-E17、差分左上 (383,822) px"
+    detail: "床に無地の麦わら帽子が伏せて置かれる（夏の記憶）"
+    generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the chosen hat was cut out of the take, scaled to 0.72 and moved about 30 px left (the model placed it too far right, onto the neighbouring ball's 30 px margin), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark foreground floor tiles, place one plain woven straw hat lying crown-up with its wide brim flat on the floor, natural pale straw color, completely plain with no ribbon, no band and no print. Make it about 1.3x larger than real scale. Give it a strong dark contact shadow around the brim. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the puddle-like light patch near it or the blue container at the right edge. Place the object, including its shadow, centered at about 50% from the left and 71% from the top of the image, occupying roughly 29% of the image width and 41% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
+    overlay: "assets/anomaly-overlays/cam01/straw-hat.webp"
+    overlay_origin: "(383,822)"
+    dimensions: "80x61"
+    review_status: 'composited'
+    note: "最寄りの既存は AR-01-floor-puddle-light と AR-01-red-rubber-ball（どちらも 31px、最終 overlay の alpha bbox の矩形距離の実測、重なりなし）。同種の帽子 AR-03-white-cap は別カメラ・別物。 麦わら帽子は生成結果から切り出し、約0.72倍に縮めて左へ寄せて貼った（元の配置では近傍の赤いゴムボールと30px未満になるため）。 ゲーム画面とライブ blink での確認は未了。"
