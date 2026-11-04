@@ -824,7 +824,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 
 | ID | 要素 | category / anomaly_type | 種別 | box（baseline px） | フェーズ / 目立ち度 |
 | --- | --- | --- | --- | --- | --- |
-| AR-05-aisle-goldfish | CAM05-E14 | object / add_creature | 小物 | `60,520,104,562`（44x42） | mid / medium |
 | AR-05-door-fingers | CAM05-E09 | person / add_person | 小物（CR-05-05 の昇格） | `562,230,596,330`（34x100） | mid / medium |
 | AR-05-ceiling-shirt | CAM05-E01 | object / add_object | 小物 | `243,8,303,50`（60x42） | mid / medium |
 | AR-05-floor-child-shadow | CAM05-E13 | person / reflection | 小物 | `597,598,672,752`（75x154） | late / medium |
@@ -840,40 +839,6 @@ CAM05 (Emergency Stairwell, `cam5.webp`, 676x900) 向けの新規の画像異変
 - 型の重複回避: 猫は他カメラに既存（`AR-02-cat` / `AR-08-cat` / `AR-07-stairs-cat` / `AR-03-walking-cat` ほか台帳に 5 件）で、これ以上は足さない（本節では猫の案を `AR-05-aisle-light-streak` に差し替えた）。**植物・蔓・花、金魚、ハンガーの服、床の子供の影だけ**は台帳・候補プールのどちらにも無いことを `grep` で確認した（2026-11-05）。ケンパ・ランドセル・水たまり・靴は既存と型が被るので使わない。
 - **remove_object / displace / text_change / multiply を入れなかった理由**（2026-11-05 に左通路・天井・右上を原寸で見直した）: 候補にした左通路の天井の丸い通気口は `AR-05-white-ribbon`（box 重なり）、左店先の丸い看板は白いリボンまで 12px、右上の防犯ドームは `AR-05-duplicate-light` の box 内で、いずれも 30px の空きが取れない。左通路は小物 3 件（silhouette・light-streak・goldfish）で 30px 余白を使い切っており、これ以上は足せない。文字を含む看板の変更は、架空化済みの基準画像ができるまで具体化しない。この 4 種は別カメラ側で補う。
 - **構造の偏り是正**: 7 件の分類は surreal 1・person 3（add_person 2 + reflection 1）・add_creature 1（金魚）・environment/state_change 1（光の帯）・add_object 1。台帳の偏り（object 137 / add_object 105）に足すのは add_object の 1 件だけ。
-
----
-
-### AR-05-aisle-goldfish — 床に置かれた金魚の袋（縁日）
-
-- **camera / element_id**: CAM05 / CAM05-E14
-- **物と変化**: 左奥通路の床に、水を入れた透明なビニール袋が一つ置かれ、赤い金魚が一匹泳いでいる（縁日の金魚すくいの記憶。袋の口は輪ゴムで縛られ、模様・文字はない）
-- **最終 box**（baseline px）: `60,520,104,562`（44x42）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,450,256,621`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (60,70)-(104,112)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles, place one small transparent plastic bag filled with water, its mouth tied with a plain rubber band, sitting upright on the floor, with a single small bright orange-red goldfish swimming inside, completely plain, with no print and no label on the bag. Make it about 1.5x larger than real scale and give the goldfish a strongly saturated orange-red color so that it reads clearly. Add a soft bright highlight on the water bag and a soft dark contact shadow on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the white floor reflections, the black wall at the right or anything else. Place the object, including its shadow, centered at about 32% from the left and 53% from the top of the image, occupying roughly 17% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles, place one small transparent plastic bag filled with water, its mouth tied with a plain rubber band, leaning slightly to one side on the floor, with a single small bright orange-red goldfish near the top of the water seen from the side, completely plain, with no print and no label on the bag. Make it about 1.5x larger than real scale and give the goldfish a strongly saturated orange-red color. Add a bright long highlight along the lower edge of the water bag and a soft dark contact shadow on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the white floor reflections, the black wall at the right or anything else. Place the object, including its shadow, centered at about 32% from the left and 53% from the top of the image, occupying roughly 17% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles, place one small transparent plastic bag filled with water, its mouth tied with a plain rubber band that makes a large visible knot, sitting upright on the floor, with a single small bright orange-red goldfish swimming near the bottom of the bag facing the camera, completely plain, with no print and no label on the bag. Make it about 1.5x larger than real scale and give the goldfish a strongly saturated orange-red color. Add a bright ring-shaped reflection on the water surface and a soft dark contact shadow on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the white floor reflections, the black wall at the right or anything else. Place the object, including its shadow, centered at about 32% from the left and 53% from the top of the image, occupying roughly 17% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 床の白い反射・タイル目地・右の黒い側面。
-- **最寄り既存 overlay と実測距離**: AR-05-joint-into-glass まで 35.0px（box 基準、次点 AR-05-brown-column 151.0px）。本節の他の項では AR-05-aisle-light-streak まで 30.0px。 余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 明るい光だまりに赤橙の小さな魚なので、色の彩度を上げて袋の縁を明るく。透明な袋は背景に溶けやすいので、水面の反射と縛り口を大きめに。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_creature'` / `detail: '左奥の通路の床に、金魚が一匹入った水の袋が置かれている（縁日の記憶。無地）'` / `candidate_id: 'AR-05-aisle-goldfish'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 金魚は台帳・候補プールのどちらにも無い（2026-11-05 の grep）。生き物の既存は猫系のみ（本節では猫を足さない）。
 
 ---
 
