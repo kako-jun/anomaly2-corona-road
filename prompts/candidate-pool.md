@@ -572,35 +572,12 @@ CAM 07（Maintenance Corridor、`cam7.webp` 675x900）に足す画像異変 7 �
 
 | ID | 対象 | category / anomaly_type | box（x1,y1,x2,y2） | phase / 目立ち度 |
 | --- | --- | --- | --- | --- |
-| AR-07-reflection-cut | E17 床左の白い反射 | surreal / state_change | `125,580,190,670`（65x90） | mid / medium |
 | AR-07-tile-mirror | E16 床の左下 | surreal / state_change | `96,770,206,842`（110x72） | early / medium |
 | AR-07-mini-door | E16（扉 E13 の縮小コピー） | surreal / duplicate | `240,560,286,638`（46x78） | mid / medium |
 | AR-07-glass-crack | E06 左のガラス | environment / state_change | `2,570,46,680`（44x110） | mid / medium |
 | AR-07-exit-sign-gone | E14 緑の非常灯 | object / remove_object | `592,128,618,158`（26x30） | late / medium |
 | AR-07-ceiling-tile-yellow | E01 天井板（昇格 CR-07-21） | environment / color_shift | `440,12,500,46`（60x34） | early / subtle |
 
-### AR-07-reflection-cut
-
-- **カメラ**: CAM07、対象 CAM07-E17（床左側の長い白色蛍光灯反射。`(115,462)–(200,748)` 付近。元画像で x 135〜185 の細長い白い帯）。
-- **物と変化**: 床左の白い反射の帯の一部が、辺の真っ直ぐな四角形に切り取られ、その中だけタイル色（灰色の床と暗い目地）に戻る（surreal / state_change）。反射は物理的には四角く切れないので、「画像を切り抜いたような」違和感になる。切り抜きの縁は鋭く、軸に平行にそろえる。
-- **box**: `125,580,190,670`（65x90）。帯の幅 約 40〜50px に左右の余白を足した範囲で、帯の高さ 90px ぶんを切る。最寄り既存 overlay（最終 alpha bbox）は AR-07-purple-floor-tile（267,703–433,849）まで **83.8px**、次点 AR-07-mask-on-floor 116.0px、AR-07-n1 131.0px。大面積 AR-07-floor-uphill とは bbox が重なる（小物と大面積。併存可）。大面積 AR-07-floor-frost の下端 y537 から 43px 離れるが、反射の見え方が競合するので**同プレイでは排他**。この節の他の box とは AR-07-mini-door まで 50.0px、AR-07-glass-crack まで 79.0px。
-- **6倍クロップ**: 原画像 `(60,500)–(318,672)`（258x172）。box は窓内で `(387,476)–(774,1011)`。
-- **生成プロンプト（3 テイク）**:
-   - テイク1:
-     ```text
-     $imagegen In this surveillance frame, cut one clean rectangular piece out of the long white fluorescent floor reflection on the left part of the floor at about x 387-774, y 476-1011 (frame pixels): inside a sharp-edged rectangle with perfectly straight horizontal and vertical edges, the bright reflection is gone and the plain grey floor tiles with their dark joints show instead, as if a rectangle of the reflection had been cropped away; above and below the rectangle the white reflection continues unchanged, and the rectangle's edges are hard, not blurred. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク2:
-     ```text
-     $imagegen In this surveillance frame, remove a rectangular window out of the long white fluorescent floor reflection on the left part of the floor at about x 387-774, y 476-1011 (frame pixels): the rectangle is slightly taller than wide, with razor-sharp straight edges, and shows the plain grey tiles and dark tile joints exactly as the floor looks away from the reflection; the reflection stays bright and continuous above and below the rectangle. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-   - テイク3:
-     ```text
-     $imagegen In this surveillance frame, make the long white fluorescent floor reflection on the left part of the floor lose one rectangular section at about x 387-774, y 476-1011 (frame pixels): in that rectangle the glare is replaced by the plain grey floor with its tile joints, the rectangle has hard straight edges that are not parallel to the tile joints' perspective but perfectly axis-aligned in the frame, and the rest of the reflection stays bright. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-     ```
-- **視認性の想定**: 反射の白（輝度 200 超）をタイルの灰（90 前後）へ戻すので max 差は 100 以上、平均差も 3.0 を十分超える見込み。下限を割りそうなのは、切り抜きが小さすぎて「ただの反射の途切れ」に見える点（box の高さ 90px を縮めない）と、羽毛ぼかしで縁が甘くなり四角さが消える点（`--margin` は 8 から試し、縁が丸まるなら小さく）。登録後に `uv run scripts/check-visibility.py --id AR-07-reflection-cut` を通す。
-- **台帳登録案**: `id: 'AR-07-reflection-cut'` / `camera_id: 'CAM07'` / `element_id: 'CAM07-E17'` / `category: 'surreal'` / `anomaly_type: 'state_change'` / `location: 'CAM07-E17 の周辺、差分左上 (125,580) px'` / `detail: '床左の白い反射の一部が四角く切り取られ、タイル色に戻る'` / `phase: mid` / `subtlety: 'medium'` / `candidate_id: 'AR-07-reflection-cut'`。note に最寄り既存 id と最終 alpha bbox 実測距離（制作後に再計測）、「人・動物は描かない。縁は鋭く軸に平行」を書く。
-- **相互参照 / 重複精査**: 床の反射を扱う既存・候補は CR-07-10（左の長い反射が階段の壁面へ垂直に折れて上る。E17・surreal/late）。あちらは反射が壁へ**折れる**形の変化で、本件は反射が**四角く欠ける**形で、見る場所も発見の仕方も違う。同プレイで共存させない（排他。CR-07-10 を制作したら box が重ならないか再確認）。人の影の案（旧 AR-07-long-shadow）は他カメラの影の型と重なるため、この項に差し替えた。
 ### AR-07-tile-mirror
 
 - **カメラ**: CAM07、対象 CAM07-E16（床の左下。反射の帯の左外にある暗いタイル）。
