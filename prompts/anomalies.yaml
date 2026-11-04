@@ -3451,4 +3451,4 @@ anomalies:
     overlay_origin: '(600,399)'
     dimensions: '76x150'
     review_status: 'composited'
-    note: '最近傍の小物は AR-04-red-lantern（33.7px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）、次点 AR-04-puddle（105px）。大面積 AR-04-window-alley の bbox 内（小物は重なってよい。alpha の約8割と重なるが、同カメラで同時に出るのは1件）。生成直後の overlay は (600,368) だったが red-lantern まで 7px だったため、overlay を (0,+31) px ずらして (600,399) に配置した（壁の漆喰テクスチャは縁でわずかにずれる）。相互参照: AR-08-bag・AR-03-paper-bag は別カメラ・別物。画像の出来: 生成りの無地トート、濃い縫い目・ストラップ・フックと影。文字なし。ゲーム画面とライブ blink での確認は未了。'
+    note: '最近傍の小物は AR-04-red-lantern（33.7px、最終overlayのalpha bboxの矩形距離の実測、重なりなし）、次点 AR-04-puddle（105px）。大面積 AR-04-window-alley の bbox 内（小物は重なってよい。alpha の約8割と重なるが、同カメラで同時に出るのは1件）。生成直後の overlay は (600,368) だったが red-lantern まで 7px だったため、overlay を (0,+31) px ずらして (600,399) に配置した（壁の漆喰テクスチャは縁でわずかにずれる）。相互参照: AR-08-bag・AR-03-paper-bag は別カメラ・別物。画像の出来: 生成りの無地トート、濃い縫い目・ストラップ・フックと影。文字なし。ゲーム画面とライブ blink での確認は未了。location の「CAM04-E14（右端の漆喰壁）」は、台帳に独立した要素がないための近似表記（E14 は右壁一面の要素）。'
