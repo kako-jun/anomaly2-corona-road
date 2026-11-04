@@ -598,7 +598,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 
   | ID | 要素 | category / anomaly_type | 規模 | 変化 |
   | --- | --- | --- | --- | --- |
-  | AR-08-hanten-floor | E16 | object / add_object | 小物 | 左の床に、藍色の半纏が脱ぎ捨てたように丸まっている |
   | AR-08-ceiling-light-grid | E01 | environment / multiply | **大面積** | 天井一面に、同じ丸い天井灯が格子状にびっしり並ぶ |
   | AR-08-wall-drawers | E14 | surreal / multiply | **大面積** | 右の壁と柱の面が、同じ小さな引き出しの壁になる（百味箪笥） |
 
@@ -611,29 +610,6 @@ CAM08（Security Office）向けの新規の画像異変 7 件（小物 5 件・
 - **共通手順**（大面積。この節の各項の窓）: 大面積は `scripts/composite-polygon.py` を使う（`crop` で全幅 675x450 の 3:2 窓を切り出し、生成結果を `restore` で元寸へ貼り戻し、面のポリゴンで `cutout --polygon … --feather 2`。複数窓は `restore --blend-px 100 --blend-edges t`）。窓は 1536/675≈2.2756 倍。生成は 1 件ずつ、生成画像は見ずに合成まで進め、採否は人間が決める運用。
 - **共通プロンプト末尾**（各プロンプトに全文を含めてある。小物は「クロップ」、大面積は「窓」の意味）: `Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
 - **共通の禁止**: 文字・数字・ロゴ・実在の店名・家紋の混入（出たテイクは没）。人の顔・体は描かない（人の気配は影・服・足元だけ）。性的・不適切の独自判定はしない（生成物はそのまま報告）。
-
-### AR-08-hanten-floor — 脱ぎ捨てられた半纏
-
-- **camera / element_id**: CAM08 / CAM08-E16（床タイル）
-- **物と変化**: 左の床に、無地の藍色の木綿の半纏が、たった今袖を抜いて脱いだように丸まって落ちている（片袖が床へ伸びる。服だけで持ち主の姿はない）。行方不明のテーマ（人が消えて服だけが残る）に沿う。
-- **最終 box**（baseline px）: `4,486,90,574`（86x88）。
-- **6倍クロップ**（baseline px）: `0,445,256,616`（256x171）。box はクロップ内の (4,41)-(90,129)。
-- **生成プロンプト**（3 テイク。T1 は丸まった山、T2 は袖を長く広げて落ちる、T3 は襟を上に向けて畳み損ねたような形）:
-
-  T1:
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the gray floor tiles at the left of the frame, place one plain indigo-blue cotton hanten work jacket lying crumpled on the floor, as if someone had just slipped out of it: a loose heap of fabric with the collar showing on top and one sleeve stretched out along the floor. Completely plain indigo cloth with no pattern, no emblem, no crest, no print and no writing, with ordinary visible folds. Make it about 1.3x larger than real scale. Give it a strong dark contact shadow on the floor and a clear tone difference from the grey floor. No person, no body, no hands, no face. Do not touch the bright floor reflection at the right of the crop, the tile joints or the wall. Place the jacket, including its shadow, centred at about 18% from the left and 50% from the top of the image, occupying roughly 34% of the image width and 51% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  T2: T1 の "one sleeve stretched out along the floor" を "both sleeves flung out wide along the floor" に置き換え、他は同じ（全文）。
-
-  T3: T1 の "a loose heap of fabric with the collar showing on top and one sleeve stretched out along the floor" を "a half-folded bundle of fabric with the collar turned up, one sleeve folded under and the other hanging off the heap" に置き換え、他は同じ（全文）。
-- **保持するもの**: 床の目地・光の斑・左端の暗い店先との境。
-- **最寄り既存 overlay と実測距離**: AR-08-floor-reflection-no-pillar まで 33.0px、次点 AR-08-n2（床の傘）35.0px（box 基準）。n3（赤いゴムまり）は 39.0px。余裕が薄い（30px との差は 3px）ので、制作後に台帳に載る最終 overlay の alpha bbox で再測定する（袖・接地影で広がる。30px を割ったら動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 藍色（暗い青）は暗い床に沈みやすい。明るい床タイル（左手前の床は中間灰）に対し、襟や折り目の縁に明るい線を入れ、接地影を濃くする。登録後に `check-visibility.py` を通す。
-- **台帳登録時**: `id: 'AR-08-hanten-floor'` / `candidate_id: 'AR-08-hanten-floor'` / `element_id: 'CAM08-E16'` / `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左の床に、藍色の半纏が脱ぎ捨てられたように丸まって落ちている（持ち主はいない）'` / `phase: 'mid'` / 目立ち度 `medium` / note「小物。CAM08-E16。最近傍の既存は AR-08-floor-reflection-no-pillar（33.0px）。昭和の服（行方不明のテーマ）。」
-- **相互参照 / 重複精査**: 床の置き物系の既存（AR-08-n1 洗濯板・n2 傘・n3 ゴムまり・n5 段ボール箱）は「物」で、服は無い。服系は AR-08-bag（暗いガラスに映る紙袋）・AR-08-suit（壁に映る背広の後ろ姿）・AR-05-old-woman-in-glass（CAM05・割烹着姿の老婆の後ろ姿）・CAM07 の下駄・CR06N-6 の雨合羽（別カメラ・別の物）。本件は「服だけが床に残る」で、人の姿そのものは出さない点が別。add_object は本節で唯一（偏り是正の対象外の 1 件）。
 
 ### AR-08-ceiling-light-grid — 天井一面の同じ丸い天井灯（大面積）
 
