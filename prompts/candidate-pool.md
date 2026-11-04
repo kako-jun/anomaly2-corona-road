@@ -372,39 +372,6 @@ CAM02（Main Corridor）の画像異変 8 件（小物 7 件・大面積 1 件�
 
 ### 小物（6倍クロップ）
 
-#### AR-02-hatch-ajar — 床中央寄りの金属製点検口の蓋の右側が横へずれて開き、中に真っ暗な四角い口が覗く
-
-- **camera / element_id**: CAM02 / CAM02-E21
-- **物と変化**: 床中央寄りの金属製点検口の蓋の右側が横へずれて開き、中に真っ暗な四角い口が覗く。
-- **最終 box**（baseline px、x0,y0,x1,y1）: `292,508,404,586`（112x78）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `220,462,476,633`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (72,46)-(184,124)
-- **生成プロンプト**（3テイク作って目視で選ぶ。テイクごとに変化の描き方だけを変えてある）:
-
-  テイク A:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the rectangular metal floor access hatch in the middle of the floor, the right two thirds of the hatch cover plate has slid sideways to the left by about one third of its width, uncovering a pitch-black rectangular opening with a thin bright metal rim. The black opening must be clearly darker than the surrounding gray tiles. The left third of the hatch, its frame and the tile joints around it stay as they are. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 44% of the image width and 46% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク B:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the rectangular metal floor access hatch in the middle of the floor, the right part of the cover plate is lifted at its far edge and propped open like a lid at a shallow angle, showing a pitch-black rectangular opening underneath and a thin dark shadow on the tiles beside it. The black opening must be clearly darker than the surrounding gray tiles. The left third of the hatch and its frame stay as they are. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 44% of the image width and 46% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-  テイク C:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the rectangular metal floor access hatch in the middle of the floor, the right part of the cover plate has been removed completely and is not visible anywhere, leaving a clean pitch-black rectangular pit with a thin bright metal frame edge. The black opening must be clearly darker than the surrounding gray tiles. The left third of the hatch and its frame stay as they are. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 44% of the image width and 46% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 点検口の左側の枠・タイル目地・床の反射。蓋を横にずらす案では、元の留め具は動かさず蓋と一緒に移るものとして扱う。
-- **最寄り既存 overlay と実測距離**: AR-02-navy-handy-fan まで 33.8px（box 基準・矩形間のユークリッド距離、次点 AR-02-chalk-hopscotch 39.0px。台帳の overlay_origin/dimensions と 2026-11-05 に実測、大面積の AR-02-floor-footprints / AR-02-shutter-crayon-drawings は除く）。**最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium（anomaly_type: state_change）
-- **視認性の注意**: box は点検口の右約2/3。点検口の左端は既存の AR-02-tile / AR-02-tile-color の box と接するため入れない。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **相互参照 / 重複精査**: CR-02-08（点検口の留め具が一つだけ押し上げられる。CAM02-E21・object/mid）と同じ要素。こちらは蓋そのものが開き中が見える大きな変化で、留め具の微細な変化とは別物。同プレイで共存させない（排他）。CR-02-08 を制作したら、この件の box と重ならないか再確認する。AR-02-tile・AR-02-tile-color は左隣の別タイル。
-- **台帳登録案**: `id: 'AR-02-hatch-ajar'` / `element_id: 'CAM02-E21'` / `category: 'object'` / `anomaly_type: 'state_change'` / `location: 'CAM02-E21 の周辺、差分左上 (292,508) px'` / `detail: '床の金属点検口の蓋の右側が横へずれて開き、真っ暗な口が覗く'` / `phase: mid`/ `subtlety: 'medium'` / `candidate_id: 'AR-02-hatch-ajar'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-
 #### AR-02-shutter-shadow — 右奥のシャッター面に、立つ人の暗い影だけが映る
 
 - **camera / element_id**: CAM02 / CAM02-E12
