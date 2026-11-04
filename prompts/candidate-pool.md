@@ -369,24 +369,6 @@
 
 ### CAM04 — Underground Junction
 
-#### AR-04-flypaper — 蝿取りリボン(黄褐色のらせん)
-
-- **camera / element_id**: CAM04 / CAM04-E01
-- **物と変化**: 天井中央の上寄り（小さな黒い天井器具の右）から、昭和の蝿取りリボンが一本、らせん状に垂れ下がる。※設計やり直し: 旧box (585,15,650,110) は右の暗い柱の縁に掛かったため、明るい天井上部へ移した
-- **最終 box**（baseline px）: `383,3,433,43`（50x40）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `280,0,536,171`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (103,3)-(153,43)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: from the bright gray ceiling in the upper center, to the right of the small black ceiling fixture, one sticky flypaper ribbon (a thin translucent tan-yellow strip coiled into a spiral, twisting down for roughly 23% of the image height from a tiny ceiling pin) hangs straight down, completely plain, with no insects, no text and no print. Make it about 1.5x wider than real scale so that it reads clearly. Add a faint soft shadow of the ribbon on the ceiling surface. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the small black ceiling fixture on its left, the round light below it on the right, the large round vent below, the ceiling seams and speckles. Place the object, including its shadow, centered at about 50% from the left and 13% from the top of the image, occupying roughly 20% of the image width and 23% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左隣の小さな黒い天井器具・右下の丸い灯・下の大きな丸い換気口・天井の継ぎ目と点状汚れ。
-- **最寄り既存 overlay と実測距離**: AR-04-ceiling-corner-fold まで 34.0px（box 基準・矩形間のユークリッド距離、次点 AR-04-ceiling-balloon 44.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: environment / early / medium
-- **視認性の注意**: 明るい天井に黄褐色が出る。らせんは細いので幅を1.5倍に。下端の暗い錘（小さな黒い玉）は付けず、色だけで対比する。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'environment'` / `anomaly_type: 'add_object'` / `detail: '天井から昭和の蝿取りリボンが一本、らせん状に垂れ下がる'` / `candidate_id: 'AR-04-flypaper'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 天井の垂れ物の兄弟: AR-03-red-string（赤い紐）・AR-07-ceiling-string・AR-05-white-ribbon。別カメラ・別物。
-
 #### AR-04-tote-bag — 無地の生成りトートバッグ(令和)
 
 - **camera / element_id**: CAM04 / CAM04-E14（漆喰壁そのものは台帳に独立要素が無く、最寄りの CAM04-E14（右の黒い店舗ガラス）を起点IDとする。）
