@@ -663,7 +663,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
 | AR-03-floor-line-break | environment | state_change | 床のタイル目地の線が一本だけ途中で途切れる | 小物 |
 | AR-03-tube-light-bent | environment | state_change | 右上の蛍光灯の光が、床の反射と違う向きへ折れ曲がる | 小物 |
 | AR-03-ceiling-eye | surreal | surreal | 天井の暗い隙間から白い目が一つ覗く | 小物 |
-| AR-03-dark-tile | object | state_change | 通路中央の床に座布団ほどの暗いタイルが一枚だけ混じる | 小物 |
 | AR-03-shutter-raised | environment | state_change | 右のシャッターの裾が少し上がる | 小物 |
 | AR-03-roll-vanish | object | remove_object | 壁際の銀白色の巻いた物が消える | 小物 |
 
@@ -818,35 +817,6 @@ CAM03（South Exit）の新規画像異変 8 件の**制作仕様**（Issue #47�
   ```
 - **相互参照 / 重複精査**: 人の姿の異変（CAM01 AR-01-back-view-paper-bag・CAM05 AR-05-old-woman-in-glass・CAM06 AR-06-worker・CAM08 AR-08-old-man-back）は全身の後ろ姿で、本件は天井から覗く目だけ。CR-03-20（天井の器具から細いリボン）とは別物。台帳・候補に『目』の異変は無い（grep 済み）。
 - **同カメラ内の排他と併存**: 排他なし。併存可=床・壁・シャッターの異変。AR-03-tube-light-bent とは box が 30px しか離れないので、同プレイで共存させないほうが読み取りやすい。
-
-### AR-03-dark-tile — 通路中央の床に座布団ほどの暗いタイルが一枚だけ混じる
-
-- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E16
-- **物と変化**: 通路の右寄りの床で、タイル一枚（座布団ほどの大きさ）だけが炭のように暗い黒灰色に変わる。穴ではなく平らな面で、目地には揃ったまま、光沢と周りの反射がうっすら残る。
-- **box (x1,y1,x2,y2)**: (545,300,615,345)（70x45）
-- **最寄り既存 overlay と実測距離**: AR-03-shutter-faded-poster (54.4)、次点 AR-03-sunken-opening-floor (56.0)。新規小物との最寄りは AR-03-floor-line-break (38.0)・AR-03-shutter-raised (33.4)。
-- **6倍クロップ範囲**: 6倍クロップ (420,252)–(676,423)（256x171）。box は窓内で (750,288)–(1170,558)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: one floor tile in the marked area (about x=750 to 1170, y=288 to 558 in the 1536x1024 frame) has turned deep charcoal black-grey, about the size of a floor cushion. It is perfectly flat, not a hole, its edges aligned with the tile joints and the perspective, its surface slightly glossy so the soft white reflections of the lights still show faintly across it. The neighbouring tiles, their speckles, joints and reflections stay exactly as they are. Add no object. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: a single floor tile at about x=760 to 1160, y=295 to 550 in the 1536x1024 frame is a much darker slate-black than the grey speckled tiles around it, with crisp edges along the joints and a faint glossy reflection. Flat surface, not a hole, no object on it. Do not change anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: one tile of the grey speckled floor (about x=750 to 1170, y=288 to 558 in the 1536x1024 frame) is replaced by a near-black polished tile of the same size and perspective, aligned with the joints, with a very faint reflection of the ceiling light. The other tiles and everything else are untouched. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-03-dark-tile'
-    candidate_id: 'AR-03-dark-tile'
-    camera_id: 'CAM03'
-    element_id: 'CAM03-E16'
-    base_photo: 'public/images/cam3.webp'
-    category: 'object'
-    anomaly_type: 'state_change'
-    location: 'CAM03-E16 の床右寄り、差分左上 (545,300) 付近（貼り込み後に再計測）'
-    detail: '床の右寄りで、タイル一枚だけが炭のように暗い黒灰色に変わる（平らで穴ではない）。'
-    overlay: 'assets/anomaly-overlays/cam03/dark-tile.webp'
-    # phase / 目立ち度: mid / medium
-    note: '最寄り既存 overlay は AR-03-shutter-faded-poster（box 距離 54px）。新規小物との最寄りは AR-03-shutter-raised（33px）。大面積 AR-03-floor-shadows と排他（同じ床の面。同プレイで共存させない）。AR-03-floor-line-break とも近いので同プレイで共存させない。'
-  ```
-- **相互参照 / 重複精査**: AR-03-blue-floor-tile（タイルの色が青）・AR-03-tile-diagonal（タイルの向き）とは別の面と色。AR-03-sunken-opening-floor（奥の開口の床が沈む）とは場所も見え方も別。CR-03-xx に暗いタイルの候補は無い。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-floor-shadows / AR-03-floor-line-break（同じ床の面）。併存可=壁・天井・シャッターの異変。
 
 ### AR-03-shutter-raised — 右のシャッターの裾が少し上がる
 
