@@ -373,24 +373,6 @@
 
 ### CAM06 — Shop Front Row
 
-#### CR06N-6 — 黄色い雨合羽
-
-- **camera / element_id**: CAM06 / CAM06-E08
-- **物と変化**: 左壁の暗い面に、子供用の黄色い雨合羽がフックに掛かっている
-- **最終 box**（baseline px）: `5,120,110,200`（105x80）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,74,256,245`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (5,46)-(110,126)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the very dark wall at the upper left, hang one child's bright yellow raincoat from a small metal hook: a saturated yellow vinyl coat with a hood and short sleeves hanging down, completely plain with no pattern, no reflective stripes, no text and no logo. Make it about 1.2x larger than real scale. Add a soft dark shadow of the coat on the wall and a faint glossy highlight on the vinyl. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the hanging sign at the upper right, the ceiling edge above, the large plant below or the rough wall texture. Place the object, including its shadow, centered at about 22% from the left and 50% from the top of the image, occupying roughly 41% of the image width and 47% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 右上の吊り看板・上の天井縁・下の大きな植物・粗い壁の質感。
-- **最寄り既存 overlay と実測距離**: AR-06-ceiling-balloons まで 32.0px（box 基準・矩形間のユークリッド距離、次点 AR-06-sign-orange-blue 32.0px）。 **余裕が小さい（36px 未満）ので、最終 overlay の alpha bbox で再測定必須**（羽毛ぼかしで box より広がる。30px 割れなら位置を動かす）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 暗い壁に鮮黄は強く出る。壁の黒潰れ部分が広いので、雨合羽の下端が粗い壁にかかる位置まで垂らして接地感（影）を出す。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左壁の暗い面に、子供用の黄色い雨合羽がフックに掛かる'` / `candidate_id: 'CR06N-6'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 同系の黄色い雨具: 台帳の黄色い長靴（CAM01。PR #97 で登録）。
-
 ### CAM07 — Maintenance Corridor
 
 ## Runtime / 背景非依存の異変在庫
