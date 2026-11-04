@@ -471,22 +471,7 @@ CAM 04（Underground Junction）の新規の画像異変 8 件（小物 7・大�
 
 | 候補ID | 対象ID | 変化 | category / anomaly_type | box (x1,y1,x2,y2) | 最寄り既存と距離（alpha bbox +2px 基準） |
 | --- | --- | --- | --- | --- | --- |
-| AR-04-left-edge-eyes | CAM04-E18 | 左端の暗がりに光る目 | surreal / add_creature | `(0,630,50,692)` | AR-04-randoseru-red 34.0px |
 | AR-04-floor-shoes-rows（大面積） | CAM04-E15 | 床の通路帯に整然と並ぶ無人の靴 | object / multiply | `(202,380,458,900)` = 実面積 127,515 px²（画像の 21.0%） | 大面積どうしの距離 3px・4px（window-alley / glass-fog。重ならない） |
-
-### AR-04-left-edge-eyes — 左端の暗がりに光る目
-
-- **カメラ / 対象**: CAM04 / CAM04-E18（物の説明・座標はインベントリが正本）
-- **物と変化**: 左端の床際の黒い縦枠の影の中に、床すれすれの高さで、小さな二つの目が淡い白黄色に光って見える（正体は写らず、輪郭は闇に溶けている）。目の周りの体・顔は描かない。目だけ。瞳孔のみの無表情な光点。
-- **box (x1,y1,x2,y2)**: `(0,630,50,692)`（50x62。画面左端に接する）。
-- **最寄り既存 overlay と実測距離**: AR-04-randoseru-red 34.0px、次点 AR-04-orange-tile 35.0px（台帳 overlay の alpha bbox を各辺 +2px した矩形との距離・2026-11-05 実測）。
-- **6倍クロップ**: `(0,578)–(256,749)`（256x171 を 1536x1024 へ拡大。物は crop 内 x 0〜300 / y 312〜684（画面左端、暗い床際））。
-- **生成プロンプト（3 テイク）**: 3 テイクは表現を振った別案。目視で選ぶ。
-  - テイク1: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). In the darkest shadow at the left edge of the frame near the floor, under the black vertical storefront frame (x 0-300, y 312-684), add exactly two small round eyes glowing pale yellow-white, side by side, close to the floor level, with a faint soft halo. Nothing else of the creature is visible: no head, no body, no outline, only the two glowing points swallowed by darkness. The eyes are about 20 px wide in this enlarged frame with a 60 px halo. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). In the black shadow at the far left edge near the floor (x 0-300, y 312-684), add two pale white-yellow glowing eyes, slightly oval, horizontally paired with a gap between them, giving a faint glow on the nearby floor tile. Only the eyes; no creature, no face, no shape. Do not change the frame or the floor. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). Add two dim cold white eyes glowing from the dark gap at the base of the left storefront frame (x 0-300, y 312-684), low to the ground, round and unblinking, with a very faint bloom. The rest of the shadow stays pure black with no creature shape. No text, no logo. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**: `id: AR-04-left-edge-eyes` / `element_id: CAM04-E18` / `category: surreal` / `anomaly_type: add_creature` / `location: 'CAM04-E18 の周辺（左端の床際の黒い縦枠の影）、差分左上 (0,630) px'` / `detail: '左端の暗がりの床際に、正体の見えない小さな二つの目だけが光る'` / `phase: mid` / `subtlety: 'subtle'` / `candidate_id: 'AR-04-left-edge-eyes'` / `note: 最近傍 AR-04-randoseru-red 34px / AR-04-orange-tile 35px（alpha bbox +2px 基準）。左ガラスの大面積 AR-04-glass-fog-handprints と box が重なる（大面積の例外）。目は面積が小さいのでプロンプトで光点とにじみを約2.5倍に誇張し、check-visibility.py を必ず通す（下回れば halo を広げる）。`
-- **相互参照・重複精査**（制作スキル「追加前の類似チェック」。台帳と candidate-pool を CAM04 だけでなく全カメラで照合）: 本案は正体が写らない目だけ。CR-04-23（扉の前に猫が座る・pool 内）は猫そのものが見える別案で、見え方が違う。台帳の猫（AR-02-cat / AR-08-cat / AR-07-stairs-cat ほか）は別カメラ。左下端の既存 AR-04-randoseru-red・AR-04-orange-tile とは 30px 以上（34px・35px）離れる。
 
 ### AR-04-floor-shoes-rows — 床の通路帯に整然と並ぶ無人の靴（大面積）
 
