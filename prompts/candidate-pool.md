@@ -1344,26 +1344,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: `AR-04-red-telephone`・`AR-04-basket`・`AR-04-poster`・`AR-04-poster-colour-restore`（ガラス内の小物。曇りで隠れるので排他）。`AR-04-fluorescent-frame-grey` `AR-04-sign-colour-blue` は枠・看板で併存可。
 - **生成枚数の最小見積り**: 素材 3 テイク。
 
-### CR-LG-05-01 カーテンが開き無人の喫茶店
-
-- **ID / camera / element_id**: CR-LG-05-01 / CAM05 / CAM05-E08
-- **面**: box 280,108,555,538（118,250 px²、19.5%）。正面ガラス区画のカーテン面全体（扉ガラス 555 以降は含めない）。
-- **物と変化**: 灰色のカーテンが全て開き、ガラスの向こうに昭和の喫茶店の店内（暖色灯、木のカウンター、赤いビニール張りの丸椅子、クリームソーダの並ぶ棚、誰もいない）が見える。店内だけ暖かく明るく、手前の通路は冷たい青灰色のまま。
-- **不気味さの狙い**: 閉店した区画に、ついさっきまで人がいた温かい店内。人はいないのに椅子が引かれている。老人たちが戻れないと主張する昭和そのもの、「シャッターの向こう側」の窓（story）。
-- **保持するもの**: 金属枠の縦横桟、ガラス反射の筋、手前の床、天井、緑看板、左の黒い側面、レンガ帯。
-- **生成プロンプト全文**:
-  ```
-  $imagegen Edit the attached surveillance camera photo of an underground shop front with a large glass facade covered by grey curtains.
-  Make ONLY this change: all grey curtains behind the glass are drawn open, and through the glass we see the warm interior of an old Showa-era Japanese coffee shop with nobody in it: warm amber lamps, a wooden counter, round stools upholstered in red vinyl (one stool pulled slightly out), a shelf lined with plain unlabeled cream-soda glasses. The interior is clearly warmer and brighter than the corridor. The metal window mullions and transoms stay exactly where they are, and the existing faint reflections on the glass stay visible. The corridor floor, ceiling, green sign, black side panel and brick band remain cold blue-grey and untouched; the warm light must not spill onto the floor.
-  There must be no menus, no signs, no shop names, no lettering and no logos anywhere. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-- **作り方**: ①割付図: ガラス各枠の多角形（桟位置は `--list-elements CAM05` と原寸拡大で確定）。②全景 3 テイク（窓 y100〜550 の 1 枚。box y108〜538 が収まる）。③元画像を下・生成を上に置き、ガラス各枠の内側ポリゴンだけを採用、桟と反射ハイライトは screen で元から戻す。境界ぼかし 1〜2 px。④床に暖色が漏れていないことを差分で確認。
-- **難所と没基準**: 文字（メニュー・看板）の混入、桟の遠近が崩れる（桟は元から戻す）、暖色が床へ漏れる（別異変になる）は没。
-- **フェーズ / 目立ち度**: mid〜late / obvious。
-- **台帳案**: category `surreal` / anomaly_type `state_change` / detail 「正面ガラスのカーテンが全て開き、無人の昭和の喫茶店の暖かい店内が見える」。note に「大面積。CAM05-E08。AR-05-glass-light 等と排他」を書く。
-- **既存との関係（差分と排他）**: `AR-05-glass-light`（(324,194) 187x336、古い店の灯りが映る）と役割が被り、`AR-05-curtain-open`（カーテン 1 枚が少し開く）・`AR-05-amber-pane`（ガラス 1 枚が琥珀色）・`AR-05-chair-reflection`・`AR-05-old-woman-in-glass`・`AR-05-sign-in-glass`・`AR-05-wind-chime`・`AR-05-curtain-mend`・**`AR-05-joint-into-glass`（床の目地線がガラス内へ連続して見える。26,832。05-01 側の排他）** はいずれも同じガラス面で、本件の「全面開放＋店内」の部分集合か上書きに当たる。**これらは全て排他**（同プレイ非共存）。差分: 本件は店内の実像（カウンター・椅子・棚）が見え、反射像でも部分変化でもない。`AR-06-reopened`（CAM06）は別カメラで、この型は CAM05 に限る。
-- **生成枚数の最小見積り**: 全景 3 テイク。
-
 ### CR-LG-05-02 床一面の白い折り鶴
 
 - **ID / camera / element_id**: CR-LG-05-02 / CAM05 / CAM05-E13
