@@ -695,24 +695,6 @@
 
 ### CAM05 — Emergency Stairwell
 
-#### CR05N-1 — 黄色と青のビーチボール
-
-- **camera / element_id**: CAM05 / CAM05-E13
-- **物と変化**: 右手前の広い床に、空気の入った無地のビーチボールが一つ転がっている（夏の記憶）
-- **最終 box**（baseline px）: `445,600,550,690`（105x90）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `370,560,626,731`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (75,40)-(180,130)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark gray floor tiles in the lower right of the frame, place one inflated plain beach ball with alternating plain yellow and blue panels (six panels meeting at a small plain cap), no text, no logo, no pattern, resting on the floor. Make it about 1.2x larger than real scale. Give it a strong dark contact shadow and a soft glossy highlight on the vinyl. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the brick base and the glass shop front behind it, the tile joints or the light patches on the floor. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 41% of the image width and 53% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 背後のレンガ帯とガラス店舗・タイル目地・床の光の斑。
-- **最寄り既存 overlay と実測距離**: CR05N-6 まで 40.0px（box 基準・矩形間のユークリッド距離、次点 AR-05-joint-into-glass 47.0px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium
-- **視認性の注意**: 暗い灰床に黄と青の原色。色が暗さに沈まないよう、黄の面積を大きく見せる向きにする。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '右手前の広い床に、空気の入った無地のビーチボールが一つ転がっている（夏の記憶）'` / `candidate_id: 'CR05N-1'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 丸い玩具系: AR-01-red-rubber-ball（CAM01）・AR-08-n3（CAM08・赤いゴムまり）。別カメラ・別の物。
-
 #### CR05N-3 — 緑のブリキのじょうろ
 
 - **camera / element_id**: CAM05 / CAM05-E16
