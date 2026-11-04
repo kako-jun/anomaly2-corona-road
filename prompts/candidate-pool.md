@@ -471,25 +471,10 @@ CAM 04（Underground Junction）の新規の画像異変 8 件（小物 7・大�
 
 | 候補ID | 対象ID | 変化 | category / anomaly_type | box (x1,y1,x2,y2) | 最寄り既存と距離（alpha bbox +2px 基準） |
 | --- | --- | --- | --- | --- | --- |
-| AR-04-wall-plaster-peel | CAM04-E14 | 漆喰壁の剥落 | environment / state_change | `(625,120,676,220)` | AR-04-red-lantern 36.1px |
 | AR-04-floor-reflection-gap | CAM04-E17 | 白い反射の中の一枚だけ映らないタイル | environment / state_change | `(256,571,344,621)` | AR-04-orange-tile 36.0px |
 | AR-04-wall-panel-fallen | CAM04-E14 | 腰壁の板が外れて倒れかかる | object / displace | `(500,520,560,605)` | AR-04-puddle 32.0px |
 | AR-04-left-edge-eyes | CAM04-E18 | 左端の暗がりに光る目 | surreal / add_creature | `(0,630,50,692)` | AR-04-randoseru-red 34.0px |
 | AR-04-floor-shoes-rows（大面積） | CAM04-E15 | 床の通路帯に整然と並ぶ無人の靴 | object / multiply | `(202,380,458,900)` = 実面積 127,515 px²（画像の 21.0%） | 大面積どうしの距離 3px・4px（window-alley / glass-fog。重ならない） |
-
-### AR-04-wall-plaster-peel — 漆喰壁の剥落
-
-- **カメラ / 対象**: CAM04 / CAM04-E14（物の説明・座標はインベントリが正本）
-- **物と変化**: 右の漆喰壁（右端の黒い柱の右側）の一角が、手のひら大〜座布団大に剥がれ落ち、下から古い赤茶色のレンガ下地が四角く覗く。剥がれた漆喰の屑が壁際にわずかに落ちている。剥落面は不揃いな縁。レンガに文字・刻印なし。壁の他の部分と黒い柱は触らない。
-- **box (x1,y1,x2,y2)**: `(625,120,676,220)`（51x100。画面右端に接する）。
-- **最寄り既存 overlay と実測距離**: AR-04-red-lantern 36.1px、次点 AR-04-ceiling-balloon 77.0px（台帳 overlay の alpha bbox を各辺 +2px した矩形との距離・2026-11-05 実測）。
-- **6倍クロップ**: `(420,84)–(676,255)`（256x171 を 1536x1024 へ拡大。物は crop 内 x 1230〜1536 / y 216〜816（画面右端に接する））。
-- **生成プロンプト（3 テイク）**: 3 テイクは表現を振った別案。目視で選ぶ。
-  - テイク1: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). On the rough pale plaster wall at the right edge of the frame, to the right of the vertical black pillar (x 1230-1536, y 216-816), show one irregular patch of plaster fallen off, exposing an old reddish-brown brick underlayer in a rough rectangle with jagged cracked edges. A few plaster crumbs lie at the bottom of the patch. The brick shows plain mortar lines and no marks or letters. The rest of the wall and the black pillar are unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). On the textured plaster wall at the right side of the frame (x 1230-1536, y 216-816), the plaster has peeled away in a ragged oval about the size of a cushion, revealing dark grey concrete and a few old orange bricks beneath, with curled plaster flakes hanging at the edge. No marks, no writing. Do not alter anything else. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). In the right-hand plaster wall (x 1230-1536, y 216-816) a rectangular chunk has broken away, revealing coarse old brick work in muted red-brown with grey mortar, edges chipped and uneven, fine white dust at the lower edge. No letters or stamps on the bricks. Everything else identical. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**: `id: AR-04-wall-plaster-peel` / `element_id: CAM04-E14` / `category: environment` / `anomaly_type: state_change` / `location: 'CAM04-E14 の周辺（右端の漆喰壁の上部）、差分左上 (625,120) px'` / `detail: '右の漆喰壁の一角が剥がれ落ち、下から古いレンガ下地が四角く覗く'` / `phase: early` / `subtlety: 'medium'` / `candidate_id: 'AR-04-wall-plaster-peel'` / `note: 最近傍 AR-04-red-lantern 36px（alpha bbox +2px 基準）。右壁一面の大面積 AR-04-window-alley と box が重なる（大面積の例外。同プレイで共存させない＝壁面を覆うため排他）。AR-04-tote-bag（右端壁フック）とは 250px 以上離れる。`
-- **相互参照・重複精査**（制作スキル「追加前の類似チェック」。台帳と candidate-pool を CAM04 だけでなく全カメラで照合）: AR-08-notice-residue（CAM08 の貼り紙の剥がし跡）は紙の跡で別カメラ・別物。本案は壁材そのものの剥落で下地が見える。AR-04-window-alley（右壁一面が窓）とは同じ壁面のため排他。
 
 ### AR-04-floor-reflection-gap — 白い反射の中の一枚だけ映らないタイル
 
