@@ -11,7 +11,7 @@ Use this skill when planning or producing an image-based anomaly for this game. 
 
 - Read [`prompts/camera-element-inventory.md`](../../../prompts/camera-element-inventory.md) for the single source of truth for camera photos, visible elements, stable IDs, and approximate bounds.
 - Open the matching `prompts/atlas/camNN.svg` for a visual index of those IDs; regenerate maps with `npm run build:camera-atlas` after changing the inventory.
-- Read [`prompts/candidate-pool.md`](../../../prompts/candidate-pool.md) for photo-specific unselected ideas, the Showa-theme candidates, the runtime/audio/UI anomaly stock with its phase-allocation guide, and the finalized-but-unproduced production specs (small objects and large-area changes: box, prompt, visibility notes); remove a selected row when promoting it into `anomalies.yaml`.
+- Read [`prompts/candidate-pool.md`](../../../prompts/candidate-pool.md) for photo-specific unselected ideas, the Showa-theme candidates, the runtime/audio/UI anomaly stock with its phase-allocation guide; remove a selected row when promoting it into `anomalies.yaml`.
 - Follow [`prompts/README.md`](../../../prompts/README.md) and [`prompts/base-template.md`](../../../prompts/base-template.md) for prompt conventions.
 - The current game camera mapping is in `src/utils/gameConfig.ts`; the WebP exports are in `public/images/`.
 
