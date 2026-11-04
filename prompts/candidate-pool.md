@@ -321,7 +321,7 @@
 
 未制作。旧・昭和案メモから、`anomalies.yaml` に同等の試作が無く、対象要素を特定できるものだけを移した。候補IDは `CR-SH-NN`。方針（核となる変化・小道具を主役にしない・修復は元写真で破損が確認できる箇所だけ）は制作スキルの「昭和の時間が戻る異変」を参照。着手前に通常どおり類似照合する（近縁: AR-01-shutter-light / AR-08-notice-residue / CR-08-17 / AR-02-duplicate-coffee-sign）。
 
-時計の針は写真に時計が写っていないため候補にしない。
+時計の針は写真に時計が写っていないため候補にしない（例外あり: 大面積 `CR-LG-07-01` は時計を**足す**案で、kako-jun 指示 2026-11-04。「制作仕様（確定済み・未制作の大面積）」参照）。
 
 2026-11-04: CR-SH-01（CAM02-E07）は CAM02-E07 に既存5件が集中している。左シャッターに重ねず、別のシャッター/壁面で作り直す（要再選定）。
 
@@ -1096,3 +1096,456 @@
 | intruder seated     | ベンチや床に座る人影                           | `add_person`                 |
 | fast figure         | 画像では残像、runtime で一瞬横切る             | `add_person`                 |
 | forbidden object    | 屋内に場違いな物（濡れた道路標識など）         | `add_object`                 |
+
+## 制作仕様（確定済み・未制作の大面積）
+
+大面積（面積が画像 675x900 = 607,500 px² の 1/8 = 75,938 px² 以上）の画像異変 16 件（8 カメラ × 2）の制作仕様。**候補ではなく、制作に入る手順書**（kako-jun 指示 2026-11-04）。方針の正本は [`README.md`](./README.md) の「配置の基準」の大面積の例外、手順の正本は制作スキル（`.agents/skills/corona-road-anomaly/SKILL.md`）。ここには重ねて書かない。
+
+- **昇格**: 制作に採用した件は、この節の該当項を**削除**して `anomalies.yaml` へ一度だけ登録する（二重に残さない）。ID は台帳の `candidate_id` 相当として note に残す。**登録前に、同カメラの box 重なり表を機械出力して台帳 note に貼る**（下の「box と既存 overlay の重なり」のコマンド。台帳は日々増えるので、この節の表は 2026-11-04 時点の値で、登録時に必ず出し直す）。
+- **座標**: すべて baseline px（675x900）。`box` は面の外接矩形で、台帳の `overlay_origin` / `dimensions` は**貼り込み後の alpha bbox で再計測**して書く（羽毛化で変わる）。bbox が 1/8 を割ったら登録しない（面を足して作り直す）。同カメラの 2 件は、**CAM08 の 2 件（排他。下の表の注）を除き box が重ならない**ことを 2026-11-04 に再計測済み（下の表）。
+- **大面積どうしの重なり**: 同カメラの大面積は重ねない。ただしゲームは 1 カメラにつき未検出の異変を 1 件しか同時に出さない（`src/hooks/useGameState.ts` の `spawnAnomaly` は、未検出の異変があるカメラを候補から外す）ので、同じ面を使い物語上も両立しない対は**「排他」と明記すれば box が重なってよい**（例: CAM08 の 08-01 と 08-02。床と床へこぼれるテレビの山が重なる）。台帳 note の「同プレイで共存させない」は、この仕様上の保証として書いてよい。既存台帳の大面積（`AR-06-wall-puddle` 540x202 / `AR-07-floor-uphill` 591x352）との重なりは項ごとに書く。小物とは座標が重なってよい（大面積の例外）。ただし**同じ面を覆い隠す小物は排他**（項の「排他」に列挙。同プレイで共存させない運用を台帳 note に書く）。
+- **生成の共通方針**: 入力は baseline を PNG 化した 3:2（1536x1024）の**窓**（下の「3:2 の窓と元画像への復元」）。先頭に `$imagegen` を明示。**1 件ずつ生成し生成画像は見ずに合成まで進め、採否は人間が決める**運用（kako-jun 指示）。生成物は作業物で `experiments/<件名>/` に置き、登録後に即削除する。
+- **3:2 の窓と元画像への復元（共通手順）**: 台帳画像は 675x900 の縦長で、`composite-anomaly.py` は縦横比が ±0.02 を超えると fail する。3:2 の生成結果をそのまま `--gen` に渡さず、必ず元画像の寸法へ戻す。
+  1. **窓**: `composite-polygon.py crop --base public/images/camN.webp --crop 0,y0,W,y0+450 --out <PNG>`（既定の出力は 1536x1024）で、baseline から**全幅 W × 高さ 450** の横長を切り出して生成に渡す。**W は画像幅に合わせる: cam1・cam6〜cam8 は 675、cam2〜cam5 は 676**（`--crop 0,y0,676,y0+450`。676x450 の縦横比 1.502 は `crop`・`restore` の許容 ±0.02 に収まる。675 のままだと最右 1 列が restore の対象外になる）。縮尺は 1536/W ≈ 2.27 倍。窓は幅を削らない（縮尺と位置を y0 の 1 値で決めるため）。box の高さが 450 以下なら窓 1 枚、**450 を超える件は上下 2 枚**（重なり 100px 以上）に分ける。窓は box を上下に含み、画像の上端・下端に接する場合以外は 5px 以上の余裕を取る。なお cam2〜cam5 の box の x2=675 は右端の 1 列手前だが、`cutout` のポリゴンは x=676 まで引いてよい（box の面積差は 0.2% 未満。1/8 の判定は登録時に alpha bbox で再測定する）。
+  2. **復元**: `composite-polygon.py restore --base <baseline、または前回の restore 出力> --gen <生成結果 1536x1024> --crop 0,y0,W,y0+450 --out <全画面 PNG>` で、生成結果を W x450 へ縮小して `(0, y0)` へ貼り戻した全画面 PNG（cam2〜cam5 は 676x900、他は 675x900）を作る。**ツール `scripts/composite-polygon.py`（crop / restore / tile / cutout / blend / flip）は PR #100 で main にマージ済み**。引数名は `uv run scripts/composite-polygon.py <サブコマンド> --help` で確認した現行のものを書いている。
+  3. **2 枚の窓**: 先に上の窓 A を生成・採用して `restore` で貼り戻し、窓 B の入力はその全画面から `crop` で切り出す（依存する絵は直列）。B の結果は A の貼り戻し済み全画面を `--base` にして `restore --blend-px 100 --blend-edges t` で貼る（B の上端 100px が A の既存内容の上へ線形に溶け込む）。
+  4. **差分抽出**: 復元した全画面を `composite-anomaly.py --gen` へ渡す、または `composite-polygon.py cutout --base <baseline> --gen <restore 出力> --polygon <面のポリゴン（複数指定可。1 枚に併合される）> [--hole <抜く物のポリゴン>] --feather 2 --out <overlay.webp>` でポリゴン内を採用する（ポリゴン外の alpha は厳密に 0）。縦横比は画像と同じまま。明暗の乗せ・光の戻しは `blend --base <全画面> --layer <baseline> --mode multiply|screen|overlay|normal --opacity <0-1> [--polygon ...] [--hole ...] [--layer-blur <σ>] [--layer-norm] [--layer-brightness <倍率>]`（例: 反射帯の光を `--mode screen` で戻す、壁の粒状を `--layer-norm` の multiply で乗せる）。上下反転は `flip`（08-01 の鏡像。範囲の制約は 08-01 の項）。
+  5. **素材だけを別生成する件**（顔・絵・紙・折り鶴・手形・ポスター・時計の文字盤・テレビ筐体・外景）の 3:2 は貼り込みスプライトの採取用で、復元は不要。割付図に沿う遠近の敷き詰めは `composite-polygon.py tile --base <baseline> --material <素材> --quad "tl tr br bl" --cols N --rows M --gap G --polygon-out <JSON>`（`--layout scatter` は散布、`--shade 0-1` は壁・床の明暗の乗せ、`--seed` で再現）で全画面 PNG を作り、`--polygon-out` の JSON をそのまま `cutout --polygon` へ渡す。複数の面は、`--polygon-append` で同じ JSON に面を足しながら `tile` を連鎖する（前の出力 PNG を次の `--base` にする）。
+  6. **敷き詰めから扉・額・窓を抜く件**（01-02 の窓、06-01 の額と扉、07-01 の扉・開口・看板）: `tile` にセル除外の指定は無く、`cutout --hole` で抜くと境界のセルが**半分切れる**。そこで、除外領域を避けるように面を**複数の quad に分け**（除外物の上・下・左・右の隙間ごとに 1 quad。各 quad の格子は除外物の縁でちょうど終わるよう列・行数を合わせる）、`--polygon-append` で連鎖して 1 つの JSON にまとめてから `cutout` する。`--hole` は quad に含まれてしまう細かい物（取手など）だけに使う。
+  各件の窓（y0〜y0+450）:
+
+  | 件 | box 高さ | 窓 |
+  | --- | ---: | --- |
+  | 01-01 | 340 | 1 枚: y0〜450 |
+  | 02-01 | 560 | **2 枚**: A y250〜700（奥の暗い角 E09 の下部を含める）／B y450〜900 |
+  | 03-02 | 450 | 1 枚: y450〜900（箱が窓にちょうど収まる。画像下端なので余裕不要） |
+  | 05-01 | 430 | 1 枚: y100〜550 |
+  | 06-02 | 255 | 1 枚: y0〜450 |
+  | 07-02 | 122 | 1 枚: y0〜450 |
+  | 08-01 | 635 | **2 枚**: A y255〜705／B y450〜900（重なり 255。box 上端 265 に 10px の余裕） |
+  | 04-01 ほか素材のみの件 | — | 全景生成なし（上の 5.） |
+
+  プロンプト中の「frame」はこの 3:2 の窓を指す。位置や高さを「画面高さの何 %」で書かず、**元画像の実寸 px**（窓内では ×2.2756）で書く。
+- **繰り返し絵柄は 1 素材を別生成 → スクリプトで遠近ワープして敷き詰め**。1 回の生成で多数を描かせると文字風の模様・顔崩れ・指崩れが出る。割付図（消失点に向かう流線と格子）を**先に作る**（向きは文章でなく図）。
+- **合成の共通方針**: `scripts/composite-anomaly.py` は並進位置合わせ前提で、大面積は低い `--threshold` だと床や壁の粒状まで拾って巨大化する。大面積は**手描きポリゴンマスク（面の台形）を主**にし、ツールは `--box` を面の外接矩形に絞り `--threshold` を高め（16〜24）で使うか、ポリゴン外を元画像で上書きした全画面を `--gen` に渡す。マスク外の alpha は厳密に 0、境界は 1〜2 px の羽毛化。接地線・巾木・枠・柱際はマスクを止める線として使う。壁・床の明暗は貼り込み素材へ multiply で乗せる。
+- **共通の禁止**: 文字・数字・ロゴ・実在店名・家紋・紋様の混入（出たテイクは没）。人の顔は 01-02 以外では出さない。性的・不適切の独自判定はしない（生成物はそのまま報告）。
+- **共通プロンプト末尾**（各項のプロンプトに全文を含めてある）: `Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+
+### 面の再計測（2026-11-04、`uv run --with pyyaml python3`）
+
+| ID | box (x1,y1,x2,y2) | 面積 px² | 画像比 | 1/8 |
+| --- | --- | ---: | ---: | --- |
+| CR-LG-01-01 | 212,0,675,340 | 157,420 | 25.9% | 可 |
+| CR-LG-01-02 | 0,215,208,725 | 106,080 | 17.5% | 可 |
+| CR-LG-02-01 | 176,340,675,900 | 279,440 | 46.0% | 可 |
+| CR-LG-02-02 | 0,50,172,600 | 94,600 | 15.6% | 可 |
+| CR-LG-03-01 | 0,100,268,670 | 152,760 | 25.1% | 可 |
+| CR-LG-03-02 | 290,450,675,900 | 173,250 | 28.5% | 可 |
+| CR-LG-04-01 | 450,120,675,750 | 141,750 | 23.3% | 可 |
+| CR-LG-04-02 | 0,10,215,740 | 156,950 | 25.8% | 可 |
+| CR-LG-05-01 | 280,108,555,538 | 118,250 | 19.5% | 可 |
+| CR-LG-05-02 | 0,610,675,900 | 195,750 | 32.2% | 可 |
+| CR-LG-06-01 | 500,40,675,860 | 143,500 | 23.6% | 可 |
+| CR-LG-06-02 | 0,0,495,255 | 126,225 | 20.8% | 可 |
+| CR-LG-07-01 | 88,126,585,352 | 112,322 | 18.5% | 可 |
+| CR-LG-07-02 | 0,0,675,122 | 82,350 | 13.6% | 可（余裕小。alpha bbox は幅 ≥640 かつ裾 ≥ y119 = 640×119=76,160 ≥ 75,938 を満たす） |
+| CR-LG-08-01 | 0,265,675,900 | 428,625 | 70.6% | 可（床全面。旧 box 0,430,675,900 から上へ広げた） |
+| CR-LG-08-02 | 0,130,248,470 | 84,320 | 13.9% | 可（柱の左縁 x≈250 の 2px 手前 x248 で止め、下へ床側 y470 まで広げた） |
+
+同カメラの 2 件の隙間（x または y の空き px）: 01=4(x) / 02=4(x) / 03=22(x) / 04=235(x) / 05=72(y) / 06=5(x) / 07=4(y)。いずれも重なり 0。**08 だけは box が 248x205（50,840 px²）重なる**（08-01 の水面が床全面に広がり、08-02 のテレビの山が床へこぼれる部分と同じ床を使うため）。この 2 件は**同プレイ排他**にして、重なりを許す（水面に積まれたテレビには接地反射が要り、08-01 の「映るのは昭和の夕焼けだけ」と矛盾するため。併存させない運用を台帳 note に書く）。
+
+### box と既存 overlay の重なり（2026-11-04、機械出力）
+
+各 box と、台帳の既存 overlay の bbox（`overlay_origin` + `dimensions`）の重なり px² を機械で出し、全件を「排他」「併存可」に振った。**排他**は同プレイで共存させない（台帳 note に互いを書く）。**併存可**は、大面積のポリゴンが当該物の**接地部・枠・保持物の輪郭で止まる**（マスクで抜く）ことを条件にする。括弧内の数字は重なり px²。
+
+```
+# 台帳登録時の出し直し（pyyaml）。boxes は登録する件の box に書き換える
+uv run --with pyyaml python3 - <<'EOF'
+import re, yaml
+d = yaml.safe_load(open('prompts/anomalies.yaml'))['anomalies']
+boxes = {'CAM08': [('08-01', 0, 265, 675, 900), ('08-02', 0, 130, 248, 470)]}  # (名, x1, y1, x2, y2)
+for cam, bl in boxes.items():
+    for n, x1, y1, x2, y2 in bl:
+        print(cam, n, 'area', (x2 - x1) * (y2 - y1))
+    for e in d:
+        if e['camera_id'] != cam: continue
+        x, y = map(int, re.search(r'\((\d+),(\d+)\)', e['overlay_origin']).groups())
+        w, h = map(int, e['dimensions'].split('x'))
+        for n, x1, y1, x2, y2 in bl:
+            ox, oy = min(x + w, x2) - max(x, x1), min(y + h, y2) - max(y, y1)
+            if ox > 0 and oy > 0: print(' ', n, e['id'], ox * oy)
+EOF
+```
+
+| 件 | 排他（同プレイ非共存） | 併存可（接地部・枠で止める） |
+| --- | --- | --- |
+| 01-01 | ceiling-fan-showa (8,892) / ceiling-panel-round (9,017) / vent-hole-triangle (1,376) / ceiling-seam-circle (2,310) / **tube-end (5,040。蛍光灯は点いたままの前提と矛盾)** | noren (4,180) / door-ajar (4,360)（提灯は y≤300 に収める）/ sign-rim (840) / sign-old-shop (47)（吊り看板は保持物） |
+| 01-02 | notice (4,462) / wall-repaint-patch (2,790) | wiped-window (441) / cat-in-frosted-window (3,384)（窓 E10 は保持）/ ceiling-seam-circle (1,680)（天井側。壁ポリゴンの外）/ bamboo-broom (3,052。床。壁の接地線で止める） |
+| 02-01 | stool (**37,590**) / leather-footprints (13,708) / chalk-hopscotch (5,890) / tile-color (6,536) / tile (4,672) / puddle (8,866) | tricycle (18,209) / smartphone-facedown (5,016) / bag (10,922) / pot-duplicate (7,007) / blue-pot (3,843) / square-pot (4,347) / ashtray (3,055) / coffee (2,650)（足跡は各物の接地部を避ける）/ duplicate-coffee-sign (11,676。看板は保持）/ shop-reopens (5,014。左シャッター側。x176〜199 だけ） |
+| 02-02 | shop-reopens (**43,000**) / open-sign (8,064) / newspaper (6,298) / cat (6,305) / wrapping-paper (1,026) | puddle (**17,875**。床。画用紙はシャッター下端の接地線で止め、水たまりは覆わない）/ cigarette (2,294) / receipt (2,420) / tile (1,344) / tile-color (1,720) |
+| 03-01 | shutter-wave (15,450) / newspaper (7,884) / paper-bag (2,964) | tile-diagonal (1,210) / blue-floor-tile (1,666)（床。シャッターの接地線で止める）/ pendant-lamp (164) |
+| 03-02 | round-puddle (2,736) / tile-diagonal (2,236) / blue-floor-tile (2,184) | kerosene-heater (15,750) / silver-can (5,251)（畳の上に載る形。接地部を抜く） |
+| 04-01 | red-lantern (10,788) | puddle (10,656。床。窓ポリゴンは右壁だけ） |
+| 04-02 | red-telephone (**61,491**) / basket (8,832) / poster-colour-restore (6,240) / poster (3,185) | fluorescent-frame-grey (24,120) / sign-colour-blue (3,360)（枠・看板は保持）/ orange-tile (5,760) / hatch-frame-round (3,520) / hatch-reflection-extra (2,328) / randoseru-red (1,632)（床。ガラス下端で止める） |
+| 05-01 | glass-light (62,832) / old-woman-in-glass (29,952) / curtain-open (29,216) / sign-in-glass (29,000) / amber-pane (27,740) / **joint-into-glass (26,832)** / chair-reflection (7,980) / curtain-mend (2,108) / wind-chime (1,975) | duplicate-light (2,200。天井）/ brick-round (1,892) / blue-brick (208)（レンガ帯は保持）/ brown-column (860。角柱は保持） |
+| 05-02 | floor-glare-backside (12,769) / marbles-scattered (11,312) / pet-bottle (6,318) | なし（重なるのはこの 3 件だけ。joint-into-glass は y409〜553 で 05-02 の box と重ならない） |
+| 06-01 | wall-puddle (**35,350**。排他。1 カメラ 1 件制で同時には出ない）/ wall-stripes (3,685) | tilted-notice (3,034。額入り掲示そのものが保持物で、格子から抜く）/ ceiling-panel-white (6,132。天井側）/ wet-footprints (2,760。床） |
+| 06-02 | ceiling-balloons (9,396) / ceiling-checker (4,371) / lamp-squared (1,876) / fluorescent-tag (3,200) | sign-orange-blue (11,232。看板 x142〜250・y134〜238 は保持。傘は看板の矩形を避ける）/ reopened (6,867。傘の下端は x253〜362 で y≤190）/ far-sign-same (117) / crt-tv-glow (2,948。店先の窓の奥。傘の下端は y≤225） |
+| 07-01 | reopened (23,086) / wall-grid (3,060) / notice (2,891) | stairs (19,947) / white-step (1,974) / stairs-cat (1,908) / ticket (1,568) / shoe-v2 (1,116)（階段は保持。時計は階段壁の手前で止める）/ crane (9,006。吊り鶴は時計の手前）/ pictogram-flip (1,224) / blue-push-plate (1,196) / duplicate-green-sign (1,015) / warm-light (900) / opening-paper (432)（扉・開口・非常灯は保持）/ ceiling-string (24) |
+| 07-02 | crane (9,638) / paper-airplane-ceiling (3,286) / paper-tag-lamp (2,208) / lamp-off (1,440) / ceiling-string (456) | なし |
+| 08-01 | floor-reflection-two-tier (19,306) / floor-reflection-no-pillar (20,648) / tile-concentric (7,392) / floor-ramune-marbles (13,209) / **pillar-second (12,744。柱の鏡像が合わない）** / panel (12,768) / panel-off (5,429) / blue-panel (5,429)（パネルの光の状態が水面の鏡像と食い違う）/ cat (1,785) / barber-pole (4,940)（床の物は接地反射が要る）/ **08-02（box 248x205）** | wall-band-wave (21,870) / suit (11,020) / pillar-notice (4,662) / bag (4,418) / fixture-duplicate (98)（壁・柱・ガラス戸の面。水面は壁と柱の接地線より下だけで、鏡像は元の壁・柱を映す）/ old-man-back (5,490。奥の通路はポリゴンの外） |
+| 08-02 | bag (12,502) / barber-pole (6,422) / cat (1,785) / notice-residue (950) / **08-01** | light-blue-bleed (2,656。天井の灯列は保持。山の頂点は y≥145） |
+
+CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢・袋・灰皿・コーヒー・看板などの小物は台の元の位置のまま併存でき、足跡はそれらの接地部を避ける。CAM08 の 08-01 の旧 box（y430〜）で 3,834 だった `pillar-second` は、box を床全面（y265〜）に広げたため 12,744 になり、排他に加えた。
+
+### 既存との重複精査（共通）
+
+- 台帳の既存大面積は 2 件のみ。`AR-06-wall-puddle`（CAM06 (135,432) 540x202）は **CR-LG-06-01 の box と 35,350 px² 重なる**（puddle の bbox が右壁の中段にかかる）。→ 06-01 は puddle と**排他**と明記する（ゲームは 1 カメラにつき未検出の異変を 1 件しか同時に出さないので、同時には出ない。bbox が重なってよく、kako-jun への確認は不要。台帳 note に「排他」を書く）。`AR-07-floor-uphill`（CAM07 (84,548) 591x352）は 07-01/02 と重ならない。
+- 型の重複回避: 01-02（顔写真の格子・CAM01 のみ）／02-01（足跡・CAM02 のみ）／02-02（クレヨン画・CAM02 のみ）／04-01・04-02・05-01・08-01・01-01 も各 1 カメラのみ。他カメラで同じ型を作らない（kako-jun 指示）。他 8 件はこれらと型が被らないよう中身を差し替え済み（無地の白紙・畳・折り鶴・同じポスター・傘・時計・シーツ・テレビの山）。テレビは小物の `CR-NEW-02-05`（CAM02）・`AR-06-crt-tv-glow`（CAM06）が既にあるため、08-02 は「積まれた山」に限定した。紙の輪つなぎは `CR-NEW-02-04`（CAM02）にあるため、01-01 は提灯だけにした。
+- **構造の反復**（レビュー指摘 N2）: 面に同じ素材を敷き詰める件が 5（01-02 顔・02-02 クレヨン画・03-01 白紙・06-01 ポスター・07-01 時計）、天井から吊る件が 3（01-01 提灯・06-02 傘・07-02 シーツ）ある。一方で床の件は 4（02-01 足跡・03-02 畳・05-02 折り鶴・08-01 水鏡）、積む・ガラス越しの件は 4（08-02 テレビの山・04-01 窓・04-02 曇り・05-01 店内）で、すべて別カメラ・別の面・別の物語（老人の昭和／子供／行方不明）に割れている。「面を覆う」大面積は必然的に反復の見た目になる（kako-jun 指示の型）ため、**型は変えない**。予備案として、03-01 を「シャッターの前に無地の白い段ボール箱が積み上がる」立体物に振る手はあるが、全景 2 窓・排他増・box 再設計を伴うので採らなかった。
+- 近い既存: 吊り物の天井（`AR-01-ceiling-fan-showa` / `AR-06-ceiling-balloons` / `AR-07-crane` / CR-02-21・CR-08-20 の折り鶴）、傘（`AR-06-umbrella` / `AR-06-reflected-umbrella` / CR-01-37 / CR-04-17）、折り鶴（`AR-07-crane`・`AR-01-container-origami`）。型が「面一面」で別物と整理し、各項の note に近傍を書く。
+- 昭和テーマ節の「時計の針は写真に時計が写っていないため候補にしない」は、**既存の時計を改変する案**の話。07-01 は時計を**足す**ので抵触しないが、方針の例外に当たるため kako-jun 指示（2026-11-04）に基づく旨を台帳 note に書く。
+
+---
+
+### CR-LG-01-01 天井一面の提灯・紙飾り
+
+- **ID / camera / element_id**: CR-LG-01-01 / CAM01 / CAM01-E01
+- **面**: box 212,0,675,340（157,420 px²、25.9%）。天井の台形（丸灯・換気口・点検板・蛍光灯のある面）。
+- **物と変化**: 通路天井の右〜中央一面に、赤白の**無地**の提灯が数十個、提灯どうしをつなぐ細い飾り紐とともに列をなして吊られる（紙の輪つなぎは CAM02 の `CR-NEW-02-04` と近いので使わない）。奥ほど小さく密。既存照明は飾りの隙間から見え、蛍光灯は点いたまま。
+- **不気味さの狙い**: 誰もいないのに祭りの準備だけがある。老人の記憶が「祭りの夜の商店街」を天井に再生する、優しい異変（story: 通路に現れていた像は老人 3 人の記憶）。
+- **保持するもの**: 床・左右の壁・店先・奥の吊り看板（E16、y373 付近）、換気口・点検板・丸灯・蛍光灯の本体、天井の色味・粒状・板継ぎ目（飾りの隙間に残す）。
+- **生成プロンプト全文**:
+  ```
+  $imagegen Edit the attached surveillance camera photo of an underground shopping arcade corridor (the ceiling occupies the upper part of the frame).
+  Make ONLY this change: on the ceiling of the right and centre part of the corridor, hang several dozen completely blank paper lanterns (red and white, round, no characters, no crests, no logos, no stripes of writing), linked by thin plain cords, in neat rows (no paper-chain garlands, no streamers) receding toward the far end of the corridor. Lanterns get smaller and denser toward the vanishing point and follow the strong perspective of the ceiling. Each lantern hangs on a thin cord about 25-40 cm below the ceiling plane. Existing ceiling fixtures (round lamps, the large concentric vent, the square access panel, the long fluorescent tube) stay visible between the lanterns and the fluorescent tube stays lit. Lanterns glow faintly warm only at their own surface; the corridor floor and walls stay cold blue-grey.
+  Do not touch the floor, walls, shopfronts, hanging signs or anything below the ceiling line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
+  ```
+- **作り方**: ①割付図: 消失点（奥の開口付近）へ向かう流線 3 本 × 提灯の位置と大きさ（手前 60px → 奥 8px）を `uv run --with pillow python3` で描いて確定。②全景を 3 テイク生成（窓 y0〜450 の 1 枚。天井以外は元画像で上書きする前提）。③天井の台形ポリゴンを手描きし、ポリゴン内のうち「提灯の実体＋吊り紐・飾り紐」だけを差分抽出（`--box 212,0,675,340 --threshold 20`）。吊り看板（y373）には届かない高さに収める。④原寸で蛍光灯が点いたまま・換気口が見えることを確認。
+- **難所と没基準**: 提灯に文字・家紋が出たら没。遠近のスケール崩れ（奥が手前より大きい）は没。消失点付近が潰れるなら奥の提灯を間引く。天井が背景化しやすいので提灯は大きめ・白を強く。
+- **フェーズ / 目立ち度**: mid〜late / obvious。
+- **台帳案**: category `environment` / anomaly_type `add_object` / detail 「通路天井の右〜中央一面に、無地の赤白の提灯が飾り紐とともに数十個吊られる（蛍光灯は点いたまま）」。note に「大面積。CAM01-E01。近傍: AR-01-ceiling-fan-showa（同じ天井の昭和小物）と bbox 重複するが大面積の例外」を書く。
+- **排他**: `AR-01-ceiling-fan-showa`・`AR-01-ceiling-panel-round`・`AR-01-vent-hole-triangle`・`AR-01-ceiling-seam-circle`（天井の飾りで同じ面に重なる）は同プレイ非共存を推奨。**`AR-01-tube-end`（蛍光灯の片端が切れる。5,040）も排他**（本件は蛍光灯が点いたままの前提）。`CR-NEW-02-04`（CAM02 の七夕の輪つなぎ飾り）とは紙の輪つなぎを使わないことで型を分けた。
+- **生成枚数の最小見積り**: 全景 3 テイク（素材の別生成なし）。
+
+### CR-LG-01-02 左壁一面の同じ顔写真（行方不明の 4 人）
+
+- **ID / camera / element_id**: CR-LG-01-02 / CAM01 / CAM01-E09
+- **面**: box 0,215,208,725（106,080 px²、17.5%）。左壁の台形から窓（E10: x45-110, y265-600）を除いた面。
+- **物と変化**: 左壁の粗い粒状壁に、額なしの白黒証明写真風の小さな顔写真が格子状に貼られる。顔は 4 種（老人男性 2・老婆 1・子供 1）の繰り返しで、監視カメラ映像のように粗く無表情、全員こちらを向く。文字・氏名・日付なし。窓の外側の壁にだけ貼る。
+- **不気味さの狙い**: story の行方不明 4 人（老人 3 人うち 1 人は老婆、4 人目は子供）を、説明なしに顔だけで示す。誰もいないのに視線だけある。
+- **保持するもの**: 窓（E10）・腰板・巾木・床、壁の粒状質感、上下の輪郭線、奥の柱との境。
+- **生成プロンプト全文**（顔素材を 1 枚の正方グリッドで別生成。本体の全景生成はしない）:
+  ```
+  $imagegen Create a flat, front-facing 2x2 contact sheet of four small black-and-white ID-style photographs, each one a different completely fictional person: (1) an elderly man with short grey hair, (2) another elderly man wearing a plain flat cap, (3) an elderly woman with her hair tied back, (4) a young child with short hair. All four have neutral expressions and look straight into the lens. Style: very coarse, low-resolution black-and-white surveillance-camera still, heavy film grain, slight blur, high contrast, small passport-photo crop with plain mid-grey background. Each photo is a plain rectangle with a thin white border and nothing printed anywhere: no captions, no names, no dates, no numbers, no text, no logos. The faces must not resemble any real person. Evenly lit flat scan on a neutral grey backdrop, each photo occupying one quadrant with equal margin.
+  Output 1536x1024 (3:2). No watermark.
+  ```
+- **作り方**: ①顔素材を 3 テイク生成し、4 種が破綻しないテイクを人間が選ぶ。②4 枚を切り出し、1 枚 22×28 px 前後（手前は 26px、奥は 18px）。③割付図: 壁の台形の 4 隅（天井境界・巾木・奥の柱際・手前端）から格子（縦 9 列×横 6〜8 行）を遠近ワープで作り、顔の並びは 4 種を巡回。窓ポリゴンは格子から抜く（共通手順 6: quad を分けて抜く）。④壁の粒状・明暗を multiply で乗せ、白黒写真の白は 85% に落とす。⑤`composite-anomaly.py` は使わず、ポリゴン alpha から overlay を切り出す（ポリゴン外は alpha 0）。
+- **難所と没基準**: 顔の同一性が崩れる・実在人物に似る・文字風の模様が写真下端に出るテイクは没。顔は粗く小さく（20〜25px）して崩れを目立たせない。
+- **フェーズ / 目立ち度**: late / obvious（4 人目が出た後）。
+- **台帳案**: category `surreal` / anomaly_type `duplicate` / detail 「左壁一面に、4 種の無表情な白黒の顔写真（老人男性 2・老婆 1・子供 1）が格子状に隙間なく貼られる」。note に「大面積。CAM01-E09、窓 E10 は保持」を書く。
+- **排他**: `AR-01-notice`・`AR-01-wall-repaint-patch`（左壁の紙・塗り直し跡で同じ面）。`AR-01-wiped-window`・`AR-01-cat-in-frosted-window` は窓内なので併存可。
+- **生成枚数の最小見積り**: 素材 3 テイク（正方グリッド）。全景生成なし。
+
+### CR-LG-02-01 床一面の足跡（奥の角へ向かう列）
+
+- **ID / camera / element_id**: CR-LG-02-01 / CAM02 / CAM02-E20
+- **面**: box 176,340,675,900（279,440 px²、46.0%）。通路の中央〜右〜手前の床。
+- **物と変化**: 床タイル一面に、乾いた砂埃の足跡が無数に付き、全部が通路奥の暗い角（柱の左の開口）へ向かって列をなす。靴は昭和の革靴・草履・小さな子供のスニーカー（無地、ロゴなし）、大小混在、手前ほど大きい。人は居ない。足跡の上でも照明反射（E22）と緑の光（E23）を保つ。
+- **不気味さの狙い**: 「シャッターの向こうへ行ったまま戻っていない」4 人（作業仮説）。行きの足跡だけで帰りが無い。子供の小さな足跡で 4 人目を示す。
+- **保持するもの**: 看板・木箱・黒板・椅子・点検口（E21）・左のシャッター壁・天井、床の目地と反射。
+- **生成プロンプト全文**:
+  ```
+  $imagegen Edit the attached surveillance camera photo of a tiled underground corridor floor.
+  Make ONLY this change: add hundreds of dusty dry footprints on the floor tiles in the centre, right and foreground area. All footprints walk toward the same place, the dark opening at the far end of the corridor beside the pillar, forming many parallel trails. Mix four kinds of soles: old leather dress shoes, flat straw sandals (zori), small children's sneakers with a plain smooth sole, and bare-ish small feet. The soles are completely plain with no tread lettering, no logos, no marks. Sizes follow perspective: large near the camera, shrinking toward the vanishing point, and they follow the diagonal lines of the tile joints. Footprints are grey-brown dust, clearly darker than the floor so they are visible, and there is no person in the frame. Keep the existing white lamp reflections and the green glow on the floor visible on top of the footprints.
+  Do not touch the signboard, wooden crate, easel blackboard, chair, floor hatch, left shutter wall or the ceiling. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
+  ```
+- **作り方**: ①割付図: 床の消失点＝奥の開口へ向かう流線 5〜6 本を引き、4 種の靴を帯状に分けて密度を変える（全面均一は禁止＝コピペ感）。②窓 A（y250〜700。奥の暗い角 E09 の下部を含む）を 3 テイク生成して 1 枚採用 → A を貼り戻した全画面から窓 B（y450〜900）を切り出して 3 テイク（B のプロンプトは「the dark opening at the far end of the corridor beside the pillar」を「the same trails keep running toward the upper part of the frame」に差し替える）。box の高さ 560 は 3:2 の窓（高さ 450）に収まらないため 2 枚に分け、重なり帯（y450〜700）は線形ブレンドで継ぐ。③床の台形ポリゴンから木箱・黒板・椅子・点検口・看板の接地部を抜き、足跡の暗部だけを差分抽出（`--box 176,340,675,900 --threshold 18` ＋ `--dilate` で足跡群をまとめる）。④反射帯は screen 合成で元の光を戻す。
+- **難所と没基準**: 遠近が目地と合わない・足跡が床を描き直して目地がずれる・靴底に文字風模様が出る・帯の向きが奥の角を向かないテイクは没。反射帯内は消えやすいので濃くする。砂埃は低コントラストになりがちなので、視認性 floor を `check-visibility.py` で先に確認する。
+- **フェーズ / 目立ち度**: late / medium（子供の小さな足跡で 4 人目を示すため、4 人目のフラグ後に限る。story の「4 人目の子供の記憶」は未決で、フラグ後の読みの一つとして添える）。
+- **台帳案**: category `person` / anomaly_type `add_object` / detail 「床一面に、昭和の靴・草履・子供の靴の足跡が無数に付き、全て奥の暗い角へ向かう（帰りの足跡は無い）」。note に「大面積。CAM02-E20。AR-02-leather-footprints の拡大版ではなく、多人数・子供混在の別物。排他」を書く。
+- **既存との関係（差分と排他）**: `AR-02-leather-footprints`（(409,732) 92x149、革靴 1 列）は本件の床の内側に完全に入る。差分: 本件は床一面・4 種の履物・奥の角へ収束・子供混在。**排他**（同プレイで共存させない。本件を採用するなら leather-footprints は台帳に残すが、台帳 note に互いを書く）。同じ床面を使う `AR-02-stool`（**37,590**。台が通路側へ動く）・`AR-02-chalk-hopscotch`・`AR-02-puddle`・`AR-02-tile`・`AR-02-tile-color` も**排他**。床に立つ小物（`AR-02-tricycle` `AR-02-smartphone-facedown` ほか。全件は「box と既存 overlay の重なり」の表）は併存可で、足跡が小物の上を通らないよう接地部はマスクで抜く。`AR-06-wet-footprints`（CAM06）は別カメラの別物で、この型は CAM02 だけに限る。
+- **生成枚数の最小見積り**: 全景 6 テイク（窓 A 3＋窓 B 3）。
+
+### CR-LG-02-02 左シャッター一面の子供のクレヨン画
+
+- **ID / camera / element_id**: CR-LG-02-02 / CAM02 / CAM02-E07
+- **面**: box 0,50,172,600（94,600 px²、15.6%）。左の横縞シャッター面（E07）とガラス店先（E08）の台形。
+- **物と変化**: シャッターとガラスの全体に、子供のクレヨン画の画用紙がテープ止めで隙間なく貼られる。どの絵も同じ構図（大きな人型と小さな人型が手をつなぐ 4 人家族、赤い家、黄色い太陽）。画用紙は少し傾き、昭和風のセロハンテープ。文字・名前なし。
+- **不気味さの狙い**: 老人たちの記憶が作る像と読める。**4 人目のフラグ後（late）に限り**、子供の記憶が作った像とも読める（story の未決: 4 人目の子供の記憶が異変を作るか。確定ではなく、フラグ後の読みの一つ）。令和の子供が昭和のシャッターに貼るという時代の混ざり（story の「現代人と昭和の建物」）。優しいが数が多くて怖い。
+- **保持するもの**: シャッターの縦枠・上下の縁・床との接地・右のガラス枠の位置、横縞の線（絵の隙間と周囲に残す）。
+- **生成プロンプト全文**（絵素材を 1 枚別生成）:
+  ```
+  $imagegen Create one flat, straight-on scan of a single sheet of off-white drawing paper (landscape, slightly wrinkled, with a small piece of old yellowed cellophane tape at each top corner) carrying a naive child's crayon and coloured-pencil drawing: two big stick-like human figures and two small stick-like human figures holding hands in a row (a family of four), a red house with a triangular roof on the left, and a big yellow sun in the top right corner. The drawing is clumsy, with thick waxy crayon strokes and visible paper texture. It contains absolutely no writing: no letters, no numbers, no names, no signature, no logo. The sheet is evenly lit and fills most of the frame on a plain neutral dark-grey background.
+  Output 1536x1024 (3:2). No watermark.
+  ```
+- **作り方**: ①素材 3 テイクから 1 枚を人間が選ぶ。②割付図: シャッター台形（上辺 0,50 → 下辺 0,600 の遠近）に格子（4 列×9 行前後）、各枚を ±4 度回転・±6% 縮尺・明度ゆらぎ・テープ位置変化で敷き詰める（完全な複製感を避ける）。③横縞の凹凸は multiply で重ね、縦枠のライン上は貼らない（枠で止める）。④ポリゴン alpha から overlay を切り出す。
+- **難所と没基準**: クレヨン画に文字風の筆致が混ざったら没。人型の本数が 4 でない素材は没。ガラス面と金属シャッターで反射が違うので、ガラス部は反射を元画像から screen で戻す。
+- **フェーズ / 目立ち度**: late / obvious。
+- **台帳案**: category `object` / anomaly_type `duplicate` / detail 「左のシャッターとガラス店先一面に、同じ家族のクレヨン画の画用紙が隙間なく貼られる」。note に「大面積。CAM02-E07」を書く。
+- **排他**: `AR-02-shop-reopens`（(0,308) 199x250、同じ店先）・`AR-02-newspaper`・`AR-02-open-sign`・`AR-02-wrapping-paper`・`AR-02-cat`（同じ面を覆う）。変化の種類は別だが画面が潰し合うので同プレイ非共存。
+- **生成枚数の最小見積り**: 素材 3 テイク。
+
+### CR-LG-03-01 シャッター一面の無地の白い紙
+
+- **ID / camera / element_id**: CR-LG-03-01 / CAM03 / CAM03-E06
+- **面**: box 0,100,268,670（152,760 px²、25.1%）。左の大きな横縞シャッターの台形（手前左端〜中央左の柱まで）。
+- **物と変化**: シャッター一面に、**文字のまったくない無地の白い紙**（A4 前後）が隙間なく貼られる。紙は 1 枚ずつ微妙に傾き、角が浮き、テープ止めの跡がある。横板の段差は紙の下に透ける。
+- **不気味さの狙い**: 尋ね人の貼り紙の「書かれる前」。誰の貼り紙かは分からないが、貼られた量だけが行方不明の多さ（1 人増えるたびに異変が増えた）を語る。
+- **保持するもの**: 横板の凹凸・影・汚れ・右の柱・床・天井。
+- **生成プロンプト全文**（紙素材を 1 枚別生成）:
+  ```
+  $imagegen Create one flat, straight-on photo of a single plain sheet of white copier paper (portrait orientation, slightly curled corners, tiny creases, a faint grey dust cast) fixed to a wall with a short strip of clear tape at the top two corners. The paper is completely blank: no writing, no printing, no letters, no numbers, no lines, no logo, no photo. Soft even low-light surveillance-camera lighting, fine film grain, mild JPEG compression, plain dark grey shutter-metal background visible around the sheet.
+  Output 1536x1024 (3:2). No watermark.
+  ```
+- **作り方**: ①素材 2 テイクから 1 枚選ぶ。②割付図: シャッター台形に紙格子（7 列×13 行前後。手前ほど大きい）、各枚 ±3 度回転・縮尺 ±5%・明度 ±8%・角の浮きを変える。紙の隙間はゼロ（隙間なく）。③横板の段差を multiply で紙に反映（紙の下に縞が透ける）。④ポリゴン alpha で切り出し、柱・床の境で止める。
+- **難所と没基準**: 紙面に文字風の汚れ・線が出たら没。隙間なく貼ると単色の白面になり「何が違う」が分かりにくいので、紙の傾きと影で格子を見せる。
+- **フェーズ / 目立ち度**: late / obvious。
+- **台帳案**: category `object` / anomaly_type `duplicate` / detail 「左のシャッター一面に、無地の白い紙が隙間なく貼られる」。note に「大面積。CAM03-E06」を書く。
+- **排他**: `AR-03-newspaper`・`AR-03-paper-bag`・`AR-03-shutter-wave`（同じシャッターの小物。面を覆うので同プレイ非共存）。CR-LG-02-02（CAM02 の画用紙）・06-01（ポスター）とは型が「無地の紙／絵柄」で別。
+- **生成枚数の最小見積り**: 素材 2 テイク。
+
+### CR-LG-03-02 床一面の畳
+
+- **ID / camera / element_id**: CR-LG-03-02 / CAM03 / CAM03-E16
+- **面**: box 290,450,675,900（173,250 px²、28.5%）。右手前の床。**左縁は縦線で切らず、タイル目地の消失点へ向かう斜線に沿わせる**（ポリゴン）。
+- **物と変化**: 地下街の床が昭和の和室の畳に変わる。い草の淡い緑褐色の畳が 2:1 の割りで敷かれ、黒い布の縁（へり）と畳どうしの目地、手前ほど大きい遠近。既存の白い反射帯は畳の上にも残る。
+- **不気味さの狙い**: 老人の記憶が作る昭和の像（優しい異変）。通路の途中から床だけが「家の中」になる。靴で歩いてはいけない床が突然現れる。
+- **保持するもの**: 床の反射・光だまり、奥の階段状開口、シャッター、壁、天井、左の床タイル（ポリゴンの外）。
+- **生成プロンプト全文**:
+  ```
+  $imagegen Edit the attached surveillance camera photo of a tiled underground corridor.
+  Make ONLY this change: replace the floor tiles in the right and foreground part of the floor with a continuous area of old Japanese tatami mats. Mats are pale green-brown woven rush (igusa), laid in the traditional pattern with 2:1 mats, each mat bordered by a narrow black cloth edging (heri) and thin seams between mats. The mat grid follows the perspective of the floor and converges to the same vanishing point as the original tile joints; mats are large near the camera and smaller toward the far end. The existing white lamp reflections and light pools on the floor stay visible on top of the tatami as soft highlights. The left edge of the tatami area follows a tile-joint line running toward the vanishing point.
+  Do not touch the walls, shutters, ceiling, the dark stepped opening at the far end, or the floor to the left of that line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
+  ```
+- **作り方**: ①割付図: 目地の消失点（奥の開口付近）と、畳の長辺・短辺の流線、へりの線を図に描く（向きは図で決める）。②全景 3 テイク生成（窓 y450〜900 の 1 枚。box の高さ 450 が窓にちょうど収まる）。③ポリゴン（床の右半、左縁は目地斜線）を手描き。差分抽出でなくポリゴン内を生成で置換し、反射帯は元画像の高輝度を screen で戻す。④`--box 290,450,675,900` は外接のみ、`--threshold` は高め（20）か不使用。
+- **難所と没基準**: 畳の目の向き・へりが目地と合わず遠近が破綻するテイクは没。畳にい草の文字風模様や家紋が出たら没。左縁が不自然な縦の直線になったら没（斜線に沿わせる）。反射帯が消えて「ただ畳を貼った」ように見えるのは没。
+- **フェーズ / 目立ち度**: mid / obvious。
+- **台帳案**: category `environment` / anomaly_type `surreal` / detail 「右手前の床一面が昭和の和室の畳に変わり、既存の白い反射は畳の上に残る」。note に「大面積。CAM03-E16」を書く。
+- **排他**: 床の小物（`AR-03-round-puddle` `AR-03-silver-can` `AR-03-kerosene-heater` `AR-03-tile-diagonal` `AR-03-blue-floor-tile`）は畳の上に載る形になるので、水たまり・タイル色変えの 3 件は排他（畳の上に水たまり・タイルは成立しない）。石油ストーブ・缶は併存可。
+- **生成枚数の最小見積り**: 全景 3 テイク。
+
+### CR-LG-04-01 窓の外の昭和の路地（右壁）
+
+- **ID / camera / element_id**: CR-LG-04-01 / CAM04 / CAM04-E14
+- **面**: box 450,120,675,750（141,750 px²、23.3%）。右壁（ガラス窓と漆喰壁）の遠近台形。
+- **物と変化**: 右の黒い店舗ガラスの壁が、白い窓枠が連続する壁に変わり、窓の外に夕焼けの昭和の路地（木造の軒、電柱、瓦屋根、細い路地）が広がる。地下街に窓はない。
+- **不気味さの狙い**: 地下にないはずの夕焼けが窓の外にある。説明がつかないが優しい。「外へ帰りたい」気持ちの象徴（老人の記憶）。
+- **保持するもの**: 床・天井・柱縁・奥の扉と鉢植え・左壁。窓枠は元の縦枠位置を踏襲し、ガラスの反射は一部残す。
+- **生成プロンプト全文**（外景を別生成し、壁へ遠近ワープする。**これが主ルート 1 つ**で、壁の全景生成は行わない）:
+  ```
+  $imagegen Create a flat, straight-on view of what is seen through a window: a narrow Showa-era Japanese back alley at sunset, warm orange and pink evening sky, wooden eaves of old houses with plain cloth awnings (noren) that are completely blank, tiled roofs, a utility pole with wires, a narrow lane receding into the distance, long soft shadows. No signs, no shop names, no lettering, no logos, no people. Slightly hazy, faded film look, fine grain.
+  Output 1536x1024 (3:2). No watermark.
+  ```
+- **作り方**: ①外景素材 3 テイク（人間が選ぶ）。②割付図: 右壁の消失点に合わせた窓の遠近台形 5〜6 枠（縦枠の位置は元写真から取る）。③外景を各枠へ遠近ワープ。④白い窓枠・反射ハイライトは元画像から戻す（桟は必ず元から）。⑤ポリゴン alpha で切り出す。
+- **難所と没基準**: 遠近が右壁の消失点と合わない・看板や電柱に文字が出る・暖色が床へ漏れる（別異変になる）のは没。壁の粒状感を維持。
+- **フェーズ / 目立ち度**: late / obvious。
+- **台帳案**: category `surreal` / anomaly_type `surreal` / detail 「右の壁一面が窓になり、窓の外に夕焼けの昭和の路地が見える」。note に「大面積。CAM04-E14」を書く。
+- **排他**: `AR-04-red-lantern`（(506,242) 87x124、同じ右ガラス内）は窓の外景に隠れるため排他。`AR-04-puddle` は床で併存可。
+- **生成枚数の最小見積り**: 外景素材 3 テイク（全景生成なし）。
+
+### CR-LG-04-02 左ガラス店先の曇りと手形
+
+- **ID / camera / element_id**: CR-LG-04-02 / CAM04 / CAM04-E07
+- **面**: box 0,10,215,740（156,950 px²、25.8%）。左ガラス店先の全面（枠内のガラスのみ）。
+- **物と変化**: ガラスが内側から結露で曇り、子供と大人の手形が大小無数に付き、指で描いた絵（傘・太陽・猫・家）が数か所だけ現れる。文字・数字なし。
+- **不気味さの狙い**: 外側でなく内側から付いた手形。店の中に人がいた痕跡だけが残る。店の中にいた人々（老人たち）の気配。**4 人目のフラグ後（late）に限り**、小さな子供の手形が混ざって 4 人目の気配とも読める（story の未決: 4 人目の子供の記憶が異変を作るか。確定ではなく読みの一つ）。
+- **保持するもの**: 白い金属枠・床・天井・上部の緑看板・奥の通路。曇りは枠線で止める。
+- **生成プロンプト全文**（手形素材を別生成）:
+  ```
+  $imagegen Create a flat, straight-on photo of a pane of cold glass fogged with condensation, seen from the outside, with many handprints and palm prints pressed on the inside surface: some large adult hands, some small child hands, in varied sizes, all with exactly five fingers and natural proportions, smeared where the hand slid. In three places a finger has drawn a very simple child-like doodle in the fog (a small umbrella, a sun, a cat face, a house) as clear lines. No writing, no numbers, no letters, no logos. The fog is milky white-grey and translucent over a dark blue-black interior, with fine droplets and a faint warm glow far behind.
+  Output 1536x1024 (3:2). No watermark.
+  ```
+- **作り方**: ①素材 3 テイクから 2 枚（大人手・子供手が主）を選び、手形を切り出す。②各ガラスパネルのポリゴンを枠内側で作り、曇りは screen、手形は不透明度を変えて 40〜60 個配置（回転・縮尺・不透明度を変える）。③指の数は全数目視（6 本・4 本は没）。④枠は別マスクで元画像を戻す。
+- **難所と没基準**: 指の本数崩れ・絵が文字風記号になる・曇りが枠をまたぐ・暗いガラスが白一色になって情報量が消えるのは没。
+- **フェーズ / 目立ち度**: late / obvious（子供の手形が混ざるため、4 人目のフラグ後に限る）。
+- **台帳案**: category `environment` / anomaly_type `add_object` / detail 「左のガラス店先が内側から曇り、大小の手形と指で描いた絵が付く」。note に「大面積。CAM04-E07」を書く。
+- **排他**: `AR-04-red-telephone`・`AR-04-basket`・`AR-04-poster`・`AR-04-poster-colour-restore`（ガラス内の小物。曇りで隠れるので排他）。`AR-04-fluorescent-frame-grey` `AR-04-sign-colour-blue` は枠・看板で併存可。
+- **生成枚数の最小見積り**: 素材 3 テイク。
+
+### CR-LG-05-01 カーテンが開き無人の喫茶店
+
+- **ID / camera / element_id**: CR-LG-05-01 / CAM05 / CAM05-E08
+- **面**: box 280,108,555,538（118,250 px²、19.5%）。正面ガラス区画のカーテン面全体（扉ガラス 555 以降は含めない）。
+- **物と変化**: 灰色のカーテンが全て開き、ガラスの向こうに昭和の喫茶店の店内（暖色灯、木のカウンター、赤いビニール張りの丸椅子、クリームソーダの並ぶ棚、誰もいない）が見える。店内だけ暖かく明るく、手前の通路は冷たい青灰色のまま。
+- **不気味さの狙い**: 閉店した区画に、ついさっきまで人がいた温かい店内。人はいないのに椅子が引かれている。老人たちが戻れないと主張する昭和そのもの、「シャッターの向こう側」の窓（story）。
+- **保持するもの**: 金属枠の縦横桟、ガラス反射の筋、手前の床、天井、緑看板、左の黒い側面、レンガ帯。
+- **生成プロンプト全文**:
+  ```
+  $imagegen Edit the attached surveillance camera photo of an underground shop front with a large glass facade covered by grey curtains.
+  Make ONLY this change: all grey curtains behind the glass are drawn open, and through the glass we see the warm interior of an old Showa-era Japanese coffee shop with nobody in it: warm amber lamps, a wooden counter, round stools upholstered in red vinyl (one stool pulled slightly out), a shelf lined with plain unlabeled cream-soda glasses. The interior is clearly warmer and brighter than the corridor. The metal window mullions and transoms stay exactly where they are, and the existing faint reflections on the glass stay visible. The corridor floor, ceiling, green sign, black side panel and brick band remain cold blue-grey and untouched; the warm light must not spill onto the floor.
+  There must be no menus, no signs, no shop names, no lettering and no logos anywhere. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
+  ```
+- **作り方**: ①割付図: ガラス各枠の多角形（桟位置は `--list-elements CAM05` と原寸拡大で確定）。②全景 3 テイク（窓 y100〜550 の 1 枚。box y108〜538 が収まる）。③元画像を下・生成を上に置き、ガラス各枠の内側ポリゴンだけを採用、桟と反射ハイライトは screen で元から戻す。境界ぼかし 1〜2 px。④床に暖色が漏れていないことを差分で確認。
+- **難所と没基準**: 文字（メニュー・看板）の混入、桟の遠近が崩れる（桟は元から戻す）、暖色が床へ漏れる（別異変になる）は没。
+- **フェーズ / 目立ち度**: mid〜late / obvious。
+- **台帳案**: category `surreal` / anomaly_type `state_change` / detail 「正面ガラスのカーテンが全て開き、無人の昭和の喫茶店の暖かい店内が見える」。note に「大面積。CAM05-E08。AR-05-glass-light 等と排他」を書く。
+- **既存との関係（差分と排他）**: `AR-05-glass-light`（(324,194) 187x336、古い店の灯りが映る）と役割が被り、`AR-05-curtain-open`（カーテン 1 枚が少し開く）・`AR-05-amber-pane`（ガラス 1 枚が琥珀色）・`AR-05-chair-reflection`・`AR-05-old-woman-in-glass`・`AR-05-sign-in-glass`・`AR-05-wind-chime`・`AR-05-curtain-mend`・**`AR-05-joint-into-glass`（床の目地線がガラス内へ連続して見える。26,832。05-01 側の排他）** はいずれも同じガラス面で、本件の「全面開放＋店内」の部分集合か上書きに当たる。**これらは全て排他**（同プレイ非共存）。差分: 本件は店内の実像（カウンター・椅子・棚）が見え、反射像でも部分変化でもない。`AR-06-reopened`（CAM06）は別カメラで、この型は CAM05 に限る。
+- **生成枚数の最小見積り**: 全景 3 テイク。
+
+### CR-LG-05-02 床一面の白い折り鶴
+
+- **ID / camera / element_id**: CR-LG-05-02 / CAM05 / CAM05-E13
+- **面**: box 0,610,675,900（195,750 px²、32.2%）。前景の床一面。
+- **物と変化**: 床一面に、無地の白い折り鶴が敷き詰められる。大きさは遠近で手前が約 60px、奥（y610 付近）が約 25px。向きは様々で互いに少し重なり、隙間から床が少しだけ覗く程度に密。
+- **不気味さの狙い**: 千羽鶴＝無事を祈る品。行方不明 4 人の「帰ってきますように」が誰も居ない通路に積もっている。白い鶴の海。
+- **保持するもの**: 天井・正面ガラス区画・手前以外の面。床の照明反射は折り鶴の上でも薄く残す（screen）。
+- **生成プロンプト全文**（折り鶴素材を別生成）:
+  ```
+  $imagegen Create a flat top-down photo of about twelve plain white origami paper cranes of varied orientation (some seen from above, some from the side, wings spread) lying close together on a dark grey stone tile floor, casting short soft dark shadows. The paper is completely blank, matte white with subtle fold creases, no printing, no writing, no patterns, no colours, no logos. Each crane is distinct and well formed with a clear head, tail and two wings. Even low-light surveillance-style lighting, fine film grain, slight blur.
+  Output 1536x1024 (3:2). No watermark.
+  ```
+- **作り方**: ①素材 3 テイクから最良を選び、鶴を 1 羽ずつ切り出して 8〜12 種のスプライトにする。②割付図: 床の消失点へ向かう流線に沿った散布（スケール s = f(y)、手前 60px → 奥 25px）、位置はポアソン円板で重なり少なめ。③各羽に接地影（multiply）、床の反射は screen で戻す。④全面均一を避け、密度は帯ごとに変える。⑤ポリゴンは床の全面（柱・正面ガラスの接地線で止める）。
+- **難所と没基準**: 折り鶴が不格好（頭・羽が判別不能）なスプライトは使わない。紙に文字が出たら没。コピペ感（同じ羽の反復）が見えたら回転・反転・縮尺を増やす。
+- **フェーズ / 目立ち度**: early〜mid / obvious（白が暗い床で強く、視認性 floor は余裕）。
+- **台帳案**: category `object` / anomaly_type `multiply` / detail 「床一面に、無地の白い折り鶴が敷き詰められる」。note に「大面積。CAM05-E13」を書く。
+- **排他**: `AR-05-pet-bottle`・`AR-05-marbles-scattered`・`AR-05-floor-glare-backside`（床の小物で、鶴に覆われる。`AR-05-joint-into-glass` は y409〜553 で 05-02 の box と重ならず、05-01 側の排他）。折り鶴系の近縁 `AR-07-crane`（CAM07 の天井 1 羽）・`AR-01-container-origami`・CR-02-21・CR-08-20 は別カメラ・別規模で併存可（型は「床一面」でここだけ）。
+- **生成枚数の最小見積り**: 素材 3 テイク。
+
+### CR-LG-06-01 右壁一面の同じポスター（手を振る子供の後ろ姿）
+
+- **ID / camera / element_id**: CR-LG-06-01 / CAM06 / CAM06-E15
+- **面**: box 500,40,675,860（143,500 px²、23.6%）。右側の粗い壁の遠近台形。
+- **物と変化**: 右の壁一面に、**完全に同じ絵柄**（手を振る子供の後ろ姿の無地の絵、文字なし）のポスターが隙間なく縦横に並ぶ。既存の額入り掲示と扉は残す。
+- **不気味さの狙い**: 同じ絵が数百枚並ぶ説明のつかなさ。手を振って遠ざかる後ろ姿は、**4 人目のフラグ後（late）に限り**、シャッターの向こうへ行ったまま戻らない 4 人目の子供とも読める（story の未決: 4 人目の子供の記憶が異変を作るか。確定ではなく読みの一つ）。後ろ姿なので顔は無く、誰の子かも分からない。
+- **保持するもの**: 壁の粗い質感、扉、取手、額入り掲示、天井・床との境、手前の影。
+- **生成プロンプト全文**（ポスター素材を 1 枚別生成）:
+  ```
+  $imagegen Create one flat, straight-on photo of a single plain poster printed on cream paper (portrait orientation, slightly faded, one small piece of tape at each top corner), showing a simple gentle illustration of a small child seen from behind, standing in a quiet empty corridor and waving one hand, wearing a plain T-shirt and shorts, with soft muted watercolour colours and a lot of empty space around the figure. The child's face is not visible. The poster has no title, no caption, no writing, no numbers, no letters, no logos anywhere, and no border text. Even low-light surveillance-style lighting, fine film grain, a plain dark grey wall visible around the poster.
+  Output 1536x1024 (3:2). No watermark.
+  ```
+- **作り方**: ①素材 3 テイクから 1 枚を選ぶ（指は 5 本、腕は 1 本だけ上げているか目視）。②割付図: 右壁の消失点へ向かう台形に格子（手前 5 列→奥ほど細く、縦 10〜12 行）。扉・額・取手は格子から抜く（共通手順 6: quad を分けて抜く）。③遠近ワープ＋壁の粗面を multiply／displace で反映。④ポリゴン alpha で切り出す。
+- **難所と没基準**: 絵に文字が出る・子供が複数／顔が見える・腕が崩れるテイクは没。完全同一の複製なので 1 枚の品質がすべて。壁の粗面にマスクが追従しにくいので境は巾木・天井線で止める。
+- **フェーズ / 目立ち度**: late / obvious（4 人目のフラグ後）。
+- **台帳案**: category `object` / anomaly_type `duplicate` / detail 「右の壁一面に、手を振る子供の後ろ姿の同じポスターが隙間なく並ぶ」。note に「大面積。CAM06-E15。AR-06-wall-puddle と排他」を書く。
+- **排他**: **`AR-06-wall-puddle`（bbox が 35,350 px² 重なる大面積。排他。1 カメラ 1 件制で同時には出ない）**、`AR-06-wall-stripes`（壁面の模様で、ポスターに覆われる）。`AR-06-tilted-notice`（額入り掲示。**保持物**なので格子から抜き、併存可）、`AR-06-ceiling-panel-white` は天井側で併存可。`AR-06-wet-footprints` は床で併存可。CR-LG-01-02（顔写真の格子）・03-01（無地の白紙）とは型が別で、顔は出さない。
+- **生成枚数の最小見積り**: 素材 3 テイク。
+
+### CR-LG-06-02 天井一面の傘（逆さに吊られる）
+
+- **ID / camera / element_id**: CR-LG-06-02 / CAM06 / CAM06-E01
+- **面**: box 0,0,495,255（126,225 px²、20.8%）。天井一面。
+- **物と変化**: 天井から、無数の無地の傘が**逆さ**（曲がり柄を上、開いた傘面の頂点を下、お椀を伏せた形）に吊られる。色は黒・透明（ビニール）・赤の 3 種。奥へ遠近で小さく密に連なる。
+- **不気味さの狙い**: 地下街は雨宿りの場所。持ち主が消えて傘だけが戻ってきて、天井に吊られている。傘が全部「逆さ」なので静かに気味が悪い。
+- **保持するもの**: 天井の板継ぎ目・点状汚れ、蛍光灯（E03）、丸灯、吊り看板「まちがいサラダ」（x約145-235, y約140-215）、左壁との境、壁面以下の全て。傘は看板の矩形（x142〜250, y134〜238）に重ねない。下端は、`AR-06-reopened` の上端（y192）に当たる x253〜362 では y≤190、その他の x では y≤225（店先ガラスの奥の `AR-06-crt-tv-glow` を覆わない）。
+- **生成プロンプト全文**:
+  ```
+  $imagegen Edit the attached surveillance camera photo of an underground shopping arcade corridor (the ceiling occupies the upper part of the frame).
+  Make ONLY this change: hang many dozens of plain, open umbrellas upside down from the ceiling on thin cords: each umbrella is hung by its curved handle clipped to the cord, the open canopy hangs below like an inverted bowl with its tip pointing down. Umbrellas are completely plain in three kinds only: solid black, clear transparent vinyl with visible metal ribs, and solid red; no prints, no tags, no brand marks, no lettering. They recede toward the far end of the corridor with correct perspective, big near the camera and small and dense far away, hanging at slightly different heights but all above the hanging sign that stays visible. The existing ceiling fluorescent tubes, round lamps and the hanging sign stay visible between the umbrellas and the fluorescent light stays on.
+  Do not touch the floor, walls, plants, shopfronts or anything below the ceiling line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
+  ```
+- **作り方**: ①割付図: 消失点（奥の通路）への流線に傘の位置・サイズ（手前 55px → 奥 10px）・色（黒・透明・赤の比 5:3:2）を割り付け、吊り看板と蛍光灯の矩形を避ける。②全景 3 テイク（窓 y0〜450 の 1 枚。天井以外は元画像で上書き）。③ポリゴン（天井の台形）内で傘＋吊り紐だけを差分抽出（`--box 0,0,495,255 --threshold 20`）。bbox が 126,225 → 1/8 を割らないよう右端・奥側まで傘を配置する。
+- **難所と没基準**: 傘が正立（柄が下）になるテイクは没。透明傘は背景が透けて破綻しやすい。傘に柄・文字が出たら没。看板と交差・重なりは没。
+- **フェーズ / 目立ち度**: mid / obvious。
+- **台帳案**: category `environment` / anomaly_type `add_object` / detail 「天井一面に、無地の黒・透明・赤の傘が逆さに無数に吊られる」。note に「大面積。CAM06-E01。近傍: AR-06-ceiling-balloons（(0,1) 108x87、同じ天井）」を書く。
+- **排他**: `AR-06-ceiling-balloons`・`AR-06-ceiling-checker`・`AR-06-lamp-squared`・`AR-06-fluorescent-tag`（天井の小物で同じ面）。傘の近縁 `AR-06-umbrella`（店先の畳んだ傘）・`AR-06-reflected-umbrella`（ガラスの赤い傘）は box（0,0,495,255）と重ならない（umbrella は (208,360)・61x141、reflected-umbrella は (277,313)・41x94 で、どちらも y≥313）ため上の表に出ないが、同カメラで傘が重なるので併存させない運用を推奨（同じ「傘」と数えられる）。`AR-06-sign-orange-blue`（吊り看板の枠色。看板は保持物で傘は矩形を避けるため併存可）と `AR-06-reopened`（左店先の灯り。傘の下端を y≤190 に収めるため併存可）とは整合する。CR-01-37・CR-04-17 は別カメラの小物。
+- **生成枚数の最小見積り**: 全景 3 テイク。
+
+### CR-LG-07-01 後壁一面の針だけの時計（全部が違う時刻）
+
+- **ID / camera / element_id**: CR-LG-07-01 / CAM07 / CAM07-E12 ほか（後壁一面: E07/E08/E11/E12）
+- **面**: box 88,126,585,352（112,322 px²、18.5%）。後壁の面（階段奥の壁・中央白壁・右壁面）。
+- **物と変化**: 後ろの壁一面に、**数字も目盛りも文字もない無地の丸い時計**（白い文字盤に細い黒縁、針だけ）が 24〜36 個、隙間少なく並び、全部が違う時刻を指す。大きさは 2〜3 種。
+- **不気味さの狙い**: 閉店した地下街の時間が、ばらばらに止まっている。老人 3 人と子供の「戻りたい時間」が別々だという暗示（story: 異変の数は行方不明の数で増える）。針だけで目印がないため、何時かも読めない。
+- **保持するもの**: 灰色扉（E13）と取手・押し板、黒い縦開口、丸看板（E08）・扉の貼り紙（E07）・ピクトグラム、緑の非常灯、天井・床・階段、柱と壁の境の影と陰影。時計は扉枠・開口枠の手前で止まる。
+- **生成プロンプト全文**（文字盤素材を別生成。針はスクリプトで描く）:
+  ```
+  $imagegen Create a flat, straight-on photo of a single plain round wall clock face: a smooth matte white dial with a thin black round bezel and NO hands, NO numerals, NO tick marks, NO dots, NO brand, NO lettering of any kind; only a small black centre cap in the middle. Slightly aged, with a faint grey dust cast and a very soft shadow on a plain pale-grey wall around it. Even low-light surveillance-style lighting, fine film grain.
+  Output 1536x1024 (3:2). No watermark.
+  ```
+- **作り方**: ①素材 2 テイクから文字盤を 1 枚選び、切り出して円形スプライト化。②**針は `uv run --with pillow python3` のスクリプトで時・分針を個別に描く**（太さ・長さの比を固定、角度は乱数で全件異なる時刻、針の影を薄く）。モデルに針を描かせない（時刻が揃う・数字が混ざるため）。③割付図: 壁の正面度が高い中央〜右は正面グリッド（大 34px・中 26px。針は時針 2px・分針 1.5px 以上の太さで描く）、左の階段壁は遠近ワープ（奥でも直径 22px 未満にしない）。扉・開口・看板・ピクトグラムは格子から抜く（共通手順 6: quad を分けて抜く）。④壁の明暗を multiply で乗せる。⑤ポリゴン alpha で切り出す。
+- **難所と没基準**: 針の角度が全て異なること（同時刻の重複は没）、文字盤に数字・目盛りが出たら没、扉枠にはみ出したら没。針が潰れないよう直径は 22px 以上（大 34px・中 26px）にし、個数は 24〜36 のうち壁に入る数でよい（旧案の大 22px・中 16px は「大きめに」と食い違い、針が潰れるため上げた）。
+- **フェーズ / 目立ち度**: late / obvious。
+- **台帳案**: category `surreal` / anomaly_type `multiply` / detail 「後ろの壁一面に、針だけの無地の時計が無数に並び、全部が違う時刻を指す」。note に「大面積。CAM07-E12 ほか。昭和テーマ節の『時計は候補にしない』は既存時計の改変の話で、本件は足す案（kako-jun 指示 2026-11-04）」を書く。
+- **排他**: `AR-07-notice`・`AR-07-reopened`・`AR-07-wall-grid`（壁の面で覆われる）。`AR-07-pictogram-flip`・`AR-07-blue-push-plate` など扉・開口の保持物の変化と、`AR-07-crane`・階段上の小物は併存可（全件は「box と既存 overlay の重なり」の表）。同カメラの 07-02（シーツ）とは box が 4px 離れていて併存可。
+- **生成枚数の最小見積り**: 素材 2 テイク（針はスクリプト）。
+
+### CR-LG-07-02 天井から垂れる白いシーツ
+
+- **ID / camera / element_id**: CR-LG-07-02 / CAM07 / CAM07-E01
+- **面**: box 0,0,675,122（82,350 px²、13.6%）。天井一面。**シーツの裾は y118〜120 を下限とし、後壁の 07-01 の box（y126〜）に入らない**。貼り込み後の alpha bbox は**幅 ≥640 かつ 裾 ≥ y119**（640×119=76,160 ≥ 75,938）を満たす。幅の端から端まで（x≲17 〜 x≳657）シーツを配置し、少なくとも数枚は裾が y119〜120 に届くようにする。
+- **物と変化**: 天井から、無地の白いシーツが 8〜12 枚、間隔を変えて垂れ下がる。長さは不揃いでゆるくたわむ。蛍光灯・換気口・丸灯は本物のまま、シーツの間から見える。
+- **不気味さの狙い**: 病室か洗濯場のように、誰も寝ていない清潔な白が天井から並ぶ。人の形は作らない（幽霊の見立てにしない）。老人の記憶の「干してあるシーツ」。
+- **保持するもの**: 蛍光灯・換気口・丸灯・黒い小器具と非常灯、壁・階段・床、天井の黒斑点の質感（シーツの隙間に残す）。
+- **生成プロンプト全文**:
+  ```
+  $imagegen Edit the attached surveillance camera photo of a corridor ceiling (the ceiling occupies the top strip of the frame).
+  Make ONLY this change: hang eight to twelve plain white bed sheets from the ceiling, each draping straight down as a loose rectangular curtain of fabric with soft vertical folds and a hem at the bottom, in uneven spacing and slightly different lengths, a few swaying slightly. The sheets are completely plain white linen, no print, no stripes, no stains forming shapes, no holes, no eyes, not shaped like a person or a ghost, no text or logos. They hang no lower than the top edge of the back wall: the lowest hems end about 269 px below the top edge of the 1536x1024 frame (26 percent of its height, which is 118 px of the 675x900 original photo). The existing fluorescent lights, the vent and the round lamps stay visible between the sheets and the fluorescent lights stay on.
+  Do not touch the wall, stairs, doors, signs, floor or anything below the ceiling line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
+  ```
+- **作り方**: ①割付図: シーツの吊り位置（天井の板継ぎ目沿い）・幅（40〜90px）・裾の高さ（元画像の実寸で 80〜120px。窓内 ×2.2756）を決め、蛍光灯・換気口・丸灯の矩形を避ける。②全景 3 テイク（窓 y0〜450 の 1 枚）。③天井ポリゴン（y0〜122）内で、シーツ本体だけを差分抽出（`--box 0,0,675,122 --threshold 20`）。④裾が y122 を越えたテイクは切らず没（07-01 と重なる）。
+- **難所と没基準**: 人型・幽霊型に見える（目の穴・頭部の盛り上がり）は没。裾が y122 を超える、または蛍光灯を隠すものは没。白が暗い天井で飽和して形が潰れないよう陰影を残す。
+- **フェーズ / 目立ち度**: mid / medium。
+- **台帳案**: category `environment` / anomaly_type `add_object` / detail 「天井から無地の白いシーツが何枚も垂れ下がる（蛍光灯と換気口は残る）」。note に「大面積。CAM07-E01。bbox 面積が余裕小なので貼り込み後に必ず再計測」を書く。
+- **排他**: `AR-07-crane`（(325,0) 79x240、天井から吊る折り鶴。本件と同じ面）・`AR-07-ceiling-string`・`AR-07-paper-tag-lamp`・`AR-07-paper-airplane-ceiling`・`AR-07-lamp-off`（天井の小物）。
+- **生成枚数の最小見積り**: 全景 3 テイク。
+
+### CR-LG-08-01 床一面の水鏡（映るのは昭和の夕焼けの商店街）
+
+- **ID / camera / element_id**: CR-LG-08-01 / CAM08 / CAM08-E16（E17/E18 を含む床一面）
+- **面**: box 0,265,675,900（428,625 px²、70.6%）。**床の全面**。旧案の box 0,430,675,900 は床の上半分（柱の左の床、通路入口、ガラス戸の前）を残し、y430 に水平な継ぎ目ができるため、床の上縁まで広げた。実測（`public/images/cam8.webp`）: 床は左の通路入口で y≈265（x≈250）、ガラス戸の足元 y≈330（x0〜128）、壁の巾木 y≈320（x128〜180）、柱の根元 y≈400〜425、右壁の巾木は (452,400)→(540,660)→(675,720) の斜線から始まる。
+- **水面の境**: 水平な直線で切らない。**壁・柱・ガラス戸・右の黒い柱の足元の接地線（巾木）**と、奥の通路（柱の右、x≳395・y≲420 の細い通路）の入口の床目地に沿わせる。通路内の床は元のまま（ポリゴンの外）。
+- **物と変化**: 床全面が薄く水を張ったような鏡面になる。水面に映るのは本来の天井でなく、夕焼けの空・電線・昭和の商店街の屋根と無地の吊り看板（逆さ）。柱の根元の影と柱そのものの反射は正しく映り、床の目地は水の下に薄く透ける。夕焼けの方向は右奥。さざ波は弱く。
+- **不気味さの狙い**: 現実の天井は変わらないのに、床だけが「上に昭和の空がある」ように見える。老人の記憶が作る像（story）。
+- **保持するもの**: 柱 E11 と根元、右の壁／パネル E14/E15 の足元、奥の通路、左のガラス戸とその枠、既存の床反射の白い光点（上からかぶせる）。床の目地格子は multiply 30% で透けさせる。
+- **生成プロンプト全文**（窓 A: y255〜705。窓 B: y450〜900 は「the floor continues down to the bottom edge of the frame」に差し替え、窓 A の貼り戻し済み全画面から切り出す）:
+  ```
+  $imagegen Edit the attached surveillance camera photo of a large tiled underground hall.
+  Make ONLY this change: the entire visible floor, from the base of the walls and the pillar down to the bottom edge of the frame, becomes a thin, perfectly calm sheet of water acting as a mirror. The water edge follows the wall bases, the pillar base and the base of the glass door, never a straight horizontal line. In the water we see, mirrored, not the real ceiling but a warm orange-pink sunset sky with thin clouds, overhead wires, tiled roofs of a Showa-era Japanese shopping street and hanging signboards that are completely blank white (reflected upside-down), the sun low in the far right. The pillar and the bottom of the right-hand wall are reflected correctly in the water, with their contact lines continuing seamlessly into their mirror images; faint tile joints remain visible beneath the water. The existing white lamp reflections on the floor remain as bright spots. The ripples are very weak.
+  Do not touch the ceiling, pillar, walls, the glass door of the left shopfront, or the far corridor beyond the pillar (its floor stays dry). There must be no letters on the reflected signboards, no logos, no shop names. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
+  ```
+- **作り方**: ①割付図: 反射の幾何（画面を水平な鏡面で垂直反転した像の位置）を先に決め、柱の接地線を軸にした鏡像と、夕焼けの方向（右奥）を図示。**窓 A・B で同じ割付図を使う**。②窓 A を 3 テイク生成して採用 → A を貼り戻した全画面から窓 B を切り出し 3 テイク（共通手順の 3 を参照）。③床のポリゴン（上の「水面の境」）内を採用し、元の床の明暗階調を multiply で一部乗せる。④`--box 0,265,675,900 --threshold 24` と高めにし、広範囲の粒状ノイズを拾わない。**下絵に `flip` を使う場合の軸と範囲**（`flip` は反射元が画像外になる画素を変更しない）: `--axis-y Y` で行 y は行 2Y−1−y を映す。範囲の全画素が反射元を持つ条件は 0 ≤ 2Y−1−y ≤ 899、すなわち **y ≤ 2Y−1 かつ y ≥ 2Y−900**。床が y899 まで続くので、1 回で全域（y265〜899）を覆うには **450 ≤ Y ≤ 582**（Y ≥ 450 で y899 が、Y ≤ (900+265)/2 で y265 が反射元を持つ）。ただし柱の接地線（y≈400〜425）を軸にすると鏡像が連続する反面、軸 Y=420 では y≤839 しか覆えない（実測例: axis-y 400・範囲 y420〜900 だと y≥800 が未変更）。そこで **2 回に分ける**: ①`--axis-y 420 --region <床のポリゴンのうち y265〜839>`（柱の根元と鏡像が連続）、②`--axis-y 450 --region <y840〜899>`（行 899−y を映す。全域が反射元を持つ）。②は下端の帯で、窓 B の生成結果で上書きしてよい。`--brightness`（水は暗い）と `--blur` で水面らしくし、最終の夕焼けの色は窓 A・B の生成結果から採用する。
+- **難所と没基準**: 面積が最大で作り物感が出やすい。柱の接地線が鏡像と連続しない・看板に文字・夕焼けの色相が弱く「何が違う」か不明・水面の上縁が水平な直線になる・窓 A/B の継ぎ目で夕焼けの向きがずれるのは没。既存の足元反射の光点を消さない。
+- **フェーズ / 目立ち度**: mid〜late / obvious。
+- **台帳案**: category `surreal` / anomaly_type `reflection` / detail 「床全面が水鏡になり、映るのは天井でなく昭和の夕焼けの商店街」。note に「大面積。CAM08-E16。08-02 とは排他」を書く。
+- **排他**: **`CR-LG-08-02`（積まれたテレビの山。同じ床を使い、水面に積まれたテレビには接地反射が要るため）**。床の小物 `AR-08-floor-reflection-two-tier`・`AR-08-floor-reflection-no-pillar`・`AR-08-tile-concentric`・`AR-08-floor-ramune-marbles`・`AR-08-cat`・`AR-08-barber-pole`、柱の鏡像が合わなくなる `AR-08-pillar-second`、パネルの光が鏡像と食い違う `AR-08-panel`・`AR-08-panel-off`・`AR-08-blue-panel`。壁・柱・ガラス戸の面の物（`AR-08-wall-band-wave` `AR-08-suit` `AR-08-pillar-notice` `AR-08-bag` ほか）は併存可（全件は「box と既存 overlay の重なり」の表）。
+- **生成枚数の最小見積り**: 全景 6 テイク（窓 A 3＋窓 B 3。素材の別生成なし）。
+
+### CR-LG-08-02 左のショーウィンドウに積まれた白黒テレビ
+
+- **ID / camera / element_id**: CR-LG-08-02 / CAM08 / CAM08-E06・E07（左の店先ガラス戸一面）
+- **面**: box **0,130,248,470**（84,320 px²、13.9%）。**実測**（`public/images/cam8.webp`）: 中央の柱の**左縁は x≈250〜252**（inventory CAM08-E11 の最小 x=249.75）。右を柱の手前 x=248 で止めると、旧 box の高さ（y130〜425 = 295）では 248×295=73,160 で 1/8（75,938）を割る。そこで**積んだテレビの山が床側（y>425）へこぼれる**構成にし、下端を y470 まで広げた。実際のガラス戸は x0〜約 132（E06）・約 183（E07）で、ガラス単独では約 183×230=42,000 px²（6.9%）しかないので、山は**ガラス戸の外へ崩れて、隣の暗い壁と明るい通路の入口（E08、x約 170〜255）まで、さらに床の手前（y≈335〜470）まで**占める。旧 box の右端 270 は柱に約 20px 食い込み「柱は保持」と矛盾していたため、x250 に直した。**この拡張は仕様の判断点**（通路入口を TV の山が塞ぐ）で、kako-jun の確認が要る。
+- **面積の条件**: alpha bbox は**幅 248（x0〜248）× 高さ 307 以上**で 75,938 以上。山の頂点は y≥145（天井灯の列の下）なので、**下端は y≥452** が要る（box 下端 y470 まで崩してよい）。幅は柱で頭打ちなので高さで稼ぐ。
+- **物と変化**: ショーウィンドウ一面に白黒のブラウン管テレビが積まれ、**全画面が同じ無人の通路**（通路の奥へ続く床と壁だけ、人も文字もなし）を映す。山は窓の底から床へこぼれ、柱の手前（x≈248）まで続く。
+- **不気味さの狙い**: テレビの中の通路は、いま画面にある通路と同じ（監視カメラの映像そのもの）。見られているのは自分たち。シャッターの向こうへ行った人々が見ているのか、という含み（メタ構造: 報告すべきか悩ませる）。
+- **保持するもの**: ガラス戸の木枠・金属縦枠・取手（山の隙間から見える位置に残す）、柱 E11 とその根元、床の反射と接地、左上の天井灯の列（山の頂点は y≥145 から）、右の床・壁。
+- **生成プロンプト全文**（筐体素材のみ生成。全景は生成しない。山の絵は筐体スプライトの合成で作る）:
+  ```
+  $imagegen Create a flat, straight-on photo of a single old black-and-white CRT television set with its screen switched off (dark glass), rounded plastic case in grey and cream, bulging glass screen, two small plain knobs without any lettering, slightly aged with a faint grey dust cast, on a plain neutral dark-grey background. No brand, no text, no numbers, no logos, no labels anywhere on the set. Even low-light surveillance-style lighting, fine film grain.
+  Output 1536x1024 (3:2). No watermark.
+  ```
+- **作り方**: ①素材: 画面に映す無人通路は `public/images/cam8.webp` 自身の縮小（通路の奥を切り出し、グレースケール化＋走査線）で用意する（**生成不要**・「同じ通路」を厳密に満たす）。②テレビ筐体の素材（空の画面の白黒テレビ 1 台）を上のプロンプトで 2 テイク別生成し、スクリプトで画面ポリゴンに①を埋める。③割付図: 山の積み方（段ごとの大きさ・傾き）を決め、スプライトを積む。山は窓の底から床へ崩れ、床側（y335〜470）にも数台が転がる。④ガラス戸の枠・柱は元画像から戻す。⑤ポリゴン alpha で切り出し、alpha bbox が上の「面積の条件」（248×307 以上）か `check` する。
+- **難所と没基準**: 画面の映像が全台同じでない・テレビに文字・ロゴが出る・山が柱にかかる（x>248 に出る。柱は保持）・bbox が 1/8 を割るのは没。画面内の通路が小さすぎて読めないときは台数を減らして大きくする。
+- **フェーズ / 目立ち度**: mid〜late / obvious。
+- **台帳案**: category `camera` / anomaly_type `duplicate` / detail 「左のショーウィンドウに白黒テレビが積まれ、全画面が同じ無人の通路を映す」。note に「大面積。CAM08-E06/E07。box は通路入口と床の手前まで拡張。08-01 とは排他。近縁（別規模）: CR-NEW-02-05（CAM02 の小物 1 台）・AR-06-crt-tv-glow（CAM06 の小物 1 台）」を書く。
+- **既存との関係（差分と排他）**: テレビの小物は既に `CR-NEW-02-05`（CAM02・奥の暗い店内の床に白黒テレビ 1 台が点く）と `AR-06-crt-tv-glow`（CAM06・窓の奥の 1 台）がある。本件は**積まれた山＋全画面が同じ無人通路を映す**構成で別物とし、**「積まれたテレビの山」は CAM08 だけに限る**（旧案の「テレビ型は CAM08 のみ」を、型を限定して直した）。この 2 件とは別カメラ・別規模で併存可。
+- **排他**: **`CR-LG-08-01`（水鏡）**、`AR-08-bag`・`AR-08-notice-residue`・`AR-08-cat`・`AR-08-barber-pole`（左ガラス・通路入口の小物で山に覆われる）。
+- **生成枚数の最小見積り**: 素材 2 テイク（筐体のみ）。映像は baseline の再利用。
+
+---
+
+### 生成枚数の総見積り（枠が限られるため最小）
+
+窓の数は共通手順の表（02-01 と 08-01 は 2 枚、他の全景件は 1 枚）。窓 B は窓 A の採用後に直列で生成する。**04-01 は全景を生成しない**（外景素材を窓ポリゴンへ遠近ワープする主ルート 1 つ）。
+
+| 件 | 素材テイク | 全景テイク |
+| --- | ---: | ---: |
+| 01-01 | 0 | 3 |
+| 01-02 | 3 | 0 |
+| 02-01 | 0 | 6（窓 A 3＋窓 B 3） |
+| 02-02 | 3 | 0 |
+| 03-01 | 2 | 0 |
+| 03-02 | 0 | 3 |
+| 04-01 | 3 | 0 |
+| 04-02 | 3 | 0 |
+| 05-01 | 0 | 3 |
+| 05-02 | 3 | 0 |
+| 06-01 | 3 | 0 |
+| 06-02 | 0 | 3 |
+| 07-01 | 2 | 0 |
+| 07-02 | 0 | 3 |
+| 08-01 | 0 | 6（窓 A 3＋窓 B 3） |
+| 08-02 | 2 | 0 |
+| **計** | **24** | **27** |
+
+合計 51 生成。全景を使う件は、1 テイクだけ試して採用可能なら残りを省く運用もできる（下限は素材 24 ＋ 全景の窓数 9 = 33 生成）。生成は**1 件ずつ**、依存する絵は直列。
