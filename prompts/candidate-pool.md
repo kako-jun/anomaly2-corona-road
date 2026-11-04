@@ -755,24 +755,6 @@
 - **視認性の注意**: 透明は床に溶ける。濃い茶の持ち手、細い骨の黒線、強いハイライトと影でコントラストを誇張する。明るい白飛びの縁には置かない。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
 - **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左手前の床に、閉じた透明ビニール傘が一本斜めに置かれる'` / `candidate_id: 'AR-08-n2'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: 傘系: AR-06-umbrella（CAM06・店先にたたんだ傘）・AR-06-reflected-umbrella（CAM06・赤い傘がガラスに映る）。別カメラ・透明ビニールという別の物。
 
-#### AR-08-n3 — 赤いゴムまり
-
-- **camera / element_id**: CAM08 / CAM08-E16
-- **物と変化**: 左手前の暗い床に、無地の赤いゴムまりが一つ置かれる。※設計やり直し: 旧box (445,465,515,545) は右の壁の巾木の斜線にかかるため、左の暗い床へ移した
-- **最終 box**（baseline px）: `25,625,85,685`（60x60）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `0,570,256,741`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (25,55)-(85,115)
-- **生成プロンプト**（3テイク作って目視で選ぶ）:
-
-  ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark gray floor tiles at the left, place one plain glossy bright red rubber ball (a Showa-era bouncing ball) resting on the floor, completely plain with no print, no stripe and no text. Make it about 1.2x larger than real scale. Give it a strong dark contact shadow and a bright small highlight on the glossy surface. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the glare blob at the lower left, the tile joints or the floor grain. Place the object, including its shadow, centered at about 21% from the left and 50% from the top of the image, occupying roughly 23% of the image width and 35% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
-  ```
-
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左下の光の塊・タイル目地・床の粒状感。
-- **最寄り既存 overlay と実測距離**: AR-08-n1 まで 40.0px（box 基準・矩形間のユークリッド距離、次点 AR-08-floor-reflection-no-pillar 50.3px）。 余裕あり。それでも最終 overlay の alpha bbox で再測定する。
-- **分類 / フェーズ / 目立ち度**: object / early / medium
-- **視認性の注意**: 暗い床に赤で強く出る。箱が60x60と小さいので1.2倍にし、ハイライトと影を強める。 登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: `category: 'object'` / `anomaly_type: 'add_object'` / `detail: '左手前の暗い床に、無地の赤いゴムまりが一つ置かれる'` / `candidate_id: 'AR-08-n3'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。 相互参照: **同モチーフ: AR-01-red-rubber-ball（CAM01・最前景右寄りの赤いゴムまり）。** 反復シリーズ（別カメラ）として扱い、制作前に見比べる。丸い玩具系: CR05N-1（ビーチボール）。
-
 #### AR-08-n5 — 段ボール箱
 
 - **camera / element_id**: CAM08 / CAM08-E16
