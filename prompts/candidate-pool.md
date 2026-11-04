@@ -140,7 +140,6 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
 
 | ID | 種別 | category / anomaly_type | 面・位置 | 概要 |
 | --- | --- | --- | --- | --- |
-| AR-01-ceiling-tile-drop | 小物 | object / displace | 右上天井 (405,122,479,198) | 天井板が一枚、片側だけ外れて垂れ下がる |
 | AR-01-ceiling-wet-stain | 小物 | environment / state_change | 中央天井 (290,212,370,248) | 天井に濡れた丸い染みが広がり水滴が垂れかける |
 | AR-01-floor-light-orphan | 小物 | surreal / state_change | 手前左の床 (2,832,92,898) | 光源のない場所に、床の光だまりがもう一つ落ちる |
 | AR-01-crouching-silhouette | 小物 | person / add_person | 奥の床 (385,484,440,538) | 奥の床にうずくまる黒い人影が一つ |
@@ -164,27 +163,12 @@ CAM01 の新規の画像異変 8 件（小物 6・大面積 2）の**制作仕�
   ```
 
 
-#### AR-01-ceiling-tile-drop — 天井板が一枚、片側だけ外れて垂れ下がる
 
-- **camera / element_id**: CAM01 / CAM01-E01（天井面。隣の換気口 E03・点検板 E04 は動かさない）
-- **物と変化**: 右上の天井の板（粒状の天井材の一枚）が、**片側の縁だけ外れて斜めに垂れ下がる**。外れた縁の奥に、真っ暗な四角い隙間と細い配線の端が見える。板は元の天井と同じ粒状の色で、無地。
-- **最終 box**（baseline px）: `405,122,479,198`（74x76）。`composite-anomaly.py --box` にはこの値を渡す
-- **6倍クロップ**（baseline px）: `314,74,570,245`（256x171）。box はクロップ内の (91,48)-(165,124)
 - **生成プロンプト**（3 テイク作って目視で選ぶ）:
 
   ```text
-  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: one ceiling tile in the plain speckled ceiling area to the right of the large round vent has come loose along one edge and hangs down at a slant like an open hatch, showing a pitch-black square gap above it with the cut end of one thin dark cable hanging from the gap. The tile is the same pale blue-grey speckled material as the rest of the ceiling, completely plain. Make it about 1.3x larger than real scale. VARIANT. Do not touch the large round vent at the left of this crop, the square access panel at the right edge, the lamp at the bottom right or anything else. Place the object centered at about 50% from the left and 50% from the top of the image, occupying roughly 29% of the image width and 44% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.
   ```
 
-  - VARIANT 1: `The loose edge hangs down toward the left`
-  - VARIANT 2: `The loose edge hangs down toward the right`
-  - VARIANT 3: `The tile hangs by one corner only, with the gap wider`
-- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特に 左の大きな同心円の換気口・右端の四角い点検板・右下の灯。
-- **最寄り既存 overlay と実測距離**（台帳の最終 overlay の alpha bbox で 2026-11-05 に実測）: AR-01-ceiling-panel-round（右）まで 32.0px、AR-01-vent-hole-triangle（左）まで 32.0px、次点 AR-01-bunting-flags 48.0px、本節の AR-01-ceiling-wet-stain まで 37.7px。**左右の既存に挟まれ、余裕が小さい（36px 未満）ので、制作後の最終 overlay の alpha bbox で再測定必須**（垂れた縁を左右に広げない。30px 割れなら box を幅の中央側へ寄せる）。
-- **分類 / フェーズ / 目立ち度**: object / mid / medium（medium 以上。subtle にしない）
-- **視認性の注意**: 黒い隙間と垂れた板の影で差分を作る。灰色の天井に溶けないよう隙間は真っ黒に。登録後に `uv run scripts/check-visibility.py --id <ledger id>` を必ず通す。
-- **台帳登録時**: id `AR-01-ceiling-tile-drop` / `category: object` / `anomaly_type: displace` / `detail: '右上の天井板が一枚、片側だけ外れて斜めに垂れ下がり、暗い天井裏の隙間が見える'`。note に最寄り既存 id と最終 alpha bbox 実測距離を書く。
-- **相互参照 / 重複精査**: 近い既存: `AR-04-ceiling-corner-fold`（台帳・CAM04・換気口の隣の天井板の角が折れて垂れる）。**別カメラで、本件は板が外れて暗い隙間と配線が見える（天井裏が覗く）点が違う**が、同じ「天井板が垂れる」型なので、制作前に見比べ、実質同じと感じたら取り下げる。「天井板が垂れる」型は、CAM08 側の同名の案が別担当で差し替えられるため、本件が CAM01 で残す唯一の案（他カメラとは重ねない）。CR-01-19（点検板の隣に同じ板が増える）は増やす案で別。
 
 #### AR-01-ceiling-wet-stain — 天井に濡れた丸い染みが広がり水滴が垂れかける
 
