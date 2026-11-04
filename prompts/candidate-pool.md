@@ -1421,26 +1421,6 @@ CAM02 の 02-01 は stool (37,590) と排他。stool が動いた台に載る鉢
 - **排他**: **`AR-06-wall-puddle`（bbox が 35,350 px² 重なる大面積。排他。1 カメラ 1 件制で同時には出ない）**、`AR-06-wall-stripes`（壁面の模様で、ポスターに覆われる）。`AR-06-tilted-notice`（額入り掲示。**保持物**なので格子から抜き、併存可）、`AR-06-ceiling-panel-white` は天井側で併存可。`AR-06-wet-footprints` は床で併存可。CR-LG-01-02（顔写真の格子）・03-01（無地の白紙）とは型が別で、顔は出さない。
 - **生成枚数の最小見積り**: 素材 3 テイク。
 
-### CR-LG-06-02 天井一面の傘（逆さに吊られる）
-
-- **ID / camera / element_id**: CR-LG-06-02 / CAM06 / CAM06-E01
-- **面**: box 0,0,495,255（126,225 px²、20.8%）。天井一面。
-- **物と変化**: 天井から、無数の無地の傘が**逆さ**（曲がり柄を上、開いた傘面の頂点を下、お椀を伏せた形）に吊られる。色は黒・透明（ビニール）・赤の 3 種。奥へ遠近で小さく密に連なる。
-- **不気味さの狙い**: 地下街は雨宿りの場所。持ち主が消えて傘だけが戻ってきて、天井に吊られている。傘が全部「逆さ」なので静かに気味が悪い。
-- **保持するもの**: 天井の板継ぎ目・点状汚れ、蛍光灯（E03）、丸灯、吊り看板「まちがいサラダ」（x約145-235, y約140-215）、左壁との境、壁面以下の全て。傘は看板の矩形（x142〜250, y134〜238）に重ねない。下端は、`AR-06-reopened` の上端（y192）に当たる x253〜362 では y≤190、その他の x では y≤225（店先ガラスの奥の `AR-06-crt-tv-glow` を覆わない）。
-- **生成プロンプト全文**:
-  ```
-  $imagegen Edit the attached surveillance camera photo of an underground shopping arcade corridor (the ceiling occupies the upper part of the frame).
-  Make ONLY this change: hang many dozens of plain, open umbrellas upside down from the ceiling on thin cords: each umbrella is hung by its curved handle clipped to the cord, the open canopy hangs below like an inverted bowl with its tip pointing down. Umbrellas are completely plain in three kinds only: solid black, clear transparent vinyl with visible metal ribs, and solid red; no prints, no tags, no brand marks, no lettering. They recede toward the far end of the corridor with correct perspective, big near the camera and small and dense far away, hanging at slightly different heights but all above the hanging sign that stays visible. The existing ceiling fluorescent tubes, round lamps and the hanging sign stay visible between the umbrellas and the fluorescent light stays on.
-  Do not touch the floor, walls, plants, shopfronts or anything below the ceiling line. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.
-  ```
-- **作り方**: ①割付図: 消失点（奥の通路）への流線に傘の位置・サイズ（手前 55px → 奥 10px）・色（黒・透明・赤の比 5:3:2）を割り付け、吊り看板と蛍光灯の矩形を避ける。②全景 3 テイク（窓 y0〜450 の 1 枚。天井以外は元画像で上書き）。③ポリゴン（天井の台形）内で傘＋吊り紐だけを差分抽出（`--box 0,0,495,255 --threshold 20`）。bbox が 126,225 → 1/8 を割らないよう右端・奥側まで傘を配置する。
-- **難所と没基準**: 傘が正立（柄が下）になるテイクは没。透明傘は背景が透けて破綻しやすい。傘に柄・文字が出たら没。看板と交差・重なりは没。
-- **フェーズ / 目立ち度**: mid / obvious。
-- **台帳案**: category `environment` / anomaly_type `add_object` / detail 「天井一面に、無地の黒・透明・赤の傘が逆さに無数に吊られる」。note に「大面積。CAM06-E01。近傍: AR-06-ceiling-balloons（(0,1) 108x87、同じ天井）」を書く。
-- **排他**: `AR-06-ceiling-balloons`・`AR-06-ceiling-checker`・`AR-06-lamp-squared`・`AR-06-fluorescent-tag`（天井の小物で同じ面）。傘の近縁 `AR-06-umbrella`（店先の畳んだ傘）・`AR-06-reflected-umbrella`（ガラスの赤い傘）は box（0,0,495,255）と重ならない（umbrella は (208,360)・61x141、reflected-umbrella は (277,313)・41x94 で、どちらも y≥313）ため上の表に出ないが、同カメラで傘が重なるので併存させない運用を推奨（同じ「傘」と数えられる）。`AR-06-sign-orange-blue`（吊り看板の枠色。看板は保持物で傘は矩形を避けるため併存可）と `AR-06-reopened`（左店先の灯り。傘の下端を y≤190 に収めるため併存可）とは整合する。CR-01-37・CR-04-17 は別カメラの小物。
-- **生成枚数の最小見積り**: 全景 3 テイク。
-
 ### CR-LG-07-01 後壁一面の針だけの時計（全部が違う時刻）
 
 - **ID / camera / element_id**: CR-LG-07-01 / CAM07 / CAM07-E12 ほか（後壁一面: E07/E08/E11/E12）
