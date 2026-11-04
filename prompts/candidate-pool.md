@@ -205,6 +205,263 @@
 | CR-06-26 | CAM06-E09 | 植物の足元に茶トラ猫が一匹座る。         | object / mid / medium        |
 | CR-06-27 | CAM06-E12 | メニュー板全体が横長の形になる。         | object / mid / medium        |
 
+## 制作仕様（未制作）— CAM 06
+
+CAM06（Shop Front Row）の画像異変 7 件の**制作仕様**（#47。台帳の偏り是正が目的）。物・変化・配置（box／polygon）・生成プロンプトまで確定済みで、まだ生成していない。採用して制作に進む時は、その項を削除して `anomalies.yaml` に一度だけ登録する（`candidate_id` に見出しの ID を入れる。候補と制作データを二重に残さない）。物の説明・座標の正本は [`camera-element-inventory.md`](./camera-element-inventory.md)。ここの box は作業用の最終値で、台帳には最終 overlay の alpha bbox から出た `overlay_origin` / `dimensions` を入れる。
+
+| ID | タイプ | カテゴリ | 規模 | 変化 |
+| --- | --- | --- | --- | --- |
+| AR-06-floor-kidshoes | multiply | surreal | 大面積（床一面） | 前景の床一面に無地の子供の靴が揃えて無数に並ぶ（つま先は通路の奥） |
+| AR-06-door-gap-light | state_change | environment | 小物 | 右の扉の下の隙間から暖かい橙色の光が漏れる |
+| AR-06-long-shadow | add_person | person | 小物 | 持ち主のいない人の形の長い影が床に伸びる |
+| AR-06-wall-gecko | add_creature | object | 小物 | 右の粗い壁にヤモリが一匹張り付く |
+| AR-06-tile-sky | surreal | surreal | 小物 | 床タイル1枚が抜けて青空が見える |
+| AR-06-pigeon | add_creature | object | 小物 | 暗い前景の床に灰色の鳩が一羽立つ |
+| AR-06-wall-height-marks | add_object | object | 小物 | 右壁に子供の背比べのような色鉛筆の横線が刻まれる |
+
+- **配分**: 7件中 add_object は1件、color_shift は0件（台帳の偏り是正）。multiply / state_change / add_person / add_creature×2 / surreal が6件。
+- **配置の実測**（2026-11-05）: 小物の box は、`anomalies.yaml` の CAM06 全 overlay の**実際の alpha bbox**（overlay 画像の alpha>0 の範囲）から**矩形間距離 30px 以上**あることを `uv run --with pyyaml --with numpy --with pillow python3` で実測した（README「配置の基準」）。本節の小物どうしも 30px 以上（AR-06-long-shadow と AR-06-tile-sky は 30.0px ちょうど。最終 alpha bbox で測り直し、割れたら動かす）。既存の大面積（AR-06-wall-puddle・AR-06-ceiling-umbrellas・AR-06-wall-same-poster）は小物の距離計算から除いた（大面積とは重なってよい）。
+- **大面積の重なり**: 本節の大面積は AR-06-floor-kidshoes の1件のみ。既存の大面積とは面が違う（天井一面・右壁一面・床の中ほど y432-634 に対し、本案は前景の床 y≥664 で 30px 空ける）ため重ならない。小物（AR-06-wet-footprints・AR-06-red-bucket・AR-06-styrofoam-box と本節の AR-06-long-shadow・AR-06-tile-sky・AR-06-pigeon）とは重なるが、ゲームは1カメラにつき未検出の異変を同時に1件しか出さない（`spawnAnomaly`）ので、台帳 note に「大面積」「同プレイで共存させない」と書く。
+- **共通手順**（小物。`.agents/skills/corona-road-anomaly/SKILL.md` の手順 5〜8 と同じ）:
+  1. 各項の「6倍クロップ」を `public/images/cam6.webp`（675x900）から切り出し、1536x1024 へ拡大する（webp は PNG に変換してから渡す）。
+  2. 明示的な `$imagegen` で各項のプロンプトを3テイク生成し、目視で選ぶ。0バイトや数KBの壊れた PNG は撮り直す。文字・ロゴらしき刻印が出たテイクは捨てる。
+  3. 選んだ結果を元のクロップ寸法へ縮小して baseline PNG の同じ位置へ貼り戻し、その全体画像を `scripts/composite-anomaly.py --gen` に渡す（`--box` は各項の最終 box。FAIL は再生成でなく `--threshold` / `--margin` を 8/12/16/18 で試す）。
+  4. 最終 overlay の alpha bbox で既存との距離を測り直す。台帳へ登録し `check-visibility.py` を通す。通らなければ強めて作り直すか、この節へ戻す。
+  5. 登録・コミットしたら `experiments/` 配下の作業物を即削除する。
+- **大面積の手順**: 後述の AR-06-floor-kidshoes を参照（`scripts/composite-polygon.py` の `crop` → imagegen → `restore` → `cutout`）。
+
+### AR-06-floor-kidshoes — 前景の床一面に揃えて並ぶ子供の靴（大面積）
+
+- **camera / element_id**: CAM06 / CAM06-E16
+- **物と変化**: 前景の床（タイル面）の一面に、無地の子供用の靴（運動靴・布靴・長靴。ロゴ・文字・柄なし）が、左右そろえた一足ずつ、つま先を通路の奥へ向けて、玄関のようにきちんと並ぶ。靴だけで人は写さない（行方不明の子供の気配。story.md の「4人目の子供」に沿う不気味さ。Exit 8 のような「同じものが面一面に並ぶ」型）。色は鈍い紺・赤・白・黄を混ぜる
+- **面**（baseline px。polygon）: `165,664 585,664 645,900 0,900 0,750 156,750`（床の前景。左は観葉植物の鉢 AR-06-tin-planter の下端 y743 を避けて y750 から、右は壁の巾木の線、奥は y664）。面積 131,337 px²（画像 607,500 px² の 21.6%。大面積の目安 約76,000px² 以上を満たす）。`composite-polygon.py cutout --polygon` にこの値を渡す
+- **3:2 窓**（baseline px）: `0,450,675,900`（675x450 ちょうど3:2。1536x1024 へ拡大して imagegen に渡し、`restore --crop 0,450,675,900` で貼り戻す。縦に割る必要はなく1窓で足りる）
+- **生成プロンプト**（3テイク作って目視で選ぶ）:
+
+  テイク1:
+
+  ```text
+  $imagegen Edit the attached image, which is a 3:2 (1536x1024) crop of a low-fi surveillance camera photo showing the lower half of a shop corridor. Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every wall, plant, shop front, shadow and the long white fluorescent reflection band exactly unchanged. Make ONLY this single change: cover the grey granite floor tiles in the near part of the frame (the floor in the lower 55% of the image, from the bottom edge up to roughly the middle) with dozens of pairs of plain small children's shoes (sneakers, canvas shoes and rubber boots in dull navy, red, white and yellow), each pair neatly lined up with the left and right shoe side by side and the toes pointing toward the far end of the corridor, arranged in tidy rows that follow the tile joints, large near the bottom edge and smaller toward the back, with a dark contact shadow under every shoe. Every shoe is completely plain: no logos, no stripes, no marks. Completely plain and unmarked: do not add any text, letters, numbers, logos or printed patterns anywhere in the image. Do not touch the left plant and its pot, the walls, the baseboard on the right, the door or the metal strips. No person or foot is visible. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク2:
+
+  ```text
+  $imagegen Edit the attached image, which is a 3:2 (1536x1024) crop of a low-fi surveillance camera photo showing the lower half of a shop corridor. Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every wall, plant, shop front, shadow and the long white fluorescent reflection band exactly unchanged. Make ONLY this single change: fill the foreground floor, from the bottom edge up to about the middle of the frame, with a dense field of small kids' shoes set down in pairs as if left at a house entrance, all toes pointing away from the camera toward the back of the corridor, in neat rows that follow the floor tiles. Mix plain dark blue canvas shoes, red sneakers, white sneakers and yellow rain boots, all without any pattern or logo. They shrink toward the back following the floor perspective, and each pair has a clear dark shadow so that it reads against the grey tiles. Completely plain and unmarked: do not add any text, letters, numbers, logos or printed patterns anywhere in the image. Do not touch the left plant and its pot, the walls, the baseboard on the right or the door. No person is visible. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク3:
+
+  ```text
+  $imagegen Edit the attached image, which is a 3:2 (1536x1024) crop of a low-fi surveillance camera photo showing the lower half of a shop corridor. Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every wall, plant, shop front, shadow and the long white fluorescent reflection band exactly unchanged. Make ONLY this single change: line up a huge number of pairs of plain children's shoes on the floor of the near half of the frame, in strictly aligned rows and columns following the tile grid, every pair facing the far end of the corridor, close together but not overlapping. Shoes are small, dull-colored (navy, red, white, mustard yellow), completely plain with no logos or stripes, each with a distinct dark contact shadow. Large in the foreground and small toward the back following the perspective. Completely plain and unmarked: do not add any text, letters, numbers, logos or printed patterns anywhere in the image. Do not touch the left plant and its pot, the walls, the baseboard on the right or the door. No person is visible. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・壁・植物・店先・蛍光灯の反射帯。polygon の外（奥の床・壁・植物の鉢）には靴を出させない（出たら polygon が切り落とす）。
+- **合成**: `restore` で貼り戻した全体画像を `--gen` に、上の polygon を `cutout`（`--feather 2`）へ。生成が polygon の外へ延びても polygon が正。靴が画像の端で切れても構わない。生成が靴を並べきれない・不揃いな場合は、`tile` で別生成の靴1足の素材を polygon に敷く方法に切り替える（`--layout grid`）。
+- **最寄り既存 overlay と実測距離**: 既存の大面積 AR-06-wall-puddle（(135,432)-(675,634)）とは 30px 空ける（polygon 上端 y664）。小物は重なってよい（AR-06-wet-footprints・AR-06-red-bucket・AR-06-styrofoam-box と本節の小物）。同じ面の複数の異変は同時に出ない。
+- **分類 / フェーズ / 目立ち度**: surreal / late / obvious
+- **視認性の注意**: 暗い靴の色は暗い床に沈みやすいので、白・赤・黄を多めにし、足元に濃い接地影を。標準状態の面積比で十分通る見込み。登録後に `uv run scripts/check-visibility.py --id AR-06-floor-kidshoes` を必ず通す。
+- **台帳登録案**: `id: 'AR-06-floor-kidshoes'` / `candidate_id: 'AR-06-floor-kidshoes'` / `element_id: 'CAM06-E16'` / `category: 'surreal'` / `anomaly_type: 'multiply'` / `location: '前景の床一面（polygon 165,664 585,664 645,900 0,900 0,750 156,750）'` / `detail: '前景の床一面に、無地の子供の靴が揃えて無数に並ぶ（つま先は通路の奥）'` / `phase: late` / 目立ち度 obvious / note: 「大面積。同プレイで AR-06-wet-footprints・AR-06-red-bucket・AR-06-styrofoam-box とは共存させない（1カメラ1件）。最寄りの既存大面積 AR-06-wall-puddle と 30px 空ける。」
+- **相互参照 / 重複精査**: AR-02-floor-footprints（CAM02 の床一面の靴・草履の足跡。『足跡』という痕跡）と AR-02-leather-footprints は痕跡で、本案は靴という物そのもの。CAM05 の床一面の白い折り鶴（`floor-white-cranes`、白い紙の群れ）とは物（靴 vs 紙）・色・意味が違い、床一面に敷くという型だけが共通する意図的な近縁。CAM01 の CR-NEW-01-02（床に黄色い長靴が一足）は1足の小物で、本案は面一面（CAM が違う）。CAM06 内では AR-06-wet-footprints（反射帯の濡れた裸足の足跡）と違い、靴の物体で面も広い。
+
+### AR-06-door-gap-light — 右の扉の下の隙間から漏れる暖かい光
+
+- **camera / element_id**: CAM06 / CAM06-E15
+- **物と変化**: 右壁の黒枠の扉の下の隙間から、暖かい橙色の光が細く漏れて、扉の足元の床に光の筋が広がる（扉の向こうに灯りの点いた部屋がある。人は写さない）
+- **最終 box**（baseline px）: `548,596,620,672`（72x76）。`composite-anomaly.py --box` にはこの値を渡す
+- **6倍クロップ**（baseline px）: `419,548,675,719`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (129,48)-(201,124)
+- **生成プロンプト**（3テイク作って目視で選ぶ）:
+
+  テイク1:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the right side of the frame, at the bottom of the dark brown door set in the right rough wall, a thin strip of warm orange incandescent light leaks out from the gap under the door and spreads as a soft glowing wedge onto the floor right in front of the door and along the skirting board. The door itself, its frame and handle stay closed and unchanged. The light should clearly read as warm orange against the cold blue-grey scene, about 1.5x stronger than natural. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the long white fluorescent reflection band on the floor, the tile joints, the rough wall texture or the door handles. Place the object, including its shadow, centered at about 64% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 44% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク2:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: at the foot of the closed dark brown door on the right wall, make a bright warm amber glow seep through the narrow gap between the door and the floor, casting a long soft orange light trail across the floor tiles and the skirting board. No one is visible, no shadow of a person, the door stays shut. Make the glow vivid so it is clearly visible at CCTV quality. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the long white fluorescent reflection band on the floor, the tile joints, the rough wall texture or the door handles. Place the object, including its shadow, centered at about 64% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 44% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク3:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: the closed dark door on the right wall now has a warm yellow-orange light shining from beneath it, as if a lit room lay behind the door: a bright thin line under the door and a fan-shaped orange light pool on the floor and skirting board in front of it. Keep the door closed. Give the light pool a soft gradient that fades into the cold grey tiles, strong enough to be seen at a glance. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the long white fluorescent reflection band on the floor, the tile joints, the rough wall texture or the door handles. Place the object, including its shadow, centered at about 64% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 44% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe long white fluorescent reflection band on the floor, the tile joints, the rough wall texture or the door handles（英語プロンプトの Do not touch に同じ）。
+- **最寄り既存 overlay と実測距離**: AR-06-wet-footprints まで 42.0px（box 基準・矩形間のユークリッド距離。次点: AR-06-red-bucket 47.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
+- **分類 / フェーズ / 目立ち度**: environment / mid / medium
+- **視認性の注意**: 暖色の橙は青灰色の床と強く対比する。光だまりを淡くしすぎない（標準状態で差分25以上の画素が100以上になる程度の濃さ）。つまみは明るさを下げると光の筋が際立つ。 登録後に `uv run scripts/check-visibility.py --id AR-06-door-gap-light` を必ず通す。
+- **台帳登録案**: `id: 'AR-06-door-gap-light'` / `candidate_id: 'AR-06-door-gap-light'` / `element_id: 'CAM06-E15'` / `category: 'environment'` / `anomaly_type: 'state_change'` / `location: '右の扉の下の隙間から漏れる暖かい光（box 548,596,620,672）'` / `detail: '右の黒枠の扉の下の隙間から暖かい橙色の光が漏れ、足元の床に光の筋が広がる（扉は閉じたまま）'` / `phase: mid` / 目立ち度 medium / note: state_change（扉の向こうの灯り）。昭和の「閉店後も誰かが残っている」気配。最寄り既存 id と最終 alpha bbox の実測距離も note に書く。
+- **相互参照 / 重複精査**: AR-06-reopened（CAM06 左の店先ガラスの向こうに喫茶店の灯りが戻る）は同じ「暖かい灯り」だが、場所（左のガラス vs 右の扉の足元）・見え方（ガラス奥の灯り vs 床に漏れる光の筋）・タイプが違う。CAM03 の CR-03-12（シャッターの隙間が真っ暗）は暗部で逆の方向。CR-06-18（扉の取手の左右）とは別。同一カメラで AR-06-wet-footprints の反射帯と見間違えないよう、扉の足元の局所の光にとどめる。
+
+### AR-06-long-shadow — 持ち主のいない長い人影
+
+- **camera / element_id**: CAM06 / CAM06-E16
+- **物と変化**: 床のタイルの上に、人の形をした長い影だけが、通路の奥へ向かって伸びる（頭・肩・腕・脚の輪郭。本体は写らない。カメラの後ろに誰かが立っている想定）
+- **最終 box**（baseline px）: `205,610,366,676`（161x66）。`composite-anomaly.py --box` にはこの値を渡す
+- **6倍クロップ**（baseline px）: `158,558,414,729`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (47,52)-(208,118)
+- **生成プロンプト**（3テイク作って目視で選ぶ）:
+
+  テイク1:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles in the center of the frame, cast the long soft-edged dark shadow of a standing person (visible head, shoulders, hanging arms and two legs, strongly foreshortened and stretched along the floor away from the camera toward the back of the corridor, as if a person is standing just behind the camera). Only the shadow exists: no person, no body, no object that could cast it. The shadow is dark charcoal, about 1.3x longer than natural, and it lies across the tile joints following their perspective. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the A-frame menu board, the box and the white reflection band to the right, the plant at the far left or the wall base. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 63% of the image width and 39% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク2:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: add a large human-shaped shadow lying across the floor tiles of the corridor, with a round head, sloping shoulders, thin arms and long legs, stretched toward the far end of the corridor and following the perspective of the floor. No person is visible anywhere. Make the shadow a solid dark tone with a slightly blurred edge, strong enough to be clearly visible against the bright floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the A-frame menu board, the box and the white reflection band to the right, the plant at the far left or the wall base. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 63% of the image width and 39% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク3:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: paint a single elongated shadow of a man standing with arms down, laid flat on the floor tiles pointing away from the camera, ending near the middle of the corridor. The silhouette shows head, neck, shoulders, arms and legs. Nobody and nothing is there to cast it. Keep the shadow dark and clearly readable, with the tile joints faintly continuing across it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the A-frame menu board, the box and the white reflection band to the right, the plant at the far left or the wall base. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 63% of the image width and 39% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe A-frame menu board, the box and the white reflection band to the right, the plant at the far left or the wall base（英語プロンプトの Do not touch に同じ）。
+- **最寄り既存 overlay と実測距離**: AR-06-styrofoam-box まで 30.0px（box 基準・矩形間のユークリッド距離。次点: AR-06-wet-footprints 30.0px / AR-06-tile-sky（本節）30.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
+- **分類 / フェーズ / 目立ち度**: person / mid / medium
+- **視認性の注意**: 影は暗い灰色〜炭色で濃く。明るい床タイルの上なので差分は出やすい。足元がタイル目地に沿うように。つまみはコントラストを上げると輪郭が出る。 登録後に `uv run scripts/check-visibility.py --id AR-06-long-shadow` を必ず通す。
+- **台帳登録案**: `id: 'AR-06-long-shadow'` / `candidate_id: 'AR-06-long-shadow'` / `element_id: 'CAM06-E16'` / `category: 'person'` / `anomaly_type: 'add_person'` / `location: '持ち主のいない長い人影（box 205,610,366,676）'` / `detail: '床のタイルに、人の形をした長い影だけが通路の奥へ向かって伸びる（持ち主は写らない）'` / `phase: mid` / 目立ち度 medium / note: add_person（影のみ）。カメラの後ろに誰かが立っている気配。フェーズは mid。最寄り既存 id と最終 alpha bbox の実測距離も note に書く。
+- **相互参照 / 重複精査**: AR-06-reflection（ガラスに映る買い物客の後ろ姿）・AR-06-worker（通路奥の店員の後ろ姿）は『人の姿そのもの』、本案は『影だけ』。CR-06-42（反射帯の端に紙袋の影だけ）は物の影、本案は人の影で位置も違う。CAM04 の CR-04-11（ガラス反射の黒い人影）とは別カメラ・別の面。CAM02 の CR-02-06（黒板の脚と影のずれ）とも別。
+
+### AR-06-wall-gecko — 右壁に張り付くヤモリ
+
+- **camera / element_id**: CAM06 / CAM06-E15
+- **物と変化**: 右の粗い壁に、淡い灰茶色のヤモリが一匹、壁を這うように張り付く（小さな爬虫類。無地の模様）
+- **最終 box**（baseline px）: `622,290,672,345`（50x55）。`composite-anomaly.py --box` にはこの値を渡す
+- **6倍クロップ**（baseline px）: `419,232,675,403`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (203,58)-(253,113)
+- **生成プロンプト**（3テイク作って目視で選ぶ）:
+
+  テイク1:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the rough gray wall at the right edge of the frame, place one pale grey-brown house gecko clinging flat to the wall, head pointing diagonally up, all four splayed toes and the tail visible. Make it about 2x larger than real scale so that it reads clearly, with a short soft dark contact shadow under its body on the textured wall. Plain skin, no pattern or markings. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the framed notice on the wall, the pinwheel or the rough wall texture elsewhere. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク2:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: a single Japanese house gecko (yamori) with a beige-grey body and splayed fingers is crawling horizontally across the rough wall at the right edge of the frame, tail curling slightly. About 2x the natural size, with a clear dark outline against the lighter wall texture and a thin cast shadow below it. No pattern, no markings. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the framed notice on the wall, the pinwheel or the rough wall texture elsewhere. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク3:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: one gecko with a light brownish-grey body rests on the coarse wall surface at the right edge, body slightly twisted, head turned toward the camera, toes spread. About 2x bigger than real life, strong contrast against the wall and a defined dark shadow beneath it. Plain, unmarked skin. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the framed notice on the wall, the pinwheel or the rough wall texture elsewhere. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 32% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe dark door and its frame, the framed notice on the wall, the pinwheel or the rough wall texture elsewhere（英語プロンプトの Do not touch に同じ）。
+- **最寄り既存 overlay と実測距離**: AR-06-tilted-notice まで 51.0px（box 基準・矩形間のユークリッド距離。次点: AR-06-blue-pinwheel 53.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
+- **分類 / フェーズ / 目立ち度**: object / mid / medium
+- **視認性の注意**: 壁の粗いテクスチャに紛れやすいので、実寸の2倍大・暗い輪郭・短く濃い影で。色は壁より少し暗い灰茶。 登録後に `uv run scripts/check-visibility.py --id AR-06-wall-gecko` を必ず通す。
+- **台帳登録案**: `id: 'AR-06-wall-gecko'` / `candidate_id: 'AR-06-wall-gecko'` / `element_id: 'CAM06-E15'` / `category: 'object'` / `anomaly_type: 'add_creature'` / `location: '右壁に張り付くヤモリ（box 622,290,672,345）'` / `detail: '右の粗い壁に、灰茶色のヤモリが一匹張り付く'` / `phase: mid` / 目立ち度 medium / note: add_creature。壁面の小動物（物の置き物と区別）。最寄り既存 id と最終 alpha bbox の実測距離も note に書く。
+- **相互参照 / 重複精査**: CAM06 の AR-06-blue-pinwheel（壁に貼る小物）とは別物。生き物の案は既存の猫・鳥系（CR-06-25/26 は猫）と種が違う。他カメラの生き物（猫・鳥など）と見比べ、ヤモリは台帳に未登録（2026-11 時点で grep 済み）。
+
+### AR-06-tile-sky — 床タイルが抜けて青空が見える
+
+- **camera / element_id**: CAM06 / CAM06-E16
+- **物と変化**: 床のタイルが一枚だけ四角く抜け落ち、穴の底に昼の青空と白い雲が見える（空間が反転したような不自然さ）
+- **最終 box**（baseline px）: `300,515,366,580`（66x65）。`composite-anomaly.py --box` にはこの値を渡す
+- **6倍クロップ**（baseline px）: `205,462,461,633`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (95,53)-(161,118)
+- **生成プロンプト**（3テイク作って目視で選ぶ）:
+
+  テイク1:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor of the corridor in the center of the frame, replace exactly one square floor tile with a square hole whose bottom shows a bright daytime blue sky with a few soft white clouds, as if the tile were a window onto the sky. The hole follows the same perspective as the tile and the neighbouring joint lines, with a thin dark edge of depth on the far side. The sky is clearly brighter and bluer than anything else in the scene. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the other tiles, the neighbouring joint lines, the A-frame menu board, the white reflection band to the right or the left-hand shopfront. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 26% of the image width and 38% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク2:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: turn one single grey floor tile at the center of the frame into an opening showing a vivid blue summer sky with a small white cumulus cloud, seen as if looking straight down into the sky. Keep the exact tile outline and perspective, with the neighbouring tiles and joints intact, and a thin dark rim at the inner edge. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the other tiles, the neighbouring joint lines, the A-frame menu board, the white reflection band to the right or the left-hand shopfront. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 26% of the image width and 38% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク3:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: one floor tile in the middle of the corridor disappears and a square patch of clear blue sky with a streak of white cloud is visible instead, bordered by the original tile joints. Make the sky saturated so that it stands out clearly against the cold grey floor, and give the near edge a thin dark depth shadow. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the other tiles, the neighbouring joint lines, the A-frame menu board, the white reflection band to the right or the left-hand shopfront. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 26% of the image width and 38% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe other tiles, the neighbouring joint lines, the A-frame menu board, the white reflection band to the right or the left-hand shopfront（英語プロンプトの Do not touch に同じ）。
+- **最寄り既存 overlay と実測距離**: AR-06-wet-footprints まで 30.0px（box 基準・矩形間のユークリッド距離。次点: AR-06-reopened 32.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
+- **分類 / フェーズ / 目立ち度**: surreal / late / obvious
+- **視認性の注意**: 青空の彩度と明度で差分は十分に出る見込み。タイル1枚分に収める（隣のタイルに広げない）。 登録後に `uv run scripts/check-visibility.py --id AR-06-tile-sky` を必ず通す。
+- **台帳登録案**: `id: 'AR-06-tile-sky'` / `candidate_id: 'AR-06-tile-sky'` / `element_id: 'CAM06-E16'` / `category: 'surreal'` / `anomaly_type: 'surreal'` / `location: '床タイルが抜けて青空が見える（box 300,515,366,580）'` / `detail: '床のタイルが一枚だけ四角く抜け、穴の底に青空と白い雲が見える'` / `phase: late` / 目立ち度 obvious / note: surreal。昭和の「空の記憶」。1タイル限定。最寄り既存 id と最終 alpha bbox の実測距離も note に書く。
+- **相互参照 / 重複精査**: CAM06 の AR-06-wall-puddle（水たまりが蛍光灯と壁を映す、大面積）は床の映り込み、本案は床が『抜ける』。CR-06-13/14（床タイルの水玉・淡い緑）は模様・色の変化で、空が見える穴ではない。他カメラの床の穴・空の案を検索したが、青空の穴は未登録。
+
+### AR-06-pigeon — 床に降りた灰色の鳩
+
+- **camera / element_id**: CAM06 / CAM06-E16
+- **物と変化**: 前景の床に、灰色の鳩が一羽、タイルの上に立つ（屋内の通路にいるはずのない鳥。無地）
+- **最終 box**（baseline px）: `20,775,150,885`（130x110）。`composite-anomaly.py --box` にはこの値を渡す
+- **6倍クロップ**（baseline px）: `0,729,256,900`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (20,46)-(150,156)
+- **生成プロンプト**（3テイク作って目視で選ぶ）:
+
+  テイク1:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark foreground floor tiles at the lower left of the frame, place one plain grey city pigeon standing on the floor, facing right, with a slightly puffed chest and a dark contact shadow under its feet. Make it about 1.5x larger than real scale so that it reads clearly against the dark floor. Natural feathers, no markings. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the left plant pot and its base, the box to the right, the tile joints or the blue bag at the left edge. Place the object, including its shadow, centered at about 33% from the left and 59% from the top of the image, occupying roughly 51% of the image width and 64% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク2:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: add one grey rock pigeon walking across the dark floor tiles in the lower left of the frame, head forward, one foot raised, neck feathers faintly iridescent. About 1.5x natural size, with a clearly lit body against the dark tiles and a dark contact shadow below it. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the left plant pot and its base, the box to the right, the tile joints or the blue bag at the left edge. Place the object, including its shadow, centered at about 33% from the left and 59% from the top of the image, occupying roughly 51% of the image width and 64% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク3:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: a single pigeon stands still on the dark floor tiles in the lower left, body turned slightly toward the camera, with light grey feathers and a darker wing. About 1.5x larger than real life, strong highlights on its back for contrast, and a clear contact shadow beneath. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the left plant pot and its base, the box to the right, the tile joints or the blue bag at the left edge. Place the object, including its shadow, centered at about 33% from the left and 59% from the top of the image, occupying roughly 51% of the image width and 64% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe left plant pot and its base, the box to the right, the tile joints or the blue bag at the left edge（英語プロンプトの Do not touch に同じ）。
+- **最寄り既存 overlay と実測距離**: AR-06-tin-planter まで 32.0px（box 基準・矩形間のユークリッド距離。次点: AR-06-styrofoam-box 43.0px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
+- **分類 / フェーズ / 目立ち度**: object / mid / medium
+- **視認性の注意**: 暗い床と灰色の羽の対比を確保するため、羽は明るめ（淡い灰）に。小さすぎると読めないので1.5倍。 登録後に `uv run scripts/check-visibility.py --id AR-06-pigeon` を必ず通す。
+- **台帳登録案**: `id: 'AR-06-pigeon'` / `candidate_id: 'AR-06-pigeon'` / `element_id: 'CAM06-E16'` / `category: 'object'` / `anomaly_type: 'add_creature'` / `location: '床に降りた灰色の鳩（box 20,775,150,885）'` / `detail: '前景の床に、灰色の鳩が一羽立つ'` / `phase: mid` / 目立ち度 medium / note: add_creature。暗い前景の床（小物は広い面に置く方針に合致）。最寄り既存 id と最終 alpha bbox の実測距離も note に書く。
+- **相互参照 / 重複精査**: CAM06 の CR-06-26（茶トラ猫が植物の足元に座る）は猫・別の場所、CR-06-12（葉の陰の人形のような生物）とも別。CAM03 の AR-03-white-cap のような床の小物とは物が違う。鳥の案は台帳に未登録（grep 済み）。
+
+### AR-06-wall-height-marks — 右壁に刻まれた背比べの線
+
+- **camera / element_id**: CAM06 / CAM06-E15
+- **物と変化**: 右の粗い壁に、子供の背比べの印のような短い横線が何本か、下から上へ間隔をあけて刻まれる（赤鉛筆・青鉛筆の横線のみ。数字・文字なし）
+- **最終 box**（baseline px）: `622,410,672,560`（50x150）。`composite-anomaly.py --box` にはこの値を渡す
+- **6倍クロップ**（baseline px）: `419,400,675,571`（256x171。1536x1024 へ拡大して imagegen に渡し、結果を縮小して同じ位置へ貼り戻す）。box はクロップ内の (203,10)-(253,160)
+- **生成プロンプト**（3テイク作って目視で選ぶ）:
+
+  テイク1:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the rough gray wall at the right edge of the frame, draw a column of six short horizontal pencil marks, like a child's height chart, evenly spaced from bottom to top, each about 30 percent of the wall strip's width, alternating red colored pencil and dark graphite. The lines should be about 2x thicker than a real pencil line so that they read clearly, following the slightly slanted perspective of the wall. Only plain tick marks: no numbers, no letters, no writing. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the gecko position above, the framed notice or the wall texture outside the marked strip. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 88% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク2:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: add a vertical set of seven short hand-drawn horizontal tick marks on the coarse wall at the right edge of the frame, like the growth marks of a child measured against a wall, in red and blue colored pencil, spaced about 20 px apart in the original photo scale and following the wall perspective. The lines are bold and clearly visible. No digits, no letters. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the gecko position above, the framed notice or the wall texture outside the marked strip. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 88% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+  テイク3:
+
+  ```text
+  $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the rough wall strip at the right edge, scratch several short horizontal colored pencil lines (red, blue and graphite) stacked upward at slightly uneven spacing, like a record of a child growing taller. Make the lines thick and high contrast so they stand out from the wall texture. No numbers or characters, only the bare tick lines. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels or printed patterns anywhere in the image. Do not touch the dark door and its frame, the gecko position above, the framed notice or the wall texture outside the marked strip. Place the object, including its shadow, centered at about 89% from the left and 50% from the top of the image, occupying roughly 20% of the image width and 88% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.
+  ```
+
+- **保持するもの**: 構図・遠近・照明・粒状感・圧縮ノイズ・他の物すべて。特にthe dark door and its frame, the gecko position above, the framed notice or the wall texture outside the marked strip（英語プロンプトの Do not touch に同じ）。
+- **最寄り既存 overlay と実測距離**: AR-06-wall-stripes まで 59.0px（box 基準・矩形間のユークリッド距離。次点: AR-06-tilted-notice 106.9px）。最終 overlay の alpha bbox で再測定する（30px を割れば動かす）。
+- **分類 / フェーズ / 目立ち度**: object / late / medium
+- **視認性の注意**: 粗い壁の凹凸に紛れやすい細線は下限未満になりやすい。赤・青の鉛筆を2倍太に、明度差を付ける。下限未満なら本数を減らして太くする。 登録後に `uv run scripts/check-visibility.py --id AR-06-wall-height-marks` を必ず通す。
+- **台帳登録案**: `id: 'AR-06-wall-height-marks'` / `candidate_id: 'AR-06-wall-height-marks'` / `element_id: 'CAM06-E15'` / `category: 'object'` / `anomaly_type: 'add_object'` / `location: '右壁に刻まれた背比べの線（box 622,410,672,560）'` / `detail: '右の粗い壁に、子供の背比べのような色鉛筆の横線が何本か刻まれる（数字・文字なし）'` / `phase: late` / 目立ち度 medium / note: add_object（印）。子供の気配。add_object 枠は本節でこの1件のみ。最寄り既存 id と最終 alpha bbox の実測距離も note に書く。
+- **相互参照 / 重複精査**: CR-06-17（額入り掲示の横に紙が増える）は紙。CAM05 以降の壁の貼り紙・落書き系（制作済みの『古い貼り紙の剥がし跡』等）とは違い、本案は子供の背比べの線。4人目（子供）の気配として物語に沿う（story.md「4人目の子供」）が、令和テーマの印は付けない。
+
 ## 追加候補 — CAM 07
 
 | 候補ID   | 対象ID    | 変化案                                             | 分類 / フェーズ / 目立ち度   |
