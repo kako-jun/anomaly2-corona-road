@@ -133,7 +133,7 @@ describe('pickLedgerEntry', () => {
     const b = pickLedgerEntry(E, [1, 2], new Set(), seq(0.2, 0.7))
     expect(a).toEqual(b)
   })
-  it('first rng value picks the camera, second picks the entry', () => {
+  it('first rng value picks the camera, fourth picks the entry', () => {
     // cameras in ledger order: [1, 2]
     expect(pickLedgerEntry(E, [1, 2], new Set(), seq(0, 0))?.id).toBe('a1')
     expect(pickLedgerEntry(E, [1, 2], new Set(), seq(0, 0.5))?.id).toBe('a2')
@@ -174,9 +174,9 @@ describe('pickLedgerEntry weighted draw (#221)', () => {
       // displace when t >= 10/11 -> i >= 910 -> 90 of 1000
       expect(sweep(S, [1], none, 2, 1, isDisplace)).toBe(90)
     })
-    it('default exponent damps to sqrt: displace starts at sqrt(10)/(sqrt(10)+1)', () => {
-      // 0.7597 -> i >= 760 -> 240 of 1000
-      expect(sweep(S, [1], none, 2, undefined, isDisplace)).toBe(240)
+    it('default exponent 0.75: displace starts at 10^0.75/(10^0.75+1)', () => {
+      // 5.623/6.623 = 0.8491 -> i >= 850 -> 150 of 1000
+      expect(sweep(S, [1], none, 2, undefined, isDisplace)).toBe(150)
     })
     it('default sits strictly between count-proportional and uniform', () => {
       const prop = sweep(S, [1], none, 2, 1, isDisplace)
@@ -185,14 +185,14 @@ describe('pickLedgerEntry weighted draw (#221)', () => {
       expect(prop).toBeLessThan(def)
       expect(def).toBeLessThan(uni)
     })
-    it('4 vs 1 entries is 2:1 by default: the rarer type from 2/3 up', () => {
+    it('4 vs 1 entries is 4^0.75:1 (about 2.83:1) by default: the rarer type from 0.7388 up', () => {
       const four = [...objects(4), mk('d1', 1, 'Object', 'displace')]
-      // i >= 667 -> 333
-      expect(sweep(four, [1], none, 2, undefined, isDisplace)).toBe(333)
+      // 2.828/3.828 = 0.7388 -> i >= 739 -> 261
+      expect(sweep(four, [1], none, 2, undefined, isDisplace)).toBe(261)
     })
     it('type counts are per category, not ledger-wide', () => {
-      // Object: 4 add_object vs 1 displace -> 2:1 -> 333. Ledger-wide add_object would be 9:1.
-      expect(sweep(Y, [1], none, 2, undefined, isDisplace)).toBe(333)
+      // Object: 4 add_object vs 1 displace -> 261 (0.7388 up). Ledger-wide add_object would be 9 vs 1 (0.8387 up -> 161).
+      expect(sweep(Y, [1], none, 2, undefined, isDisplace)).toBe(261)
       // Person has a single type, so with the category fixed to Person nothing else can appear.
       for (let i = 0; i < 20; i++) {
         const r = pickLedgerEntry(Y, [1], none, seq(0, 0.99, i / 20, 0))
@@ -200,7 +200,7 @@ describe('pickLedgerEntry weighted draw (#221)', () => {
       }
     })
     it('a Person add_object is a separate group from Object add_object (X)', () => {
-      expect(sweep(X, [1], none, 1, undefined, isPerson)).toBe(250)
+      expect(sweep(X, [1], none, 1, undefined, isPerson)).toBe(161)
       for (let i = 0; i < 20; i++) {
         expect(pickLedgerEntry(X, [1], none, seq(0, 0.99, i / 20, 0))?.id).toBe(
           'p1'
@@ -213,14 +213,14 @@ describe('pickLedgerEntry weighted draw (#221)', () => {
     it('exponent 0 is uniform: Person exactly half', () => {
       expect(sweep(C, [1], none, 1, 0, isPerson)).toBe(500)
     })
-    it('default is sqrt: Person from 3:1 -> 0.75 up', () => {
-      expect(sweep(C, [1], none, 1, undefined, isPerson)).toBe(250)
+    it('default exponent 0.75: Person from 1 - 1/(1+9^0.75) = 0.8386 up', () => {
+      expect(sweep(C, [1], none, 1, undefined, isPerson)).toBe(161)
     })
     it('exponent 1 is proportional: Person from 0.9 up', () => {
       expect(sweep(C, [1], none, 1, 1, isPerson)).toBe(100)
     })
     it('the category weight does not depend on the entries types (X = C)', () => {
-      expect(sweep(X, [1], none, 1, undefined, isPerson)).toBe(250)
+      expect(sweep(X, [1], none, 1, undefined, isPerson)).toBe(161)
     })
   })
 
@@ -275,9 +275,9 @@ describe('pickLedgerEntry weighted draw (#221)', () => {
       const nine = new Set(S.slice(0, 9).map(e => e.id))
       const afterFive = sweep(S, [1], five, 2, undefined, isDisplace)
       const afterNine = sweep(S, [1], nine, 2, undefined, isDisplace)
-      // sqrt(5) vs 1 -> from 0.69098 -> i >= 691 -> 309; 1 vs 1 -> 500
-      expect(base).toBe(240)
-      expect(afterFive).toBe(309)
+      // 5^0.75 = 3.344 vs 1 -> from 0.7698 -> i >= 770 -> 230; 1 vs 1 -> 500
+      expect(base).toBe(150)
+      expect(afterFive).toBe(230)
       expect(afterNine).toBe(500)
     })
   })
@@ -311,12 +311,17 @@ describe('pickLedgerEntry weighted draw (#221)', () => {
       ).toBe('m1')
     })
     it('category boundary: exactly on the cumulative edge goes to the next group', () => {
-      // C default: Object weight 3 of 4 -> 0.75 is Person, just below is Object
-      expect(pickLedgerEntry(C, [1], none, seq(0, 0.75, 0, 0))?.id).toBe('p1')
+      // exponent 0: two equal categories, the edge is exactly 0.5
+      expect(pickLedgerEntry(C, [1], none, seq(0, 0.5, 0, 0), 0)?.id).toBe('p1')
       expect(
-        pickLedgerEntry(C, [1], none, seq(0, 0.75 - Number.EPSILON, 0, 0))
+        pickLedgerEntry(C, [1], none, seq(0, 0.5 - Number.EPSILON, 0, 0), 0)
           ?.category
       ).toBe('Object')
+      // default: edge at 0.8386 (Object 9^0.75 vs Person 1)
+      expect(pickLedgerEntry(C, [1], none, seq(0, 0.84, 0, 0))?.id).toBe('p1')
+      expect(pickLedgerEntry(C, [1], none, seq(0, 0.83, 0, 0))?.category).toBe(
+        'Object'
+      )
     })
     it('type boundary: exactly 0.5 with exponent 0 is the second type', () => {
       expect(pickLedgerEntry(S, [1], none, seq(0, 0, 0.5, 0), 0)?.id).toBe('d1')

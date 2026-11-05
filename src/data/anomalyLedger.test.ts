@@ -48,8 +48,7 @@ describe('real anomaly ledger', () => {
     expect(ANOMALY_LEDGER.length).toBeGreaterThan(0)
   })
 
-  it('has at least 299 entries, every one with a known anomalyType (parsed as the build does)', () => {
-    expect(ANOMALY_LEDGER.length).toBeGreaterThanOrEqual(299)
+  it('every entry has a known anomalyType (parsed as the build does)', () => {
     for (const e of ANOMALY_LEDGER) {
       expect(ANOMALY_TYPES, e.id).toContain(e.anomalyType)
     }

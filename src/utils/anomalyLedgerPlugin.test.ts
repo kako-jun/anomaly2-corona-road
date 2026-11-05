@@ -1,5 +1,5 @@
-import { ANOMALY_TYPES } from './anomalyLedger'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { ANOMALY_TYPES } from './anomalyLedger'
 
 // The Vite plugin in vite.config.ts reads the YAML and checks overlay files. Its failure modes are
 // build errors, so exercise load() directly with fs replaced for the ledger path only.
