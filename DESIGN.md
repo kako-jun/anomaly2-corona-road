@@ -236,15 +236,15 @@ What to take from it:
 
 **Part images (kako-jun approved, 2026-11-05, #48):** the cabinet is dressed with raster part images made to resemble the reference photo, in `public/ui/` (webp, about 250KB in total; the budget is 600KB). They are generated artwork and the licence is the author's. The reference photo itself is never bundled, and no real maker or model name is reproduced (the printed model name is the invented `VIDEO MONITOR CR-42`, drawn as CSS text). Generation sources and rejected takes are not kept in the repo (#48 "作業物は消す").
 
-| Part | File(s) | How it is applied |
-| --- | --- | --- |
-| Cabinet face | `surface.webp` | seamless tile behind `.cabinet`; the wear overlay `.cabinet::before` is weakened to 30% |
-| Monitor frame | `bezel_mon.webp` | one portrait picture as `.bezel` background (the tube is always about 3:4), with a transparent opening; `.glass` sits in the opening and is cut to the tube outline with `clip-path` |
-| Display windows (SHIFT TIME / REPORTS / STRIKES) | `window9.webp` | `border-image` 9-slice on `.vfd` and `.lamps` (6px top/bottom so the window height is unchanged); digits and glow stay CSS |
-| Camera keys, REPORT key | `cam-key(-pressed).webp`, `report-key(-pressed).webp` | `border-image` on `.key`; numbers and labels stay CSS text; pressed = second image plus a 3px drop |
-| Knobs | `knob.webp` | background of `.knob`; the index line `.mark` stays CSS and is what rotates |
-| Lamps (green camera, amber strikes, red REPORT) | `lamp-{green,amber,red}-{on,off}.webp` | background of `.lamp` / `.lamp-big`; the lit glow is a CSS `box-shadow` |
-| Speaker grille | `speaker_tile.webp` | a wide strip (`repeat-x`) along the bottom edge. A small square grille block was tried and rejected: the strip is preferred and it keeps the phone page height unchanged |
+| Part                                             | File(s)                                               | How it is applied                                                                                                                                                                    |
+| ------------------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Cabinet face                                     | `surface.webp`                                        | seamless tile behind `.cabinet`; the wear overlay `.cabinet::before` is weakened to 30%                                                                                              |
+| Monitor frame                                    | `bezel_mon.webp`                                      | one portrait picture as `.bezel` background (the tube is always about 3:4), with a transparent opening; `.glass` sits in the opening and is cut to the tube outline with `clip-path` |
+| Display windows (SHIFT TIME / REPORTS / STRIKES) | `window9.webp`                                        | `border-image` 9-slice on `.vfd` and `.lamps` (6px top/bottom so the window height is unchanged); digits and glow stay CSS                                                           |
+| Camera keys, REPORT key                          | `cam-key(-pressed).webp`, `report-key(-pressed).webp` | `border-image` on `.key`; numbers and labels stay CSS text; pressed = second image plus a 3px drop                                                                                   |
+| Knobs                                            | `knob.webp`                                           | background of `.knob`; the index line `.mark` stays CSS and is what rotates                                                                                                          |
+| Lamps (green camera, amber strikes, red REPORT)  | `lamp-{green,amber,red}-{on,off}.webp`                | background of `.lamp` / `.lamp-big`; the lit glow is a CSS `box-shadow`                                                                                                              |
+| Speaker grille                                   | `speaker_tile.webp`                                   | a wide strip (`repeat-x`) along the bottom edge. A small square grille block was tried and rejected: the strip is preferred and it keeps the phone page height unchanged             |
 
 Kept as CSS (not images): scanlines, noise, glow, vignette, OSD (REC / CAM n / subtitles), every label and number, the glass haze, and the handwritten note paper and tape of the SELECT TYPE dialog (`.cat-note`, #236). The start and result screens are still the older design (handled in #45).
 
