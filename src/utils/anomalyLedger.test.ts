@@ -362,4 +362,23 @@ describe('parseLedgerEntry also_category (#236)', () => {
     const withAlso = parseLedgerEntry(raw({ also_category: 'person' }), 0)
     expect(withAlso).toEqual({ ...base, alsoCategory: 'Person' })
   })
+  it('trims surrounding whitespace and accepts the value', () => {
+    expect(
+      parseLedgerEntry(raw({ also_category: ' person ' }), 0).alsoCategory
+    ).toBe('Person')
+  })
+  it.each(['', '   '])('treats blank %j as no column', v => {
+    const e = parseLedgerEntry(raw({ also_category: v }), 0)
+    expect('alsoCategory' in e).toBe(false)
+  })
+  it('reports the trimmed value in the unknown error', () => {
+    expect(() =>
+      parseLedgerEntry(raw({ also_category: ' ghost ' }), 0)
+    ).toThrow(/entry "AR-01-notice".*also_category "ghost" is unknown/)
+  })
+  it('rejects a padded value equal to category', () => {
+    expect(() =>
+      parseLedgerEntry(raw({ also_category: ' object ' }), 0)
+    ).toThrow(/entry "AR-01-notice".*also_category "object" is the same as/)
+  })
 })

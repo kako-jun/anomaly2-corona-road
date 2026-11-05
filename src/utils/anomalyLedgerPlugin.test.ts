@@ -259,6 +259,22 @@ describe('anomaly-ledger vite plugin', () => {
       await expect(run(yaml)).rejects.toThrow(/entry "a2".*also_category/)
     })
 
+    it('trims a padded value', async () => {
+      const { out } = await run(withAlso("also_category: ' person '"))
+      expect(parse(out)[0].alsoCategory).toBe('Person')
+    })
+
+    it('treats an empty cell as no column', async () => {
+      const { out } = await run(withAlso("also_category: ''"))
+      expect('alsoCategory' in parse(out)[0]).toBe(false)
+    })
+
+    it('fails the build on a padded invalid value, naming the trimmed value', async () => {
+      await expect(run(withAlso("also_category: ' ghost '"))).rejects.toThrow(
+        /entry "a1".*also_category "ghost" is unknown/
+      )
+    })
+
     it('leaves entries without the column unchanged (no alsoCategory key)', async () => {
       const { out } = await run(`anomalies:\n${entryYaml()}\n`)
       expect('alsoCategory' in parse(out)[0]).toBe(false)
