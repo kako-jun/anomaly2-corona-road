@@ -173,7 +173,11 @@ export const useGameState = () => {
         a => a.cameraId === currentCamera.id && !a.detectedAt
       )
 
-      if (anomalyOnCamera && anomalyOnCamera.category === category) {
+      if (
+        anomalyOnCamera &&
+        (anomalyOnCamera.category === category ||
+          anomalyOnCamera.alsoCategory === category)
+      ) {
         setStats(prev => ({
           ...prev,
           correctReports: prev.correctReports + 1,

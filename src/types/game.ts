@@ -20,6 +20,8 @@ export interface Anomaly {
   /** Ledger id (prompts/anomalies.yaml). */
   id: string
   category: AnomalyCategory
+  /** Optional second correct report (ledger `also_category`). */
+  alsoCategory?: AnomalyCategory
   cameraId: number
   detectedAt?: number
   phase: GamePhase

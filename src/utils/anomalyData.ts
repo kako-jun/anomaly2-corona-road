@@ -72,6 +72,7 @@ export const createAnomaly = (
 ): Anomaly => ({
   id: entry.id,
   category: entry.category,
+  ...(entry.alsoCategory ? { alsoCategory: entry.alsoCategory } : {}),
   cameraId: entry.cameraId,
   phase,
   overlay: {

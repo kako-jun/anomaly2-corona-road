@@ -298,6 +298,48 @@ describe('reporting', () => {
     expect(result.current.feedback?.message).toMatch(/WRONG CATEGORY/)
   })
 
+  describe('also_category (#236)', () => {
+    const withAlso = () => {
+      ledger.push({ ...entry('a', 1, 'Object'), alsoCategory: 'Person' })
+      const hook = start()
+      advance(FIRST + 100)
+      return hook
+    }
+
+    it('the primary category is correct and the feedback names it', () => {
+      const { result } = withAlso()
+      act(() => result.current.reportAnomaly('Object'))
+      expect(result.current.stats.correctReports).toBe(1)
+      expect(result.current.feedback?.kind).toBe('correct')
+      expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
+    })
+
+    it('the also_category is correct too, and the feedback still names the primary', () => {
+      const { result } = withAlso()
+      act(() => result.current.reportAnomaly('Person'))
+      expect(result.current.stats.correctReports).toBe(1)
+      expect(result.current.stats.misreports).toBe(0)
+      expect(result.current.activeAnomalyHere).toBeUndefined()
+      expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
+    })
+
+    it('a third category is a false report', () => {
+      const { result } = withAlso()
+      act(() => result.current.reportAnomaly('Camera'))
+      expect(result.current.stats.misreports).toBe(1)
+      expect(result.current.stats.correctReports).toBe(0)
+      expect(result.current.activeAnomalyHere?.id).toBe('a')
+    })
+
+    it('an anomaly without also_category accepts only its primary category', () => {
+      const { result } = withAnomaly('Object')
+      act(() => result.current.reportAnomaly('Person'))
+      expect(result.current.stats.misreports).toBe(1)
+      act(() => result.current.reportAnomaly('Object'))
+      expect(result.current.stats.correctReports).toBe(1)
+    })
+  })
+
   it('wrong camera + right category is a false report and leaves it unresolved', () => {
     const { result } = withAnomaly()
     act(() => result.current.switchCamera(1))

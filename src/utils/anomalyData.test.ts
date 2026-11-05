@@ -397,4 +397,12 @@ describe('createAnomaly', () => {
       '/hashed.webp'
     )
   })
+  it('carries alsoCategory over when the entry has one', () => {
+    const a = createAnomaly({ ...e, alsoCategory: 'Person' }, 'early', 'u')
+    expect(a.alsoCategory).toBe('Person')
+    expect(a.category).toBe('Object')
+  })
+  it('has no alsoCategory key when the entry has none', () => {
+    expect('alsoCategory' in createAnomaly(e, 'early', 'u')).toBe(false)
+  })
 })
