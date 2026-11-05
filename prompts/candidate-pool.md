@@ -180,37 +180,6 @@
 
 台帳に `planned` で載せた画像案の制作仕様の詳細。制作して昇格したら、その案の `###` 節を削除する。
 
-### AR-03-tile-shifted — 床のタイル一枚だけが横にずれ、継ぎ目に黒い隙間ができる
-
-- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E16（床）
-- **型 / カテゴリ / フェーズ / 目立ち度**: displace / environment / mid / medium
-- **物と変化**: 手前左寄りの床の大きなタイル一枚（目地に囲まれた約150px四方）が、右へ数センチずれて、元の位置との間に細い黒い隙間（約8px）が開き、反対側の目地は重なってタイルの端が少し隣へ乗り上げる。タイルの色・斑点は同じ。『同じ物が少し違う位置にある』変化で、色や柄は変わらない（タイルの色・斜め目地の異変とは別）。
-- **box (x1,y1,x2,y2)**: (200,790,350,890)（150x100）
-- **最寄り既存 overlay と実測距離**: AR-03-tricycle (41.0)、次点 AR-03-blue-floor-tile (43.0)。
-- **6倍クロップ範囲**: 6倍クロップ (147,729)–(403,900)（256x171）。box は窓内で (318,366)–(1218,966)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the large floor tile in the lower-left of the frame that fills about x=318 to 1218, y=366 to 966. The whole tile has slid sideways to the right by about 50 px: along its left edge a thin black gap about 48 px wide has opened between it and the neighbouring tile, and its right edge slightly overlaps onto the next tile. The tile keeps exactly the same colour, speckles and reflection. Nothing else changes. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: one floor tile in the area x=318 to 1218, y=366 to 966 is misaligned: it has been pushed to the right, leaving a dark narrow crack on its left side and riding up over the joint on its right side. Same grey speckled stone, same light. All other tiles, joints and reflections stay exactly the same. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the single big floor tile at x=318 to 1218, y=366 to 966 is shifted out of line with its neighbours by about one hand width, so that the joint lines no longer match up along the edge, with a visible black gap on one side. No colour change, no pattern change, no hole, no new object. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-03-tile-shifted'
-    candidate_id: 'AR-03-tile-shifted'
-    camera_id: 'CAM03'
-    element_id: 'CAM03-E16'
-    base_photo: 'public/images/cam3.webp'
-    category: 'environment'
-    anomaly_type: 'displace'
-    location: '手前左寄りの床、差分左上 (200,790) 付近（貼り込み後に再計測）'
-    detail: '床のタイル一枚が右へずれ、継ぎ目に黒い隙間ができる。'
-    overlay: 'assets/anomaly-overlays/cam03/tile-shifted.webp'
-    # phase / 目立ち度: mid / medium
-    note: '最寄り既存 overlay は AR-03-tricycle（box 距離 41px）。大面積 AR-03-floor-tatami とは同じ床の面なので排他。'
-  ```
-- **視認性の見立て**: 隙間の黒い線が太さ約8px・長さ約100px で面積は小さめ。check-visibility を必ず通す（通らなければ隙間を広げ、乗り上げる側の影を濃くする）。
-- **相互参照 / 重複精査**: 床の穴・沈み（AR-03-sunken-opening-floor）、斜め目地（AR-03-tile-diagonal）、タイルの色（AR-03-blue-floor-tile / AR-03-dark-tile）、取り下げ案 AR-03-floor-line-break（目地が消える）とは別で、『タイルが位置ごとずれる』だけ。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-floor-tatami（床の面を使う大面積）。併存可=壁・天井・シャッター・看板の異変。
-
 ### AR-03-shutter-dents-many — 左シャッターの下のほうの小さな凹みが、数個から十数個に増える
 
 - **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E06（左のシャッター）
