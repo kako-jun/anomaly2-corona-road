@@ -379,37 +379,6 @@
 
 台帳に `planned` で載せた画像案の制作仕様の詳細。制作して昇格したら、その案の `###` 節を削除する。
 
-### AR-07-window-sill-gone — 左のガラス窓の下の木の棚板が消える
-
-- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E06
-- **型 / カテゴリ / フェーズ / 目立ち度**: remove_object / object / early / subtle
-- **物と変化**: 左端の暗いガラス窓（店先）の手前下、画面左の縁に見える明るい木色（ベージュ）の細い棚板（窓の下枠）。ガラス窓に沿って段々に並ぶ棚板の一番手前。ベージュの棚板が消え、そこは暗いガラス面と白い縦枠だけの自然なつながりに埋まる。ほかの棚板、ガラスのひび（AR-07-glass-crack）、白い縦の金属枠は変えない。
-- **box (x1,y1,x2,y2)**: (0,418,40,478)（40x60）
-- **最寄り既存 overlay と実測距離**: AR-07-n1 (57.0)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
-- **6倍クロップ範囲**: 6倍クロップ (0,363)–(256,534)（256x171）。box は窓内で (0,330)–(240,690)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: the light beige wooden window-sill ledge at the very left edge of the frame, at the bottom of the dark glass shop window (the bright wooden slab at the lower-left corner of the marked area, x=0 to 240, y=330 to 690 in the 1536x1024 frame), is removed: the area becomes the same dark window glass and the white vertical metal frame continuing without the ledge, with natural dark reflections. The other, higher ledges, the white frame and the floor stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: erase the pale wood-coloured ledge slab at the bottom left of the dark shop window glass (marked area x=0 to 240, y=330 to 690): where it was, continue the dark glass surface and the pale vertical frame so that it looks as if the ledge never existed. Add nothing. All other ledges, frames and the floor stay. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: the beige wooden sill board at the left window is gone; only dark glass and the white metal frame remain in its place (area x=0 to 240, y=330 to 690), with the same dim reflections as the rest of the window. Nothing new appears. Keep the other ledges and everything else unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **視認性の見立て**: subtle。標準状態（明るさ50・コントラスト50）でも少し見える強さを目標にし、通らなければ強めて作り直す。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-07-window-sill-gone'
-    candidate_id: 'AR-07-window-sill-gone'
-    camera_id: 'CAM07'
-    element_id: 'CAM07-E06'
-    base_photo: 'public/images/cam7.webp'
-    category: 'object'
-    anomaly_type: 'remove_object'
-    location: 'CAM07-E06 の周辺、差分左上 (0,418) 付近（貼り込み後に再計測）'
-    detail: '左ガラス窓の下の明るい木の棚板が一枚消える。'
-    overlay: 'assets/anomaly-overlays/cam07/window-sill-gone.webp'
-    # phase / 目立ち度: early / subtle
-    note: '最寄り既存 overlay は AR-07-n1（距離 57px）、AR-07-glass-crack（距離 57px 超）。画面端の小さな差分なので check-visibility を必ず通す（通らなければ消す範囲を棚板の上の段まで広げる）。左ガラスの AR-07-glass-crack とは同プレイ共存可（距離がある）。'
-  ```
-- **相互参照 / 重複精査**: 台帳に左ガラスの棚板の異変は無い。映り込みの案とは別で、こちらは実物の消失。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=なし。大面積の AR-07-wall-clocks（距離 64px）・AR-07-floor-frost（36px）・AR-07-floor-uphill・AR-07-ceiling-white-sheets とは 30px 以上離れ、全部併存可。小物の異変とも 30px 以上離れる。
-
 ### AR-07-opening-white-figure — 中央の黒い開口の奥に白い服の人が立つ
 
 - **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E11
