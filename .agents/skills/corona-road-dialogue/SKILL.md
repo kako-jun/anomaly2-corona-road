@@ -12,7 +12,7 @@ Use this skill for dialogue planning, generation, editing, and review. The YAML 
 - [`docs/story.md`](../../../docs/story.md): character canon, story facts, topics, and unresolved decisions.
 - [`dialogue/README.md`](../../../dialogue/README.md): ledger schema, playback behavior, and subtitle rules.
 - [`dialogue/flags.yaml`](../../../dialogue/flags.yaml): the source of truth for progress thresholds.
-- Check Issues #29 and #82 for approved dialogue decisions and production scope. Check #86 for the child-to-final story beat and #266 for per-entry unlock support.
+- Check Issues #29 and #82 for approved dialogue decisions and production scope. Check #86 for the child-to-final story beat and #266 for per-entry unlock support (implemented).
 
 Do not copy progress counts into notes or issues. Use `npm run dialogue:summary` for the current ledger counts.
 
@@ -29,7 +29,7 @@ Do not copy progress counts into notes or issues. Use `npm run dialogue:summary`
 For every conversation, decide its ledger file, trigger, tone, and release point before writing its lines. Keep the release condition in the dialogue entry or in the central flag ledger; do not maintain a second content inventory.
 
 - Use existing conditions from `dialogue/README.md` and `flags.yaml`. `story.when.flag` triggers a queued story event; it is not a general unlock condition for chatter or openings.
-- Check whether Issue #266's per-entry unlock implementation has landed. Until it has, do not imply a post-flag opening/chatter line is gated when the current schema cannot represent that gate. Keep such content out of the live ledger until the schema supports it.
+- To hold a line back until a progress flag is raised, give the entry `unlock: <flag name>` (any kind; the flag must be defined in `flags.yaml` or the build fails). A locked line is not a candidate and is not marked used; it joins the normal bag once the flag is raised. Lines without `unlock` are always candidates.
 - Use `story.yaml` for event conversations tied to a raised story flag. `childResponse` follows `child` immediately in the same shift; do not add a long post-child loop or casual-chat phase. The ending is a special same-shift result after every anomaly spawned following child discovery is ignored until time runs out, not a cumulative `final` progress flag.
 - The story's turn is not simply "ignoring anomalies is good." It rejects compulsive fault-finding and tattling that labels anything unusual as bad and tries to normalize it. After the child is found, the detectives realize they should investigate what the family did to make the missing people unwilling to return. Do not reveal the family's actual behavior before the epilogue.
 - The ending is a one-month-later Irish pub conversation seen from one fixed security-camera image. Keep the rear view, counter, and glasses central; show both heads, hair, necks, shoulders, and hands, with faces out of frame. The dialogue auto-advances as one scene; mention the three elders' current refusal to return and the shift toward investigating their families. Let the player infer the pair's closeness from their ease with each other; do not state their relationship. Keep actual family details for the epilogue.

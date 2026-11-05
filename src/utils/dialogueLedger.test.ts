@@ -139,6 +139,38 @@ describe('parseEntry: valid entries of every kind', () => {
   })
 })
 
+describe('parseEntry: unlock', () => {
+  const cases: [DialogueFile, Record<string, unknown>][] = [
+    ['opening', { id: 'opening-1' }],
+    ['chatter', { id: 'chatter-1' }],
+    ['false-report', { id: 'false-report-1' }],
+    ['closing', { id: 'closing-1', when: { result: 'dawn' } }],
+    ['midpoint', { id: 'midpoint-1', when: { stage: 'few' } }],
+    ['story', { id: 'story-1', when: { flag: 'f1' } }],
+    ['anomaly-lines', { id: 'an-an1-1', when: { anomaly: 'an1' } }],
+  ]
+  it.each(cases)('%s accepts a defined unlock flag', (file, over) => {
+    const e = parseEntry(file, entry({ ...over, unlock: 'f1' }), 0, ctx)
+    expect(e.unlock).toBe('f1')
+  })
+  it.each(cases)('%s rejects an undefined unlock flag', (file, over) => {
+    expect(() =>
+      parseEntry(file, entry({ ...over, unlock: 'ghost' }), 0, ctx)
+    ).toThrow(/unlock "ghost" is not defined in flags\.yaml/)
+  })
+  it('leaves unlock out when not given', () => {
+    expect('unlock' in parseEntry('opening', entry(), 0, ctx)).toBe(false)
+  })
+  it.each([[1], [''], [null], [['f1']]])(
+    'rejects a non-string or empty unlock %j',
+    v => {
+      expect(() =>
+        parseEntry('opening', entry({ unlock: v }), 0, ctx)
+      ).toThrow()
+    }
+  )
+})
+
 describe('parseEntry: when', () => {
   it.each(['opening', 'chatter', 'false-report'] as const)(
     '%s rejects a non-empty when',
@@ -419,6 +451,16 @@ describe('parseFlags', () => {
       parseFlags({ flags: { a: { foundUnique: v } } }, anomalyIds)
     if (ok) expect(run).not.toThrow()
     else expect(run).toThrow(/"foundUnique" must be a positive integer/)
+  })
+  it('parses foundTotal', () => {
+    expect(parseFlags({ flags: { a: { foundTotal: 5 } } }, anomalyIds)).toEqual(
+      [{ name: 'a', when: { foundTotal: 5 } }]
+    )
+  })
+  it.each([[0], [1.5], ['3'], [-1]])('rejects foundTotal %j', v => {
+    expect(() =>
+      parseFlags({ flags: { a: { foundTotal: v } } }, anomalyIds)
+    ).toThrow(/"foundTotal" must be a positive integer/)
   })
   it('applies the same number check to reiwaFound and loops', () => {
     expect(() =>
