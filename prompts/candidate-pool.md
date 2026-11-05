@@ -381,6 +381,72 @@
 | CR-05-26 | CAM05-E10 | 架空化した看板のひらがな一文字だけ左右反転する。 | object / early / subtle      |
 | CR-05-27 | CAM05-E09 | 暗い隙間の反射にだけ小さな傘が映る。             | surreal / mid / medium       |
 
+## 制作仕様（未制作）— CAM 05
+
+型の偏り（台帳の remove_object・add_creature が少ない）を直すための案 2 件。画像は未制作。台帳には未登録。書式は CAM 03 の見本に揃える。
+
+### AR-05-shelf-items-gone — 左奥通路の店先のガラス棚から、白い小物が全部消える
+
+- **カメラ**: CAM05（`cam5.webp`、676x900）／対象要素: CAM05-E06
+- **型 / カテゴリ / フェーズ / 目立ち度**: `remove_object` / object / early / subtle
+- **物と変化**: 左奥通路の店先に縦長のガラス棚があり、三段それぞれの棚板に白っぽい小物（陶器の置物のような塊が数個ずつ。何かは判別できない）が並んでいる。三段とも小物がすべて消え、棚板と奥の暗い背板だけが残る。消えた跡は背板と棚板の自然な続きで埋まり、白抜けや跡は残らない。
+- **box (x1,y1,x2,y2)**: (58,234,80,300)（22x66）
+- **最寄り既存 overlay と実測距離**: AR-05-stand-tag (30.5)、AR-05-aisle-silhouette (36.0)、AR-05-morning-glory-wall (38.0・大面積)。30px 規則すれすれなので、確定時に alpha bbox で再計測する。
+- **6倍クロップ範囲**: 6倍クロップ (0,184)–(256,355)（256x171）。box は窓内で (348,300)–(480,696)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: the narrow tall glass display cabinet in the middle of the frame (marked area about x=348 to 480, y=300 to 696) has three shelves, and on each shelf a few small whitish ornaments stand. Remove every one of these ornaments: all three shelves become empty, showing only the shelf boards and the dark back panel, filled in naturally with the same dark tone and the same soft reflection on the glass. The cabinet frame, the glass, the beige panels beside it and everything else stay exactly as they are. Add nothing. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: in the marked area (about x=348 to 480, y=300 to 696) the glass cabinet shows three shelves with small white ornaments. Erase all the ornaments from the top, middle and lower shelves so the shelves are bare: continue the dark back panel and the thin shelf boards through where the ornaments were, with the same grain, reflection and noise. No new object, no gap, no bright patch left behind. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: the small white objects standing on the three shelves of the glass cabinet in the marked area (about x=348 to 480, y=300 to 696) vanish completely, leaving clean empty shelves: the shelf boards and the dark wall behind them continue seamlessly. Keep the cabinet, the glass reflections and all neighbouring objects unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+- **視認性の見立て**: 白い小物は暗い背板の上で明暗差が大きく、各数画素角が三段分で面積比は通る見込み。ただし小物が全体で数十画素と小さいので、消した跡が背板と同じ暗さで埋まっていること（差分が白→暗で最大差分40以上）を check-visibility で確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-05-shelf-items-gone'
+    candidate_id: 'AR-05-shelf-items-gone'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E06'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'remove_object'
+    location: 'CAM05-E06 の左奥通路のガラス棚（差分左上 (58,234) 付近）（貼り込み後に再計測）'
+    detail: '左奥の店先のガラス棚の三段に並んでいた白い小物が全部消え、空の棚になる。'
+    overlay: 'assets/anomaly-overlays/cam05/shelf-items-gone.webp'
+    # phase / 目立ち度: early / subtle
+    note: '最寄り既存 overlay は AR-05-stand-tag（box 距離 30.5）。『消す』型は消した面が自然に埋まるか目視を必ず行う。'
+  ```
+- **相互参照 / 重複精査**: 消える『小物』の異変は台帳に無い（remove_object は AR-05 に未登録）。AR-05-stand-tag（同じ通路のスタンドに札が増える）・赤電話（別カメラ・棚に物が増える）とは対象も方向も逆。
+- **同カメラ内の排他と併存**: 併存可=床・天井・ガラス区画の異変。AR-05-stand-tag とは別の物（距離 30.5）。
+
+### AR-05-floor-turtle — 手前の床に、大きな亀が一匹いる
+
+- **カメラ**: CAM05（`cam5.webp`、676x900）／対象要素: CAM05-E13
+- **型 / カテゴリ / フェーズ / 目立ち度**: `add_creature` / object / mid / medium
+- **物と変化**: 手前中央寄りの暗い床に、甲羅が30〜40cmほどのくすんだオリーブ色の亀が一匹、首をわずかに伸ばして立っている（四肢が短く、顔は左前方を向く）。無人の地下街に迷い込んだ生き物。亀に模様や文字は無く、足元に濃い接地影が落ちる。台帳の生き物（猫・金魚・鳩・ヤモリ・雀）とは種も見え方も別。
+- **box (x1,y1,x2,y2)**: (205,670,290,740)（85x70）
+- **最寄り既存 overlay と実測距離**: AR-05-pet-bottle (31.0)、AR-05-marbles-scattered (51.0)。大面積の AR-05-floor-white-cranes の範囲内（排他）。
+- **6倍クロップ範囲**: 6倍クロップ (119,620)–(375,791)（256x171）。box は窓内で (516,300)–(1026,720)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: add one large tortoise on the grey tiled floor inside the marked area (about x=516 to 1026, y=300 to 720 in the 1536x1024 frame): a dull olive-brown domed shell with lighter growth rings, a small head stretched a little forward toward the left, four short stubby legs planted on the floor, shell about 450 pixels wide in this frame. A strong dark contact shadow under it and a faint pale highlight along the top of the shell so it stands out from the floor. It has no pattern, no letters, no marks. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: in the marked area (about x=516 to 1026, y=300 to 720) a single plain tortoise stands on the floor tiles, seen from slightly above, shell dark olive with a paler edge, head pointing to the left, short legs, a soft dark shadow around its feet. It straddles no tile joint cleanly: the joints run through under its shell naturally. Add nothing else, keep all other floor, light and reflections unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: add a single big tortoise (plain, unmarked, olive-green and brown shell, wrinkled legs, calm) on the floor in the marked area (about x=516 to 1026, y=300 to 720), its body about 500 pixels long in this frame, with a dark contact shadow. Do not add any other animal or object. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+- **視認性の見立て**: 灰色の暗い床に、オリーブ色の甲羅と暗い接地影。大きさ約85x70pxで面積は十分。床の明暗に溶けないよう、甲羅のハイライトと接地影を強める。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-05-floor-turtle'
+    candidate_id: 'AR-05-floor-turtle'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E13'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'add_creature'
+    location: 'CAM05-E13 の手前中央寄りの床、差分左上 (205,670) 付近（貼り込み後に再計測）'
+    detail: '手前中央寄りの床に、大きな亀が一匹立っている（無地・文字なし）。'
+    overlay: 'assets/anomaly-overlays/cam05/floor-turtle.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-05-pet-bottle（box 距離 31.0）。亀の足元が色の濃い接地影を持つこと。報告カテゴリは object（猫・小動物の仮分類に従う）。'
+  ```
+- **相互参照 / 重複精査**: 生き物の異変は CAM05 に猫（CR-05-25・候補）・金魚（AR-05-aisle-goldfish）。亀は台帳・候補のどのカメラにも無い。床の人影（AR-05-floor-child-shadow）とも別。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-05-floor-white-cranes。併存可=壁・天井・ガラス・通路の異変。
+
 ## 追加候補 — CAM 06
 
 | 候補ID   | 対象ID    | 変化案                                   | 分類 / フェーズ / 目立ち度   |
