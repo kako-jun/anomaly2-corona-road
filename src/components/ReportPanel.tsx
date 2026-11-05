@@ -10,7 +10,7 @@ const CATEGORIES: AnomalyCategory[] = [
   'Surreal',
 ]
 
-/** One-line hint written on a note stuck under each type key (always visible). */
+/** One-line hint written on a note stuck under each category key (always visible). */
 const CATEGORY_HINTS: Record<AnomalyCategory, string> = {
   Camera: 'the whole picture glitches',
   Object: 'a thing appears, vanishes or changes',

@@ -451,7 +451,7 @@ describe('isFlagMet', () => {
       isFlagMet({ name: 'g', when: { loops: 2 } }, progress({ loops: n }))
     ).toBe(ok)
   })
-  it('counts duplicated foundIds as their number of kinds', () => {
+  it('counts duplicated foundIds as their number of distinct anomalies', () => {
     expect(
       isFlagMet(
         { name: 'g', when: { foundUnique: 3 } },
@@ -495,7 +495,7 @@ describe('isFlagMet', () => {
   it.each([
     [0, false],
     [1, true],
-  ])('foundUnique 1 with %i found kinds -> %s', (n, ok) => {
+  ])('foundUnique 1 with %i distinct found anomalies -> %s', (n, ok) => {
     expect(
       isFlagMet(
         { name: 'g', when: { foundUnique: 1 } },

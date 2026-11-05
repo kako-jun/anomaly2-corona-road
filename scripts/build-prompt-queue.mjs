@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Build prompts/queue/index.html from prompts/anomalies.yaml
 // Lists every kind=image entry (produced and planned; status is shown, planned is highlighted as
-// not yet made). kind=runtime entries have no image to generate and are left out.
+// not yet made). kind=non_image entries have no image to generate and are left out.
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -186,4 +186,4 @@ const yaml = readFileSync(yamlPath, "utf8");
 const all = parseAnomalies(yaml);
 const items = all.filter((a) => (a.kind || "image") === "image");
 writeFileSync(outPath, renderHtml(items));
-console.log(`wrote ${outPath} (${items.length} image items of ${all.length} entries; runtime skipped)`);
+console.log(`wrote ${outPath} (${items.length} image items of ${all.length} entries; non_image skipped)`);

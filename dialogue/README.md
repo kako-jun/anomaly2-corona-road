@@ -53,7 +53,7 @@ dialogues:
 ```yaml
 flags:
   elder1:
-    foundUnique: 20 # 見つけた異変の種類の数（重複なし。foundIds の長さ）
+    foundUnique: 20 # 見つけた異変の数（重複なし。foundIds の長さ。用語は prompts/README.md の用語集）
   child:
     foundUnique: 120
     reiwaFound: 3 # 令和の異変を重複なしで3つ

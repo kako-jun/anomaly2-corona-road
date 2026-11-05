@@ -79,7 +79,7 @@ describe('recordFound', () => {
     recordFound('b')
     expect(recordFound('b')).toEqual([])
   })
-  it('a duplicate report does not reach a milestone of distinct kinds', async () => {
+  it('a duplicate report does not reach a milestone of distinct anomalies', async () => {
     const { recordFound, load } = await fresh()
     recordFound('a')
     expect(recordFound('a')).toEqual([])

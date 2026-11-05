@@ -126,7 +126,7 @@ def main():
         unmeasurable = [e["id"] for e in entries if not is_measurable(e)]
         if unmeasurable:
             p.error(
-                "no overlay to measure (kind=runtime or status=planned): "
+                "no overlay to measure (kind=non_image or status=planned): "
                 + ", ".join(unmeasurable)
             )
     else:
