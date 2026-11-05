@@ -1,18 +1,235 @@
-# 毎回のゲーム終了時の会話。when.result: dawn（夜明け）| withdraw（撤収）| ending（エンディング）。
-# 動作確認用の実例のみ（本制作ではない）。
+# 毎回のゲーム終了時の会話。夜明けと撤収は結果別に選ぶ。
 dialogues:
-  - id: closing-sample-01
+  - id: closing-dawn-01
     tone: light
     when: { result: dawn }
     lines:
       - { who: M, text: 'はい　朝ですね　引き継ぎに行ってきますよ' }
       - { who: A, text: 'やっと朝だね　お疲れさま　気をつけて帰って' }
-  - id: closing-sample-02
+  - id: closing-dawn-02
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: 'ああ　明るくなってる　終わったんだね' }
+      - { who: M, text: 'はい　引き継ぎの人も来ていますよ' }
+      - { who: A, text: 'よかった　これで帰れる' }
+  - id: closing-dawn-03
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: 'ふう　肩が固まってる　朝まで座りっぱなしだった' }
+      - { who: M, text: 'はい　少し伸ばしてください' }
+  - id: closing-dawn-04
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '今夜も長かったね　外の空が白い' }
+      - { who: M, text: 'そうですね　朝になりましたよ' }
+  - id: closing-dawn-05
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: 'やった　朝だ!　眠いけど嬉しい' }
+      - { who: M, text: 'はい　お疲れさまでした' }
+  - id: closing-dawn-06
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '樫原くん　もう朝だよ　帰れるね' }
+      - { who: M, text: 'はい　その前に引き継ぎです' }
+      - { who: A, text: 'そうだった　あと少し頑張ろう' }
+  - id: closing-dawn-07
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: M, text: '出河さん　外が明るいですよ' }
+      - { who: A, text: 'えっ　ほんと?　気づかなかった' }
+      - { who: M, text: 'はい　窓の向こうが白んでます' }
+  - id: closing-dawn-08
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: 'この時間の金沢　静かだね' }
+      - { who: M, text: 'はい　通りはまだ静かですよ' }
+  - id: closing-dawn-09
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '朝の光　少し眩しい' }
+      - { who: M, text: '画面を見た後ですからね' }
+      - { who: A, text: 'そっか!　目が慣れてないんだ' }
+  - id: closing-dawn-10
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: 'ああ　やっと終わった　ほっとした' }
+      - { who: M, text: 'はい　今夜の勤務は終了です' }
+  - id: closing-dawn-11
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: M, text: '引き継ぎの人が来ましたよ' }
+      - { who: A, text: 'ありがとう　助かった' }
+      - { who: M, text: 'はい　こちらも戻ります' }
+  - id: closing-dawn-12
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '今日は眠れそう　今ならすぐ寝られる!' }
+      - { who: M, text: 'はい　帰り道だけ気をつけてください' }
+  - id: closing-dawn-13
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '朝の空気って　こんなに冷たかった?' }
+      - { who: M, text: 'はい　室内にいると忘れますね' }
+      - { who: A, text: 'だよね　外に出るのが楽しみ' }
+  - id: closing-dawn-14
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '夜勤明け　温かいもの食べたくなるね' }
+      - { who: M, text: 'はい　味噌汁とかいいですよ' }
+      - { who: A, text: '今朝もそれにしようかな' }
+  - id: closing-dawn-15
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '最後にコーヒー飲もうかな' }
+      - { who: M, text: 'はい　朝なので飲みすぎ注意ですよ' }
+      - { who: A, text: '分かってる　たぶん' }
+  - id: closing-dawn-16
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '今日は無事に終われたね' }
+      - { who: M, text: 'はい　お疲れさまです' }
+      - { who: A, text: 'いい朝だね' }
+  - id: closing-dawn-17
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '引き継ぎが終わったら　すぐ帰るよ' }
+      - { who: M, text: 'はい　俺も準備します' }
+  - id: closing-dawn-18
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: M, text: '出河さん　眼鏡を拭いたほうがいいですよ' }
+      - { who: A, text: 'えっ　曇ってる?　ちょっと見せて' }
+      - { who: M, text: 'はい　朝の光で分かります' }
+  - id: closing-dawn-19
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: 'あっ　朝日　思ったよりきれいだね' }
+      - { who: M, text: 'はい　外が少しずつ明るくなってますよ' }
+  - id: closing-dawn-20
+    tone: light
+    when: { result: dawn }
+    lines:
+      - { who: A, text: '明日の夜も　よろしくね' }
+      - { who: M, text: 'はい　いつもどおり来ますよ' }
+  - id: closing-withdraw-01
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '今日はここまで　悔しいけど撤収しよう' }
-      - { who: M, text: 'はい　分かりました　お疲れさまです' }
+      - { who: A, text: '今日は撤収　もう少し見たかったのに' }
+  - id: closing-withdraw-02
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'ああもう　悔しいけど　ここで引き上げよう' }
+  - id: closing-withdraw-03
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '樫原くん　今日はここまで　先に立つね' }
+  - id: closing-withdraw-04
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'ごめん　頭を冷やしたい　撤収する' }
+  - id: closing-withdraw-05
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '今夜は帰ろう　このまま続けてもだめだ' }
+  - id: closing-withdraw-06
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '撤収しよう　あと少しだった気がするのに' }
+  - id: closing-withdraw-07
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'もう限界　今日は引き上げる' }
+  - id: closing-withdraw-08
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'ここで切り上げる　悔しいけど決めた' }
+  - id: closing-withdraw-09
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '今夜は撤収　明日また来るよ' }
+  - id: closing-withdraw-10
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'だめだ　焦ってる　今日は止めよう' }
+  - id: closing-withdraw-11
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '樫原くん　もう帰ろう　今は続けられない' }
+  - id: closing-withdraw-12
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'こんなところで間違えるなんて　悔しい' }
+  - id: closing-withdraw-13
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '落ち着かない　でも今日は撤収する' }
+  - id: closing-withdraw-14
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '私が決めたことだ　引き上げよう' }
+  - id: closing-withdraw-15
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'もう少し見たかった　でも今日は撤収' }
+  - id: closing-withdraw-16
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'ごめんね　今日は私が先に帰る' }
+  - id: closing-withdraw-17
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'ここまでにする　少し頭を冷やしてくる' }
+  - id: closing-withdraw-18
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '続きが気になるけど　今夜は引き上げる' }
+  - id: closing-withdraw-19
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: 'だめだ　今は冷静に見られない　撤収' }
+  - id: closing-withdraw-20
+    tone: serious
+    when: { result: withdraw }
+    lines:
+      - { who: A, text: '悔しい　ほんとに悔しいけど　今日は終わり' }
   - id: closing-sample-03
     tone: serious
     when: { result: ending }

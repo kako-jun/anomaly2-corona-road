@@ -18,3 +18,39 @@ dialogues:
     lines:
       - { who: A, text: 'ここ禁煙のはずよね?' }
       - { who: M, text: '2番の台の上　見てください' }
+  - id: an-AR-01-notice-01
+    tone: serious
+    when: { anomaly: AR-01-notice }
+    lines:
+      - { who: A, text: '左の壁に紙があった気がするんだけど' }
+      - { who: M, text: '古い掲示みたいなものですね　位置を見直しましょう' }
+  - id: an-AR-01-notice-02
+    tone: serious
+    when: { anomaly: AR-01-notice }
+    lines:
+      - { who: M, text: '1番の左壁　何か貼られていませんか' }
+      - { who: A, text: 'あっ　あの小さい紙?　見落としそうだった!' }
+  - id: an-AR-01-notice-03
+    tone: serious
+    when: { anomaly: AR-01-notice }
+    lines:
+      - { who: A, text: '壁の掲示　前からあったっけ?' }
+      - { who: M, text: 'そこを確認してください　記録と違うかもしれません' }
+  - id: an-AR-02-ashtray-01
+    tone: serious
+    when: { anomaly: AR-02-ashtray }
+    lines:
+      - { who: A, text: '台の上に灰皿?　ここで吸った人がいるの?' }
+      - { who: M, text: '吸いかけのものもありますね　見てください' }
+  - id: an-AR-02-ashtray-02
+    tone: serious
+    when: { anomaly: AR-02-ashtray }
+    lines:
+      - { who: M, text: '2番の右手前　台の上を確認してください' }
+      - { who: A, text: 'うわっ　タバコまで置いてある!' }
+  - id: an-AR-02-ashtray-03
+    tone: serious
+    when: { anomaly: AR-02-ashtray }
+    lines:
+      - { who: A, text: 'あの台　さっきは何もなかったよね?' }
+      - { who: M, text: '灰皿が出ています　吸いかけのタバコもありますよ' }
