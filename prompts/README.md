@@ -102,7 +102,10 @@ prompts/
 
 `also_category`（任意の列）: 本当に割れる異変だけに付ける、もう1つの正解カテゴリ。プレイヤーが `category` と `also_category` のどちらを選んでも正解になる（フィードバックの `CONFIRMED — …` は主カテゴリ `category` を出す）。`category` と異なる有効なカテゴリ（小文字: `camera` / `object` / `environment` / `person` / `surreal`）でなければビルドが失敗し、エントリ id が表示される。`camera` は画像差分の台帳に現れないので指定できない（拒否される）。無い異変が通常で、既存の entry には付けなくてよい。
 
-線引き（#47）: 物の出現（提灯・傘・旗・シーツ・蝿取りリボン・電球・テレビなど。天井から吊るものを含む）は `object`。床・壁・天井そのものの色・向き・反射・霜などの状態の変化は `environment`（床タイル・反射・霜は `surreal` にしない）。
+線引き（#47, #236）: 物の出現（提灯・傘・旗・シーツ・蝿取りリボン・電球・テレビなど。天井から吊るものを含む）は `object`。床・壁・天井そのものの色・向き・霜などの面の状態の変化は `environment`（床タイル1枚が鏡になる、も `environment`）。反射そのものがおかしい（映るはずのものが映らない・反射の形が変わる・水鏡など）は `surreal`。映ったものが物・人なら、その物・人が主カテゴリで `also_category: 'surreal'`。
+
+`also_category` の使い方の例: 映り込み = 主カテゴリ（物・人）+ `surreal`、扉の開閉 = `environment` と `object`、面の全面置換 = `environment` + `surreal`。
+割れない・付けないもの: 影だけの `person`（ボタンの説明に影が明記されている）、数が多いだけの物の並置（ポスター・提灯・シーツ・靴・テレビ）は `object` のみ。物理的にあり得ない並び（全部違う時刻の時計など）は `object` + `also_category: 'surreal'`。光が漏れる扉・シャッターも付けない。床・壁・天井の面に変化が出る異変は、あり得ない景色なら `surreal` 主 + `also_category: 'environment'`、反射・光の形がおかしいなら `environment` 主 + `also_category: 'surreal'`。
 
 ## フェーズ
 
