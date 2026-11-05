@@ -27,6 +27,7 @@ export interface UsedState {
 /** The progress that flag conditions read (a slice of SaveData plus the Reiwa marking). */
 export interface FlagProgress {
   foundIds: readonly string[]
+  foundTotal?: number
   loops: number
   flags: Readonly<Record<string, boolean>>
   /** Ids of Reiwa-themed anomalies. The ledger has no marking yet (docs/story.md), so the caller supplies it. */
@@ -119,6 +120,13 @@ export const applyUsed = (
 const ofKind = (ledger: DialogueLedger, kind: DialogueKind): DialogueEntry[] =>
   ledger.entries.filter(e => e.kind === kind)
 
+/** A post-flag gate is a candidate filter; locked entries never reach bag accounting. */
+const unlocked = (
+  entries: readonly DialogueEntry[],
+  flags: Readonly<Record<string, boolean>>
+): DialogueEntry[] =>
+  entries.filter(e => e.unlock === undefined || flags[e.unlock] === true)
+
 export interface Picked {
   entry: DialogueEntry
   used: UsedState
@@ -136,18 +144,24 @@ const drawChatterBag = (
 export const pickOpening = (
   ledger: DialogueLedger,
   used: UsedState,
-  rng: Rng = Math.random
-): Picked | null => drawChatterBag(ofKind(ledger, 'opening'), used, rng)
+  rng: Rng = Math.random,
+  flags: Readonly<Record<string, boolean>> = {}
+): Picked | null =>
+  drawChatterBag(unlocked(ofKind(ledger, 'opening'), flags), used, rng)
 
 export const pickClosing = (
   ledger: DialogueLedger,
   result: ClosingResult,
   used: UsedState,
-  rng: Rng = Math.random
+  rng: Rng = Math.random,
+  flags: Readonly<Record<string, boolean>> = {}
 ): Picked | null =>
   drawChatterBag(
-    ledger.entries.filter(
-      e => e.kind === 'closing' && e.when.result === result
+    unlocked(
+      ledger.entries.filter(
+        e => e.kind === 'closing' && e.when.result === result
+      ),
+      flags
     ),
     used,
     rng
@@ -157,10 +171,16 @@ export const pickMidpoint = (
   ledger: DialogueLedger,
   stage: MidpointStage,
   used: UsedState,
-  rng: Rng = Math.random
+  rng: Rng = Math.random,
+  flags: Readonly<Record<string, boolean>> = {}
 ): Picked | null =>
   drawChatterBag(
-    ledger.entries.filter(e => e.kind === 'midpoint' && e.when.stage === stage),
+    unlocked(
+      ledger.entries.filter(
+        e => e.kind === 'midpoint' && e.when.stage === stage
+      ),
+      flags
+    ),
     used,
     rng
   )
@@ -168,18 +188,24 @@ export const pickMidpoint = (
 export const pickChatter = (
   ledger: DialogueLedger,
   used: UsedState,
-  rng: Rng = Math.random
-): Picked | null => drawChatterBag(ofKind(ledger, 'chatter'), used, rng)
+  rng: Rng = Math.random,
+  flags: Readonly<Record<string, boolean>> = {}
+): Picked | null =>
+  drawChatterBag(unlocked(ofKind(ledger, 'chatter'), flags), used, rng)
 
 /** The conversation for a flag that was just raised (its entries form a bag, so a repeat flag does not repeat text). */
 export const pickStory = (
   ledger: DialogueLedger,
   flag: string,
   used: UsedState,
-  rng: Rng = Math.random
+  rng: Rng = Math.random,
+  flags: Readonly<Record<string, boolean>> = {}
 ): Picked | null =>
   drawChatterBag(
-    ledger.entries.filter(e => e.kind === 'story' && e.when.flag === flag),
+    unlocked(
+      ledger.entries.filter(e => e.kind === 'story' && e.when.flag === flag),
+      flags
+    ),
     used,
     rng
   )
@@ -192,11 +218,15 @@ export const pickFalseReport = (
   ledger: DialogueLedger,
   anomalyId: string | null,
   used: UsedState,
-  rng: Rng = Math.random
+  rng: Rng = Math.random,
+  flags: Readonly<Record<string, boolean>> = {}
 ): Picked | null => {
   if (anomalyId !== null) {
     const own = ledger.entries.filter(
-      e => e.kind === 'anomaly-line' && e.when.anomaly === anomalyId
+      e =>
+        e.kind === 'anomaly-line' &&
+        e.when.anomaly === anomalyId &&
+        (e.unlock === undefined || flags[e.unlock] === true)
     )
     const usedOwn = used.usedLines[anomalyId] ?? []
     const usedSet = new Set(usedOwn)
@@ -212,7 +242,11 @@ export const pickFalseReport = (
       }
     }
   }
-  return drawChatterBag(ofKind(ledger, 'false-report'), used, rng)
+  return drawChatterBag(
+    unlocked(ofKind(ledger, 'false-report'), flags),
+    used,
+    rng
+  )
 }
 
 /** Midpoint stage from the number of anomalies found this play. */
@@ -237,6 +271,8 @@ export const isFlagMet = (
   const w = def.when
   const found = new Set(progress.foundIds)
   if (w.foundUnique !== undefined && found.size < w.foundUnique) return false
+  if (w.foundTotal !== undefined && (progress.foundTotal ?? 0) < w.foundTotal)
+    return false
   if (w.reiwaFound !== undefined) {
     let n = 0
     for (const id of found) if (progress.reiwaIds.has(id)) n++
@@ -298,6 +334,8 @@ export const chatterAllowed = (
 export interface SelectInput {
   ledger: DialogueLedger
   used: UsedState
+  /** Current raised flags, used only for per-entry post-flag release gates. */
+  flags?: Readonly<Record<string, boolean>>
   rng?: Rng
   /** Flags that just rose and wait for their conversation (oldest first). Highest priority. */
   pendingFlags?: readonly string[]
@@ -327,8 +365,9 @@ export interface Selected extends Picked {
 export const selectNext = (input: SelectInput): Selected | null => {
   const rng = input.rng ?? Math.random
   const used = input.used
+  const flags = input.flags ?? {}
   for (const flag of input.pendingFlags ?? []) {
-    const p = pickStory(input.ledger, flag, used, rng)
+    const p = pickStory(input.ledger, flag, used, rng, flags)
     if (p) return { ...p, source: 'flag', flag }
   }
   if (input.pendingFalseReport) {
@@ -336,16 +375,23 @@ export const selectNext = (input: SelectInput): Selected | null => {
       input.ledger,
       input.pendingFalseReport.anomalyId,
       used,
-      rng
+      rng,
+      flags
     )
     if (p) return { ...p, source: 'false-report' }
   }
   if (input.pendingMidpoint) {
-    const p = pickMidpoint(input.ledger, input.pendingMidpoint, used, rng)
+    const p = pickMidpoint(
+      input.ledger,
+      input.pendingMidpoint,
+      used,
+      rng,
+      flags
+    )
     if (p) return { ...p, source: 'midpoint' }
   }
   if (chatterAllowed(input.last ?? null, input.nowMs ?? 0, input.quietMs)) {
-    const p = pickChatter(input.ledger, used, rng)
+    const p = pickChatter(input.ledger, used, rng, flags)
     if (p) return { ...p, source: 'chatter' }
   }
   return null

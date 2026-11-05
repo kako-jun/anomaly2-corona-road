@@ -400,3 +400,51 @@ dialogues:
       - { who: A, text: '詰めるよ　でも最初の予定で疲れちゃう' }
       - { who: M, text: '予定表が気合いを入れすぎですね' }
       - { who: A, text: 'うん　次の休みは空けておく!' }
+  - id: chatter-61
+    tone: light
+    unlock: elder1
+    lines:
+      - { who: M, text: '一人目の聞き取り記録　何度も読み返してましたね' }
+      - { who: A, text: '言葉を間違えたくなくて　同じところで止まっちゃう' }
+      - { who: M, text: '見やすいように行を分けておきましたよ' }
+      - { who: A, text: 'ありがとう　そういう細かいところ　よく気づくね' }
+  - id: chatter-62
+    tone: light
+    unlock: elder1
+    lines:
+      - { who: A, text: 'このファイル　端がそろわないなあ' }
+      - { who: M, text: '出河さん　角を机に当てるとそろいますよ' }
+      - { who: A, text: 'えっ　本当だ!　きれいになった' }
+      - { who: M, text: '見ていて気持ちいいですね' }
+  - id: chatter-63
+    tone: light
+    unlock: elder2
+    lines:
+      - { who: A, text: '手が乾燥して　紙がめくれない!' }
+      - { who: M, text: '指先を少し湿らせるといいですよ' }
+      - { who: A, text: 'それは分かってるけど　書類の前だと迷うね' }
+      - { who: M, text: 'そうですね　手を洗ってきますか' }
+  - id: chatter-64
+    tone: light
+    unlock: elder2
+    lines:
+      - { who: M, text: '出河さん　そのペン　持ちやすそうですね' }
+      - { who: A, text: '握りやすいの　昔からこればかり' }
+      - { who: M, text: '手に合う道具って　替えにくいですよね' }
+      - { who: A, text: 'そうなの!　同じのを見つけると安心する' }
+  - id: chatter-65
+    tone: light
+    unlock: elder3
+    lines:
+      - { who: M, text: '出河さん　その眼鏡　少しずれてますよ' }
+      - { who: A, text: 'えっ　ほんと?　ずっとこのままだった?' }
+      - { who: M, text: '今気づきました　直すと見やすいですよ' }
+      - { who: A, text: 'ありがとう　見てくれてたんだね' }
+  - id: chatter-66
+    tone: light
+    unlock: elder3
+    lines:
+      - { who: M, text: '資料　持ってきますか' }
+      - { who: A, text: 'お願い　あっ　重かったら半分持つよ' }
+      - { who: M, text: '大丈夫ですよ　これくらいなら' }
+      - { who: A, text: 'そういうところ　頼りになるね' }

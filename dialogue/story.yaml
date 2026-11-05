@@ -5,26 +5,35 @@ dialogues:
     when: { flag: elder1 }
     lines:
       - { who: A, text: 'やっと見つかったのに　帰りたくないって?　なんで…' }
-      - { who: M, text: 'はい　本人はそう言ってますよ　懐かしい場所にいたいと' }
+      - { who: M, text: '食べるものもあるし困ってない　帰るかは自分で決めると　きっぱり言ってました' }
       - { who: A, text: '家族が待ってるのに　そんなのつらいよ…' }
   - id: story-elder2
     tone: serious
     when: { flag: elder2 }
     lines:
       - { who: A, text: 'また?　二人目も帰りたくないって言ったの?' }
-      - { who: M, text: 'はい　前の人と同じですよ　昔の場所に残りたいそうです' }
-      - { who: A, text: 'どうしてそんなに　帰るのが嫌なんだろう' }
+      - { who: M, text: 'はい　帰らないと言ったあと　こちらの体調まで気づかってました' }
+      - { who: A, text: '自分のことより?　やさしい人なんだね…' }
   - id: story-elder3
     tone: serious
     when: { flag: elder3 }
     lines:
       - { who: A, text: '三人とも帰らないなんて　そんなことある?' }
-      - { who: M, text: 'はい　三人とも本人の希望だそうですよ' }
-      - { who: A, text: 'そんな顔で言われたら　怒れないよ…' }
+      - { who: M, text: '三人目は「帰りたい場所なら　とっくに帰ってますよ」と笑ってました' }
+      - { who: A, text: 'そんなふうに言われたら　怒れないよ…' }
   - id: story-child
     tone: serious
     when: { flag: child }
     lines:
-      - { who: A, text: '今度は子供だって?　そんなの　早く見つけないと!' }
-      - { who: M, text: 'はい　大人の時とは話が違いますよ' }
-      - { who: A, text: '分かってる　あの子の家族も待ってるんだから' }
+      - { who: A, text: '見つけた…よかった　でも家へ戻せば解決なの?' }
+      - { who: M, text: '老人たちの様子では　異変の食べ物でも効くようです' }
+      - { who: A, text: '餓死を心配して急ぐ必要はないね　帰りたくない理由を調べよう' }
+      - { who: M, text: 'はい　家族のことを調べましょう' }
+  - id: story-child-response
+    tone: serious
+    when: { flag: childResponse }
+    lines:
+      - { who: A, text: '樫原くん　あの子が話すまで待ってたね' }
+      - { who: M, text: 'はい　怖がらせたくなかったので' }
+      - { who: A, text: '子供には優しいんだね　父性本能かな?' }
+      - { who: M, text: 'そこまでじゃないですよ　心配だっただけです' }

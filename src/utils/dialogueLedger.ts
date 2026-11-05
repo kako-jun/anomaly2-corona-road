@@ -20,6 +20,8 @@ interface Base {
   id: string
   tone: Tone
   lines: DialogueLine[]
+  /** Optional post-flag release condition; independent of story.when.flag. */
+  unlock?: string
 }
 
 export type DialogueEntry = Base &
@@ -38,12 +40,14 @@ export type DialogueKind = DialogueEntry['kind']
 /**
  * Conditions of one flag; all that are present must hold (AND). Numbers are "at least".
  * `foundUnique`: number of distinct anomalies ever found (`foundIds.length`).
+ * `foundTotal`: total correct reports, including repeats.
  * `reiwaFound`: number of distinct Reiwa-themed anomalies ever found.
  * `loops`: completed plays. `found`: ids that must all have been found.
  * `requires`: other flags that must already be raised.
  */
 export interface FlagCondition {
   foundUnique?: number
+  foundTotal?: number
   reiwaFound?: number
   loops?: number
   found?: string[]
@@ -200,14 +204,23 @@ export const parseEntry = (
   const kind = KIND_OF_FILE[file]
   try {
     if (!isRecord(raw)) throw new Error('not a mapping')
-    onlyKeys(raw, ['id', 'when', 'tone', 'lines'], 'entry')
+    onlyKeys(raw, ['id', 'when', 'tone', 'lines', 'unlock'], 'entry')
     const id = str(raw, 'id')
     const tone = oneOf<Tone>(str(raw, 'tone'), TONES, 'tone')
     if (kind === 'chatter' && tone !== 'light') {
       throw new Error('chatter takes only tone "light"')
     }
     const lines = parseLines(raw.lines)
-    const base = { id, tone, lines }
+    const unlock = raw.unlock === undefined ? undefined : str(raw, 'unlock')
+    if (unlock !== undefined && !ctx.flagNames.has(unlock)) {
+      throw new Error(`unlock "${unlock}" is not defined in flags.yaml`)
+    }
+    const base = {
+      id,
+      tone,
+      lines,
+      ...(unlock === undefined ? {} : { unlock }),
+    }
     let entry: DialogueEntry
     switch (kind) {
       case 'closing':
@@ -307,12 +320,21 @@ export const parseFlags = (
       }
       onlyKeys(
         raw,
-        ['foundUnique', 'reiwaFound', 'loops', 'found', 'requires'],
+        [
+          'foundUnique',
+          'foundTotal',
+          'reiwaFound',
+          'loops',
+          'found',
+          'requires',
+        ],
         'condition'
       )
       const when: FlagCondition = {}
       if ('foundUnique' in raw)
         when.foundUnique = positiveInt(raw.foundUnique, 'foundUnique')
+      if ('foundTotal' in raw)
+        when.foundTotal = positiveInt(raw.foundTotal, 'foundTotal')
       if ('reiwaFound' in raw)
         when.reiwaFound = positiveInt(raw.reiwaFound, 'reiwaFound')
       if ('loops' in raw) when.loops = positiveInt(raw.loops, 'loops')

@@ -15,9 +15,9 @@ export interface SaveSettings {
 
 export interface SaveData {
   v: typeof SAVE_VERSION
-  /** Total correct finds across all plays, duplicates counted. A record only; never used for milestones. */
+  /** Total correct finds across all plays, duplicates counted. May drive foundTotal flag thresholds. */
   foundTotal: number
-  /** Distinct anomaly ids ever found. Its length is what milestones use. */
+  /** Distinct anomaly ids ever found. Its length drives foundUnique flag thresholds. */
   foundIds: string[]
   /** Completed plays (dawn or withdraw). */
   loops: number

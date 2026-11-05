@@ -15,6 +15,7 @@ const STORY_FLAGS = storyFlagNames(ledger)
 const withRaisedFlags = (cur: SaveData, out: string[]): SaveData => {
   const raised = newlyRaisedFlags(ledger.flags, {
     foundIds: cur.foundIds,
+    foundTotal: cur.foundTotal,
     loops: cur.loops,
     flags: cur.flags,
     reiwaIds: REIWA_IDS,

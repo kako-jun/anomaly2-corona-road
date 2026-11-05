@@ -12,5 +12,5 @@ flags:
     foundUnique: 120 # 仮の例。累計に加えて令和の異変の条件でも決まる
     reiwaFound: 3 # 令和の異変を重複なしで3つ（docs/story.md）
     requires: [elder3]
-  final:
-    requires: [child] # 最後のフラグの条件は暫定（docs/story.md 未決）
+  childResponse:
+    requires: [child] # 子供発見の会話の直後に続ける短い反応

@@ -194,6 +194,7 @@ export const useSubtitle = (input: SubtitleInput) => {
       const sel = selectNext({
         ledger,
         used,
+        flags: load().flags,
         pendingFlags,
         pendingFalseReport: pendingFalse,
         pendingMidpoint,
@@ -252,7 +253,13 @@ export const useSubtitle = (input: SubtitleInput) => {
         pendingFalse = null
         pendingMidpoint = null
         lines = []
-        const picked = pickClosing(ledger, result, used)
+        const picked = pickClosing(
+          ledger,
+          result,
+          used,
+          Math.random,
+          load().flags
+        )
         if (!picked) {
           hide()
           later(() => inputRef.current.onClosingDone(), 0)
@@ -264,7 +271,7 @@ export const useSubtitle = (input: SubtitleInput) => {
 
     // Opening after a short wait, then chatter (via the silence after it).
     later(() => {
-      const opening = pickOpening(ledger, used)
+      const opening = pickOpening(ledger, used, Math.random, load().flags)
       if (opening) {
         heldFlags = [...pendingFlags]
         play(opening.entry, opening.used)
