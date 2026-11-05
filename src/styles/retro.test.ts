@@ -101,8 +101,13 @@ describe('retro.css', () => {
     ).toBe(true)
   })
 
-  it('puts report type key text below the step line via padding-top', () => {
+  it('sets a positive px padding-top on report type keys', () => {
     const tops = decls('.cat-grid .key', 'padding-top')
     expect(tops.length).toBeGreaterThan(0)
+    for (const v of tops) {
+      const m = /^(\d+(?:\.\d+)?)px(?:\s*!important)?$/.exec(v.trim())
+      expect(m, v).not.toBeNull()
+      expect(Number(m![1]), v).toBeGreaterThan(0)
+    }
   })
 })
