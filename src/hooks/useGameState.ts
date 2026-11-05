@@ -6,6 +6,13 @@ import {
   msToGameTime,
   getGamePhase,
 } from '../utils/gameConfig'
+import {
+  CHILD_FLAG,
+  isChildFound,
+  judgeTimeUp,
+  pacingFor,
+} from '../utils/endingJudge'
+import { load } from '../utils/saveData'
 import { createAnomaly, pickLedgerEntry } from '../utils/anomalyData'
 import type { FlagEvent } from './useSubtitle'
 import {
@@ -35,7 +42,7 @@ const SPAWN_RETRY_MS = 1000
 
 /** How a shift ended: the closing conversation to play, and the result screen that follows. */
 export interface Ending {
-  closing: 'dawn' | 'withdraw'
+  closing: 'dawn' | 'withdraw' | 'ending'
   outcome: 'win' | 'lose'
 }
 
@@ -73,6 +80,11 @@ export const useGameState = () => {
   const ledgerExhaustedRef = useRef(false)
   // Ledger ids already shown this shift (no repeats within a shift).
   const usedLedgerIdsRef = useRef<Set<string>>(new Set())
+  // The child has been found (flag saved): the rest of this shift, and later shifts, run faster (Issue #86).
+  const childFoundRef = useRef(false)
+  // Ids that appeared after the child was found in this shift, and how many of them were reported.
+  const afterChildIdsRef = useRef<Set<string>>(new Set())
+  const afterChildReportedRef = useRef(0)
 
   useEffect(() => {
     statsRef.current = stats
@@ -94,6 +106,8 @@ export const useGameState = () => {
     })
     usedLedgerIdsRef.current = new Set()
     ledgerExhaustedRef.current = false
+    afterChildIdsRef.current = new Set()
+    afterChildReportedRef.current = 0
     setActiveAnomalies([])
     setFeedback(null)
     setEnding(null)
@@ -102,6 +116,8 @@ export const useGameState = () => {
     endingRef.current = null
     // Flags that became true between shifts (loop-based ones) cut in once the shift is running.
     const raised = raiseFlagsAtStart()
+    // The flag is saved, so a shift that starts after the child was found is a "child found" shift from the start.
+    childFoundRef.current = isChildFound(load().flags)
     flagSeqRef.current += 1
     setFlagEvent(
       raised.length > 0 ? { seq: flagSeqRef.current, flags: raised } : null
@@ -142,8 +158,9 @@ export const useGameState = () => {
 
   /**
    * The shift is over: count the loop and hand over to the closing conversation (`Cabinet` plays it,
-   * then calls `finishEnding`). 'dawn' = time ran out, 'withdraw' = too many false reports.
-   * The true ending (final flag, time out without pointing it out) is not connected yet (Issue #74).
+   * then calls `finishEnding`). 'dawn' = time ran out, 'withdraw' = too many false reports,
+   * 'ending' = time ran out after the child was found without reporting any anomaly that appeared
+   * since (Issue #86; it counts as a win and one loop, like dawn).
    */
   const endShift = useCallback(
     (closing: Ending['closing'], outcome: Ending['outcome']) => {
@@ -191,7 +208,11 @@ export const useGameState = () => {
           )
         )
         pushFeedback('correct', `CONFIRMED — ${anomalyOnCamera.category}`)
+        if (afterChildIdsRef.current.has(anomalyOnCamera.id)) {
+          afterChildReportedRef.current += 1
+        }
         const raised = recordFound(anomalyOnCamera.id)
+        if (raised.includes(CHILD_FLAG)) childFoundRef.current = true
         if (raised.length > 0) {
           flagSeqRef.current += 1
           setFlagEvent({ seq: flagSeqRef.current, flags: raised })
@@ -244,6 +265,7 @@ export const useGameState = () => {
           console.warn(`Skipping anomaly "${entry.id}":`, e)
           continue
         }
+        if (childFoundRef.current) afterChildIdsRef.current.add(entry.id)
         const newAnomaly = createAnomaly(entry, getGamePhase(currentTime), url)
         setActiveAnomalies(prev => [...prev, newAnomaly])
         setStats(prev => ({
@@ -282,6 +304,15 @@ export const useGameState = () => {
           endShift('withdraw', 'lose')
           return
         }
+        if (
+          judgeTimeUp({
+            spawnedAfterChild: afterChildIdsRef.current.size,
+            reportedAfterChild: afterChildReportedRef.current,
+          }) === 'ending'
+        ) {
+          endShift('ending', 'win')
+          return
+        }
         endShift(
           'dawn',
           statsRef.current.correctReports >= DEFAULT_CONFIG.minCorrectReports
@@ -291,8 +322,9 @@ export const useGameState = () => {
         return
       }
 
+      const pacing = pacingFor(childFoundRef.current)
       const interval = firstSpawnDoneRef.current
-        ? DEFAULT_CONFIG.anomalyIntervalMs
+        ? pacing.anomalyIntervalMs
         : DEFAULT_CONFIG.firstAnomalyDelayMs
       const sinceLast = elapsed - lastAnomalyTimeRef.current
       const activeCount = activeAnomaliesRef.current.filter(
@@ -300,7 +332,7 @@ export const useGameState = () => {
       ).length
 
       if (sinceLast >= interval && !ledgerExhaustedRef.current) {
-        if (activeCount >= DEFAULT_CONFIG.maxConcurrentAnomalies) {
+        if (activeCount >= pacing.maxConcurrentAnomalies) {
           // Advance the cadence even when the cap blocks the spawn — otherwise
           // clearing the cap immediately triggers a back-to-back burst.
           lastAnomalyTimeRef.current = elapsed

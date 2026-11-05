@@ -34,7 +34,7 @@ export interface SubtitleInput {
   /** Flags that just rose; their story conversation cuts in after the line on screen. */
   flagEvent: FlagEvent | null
   /** Set when the shift is over: the closing conversation plays, then `onClosingDone` runs. */
-  ending: 'dawn' | 'withdraw' | null
+  ending: 'dawn' | 'withdraw' | 'ending' | null
   onClosingDone: () => void
 }
 
@@ -46,7 +46,7 @@ interface Machine {
   falseReport: (anomalyId: string | null) => void
   flags: (names: string[]) => void
   checkMidpoint: (elapsedMs: number, found: number) => void
-  end: (result: 'dawn' | 'withdraw') => void
+  end: (result: 'dawn' | 'withdraw' | 'ending') => void
 }
 
 const storyFlags = storyFlagNames(ledger)

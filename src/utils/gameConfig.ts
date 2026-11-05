@@ -96,3 +96,21 @@ export const DIALOGUE_CONFIG = {
   /** Quiet time after a `serious` conversation before chatter may appear. */
   seriousQuietMs: 20_000,
 }
+
+/**
+ * Pacing once the child has been found (the `child` flag is raised), Issue #86. kako-jun only said
+ * "more anomalies appear after the child is found"; these two values are PLACEHOLDERS, not decided.
+ * They replace `anomalyIntervalMs` / `maxConcurrentAnomalies` of `DEFAULT_CONFIG` for the rest of the shift.
+ */
+export const CHILD_FOUND_PACING = {
+  anomalyIntervalMs: 15_000,
+  maxConcurrentAnomalies: 4,
+}
+
+/** The still image the screen switches to for the true ending (the bar one month later, 675x900). */
+export const ENDING_BAR_CAMERA: Camera = {
+  id: 9, // placeholder: only shown in the "CAM n" label on the monitor
+  name: 'CAM 09',
+  location: 'Bar',
+  image: '/images/ending-bar.webp',
+}

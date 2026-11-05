@@ -3,7 +3,7 @@ import { act, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { LedgerEntry } from '../utils/anomalyLedger'
 import * as saveData from '../utils/saveData'
-import { DEFAULT_CONFIG } from '../utils/gameConfig'
+import { CHILD_FOUND_PACING, DEFAULT_CONFIG } from '../utils/gameConfig'
 import { useGameState } from './useGameState'
 
 // A small, controllable ledger instead of the real one (mutated in place per test).
@@ -24,6 +24,8 @@ vi.mock('virtual:dialogue', () => ({
     flags: [
       { name: 'two', when: { foundUnique: 2 } },
       { name: 'loopy', when: { loops: 1 } },
+      // The child flag (Issue #86): tests seed foundTotal 49 so the next correct report raises it.
+      { name: 'child', when: { foundTotal: 50 } },
     ],
     entries: [
       {
@@ -792,5 +794,134 @@ describe('startGame resets the ending and the flag event', () => {
     advance(DEFAULT_CONFIG.totalDurationMs)
     expect(result.current.gameState).toBe('ending')
     expect(saveData.load().loops).toBe(2)
+  })
+})
+
+// ---- the true ending (Issue #86) --------------------------------------------------------------
+
+describe('after the child is found', () => {
+  const total = DEFAULT_CONFIG.totalDurationMs
+  const seed = (patch: Partial<ReturnType<typeof saveData.load>>) =>
+    saveData.update(cur => ({ ...cur, ...patch }))
+  const fill = () => {
+    for (let i = 0; i < 40; i++) ledger.push(entry(`a${i}`, (i % 8) + 1))
+  }
+
+  it('before the child is found, time running out stays a dawn', () => {
+    fill()
+    const { result } = start()
+    advance(total)
+    expect(result.current.ending?.closing).toBe('dawn')
+  })
+
+  it('in a shift that starts with the child already found, anomalies come faster and up to the higher cap', () => {
+    fill()
+    seed({ flags: { child: true } })
+    const { result } = start()
+    advance(FIRST + 100)
+    expect(result.current.activeAnomalies).toHaveLength(1)
+    advance(CHILD_FOUND_PACING.anomalyIntervalMs)
+    expect(result.current.activeAnomalies).toHaveLength(2)
+    advance(CHILD_FOUND_PACING.anomalyIntervalMs * 3)
+    expect(result.current.activeAnomalies).toHaveLength(
+      CHILD_FOUND_PACING.maxConcurrentAnomalies
+    )
+  })
+
+  it('child found and nothing reported afterwards: the ending, a win, one loop', () => {
+    fill()
+    seed({ flags: { child: true } })
+    const { result } = start()
+    advance(total)
+    expect(result.current.ending).toEqual({ closing: 'ending', outcome: 'win' })
+    expect(result.current.gameState).toBe('ending')
+    expect(saveData.load().loops).toBe(1)
+    act(() => result.current.finishEnding())
+    expect(result.current.gameState).toBe('win')
+  })
+
+  it('one report of an anomaly that appeared after the child makes it an ordinary dawn', () => {
+    fill()
+    seed({ flags: { child: true } })
+    const { result } = start()
+    advance(FIRST + 100)
+    const here = result.current.activeAnomalies[0]
+    act(() => result.current.switchCamera(here.cameraId - 1))
+    act(() => result.current.reportAnomaly(here.category))
+    expect(result.current.stats.correctReports).toBe(1)
+    advanceTo(FIRST + 100, total)
+    expect(result.current.ending?.closing).toBe('dawn')
+  })
+
+  it('the report that raises the child flag mid-shift does not count: ignoring the rest is the ending', () => {
+    fill()
+    seed({ foundTotal: 49 })
+    const { result } = start()
+    advance(FIRST + 100)
+    const first = result.current.activeAnomalies[0]
+    act(() => result.current.switchCamera(first.cameraId - 1))
+    act(() => result.current.reportAnomaly(first.category))
+    expect(saveData.load().flags.child).toBe(true)
+    // Anomalies spawned from now on are post-child (faster cadence); none is reported.
+    advanceTo(FIRST + 100, total)
+    expect(result.current.activeAnomalies.length).toBeGreaterThan(1)
+    expect(result.current.ending).toEqual({ closing: 'ending', outcome: 'win' })
+  })
+
+  it('reporting an older anomaly (shown before the child) after the child is found does not stop the ending', () => {
+    fill()
+    seed({ foundTotal: 49 })
+    const { result } = start()
+    advance(FIRST + 100)
+    const old = result.current.activeAnomalies[0]
+    advance(INTERVAL)
+    const second = result.current.activeAnomalies[1]
+    // Raise the child with the second one, then report the first (older) one.
+    act(() => result.current.switchCamera(second.cameraId - 1))
+    act(() => result.current.reportAnomaly(second.category))
+    expect(saveData.load().flags.child).toBe(true)
+    act(() => result.current.switchCamera(old.cameraId - 1))
+    act(() => result.current.reportAnomaly(old.category))
+    advanceTo(FIRST + 100 + INTERVAL, total)
+    expect(result.current.ending?.closing).toBe('ending')
+  })
+
+  it('nothing appeared after the child (the last ledger entry raised it): dawn', () => {
+    ledger.push(entry('only', 1))
+    seed({ foundTotal: 49 })
+    const { result } = start()
+    advance(FIRST + 100)
+    act(() => result.current.reportAnomaly('Object'))
+    expect(saveData.load().flags.child).toBe(true)
+    advanceTo(FIRST + 100, total)
+    expect(result.current.ending?.closing).toBe('dawn')
+  })
+
+  it('a withdraw is never the ending, even with the child found and nothing reported', () => {
+    fill()
+    seed({ flags: { child: true } })
+    const { result } = start()
+    advance(FIRST + 100)
+    for (let i = 0; i < DEFAULT_CONFIG.maxMisreports; i++) {
+      act(() => result.current.switchCamera(7))
+      act(() => result.current.reportAnomaly('Person'))
+    }
+    advance(TOAST_MS + 100)
+    expect(result.current.ending).toEqual({
+      closing: 'withdraw',
+      outcome: 'lose',
+    })
+  })
+
+  it('the next shift keeps the child found state (the flag is saved)', () => {
+    fill()
+    seed({ flags: { child: true } })
+    const { result } = start()
+    advance(total)
+    act(() => result.current.finishEnding())
+    act(() => result.current.startGame())
+    advance(FIRST + 100)
+    advance(CHILD_FOUND_PACING.anomalyIntervalMs)
+    expect(result.current.activeAnomalies).toHaveLength(2)
   })
 })
