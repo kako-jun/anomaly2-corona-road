@@ -77,11 +77,11 @@ export const getGamePhase = (ms: number): 'early' | 'mid' | 'late' => {
 /**
  * Anomaly draw (#221): at the category and type steps a group's weight is (its unused count) ^ this.
  * The count is the unused entries inside the camera already chosen. 0 = uniform, 1 = proportional
- * to count (same as no balancing). 0.75 was picked by simulating the real ledger (299 entries,
+ * to count (at these two steps; the old behaviour there. The camera step and the final entry step
+ * are always uniform). 0.75 was picked by simulating the real ledger (299 entries,
  * 6-11 per shift, 50k shifts): at 0.5 an entry that is the only one of its category in a camera
  * showed up about 3x as often as before (up to 9.5%), which worsens repeats; at 0.75 the maximum
- * is 5.5% (about 1.9x the mean) and the add_object share falls from 36% to 28%. The camera step
- * and the final entry step stay uniform.
+ * is about 5.4% (about 1.9x the mean) and the add_object share falls from 36% to 28%.
  */
 export const DRAW_WEIGHT_EXPONENT = 0.75
 
