@@ -12,6 +12,7 @@ const raw = (over: Record<string, unknown> = {}) => ({
   id: 'AR-01-notice',
   camera_id: 'CAM01',
   category: 'object',
+  anomaly_type: 'add_object',
   overlay: 'assets/anomaly-overlays/cam01/notice.webp',
   overlay_origin: '(137,379)',
   dimensions: '46x97',
@@ -101,6 +102,7 @@ describe('parseLedgerEntry', () => {
       id: 'AR-01-notice',
       cameraId: 1,
       category: 'Object',
+      anomalyType: 'add_object',
       overlay: 'assets/anomaly-overlays/cam01/notice.webp',
       origin: { x: 137, y: 379 },
       size: { w: 46, h: 97 },
@@ -109,7 +111,15 @@ describe('parseLedgerEntry', () => {
   it('ignores the other ledger columns', () => {
     const e = parseLedgerEntry(raw({ note: 'x', element_id: 'CAM01-E09' }), 0)
     expect(Object.keys(e).sort()).toEqual(
-      ['cameraId', 'category', 'id', 'origin', 'overlay', 'size'].sort()
+      [
+        'anomalyType',
+        'cameraId',
+        'category',
+        'id',
+        'origin',
+        'overlay',
+        'size',
+      ].sort()
     )
   })
   it('trims surrounding whitespace in values', () => {
@@ -125,6 +135,7 @@ describe('parseLedgerEntry', () => {
     'id',
     'camera_id',
     'category',
+    'anomaly_type',
     'overlay',
     'overlay_origin',
     'dimensions',

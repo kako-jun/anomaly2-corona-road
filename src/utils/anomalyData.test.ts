@@ -6,6 +6,7 @@ const entry = (id: string, cameraId: number): LedgerEntry => ({
   id,
   cameraId,
   category: 'Object',
+  anomalyType: 'add_object',
   overlay: `assets/anomaly-overlays/${id}.webp`,
   origin: { x: 1, y: 2 },
   size: { w: 3, h: 4 },

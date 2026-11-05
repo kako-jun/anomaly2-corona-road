@@ -44,6 +44,7 @@ const anomalies = `anomalies:
   - id: 'a1'
     camera_id: 'CAM01'
     category: 'object'
+    anomaly_type: 'add_object'
     overlay: 'assets/anomaly-overlays/cam01/a1.webp'
     overlay_origin: '(1,2)'
     dimensions: '3x4'
