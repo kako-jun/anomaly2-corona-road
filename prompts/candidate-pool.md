@@ -309,6 +309,106 @@
 | CR-02-26 | CAM02-E19 | 鉢が消え、ガラス面にだけ鉢の姿が映る。     | surreal / mid / medium       |
 | CR-02-27 | CAM02-E09 | 奥の開口に三毛猫が一匹座る。               | object / mid / medium        |
 
+## 制作仕様（未制作）— CAM 02
+
+CAM 02（`cam2.webp`、676x900）の型の偏りを直すために起こした制作仕様 3 件。型: remove_object 1 / text_change 1 / surreal 1。画像は作っていない。台帳（`anomalies.yaml`）へは、制作して overlay ができてから一件ずつ登録する。写真の写っているものは原寸の拡大で確認した（要素の座標は `camera-element-inventory.md` が正本）。
+
+### AR-02-wall-bird-gone — 右壁の黒い店舗ガラスの白い鳥の装飾が一羽だけ消える
+
+- **カメラ**: CAM02（`cam2.webp`、676x900）／対象要素: CAM02-E17
+- **型 / カテゴリ / フェーズ / 目立ち度**: remove_object / object / mid / medium
+- **物**: 右側の黒い店舗ガラスに散る白い飾りのうち、柱寄り（画面左）の大きな鳥（翼を広げた白い鳥、約 21x44 px。星形の飾りの下、右端の小さな鳥の上）。
+- **変化**: この一羽だけが消え、黒いガラスと周りの星形・他の鳥はそのまま。消えた跡は一様に黒く、ガラスの反射と細かな粒状感だけが続く。星・鳥の数を数えた人だけが気づく『減る』変化（AR-02-wall-bird-triplet は同じ装飾が『増える』）。
+- **box (x1,y1,x2,y2)**: (636,248,664,302)（28x54）
+- **最寄り既存 overlay と実測距離**: AR-02-smoke (31.0)、次点 AR-02-duplicate-coffee-sign (64.0)。
+- **6倍クロップ範囲**: 6倍クロップ (420,190)–(676,361)（256x171）。box は窓内で (1296,348)–(1464,672)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: In the lower-right of the frame, on the large dark glass storefront wall (right edge of the crop), there is a row of white decorative silhouettes (stars and flying birds). The tall white bird with spread wings located at about x=1296 to 1464, y=350 to 670 in the 1536x1024 frame is removed completely: that area becomes the same plain near-black glass with the same faint reflections and grain as the glass around it, as if the bird had never been there. The other stars and birds, including the small bird further down and the one at the right edge, stay exactly as they are. Add nothing. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: In the lower-right of the frame, on the dark glass storefront wall at the right edge, erase one white bird silhouette (the larger white bird with spread wings, inside the area x=1296 to 1464, y=348 to 672 in the 1536x1024 frame). Fill the gap with seamless dark glass, continuing the faint cold reflections and the film grain. Do not touch any star shape, any other bird, the wooden easel or the frame edges. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: On the dark glass wall at the right of the crop, one of the white wing-spread bird decorations is missing: inside x=1296 to 1464, y=348 to 672 (1536x1024 frame) the glass is simply empty and dark, with no outline, no ghost, no discolouration where the decoration used to be. Every other decoration keeps its exact position and brightness. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: 白い飾り（輝度が高い）が黒いガラスに変わるので、消した面の差分は 100 を超える見込み。面積は鳥の実形で約 500〜700 画素。下限（最大差分 40、平均 3、差分25以上が 100 画素以上）は余裕で通る見立て。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-02-wall-bird-gone'
+    candidate_id: 'AR-02-wall-bird-gone'
+    camera_id: 'CAM02'
+    element_id: 'CAM02-E17'
+    base_photo: 'public/images/cam2.webp'
+    category: 'object'
+    anomaly_type: 'remove_object'
+    location: 'CAM02-E17 の差分左上 (636,248) 付近（貼り込み後に再計測）'
+    detail: '右壁の黒い店舗ガラスの白い鳥の装飾が一羽だけ消える。'
+    overlay: 'assets/anomaly-overlays/cam02/wall-bird-gone.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-02-smoke（box 距離 31px）。壁面の煙が出ていると鳥の消失が隠れるため、同プレイでは避けたい。同じ装飾群の AR-02-wall-bird-triplet（鳥が三羽に増える）と、鳥の数が矛盾するので同プレイで共存させない。'
+  ```
+- **相互参照 / 重複精査**: AR-02-pillar-sign-gone は『看板が消えて日焼け跡が残る』で、対象（柱上の看板）も跡の見え方も別。ここは何も跡が残らない黒いガラス。CR-02-07（白い壁飾りの一つの向き）・AR-02-flower-ornament/red-star（星の形・色）とは対象の飾りも変化も別。candidate-pool に鳥の装飾を消す案は無い。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-02-wall-bird-triplet / AR-02-smoke。併存可=床・天井・左シャッター・柱の異変。
+
+### AR-02-signboard-text-peek — 右上の橙色の吊り看板の文字が「ノスタ」から別の文字に変わる
+
+- **カメラ**: CAM02（`cam2.webp`、676x900）／対象要素: CAM02-E06
+- **型 / カテゴリ / フェーズ / 目立ち度**: text_change / object / mid / medium
+- **物**: 画面右上端で切れている橙赤地・白い円の看板（原寸で読み直した：円の中に緑の太い筆文字「ノスタ」が見え、「タ」は画面右端で切れる。文字の位置は約 x=622〜676, y=40〜82）。
+- **変化**: 「ノスタ」の「ノ」はそのままで、続く二文字（「スタ」の位置）が「ゾク」に変わり、画面に見える範囲は「ノゾク」（覗く）と読める。書体・色・太さ・傾きは元の緑の太い筆文字のまま、円と橙の地は変えない。実在の店名・語ではなく、『元の文字と違う文字』になる文字だけの変化。
+- **box (x1,y1,x2,y2)**: (636,34,676,92)（40x58）
+- **最寄り既存 overlay と実測距離**: AR-02-smoke (31.0)、次点 AR-02-tanabata-paper-chain (35.0)。
+- **6倍クロップ範囲**: 6倍クロップ (420,0)–(676,171)（256x171）。box は窓内で (1296,204)–(1536,552)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: On the orange-red hanging sign at the top-right corner of the crop (a white circle with green brush-style katakana letters), the green letters currently read ノスタ and the last letter is cut off by the right edge of the frame. Change only the letters that sit at about x=1296 to 1536, y=204 to 552 in the 1536x1024 frame: keep the first letter ノ exactly as it is and replace the two letters after it with the katakana ゾ and ク, so that the visible text reads ノゾク (the ク is partly cut by the right edge, just like the original last letter was). Use the same thick dark green brush stroke, the same slant, size, spacing, and the same slightly worn paint. The white circle, the orange-red background, the black frame and everything else stay unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Apart from the three katakana described above there is no other text change, no extra letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: Edit the sign at the top-right of the crop. Inside x=1296 to 1536, y=204 to 552 (1536x1024 frame) the two green katakana letters after the first letter ノ are repainted as ゾ and ク, in the identical hand-painted thick green style, on the same white circle. The visible word becomes ノゾク. Do not change the letter ノ, the circle, the orange-red board, or the frame; no other letters are added anywhere. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Apart from the three katakana described above there is no other text change, no extra letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: The orange-red sign at the upper right has the same layout and the same green brush lettering, but its wording is different: the letters after the first one are now ゾク instead of スタ, giving ノゾク, painted in the same style and cut off by the frame edge in the same way. Only the area x=1296 to 1536, y=204 to 552 (1536x1024 frame) changes. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Apart from the three katakana described above there is no other text change, no extra letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: 緑の筆文字の字形が変わる面（約 44x58）で、白い円地に濃い緑の線が入れ替わるので差分は大きい（最大差分は 100 以上の見込み）。差分25以上の画素は字画の入れ替え分で 300 画素前後と見る。文字の読み分けは暗い画面端で難しいので、check-visibility を必ず通す。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-02-signboard-text-peek'
+    candidate_id: 'AR-02-signboard-text-peek'
+    camera_id: 'CAM02'
+    element_id: 'CAM02-E06'
+    base_photo: 'public/images/cam2.webp'
+    category: 'object'
+    anomaly_type: 'text_change'
+    location: 'CAM02-E06 の差分左上 (636,34) 付近（貼り込み後に再計測）'
+    detail: '右上の橙色の吊り看板の文字が「ノスタ」から別の文字に変わる。'
+    overlay: 'assets/anomaly-overlays/cam02/signboard-text-peek.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-02-smoke（box 距離 31px。同じ右上の壁面だが煙は看板より下）。看板は大きな円と地色が元のままなので、AR-01-sign-old-shop（別カメラ）のような絵柄の変化とは見え方が別。'
+  ```
+- **相互参照 / 重複精査**: CR-02-23（COFFEE 看板の下段のカタカナ一文字の左右反転）・CR-SH-02（COFFEE 看板の文字が昔の喫茶店の名前に戻る）とは、対象の看板が別（こちらは右上の橙の看板 E06）。CR-02-01（COFFEE の一文字消し）とも別。台帳に E06 の異変は無い。
+- **同カメラ内の排他と併存**: 併存可=ほぼすべて。AR-02-smoke とは box が離れているが、煙が出ているとき文字の変化は見えにくい（排他ではないが推奨しない）。
+
+### AR-02-pillar-wax-melt — 柱の左の白い面の下半分が、蝋のように溶けて垂れ落ちる
+
+- **カメラ**: CAM02（`cam2.webp`、676x900）／対象要素: CAM02-E10
+- **型 / カテゴリ / フェーズ / 目立ち度**: surreal / surreal / late / medium
+- **物**: 中央の白灰色の角柱の左の面の下半分から根元（約 x=272〜318, y=306〜346）。柱の足元には黒い幅木が走る。
+- **変化**: 柱の白い面の下半分がとろけて、蝋のように下へ縦に垂れ落ち、根元の幅木の上に白い溜まりを作る（垂れの筋は 4〜5 本、長さ約 40 px）。溶けた跡の面は一段暗い灰色のコンクリートが露出する。壁・床の傷みでなく『物理が壊れる』変化（柱が液体のように流れる）。
+- **box (x1,y1,x2,y2)**: (272,308,318,344)（46x36）
+- **最寄り既存 overlay と実測距離**: AR-02-chalk-hopscotch (30.0)、次点 AR-02-bw-television (30.0)。
+- **6倍クロップ範囲**: 6倍クロップ (167,241)–(423,412)（256x171）。box は窓内で (630,402)–(906,618)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: On the pale-grey square pillar at the centre of the crop, the lower part of its left face (about x=630 to 906, y=402 to 618 in the 1536x1024 frame, down to the black skirting board at its base) melts like candle wax: the white surface droops in four or five long vertical drips, each about 240 px long on screen, and a soft white puddle pools on top of the black base moulding. Where the surface has melted away a darker grey bare concrete layer shows through. Keep the pillar's right face, the pillar's top, the floor and all other objects unchanged. No text, no extra objects. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: Edit only the lower left face of the central pillar, inside x=630 to 906, y=402 to 618 (1536x1024 frame): the pale plaster sags and drips downward like melted wax, long drips ending in a rounded blob resting on the black skirting at the foot. The rest of the pillar, the floor and the corridor are untouched. The drips have the same cold grey-white colour as the pillar and a faint wet highlight. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: The base of the pale pillar at the centre is melting: in the area x=630 to 906, y=402 to 618 (1536x1024 frame) the white painted surface runs down in thick wax-like streaks over the dark baseboard, leaving a darker grey mark above. Everything else, including the right face of the pillar and the floor, remains exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: 柱の白い面に暗い灰色の露出面と垂れが入るので、境の差分は 40 を超える見込み。平均差分は小さめで、差分25以上の画素は 400 画素規模。垂れの本数と暗い露出面を強めに指示し、check-visibility を必ず通す（通らなければ露出面を広く暗くする）。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-02-pillar-wax-melt'
+    candidate_id: 'AR-02-pillar-wax-melt'
+    camera_id: 'CAM02'
+    element_id: 'CAM02-E10'
+    base_photo: 'public/images/cam2.webp'
+    category: 'surreal'
+    anomaly_type: 'surreal'
+    location: 'CAM02-E10 の差分左上 (272,308) 付近（貼り込み後に再計測）'
+    detail: '柱の左の白い面の下半分が、蝋のように溶けて垂れ落ちる。'
+    overlay: 'assets/anomaly-overlays/cam02/pillar-wax-melt.webp'
+    # phase / 目立ち度: late / medium
+    note: '最寄り既存 overlay は AR-02-chalk-hopscotch（box 距離 30px）と AR-02-bw-television（30px）。AR-02-floor-footprints（床一面・大面積）と box は重ならないが、溜まりは幅木の上に収め、床の面に出さない。'
+  ```
+- **相互参照 / 重複精査**: AR-04-ceiling-corner-fold（別カメラ・天井板の角が垂れる）・AR-01-ceiling-wet-stain（別カメラ・天井の染み）とは対象も見え方も別。AR-02-pillar-sign-gone・AR-02-pillar-notice は柱の看板・紙で別。CR-02-06（黒板の影が壁に伸びる）・CR-02-09（柱がもう一つ続く）は別の物理崩壊。柱の壁面が溶ける案は他に無い。
+- **同カメラ内の排他と併存**: 併存可=天井・右壁・左シャッター・床の小さな異変。
+
 ## 追加候補 — CAM 03
 
 | 候補ID   | 対象ID    | 変化案                                   | 分類 / フェーズ / 目立ち度 |
