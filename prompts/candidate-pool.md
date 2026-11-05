@@ -5,7 +5,7 @@
 ## 正本と昇格ルール
 
 - 写っている物の説明・座標・カメラ写真の正本は [`camera-element-inventory.md`](./camera-element-inventory.md)。写真固有の候補ではここでは要素IDだけ参照し、物体説明や座標を複製しない。
-- 制作済みの真実は台帳（`anomalies.yaml`）。制作仕様の節は制作・登録済みの案を撤去するため、取り下げた案だけが「制作仕様（未制作）— CAM 03」に残る（将来の再挑戦用）。
+- 制作済みの真実は台帳（`anomalies.yaml`）。制作仕様の節は制作・登録済みの案を撤去するため、取り下げた案だけが「制作仕様（未制作）— CAM 03」に残る（将来の再挑戦用）。CAM 07 は型の偏り是正のため、制作前の仕様 9 件を「制作仕様（未制作）— CAM 07」に置く（制作・登録したら撤去）。
 - 末尾の「Runtime / 背景非依存の異変在庫」は写真に紐づかず、昇格しても `anomalies.yaml` には載せない（実装タスクとして別管理）。
 - 候補の正本はこのファイル。採用候補を生成工程へ移す時は、この行を削除し、`anomalies.yaml` に一件だけ登録する。候補と制作データを二重に残さない。
 - カテゴリは `camera` / `object` / `environment` / `person` / `surreal`、フェーズは `early` / `mid` / `late`。目立ち度は `subtle` / `medium` / `obvious`。
@@ -249,6 +249,298 @@
 | CR-07-24 | CAM07-E13 | 丸い扉の取手が四角い取手になる。                   | object / early / subtle      |
 | CR-07-25 | CAM07-E13 | 扉上部の小窓が二つに増える。                       | object / mid / medium        |
 | CR-07-26 | CAM07-E06 | 現実の踊り場にはいない猫だけガラスに映る。         | surreal / mid / medium       |
+
+## 制作仕様（未制作）— CAM 07
+
+CAM 07（`cam7.webp`、675x900）の型の偏りを直すための制作前の仕様 9 件。画像は未制作で、台帳（`anomalies.yaml`）にも未登録。制作・登録に進んだ案は、この節から撤去して台帳へ移す。この節の box は `cam7.webp` の画素座標。同カメラの既存 overlay（台帳 CAM07 の全件）との最寄り距離を実測済み（30px 規則）。型の内訳は remove_object 2 / displace 1 / text_change 1 / multiply 1 / add_creature 1 / add_person 1 / surreal 2。
+
+### AR-07-sign-text-change — 吊り看板の下段の文字が別の文字に変わる
+
+- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E08
+- **型 / カテゴリ / フェーズ / 目立ち度**: text_change / object / mid / subtle
+- **物**: 左奥の壁に吊られた白円・赤橙枠の丸看板。円内の上に小さな絵柄、その下に細かい文字が二行ほど並ぶ（6倍で見ても判読不能な小さな印字）。
+- **変化**: 円内の下側の文字列だけが、はっきり読める別の文字列「営業中」（赤橙系の細い印字）に置き換わる。看板の枠・円・上の絵柄・位置は変えない。元は読めない細かな印字が、読める三文字に変わる。丸看板の「ロゴが消える」案（CR-07-02）や看板の色・縁の案（CR-07-35）とは別で、文字の中身だけが変わる。
+- **box (x1,y1,x2,y2)**: (209,147,238,168)（29x21）
+- **最寄り既存 overlay と実測距離**: AR-07-pictogram-flip (31.0)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
+- **6倍クロップ範囲**: 6倍クロップ (95,72)–(351,243)（256x171）。box は窓内で (684,450)–(858,576)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: the small printed text lines inside the white circle of the orange-framed round hanging sign (the lower text lines, in the marked area) are replaced by one clean printed line that reads "営業中" (three kanji) in the same thin dark red-orange print, same size and baseline as the old small print. The orange frame, the white circle, the small emblem above the text and the sign's position are unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No other text, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: inside the orange-framed round sign, the two small lines of unreadable print under the emblem are re-set as one legible Japanese line "営業中" (three kanji, thin dark red-orange print, about the same height as the old print). Nothing else on the sign changes: the emblem, the orange border, the white disc and the black bracket above it stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No other text, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: only the text of the round hanging sign changes: below the small emblem in the white circle the fine print now reads "営業中" (three kanji, thin red-orange characters, centred, same print size). All shape, colour and framing of the sign, the wall and the door beside it are unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No other text, no logos, no watermark.`
+- **視認性の見立て**: subtle。標準状態（明るさ50・コントラスト50）でも少し見える強さを目標にし、通らなければ強めて作り直す。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-07-sign-text-change'
+    candidate_id: 'AR-07-sign-text-change'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E08'
+    base_photo: 'public/images/cam7.webp'
+    category: 'object'
+    anomaly_type: 'text_change'
+    location: 'CAM07-E08 の周辺、差分左上 (209,147) 付近（貼り込み後に再計測）'
+    detail: '左奥の丸い吊り看板の下側の細かい文字が「営業中」に変わる。'
+    overlay: 'assets/anomaly-overlays/cam07/sign-text-change.webp'
+    # phase / 目立ち度: mid / subtle
+    note: '最寄り既存 overlay は AR-07-pictogram-flip（距離 31px）。丸看板は元が判読不能（6倍でも読めない細かい印字）なので、登録前に原寸で読み直し、読めない→読める三文字になっていることを確認する。文字の変化は面積が小さいので check-visibility を必ず通す（通らなければ文字を太く大きくする）。dome-camera-gone / dome-camera-on-wall と同じ壁の面（距離 11px）なので同プレイで共存させない。'
+  ```
+- **相互参照 / 重複精査**: CR-07-02（ロゴが消える）・CR-07-35（縁が金色）は台帳に無く、変化の中身が違う（消失・色）。台帳に text_change は CAM07 に無く、文字の中身が変わる異変は他カメラの text_change と対象が別。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-07-dome-camera-gone / AR-07-dome-camera-on-wall（同じ壁と天井の境）/ AR-07-wall-clocks（大面積・同じ壁面）。併存可=床・階段・右壁の異変。
+
+### AR-07-dome-camera-gone — 天井の黒いドーム器具が一つ消える
+
+- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E05
+- **型 / カテゴリ / フェーズ / 目立ち度**: remove_object / object / early / subtle
+- **物**: 左奥の天井、丸看板のすぐ上にある黒い半球状のドーム器具（監視カメラ風。幅12px ほど）。すぐ右に小さな白い丸い埋込灯が一つある。
+- **変化**: ドーム器具が消え、その位置は周りと同じ青灰色の天井板に自然に埋まる（取り付け跡は薄く残してよいが器具は無い）。右の埋込灯、左の細長い通気口、黒い小さな金具、丸看板は変えない。『見ていたはずの黒い器具が一つ無い』減少の異変。緑の非常灯が消える AR-07-exit-sign-gone とは物も場所も別。
+- **box (x1,y1,x2,y2)**: (226,106,256,136)（30x30）
+- **最寄り既存 overlay と実測距離**: AR-07-paper-tag-lamp (49.4)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
+- **6倍クロップ範囲**: 6倍クロップ (113,36)–(369,207)（256x171）。box は窓内で (678,420)–(858,600)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: the small black dome-shaped fixture hanging from the ceiling just above the round orange sign (about x=700 to 790, y=510 to 575 in the 1536x1024 frame) is removed, and the ceiling surface there is filled in with the same blue-grey speckled ceiling panel, as if it had never been mounted. The small round white recessed light just to its right, the thin dark vent slot to its left and the orange sign below stay exactly as they are. The edit area is about x=678 to 858, y=420 to 600. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: erase the black half-sphere ceiling fixture (a surveillance-camera-style dome) that sits above the orange round sign, in the marked area: the ceiling there becomes plain, evenly lit blue-grey ceiling with only a faint pale rectangular mounting mark where the dome was. Add nothing. The white recessed light beside it, the vent slot and everything else remain. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: the black dome fixture on the ceiling above the round hanging sign is gone; only smooth ceiling panel with the same fine speckles and a very faint circular shadow ring remains at its place (area x=678 to 858, y=420 to 600). No new object appears. All neighbouring fixtures, the sign, the wall and the shadows are unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: subtle。標準状態（明るさ50・コントラスト50）でも少し見える強さを目標にし、通らなければ強めて作り直す。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-07-dome-camera-gone'
+    candidate_id: 'AR-07-dome-camera-gone'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E05'
+    base_photo: 'public/images/cam7.webp'
+    category: 'object'
+    anomaly_type: 'remove_object'
+    location: 'CAM07-E05 の周辺、差分左上 (226,106) 付近（貼り込み後に再計測）'
+    detail: '天井の黒いドーム器具が一つ消え、天井板だけが残る。'
+    overlay: 'assets/anomaly-overlays/cam07/dome-camera-gone.webp'
+    # phase / 目立ち度: early / subtle
+    note: '最寄り既存 overlay は AR-07-paper-tag-lamp（距離 49.4px）。器具が小さいので check-visibility を必ず通す（通らなければ取り付け跡の円を濃くする）。AR-07-sign-text-change / dome-camera-on-wall と同じ面、AR-07-ceiling-white-sheets（大面積・天井一面）と排他。'
+  ```
+- **相互参照 / 重複精査**: 台帳の remove_object は AR-07-exit-sign-gone（右の緑の非常灯）のみ。対象（天井の黒い器具）・場所（左奥）・見え方（黒い点が一つ無い）が別。AR-07-lamp-off（丸灯が点かない）は光、こちらは器具そのものの消失。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-07-sign-text-change / AR-07-dome-camera-on-wall / AR-07-ceiling-white-sheets（大面積・天井）/ AR-07-wall-clocks。併存可=床・階段・右壁・左ガラスの異変。
+
+### AR-07-dome-camera-on-wall — 天井のドーム器具が壁の低い位置にずれて付く
+
+- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E05
+- **型 / カテゴリ / フェーズ / 目立ち度**: displace / object / mid / medium
+- **物**: 左奥の天井、丸看板のすぐ上にある黒い半球状のドーム器具（幅12px ほど）。丸看板の下は何も無い白い壁。
+- **変化**: ドーム器具が天井から消え、同じ器具が丸看板の下の白い壁面（看板の下端から約 20px 下）に取り付けられている。大きさ・向きは同じで、取り付け位置だけが天井から壁へずれる。『同じ物が不自然な位置にある』変化。丸看板・埋込灯は変えない。
+- **box (x1,y1,x2,y2)**: (212,115,254,198)（42x83）
+- **最寄り既存 overlay と実測距離**: AR-07-pictogram-flip (34.0)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
+- **6倍クロップ範囲**: 6倍クロップ (105,71)–(361,242)（256x171）。box は窓内で (642,264)–(894,762)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: move one object: the small black dome-shaped fixture on the ceiling above the round orange sign (about x=750 to 830, y=300 to 365 in the 1536x1024 frame) disappears from the ceiling (the ceiling there becomes plain blue-grey ceiling panel), and the same black dome fixture, same size and same shape, is now mounted on the plain white wall below the round sign (about x=660 to 740, y=640 to 720). The orange sign, the white recessed light and everything else stay as they are. The edit area is about x=642 to 894, y=264 to 762. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: the black half-sphere fixture that normally hangs on the ceiling above the orange round sign is relocated: the ceiling spot is left clean, and an identical black dome now sits on the white wall under the sign, as if screwed to the wall. Same size, same black colour, a soft shadow under it. Nothing else changes. Area x=642 to 894, y=264 to 762. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: relocate the ceiling dome fixture above the round hanging sign down onto the wall: erase it from the ceiling (smooth ceiling remains) and draw the identical black dome on the empty white wall beneath the sign, about 20 px (at original scale) below the sign's lower edge. The sign, the nearby light and the door stay unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: medium。標準状態で見つけられる強さ。つまみで見やすくなる。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-07-dome-camera-on-wall'
+    candidate_id: 'AR-07-dome-camera-on-wall'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E05'
+    base_photo: 'public/images/cam7.webp'
+    category: 'object'
+    anomaly_type: 'displace'
+    location: 'CAM07-E05 の周辺、差分左上 (212,115) 付近（貼り込み後に再計測）'
+    detail: '天井の黒いドーム器具が、丸看板の下の白い壁の低い位置に付いている。'
+    overlay: 'assets/anomaly-overlays/cam07/dome-camera-on-wall.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-07-pictogram-flip（距離 34px）。左右の box 幅が広い（42x83）ので、貼り込み後に実際の差分矩形を再計測する。AR-07-sign-text-change / dome-camera-gone / AR-07-wall-clocks（大面積）と同じ壁面で排他。'
+  ```
+- **相互参照 / 重複精査**: dome-camera-gone（消える）とは、器具が無くなるか別の位置に現れるかで見え方が別。台帳の displace は CAM07 に無い。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-07-sign-text-change / AR-07-dome-camera-gone / AR-07-wall-clocks（大面積）。併存可=床・階段・右壁・左ガラスの異変。
+
+### AR-07-window-sill-gone — 左のガラス窓の下の木の棚板が消える
+
+- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E06
+- **型 / カテゴリ / フェーズ / 目立ち度**: remove_object / object / early / subtle
+- **物**: 左端の暗いガラス窓（店先）の手前下、画面左の縁に見える明るい木色（ベージュ）の細い棚板（窓の下枠）。ガラス窓に沿って段々に並ぶ棚板の一番手前。
+- **変化**: ベージュの棚板が消え、そこは暗いガラス面と白い縦枠だけの自然なつながりに埋まる。ほかの棚板、ガラスのひび（AR-07-glass-crack）、白い縦の金属枠は変えない。
+- **box (x1,y1,x2,y2)**: (0,418,40,478)（40x60）
+- **最寄り既存 overlay と実測距離**: AR-07-n1 (57.0)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
+- **6倍クロップ範囲**: 6倍クロップ (0,363)–(256,534)（256x171）。box は窓内で (0,330)–(240,690)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: the light beige wooden window-sill ledge at the very left edge of the frame, at the bottom of the dark glass shop window (the bright wooden slab at the lower-left corner of the marked area, x=0 to 240, y=330 to 690 in the 1536x1024 frame), is removed: the area becomes the same dark window glass and the white vertical metal frame continuing without the ledge, with natural dark reflections. The other, higher ledges, the white frame and the floor stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: erase the pale wood-coloured ledge slab at the bottom left of the dark shop window glass (marked area x=0 to 240, y=330 to 690): where it was, continue the dark glass surface and the pale vertical frame so that it looks as if the ledge never existed. Add nothing. All other ledges, frames and the floor stay. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: the beige wooden sill board at the left window is gone; only dark glass and the white metal frame remain in its place (area x=0 to 240, y=330 to 690), with the same dim reflections as the rest of the window. Nothing new appears. Keep the other ledges and everything else unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: subtle。標準状態（明るさ50・コントラスト50）でも少し見える強さを目標にし、通らなければ強めて作り直す。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-07-window-sill-gone'
+    candidate_id: 'AR-07-window-sill-gone'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E06'
+    base_photo: 'public/images/cam7.webp'
+    category: 'object'
+    anomaly_type: 'remove_object'
+    location: 'CAM07-E06 の周辺、差分左上 (0,418) 付近（貼り込み後に再計測）'
+    detail: '左ガラス窓の下の明るい木の棚板が一枚消える。'
+    overlay: 'assets/anomaly-overlays/cam07/window-sill-gone.webp'
+    # phase / 目立ち度: early / subtle
+    note: '最寄り既存 overlay は AR-07-n1（距離 57px）、AR-07-glass-crack（距離 57px 超）。画面端の小さな差分なので check-visibility を必ず通す（通らなければ消す範囲を棚板の上の段まで広げる）。左ガラスの AR-07-glass-crack とは同プレイ共存可（距離がある）。'
+  ```
+- **相互参照 / 重複精査**: 台帳に左ガラスの棚板の異変は無い。CR-07-33（ガラスに手袋が映る）・CR-07-26（猫が映る）は映り込みの案で、こちらは実物の消失。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=なし（小物で他の異変と距離 30px 以上）。併存可=全部。
+
+### AR-07-opening-white-figure — 中央の黒い開口の奥に白い服の人が立つ
+
+- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E11
+- **型 / カテゴリ / フェーズ / 目立ち度**: add_person / person / late / medium
+- **物**: 中央の壁にある深い黒色の縦長開口（E11）。下の方は真っ黒で何も見えない。
+- **変化**: 開口の暗がりの下の方に、白い上着と暗いズボンの人が、こちらに背を向けて直立している（高さ約 45px の小さな人影、顔は見えない）。ほとんど動きのない廊下に人が一人いるのが異変。開口の暗さと対照的な白い上着で見える。
+- **box (x1,y1,x2,y2)**: (302,293,350,343)（48x50）
+- **最寄り既存 overlay と実測距離**: AR-07-warm-light (30.0)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
+- **6倍クロップ範囲**: 6倍クロップ (198,233)–(454,404)（256x171）。box は窓内で (624,360)–(912,660)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: add one person: inside the deep black rectangular opening, in its lower part (marked area x=624 to 912, y=360 to 660 in the 1536x1024 frame), a person stands upright seen from behind, wearing a pale off-white jacket and dark trousers, about 45 px tall at original scale (270 px in this frame), standing still with arms down. No face visible. The person is in the dark opening and slightly dimmer than the white wall; do not add any light source. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: add a single small human figure standing deep inside the black doorway opening, facing away from the camera: pale grey-white jacket, dark trousers, short dark hair, about 270 px tall in this 1536x1024 frame, feet on the dark floor at the bottom of the opening (area x=624 to 912, y=360 to 660). They stand perfectly still. No face, no light, no other change. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: inside the pitch-black tall opening in the centre wall, near its bottom, one person stands upright with their back to us: a light cream jacket that catches a little of the corridor light, dark legs, arms hanging down, about 270 px tall in this frame (area x=624 to 912, y=360 to 660). Realistic, low-light, slightly noisy like the rest of the image. Nothing else is added or changed. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: medium。標準状態で見つけられる強さ。つまみで見やすくなる。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-07-opening-white-figure'
+    candidate_id: 'AR-07-opening-white-figure'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E11'
+    base_photo: 'public/images/cam7.webp'
+    category: 'person'
+    anomaly_type: 'add_person'
+    location: 'CAM07-E11 の周辺、差分左上 (302,293) 付近（貼り込み後に再計測）'
+    detail: '中央の黒い開口の奥の下の方に、白い上着の人が背を向けて立つ。'
+    overlay: 'assets/anomaly-overlays/cam07/opening-white-figure.webp'
+    # phase / 目立ち度: late / medium
+    note: '最寄り既存 overlay は AR-07-warm-light（距離 30px、黒い開口の奥の灯）。AR-07-warm-light・AR-07-crane は同じ開口で、人影と灯りが同時に出ると主従が曖昧になるので同プレイで共存させない。AR-07-wall-clocks（大面積・同じ壁面）と排他。人物は暗がりでコントラストが落ちるので、上着の白を強めて check-visibility を通す。'
+  ```
+- **相互参照 / 重複精査**: 台帳の person は AR-07-stair-figures（右階段の重なる人影）のみ。場所（中央の黒い開口）・見え方（一人が立つ）が別。CR-07-07（開口に灰色扉が立つ）は物で、人ではない。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-07-warm-light / AR-07-wall-clocks（大面積）。併存可=床・階段・右壁・左ガラス・天井の異変。
+
+### AR-07-floor-white-rabbit — 右手前の暗い床に白いウサギが座っている
+
+- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E16
+- **型 / カテゴリ / フェーズ / 目立ち度**: add_creature / object / mid / medium
+- **物**: 右の階段の下あたり、暗い床と階段の根元が溶け合う右奥の暗がり（画面右端付近、扉より手前）。
+- **変化**: 暗い床の上に、真っ白な小さなウサギが一羽、こちらを向いて座っている（体長約 30px）。地下の通路には本来いない動物。左階段の猫（AR-07-stairs-cat）とは種類も場所も別。
+- **box (x1,y1,x2,y2)**: (600,358,655,413)（55x55）
+- **最寄り既存 overlay と実測距離**: AR-07-n4 (32.0)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
+- **6倍クロップ範囲**: 6倍クロップ (419,300)–(675,471)（256x171）。box は窓内で (1086,348)–(1416,678)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: add one small white rabbit sitting on the dark floor in the lower-right part of the marked area (area x=1086 to 1416, y=348 to 678 in the 1536x1024 frame): pure white fur, upright ears, sitting side-on with its head turned towards the camera, about 180 px long in this frame. A soft shadow under it and a faint reflection on the glossy dark floor. Nothing else is added. The surrounding dark floor, stairs and wall stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: add a single white domestic rabbit sitting still on the glossy dark floor near the foot of the dark right staircase (area x=1086 to 1416, y=348 to 678): bright white body, long upright ears, small dark eyes looking at the camera, about 180 px long in this frame, with a small dim reflection below it. Nothing else changes. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: a white rabbit crouches on the dark tiled floor at the bottom-right area of the crop (area x=1086 to 1416, y=348 to 678): fluffy white fur, ears raised, facing the camera, the size of a small cat (about 180 px long in this frame), lit faintly by the corridor light so it stands out against the dark floor. No other object or change. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: medium。標準状態で見つけられる強さ。つまみで見やすくなる。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-07-floor-white-rabbit'
+    candidate_id: 'AR-07-floor-white-rabbit'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E16'
+    base_photo: 'public/images/cam7.webp'
+    category: 'object'
+    anomaly_type: 'add_creature'
+    location: 'CAM07-E16 の周辺、差分左上 (600,358) 付近（貼り込み後に再計測）'
+    detail: '右奥の暗い床に、白いウサギが一羽座っている。'
+    overlay: 'assets/anomaly-overlays/cam07/floor-white-rabbit.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-07-n4（距離 32px）。暗い場所なのでウサギの白で check-visibility を通す。AR-07-floor-frost（大面積・床の中段）と同じ面で排他。AR-07-n4 は同プレイ共存可（30px 以上離れる）。'
+  ```
+- **相互参照 / 重複精査**: 台帳の動物は AR-07-stairs-cat（左階段の猫）のみ。種類（ウサギ）・場所（右奥の床）が別。CR-07-26（猫が映る）とも別。小動物は台帳の運用に合わせ object に分類。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-07-floor-frost（大面積・床の中段）。併存可=ほか全部。
+
+### AR-07-ceiling-sky-hole — 左上の天井に円い穴が開いて青空が覗く
+
+- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E01
+- **型 / カテゴリ / フェーズ / 目立ち度**: surreal / surreal / late / obvious
+- **物**: 左上の隅の天井（E01）。暗い青灰色の天井板で、左の縁は窓枠、右に細長い蛍光灯が続く。
+- **変化**: 天井の隅に丸い穴が開き、穴の中に青い空と薄い白雲が見える（昼の光が漏れて、周囲の天井板に少し明るい縁の反射が出る）。地下に空がある、物理の崩れ。
+- **box (x1,y1,x2,y2)**: (42,0,100,48)（58x48）
+- **最寄り既存 overlay と実測距離**: AR-07-paper-tag-lamp (32.0)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
+- **6倍クロップ範囲**: 6倍クロップ (0,0)–(256,171)（256x171）。box は窓内で (252,0)–(600,288)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: make a round hole in the ceiling at the upper-left corner of the marked area (area x=252 to 600, y=0 to 288 in the 1536x1024 frame): a clean circular opening about 240 px wide in this frame, through which a bright daytime blue sky with a few thin white clouds is visible, with a thin soft glow on the surrounding ceiling panel edge. The rest of the ceiling, the fluorescent lamp and the window frame on the left stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: cut a perfectly round opening into the dark blue-grey ceiling at the top-left (area x=252 to 600, y=0 to 288): inside it, a pale blue sky with a couple of soft white clouds, brighter than the dim corridor. Faint blue-white spill light on the ceiling around the rim. No other change; the lamp to its right and the left window frame remain. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: the ceiling panel at the top-left corner has a circular hole showing open sky: clear light blue, one or two thin cirrus clouds, a slightly brighter rim where daylight hits the ceiling edge (area x=252 to 600, y=0 to 288, a circle about 220 px across in this frame). Everything outside this area is identical to the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: obvious。標準状態ではっきり見える。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-07-ceiling-sky-hole'
+    candidate_id: 'AR-07-ceiling-sky-hole'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E01'
+    base_photo: 'public/images/cam7.webp'
+    category: 'surreal'
+    anomaly_type: 'surreal'
+    location: 'CAM07-E01 の周辺、差分左上 (42,0) 付近（貼り込み後に再計測）'
+    detail: '左上の天井に丸い穴が開き、青空と薄い雲が見える。'
+    overlay: 'assets/anomaly-overlays/cam07/ceiling-sky-hole.webp'
+    # phase / 目立ち度: late / obvious
+    note: '最寄り既存 overlay は AR-07-paper-tag-lamp（距離 32px）。AR-07-ceiling-white-sheets（大面積・天井一面）と同じ面で排他。空の青と明るさが周りと違うので check-visibility は通る見込み。切り抜き端は暗い天井になじませる。'
+  ```
+- **相互参照 / 重複精査**: 台帳の surreal は階段・床・時計・霜・鏡・小扉で、天井が開いて空が見える異変は無い。AR-07-ceiling-white-sheets（天井から白布）・AR-07-ceiling-tile-yellow（天井板の色）とは物・見え方が別。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-07-ceiling-white-sheets（大面積・天井一面）/ AR-07-ceiling-lights-row（同じ天井の面）。併存可=床・階段・壁の異変。
+
+### AR-07-floor-black-hole — 手前右の床のタイル一枚が抜けて黒い四角い穴になる
+
+- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E16
+- **型 / カテゴリ / フェーズ / 目立ち度**: surreal / surreal / late / obvious
+- **物**: 右手前の広い灰色タイル床（E16）。タイルは斜めの格子で、丸い白い反射が点在する。
+- **変化**: 床のタイル一枚分が四角く抜け、真っ黒な穴になる（縁は床のタイルの切り口、奥に淡く下へ続く段の線がかすかに見える）。穴の縁はタイルの目地に沿う。AR-07-tile-mirror（鏡のタイル）・AR-07-purple-floor-tile（色）・AR-07-floor-puddle（水たまり）とは別で、床に落ちる穴。
+- **box (x1,y1,x2,y2)**: (530,812,665,893)（135x81）
+- **最寄り既存 overlay と実測距離**: AR-07-floor-puddle (38.0)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
+- **6倍クロップ範囲**: 6倍クロップ (419,729)–(675,900)（256x171）。box は窓内で (666,498)–(1476,984)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: replace one floor tile in the marked area (area x=666 to 1476, y=498 to 984 in the 1536x1024 frame) with a square black hole, following the perspective of the floor grid exactly: its edges run along the tile joints, the cut edge of the grey speckled tile is visible as a thin lighter rim, and inside the hole it is almost pure black with faint horizontal lines of steps going down, barely visible. No reflection of the ceiling light inside the hole. All neighbouring tiles and reflections stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: one floor tile has fallen away and left a hole shaped exactly like the tile (a skewed square following the floor grid in the marked area x=666 to 1476, y=498 to 984): deep black inside, a thin bright cut edge of the stone on the near side, and a very faint set of stair lines dropping into the darkness. The surrounding tiles and the white round reflections remain unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: turn one grey tile of the glossy floor at the lower right into an open square pit in the marked area (x=666 to 1476, y=498 to 984): black void with a faint downward staircase glimpsed inside, the stone edge thickness visible on the near and left sides, joints continuing around it. No light inside. Do not touch any other tile or reflection. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: obvious。標準状態ではっきり見える。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-07-floor-black-hole'
+    candidate_id: 'AR-07-floor-black-hole'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E16'
+    base_photo: 'public/images/cam7.webp'
+    category: 'surreal'
+    anomaly_type: 'surreal'
+    location: 'CAM07-E16 の周辺、差分左上 (530,812) 付近（貼り込み後に再計測）'
+    detail: '右手前の床のタイル一枚が、真っ黒な四角い穴になる。'
+    overlay: 'assets/anomaly-overlays/cam07/floor-black-hole.webp'
+    # phase / 目立ち度: late / obvious
+    note: '最寄り既存 overlay は AR-07-floor-puddle（距離 38px）。AR-07-floor-uphill（大面積・床一面）と同じ面で排他。穴は大きく黒いので check-visibility は通る見込み。穴の縁は床の格子の向き（斜め）に合わせる。'
+  ```
+- **相互参照 / 重複精査**: 台帳の床の異変は鏡のタイル（tile-mirror）・ひし形（diamond-tile）・紫（purple-floor-tile）・水たまり・霜・上り坂・足跡系で、タイルが抜けて穴になる異変は無い。cam3 の AR-03-sunken-opening-floor とはカメラ・床の質が別。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-07-floor-uphill（大面積・床一面）/ AR-07-floor-puddle（近接）。併存可=壁・天井・階段・左ガラスの異変。
+
+### AR-07-ceiling-lights-row — 奥の天井に小さな丸い灯が横一列に増える
+
+- **カメラ**: CAM07（`cam7.webp`、675x900）／対象要素: CAM07-E05
+- **型 / カテゴリ / フェーズ / 目立ち度**: multiply / environment / mid / medium
+- **物**: 奥の天井（E05）。小さな黒い器具と、小さな白い丸い埋込灯が数個だけある。
+- **変化**: 丸い換気口の下の天井に、同じ大きさの小さな白い丸い埋込灯が横一列に 6 つ並ぶ（もとは 1〜2 個）。数が増えるだけで、どれも同じ明るさ・大きさ。
+- **box (x1,y1,x2,y2)**: (236,52,293,100)（57x48）
+- **最寄り既存 overlay と実測距離**: AR-07-crane (32.0)。距離は台帳 CAM07 の全 overlay 矩形との実測（大面積の overlay は 30px 規則の例外で除く）。
+- **6倍クロップ範囲**: 6倍クロップ (136,0)–(392,171)（256x171）。box は窓内で (600,312)–(942,600)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: add several identical small round white recessed ceiling lights: in the marked area (x=600 to 942, y=312 to 600 in the 1536x1024 frame) draw a neat horizontal row of six small flat round white lights, each about 40 px wide in this frame and evenly spaced, on the blue-grey ceiling just below the large round vent, each with a small soft glow. They look like the one existing small white recessed light elsewhere on the ceiling. Nothing else changes. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: multiply the small round ceiling lights: in the marked area (x=600 to 942, y=312 to 600) there are now six identical small round recessed white lights in one straight row, same size, same brightness, even spacing, matching the single recessed light that already exists on this ceiling. The big round vent above and everything else stay as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground passage hall (glossy grey terrazzo floor tiles with soft white fluorescent reflections, a wide staircase and a white wall with a grey metal door, a dark glass shop front on the left, a dark staircase on the right). Edit only this: on the ceiling area under the circular vent (x=600 to 942, y=312 to 600 in the 1536x1024 frame) place a straight row of six identical small round white recessed lights (about 40 px diameter each in this frame, even gaps, soft glow). No other lights, no other changes. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: medium。標準状態で見つけられる強さ。つまみで見やすくなる。 登録前に `uv run scripts/check-visibility.py --id` で下限（最大差分 ≥ 40 / 平均差分 ≥ 3 / 差分25以上が100画素以上か面積の25%以上）を確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-07-ceiling-lights-row'
+    candidate_id: 'AR-07-ceiling-lights-row'
+    camera_id: 'CAM07'
+    element_id: 'CAM07-E05'
+    base_photo: 'public/images/cam7.webp'
+    category: 'environment'
+    anomaly_type: 'multiply'
+    location: 'CAM07-E05 の周辺、差分左上 (236,52) 付近（貼り込み後に再計測）'
+    detail: '奥の天井の丸い換気口の下に、小さな丸い埋込灯が横一列に6つ増える。'
+    overlay: 'assets/anomaly-overlays/cam07/ceiling-lights-row.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-07-crane（距離 32px）。AR-07-ceiling-white-sheets（大面積・天井一面）と同じ面で排他。AR-07-lamp-off（丸灯が消える）とは別で、増えるのが異変。灯が小さいので check-visibility を必ず通す（通らなければ灯を大きく・数を減らさず明るく）。'
+  ```
+- **相互参照 / 重複精査**: 台帳の天井の異変は折り鶴・紐・紙飛行機・白いシーツ・天井板の黄色・丸灯の消灯・紙札。灯の数が増える異変は無い。CR-07-22（丸型設備の隣に同じ設備が増える）は換気口の複製（duplicate）で、こちらは埋込灯の数の増殖（multiply）で見え方が別。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-07-ceiling-white-sheets（大面積・天井）/ AR-07-ceiling-sky-hole（同じ天井）。併存可=床・階段・壁・左ガラスの異変。
 
 ## 追加候補 — CAM 08
 
