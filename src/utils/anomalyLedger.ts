@@ -61,6 +61,8 @@ export interface LedgerEntry {
   origin: { x: number; y: number }
   /** Overlay size in pixels. */
   size: { w: number; h: number }
+  /** True for a Reiwa anomaly (the ledger's explicit `reiwa: true`, #83); absent otherwise. */
+  reiwa?: true
 }
 
 const CATEGORY_BY_LEDGER_VALUE: Record<string, AnomalyCategory> = {
@@ -181,6 +183,8 @@ export interface LedgerRecord {
   /** Absent only for non-image `ui_corruption` / `rule_break` (no report window yet, #80); every image entry has one. */
   category?: AnomalyCategory
   alsoCategories?: AnomalyCategory[]
+  /** The ledger's `reiwa: true` (a thing the Showa era did not have); absent = not Reiwa. Any kind may carry it. */
+  reiwa?: true
   /** Pointer to the production spec (e.g. a `### id` section of candidate-pool.md). */
   spec?: string
   detail?: string
@@ -274,6 +278,13 @@ export const parseLedgerRecord = (
         : parseAlsoCategories(rec.also_categories, category)
 
     const detail = kind === 'non_image' ? field(rec, 'detail') : undefined
+    // reiwa: optional; only `true` is accepted (omit it for a non-Reiwa entry).
+    if (has(rec, 'reiwa') && rec.reiwa !== true) {
+      throw new Error(
+        `reiwa "${String(rec.reiwa)}" must be true (omit the key for a non-Reiwa entry)`
+      )
+    }
+    const reiwa = rec.reiwa === true ? (true as const) : undefined
     const spec = has(rec, 'spec') ? field(rec, 'spec') : undefined
 
     // overlay / overlay_origin / dimensions: all required for image+produced, all-or-none for
@@ -300,6 +311,7 @@ export const parseLedgerRecord = (
       ...(cameraId !== undefined ? { cameraId } : {}),
       ...(category ? { category } : {}),
       ...(alsoCategories ? { alsoCategories } : {}),
+      ...(reiwa ? { reiwa } : {}),
       ...(spec ? { spec } : {}),
       ...(detail ? { detail } : {}),
       ...(overlay && origin && size ? { overlay, origin, size } : {}),
@@ -336,8 +348,14 @@ export const toLedgerEntry = (r: LedgerRecord): LedgerEntry => {
     overlay: r.overlay,
     origin: r.origin,
     size: r.size,
+    ...(r.reiwa ? { reiwa: r.reiwa } : {}),
   }
 }
+
+/** Ids of the Reiwa entries (`reiwa` marked), without duplicates, in ledger order. */
+export const reiwaIdsOf = (entries: readonly LedgerEntry[]): string[] => [
+  ...new Set(entries.filter(e => e.reiwa === true).map(e => e.id)),
+]
 
 /** Parse and validate one raw YAML entry as a game entry (kind=image, status=produced). */
 export const parseLedgerEntry = (raw: unknown, index: number): LedgerEntry =>

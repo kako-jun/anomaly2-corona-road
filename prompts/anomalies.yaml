@@ -2778,6 +2778,7 @@ anomalies:
     note: 'プール外の新案。CAM05 の不足を補う面状の変化(天井全体は ceiling-grid の点状が検出不能で失敗したため差し替え)。拡大切り抜きを編集して元写真へ貼り戻し、閾値18で切り出し。alpha内の差分は最大78・平均22.3。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-02-smartphone-facedown'
     candidate_id: 'CR-RZ-02'
+    reiwa: true
     camera_id: 'CAM02'
     element_id: 'CAM02-E20'
     base_photo: 'public/images/cam2.webp'
@@ -2796,6 +2797,7 @@ anomalies:
     note: '令和（CR-RZ-02）。最近傍の既存は AR-02-tile-color（距離110px）。左下の広い床に置いた前景の小物。同要素 E20 の既存（cigarette/receipt/puddle/点検口左タイル）より下で中央寄りで、位置が重ならない。標準で見える（max179.6/mean33.2/n25=1206、自前計測）。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-04-earbud-single'
     candidate_id: 'CR-RZ-04'
+    reiwa: true
     camera_id: 'CAM04'
     element_id: 'CAM04-E15'
     base_photo: 'public/images/cam4.webp'
@@ -2814,6 +2816,7 @@ anomalies:
     note: '令和（CR-RZ-04）。最近傍の既存は AR-04-hatch-frame-round（矩形は重ならず、距離21px）。実寸より約2.5倍に誇張（実寸だと点になるため）。標準で見える（max194.3/mean22.2/n25=285、自前計測）。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-01-power-bank'
     candidate_id: 'CR-RZ-01'
+    reiwa: true
     camera_id: 'CAM01'
     element_id: 'CAM01-E17'
     base_photo: 'public/images/cam1.webp'
@@ -2832,6 +2835,7 @@ anomalies:
     note: '令和（CR-RZ-01）。最近傍の既存は AR-01-lattice-tile（31px）、次点 AR-01-floor-puddle-light（125px）。標準で見える（max143.9/mean18.2/n25=738、自前計測）。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。 排他: AR-01-floor-crosswalk（床一面の大面積。同プレイで共存させない）。'
   - id: 'AR-03-silver-can'
     candidate_id: 'CR-RZ-03'
+    reiwa: true
     camera_id: 'CAM03'
     element_id: 'CAM03-E16'
     base_photo: 'public/images/cam3.webp'
@@ -2850,6 +2854,7 @@ anomalies:
     note: '令和（CR-RZ-03）。最近傍の既存は AR-03-tile-diagonal（87px）。AR-06-tin-planter（昭和のブリキ缶）とは別物。視認性のため缶を大きめに描いた。標準で見える（max216.3/mean30.6/n25=1668、自前計測）。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-05-pet-bottle'
     candidate_id: 'CR-RZ-05'
+    reiwa: true
     camera_id: 'CAM05'
     element_id: 'CAM05-E13'
     base_photo: 'public/images/cam5.webp'
@@ -2868,6 +2873,7 @@ anomalies:
     note: '令和（CR-RZ-05）。最近傍の既存は AR-05-brown-column（51.7px）。cam06/soda.webp（昭和のソーダ瓶）と形が近いが別物（ペットボトルの肩・白いキャップ・琥珀色）。標準で見える（max235.1/mean44.1/n25=2339、自前計測）。再構成一致、マスク外差分ゼロ。ゲーム画面とライブ blink での確認は未了。'
   - id: 'AR-07-mask-on-floor'
     candidate_id: 'CR-RZ-06'
+    reiwa: true
     camera_id: 'CAM07'
     element_id: 'CAM07-E16'
     base_photo: 'public/images/cam7.webp'

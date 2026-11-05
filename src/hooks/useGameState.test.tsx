@@ -204,6 +204,21 @@ describe('spawning from the ledger', () => {
     expect(result.current.stats.totalAnomalies).toBe(2)
   })
 
+  it('keeps Reiwa entries out until elder3 is saved (#83), and stops spawning when only they remain', () => {
+    ledger.push({ ...entry('rz', 1), reiwa: true })
+    const { result } = start()
+    advance(FIRST + INTERVAL * 2)
+    expect(result.current.stats.totalAnomalies).toBe(0)
+  })
+
+  it('draws Reiwa entries once elder3 is saved (#83)', () => {
+    saveData.update(cur => ({ ...cur, flags: { ...cur.flags, elder3: true } }))
+    ledger.push({ ...entry('rz', 1), reiwa: true })
+    const { result } = start()
+    advance(FIRST + 100)
+    expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['rz'])
+  })
+
   it('does not retry every frame while no camera is free', () => {
     ledger.push(entry('a', 1), entry('b', 1))
     const { result } = start()

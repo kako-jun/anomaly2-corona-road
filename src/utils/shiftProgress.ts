@@ -1,13 +1,15 @@
 import ledger from 'virtual:dialogue'
+import anomalies from 'virtual:anomalies'
+import { reiwaIdsOf } from './anomalyLedger'
 import { newlyRaisedFlags, storyFlagNames } from './dialogueEngine'
 import { update } from './saveData'
 import type { SaveData } from './saveData'
 
 /**
- * Ids of Reiwa-themed anomalies. The anomaly ledger has no such marking yet (docs/story.md), so this
- * is empty; replace it with the marked ids once the ledger carries the marking.
+ * Ids of the Reiwa anomalies: ledger entries (image + produced) marked `reiwa: true`, passed in through
+ * `virtual:anomalies` (#83). The anomaly ledger is the only source; nothing is listed here.
  */
-const REIWA_IDS: ReadonlySet<string> = new Set()
+const REIWA_IDS: ReadonlySet<string> = new Set(reiwaIdsOf(anomalies))
 
 const STORY_FLAGS = storyFlagNames(ledger)
 

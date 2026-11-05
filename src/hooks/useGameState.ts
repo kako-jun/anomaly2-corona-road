@@ -5,6 +5,7 @@ import {
   CAMERAS,
   msToGameTime,
   getGamePhase,
+  DRAW_WEIGHT_EXPONENT,
 } from '../utils/gameConfig'
 import {
   CHILD_FLAG,
@@ -13,7 +14,11 @@ import {
   pacingFor,
 } from '../utils/endingJudge'
 import { load } from '../utils/saveData'
-import { createAnomaly, pickLedgerEntry } from '../utils/anomalyData'
+import {
+  REIWA_UNLOCK_FLAG,
+  createAnomaly,
+  pickLedgerEntry,
+} from '../utils/anomalyData'
 import type { FlagEvent } from './useSubtitle'
 import {
   raiseFlagsAtStart,
@@ -254,8 +259,17 @@ export const useGameState = () => {
           )
       ).map(c => c.id)
       const used = usedLedgerIdsRef.current
+      // Reiwa anomalies join the draw once elder3 is saved; one raised mid-shift counts from the next spawn.
+      const reiwaUnlocked = load().flags[REIWA_UNLOCK_FLAG] === true
       for (;;) {
-        const entry = pickLedgerEntry(ANOMALY_LEDGER, freeCameraIds, used)
+        const entry = pickLedgerEntry(
+          ANOMALY_LEDGER,
+          freeCameraIds,
+          used,
+          Math.random,
+          DRAW_WEIGHT_EXPONENT,
+          reiwaUnlocked
+        )
         if (!entry) break
         used.add(entry.id)
         let url: string
@@ -274,7 +288,9 @@ export const useGameState = () => {
         }))
         return 'spawned'
       }
-      return ANOMALY_LEDGER.some(e => !used.has(e.id))
+      return ANOMALY_LEDGER.some(
+        e => !used.has(e.id) && (reiwaUnlocked || e.reiwa !== true)
+      )
         ? 'no-free-camera'
         : 'exhausted'
     },
