@@ -112,38 +112,6 @@
 
 台帳に `planned` で載せた画像案の制作仕様の詳細。制作して昇格したら、その案の `###` 節を削除する。
 
-### AR-02-wall-bird-gone — 右壁の黒い店舗ガラスの白い鳥の装飾が一羽だけ消える
-
-- **カメラ**: CAM02（`cam2.webp`、676x900）／対象要素: CAM02-E17
-- **型 / カテゴリ / フェーズ / 目立ち度**: remove_object / object / mid / medium
-- **物**: 右側の黒い店舗ガラスに散る白い飾りのうち、柱寄り（画面左）の大きな鳥（翼を広げた白い鳥、約 21x44 px。星形の飾りの下、右端の小さな鳥の上）。
-- **変化**: この一羽だけが消え、黒いガラスと周りの星形・他の鳥はそのまま。消えた跡は一様に黒く、ガラスの反射と細かな粒状感だけが続く。星・鳥の数を数えた人だけが気づく『減る』変化（AR-02-wall-bird-triplet は同じ装飾が『増える』）。
-- **box (x1,y1,x2,y2)**: (636,248,664,302)（28x54）
-- **最寄り既存 overlay と実測距離**: AR-02-smoke (31.0)、次点 AR-02-duplicate-coffee-sign (64.0)。
-- **6倍クロップ範囲**: 6倍クロップ (420,190)–(676,361)（256x171）。box は窓内で (1296,348)–(1464,672)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: In the lower-right of the frame, on the large dark glass storefront wall (right edge of the crop), there is a row of white decorative silhouettes (stars and flying birds). The tall white bird with spread wings located at about x=1296 to 1464, y=350 to 670 in the 1536x1024 frame is removed completely: that area becomes the same plain near-black glass with the same faint reflections and grain as the glass around it, as if the bird had never been there. The other stars and birds, including the small bird further down and the one at the right edge, stay exactly as they are. Add nothing. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: In the lower-right of the frame, on the dark glass storefront wall at the right edge, erase one white bird silhouette (the larger white bird with spread wings, inside the area x=1296 to 1464, y=348 to 672 in the 1536x1024 frame). Fill the gap with seamless dark glass, continuing the faint cold reflections and the film grain. Do not touch any star shape, any other bird, the wooden easel or the frame edges. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: On the dark glass wall at the right of the crop, one of the white wing-spread bird decorations is missing: inside x=1296 to 1464, y=348 to 672 (1536x1024 frame) the glass is simply empty and dark, with no outline, no ghost, no discolouration where the decoration used to be. Every other decoration keeps its exact position and brightness. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **視認性の見立て**: 白い飾り（輝度が高い）が黒いガラスに変わるので、消した面の差分は 100 を超える見込み。面積は鳥の実形で約 500〜700 画素。下限（最大差分 40、平均 3、差分25以上が 100 画素以上）は余裕で通る見立て。
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-02-wall-bird-gone'
-    candidate_id: 'AR-02-wall-bird-gone'
-    camera_id: 'CAM02'
-    element_id: 'CAM02-E17'
-    base_photo: 'public/images/cam2.webp'
-    category: 'object'
-    anomaly_type: 'remove_object'
-    location: 'CAM02-E17 の差分左上 (636,248) 付近（貼り込み後に再計測）'
-    detail: '右壁の黒い店舗ガラスの白い鳥の装飾が一羽だけ消える。'
-    overlay: 'assets/anomaly-overlays/cam02/wall-bird-gone.webp'
-    # phase / 目立ち度: mid / medium
-    note: '最寄り既存 overlay は AR-02-smoke（box 距離 31px）。壁面の煙が出ていると鳥の消失が隠れるため、同プレイでは避けたい。同じ装飾群の AR-02-wall-bird-triplet（鳥が三羽に増える）と、鳥の数が矛盾するので同プレイで共存させない。'
-  ```
-- **相互参照 / 重複精査**: AR-02-pillar-sign-gone は『看板が消えて日焼け跡が残る』で、対象（柱上の看板）も跡の見え方も別。ここは何も跡が残らない黒いガラス。AR-02-flower-ornament/red-star（星の形・色）とは対象の飾りも変化も別。candidate-pool に鳥の装飾を消す案は無い。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-02-wall-bird-triplet / AR-02-smoke。併存可=床・天井・左シャッター・柱の異変。
-
 ### AR-02-pillar-wax-melt — 柱の左の白い面の下半分が、蝋のように溶けて垂れ落ちる
 
 - **カメラ**: CAM02（`cam2.webp`、676x900）／対象要素: CAM02-E10
