@@ -16,6 +16,8 @@ const ledger: DialogueLedger = {
     { name: 'quiet', when: { foundUnique: 3 } },
     { name: 'child', when: { reiwaFound: 1, requires: ['first'] } },
     { name: 'again', when: { loops: 1 } },
+    { name: 'twice', when: { loops: 2 } },
+    { name: 'many', when: { foundTotal: 4 } },
   ],
   // "quiet" has no story conversation on purpose.
   entries: [
@@ -40,6 +42,19 @@ describe('recordFound', () => {
     recordFound('a')
     recordFound('a')
     expect(load().foundTotal).toBe(2)
+  })
+  it('raises a foundTotal flag exactly at the boundary, counting repeats', async () => {
+    const { recordFound, load } = await fresh()
+    for (let i = 0; i < 3; i++) expect(recordFound('a')).toEqual([])
+    expect(load().flags.many).toBeUndefined()
+    expect(recordFound('a')).toEqual(['many'])
+    expect(load().flags.many).toBe(true)
+    expect(load().foundIds).toEqual(['a'])
+  })
+  it('a foundTotal flag without a story is not queued', async () => {
+    const { recordFound, load } = await fresh()
+    for (let i = 0; i < 4; i++) recordFound('a')
+    expect(load().pendingStories).toEqual([])
   })
   it('does not duplicate foundIds', async () => {
     const { recordFound, load } = await fresh()
@@ -118,6 +133,16 @@ describe('raiseFlagsAtStart', () => {
     expect(raiseFlagsAtStart()).toEqual(['again'])
     expect(load().flags).toEqual({ again: true })
     expect(load().pendingStories).toEqual(['again'])
+  })
+  it('raises loops flags at their own boundary on the next start', async () => {
+    const { recordShiftEnd, raiseFlagsAtStart, load } = await fresh()
+    recordShiftEnd()
+    expect(raiseFlagsAtStart()).toEqual(['again'])
+    expect(load().flags.twice).toBeUndefined()
+    recordShiftEnd()
+    expect(load().flags.twice).toBeUndefined()
+    expect(raiseFlagsAtStart()).toEqual(['twice'])
+    expect(load().flags).toEqual({ again: true, twice: true })
   })
   it('does not return the same flag twice', async () => {
     const { recordShiftEnd, raiseFlagsAtStart } = await fresh()

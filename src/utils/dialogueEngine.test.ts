@@ -184,6 +184,115 @@ describe('pick by kind and when', () => {
   })
 })
 
+/** An entry with a post-flag release gate. */
+const lk = (
+  id: string,
+  kind: DialogueKind,
+  unlock: string,
+  when: Record<string, string> = {}
+): DialogueEntry => ({ ...mk(id, kind, when), unlock }) as DialogueEntry
+
+describe('unlock (post-flag release gate)', () => {
+  const locked = [
+    lk('opening-u', 'opening', 'g'),
+    lk('chatter-u', 'chatter', 'g'),
+    lk('false-report-u', 'false-report', 'g'),
+    lk('closing-u', 'closing', 'g', { result: 'dawn' }),
+    lk('midpoint-u', 'midpoint', 'g', { stage: 'mid' }),
+    lk('story-u', 'story', 'g', { flag: 'a' }),
+  ]
+  type Flags = Record<string, boolean>
+  const pickers: [string, (l: DialogueLedger, f?: Flags) => unknown][] = [
+    ['opening', (l, f) => pickOpening(l, noUsed(), rng0, f)],
+    ['chatter', (l, f) => pickChatter(l, noUsed(), rng0, f)],
+    ['false-report', (l, f) => pickFalseReport(l, null, noUsed(), rng0, f)],
+    ['closing', (l, f) => pickClosing(l, 'dawn', noUsed(), rng0, f)],
+    ['midpoint', (l, f) => pickMidpoint(l, 'mid', noUsed(), rng0, f)],
+    ['story', (l, f) => pickStory(l, 'a', noUsed(), rng0, f)],
+  ]
+  const idOf: Record<string, string> = {
+    opening: 'opening-u',
+    chatter: 'chatter-u',
+    'false-report': 'false-report-u',
+    closing: 'closing-u',
+    midpoint: 'midpoint-u',
+    story: 'story-u',
+  }
+  it.each(pickers)('%s: a locked entry is not a candidate', (_kind, run) => {
+    const l = ledgerOf(locked)
+    expect(run(l)).toBeNull()
+    expect(run(l, {})).toBeNull()
+    expect(run(l, { g: false })).toBeNull()
+    expect(run(l, { other: true })).toBeNull()
+  })
+  it.each(pickers)('%s: an unlocked entry is a candidate', (kind, run) => {
+    const p = run(ledgerOf(locked), { g: true }) as { entry: DialogueEntry }
+    expect(p.entry.id).toBe(idOf[kind])
+  })
+  it('anomaly-line: locked own lines are skipped and not marked used', () => {
+    const own = lk('an-x-u', 'anomaly-line', 'g', { anomaly: 'x' })
+    const common = mk('false-report-1', 'false-report')
+    const l = ledgerOf([own, common])
+    const p = pickFalseReport(l, 'x', noUsed(), rng0, {})
+    expect(p?.entry.id).toBe('false-report-1')
+    expect(p?.used.usedLines).toEqual({})
+    const q = pickFalseReport(l, 'x', noUsed(), rng0, { g: true })
+    expect(q?.entry.id).toBe('an-x-u')
+    expect(q?.used.usedLines).toEqual({ x: ['an-x-u'] })
+  })
+  it('a locked entry never enters the bag nor the used list', () => {
+    const l = ledgerOf([
+      mk('chatter-1', 'chatter'),
+      lk('chatter-u', 'chatter', 'g'),
+    ])
+    let used = noUsed()
+    for (let i = 0; i < 6; i++) {
+      const p = pickChatter(l, used, rngHigh, {})
+      expect(p?.entry.id).toBe('chatter-1')
+      used = p!.used
+    }
+    expect(used.usedChatter).not.toContain('chatter-u')
+  })
+  it('after the flag is raised the entry joins the bag', () => {
+    const l = ledgerOf([
+      mk('chatter-1', 'chatter'),
+      lk('chatter-u', 'chatter', 'g'),
+    ])
+    const used: UsedState = { usedLines: {}, usedChatter: ['chatter-1'] }
+    expect(pickChatter(l, used, rng0, {})?.entry.id).toBe('chatter-1')
+    expect(pickChatter(l, used, rng0, { g: true })?.entry.id).toBe('chatter-u')
+  })
+  it('entries without unlock stay valid whatever the flags', () => {
+    const l = ledgerOf([mk('chatter-1', 'chatter')])
+    expect(pickChatter(l, noUsed(), rng0)?.entry.id).toBe('chatter-1')
+    expect(pickChatter(l, noUsed(), rng0, {})?.entry.id).toBe('chatter-1')
+    expect(pickChatter(l, noUsed(), rng0, { g: true })?.entry.id).toBe(
+      'chatter-1'
+    )
+  })
+  it('selectNext passes the flags to every source', () => {
+    const l = ledgerOf(locked)
+    const input = {
+      ledger: l,
+      used: noUsed(),
+      rng: rng0,
+      pendingFlags: ['a'],
+      pendingFalseReport: { anomalyId: null },
+      pendingMidpoint: 'mid' as const,
+    }
+    const flags = { g: true }
+    expect(selectNext(input)).toBeNull()
+    expect(selectNext({ ...input, flags })?.entry.id).toBe('story-u')
+    const noStory = { ...input, pendingFlags: [], flags }
+    expect(selectNext(noStory)?.entry.id).toBe('false-report-u')
+    const noFalse = { ...noStory, pendingFalseReport: null }
+    expect(selectNext(noFalse)?.entry.id).toBe('midpoint-u')
+    expect(selectNext({ ...noFalse, pendingMidpoint: null })?.entry.id).toBe(
+      'chatter-u'
+    )
+  })
+})
+
 describe('pickFalseReport (decision table)', () => {
   const own1 = mk('an-x-1', 'anomaly-line', { anomaly: 'x' })
   const own2 = mk('an-x-2', 'anomaly-line', { anomaly: 'x' })
@@ -357,6 +466,42 @@ describe('isFlagMet', () => {
         progress({ foundIds: ['a', 'a'], reiwaIds: new Set(['a']) })
       )
     ).toBe(false)
+  })
+  it.each([
+    [2, false],
+    [3, true],
+    [4, true],
+  ])('foundTotal 3 with %i total -> %s', (n, ok) => {
+    expect(
+      isFlagMet(
+        { name: 'g', when: { foundTotal: 3 } },
+        progress({ foundTotal: n })
+      )
+    ).toBe(ok)
+  })
+  it('foundTotal counts repeats; foundUnique does not', () => {
+    const p = progress({ foundIds: ['a'], foundTotal: 3 })
+    expect(isFlagMet({ name: 'g', when: { foundTotal: 3 } }, p)).toBe(true)
+    expect(isFlagMet({ name: 'g', when: { foundUnique: 2 } }, p)).toBe(false)
+  })
+  it('a missing foundTotal in the progress counts as 0', () => {
+    expect(
+      isFlagMet(
+        { name: 'g', when: { foundTotal: 1 } },
+        progress({ foundTotal: undefined })
+      )
+    ).toBe(false)
+  })
+  it.each([
+    [0, false],
+    [1, true],
+  ])('foundUnique 1 with %i found kinds -> %s', (n, ok) => {
+    expect(
+      isFlagMet(
+        { name: 'g', when: { foundUnique: 1 } },
+        progress({ foundIds: Array.from({ length: n }, (_, i) => `k${i}`) })
+      )
+    ).toBe(ok)
   })
   it('uses the raised argument for requires when given', () => {
     const def: FlagDef = { name: 'g', when: { requires: ['p'] } }
