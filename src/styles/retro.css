@@ -1600,6 +1600,18 @@
   padding-bottom: 8px !important;
 }
 
+/* SELECT TYPE keys: the step line of the key image sits about 40% down; put the text on the lower face, below it
+   (padding-top only; the key height is unchanged because min-height is border-box) */
+.cat-grid .key {
+  padding-top: 10px !important;
+  padding-bottom: 0 !important;
+}
+@media (min-width: 900px) {
+  .cat-grid .key {
+    padding-top: 10px !important;
+  }
+}
+
 /* 6. small display windows: remove the white haze ellipses that read as grey smudges behind the green digits */
 .vfd::after,
 .lamps::after {
