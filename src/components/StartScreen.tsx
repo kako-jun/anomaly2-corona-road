@@ -62,7 +62,7 @@ export const StartScreen = ({ onStart }: StartScreenProps) => {
         <div className="start-row">
           <div className="start-lab">報告</div>
           <div className="start-desc">
-            <span className="start-rep">REPORT</span> を押して種類を選ぶ
+            <span className="start-rep">REPORT</span> を押してカテゴリを選ぶ
           </div>
         </div>
 

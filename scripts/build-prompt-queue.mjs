@@ -2,73 +2,76 @@
 // Build prompts/queue/index.html from prompts/anomalies.yaml
 // Lists every kind=image entry (produced and planned; status is shown, planned is highlighted as
 // not yet made). kind=non_image entries have no image to generate and are left out.
-import { readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const yamlPath = join(root, "prompts", "anomalies.yaml");
-const outPath = join(root, "prompts", "queue", "index.html");
+const root = dirname(dirname(fileURLToPath(import.meta.url)))
+const yamlPath = join(root, 'prompts', 'anomalies.yaml')
+const outPath = join(root, 'prompts', 'queue', 'index.html')
 
 const ANOMALY_HINTS = {
-  add_object: "Add a new object to the scene",
-  remove_object: "Remove an existing object cleanly, inpaint background",
-  add_person: "Add a human figure",
-  add_creature: "Add a non-human creature",
-  state_change: "Change the state of an existing element",
-  duplicate: "Duplicate an existing element so it appears twice",
-  multiply: "Increase the count of an element abnormally",
-  displace: "Move an existing element to an unnatural position",
-  color_shift: "Shift the color of a specific region only",
-  text_change: "Change text on a sign or display",
-  surreal: "Apply a reality-breaking distortion",
-  reflection: "Create an anomalous reflection or shadow",
-};
+  add_object: 'Add a new object to the scene',
+  remove_object: 'Remove an existing object cleanly, inpaint background',
+  add_person: 'Add a human figure',
+  add_creature: 'Add a non-human creature',
+  state_change: 'Change the state of an existing element',
+  duplicate: 'Duplicate an existing element so it appears twice',
+  multiply: 'Increase the count of an element abnormally',
+  displace: 'Move an existing element to an unnatural position',
+  color_shift: 'Shift the color of a specific region only',
+  text_change: 'Change text on a sign or display',
+  surreal: 'Apply a reality-breaking distortion',
+  reflection: 'Create an anomalous reflection or shadow',
+}
 
 function unquote(s) {
-  s = s.trim();
-  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
-    return s.slice(1, -1);
+  s = s.trim()
+  if (
+    (s.startsWith('"') && s.endsWith('"')) ||
+    (s.startsWith("'") && s.endsWith("'"))
+  ) {
+    return s.slice(1, -1)
   }
-  return s;
+  return s
 }
 
 // Minimal parser for the fixed shape: `anomalies:` list of mappings, 2-space indent.
 function parseAnomalies(yaml) {
-  const items = [];
-  let cur = null;
-  let inList = false;
+  const items = []
+  let cur = null
+  let inList = false
   for (const raw of yaml.split(/\r?\n/)) {
-    const line = raw.replace(/\s+$/, "");
-    if (!line || line.trim().startsWith("#")) continue;
-    if (line === "anomalies:") {
-      inList = true;
-      continue;
+    const line = raw.replace(/\s+$/, '')
+    if (!line || line.trim().startsWith('#')) continue
+    if (line === 'anomalies:') {
+      inList = true
+      continue
     }
-    if (!inList) continue;
-    const itemStart = line.match(/^  - ([a-zA-Z0-9_]+):\s*(.*)$/);
+    if (!inList) continue
+    const itemStart = line.match(/^  - ([a-zA-Z0-9_]+):\s*(.*)$/)
     if (itemStart) {
-      if (cur) items.push(cur);
-      cur = {};
-      cur[itemStart[1]] = unquote(itemStart[2]);
-      continue;
+      if (cur) items.push(cur)
+      cur = {}
+      cur[itemStart[1]] = unquote(itemStart[2])
+      continue
     }
-    const prop = line.match(/^    ([a-zA-Z0-9_]+):\s*(.*)$/);
+    const prop = line.match(/^    ([a-zA-Z0-9_]+):\s*(.*)$/)
     if (prop && cur) {
-      cur[prop[1]] = unquote(prop[2]);
+      cur[prop[1]] = unquote(prop[2])
     }
   }
-  if (cur) items.push(cur);
-  return items;
+  if (cur) items.push(cur)
+  return items
 }
 
 function buildPrompt(a) {
-  const hint = ANOMALY_HINTS[a.anomaly_type] || a.anomaly_type;
+  const hint = ANOMALY_HINTS[a.anomaly_type] || a.anomaly_type
   return `Edit the attached surveillance camera photo.
 
 Make ONLY this single change:
 - ${hint}: ${a.detail}
-- Location in frame: ${a.location || "(see the spec / element inventory)"}
+- Location in frame: ${a.location || '(see the spec / element inventory)'}
 
 CRITICAL — keep everything else PIXEL-IDENTICAL to the source image:
 - camera angle, framing, lens distortion, aspect ratio
@@ -83,30 +86,30 @@ Output style:
 - photo-realistic
 - matches the original's surveillance camera aesthetic exactly
 - same resolution as input
-- the change should be subtle enough that a casual viewer might miss it`;
+- the change should be subtle enough that a casual viewer might miss it`
 }
 
 function esc(s) {
-  return String(s ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
 }
 
 function renderRow(a, i) {
-  const prompt = buildPrompt(a);
-  const planned = (a.status || "produced") === "planned";
-  return `      <tr${planned ? ' class="planned"' : ""}>
+  const prompt = buildPrompt(a)
+  const planned = (a.status || 'produced') === 'planned'
+  return `      <tr${planned ? ' class="planned"' : ''}>
         <td class="num">${i + 1}</td>
         <td class="id">${esc(a.id)}</td>
-        <td class="status">${planned ? "未作成 (planned)" : "produced"}</td>
+        <td class="status">${planned ? '未作成 (planned)' : 'produced'}</td>
         <td><code>${esc(a.base_photo)}</code></td>
-        <td class="kind">${esc(a.category || "")} / ${esc(a.anomaly_type || "")}${a.phase ? ` / ${esc(a.phase)}` : ""}</td>
+        <td class="kind">${esc(a.category || '')} / ${esc(a.anomaly_type || '')}${a.phase ? ` / ${esc(a.phase)}` : ''}</td>
         <td>${esc(a.location)}</td>
         <td>${esc(a.detail)}</td>
         <td><button data-prompt="${esc(prompt)}">Copy</button></td>
-      </tr>`;
+      </tr>`
 }
 
 function renderHtml(items) {
@@ -160,7 +163,7 @@ function renderHtml(items) {
         </tr>
       </thead>
       <tbody>
-${items.map(renderRow).join("\n")}
+${items.map(renderRow).join('\n')}
       </tbody>
     </table>
   </main>
@@ -179,11 +182,13 @@ ${items.map(renderRow).join("\n")}
   </script>
 </body>
 </html>
-`;
+`
 }
 
-const yaml = readFileSync(yamlPath, "utf8");
-const all = parseAnomalies(yaml);
-const items = all.filter((a) => (a.kind || "image") === "image");
-writeFileSync(outPath, renderHtml(items));
-console.log(`wrote ${outPath} (${items.length} image items of ${all.length} entries; non_image skipped)`);
+const yaml = readFileSync(yamlPath, 'utf8')
+const all = parseAnomalies(yaml)
+const items = all.filter(a => (a.kind || 'image') === 'image')
+writeFileSync(outPath, renderHtml(items))
+console.log(
+  `wrote ${outPath} (${items.length} image items of ${all.length} entries; non_image skipped)`
+)

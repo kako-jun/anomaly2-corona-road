@@ -125,7 +125,7 @@ describe('ReportDialog', () => {
   it('is a modal dialog labelled by its title', () => {
     const { dialog } = setupDialog()
     expect(dialog).toHaveAttribute('aria-modal', 'true')
-    expect(dialog).toHaveAccessibleName('SELECT TYPE')
+    expect(dialog).toHaveAccessibleName('SELECT CATEGORY')
     expect(dialog.getAttribute('aria-labelledby')).toBe('dlgTitle')
   })
 
