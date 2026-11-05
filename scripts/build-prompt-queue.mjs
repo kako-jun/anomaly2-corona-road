@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 // Build prompts/queue/index.html from prompts/anomalies.yaml
+// Lists every kind=image entry (produced and planned; status is shown, planned is highlighted as
+// not yet made). kind=runtime entries have no image to generate and are left out.
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -66,7 +68,7 @@ function buildPrompt(a) {
 
 Make ONLY this single change:
 - ${hint}: ${a.detail}
-- Location in frame: ${a.location}
+- Location in frame: ${a.location || "(see the spec / element inventory)"}
 
 CRITICAL — keep everything else PIXEL-IDENTICAL to the source image:
 - camera angle, framing, lens distortion, aspect ratio
@@ -94,9 +96,11 @@ function esc(s) {
 
 function renderRow(a, i) {
   const prompt = buildPrompt(a);
-  return `      <tr>
+  const planned = (a.status || "produced") === "planned";
+  return `      <tr${planned ? ' class="planned"' : ""}>
         <td class="num">${i + 1}</td>
         <td class="id">${esc(a.id)}</td>
+        <td class="status">${planned ? "未作成 (planned)" : "produced"}</td>
         <td><code>${esc(a.base_photo)}</code></td>
         <td class="kind">${esc(a.category || "")} / ${esc(a.anomaly_type || "")}${a.phase ? ` / ${esc(a.phase)}` : ""}</td>
         <td>${esc(a.location)}</td>
@@ -127,6 +131,9 @@ function renderHtml(items) {
     .num { width: 40px; color: var(--muted); font-variant-numeric: tabular-nums; }
     .id { font-family: ui-monospace, Menlo, Consolas, monospace; }
     .kind { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+    tr.planned td { background: #1d1a10; }
+    .status { font-size: 11px; white-space: nowrap; color: var(--muted); }
+    tr.planned .status { color: #fbbf24; font-weight: 700; }
     code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11px; color: var(--accent); }
     button { min-width: 72px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--text); background: #202838; font: inherit; cursor: pointer; }
     button:hover { border-color: var(--accent); }
@@ -144,6 +151,7 @@ function renderHtml(items) {
         <tr>
           <th class="num">#</th>
           <th>id</th>
+          <th>status</th>
           <th>base photo</th>
           <th>kind</th>
           <th>location</th>
@@ -175,6 +183,7 @@ ${items.map(renderRow).join("\n")}
 }
 
 const yaml = readFileSync(yamlPath, "utf8");
-const items = parseAnomalies(yaml);
+const all = parseAnomalies(yaml);
+const items = all.filter((a) => (a.kind || "image") === "image");
 writeFileSync(outPath, renderHtml(items));
-console.log(`wrote ${outPath} (${items.length} items)`);
+console.log(`wrote ${outPath} (${items.length} image items of ${all.length} entries; runtime skipped)`);

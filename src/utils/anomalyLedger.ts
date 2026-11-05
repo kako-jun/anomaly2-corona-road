@@ -165,7 +165,7 @@ export interface LedgerRecord {
   anomalyType: AnomalyType
   /** Absent only for runtime entries (the camera is drawn at random when the anomaly appears). */
   cameraId?: number
-  /** Absent only for runtime `ui_corruption` / `rule_break` (no report window yet, #80) and the like. */
+  /** Absent only for runtime `ui_corruption` / `rule_break` (no report window yet, #80); every image entry has one. */
   category?: AnomalyCategory
   alsoCategory?: AnomalyCategory
   /** Pointer to the production spec (e.g. a `### id` section of candidate-pool.md). */

@@ -79,7 +79,7 @@ prompts/
 | runtime（planned / produced とも） | `anomaly_type`（runtime 型）`detail`                                                        | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_category` は image と同じ検証（camera 不可）で任意 |
 
 - `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### CR-RZ-07`）。
-- runtime の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（`environment` 仮）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
+- runtime の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に runtime 型、runtime に画像型）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
 - ゲーム（`virtual:anomalies`）に渡るのは `kind: image` かつ `status: produced` だけ。planned と runtime は検証されるが抽選には出ない（出現ロジックと効果は #78・#79・#80）。
 - 件数の要約: `npm run ledger:summary`（kind / status / category / anomaly_type とそのクロス集計。ビルドと同じ検証を通る）。
@@ -90,7 +90,7 @@ prompts/
 
 `anomaly_type` に書ける値:
 
-上の4行（`feed_glitch` / `sound` / `ui_corruption` / `rule_break`）は `kind: runtime` 専用で、前の12行は `kind: image` 専用（食い違いはビルドが失敗する）。ゲームは image の値を異変の抽選の重み（カメラ内の型ごとの未使用件数）に使う。未知の値はビルドが落ちる。型を増やすときは `src/utils/anomalyLedger.ts` の `ANOMALY_TYPES` も更新する（この表と `ANOMALY_TYPES` の一致はテストで縛ってある）。
+下の表の末尾4行（`feed_glitch` / `sound` / `ui_corruption` / `rule_break`）は `kind: runtime` 専用で、先頭12行は `kind: image` 専用（食い違いはビルドが失敗する）。ゲームは image の値を異変の抽選の重み（カメラ内の型ごとの未使用件数）に使う。未知の値はビルドが落ちる。型を増やすときは `src/utils/anomalyLedger.ts` の `ANOMALY_TYPES` も更新する（この表と `ANOMALY_TYPES` の一致はテストで縛ってある）。
 
 | type            | 説明                      | 例                                           |
 | --------------- | ------------------------- | -------------------------------------------- |
@@ -158,6 +158,6 @@ Claude は enum から適切な `anomaly_type` を選び、`location` と `detai
 
 異変の多様性を確保するため、写真要素ごとの未採用案は `candidate-pool.md` に集約する。猫、物の増減、反射、床壁天井の模様、文字反転、色形、段数、ノブ左右、吊り物、紙、水たまりを含む。候補数は完成素材数ではない。
 
-`anomalies.yaml` は全異変の台帳（以下は画像異変の運用）。現在の `queue/index.html` は状態で絞らず登録全件を表示するため、表示された項目が生成待ちとは限らない。`review_status: composited` は静止差分の試作で、完成・採用・ゲームへの実装を意味しない。`category` はゲームの報告用5分類に合わせた値で、猫などの小動物も現在は `object` に仮分類している（ゲーム側の報告分類確定時に見直す）。`camera` は画面全体の乱れ専用で、runtime の `feed_glitch` が使う（積まれた物なども `object`）。
+`anomalies.yaml` は全異変の台帳（以下は画像異変の運用）。`queue/index.html` は `kind: image` の全件（`produced` と `planned`）を表示し、status 列で区別する（`planned` は「未作成」として強調）。`kind: runtime` は画像を作らないので載せない。`produced` の行は制作済みなので、表示された項目が生成待ちとは限らない。`review_status: composited` は静止差分の試作で、完成・採用・ゲームへの実装を意味しない。`category` はゲームの報告用5分類に合わせた値で、猫などの小動物も現在は `object` に仮分類している（ゲーム側の報告分類確定時に見直す）。`camera` は画面全体の乱れ専用で、runtime の `feed_glitch` が使う（積まれた物なども `object`）。
 
 異変を追加する前に、制作済み台帳と候補一覧の両方で、対象・変化・見え方・報告カテゴリの類似を照合する。制作に選んだ候補は台帳へ移し、二重に数えない。詳細な判断基準は制作スキルの「追加前の類似チェック」を参照。
