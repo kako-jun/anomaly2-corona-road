@@ -3067,7 +3067,7 @@ anomalies:
     camera_id: 'CAM03'
     element_id: 'CAM03-E01'
     base_photo: 'public/images/cam3.webp'
-    category: 'environment'
+    category: 'object'
     anomaly_type: 'add_object'
     phase: 'mid'
     subtlety: 'medium'

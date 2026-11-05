@@ -39,7 +39,7 @@
 - **Categories**: 5 types (the ledger's `category`; the correct report is the category of the anomaly on the camera you are watching)
   - Camera: the whole feed going wrong (picture glitches). Handled as a runtime anomaly, not an image overlay, so the ledger has no `camera` entry; changes to a thing in the picture are Object
   - Object: Physical items appearing/disappearing/changing
-  - Environment: Lighting, structure, atmosphere changes (the state of the floor / wall / ceiling itself: color, orientation, reflection, frost; hung or attached decorations are Object; see `prompts/README.md`)
+  - Environment: Lighting, structure, atmosphere changes (boundary with Object: see `prompts/README.md`)
   - Person: Human figures, shadows, movements
   - Surreal: Reality-breaking phenomena
 
