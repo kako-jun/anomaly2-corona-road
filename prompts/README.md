@@ -80,7 +80,7 @@ planned の画像案は制作済みの後ろ、runtime はその後ろに置く�
 | image + planned                    | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                           |
 | runtime（planned / produced とも） | `anomaly_type`（runtime 型）`detail`                                                        | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_categories` は image と同じ検証（camera 不可）で任意 |
 
-- `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### AR-01-ceiling-spider`）。
+- `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### AR-01-outlets-multiply`）。
 - runtime の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に runtime 型、runtime に画像型）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
 - ゲーム（`virtual:anomalies`）に渡るのは `kind: image` かつ `status: produced` だけ。planned と runtime は検証されるが抽選には出ない（出現ロジックと効果は #78・#79・#80）。
