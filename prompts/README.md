@@ -22,7 +22,7 @@ prompts/
 - `.agents/skills/corona-road-anomaly/SKILL.md` — 候補選定から差分合成・レビュー・登録までの反復手順（prompts/ の外にある制作スキル）。
 - 異変の全件は `anomalies.yaml`（制作済み=`produced`、未制作=`planned`、画像=`image`、画面の乱れ・音・UI・ルール=`runtime`）。まだ台帳に載せていない発想の段階の案が `candidate-pool.md`。選ぶ時は該当案を候補から削除して台帳へ一度だけ登録する（昇格ルールは下の「台帳の書式」）。
 - `queue/index.html` と `atlas/*.svg` は**生成物**。手で編集せず、元の正本を直して再生成する。
-- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、未制作の昭和案は `candidate-pool.md` の「昭和テーマ候補」にある。
+- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、未制作の昭和案は台帳 `anomalies.yaml` に `status: planned`（note に「昭和テーマ」）で載っている。
 - 4人目（令和のZ世代の子供）の「令和の異変（どれでも3つ見つければ条件成立）」の候補は `candidate-pool.md` の「令和テーマ候補」にある（制作済みの令和の画像異変は `anomalies.yaml` の `candidate_id: CR-RZ-*` で探す（#83 の 1. で本物の台帳印が入るまでの仮の見つけ方）。昭和でない令和の物。方針は `docs/story.md` の「進行」節）。
 
 ## ワークフロー
