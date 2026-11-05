@@ -492,6 +492,160 @@
 | CR-04-23 | CAM04-E10 | 扉の前に小さな猫が一匹座る。                                   | object / mid / medium        |
 | CR-04-27 | CAM04-E07 | 壁面に縦長の白い紙が一枚増える。                               | object / early / medium      |
 
+## 制作仕様（未制作）— CAM 04
+
+台帳で薄い型（remove_object・add_creature・surreal・add_person）を補うための制作仕様。画像は未制作。制作・登録済みにした案はこの節から撤去する。
+
+### AR-04-ceiling-dome-gone — 天井の黒い小型ドーム器具が一つ消える
+
+- **カメラ**: CAM04（`cam4.webp`、676x900）／対象要素: CAM04-E06
+- **物と変化**: 中央左の天井にある小さな黒いドーム状の器具（x≈337,y≈162。半球で、黒く光る）。中央左の天井に付いている小さな黒いドーム状の器具が一つ、跡形もなく消え、天井板は元から何も付いていなかったように続く。取り付け跡・ビス穴・影も残さない（跡が自然に埋まる）。すぐ下の小さな煙感知器状の器具と奥の黒い器具は元のまま。
+- **box (x1,y1,x2,y2)**: (324,150,350,174)（26x24）
+- **最寄り既存 overlay と実測距離**: AR-04-ceiling-corner-fold (39.6)、次点 AR-04-sign-hollow (45.6)。
+- **6倍クロップ範囲**: 6倍クロップ (209,77)–(465,248)（256x171）。box は窓内で (690,438)–(846,582)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: the small black dome-shaped fixture hanging from the ceiling at about x=768, y=510 (a dark glossy half-sphere about 80 px wide) is gone. In its place the pale speckled ceiling board continues with the same fine speckle texture and the same soft grey shading, with no hole, no screw marks, no outline and no shadow. The edit area is about x=690 to 846, y=438 to 582. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: remove the small black dome fixture on the ceiling at about x=768, y=510 and fill the area by continuing the surrounding ceiling surface: same off-white speckled board, same gentle gradient, as if nothing had ever been mounted there. Do not leave a ghost, ring or stain. The two other small fixtures further down stay. The edit area is about x=690 to 846, y=438 to 582. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: erase the glossy black dome (a half-sphere ceiling camera-like fixture) at about x=768, y=510. The ceiling there is plain continuous speckled board, same brightness as its surroundings. Nothing replaces it. The edit area is about x=690 to 846, y=438 to 582. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: 黒い半球（約14x12 px）が明るい天井に溶けるので差分は大きい（最大差分は40を大きく超える見込み）。面積は約100〜170画素で、25%条項もあり通る見込み。check-visibility で確認し、通らなければ box を周囲の天井へ少し広げて天井の陰影を揃える。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-04-ceiling-dome-gone'
+    candidate_id: 'AR-04-ceiling-dome-gone'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E06'
+    base_photo: 'public/images/cam4.webp'
+    category: 'object'
+    anomaly_type: 'remove_object'
+    location: 'CAM04-E06、差分左上 (324,150) 付近（貼り込み後に再計測）'
+    detail: '中央左の天井の小さな黒いドーム状の器具が一つ消え、天井板が何事もなかったように続く。'
+    overlay: 'assets/anomaly-overlays/cam04/ceiling-dome-gone.webp'
+    # phase / 目立ち度: early / subtle
+    note: '小物。最近傍 AR-04-ceiling-corner-fold（39.6px）。小さな煙感知器状の器具（x≈343,y≈197）と別の黒い器具は元のまま残す（消すのはドームだけ）。差分の縁は天井の粒状感になじませる。'
+  ```
+- **相互参照 / 重複精査**: AR-08-vent-paper-plug（ドームを紙で塞ぐ・add_object・CAM08）は『足す』、AR-07-exit-sign-gone は『跡が残る』で別。本案は物が跡なく消えるだけ。CR-04-03（天井の短い器具が傾く）・AR-04-ceiling-corner-fold（天井板の角が垂れる）とは対象も見え方も別。
+- **同カメラ内の排他と併存**: 併存可=床・壁・扉・看板の異変。同じ天井面の AR-04-ceiling-corner-fold とは近いので連続して出さない運用が望ましい（box は重ならない）。
+
+### AR-04-rat-left-floor — 左の床際を、黒っぽいネズミが一匹横切る
+
+- **カメラ**: CAM04（`cam4.webp`、676x900）／対象要素: CAM04-E15
+- **物と変化**: 左手前の明るい床タイル（x≈125–195, y≈566–600）。左手前の明るい床の上を、灰黒色の大きなネズミが一匹、壁際へ向かって小走りに横切る（横向き、尾は弧を描く）。足元に薄い接地影。
+- **box (x1,y1,x2,y2)**: (125,566,195,600)（70x34）
+- **最寄り既存 overlay と実測距離**: AR-04-hatch-reflection-extra (33.0)、AR-04-orange-tile (32.0)。
+- **6倍クロップ範囲**: 6倍クロップ (32,495)–(288,666)（256x171）。box は窓内で (558,426)–(978,630)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: on the pale grey polished floor tiles at about x=558 to 978, y=426 to 630, one dark grey-black rat is scurrying across the floor in side view, body about 320 px long in this frame, nose pointing left towards the glass wall, tail curled in an S, tiny pink feet, a soft thin contact shadow and a faint blur of motion. Lit by the same cool ceiling light. No other change. The edit area is about x=558 to 978, y=426 to 630. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: add a single large grey-brown rat on the left-front floor tiles (x=558 to 978, y=426 to 630), seen from the side, mid-stride, body about 300 px long, whiskers visible, glossy dark fur reflecting a little of the ceiling lights, natural contact shadow. Nothing else is added or altered. The edit area is about x=558 to 978, y=426 to 630. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: one dark rat stands on the floor near the left glass wall at x=558 to 978, y=426 to 630, its body slightly raised, head turned toward the camera, tail extended behind it along a floor tile joint, with a short shadow. Colour grading and grain match the surrounding tiles. The edit area is about x=558 to 978, y=426 to 630. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: 明るい床に濃い灰黒のネズミは差分が大きい（体長約50x25 px）。通る見込み。毛の暗さで下限を満たす。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-04-rat-left-floor'
+    candidate_id: 'AR-04-rat-left-floor'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E15'
+    base_photo: 'public/images/cam4.webp'
+    category: 'object'
+    anomaly_type: 'add_creature'
+    location: 'CAM04-E15、差分左上 (125,566) 付近（貼り込み後に再計測）'
+    detail: '左手前の明るい床の上を、黒っぽいネズミが一匹横切っている。'
+    overlay: 'assets/anomaly-overlays/cam04/rat-left-floor.webp'
+    # phase / 目立ち度: mid / medium
+    note: '小物。最近傍 AR-04-orange-tile（32.0px）・AR-04-hatch-reflection-extra（33.0px）。左の大面積 AR-04-glass-fog-handprints と box が重なる（大面積の例外・排他）。小動物の分類は猫と同じく object に仮分類（README）。'
+  ```
+- **相互参照 / 重複精査**: AR-04-left-edge-eyes（暗がりの目だけ・surreal）は『正体を見せない』、本案は『はっきり見える小動物』で別。AR-01-threshold-pigeon（鳩・CAM01）・AR-02-leather-footprints とは種も場所も別。CR-04-23（扉の前に猫）・AR-04-puddle とは位置・種が別。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-04-glass-fog-handprints（大面積）。併存可=右・天井・奥の異変。
+
+### AR-04-wall-moth — 右の漆喰の壁に、大きな蛾が一匹とまる
+
+- **カメラ**: CAM04（`cam4.webp`、676x900）／対象要素: CAM04-E14
+- **物と変化**: 右端の淡いクリーム色の漆喰の壁面（x≈623–674, y≈265–330）。右の漆喰の壁の上部に、翅を平らに広げた大きな暗褐色の蛾が一匹とまる（翅幅は約40 px、翅に淡い目玉模様）。足元に薄い影。
+- **box (x1,y1,x2,y2)**: (623,265,674,330)（51x65）
+- **最寄り既存 overlay と実測距離**: AR-04-red-lantern (30.0)、AR-04-wall-plaster-peel (34.0)。
+- **6倍クロップ範囲**: 6倍クロップ (420,212)–(676,383)（256x171）。box は窓内で (1218,318)–(1524,708)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: on the pale cream speckled plaster wall at the right edge (the area at about x=1218 to 1524, y=318 to 708), one large dark-brown moth is resting with its wings spread flat, wingspan about 250 px in this frame, with pale eye-spot patterns on the wings, a hairy body and feathery antennae, a soft shadow on the plaster. Same cool light as the wall. Nothing else is added. The edit area is about x=1218 to 1524, y=318 to 708. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: add a single big dusky moth with wings spread, perched on the right plaster wall at x=1218 to 1524, y=318 to 708, wing patterning in brown, grey and cream with two faint eye-spots, soft hairy edges, a faint cast shadow. It sits flat against the wall, perspective following the wall. The edit area is about x=1218 to 1524, y=318 to 708. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: a large dark moth clings to the right plaster wall (x=1218 to 1524, y=318 to 708), wings half-open in a V, wingspan about 250 px here, body and antennae clearly visible, matching the low-light grain of the wall. The edit area is about x=1218 to 1524, y=318 to 708. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: 淡いクリーム色の壁に暗褐色の大きな蛾（翅幅約40 px）は差分が大きい。通る見込み。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-04-wall-moth'
+    candidate_id: 'AR-04-wall-moth'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E14'
+    base_photo: 'public/images/cam4.webp'
+    category: 'object'
+    anomaly_type: 'add_creature'
+    location: 'CAM04-E14、差分左上 (623,265) 付近（貼り込み後に再計測）'
+    detail: '右の漆喰の壁に、翅を広げた大きな暗褐色の蛾が一匹とまっている。'
+    overlay: 'assets/anomaly-overlays/cam04/wall-moth.webp'
+    # phase / 目立ち度: early / medium
+    note: '小物。最近傍 AR-04-red-lantern（30.0px）・AR-04-wall-plaster-peel（34.0px）。右壁の大面積 AR-04-window-alley と box が重なる（大面積の例外・排他）。小動物は object に仮分類（README）。'
+  ```
+- **相互参照 / 重複精査**: AR-04-left-edge-eyes・AR-01-threshold-pigeon とは種も場所も別。AR-04-wall-plaster-peel（壁の剥落・state_change）・AR-04-tote-bag（壁のフック）とは別の物。台帳に虫の異変は無い。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-04-window-alley（大面積）。併存可=左・床・天井の異変。
+
+### AR-04-wall-small-door — 右の漆喰の壁に、子供ほどの背丈の小さな扉が現れる
+
+- **カメラ**: CAM04（`cam4.webp`、676x900）／対象要素: CAM04-E14
+- **物と変化**: 右端の下部の漆喰の壁面（x≈622–674, y≈598–738。壁と床の境の巾木の線の上）。右の壁の下部に、周りの壁と同じクリーム色に塗られた小さな木の扉（高さ約100 px、通常の扉の半分ほど）が、壁に埋め込まれて現れる。細い暗い枠、丸い真鍮のノブ。下辺は巾木の線に沿う。空間の寸法が崩れた異変。
+- **box (x1,y1,x2,y2)**: (622,598,674,738)（52x140）
+- **最寄り既存 overlay と実測距離**: AR-04-thermos (47.0)、AR-04-tote-bag (49.0)。
+- **6倍クロップ範囲**: 6倍クロップ (420,583)–(676,754)（256x171）。box は窓内で (1212,90)–(1524,930)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: in the lower right plaster wall (the area at about x=1212 to 1524, y=90 to 930), a small closed wooden door appears set flush into the wall: about 270 px wide and 800 px tall in this frame, painted the same cream colour as the wall, with a thin dark frame, a small round brass knob on the left side and its bottom edge following the skirting line (slanted by the corridor's perspective). The wall's plaster texture, the dark pillar to its left and the floor stay. The edit area is about x=1212 to 1524, y=90 to 930. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: add a half-height door to the right wall at x=1212 to 1524, y=90 to 930: cream-painted wood, narrow dark frame, a small round brass doorknob, flat panels, closed, perspective-matched to the receding wall, with a thin shadow line around the frame. Nothing else changes. The edit area is about x=1212 to 1524, y=90 to 930. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: a small child-sized door has appeared in the lower part of the right plaster wall (x=1212 to 1524, y=90 to 930): cream wooden door in a dark thin frame with a round brass knob, standing closed on the skirting line. The plaster around it is unchanged. The edit area is about x=1212 to 1524, y=90 to 930. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: クリーム色の壁に暗い枠と真鍮ノブの輪郭で差が出る。大きさは約50x140 px と十分。通る見込み。check-visibility で確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-04-wall-small-door'
+    candidate_id: 'AR-04-wall-small-door'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E14'
+    base_photo: 'public/images/cam4.webp'
+    category: 'surreal'
+    anomaly_type: 'surreal'
+    location: 'CAM04-E14、差分左上 (622,598) 付近（貼り込み後に再計測）'
+    detail: '右の漆喰の壁の下部に、周りと同じ色の小さな木の扉（真鍮のノブ付き）が現れる。'
+    overlay: 'assets/anomaly-overlays/cam04/wall-small-door.webp'
+    # phase / 目立ち度: late / obvious
+    note: '中型。最近傍 AR-04-thermos（47.0px）・AR-04-tote-bag（49.0px）。右壁の大面積 AR-04-window-alley と box が重なる（大面積の例外・排他）。扉に文字・マークなし。'
+  ```
+- **相互参照 / 重複精査**: AR-07-mini-door（奥の金属扉の4分の1の複製が床に自立・duplicate・CAM07）とは別カメラ・別の見え方（壁に埋まる実用サイズの小扉 vs 床に立つ複製）。CR-04-12（奥の両開き扉が壁になる）・AR-04-door-gap とは別の扉。AR-04-window-alley（壁が窓になる）とは同じ壁で排他。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-04-window-alley（大面積）。併存可=左・天井・奥の異変。
+
+### AR-04-floor-reaching-hand — 手前の床の下端から、白い手が一本伸びる
+
+- **カメラ**: CAM04（`cam4.webp`、676x900）／対象要素: CAM04-E15
+- **物と変化**: 前景の暗い灰色の床タイル（x≈400–525, y≈820–898。画面の下端）。画面の下端の床に、カメラの下から伸びてきたような青白い手と前腕が一本、掌を下に床へついて現れる。指は奥の通路へ向かって少し開き、手首から先は画面の外へ消える。持ち主の体は写らない。
+- **box (x1,y1,x2,y2)**: (400,820,525,898)（125x78）
+- **最寄り既存 overlay と実測距離**: AR-04-hatch-frame-round (32.0)、AR-04-puddle (33.0)。
+- **6倍クロップ範囲**: 6倍クロップ (334,729)–(590,900)（256x171）。box は窓内で (396,546)–(1146,1014)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: at the bottom edge of the dark grey polished floor (the area at about x=396 to 1146, y=546 to 1014), a pale bluish-white human hand and forearm reach in from the bottom edge of the frame, palm pressed flat on the floor tile, the fingers slightly spread and pointing up the corridor, the forearm about 450 px long in this frame disappearing off the bottom of the frame, with a soft contact shadow and a faint reflection on the polished tile. No other part of the person is visible. The edit area is about x=396 to 1146, y=546 to 1014. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: add a single pale human hand and bare forearm at the very bottom of the frame, reaching along the floor away from the camera (x=396 to 1146, y=546 to 1014): skin cold bluish white in the cool light, fingers curled a little, a slender wrist, slightly translucent glow from the ceiling lights, mirrored faintly in the polished floor. Cut off by the bottom frame edge. The edit area is about x=396 to 1146, y=546 to 1014. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: a bare arm crawls into the bottom of the frame from below the camera: the hand is flat on the floor at about x=700 to 1000, y=700 to 900, fingers pointing toward the far end of the corridor, the forearm trailing off the lower edge, with a faint reflection on the tiles. The skin is pale with a blue-grey cast to match the grading. The edit area is about x=396 to 1146, y=546 to 1014. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
+- **視認性の見立て**: 暗い床に青白い手と前腕は差分が大きい（約60x40 px）。通る見込み。肌色の暗さで下限を満たす。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-04-floor-reaching-hand'
+    candidate_id: 'AR-04-floor-reaching-hand'
+    camera_id: 'CAM04'
+    element_id: 'CAM04-E15'
+    base_photo: 'public/images/cam4.webp'
+    category: 'person'
+    anomaly_type: 'add_person'
+    location: 'CAM04-E15、差分左上 (400,820) 付近（貼り込み後に再計測）'
+    detail: '手前の床の下端から、青白い手と前腕が一本伸びて床についている。'
+    overlay: 'assets/anomaly-overlays/cam04/floor-reaching-hand.webp'
+    # phase / 目立ち度: late / obvious
+    note: '中型。最近傍 AR-04-hatch-frame-round（32.0px）・AR-04-puddle（33.0px）。手前〜中景の大面積 AR-04-floor-shoes-rows と box が重なる（大面積の例外・排他）。持ち主の体・顔は写さない。'
+  ```
+- **相互参照 / 重複精査**: AR-04-shadow-behind-camera（カメラの背後の人の影）・AR-04-glass-silhouette（ガラス越しの黒い人影）は『影・人影』、本案は『実体のある手』で別。AR-02-leather-footprints・AR-06-wet-footprints（足跡）とは別。AR-05-door-fingers（扉の隙間の指の影）とは別カメラ・別の見え方。CR-02-10（床反射に足）とは見え方が別。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-04-floor-shoes-rows（大面積）/ AR-04-shadow-behind-camera（同じ床の下端）。併存可=左・右・天井の異変。
+
 ## 追加候補 — CAM 05
 
 | 候補ID   | 対象ID    | 変化案                                           | 分類 / フェーズ / 目立ち度   |
