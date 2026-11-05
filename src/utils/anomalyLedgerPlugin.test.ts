@@ -217,33 +217,33 @@ describe('anomaly-ledger vite plugin', () => {
     )
   })
 
-  describe('also_category (#236)', () => {
+  describe('also_categories (#236)', () => {
     const withAlso = (line: string) =>
       `anomalies:\n${entryYaml()}\n    ${line}\n`
     const parse = (out: unknown) =>
       JSON.parse((out as string).replace('export default ', ''))
 
     it.each([
-      ['single-quoted', "also_category: 'person'"],
-      ['double-quoted', 'also_category: "person"'],
-      ['unquoted', 'also_category: person'],
-    ])('emits alsoCategory from a %s value', async (_n, line) => {
+      ['single-quoted', "also_categories: ['person']"],
+      ['double-quoted', 'also_categories: ["person"]'],
+      ['unquoted', 'also_categories: [person]'],
+    ])('emits alsoCategories from a %s value', async (_n, line) => {
       const { out } = await run(withAlso(line))
       const json = parse(out)
-      expect(json[0].alsoCategory).toBe('Person')
+      expect(json[0].alsoCategories).toEqual(['Person'])
       expect(json[0].category).toBe('Object')
     })
 
     it('fails the build on an unknown value, naming the entry', async () => {
-      await expect(run(withAlso("also_category: 'ghost'"))).rejects.toThrow(
-        /entry "a1".*also_category/
+      await expect(run(withAlso("also_categories: ['ghost']"))).rejects.toThrow(
+        /entry "a1".*also_categories/
       )
     })
 
     it('fails the build when it equals category', async () => {
-      await expect(run(withAlso("also_category: 'object'"))).rejects.toThrow(
-        /entry "a1".*also_category/
-      )
+      await expect(
+        run(withAlso("also_categories: ['object']"))
+      ).rejects.toThrow(/entry "a1".*also_categories/)
     })
 
     it('names the second entry when only it is invalid', async () => {
@@ -255,29 +255,29 @@ describe('anomaly-ledger vite plugin', () => {
         id: 'a2',
         overlay: 'assets/anomaly-overlays/cam01/a2.webp',
       })
-      const yaml = `anomalies:\n${entryYaml()}\n    also_category: 'person'\n${second}\n    also_category: 'ghost'\n`
-      await expect(run(yaml)).rejects.toThrow(/entry "a2".*also_category/)
+      const yaml = `anomalies:\n${entryYaml()}\n    also_categories: ['person']\n${second}\n    also_categories: ['ghost']\n`
+      await expect(run(yaml)).rejects.toThrow(/entry "a2".*also_categories/)
     })
 
     it('trims a padded value', async () => {
-      const { out } = await run(withAlso("also_category: ' person '"))
-      expect(parse(out)[0].alsoCategory).toBe('Person')
+      const { out } = await run(withAlso("also_categories: [' person ']"))
+      expect(parse(out)[0].alsoCategories).toEqual(['Person'])
     })
 
     it('treats an empty cell as no column', async () => {
-      const { out } = await run(withAlso("also_category: ''"))
-      expect('alsoCategory' in parse(out)[0]).toBe(false)
+      const { out } = await run(withAlso("also_categories: ['']"))
+      expect('alsoCategories' in parse(out)[0]).toBe(false)
     })
 
     it('fails the build on a padded invalid value, naming the trimmed value', async () => {
-      await expect(run(withAlso("also_category: ' ghost '"))).rejects.toThrow(
-        /entry "a1".*also_category "ghost" is unknown/
-      )
+      await expect(
+        run(withAlso("also_categories: [' ghost ']"))
+      ).rejects.toThrow(/entry "a1".*also_categories "ghost" is unknown/)
     })
 
-    it('leaves entries without the column unchanged (no alsoCategory key)', async () => {
+    it('leaves entries without the column unchanged (no alsoCategories key)', async () => {
       const { out } = await run(`anomalies:\n${entryYaml()}\n`)
-      expect('alsoCategory' in parse(out)[0]).toBe(false)
+      expect('alsoCategories' in parse(out)[0]).toBe(false)
     })
   })
 })

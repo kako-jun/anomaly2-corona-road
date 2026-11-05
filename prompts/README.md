@@ -72,11 +72,11 @@ prompts/
 | `status`   | `produced`（制作済み）/ `planned`（未制作）      | `produced` |
 | `kind`     | `image`（overlay を描く）/ `runtime`（画像なし） | `image`    |
 
-| kind / status                      | 必須                                                                                        | 省略可・禁止                                                                                                               |
-| ---------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| image + produced                   | `camera_id` `category` `anomaly_type` `overlay` `overlay_origin` `dimensions`（従来どおり） |                                                                                                                            |
-| image + planned                    | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                         |
-| runtime（planned / produced とも） | `anomaly_type`（runtime 型）`detail`                                                        | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_category` は image と同じ検証（camera 不可）で任意 |
+| kind / status                      | 必須                                                                                        | 省略可・禁止                                                                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| image + produced                   | `camera_id` `category` `anomaly_type` `overlay` `overlay_origin` `dimensions`（従来どおり） |                                                                                                                              |
+| image + planned                    | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                           |
+| runtime（planned / produced とも） | `anomaly_type`（runtime 型）`detail`                                                        | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_categories` は image と同じ検証（camera 不可）で任意 |
 
 - `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### CR-RZ-07`）。
 - runtime の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
@@ -115,7 +115,7 @@ prompts/
 
 ゲームの report 選択肢に対応:
 
-- `camera` — そのカメラの画面全体のおかしくなり方（映像の乱れ等）。画像差分(overlay)では作らず runtime 異変（`anomaly_type: feed_glitch`）で扱うため、`kind: image` の entry には付けない（付けると `also_category` では拒否される）。物の変化は `object`
+- `camera` — そのカメラの画面全体のおかしくなり方（映像の乱れ等）。画像差分(overlay)では作らず runtime 異変（`anomaly_type: feed_glitch`）で扱うため、`kind: image` の entry には付けない（付けると `also_categories` では拒否される）。物の変化は `object`
 - `object` — 物の出現・消失・変化
 - `environment` — 光、構造、雰囲気
 - `person` — 人影、動き
@@ -128,12 +128,12 @@ prompts/
 - 光や、床・壁・天井の面 → `environment`
 - あり得ない現象 → `surreal`
 
-`also_category`（任意の列）: 本当に割れる異変だけに付ける、もう1つの正解カテゴリ。プレイヤーが `category` と `also_category` のどちらを選んでも正解になる（フィードバックの `CONFIRMED — …` は主カテゴリ `category` を出す）。`category` と異なる有効なカテゴリ（小文字: `camera` / `object` / `environment` / `person` / `surreal`）でなければビルドが失敗し、エントリ id が表示される。`camera` は runtime 異変であって画像差分ではないので指定できない（拒否される）。無い異変が通常で、既存の entry には付けなくてよい。
+`also_categories`（任意の列）: 本当に割れる異変だけに付ける任意の配列（YAML のシーケンス。例: `also_categories: ['surreal']`）。プレイヤーが `category` と `also_categories` のどれを選んでも正解になる。3つ以上でもよい。camera 不可。主カテゴリと重複不可（要素どうしの重複も不可）。`category` が空の entry には書けない。フィードバックの `CONFIRMED — …` は主カテゴリ `category` を出す。各要素は有効なカテゴリ（小文字: `camera` / `object` / `environment` / `person` / `surreal`）でなければビルドが失敗し、エントリ id が表示される。`camera` は runtime 異変であって画像差分ではないので指定できない（拒否される）。無い異変が通常で、既存の entry には付けなくてよい。
 
-線引き（#47, #236）: 物の出現（提灯・傘・旗・シーツ・蝿取りリボン・電球・テレビなど。天井から吊るものを含む）は `object`。床・壁・天井そのものの色・向き・霜などの面の状態の変化は `environment`（床タイル1枚が鏡になる、も `environment`）。反射そのものがおかしい（映るはずのものが映らない・反射の形が変わる・水鏡など）は `surreal`。映ったものが物・人なら、その物・人が主カテゴリで `also_category: 'surreal'`。
+線引き（#47, #236）: 物の出現（提灯・傘・旗・シーツ・蝿取りリボン・電球・テレビなど。天井から吊るものを含む）は `object`。床・壁・天井そのものの色・向き・霜などの面の状態の変化は `environment`（床タイル1枚が鏡になる、も `environment`）。反射そのものがおかしい（映るはずのものが映らない・反射の形が変わる・水鏡など）は `surreal`。映ったものが物・人なら、その物・人が主カテゴリで `also_categories: ['surreal']`。
 
-`also_category` の使い方の例: 映り込み = 主カテゴリ（物・人）+ `surreal`、扉の開閉 = `environment` と `object`、面の全面置換 = `environment` + `surreal`。
-割れない・付けないもの: 影だけの `person`（ボタンの説明に影が明記されている）、数が多いだけの物の並置（ポスター・提灯・シーツ・靴・テレビ）は `object` のみ。物理的にあり得ない並び（全部違う時刻の時計など）は `object` + `also_category: 'surreal'`。光が漏れる扉・シャッターも付けない。床・壁・天井の面に変化が出る異変は、あり得ない景色なら `surreal` 主 + `also_category: 'environment'`、反射・光の形がおかしいなら `environment` 主 + `also_category: 'surreal'`。
+`also_categories` の使い方の例: 映り込み = 主カテゴリ（物・人）+ `surreal`、扉の開閉 = `environment` と `object`、面の全面置換 = `environment` + `surreal`。
+割れない・付けないもの: 影だけの `person`（ボタンの説明に影が明記されている）、数が多いだけの物の並置（ポスター・提灯・シーツ・靴・テレビ）は `object` のみ。物理的にあり得ない並び（全部違う時刻の時計など）は `object` + `also_categories: ['surreal']`。光が漏れる扉・シャッターも付けない。床・壁・天井の面に変化が出る異変は、あり得ない景色なら `surreal` 主 + `also_categories: ['environment']`、反射・光の形がおかしいなら `environment` 主 + `also_categories: ['surreal']`。
 
 ## フェーズ
 

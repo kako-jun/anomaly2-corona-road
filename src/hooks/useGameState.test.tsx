@@ -298,9 +298,9 @@ describe('reporting', () => {
     expect(result.current.feedback?.message).toMatch(/WRONG CATEGORY/)
   })
 
-  describe('also_category (#236)', () => {
+  describe('also_categories (#236)', () => {
     const withAlso = () => {
-      ledger.push({ ...entry('a', 1, 'Object'), alsoCategory: 'Person' })
+      ledger.push({ ...entry('a', 1, 'Object'), alsoCategories: ['Person'] })
       const hook = start()
       advance(FIRST + 100)
       return hook
@@ -314,7 +314,7 @@ describe('reporting', () => {
       expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
     })
 
-    it('the also_category is correct too, and the feedback still names the primary', () => {
+    it('the also_categories is correct too, and the feedback still names the primary', () => {
       const { result } = withAlso()
       act(() => result.current.reportAnomaly('Person'))
       expect(result.current.stats.correctReports).toBe(1)
@@ -331,7 +331,7 @@ describe('reporting', () => {
       expect(result.current.activeAnomalyHere?.id).toBe('a')
     })
 
-    it('an anomaly without also_category accepts only its primary category', () => {
+    it('an anomaly without also_categories accepts only its primary category', () => {
       const { result } = withAnomaly('Object')
       act(() => result.current.reportAnomaly('Person'))
       expect(result.current.stats.misreports).toBe(1)
