@@ -1,17 +1,140 @@
-# 雑談。すべて tone: light（日常のどうでもいい会話）。動作確認用の実例のみ（本制作ではない）。
+# 事件の手がかりを含まない日常雑談。全て tone: light。
 dialogues:
-  - id: chatter-sample-01
+  - id: chatter-01
     tone: light
     lines:
-      - { who: M, text: '昨日の特番　見ました?' }
-      - { who: A, text: 'いや　興味ないから' }
-  - id: chatter-sample-02
+      - { who: A, text: '樫原くん　その眼鏡　ずっと同じの?' }
+      - { who: M, text: 'はい　壊れた部分だけ直してますよ　買い替えは考えてないです' }
+      - { who: A, text: 'えっ　そう見える?　私も店を変えるのが苦手でね' }
+      - { who: M, text: '同じ店に通う人　多いですよ' }
+  - id: chatter-02
     tone: light
     lines:
-      - { who: A, text: '換気効きすぎ?　首のうしろ寒いわ' }
-      - { who: M, text: 'すみません　空調　見ておきます' }
-  - id: chatter-sample-03
+      - { who: A, text: 'えっ　その髪留め新しくした?　つやつやしてる' }
+      - { who: M, text: 'はい　金沢の店で見つけました　黒なら仕事でも大丈夫ですよ' }
+      - { who: A, text: 'うん　似合ってる　すごくいい' }
+      - { who: M, text: 'そうですか　よかったです' }
+  - id: chatter-03
     tone: light
     lines:
-      - { who: M, text: '昼　何食べました?' }
-      - { who: A, text: '覚えてないわ　寝たの朝だもの' }
+      - { who: M, text: '夜食はサラダですか' }
+      - { who: A, text: 'そう　夜中に揚げ物は重いから' }
+      - { who: M, text: '俺は揚げたパンです　野菜はないです' }
+      - { who: A, text: 'ええっ　それだけ?　野菜も食べてよ' }
+  - id: chatter-04
+    tone: light
+    lines:
+      - { who: A, text: 'ブラック　何杯目だろ' }
+      - { who: M, text: 'はい　さっきから五杯目ですよ' }
+      - { who: A, text: 'えっ　数えてたの?　もう数えなくていいよ' }
+      - { who: M, text: 'カップが増えてましたから' }
+  - id: chatter-05
+    tone: light
+    lines:
+      - { who: A, text: '夜勤明けにすぐ寝られる?' }
+      - { who: M, text: 'はい　帰ったら何か食べて寝ますよ' }
+      - { who: A, text: 'えっ　食べたら眠くなるの?' }
+      - { who: M, text: 'なります　そのまま寝ます' }
+  - id: chatter-06
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　金沢のバス　もう慣れました?' }
+      - { who: A, text: 'まだ迷うよ　東京なら歩いてた距離でも乗るんだね' }
+      - { who: M, text: 'はい　この辺は電車の本数も少ないですよ' }
+  - id: chatter-07
+    tone: light
+    lines:
+      - { who: A, text: 'わあ　明け方の空ってこんな色なんだ' }
+      - { who: M, text: 'はい　出勤前だと見ない時間ですよ' }
+      - { who: A, text: 'そうか　私が見てなかっただけか' }
+  - id: chatter-08
+    tone: light
+    lines:
+      - { who: A, text: 'あれ　今日は席が違うね' }
+      - { who: M, text: 'はい　資料を広げやすいように空けましたよ' }
+      - { who: A, text: 'ありがとう!　助かった' }
+      - { who: M, text: '邪魔にならない位置にしたつもりです' }
+  - id: chatter-09
+    tone: light
+    lines:
+      - { who: A, text: 'ああ　また録画が増えてる　全然見てないのに' }
+      - { who: M, text: '消さないんですか' }
+      - { who: A, text: '見たい気持ちはあるの!　時間がないだけ' }
+      - { who: M, text: 'はい　残しておきましょう' }
+  - id: chatter-10
+    tone: light
+    lines:
+      - { who: A, text: '通販の健康器具　箱を開けたら満足した' }
+      - { who: M, text: 'まだ使ってないですね' }
+      - { who: A, text: 'えっ　見てた?' }
+      - { who: M, text: '箱がそのままでしたから' }
+  - id: chatter-11
+    tone: light
+    lines:
+      - { who: M, text: '雨　強くなってきました' }
+      - { who: A, text: '傘　持ってきた?' }
+      - { who: M, text: 'いいえ　帰る時に走りますよ' }
+      - { who: A, text: 'また?　それだと濡れるよ' }
+  - id: chatter-12
+    tone: light
+    lines:
+      - { who: A, text: 'その曲　今の若い子はよく聴くの?' }
+      - { who: M, text: 'はい　俺の周りではよく流れてますよ' }
+      - { who: A, text: '名前を聞いても分からなそう' }
+      - { who: M, text: '周りに聞けば分かりますよ' }
+  - id: chatter-13
+    tone: light
+    lines:
+      - { who: M, text: 'その鼻歌　学生の頃の曲ですか' }
+      - { who: A, text: 'そう　懐かしいな　覚えてるものだね' }
+      - { who: M, text: '親の世代の曲ですよ' }
+      - { who: A, text: 'ちょっと待って!　まだ親ってほどじゃないよ' }
+  - id: chatter-14
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　血液型って何ですか' }
+      - { who: A, text: 'えっ　何に使うの?　占い?' }
+      - { who: M, text: 'いえ　聞いただけですよ' }
+      - { who: A, text: '信じてないよ　順位だけ見るけど' }
+  - id: chatter-15
+    tone: light
+    lines:
+      - { who: M, text: '仮眠　とれました?' }
+      - { who: A, text: '目を閉じただけ　寝ると余計つらい' }
+      - { who: M, text: 'それは眠れてないですよ' }
+      - { who: A, text: '分かってる　分かってるけどね' }
+  - id: chatter-16
+    tone: light
+    lines:
+      - { who: A, text: '煙草の匂い　苦手なんだ' }
+      - { who: M, text: 'はい　服にも残りますよ' }
+      - { who: A, text: 'そう!　それに体にもよくないよ' }
+      - { who: M, text: 'そうですね　周りにもよくないです' }
+  - id: chatter-17
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　メモの字　読みやすいですね' }
+      - { who: A, text: '現場で読めないと困るからね' }
+      - { who: M, text: '俺の字は読めないって言われます' }
+      - { who: A, text: 'えっ　自分では読めるの?' }
+  - id: chatter-18
+    tone: light
+    lines:
+      - { who: A, text: '眠気覚まし　何してる?' }
+      - { who: M, text: 'ガムを噛みます　出河さんは?' }
+      - { who: A, text: '立って水を飲む　それだけで少し変わるよ' }
+      - { who: M, text: 'はい　試してみますよ' }
+  - id: chatter-19
+    tone: light
+    lines:
+      - { who: A, text: '夜勤明けって　温かいもの食べたくならない?' }
+      - { who: M, text: 'はい　味噌汁とかいいですよ' }
+      - { who: A, text: 'そうなの!　それだけのために店を探す日もある' }
+      - { who: M, text: '出河さんは　食べる店を決めるのが早いですね' }
+  - id: chatter-20
+    tone: light
+    lines:
+      - { who: M, text: '休みの日も　夜に眠くならないんですよね' }
+      - { who: A, text: 'ああ　分かる!　私も朝寝て昼に起きる' }
+      - { who: M, text: '体が勤務時間を覚えてるんですかね' }
+      - { who: A, text: '休みの日までこの生活　困るよね' }

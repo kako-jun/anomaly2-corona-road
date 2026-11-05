@@ -1,19 +1,197 @@
-# 経過時点の中間コメント。when.stage: few | mid | many（その回のここまでの見つけた数の段階）。
-# 動作確認用の実例のみ（本制作ではない）。
+# 中間コメント。各台詞はその回に見つけた数の stage で選ぶ。
 dialogues:
-  - id: midpoint-sample-01
+  - id: midpoint-01
     tone: serious
     when: { stage: few }
     lines:
-      - { who: A, text: 'ここまで静かね　見落としてないかしら' }
-  - id: midpoint-sample-02
+      - { who: A, text: 'あれ　まだこれだけ?　そんなに時間たったの?' }
+      - { who: M, text: 'はい　折り返しですよ　焦らなくて大丈夫です' }
+  - id: midpoint-02
+    tone: serious
+    when: { stage: few }
+    lines:
+      - { who: A, text: 'うそ　まだ少ししか見つけてない?　私なにしてたの' }
+      - { who: M, text: 'はい　記録はそうなってます　まだ時間はありますよ' }
+  - id: midpoint-03
+    tone: serious
+    when: { stage: few }
+    lines:
+      - { who: A, text: '見落としたかな　私　ちゃんと見てるよね?' }
+      - { who: M, text: 'はい　見ていますよ　今夜は少ないだけです' }
+  - id: midpoint-04
+    tone: light
+    when: { stage: few }
+    lines:
+      - { who: A, text: '今夜は静かだね　静かすぎない?' }
+      - { who: M, text: 'はい　今のところ静かです' }
+      - { who: A, text: 'そのまま言わなくていいよ　余計気になる!' }
+  - id: midpoint-05
+    tone: serious
+    when: { stage: few }
+    lines:
+      - { who: M, text: '見つけた数は　まだ少なめですよ' }
+      - { who: A, text: 'そんなに少ないの?　もっと見た気がする' }
+      - { who: M, text: 'はい　体感より少ないです' }
+  - id: midpoint-06
+    tone: light
+    when: { stage: few }
+    lines:
+      - { who: A, text: 'このまま何もなかったら　私ずっと座ってただけ?' }
+      - { who: M, text: 'はい　そういう夜もありますよ' }
+  - id: midpoint-07
+    tone: serious
+    when: { stage: few }
+    lines:
+      - { who: A, text: 'せっかく来たのに　まだ手応えがないね' }
+      - { who: M, text: '今夜の記録は　まだ途中ですよ' }
+      - { who: A, text: 'そうだね　まだ終わってない' }
+  - id: midpoint-08
+    tone: light
+    when: { stage: few }
+    lines:
+      - { who: A, text: '樫原くん　眠くない?　私は少し眠い' }
+      - { who: M, text: 'はい　少しだけです' }
+      - { who: A, text: '少しって顔じゃないよ' }
+  - id: midpoint-09
+    tone: serious
+    when: { stage: few }
+    lines:
+      - { who: A, text: 'まだ少ないね　焦って報告しないようにしないと' }
+      - { who: M, text: 'はい　見てからでいいですよ' }
+  - id: midpoint-10
+    tone: light
+    when: { stage: few }
+    lines:
+      - { who: A, text: 'えっ　もう半分?　何もしてない気がする!' }
+      - { who: M, text: 'はい　時刻は半分です　仕事は残ってますよ' }
+  - id: midpoint-11
     tone: light
     when: { stage: mid }
     lines:
-      - { who: M, text: 'ぼちぼち折り返しですね' }
-      - { who: A, text: 'まあ　順調ってところかしら' }
-  - id: midpoint-sample-03
+      - { who: M, text: 'はい　時刻は半分ですよ' }
+      - { who: A, text: 'もう折り返し?　早いね' }
+  - id: midpoint-12
+    tone: light
+    when: { stage: mid }
+    lines:
+      - { who: A, text: 'そこそこ見つけたね　今夜は順調かな' }
+      - { who: M, text: 'はい　今のところはいいペースですよ' }
+  - id: midpoint-13
+    tone: light
+    when: { stage: mid }
+    lines:
+      - { who: A, text: '私　今夜は調子いいかも!' }
+      - { who: M, text: 'はい　今夜はいくつか見つけていますよ' }
+      - { who: A, text: 'そうなの?　うれしい!' }
+  - id: midpoint-14
+    tone: serious
+    when: { stage: mid }
+    lines:
+      - { who: A, text: '半分まで来たのに　まだ落ち着かないな' }
+      - { who: M, text: 'はい　急ぐ必要はないですよ' }
+      - { who: A, text: '分かってる　でも気になっちゃう' }
+  - id: midpoint-15
+    tone: light
+    when: { stage: mid }
+    lines:
+      - { who: A, text: '今夜は見つけるたびに驚いてる気がする' }
+      - { who: M, text: 'はい　声に出てますよ' }
+      - { who: A, text: 'えっ　そんなに大きい?' }
+  - id: midpoint-16
+    tone: light
+    when: { stage: mid }
+    lines:
+      - { who: M, text: '今夜は半分まで来ましたね' }
+      - { who: A, text: 'まだ半分?　もう半分?　どっちなんだろう' }
+      - { who: M, text: 'はい　どちらでも同じ時刻ですよ' }
+  - id: midpoint-17
+    tone: serious
+    when: { stage: mid }
+    lines:
+      - { who: A, text: 'この調子で朝まで見落とさずにいけるかな' }
+      - { who: M, text: 'はい　一つずつ見ていけば大丈夫ですよ' }
+  - id: midpoint-18
+    tone: light
+    when: { stage: mid }
+    lines:
+      - { who: A, text: 'あっ　もう半分なんだ　コーヒー飲みすぎたかも' }
+      - { who: M, text: 'はい　カップが増えてますよ' }
+      - { who: A, text: 'それは見ないで!' }
+  - id: midpoint-19
+    tone: light
+    when: { stage: mid }
+    lines:
+      - { who: A, text: '今夜は少し進んだね　うれしい' }
+      - { who: M, text: 'はい　記録にも出てますよ' }
+  - id: midpoint-20
+    tone: serious
+    when: { stage: mid }
+    lines:
+      - { who: A, text: '折り返しだね　ここからも気を抜かない' }
+      - { who: M, text: 'はい　俺も見ていますよ' }
+  - id: midpoint-21
     tone: light
     when: { stage: many }
     lines:
-      - { who: A, text: 'あんた　今夜は目がいいわね' }
+      - { who: A, text: 'わあ　今夜こんなに見つけたんだね!' }
+      - { who: M, text: 'はい　今のところ多いですよ' }
+  - id: midpoint-22
+    tone: light
+    when: { stage: many }
+    lines:
+      - { who: A, text: 'えっ　まだ時間あるのに　もうこんな数?' }
+      - { who: M, text: 'はい　記録上は多いです' }
+      - { who: A, text: 'すごいね　私たち' }
+  - id: midpoint-23
+    tone: serious
+    when: { stage: many }
+    lines:
+      - { who: A, text: '見つけた数が多いね　少し怖くなってきた' }
+      - { who: M, text: 'はい　でも一つずつ確認しましょう' }
+  - id: midpoint-24
+    tone: light
+    when: { stage: many }
+    lines:
+      - { who: A, text: '今日は目が冴えてる!　こんなに分かるなんて' }
+      - { who: M, text: 'はい　出河さん　よく見つけていますよ' }
+  - id: midpoint-25
+    tone: light
+    when: { stage: many }
+    lines:
+      - { who: A, text: 'こんなに見つけてた?　私　自分でもびっくり' }
+      - { who: M, text: 'はい　驚くところまで含めていつもどおりです' }
+      - { who: A, text: 'いつもどおりって何!' }
+  - id: midpoint-26
+    tone: serious
+    when: { stage: many }
+    lines:
+      - { who: A, text: 'これだけ見つけても　まだ終わらないんだね' }
+      - { who: M, text: 'はい　朝までは続きますよ' }
+  - id: midpoint-27
+    tone: light
+    when: { stage: many }
+    lines:
+      - { who: M, text: 'はい　今夜は多いですね' }
+      - { who: A, text: 'その言い方だと　他人事みたいだよ' }
+      - { who: M, text: '俺も一緒に見ていますよ' }
+  - id: midpoint-28
+    tone: light
+    when: { stage: many }
+    lines:
+      - { who: A, text: 'やった　今夜はたくさん見つけた!' }
+      - { who: M, text: 'はい　まだ時間はありますよ' }
+      - { who: A, text: '分かってる　喜ぶのは少しだけ' }
+  - id: midpoint-29
+    tone: serious
+    when: { stage: many }
+    lines:
+      - { who: A, text: '見つかる数が多いほど　気持ちは複雑だね' }
+      - { who: M, text: 'はい　そうですね' }
+      - { who: A, text: 'もう少し喜べると思ってた' }
+  - id: midpoint-30
+    tone: light
+    when: { stage: many }
+    lines:
+      - { who: A, text: 'すごい　今夜は私の勘が冴えてる!' }
+      - { who: M, text: 'はい　勘だけではないですよ' }
+      - { who: A, text: 'えっ　どういう意味?' }

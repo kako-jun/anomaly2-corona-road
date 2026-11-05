@@ -21,7 +21,8 @@
     "prepare": "husky",
     "build:prompts": "node scripts/build-prompt-queue.mjs",
     "build:camera-atlas": "node scripts/build-camera-atlas.mjs",
-    "ledger:summary": "node scripts/ledger-summary.mjs"
+    "ledger:summary": "node scripts/ledger-summary.mjs",
+    "dialogue:summary": "node .agents/skills/corona-road-dialogue/scripts/dialogue-summary.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

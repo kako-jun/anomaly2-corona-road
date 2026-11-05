@@ -5,14 +5,14 @@ dialogues:
     tone: light
     when: { result: dawn }
     lines:
-      - { who: M, text: '朝ですね　引き継ぎ　行ってきます' }
-      - { who: A, text: 'お疲れさま　気をつけてね' }
+      - { who: M, text: 'はい　朝ですね　引き継ぎに行ってきますよ' }
+      - { who: A, text: 'やっと朝だね　お疲れさま　気をつけて帰って' }
   - id: closing-sample-02
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '今夜はここまでにするわ' }
-      - { who: M, text: 'あ　はい　お疲れさまでした' }
+      - { who: A, text: '今日はここまで　悔しいけど撤収しよう' }
+      - { who: M, text: 'はい　分かりました　お疲れさまです' }
   - id: closing-sample-03
     tone: serious
     when: { result: ending }

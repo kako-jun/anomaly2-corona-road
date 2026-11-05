@@ -1,12 +1,119 @@
-# 共通の誤報（お手つき）の会話。ヒントは入れない。異変ごとの会話（anomaly-lines.yaml）を使い切った
-# とき・該当がないときの受け皿。動作確認用の実例のみ（本制作ではない）。
+# 共通の誤報会話。異変ごとの会話にヒントを任せ、ここには手がかりを入れない。
 dialogues:
-  - id: false-report-sample-01
+  - id: false-report-01
     tone: light
     lines:
-      - { who: A, text: '今の違うわね　見間違いよ' }
-  - id: false-report-sample-02
+      - { who: A, text: 'えっ　今の違ったの?　私の見間違い?' }
+      - { who: M, text: 'はい　今のは違いますよ' }
+  - id: false-report-02
     tone: light
     lines:
-      - { who: M, text: 'すみません　勘違いでした' }
-      - { who: A, text: '落ち着いて　もう一度ね' }
+      - { who: A, text: 'うそ　また違う?　ちょっと悔しい' }
+      - { who: M, text: 'はい　でも確認するのは大事ですよ' }
+  - id: false-report-03
+    tone: light
+    lines:
+      - { who: A, text: 'ああ　今のは気のせいだった' }
+      - { who: M, text: 'はい　そういうこともありますよ' }
+  - id: false-report-04
+    tone: light
+    lines:
+      - { who: A, text: 'ええっ　全然違ったの?' }
+      - { who: M, text: 'はい　今回は違いました' }
+      - { who: A, text: '自信あったのに!' }
+  - id: false-report-05
+    tone: light
+    lines:
+      - { who: A, text: '今の記録されちゃう?' }
+      - { who: M, text: 'はい　記録には残りますよ' }
+      - { who: A, text: 'うわ　見られるの恥ずかしい' }
+  - id: false-report-06
+    tone: light
+    lines:
+      - { who: A, text: 'ごめん　早とちりした' }
+      - { who: M, text: '大丈夫ですよ　続けましょう' }
+  - id: false-report-07
+    tone: light
+    lines:
+      - { who: A, text: 'またやっちゃった　私らしくない' }
+      - { who: M, text: '疲れてると　判断が早くなりますよ' }
+      - { who: A, text: 'えっ　疲れてる顔してる?' }
+  - id: false-report-08
+    tone: light
+    lines:
+      - { who: M, text: 'はい　今のは誤報ですよ' }
+      - { who: A, text: 'そんなに淡々と言わなくてもいいよ' }
+      - { who: M, text: '結果なので' }
+  - id: false-report-09
+    tone: light
+    lines:
+      - { who: A, text: '今の　惜しかった?' }
+      - { who: M, text: '惜しくはないですよ　違いました' }
+      - { who: A, text: 'きびしい!' }
+      - { who: M, text: 'すみません　そういう意味では' }
+  - id: false-report-10
+    tone: light
+    lines:
+      - { who: A, text: '私の目　どうかしてる?' }
+      - { who: M, text: 'いえ　報告が違っただけですよ' }
+      - { who: A, text: 'あっ　そういう言い方してくれるんだ' }
+  - id: false-report-11
+    tone: light
+    lines:
+      - { who: A, text: 'ちょっと待って　自信あったのに' }
+      - { who: M, text: '自信があったのは伝わりましたよ' }
+      - { who: A, text: 'それ　慰めになってない!' }
+  - id: false-report-12
+    tone: light
+    lines:
+      - { who: M, text: '誤報でした　次を見ましょう' }
+      - { who: A, text: '分かったから　そんなに正確に言わなくていいよ' }
+  - id: false-report-13
+    tone: light
+    lines:
+      - { who: A, text: 'ああもう　間違えた' }
+      - { who: M, text: 'はい　次がありますよ' }
+      - { who: A, text: 'その言い方　ちょっと軽いよ' }
+      - { who: M, text: 'すみません　口が滑りました' }
+  - id: false-report-14
+    tone: light
+    lines:
+      - { who: A, text: '今のなし!　ってできないよね' }
+      - { who: M, text: 'はい　記録は消せないですよ' }
+      - { who: A, text: 'ええっ　やっぱり残るんだ' }
+  - id: false-report-15
+    tone: light
+    lines:
+      - { who: A, text: '誤報って　こんなに悔しいんだね' }
+      - { who: M, text: 'はい　初めて知りました?' }
+      - { who: A, text: 'うん　できれば知らずにいたかった' }
+  - id: false-report-16
+    tone: light
+    lines:
+      - { who: A, text: '今度は落ち着いて見る　絶対' }
+      - { who: M, text: 'はい　そのほうがいいですよ' }
+      - { who: A, text: 'そんなに真顔で言わなくても!' }
+  - id: false-report-17
+    tone: light
+    lines:
+      - { who: A, text: '今のは間違い　はい　分かってる' }
+      - { who: M, text: 'はい　確認できましたよ' }
+      - { who: A, text: '確認の声まで落ち着いてるね' }
+  - id: false-report-18
+    tone: light
+    lines:
+      - { who: A, text: 'ごめん　また先走った' }
+      - { who: M, text: '謝らなくて大丈夫ですよ' }
+      - { who: A, text: 'そう言われると　余計申し訳ないよ' }
+  - id: false-report-19
+    tone: light
+    lines:
+      - { who: A, text: 'もう一回　落ち着いてやる' }
+      - { who: M, text: 'はい　次も見ていますよ' }
+      - { who: A, text: 'ありがとう　頼りにしてる' }
+  - id: false-report-20
+    tone: light
+    lines:
+      - { who: A, text: 'えっ　また違う?　今日はだめだなあ' }
+      - { who: M, text: '今日はまだ終わってないですよ' }
+      - { who: A, text: 'そうだね　ここから取り返す!' }

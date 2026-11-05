@@ -1,29 +1,30 @@
-# フラグで発生する会話。when.flag は flags.yaml のフラグ名。立った瞬間に割り込んで出す。
-# 動作確認用の実例のみ（本制作ではない）。
+# 進行フラグが立ったときに一度だけ再生する本制作のストーリー会話。
 dialogues:
-  - id: story-sample-01
+  - id: story-elder1
     tone: serious
     when: { flag: elder1 }
     lines:
-      - { who: A, text: 'ひとり目　見つかったわ' }
-      - { who: M, text: '……そう　ですか' }
-  - id: story-sample-02
+      - { who: A, text: 'やっと見つかったのに　帰りたくないって?　なんで…' }
+      - { who: M, text: 'はい　本人はそう言ってますよ　懐かしい場所にいたいと' }
+      - { who: A, text: '家族が待ってるのに　そんなのつらいよ…' }
+  - id: story-elder2
     tone: serious
     when: { flag: elder2 }
     lines:
-      - { who: A, text: 'ふたり目も　この近くだった' }
-  - id: story-sample-03
+      - { who: A, text: 'また?　二人目も帰りたくないって言ったの?' }
+      - { who: M, text: 'はい　前の人と同じですよ　昔の場所に残りたいそうです' }
+      - { who: A, text: 'どうしてそんなに　帰るのが嫌なんだろう' }
+  - id: story-elder3
     tone: serious
     when: { flag: elder3 }
     lines:
-      - { who: A, text: '三人とも　昭和の人たちよ' }
-  - id: story-sample-04
+      - { who: A, text: '三人とも帰らないなんて　そんなことある?' }
+      - { who: M, text: 'はい　三人とも本人の希望だそうですよ' }
+      - { who: A, text: 'そんな顔で言われたら　怒れないよ…' }
+  - id: story-child
     tone: serious
     when: { flag: child }
     lines:
-      - { who: A, text: '四人目は　まだ子供だった' }
-  - id: story-sample-05
-    tone: serious
-    when: { flag: final }
-    lines:
-      - { who: M, text: '全部　つながりました' }
+      - { who: A, text: '今度は子供だって?　そんなの　早く見つけないと!' }
+      - { who: M, text: 'はい　大人の時とは話が違いますよ' }
+      - { who: A, text: '分かってる　あの子の家族も待ってるんだから' }
