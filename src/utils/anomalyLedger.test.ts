@@ -316,7 +316,6 @@ describe('parseLedgerEntry also_category (#236)', () => {
     expect('alsoCategory' in e).toBe(false)
   })
   it.each([
-    ['camera', 'Camera'],
     ['object', 'Object'],
     ['environment', 'Environment'],
     ['person', 'Person'],
@@ -357,6 +356,15 @@ describe('parseLedgerEntry also_category (#236)', () => {
       /entry "AR-01-notice".*also_category/
     )
   })
+  it.each(['camera', ' Camera ', 'CAMERA'])(
+    'rejects camera as also_category (%j) with the entry id',
+    v => {
+      expect(() => parseLedgerEntry(raw({ also_category: v }), 0)).toThrow(
+        /entry "AR-01-notice".*also_category "[Cc][Aa][Mm][Ee][Rr][Aa]" is not allowed/
+      )
+    }
+  )
+
   it('adds alsoCategory without changing any other field', () => {
     const base = parseLedgerEntry(raw(), 0)
     const withAlso = parseLedgerEntry(raw({ also_category: 'person' }), 0)

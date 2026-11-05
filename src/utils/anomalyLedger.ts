@@ -104,6 +104,11 @@ export const parseAlsoCategory = (
   } catch {
     throw new Error(`also_category "${text}" is unknown`)
   }
+  if (also === 'Camera') {
+    throw new Error(
+      `also_category "${text}" is not allowed (camera is a runtime anomaly, not an image entry)`
+    )
+  }
   if (also === category) {
     throw new Error(`also_category "${text}" is the same as category`)
   }
