@@ -11,7 +11,7 @@ Use this skill when planning or producing an image-based anomaly for this game. 
 
 - Read [`prompts/camera-element-inventory.md`](../../../prompts/camera-element-inventory.md) for the single source of truth for camera photos, visible elements, stable IDs, and approximate bounds.
 - Open the matching `prompts/atlas/camNN.svg` for a visual index of those IDs; regenerate maps with `npm run build:camera-atlas` after changing the inventory.
-- Read [`prompts/candidate-pool.md`](../../../prompts/candidate-pool.md) for photo-specific unselected ideas, the Showa-theme candidates, the runtime/audio/UI anomaly stock with its phase-allocation guide; remove a selected row when promoting it into `anomalies.yaml` (runtime ones go in as `kind: runtime`; format and promotion rule: `prompts/README.md` "台帳の書式").
+- Read [`prompts/candidate-pool.md`](../../../prompts/candidate-pool.md) for the production specs (`###` sections) of the `planned` image ideas and the runtime allocation guide. The ledger `prompts/anomalies.yaml` is the single source of truth (produced, planned and `kind: runtime`); delete the spec section when promoting an idea to produced (format and promotion rule: `prompts/README.md` "台帳の書式").
 - Follow [`prompts/README.md`](../../../prompts/README.md) and [`prompts/base-template.md`](../../../prompts/base-template.md) for prompt conventions.
 - The current game camera mapping is in `src/utils/gameConfig.ts`; the WebP exports are in `public/images/`.
 
@@ -66,7 +66,7 @@ Use `planned`, `generated`, `composited`, and `reviewed` as distinct states. Nev
 
 ## 昭和の時間が戻る異変
 
-この作品では、懐かしく寂しい日常が一瞬戻る方向を優先する。閉店した店が営業する、壊れていた物が直る等、写真で確認できる現状から一つだけ変える。怖がらせる小道具を前提にしない。核となる変化は「閉店した店が再び営業し、壊れたものが直り、失われた日常が一瞬戻る」で、広告などの小道具は補助でありテーマの中心にしない。修復は元写真で破損が確認できる箇所を選んでから制作し、破損を想像で決めない。『既に存在した物の変化』と『追加』を混同しない。小物は実ゲームの表示寸法で視認性を検証する。公開用 baseline の店名・マークは kako-jun の他作品のパロディにし、Corona Road の名前は維持する。最初の本命は「閉じたシャッターが少し開き暖かな店内光が漏れる」。候補は `prompts/candidate-pool.md` の「昭和テーマ候補」を参照（制作状態は `prompts/anomalies.yaml` が正本）。
+この作品では、懐かしく寂しい日常が一瞬戻る方向を優先する。閉店した店が営業する、壊れていた物が直る等、写真で確認できる現状から一つだけ変える。怖がらせる小道具を前提にしない。核となる変化は「閉店した店が再び営業し、壊れたものが直り、失われた日常が一瞬戻る」で、広告などの小道具は補助でありテーマの中心にしない。修復は元写真で破損が確認できる箇所を選んでから制作し、破損を想像で決めない。『既に存在した物の変化』と『追加』を混同しない。小物は実ゲームの表示寸法で視認性を検証する。公開用 baseline の店名・マークは kako-jun の他作品のパロディにし、Corona Road の名前は維持する。最初の本命は「閉じたシャッターが少し開き暖かな店内光が漏れる」。案と制作状態は `prompts/anomalies.yaml` が正本（昭和の画像案は台帳に載せない方針で、音の案だけ `kind: runtime` にある）。
 
 生成結果が全体を描き直しても、元画像を下地とし、生成画像を元の寸法・構図に位置合わせして対象と必要な光・影だけをマスクで重ねる。境界は徐々に透過させ、マスク外は必ずゼロにする。床目地やシャッターの線を確認し、ずれが見える場合は位置合わせやマスクを調整する。PNGなどロスレスで保存し、マスク外差分ゼロを検証する。
 
@@ -83,11 +83,11 @@ Use `planned`, `generated`, `composited`, and `reviewed` as distinct states. Nev
 
 ## 追加前の類似チェック
 
-新しい候補の記録や生成に着手する前に、`prompts/anomalies.yaml` の制作済み・試作と `prompts/candidate-pool.md` の未制作案の両方を検索する。対象要素ID、カメラ、物の名前、同義語、異変タイプを使い、同じ画面だけでなく別画面も確認する。完全一致だけでなく、以下の組み合わせが近く、プレイヤーから見た変化が実質同じ案も拾う。
+新しい候補の記録や生成に着手する前に、`prompts/anomalies.yaml` の制作済み・試作（`status: planned` も含む）を検索する。対象要素ID、カメラ、物の名前、同義語、異変タイプを使い、同じ画面だけでなく別画面も確認する。完全一致だけでなく、以下の組み合わせが近く、プレイヤーから見た変化が実質同じ案も拾う。
 
 - 対象（同じ物や似た店先・床など）と変化（出現・消失・移動・複製・色・形・反射など）
 - 見た目・位置・大きさ・タイミング・報告カテゴリと、何に気付く異変か
 
 候補から制作する場合、その候補自身は重複として数えず、既存の別IDと比較する。近い案を発見したらIDと共通点・差を記録し、単なる言い換えは追加しない。別カメラや別色だけでも、観察対象や発見の仕方に意味のある違いがあれば残してよい。意図的に似せたシリーズは、その意図と違いを記録する。似ているか不確実なときは断定せず候補として記録し、制作前に見比べる。
 
-新しい案には安定ID、カメラ・対象要素ID、変化、報告カテゴリ、制作状態を記録する。制作したら同じ案を候補一覧から移して `anomalies.yaml` に登録し、透過差分画像のパスと配置・サイズ・検証状態を更新する。登録済み試作と候補を二重に数えない。候補IDや内容を変更する場合は既存素材との対応を壊さず、必要なら関連IDを残す。
+新しい案には安定ID、カメラ・対象要素ID、変化、報告カテゴリ、制作状態を記録する。新案は `anomalies.yaml` に `planned` で足し、制作したら同じエントリを `produced` にして（制作仕様の `###` 節はプールから削除）、透過差分画像のパスと配置・サイズ・検証状態を更新する。登録済み試作と候補を二重に数えない。候補IDや内容を変更する場合は既存素材との対応を壊さず、必要なら関連IDを残す。
