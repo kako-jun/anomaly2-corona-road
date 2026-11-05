@@ -128,6 +128,46 @@ describe('ReportDialog', () => {
     expect(dialog).toHaveAccessibleName('SELECT TYPE')
     expect(dialog.getAttribute('aria-labelledby')).toBe('dlgTitle')
   })
+
+  describe('type hints (#236)', () => {
+    const HINTS: Record<string, string> = {
+      Camera: 'the whole picture glitches',
+      Object: 'a thing appears, vanishes or changes',
+      Environment: 'light, or the floor, wall or ceiling surface',
+      Person: 'a figure, shadow, hand or trace of someone',
+      Surreal: 'something impossible',
+    }
+
+    it.each(CATEGORIES)(
+      'shows the hint for %s and links it with aria-describedby',
+      category => {
+        const { dialog } = setupDialog()
+        const button = within(dialog).getByRole('button', {
+          name: category.toUpperCase(),
+        })
+        const id = button.getAttribute('aria-describedby')
+        expect(id).toBeTruthy()
+        const note = document.getElementById(id as string)
+        expect(note).not.toBeNull()
+        expect(dialog).toContainElement(note)
+        expect(note?.textContent).toBe(HINTS[category])
+      }
+    )
+
+    it('renders one hint element per category', () => {
+      const { dialog } = setupDialog()
+      expect(dialog.querySelectorAll('.cat-note')).toHaveLength(
+        CATEGORIES.length
+      )
+    })
+
+    it('gives CANCEL no hint', () => {
+      setupDialog()
+      const cancel = screen.getByRole('button', { name: 'CANCEL' })
+      expect(cancel).not.toHaveAttribute('aria-describedby')
+      expect(cancel.parentElement?.querySelector('.cat-note')).toBeNull()
+    })
+  })
 })
 
 describe('ReportButton', () => {

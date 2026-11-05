@@ -304,3 +304,62 @@ describe('parseLedger', () => {
     ).toThrow(/entry "bad"/)
   })
 })
+
+describe('parseLedgerEntry also_category (#236)', () => {
+  it('is undefined (key absent) when the column is missing', () => {
+    const e = parseLedgerEntry(raw(), 0)
+    expect(e.alsoCategory).toBeUndefined()
+    expect('alsoCategory' in e).toBe(false)
+  })
+  it('is undefined (key absent) when the value is null', () => {
+    const e = parseLedgerEntry(raw({ also_category: null }), 0)
+    expect('alsoCategory' in e).toBe(false)
+  })
+  it.each([
+    ['camera', 'Camera'],
+    ['object', 'Object'],
+    ['environment', 'Environment'],
+    ['person', 'Person'],
+    ['surreal', 'Surreal'],
+  ])('accepts %s when it differs from category', (value, expected) => {
+    const category = expected === 'Person' ? 'camera' : 'person'
+    expect(
+      parseLedgerEntry(raw({ category, also_category: value }), 0).alsoCategory
+    ).toBe(expected)
+  })
+  it('treats case like parseCategory does', () => {
+    expect(
+      parseLedgerEntry(raw({ also_category: 'PERSON' }), 0).alsoCategory
+    ).toBe('Person')
+    expect(
+      parseLedgerEntry(raw({ also_category: 'Surreal' }), 0).alsoCategory
+    ).toBe('Surreal')
+  })
+  it('rejects an unknown value, naming the entry', () => {
+    expect(() => parseLedgerEntry(raw({ also_category: 'ghost' }), 0)).toThrow(
+      /entry "AR-01-notice".*also_category "ghost" is unknown/
+    )
+  })
+  it.each(['object', 'Object', 'OBJECT'])(
+    'rejects %s when it equals category, naming the entry',
+    v => {
+      expect(() => parseLedgerEntry(raw({ also_category: v }), 0)).toThrow(
+        /entry "AR-01-notice".*is the same as category/
+      )
+    }
+  )
+  it.each([
+    ['a number', 12],
+    ['a boolean', true],
+    ['an array', ['person']],
+  ])('rejects a value that is %s', (_n, v) => {
+    expect(() => parseLedgerEntry(raw({ also_category: v }), 0)).toThrow(
+      /entry "AR-01-notice".*also_category/
+    )
+  })
+  it('adds alsoCategory without changing any other field', () => {
+    const base = parseLedgerEntry(raw(), 0)
+    const withAlso = parseLedgerEntry(raw({ also_category: 'person' }), 0)
+    expect(withAlso).toEqual({ ...base, alsoCategory: 'Person' })
+  })
+})
