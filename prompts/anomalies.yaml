@@ -3547,7 +3547,7 @@ anomalies:
     camera_id: 'CAM08'
     element_id: 'CAM08-E06'
     base_photo: 'public/images/cam8.webp'
-    category: 'camera'
+    category: 'object'
     anomaly_type: 'duplicate'
     phase: 'mid'
     subtlety: 'obvious'
