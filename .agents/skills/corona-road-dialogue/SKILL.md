@@ -30,6 +30,7 @@ For every conversation, decide its ledger file, trigger, tone, and release point
 - Check whether Issue #266's per-entry unlock implementation has landed. Until it has, do not imply a post-flag opening/chatter line is gated when the current schema cannot represent that gate. Keep such content out of the live ledger until the schema supports it.
 - Use `story.yaml` for event conversations tied to a raised story flag. Leave child-to-final material for the distinct intermediate flag/condition tracked by Issue #86; do not bind it to the current provisional `final` condition.
 - `chatter.yaml` is light everyday talk and must not carry anomaly clues. Common `false-report.yaml` entries also contain no hints; reserve small hints for the matching entry in `anomaly-lines.yaml`.
+- Anomaly-specific dialogue gives a nudge, not the answer: point to a broad area or suggest comparing nearby details, but do not name the anomalous object or state its exact change, color, or count. Across each anomaly's alternatives, balance who voices that observation cue (one from 出河さん and one from 樫原くん); operational instructions may remain led by 出河さん.
 - Match `midpoint.yaml` entries to the `few`, `mid`, or `many` condition without asserting a count the stage does not guarantee. Match `closing.yaml` entries to their exact result.
 - Use `tone: serious` only when the content warrants the quiet period; all chatter entries use `tone: light`.
 
@@ -42,6 +43,7 @@ For every conversation, decide its ledger file, trigger, tone, and release point
    - correct speaker and relationship voice, including occasional unintentional chattiness from 樫原くん;
    - consistency with confirmed canon and no invented backstory or unsupported statistics;
    - the right trigger, release point, tone, and kind-specific hint policy;
+   - anomaly hints stay indirect: they identify a broad area or invite comparison without naming the anomaly or its exact change, and the actionable observation cue is voiced by 出河さん in one alternative and 樫原くん in another (count the clue itself, not just the first speaker);
    - repeated ideas, overly similar wording, out-of-character flirting, or forced feminine speech;
    - valid IDs, 2–4 lines, and no real product, show, person, or trademark names.
      Resolve concrete continuity, voice, hint, and format findings in one correction pass; do not keep iterating over subjective nits after the acceptance criteria are met.

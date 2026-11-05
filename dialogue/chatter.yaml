@@ -138,3 +138,265 @@ dialogues:
       - { who: A, text: 'ああ　分かる!　私も朝寝て昼に起きる' }
       - { who: M, text: '体が勤務時間を覚えてるんですかね' }
       - { who: A, text: '休みの日までこの生活　困るよね' }
+  - id: chatter-21
+    tone: light
+    lines:
+      - { who: A, text: '最近　寝る前に本を読むんだけど' }
+      - { who: M, text: 'いいですね　何を読んでるんですか' }
+      - { who: A, text: '最初の数ページで寝ちゃう本' }
+      - { who: M, text: 'それは睡眠に役立ってますね' }
+  - id: chatter-22
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　傘は折りたたみ派ですか' }
+      - { who: A, text: '普通の傘　折りたたむのが苦手でね' }
+      - { who: M, text: '俺はたたむのが面倒で　長いのを持ち歩きます' }
+      - { who: A, text: 'それはそれで大変そう!' }
+  - id: chatter-23
+    tone: light
+    lines:
+      - { who: A, text: '樫原くん　休みの日の朝って何時に起きる?' }
+      - { who: M, text: '昼です　朝と言っていいかは微妙ですけど' }
+      - { who: A, text: '私も似たようなもの　安心した' }
+  - id: chatter-24
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　カップの飲み物は混ぜる派ですか' }
+      - { who: A, text: '混ぜるよ　底に残ると悔しいから' }
+      - { who: M, text: '俺は最後まで気づかずに飲みます' }
+      - { who: A, text: 'えっ　最後の一口で分かるでしょ!' }
+  - id: chatter-25
+    tone: light
+    lines:
+      - { who: A, text: '今日　靴下の左右が違う気がする' }
+      - { who: M, text: '見たところ　同じ組み合わせですよ' }
+      - { who: A, text: 'よかった　朝からずっと気になってた' }
+  - id: chatter-26
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　買い物のメモは紙ですか' }
+      - { who: A, text: '紙に書いて　その紙を忘れていく' }
+      - { who: M, text: 'メモの意味が薄いですね' }
+      - { who: A, text: 'そうなの　帰ってから思い出す' }
+  - id: chatter-27
+    tone: light
+    lines:
+      - { who: A, text: '今日は甘いものが食べたいな' }
+      - { who: M, text: '夜勤中に食べると　眠くなりませんか' }
+      - { who: A, text: 'なるね　でも食べたい気持ちが勝つ!' }
+  - id: chatter-28
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　家で時計を見ますか' }
+      - { who: A, text: '見るよ　腕時計も壁の時計も' }
+      - { who: M, text: '俺は時間を見すぎて　まだ一分かと思います' }
+      - { who: A, text: '分かる　待ってる時ほど進まないよね' }
+  - id: chatter-29
+    tone: light
+    lines:
+      - { who: A, text: '樫原くんって　寝る時に明かり消す?' }
+      - { who: M, text: '消しますよ　点けたままだと朝に後悔します' }
+      - { who: A, text: '私はたまに点けたまま寝ちゃう' }
+      - { who: M, text: '疲れてる時は　仕方ないですよ' }
+  - id: chatter-30
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　冬は手袋を使いますか' }
+      - { who: A, text: '使うよ　片方だけ見つからなくなるけど' }
+      - { who: M, text: '片方だけで出るんですか' }
+      - { who: A, text: '出ないよ!　探すの' }
+  - id: chatter-31
+    tone: light
+    lines:
+      - { who: A, text: '最近　湯船につかると出られなくなる' }
+      - { who: M, text: '気持ちよくて　時間を忘れるんですか' }
+      - { who: A, text: 'そう　あと五分が何回も続く' }
+  - id: chatter-32
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　パンの耳は食べますか' }
+      - { who: A, text: '食べるよ　そこが好きな人もいるよね' }
+      - { who: M, text: '俺は最後に取っておきます' }
+      - { who: A, text: '好きなの?　苦手なの?' }
+  - id: chatter-33
+    tone: light
+    lines:
+      - { who: A, text: '今朝　目覚ましを止めた記憶がない' }
+      - { who: M, text: '止めた後に　また寝たんじゃないですか' }
+      - { who: A, text: 'そうだと思う　自分が信用できない' }
+  - id: chatter-34
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　家の鍵はどこに入れてますか' }
+      - { who: A, text: '鞄の内ポケット　たまに別の所に移す' }
+      - { who: M, text: '戻す場所を決めると楽ですよ' }
+      - { who: A, text: 'それができたら苦労しないよ!' }
+  - id: chatter-35
+    tone: light
+    lines:
+      - { who: A, text: '樫原くん　炭酸は強いのが好き?' }
+      - { who: M, text: '強いほうがいいです　喉がびっくりするくらい' }
+      - { who: A, text: '私は弱め　びっくりしたくない' }
+  - id: chatter-36
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　駅で迷うことありますか' }
+      - { who: A, text: 'あるよ　案内を読んだのに逆へ行く' }
+      - { who: M, text: '読んだ内容と反対へ進んでますね' }
+      - { who: A, text: '言葉にすると　ひどいね!' }
+  - id: chatter-37
+    tone: light
+    lines:
+      - { who: A, text: '最近　目薬をどこに置いたか忘れる' }
+      - { who: M, text: '使った場所に置いてあることが多いですよ' }
+      - { who: A, text: '机の上にあった　見つけた!' }
+  - id: chatter-38
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　料理はレシピを見ますか' }
+      - { who: A, text: '見るよ　途中から目分量になるけど' }
+      - { who: M, text: 'レシピの意味がなくなってませんか' }
+      - { who: A, text: '最初はあるの　最初はね' }
+  - id: chatter-39
+    tone: light
+    lines:
+      - { who: A, text: '今日は肩がこってるなあ' }
+      - { who: M, text: '同じ姿勢が続くと　固まりますよ' }
+      - { who: A, text: '分かってるけど　動くのも面倒!' }
+  - id: chatter-40
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　写真を撮る時は構えますか' }
+      - { who: A, text: '構えないよ　後で見たら全部ぶれてる' }
+      - { who: M, text: '撮る前に一秒止まると違いますよ' }
+      - { who: A, text: '分かった　次は一秒だけ頑張る' }
+  - id: chatter-41
+    tone: light
+    lines:
+      - { who: A, text: 'この前　冷蔵庫を開けて何を取るか忘れた' }
+      - { who: M, text: '中を見たら思い出しましたか' }
+      - { who: A, text: '思い出すどころか　何か食べたくなった' }
+  - id: chatter-42
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　イヤホンは片方だけ使いますか' }
+      - { who: A, text: '家では片方だけ　呼ばれたら気づきたいから' }
+      - { who: M, text: '仕事の癖が出てますね' }
+      - { who: A, text: 'そうかも　家でも周りを気にしちゃう' }
+  - id: chatter-43
+    tone: light
+    lines:
+      - { who: A, text: 'そろそろ新しい鞄が欲しいんだけど' }
+      - { who: M, text: '今の鞄　まだ使えそうに見えますよ' }
+      - { who: A, text: 'そうなの　だから買う理由を探してる' }
+  - id: chatter-44
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　買った服はすぐ着ますか' }
+      - { who: A, text: '着るよ　しまい込むと忘れちゃうから' }
+      - { who: M, text: '俺は値札を取るまでが長いです' }
+      - { who: A, text: 'それは早く取ってあげて!' }
+  - id: chatter-45
+    tone: light
+    lines:
+      - { who: A, text: '今日は髪がまとまらない' }
+      - { who: M, text: 'いつもと同じに見えますけど' }
+      - { who: A, text: 'それならいい　本人だけ分かるやつかな' }
+  - id: chatter-46
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　休憩中は何をしていますか' }
+      - { who: A, text: '座って目を閉じる　眠れなくても楽になる' }
+      - { who: M, text: '俺は動画を見て　休憩が終わります' }
+      - { who: A, text: '休んだ気がしないやつだね' }
+  - id: chatter-47
+    tone: light
+    lines:
+      - { who: A, text: '樫原くん　辛いものは平気?' }
+      - { who: M, text: '平気です　汗は出ますけど顔には出しません' }
+      - { who: A, text: '今度　顔に出るか見てみたい' }
+  - id: chatter-48
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　家で靴をそろえますか' }
+      - { who: A, text: 'そろえるつもりで　だいたい忘れる' }
+      - { who: M, text: 'つま先を向けるだけでも違いますよ' }
+      - { who: A, text: '今度こそやる　見ててね' }
+  - id: chatter-49
+    tone: light
+    lines:
+      - { who: A, text: '金沢の雨って　傘を持つか迷う日が多いね' }
+      - { who: M, text: '降ったり止んだりしますからね' }
+      - { who: A, text: '出た瞬間に降るの　やめてほしい!' }
+  - id: chatter-50
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　手帳は何色ですか' }
+      - { who: A, text: '紺色　汚れが目立たないから' }
+      - { who: M, text: '俺は明るい色です　鞄の中で見つかるんで' }
+      - { who: A, text: 'それは合理的だね' }
+  - id: chatter-51
+    tone: light
+    lines:
+      - { who: A, text: '昨日　冷凍庫から何か出したはずなんだけど' }
+      - { who: M, text: '解凍して食べたんじゃないですか' }
+      - { who: A, text: 'そうだった　食べたことまで忘れてた' }
+  - id: chatter-52
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　寝る前に明日の準備しますか' }
+      - { who: A, text: 'する日もある　しない日は朝に慌てる' }
+      - { who: M, text: '準備しても忘れ物はしますよね' }
+      - { who: A, text: 'えっ　樫原くんも?　少し安心した' }
+  - id: chatter-53
+    tone: light
+    lines:
+      - { who: A, text: '今週　洗濯物をたたむのを後回しにしてる' }
+      - { who: M, text: '着るものがなくなる前に片づけましょう' }
+      - { who: A, text: 'その期限まで　まだ少しあるんだよね' }
+  - id: chatter-54
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　目覚ましは何回鳴らしますか' }
+      - { who: A, text: '一回のつもり　止めてから何回も寝る' }
+      - { who: M, text: 'それは実質　何回も鳴らしてますね' }
+      - { who: A, text: 'そうなの　自覚はある!' }
+  - id: chatter-55
+    tone: light
+    lines:
+      - { who: A, text: '樫原くん　朝ごはんは食べる?' }
+      - { who: M, text: '起きた時間によります　昼なら昼ごはんです' }
+      - { who: A, text: 'そこは時刻で決めるんだね' }
+  - id: chatter-56
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　靴の手入れってしますか' }
+      - { who: A, text: '汚れた時だけ　普段は見ないふり' }
+      - { who: M, text: '見ないふりの期間が長くなりそうですね' }
+      - { who: A, text: 'そうなの　今日は見てみる' }
+  - id: chatter-57
+    tone: light
+    lines:
+      - { who: A, text: 'コンビニで同じものばかり買っちゃう' }
+      - { who: M, text: '決めていると迷わなくていいですよ' }
+      - { who: A, text: 'そう思ってたけど　今日は違うのにする!' }
+  - id: chatter-58
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　家の中でも眼鏡ですか' }
+      - { who: A, text: '外すと何も見えないからね' }
+      - { who: M, text: '俺もです　眼鏡を探す時に困ります' }
+      - { who: A, text: 'かけたまま探してるのにね' }
+  - id: chatter-59
+    tone: light
+    lines:
+      - { who: A, text: '最近　小さい観葉植物を置こうか迷ってる' }
+      - { who: M, text: '水やりを忘れないか心配ですか' }
+      - { who: A, text: 'そう　植物に申し訳ないことになりそうで' }
+  - id: chatter-60
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　休日に予定を詰めるほうですか' }
+      - { who: A, text: '詰めるよ　でも最初の予定で疲れちゃう' }
+      - { who: M, text: '予定表が気合いを入れすぎですね' }
+      - { who: A, text: 'うん　次の休みは空けておく!' }
