@@ -150,36 +150,6 @@
 
 台帳に `planned` で載せた画像案の制作仕様の詳細。制作して昇格したら、その案の `###` 節を削除する。
 
-### AR-03-shutter-dents-many — 左シャッターの下のほうの小さな凹みが、数個から十数個に増える
-
-- **カメラ**: CAM03（`cam3.webp`、676x900）／対象要素: CAM03-E06（左のシャッター）
-- **型 / カテゴリ / フェーズ / 目立ち度**: multiply / object / mid / medium
-- **物と変化**: 左シャッターの下のほう（床に近い側）に、握りこぶし大の細長い凹みが、もとは数か所しか無いのに、十数個、不揃いに散らばる。凹みはすべて同じ形・同じ向き（横板に沿った細い楕円）で、増えた数だけが不気味。新しい物を足す add_object や同じ物の複製 duplicate とは違い、『もとの傷の数』が増える multiply。
-- **box (x1,y1,x2,y2)**: (0,440,62,590)（62x150）
-- **最寄り既存 overlay と実測距離**: AR-03-shutter-fingers (33.0)、次点 AR-03-paper-bag (41.0)。
-- **6倍クロップ範囲**: 6倍クロップ (0,430)–(256,601)（256x171）。box は窓内で (0,60)–(372,960)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the lower-left part of the closed grey roll-up shutter at x=0 to 372, y=60 to 960. Add about fourteen small horizontal oval dents, each about 40 px long and 18 px tall, scattered irregularly across the slats there, each with a light edge on top and a dark shadow beneath, all with the same shape and the same orientation along the slats. The shutter colour, slats and existing scratches stay as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: many small identical dents appear on the shutter slats in the area x=0 to 372, y=60 to 960: around twelve to sixteen of them, like knuckle-sized bumps pressed from inside, all oval, all aligned with the slat direction, evenly dark in the centre. No other change to the shutter. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle, white fluorescent lights). Edit only this: the shutter in the area x=0 to 372, y=60 to 960 is dotted with a crowd of identical small oval dents (about fifteen), as if something has been pushing from the inside over and over. Same grey metal, same lighting, no colour change, no hole, no text. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-03-shutter-dents-many'
-    candidate_id: 'AR-03-shutter-dents-many'
-    camera_id: 'CAM03'
-    element_id: 'CAM03-E06'
-    base_photo: 'public/images/cam3.webp'
-    category: 'object'
-    anomaly_type: 'multiply'
-    location: '左シャッターの下寄り、差分左上 (0,440) 付近（貼り込み後に再計測）'
-    detail: '左シャッターの下のほうに、同じ形の小さな凹みが十数個に増える。'
-    overlay: 'assets/anomaly-overlays/cam03/shutter-dents-many.webp'
-    # phase / 目立ち度: mid / medium
-    note: '最寄り既存 overlay は AR-03-shutter-fingers（box 距離 33px）。大面積 AR-03-shutter-blank-papers（シャッターの同じ面）・AR-03-floor-tatami（box が畳の上端と重なる）とは排他。'
-  ```
-- **視認性の見立て**: 凹み1個は小さいが、十数個の合計面積と影の差で下限を満たす見立て。check-visibility を必ず通す（通らなければ凹みを大きく・数を増やす）。
-- **相互参照 / 重複精査**: AR-03-shutter-fingers（隙間から覗く白い指）・AR-03-shutter-wave（板が波形）とは別で、『傷・凹みの数が増える』だけ。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-shutter-blank-papers（同じシャッター面）/ AR-03-floor-tatami（box が床の畳の上端と重なる。大面積）。併存可=天井・看板の異変。
 
 ## 制作仕様（未制作）— CAM 04
 
