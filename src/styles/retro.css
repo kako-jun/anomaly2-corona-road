@@ -1420,11 +1420,12 @@
 .vfd,
 .lamps {
   box-sizing: border-box;
-  min-height: 46px;
+  /* 6px top/bottom keeps the window height identical to before the frame image (page height must not grow) */
+  min-height: 44px;
   border-style: solid;
   border-color: transparent;
-  border-width: 8px;
-  border-image: url('/ui/window9.webp') 24 fill / 8px round;
+  border-width: 6px 8px;
+  border-image: url('/ui/window9.webp') 24 fill / 6px 8px round;
   background-clip: padding-box;
   border-radius: 0;
   box-shadow: none;
