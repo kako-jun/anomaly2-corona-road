@@ -314,7 +314,7 @@ describe('reporting', () => {
       expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
     })
 
-    it('the also_categories is correct too, and the feedback still names the primary', () => {
+    it('a category listed in also_categories is correct too, and the feedback still names the primary', () => {
       const { result } = withAlso()
       act(() => result.current.reportAnomaly('Person'))
       expect(result.current.stats.correctReports).toBe(1)

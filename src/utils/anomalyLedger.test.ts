@@ -433,6 +433,15 @@ describe('parseLedgerEntry also_categories array shapes (#240)', () => {
       /entry "AR-01-notice".*"also_categories" has a non-string item/
     )
   })
+  it.each([
+    ['true', true],
+    ['a number', 12],
+    ['an object', { a: 1 }],
+  ])('rejects %s as not an array', (_n, v) => {
+    expect(() => parseLedgerEntry(raw({ also_categories: v }), 0)).toThrow(
+      /entry "AR-01-notice".*"also_categories" is not an array/
+    )
+  })
   it('rejects a bare string', () => {
     expect(() =>
       parseLedgerEntry(raw({ also_categories: 'person' }), 0)
