@@ -224,7 +224,7 @@
 
 ## 制作仕様（未制作）— CAM 05
 
-型の偏り（台帳の remove_object・add_person・add_creature が少ない）を直すための案 3 件。画像は未制作。台帳には未登録。書式は CAM 03 の見本に揃える。
+型の偏り（台帳の remove_object・add_creature が少ない）を直すための案 2 件。画像は未制作。台帳には未登録。書式は CAM 03 の見本に揃える。
 
 ### AR-05-shelf-items-gone — 左奥通路の店先のガラス棚から、白い小物が全部消える
 
@@ -287,37 +287,6 @@
   ```
 - **相互参照 / 重複精査**: 生き物の異変は CAM05 に猫（CR-05-25・候補）・金魚（AR-05-aisle-goldfish）。亀は台帳・候補のどのカメラにも無い。床の人影（AR-05-floor-child-shadow）とも別。
 - **同カメラ内の排他と併存**: 同プレイで共存させない=AR-05-floor-white-cranes。併存可=壁・天井・ガラス・通路の異変。
-
-### AR-05-edge-face — 右端の窓のカーテンの隙間から、顔だけがこちらを覗く
-
-- **カメラ**: CAM05（`cam5.webp`、676x900）／対象要素: CAM05-E07
-- **型 / カテゴリ / フェーズ / 目立ち度**: `add_person` / person / late / obvious
-- **物と変化**: ガラス区画の右端（画面端に切れて見える窓）の内側、灰色のカーテンの二つの襞の間から、人の顔だけが覗く。血の気のない無表情の顔（額から顎まで約28px）が、まっすぐカメラを向く。目は暗い窪み、首から下はカーテンに隠れる。流血・傷・誇張した表情は無し。老婆（AR-05-old-woman-in-glass・背を向けた全身）・指だけ（AR-05-door-fingers）・黒い人影（他カメラ）とは別で、『顔がこちらを見る』変化。
-- **box (x1,y1,x2,y2)**: (650,218,676,300)（26x82）
-- **最寄り既存 overlay と実測距離**: AR-05-door-fingers (44.0)、AR-05-sign-digit-missing (44.0)、AR-05-duplicate-light (100.0)
-- **6倍クロップ範囲**: 6倍クロップ (420,187)–(676,358)（256x171）。box は窓内で (1380,186)–(1536,678)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: inside the right edge of the glass shop front (the narrow window strip at the right edge of the frame, marked area about x=1380 to 1536, y=186 to 678 in the 1536x1024 frame), between two vertical folds of the grey curtain, a pale expressionless human face appears: forehead to chin about 170 pixels tall in this frame, eyes as dark hollows, mouth closed, looking straight at the camera. Only the face is visible; neck and body are hidden behind the curtain folds. No blood, no injury, no exaggerated expression. The curtain, frame and everything else stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: in the marked area at the right edge of the glass (about x=1380 to 1536, y=186 to 678) a bloodless grey-white human face peeks out through a gap in the curtain, staring at the camera with dark sunken eyes, neutral mouth. The curtain folds overlap its neck and body so only the face shows, partly cut by the image edge. No other change. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: behind the glass at the far right of the frame (marked area about x=1380 to 1536, y=186 to 678), between the curtain folds, a single plain pale face of an adult looks out toward the camera: calm, motionless, eyes as dark shadows, its lower face lit slightly by the corridor light. Do not add a body, hands or any other person; leave everything else unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
-- **視認性の見立て**: 暗いカーテン地の上の青白い顔。幅約20px・高さ約28pxの明るい塊で、面積は十分。暗い背景との差を確保するため顔を白めにする。画面端で一部切れてよい。
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-05-edge-face'
-    candidate_id: 'AR-05-edge-face'
-    camera_id: 'CAM05'
-    element_id: 'CAM05-E07'
-    base_photo: 'public/images/cam5.webp'
-    category: 'person'
-    anomaly_type: 'add_person'
-    location: 'CAM05-E07 のガラス区画右端の窓、差分左上 (650,218) 付近（貼り込み後に再計測）'
-    detail: '右端の窓のカーテンの襞の間から、血の気のない無表情の顔だけがこちらを覗く。'
-    overlay: 'assets/anomaly-overlays/cam05/edge-face.webp'
-    # phase / 目立ち度: late / obvious
-    note: '最寄り既存 overlay は AR-05-door-fingers（box 距離 44.0）。顔の描写に注意（無表情・血なし）。報告カテゴリは person。'
-  ```
-- **相互参照 / 重複精査**: 人物の異変は AR-05-old-woman-in-glass（背を向けた老婆）・AR-05-door-fingers（指のみ）・AR-05-aisle-silhouette（少年の影）・AR-05-floor-child-shadow（子供の影）。いずれも顔がこちらを見る変化は無い。台帳の顔の異変は他カメラの壁の模様・写真の貼り出しで、窓の内側から覗く顔ではない。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-05-old-woman-in-glass（同じガラス区画の人物。続けて出さない）。併存可=床・天井・通路の異変。
 
 ## 追加候補 — CAM 06
 
