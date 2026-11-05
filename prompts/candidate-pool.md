@@ -25,22 +25,6 @@
 | CR-01-11 | CAM01-E15 | 左奥の案内板の矢印が、壁ではなく画面を見る方向を指している。       | object / late / obvious    |
 | CR-01-12 | CAM01-E20 | 右下の切れた灰色の床端が、床ではなく壁面へ垂直に折れ曲がって続く。 | surreal / late / obvious   |
 
-## CAM 02 — Main Corridor
-
-| 候補ID   | 対象ID    | 変化案                                                           | 分類 / フェーズ / 目立ち度 |
-| -------- | --------- | ---------------------------------------------------------------- | -------------------------- |
-| CR-02-01 | CAM02-E14 | 「COFFEE」の一文字だけが消え、緑の点灯はそのまま続く。           | object / early / subtle    |
-| CR-02-02 | CAM02-E19 | ピンクの鉢の受け皿だけが、台の反対端へ移動している。             | object / early / subtle    |
-| CR-02-03 | CAM02-E16 | 木箱の格子穴が一つだけ塞がっている。                             | object / early / subtle    |
-| CR-02-04 | CAM02-E07 | 左シャッターの一枚の横板だけが、数センチ浮いている。             | object / early / subtle    |
-| CR-02-05 | CAM02-E15 | 看板の後ろの葉が、すべて看板の光源から遠ざかる向きに曲がる。     | environment / mid / medium |
-| CR-02-06 | CAM02-E18 | 黒板の脚が床に接しているのに、影だけが壁へ伸びている。           | surreal / mid / medium     |
-| CR-02-07 | CAM02-E17 | 白い壁飾りの一つだけが、他の模様と同じ向きに揃っていない。       | object / mid / medium      |
-| CR-02-08 | CAM02-E21 | 床点検口の留め具が一つだけ内側から押し上げられている。           | object / mid / medium      |
-| CR-02-09 | CAM02-E09 | 暗い奥に同じ柱がもう一つ続き、廊下が実際より深く見える。         | surreal / late / obvious   |
-| CR-02-10 | CAM02-E22 | 床の白い反射に、人の足だけが二組映り、通路には誰もいない。       | person / late / obvious    |
-| CR-02-12 | CAM02-E12 | 右奥のシャッターが壁面と同じ色になり、閉じた時の縦枠だけが残る。 | surreal / late / obvious   |
-
 ## CAM 03 — South Exit
 
 | 候補ID   | 対象ID    | 変化案                                                                 | 分類 / フェーズ / 目立ち度   |
@@ -291,23 +275,6 @@
   ```
 - **相互参照 / 重複精査**: AR-01-cat-in-frosted-window は同じ窓の下部に映る猫の影（reflection）で、場所・対象が違う。CR-01-06（開口の小さな人影）・CR-01-09（窓にシャッターの裏）とも別。同カメラには AR-01-wall-faces（左壁一面に無表情の顔写真が格子状に並ぶ duplicate）があり、顔という題材は近いが、見え方が違う（窓ガラスの奥に顔が一つだけ・生きた人が覗く／壁一面に写真の顔が多数）。同プレイでは共存させない。
 - **同カメラ内の排他と併存**: 同プレイで共存させない=AR-01-wall-faces（顔の題材が近い。box は重ならない）。併存可=床・天井・右の店先の異変。
-
-## 追加候補 — CAM 02
-
-| 候補ID   | 対象ID    | 変化案                                     | 分類 / フェーズ / 目立ち度   |
-| -------- | --------- | ------------------------------------------ | ---------------------------- |
-| CR-02-13 | CAM02-E20 | 床タイル一枚の中央に小さな円模様が現れる。 | environment / early / subtle |
-| CR-02-14 | CAM02-E20 | 床の一枚だけ市松模様になる。               | environment / mid / medium   |
-| CR-02-15 | CAM02-E20 | 床の一枚だけ薄い桃色になる。               | environment / early / subtle |
-| CR-02-16 | CAM02-E20 | 看板の手前に小さな水たまりが現れる。       | environment / mid / medium   |
-| CR-02-19 | CAM02-E01 | 天井板の一枚だけ木目模様になる。           | environment / mid / medium   |
-| CR-02-20 | CAM02-E03 | 丸い天井設備が四角い輪郭になる。           | environment / mid / medium   |
-| CR-02-21 | CAM02-E05 | 吊り器具から小さな折り鶴が下がる。         | object / mid / medium        |
-| CR-02-23 | CAM02-E14 | 下段のカタカナ一文字だけ左右反転する。     | object / early / subtle      |
-| CR-02-24 | CAM02-E14 | 緑色の発光面が琥珀色になる。               | object / mid / medium        |
-| CR-02-25 | CAM02-E16 | 木箱が左右に二つ並ぶ。                     | object / mid / medium        |
-| CR-02-26 | CAM02-E19 | 鉢が消え、ガラス面にだけ鉢の姿が映る。     | surreal / mid / medium       |
-| CR-02-27 | CAM02-E09 | 奥の開口に三毛猫が一匹座る。               | object / mid / medium        |
 
 ## 制作仕様（未制作）— CAM 02
 
