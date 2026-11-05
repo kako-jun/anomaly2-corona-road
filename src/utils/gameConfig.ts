@@ -74,6 +74,13 @@ export const getGamePhase = (ms: number): 'early' | 'mid' | 'late' => {
   return 'late'
 }
 
+/**
+ * Anomaly draw (#221): at the category and type steps a group's weight is (its unused count) ^ this.
+ * 0 = uniform, 1 = proportional to count, 0.5 (default) = square root, so a rare kind still
+ * appears but less often. The camera step and the final entry step stay uniform.
+ */
+export const DRAW_WEIGHT_EXPONENT = 0.5
+
 /** Dialogue timing and thresholds (docs/save-data.md and dialogue/README.md describe the behaviour). */
 export const DIALOGUE_CONFIG = {
   /** Wait after the shift starts before the opening conversation. */
