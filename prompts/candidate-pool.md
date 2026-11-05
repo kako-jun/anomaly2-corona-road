@@ -5,7 +5,7 @@
 ## 正本と昇格ルール
 
 - 写っている物の説明・座標・カメラ写真の正本は [`camera-element-inventory.md`](./camera-element-inventory.md)。写真固有の候補ではここでは要素IDだけ参照し、物体説明や座標を複製しない。
-- 制作済みの真実は台帳（`anomalies.yaml`）。制作仕様の節は制作・登録済みの案を撤去するため、取り下げた案だけが「制作仕様（未制作）— CAM 03」に残る（将来の再挑戦用）。
+- 制作済みの真実は台帳（`anomalies.yaml`）。制作仕様の節は制作・登録済みの案を撤去するため、取り下げた案は「制作仕様（未制作）— CAM 03」に残る（将来の再挑戦用）。型の偏りを直すための未制作の仕様は「制作仕様（未制作）— CAM 05」にある（画像は未制作・台帳未登録。制作に進める時は節ごと撤去して台帳へ登録する）。
 - 末尾の「Runtime / 背景非依存の異変在庫」は写真に紐づかず、昇格しても `anomalies.yaml` には載せない（実装タスクとして別管理）。
 - 候補の正本はこのファイル。採用候補を生成工程へ移す時は、この行を削除し、`anomalies.yaml` に一件だけ登録する。候補と制作データを二重に残さない。
 - カテゴリは `camera` / `object` / `environment` / `person` / `surreal`、フェーズは `early` / `mid` / `late`。目立ち度は `subtle` / `medium` / `obvious`。
@@ -194,6 +194,197 @@
   ```
 - **相互参照 / 重複精査**: 床の穴・沈み（AR-03-sunken-opening-floor）やタイルの向き・色（AR-03-tile-diagonal / AR-03-blue-floor-tile）とは別で、物は増減せず『目地の線が消える』だけ。CR-03-30/04 系の灯の候補とは無関係。台帳に目地の連続性を崩す異変は無い。
 - **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-floor-shadows（同じ床の面）/ AR-03-dark-tile（同じ床の面・近接）。併存可=壁・天井・シャッターの異変。
+
+## 制作仕様（未制作）— CAM 05
+
+型の偏り（台帳の remove_object・displace・text_change・add_person・surreal・add_creature が少ない）を直すための案 6 件。画像は未制作。台帳には未登録。書式は CAM 03 の見本に揃える。
+
+### AR-05-sign-text-sabotan — 左奥通路の丸い看板の店名が一字だけ違う文字になる
+
+- **カメラ**: CAM05（`cam5.webp`、676x900）／対象要素: CAM05-E06
+- **型 / カテゴリ / フェーズ / 目立ち度**: `text_change` / object / early / subtle
+- **物と変化**: 左奥通路の入口脇、天井下の青緑の丸い看板に、カタカナで「サボテン」（原寸で読める範囲。原画像を拡大して確認済み）と書かれている。これが「サボタン」に変わる（3字目「テ」→「タ」）。看板の形・色・位置は変えず、文字だけが違う。店名は架空の一般語で、実在の店名ではない。看板の文字は原寸で数画素なので、差分を見えるようにするため、新しい文字は元より一回り太く明るい塗料の筆致（クリーム色）にする。
+- **box (x1,y1,x2,y2)**: (3,196,34,231)（31x35）
+- **最寄り既存 overlay と実測距離**: AR-05-white-ribbon (55.1)、次点 AR-05-morning-glory-wall (84.0・大面積)・AR-05-stand-tag (92.0)
+- **クロップ範囲**: (0,128)–(256,299)（256x171）。box は窓内で (18,408)–(204,618)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: the round teal sign hanging under the ceiling at the entrance of the left side aisle (inside the marked area about x=18 to 204, y=408 to 618 in the 1536x1024 frame) carries four katakana characters; change the third character so that the whole word reads "サボタン" (the third glyph becomes "タ"). Draw all four characters in slightly thicker, brighter cream paint than the original, hand-painted and slightly uneven. The round sign, its colour, its bracket and everything else stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: the four katakana characters on the round teal sign in the marked area (about x=18 to 204, y=408 to 618) are repainted so that they read "サボタン" instead of the original wording: only the third character differs ("タ"). Cream paint, a little thicker than before, hand-lettered. The sign shape, colour, bracket and every other object remain unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: on the round teal sign in the marked area (about x=18 to 204, y=408 to 618) the lettering is replaced by the katakana word "サボタン" (four characters, large, cream coloured, hand-painted). Nothing else on the sign changes; do not add any other text or symbol anywhere. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+- **視認性の見立て**: 小さな丸看板の中の数文字の差。文字を太く明るくして面積を稼いでも下限（最大差分40・25以上の画素が看板面積の25%）に届くかぎりぎり。check-visibility で未達なら文字面を看板全面に広げる（看板の地色を暗くし文字をクリーム色の大きめ書体に）。それでも通らなければ見送る。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-05-sign-text-sabotan'
+    candidate_id: 'AR-05-sign-text-sabotan'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E06'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'text_change'
+    location: 'CAM05-E06 の左奥通路、天井下の青緑の丸看板（差分左上 (3,196) 付近）（貼り込み後に再計測）'
+    detail: '左奥の丸い看板の店名「サボテン」が「サボタン」の一字違いに書き換わる。'
+    overlay: 'assets/anomaly-overlays/cam05/sign-text-sabotan.webp'
+    # phase / 目立ち度: early / subtle
+    note: '最寄り既存 overlay は AR-05-white-ribbon（box 距離 55.1）。文字だけの変更で overlay が小さいので、check-visibility を必ず通す。'
+  ```
+- **相互参照 / 重複精査**: CR-05-26（緑看板のひらがな反転）・AR-05-sign-digit-missing（緑看板の数字消失）とは別の看板。台帳・候補に左奥の丸看板の文字を変える案は無い。AR-05-sign-in-glass（丸看板の複製）とは変化が別（複製は看板が増える、これは文字が違う）。同じ看板を使うので同プレイで共存させない。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-05-sign-in-glass（同じ丸看板）。併存可=床・天井・ガラス面の異変。
+
+### AR-05-shelf-items-gone — 左奥通路の店先のガラス棚から、白い小物が全部消える
+
+- **カメラ**: CAM05（`cam5.webp`、676x900）／対象要素: CAM05-E06
+- **型 / カテゴリ / フェーズ / 目立ち度**: `remove_object` / object / early / subtle
+- **物と変化**: 左奥通路の店先に縦長のガラス棚があり、三段それぞれの棚板に白っぽい小物（陶器の置物のような塊が数個ずつ。何かは判別できない）が並んでいる。三段とも小物がすべて消え、棚板と奥の暗い背板だけが残る。消えた跡は背板と棚板の自然な続きで埋まり、白抜けや跡は残らない。
+- **box (x1,y1,x2,y2)**: (58,234,80,300)（22x66）
+- **最寄り既存 overlay と実測距離**: AR-05-stand-tag (30.5)、AR-05-aisle-silhouette (36.0)、AR-05-morning-glory-wall (38.0・大面積)。30px 規則すれすれなので、確定時に alpha bbox で再計測する。
+- **クロップ範囲**: (0,184)–(256,355)（256x171）。box は窓内で (348,300)–(480,696)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: the narrow tall glass display cabinet in the middle of the frame (marked area about x=348 to 480, y=300 to 696) has three shelves, and on each shelf a few small whitish ornaments stand. Remove every one of these ornaments: all three shelves become empty, showing only the shelf boards and the dark back panel, filled in naturally with the same dark tone and the same soft reflection on the glass. The cabinet frame, the glass, the beige panels beside it and everything else stay exactly as they are. Add nothing. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: in the marked area (about x=348 to 480, y=300 to 696) the glass cabinet shows three shelves with small white ornaments. Erase all the ornaments from the top, middle and lower shelves so the shelves are bare: continue the dark back panel and the thin shelf boards through where the ornaments were, with the same grain, reflection and noise. No new object, no gap, no bright patch left behind. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: the small white objects standing on the three shelves of the glass cabinet in the marked area (about x=348 to 480, y=300 to 696) vanish completely, leaving clean empty shelves: the shelf boards and the dark wall behind them continue seamlessly. Keep the cabinet, the glass reflections and all neighbouring objects unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+- **視認性の見立て**: 白い小物は暗い背板の上で明暗差が大きく、各数画素角が三段分で面積比は通る見込み。ただし小物が全体で数十画素と小さいので、消した跡が背板と同じ暗さで埋まっていること（差分が白→暗で最大差分40以上）を check-visibility で確認する。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-05-shelf-items-gone'
+    candidate_id: 'AR-05-shelf-items-gone'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E06'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'remove_object'
+    location: 'CAM05-E06 の左奥通路のガラス棚（差分左上 (58,234) 付近）（貼り込み後に再計測）'
+    detail: '左奥の店先のガラス棚の三段に並んでいた白い小物が全部消え、空の棚になる。'
+    overlay: 'assets/anomaly-overlays/cam05/shelf-items-gone.webp'
+    # phase / 目立ち度: early / subtle
+    note: '最寄り既存 overlay は AR-05-stand-tag（box 距離 30.5）。『消す』型は消した面が自然に埋まるか目視を必ず行う。'
+  ```
+- **相互参照 / 重複精査**: 消える『小物』の異変は台帳に無い（remove_object は AR-05 に未登録）。AR-05-stand-tag（同じ通路のスタンドに札が増える）・赤電話（別カメラ・棚に物が増える）とは対象も方向も逆。
+- **同カメラ内の排他と併存**: 併存可=床・天井・ガラス区画の異変。AR-05-stand-tag とは別の物（距離 30.5）だが、同じ通路なので続けて出さない運用が望ましい。
+
+### AR-05-floor-tile-slid — 前景左の床タイル一枚が、少しずれて隙間ができる
+
+- **カメラ**: CAM05（`cam5.webp`、676x900）／対象要素: CAM05-E13
+- **型 / カテゴリ / フェーズ / 目立ち度**: `displace` / environment / early / subtle
+- **物と変化**: 左手前の床（光の帯の右、区画の根元へ続く広い床）の灰色の正方形タイル一枚が、元の位置から斜めに約5cm（画面で約10px）ずれ、隣のタイルとの間に暗い隙間が口を開ける。タイル自体の色・粒・大きさは同じ。『同じ物（タイル）が不自然な位置にある』変化で、色や穴の異変とは別。
+- **box (x1,y1,x2,y2)**: (15,600,115,690)（100x90）
+- **最寄り既存 overlay と実測距離**: AR-05-aisle-goldfish (34.0)、AR-05-joint-into-glass (52.8)。大面積の AR-05-floor-white-cranes と AR-05-morning-glory-wall の範囲内（大面積は重なってよいが、cranes とは排他）。
+- **クロップ範囲**: (0,517)–(384,773)（384x256・4倍）。box は窓内で (60,332)–(460,692)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 4x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: the single large grey square floor tile inside the marked area (about x=60 to 460, y=332 to 692 in the 1536x1024 frame) is shifted diagonally toward the lower right by about 40 pixels (in this frame): along its upper and left edges a dark, narrow gap about 25 pixels wide opens up between it and its neighbours, and its lower right edge overlaps slightly onto the next tile, with a thin dark shadow line. The tile keeps its own colour, speckle and size. All other tiles and joints, the light patches and every other object stay exactly as they are. Add nothing. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 4x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: one floor tile in the marked area (about x=60 to 460, y=332 to 692) has slid out of place: it is moved about 40 pixels to the lower right and a black crack-like gap about 25 pixels wide shows along its upper and left sides, with the neighbouring tiles' edges cleanly visible. Same speckled grey stone as before. No other tile changes, no new object. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 4x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: a single grey floor tile in the marked area (about x=60 to 460, y=332 to 692) sits crookedly: displaced diagonally to the lower right by about 40 pixels with a dark open gap on the upper-left side, as if the tile had been pushed. The stone texture, reflections and noise of the tile are unchanged and all surrounding tiles are left as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+- **視認性の見立て**: タイルと隙間の暗い線は床面の中で線状。隙間を幅25px（元画像で約6px）まで広げ、暗さを強めて、差分25以上の画素100以上を確保する。通らなければタイルを大きくずらす（隙間を広げる）。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-05-floor-tile-slid'
+    candidate_id: 'AR-05-floor-tile-slid'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E13'
+    base_photo: 'public/images/cam5.webp'
+    category: 'environment'
+    anomaly_type: 'displace'
+    location: 'CAM05-E13 の左手前の床、差分左上 (15,600) 付近（貼り込み後に再計測）'
+    detail: '左手前の床のタイル一枚が斜めにずれ、隣との間に暗い隙間が開く。'
+    overlay: 'assets/anomaly-overlays/cam05/floor-tile-slid.webp'
+    # phase / 目立ち度: early / subtle
+    note: '最寄り既存 overlay は AR-05-aisle-goldfish（box 距離 34.0）。隙間が薄いと check-visibility を通らないので隙間は暗く太めにする。'
+  ```
+- **相互参照 / 重複精査**: 床タイルの異変は AR-05-blue-brick（色）・CR-05-13/14（色・縞）・CR-05-40（目地の二重線）と別。位置をずらす型は CAM05 の床に無い。AR-05-joint-into-glass（目地がガラス内へ連続）とも、ずれる物（タイル）が違い見え方も別。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-05-floor-white-cranes（床一面）/ AR-05-floor-water-film（床一面）/ AR-05-floor-turtle（同じ床の面）。併存可=壁・天井・ガラス・通路の異変。
+
+### AR-05-floor-turtle — 手前の床に、大きな亀が一匹いる
+
+- **カメラ**: CAM05（`cam5.webp`、676x900）／対象要素: CAM05-E13
+- **型 / カテゴリ / フェーズ / 目立ち度**: `add_creature` / object / mid / medium
+- **物と変化**: 手前中央寄りの暗い床に、甲羅が30〜40cmほどのくすんだオリーブ色の亀が一匹、首をわずかに伸ばして立っている（四肢が短く、顔は左前方を向く）。無人の地下街に迷い込んだ生き物。亀に模様や文字は無く、足元に濃い接地影が落ちる。台帳の生き物（猫・金魚・白い鳩〈別カメラ〉）とは種も見え方も別。
+- **box (x1,y1,x2,y2)**: (205,670,290,740)（85x70）
+- **最寄り既存 overlay と実測距離**: AR-05-pet-bottle (31.0)、AR-05-marbles-scattered (51.0)。大面積の AR-05-floor-white-cranes の範囲内（排他）。
+- **クロップ範囲**: (119,620)–(375,791)（256x171）。box は窓内で (516,300)–(1026,720)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: add one large tortoise on the grey tiled floor inside the marked area (about x=516 to 1026, y=300 to 720 in the 1536x1024 frame): a dull olive-brown domed shell with lighter growth rings, a small head stretched a little forward toward the left, four short stubby legs planted on the floor, shell about 450 pixels wide in this frame. A strong dark contact shadow under it and a faint pale highlight along the top of the shell so it stands out from the floor. It has no pattern, no letters, no marks. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: in the marked area (about x=516 to 1026, y=300 to 720) a single plain tortoise stands on the floor tiles, seen from slightly above, shell dark olive with a paler edge, head pointing to the left, short legs, a soft dark shadow around its feet. It straddles no tile joint cleanly: the joints run through under its shell naturally. Add nothing else, keep all other floor, light and reflections unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: add a single big tortoise (plain, unmarked, olive-green and brown shell, wrinkled legs, calm) on the floor in the marked area (about x=516 to 1026, y=300 to 720), its body about 500 pixels long in this frame, with a dark contact shadow. Do not add any other animal or object. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+- **視認性の見立て**: 灰色の暗い床に、オリーブ色の甲羅と暗い接地影。大きさ約85x70pxで面積は十分。床の明暗に溶けないよう、甲羅のハイライトと接地影を強める。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-05-floor-turtle'
+    candidate_id: 'AR-05-floor-turtle'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E13'
+    base_photo: 'public/images/cam5.webp'
+    category: 'object'
+    anomaly_type: 'add_creature'
+    location: 'CAM05-E13 の手前中央寄りの床、差分左上 (205,670) 付近（貼り込み後に再計測）'
+    detail: '手前中央寄りの床に、大きな亀が一匹立っている（無地・文字なし）。'
+    overlay: 'assets/anomaly-overlays/cam05/floor-turtle.webp'
+    # phase / 目立ち度: mid / medium
+    note: '最寄り既存 overlay は AR-05-pet-bottle（box 距離 31.0）。亀の足元が色の濃い接地影を持つこと。報告カテゴリは object（猫・小動物の仮分類に従う）。'
+  ```
+- **相互参照 / 重複精査**: 生き物の異変は CAM05 に猫（CR-05-25・候補）・金魚（AR-05-aisle-goldfish）。亀は台帳・候補のどのカメラにも無い。白い鳩（別カメラの敷居）・床の人影（AR-05-floor-child-shadow）とも別。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-05-floor-white-cranes / AR-05-floor-water-film / AR-05-floor-tile-slid（同じ床の面）。併存可=壁・天井・ガラス・通路の異変。
+
+### AR-05-edge-face — 右端の窓のカーテンの隙間から、顔だけがこちらを覗く
+
+- **カメラ**: CAM05（`cam5.webp`、676x900）／対象要素: CAM05-E07
+- **型 / カテゴリ / フェーズ / 目立ち度**: `add_person` / person / late / obvious
+- **物と変化**: ガラス区画の右端（画面端に切れて見える窓）の内側、灰色のカーテンの二つの襞の間から、人の顔だけが覗く。血の気のない無表情の顔（額から顎まで約28px）が、まっすぐカメラを向く。目は暗い窪み、首から下はカーテンに隠れる。流血・傷・誇張した表情は無し。老婆（AR-05-old-woman-in-glass・背を向けた全身）・指だけ（AR-05-door-fingers）・黒い人影（他カメラ）とは別で、『顔がこちらを見る』変化。
+- **box (x1,y1,x2,y2)**: (650,218,676,300)（26x82）
+- **最寄り既存 overlay と実測距離**: AR-05-door-fingers (44.0)、AR-05-sign-digit-missing (44.0)、AR-05-duplicate-light (100.0)
+- **クロップ範囲**: (420,187)–(676,358)（256x171）。box は窓内で (1380,186)–(1536,678)。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: inside the right edge of the glass shop front (the narrow window strip at the right edge of the frame, marked area about x=1380 to 1536, y=186 to 678 in the 1536x1024 frame), between two vertical folds of the grey curtain, a pale expressionless human face appears: forehead to chin about 170 pixels tall in this frame, eyes as dark hollows, mouth closed, looking straight at the camera. Only the face is visible; neck and body are hidden behind the curtain folds. No blood, no injury, no exaggerated expression. The curtain, frame and everything else stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: in the marked area at the right edge of the glass (about x=1380 to 1536, y=186 to 678) a bloodless grey-white human face peeks out through a gap in the curtain, staring at the camera with dark sunken eyes, neutral mouth. The curtain folds overlap its neck and body so only the face shows, partly cut by the image edge. No other change. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: behind the glass at the far right of the frame (marked area about x=1380 to 1536, y=186 to 678), between the curtain folds, a single plain pale face of an adult looks out toward the camera: calm, motionless, eyes as dark shadows, its lower face lit slightly by the corridor light. Do not add a body, hands or any other person; leave everything else unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+- **視認性の見立て**: 暗いカーテン地の上の青白い顔。幅約20px・高さ約28pxの明るい塊で、面積は十分。暗い背景との差を確保するため顔を白めにする。画面端で一部切れてよい。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-05-edge-face'
+    candidate_id: 'AR-05-edge-face'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E07'
+    base_photo: 'public/images/cam5.webp'
+    category: 'person'
+    anomaly_type: 'add_person'
+    location: 'CAM05-E07 のガラス区画右端の窓、差分左上 (650,218) 付近（貼り込み後に再計測）'
+    detail: '右端の窓のカーテンの襞の間から、血の気のない無表情の顔だけがこちらを覗く。'
+    overlay: 'assets/anomaly-overlays/cam05/edge-face.webp'
+    # phase / 目立ち度: late / obvious
+    note: '最寄り既存 overlay は AR-05-door-fingers（box 距離 44.0）。顔の描写に注意（無表情・血なし）。報告カテゴリは person。'
+  ```
+- **相互参照 / 重複精査**: 人物の異変は AR-05-old-woman-in-glass（背を向けた老婆）・AR-05-door-fingers（指のみ）・AR-05-aisle-silhouette（少年の影）・AR-05-floor-child-shadow（子供の影）。いずれも顔がこちらを見る変化は無い。台帳の顔の異変は他カメラの壁の模様・写真の貼り出しで、窓の内側から覗く顔ではない。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-05-old-woman-in-glass（同じガラス区画の人物。続けて出さない）。併存可=床・天井・通路の異変。
+
+### AR-05-floor-water-film — 前景の床一面に、薄く黒い水が張って天井の灯が逆さに映る
+
+- **カメラ**: CAM05（`cam5.webp`、676x900）／対象要素: CAM05-E13
+- **型 / カテゴリ / フェーズ / 目立ち度**: `surreal` / surreal / late / obvious
+- **物と変化**: 手前の床（区画の根元の接地線より手前、y600以下）の全面に、深さ1cmほどの黒い静かな水が薄く張り、タイルの目地は水の下にかすかに透ける。水面には天井の長い蛍光灯と丸灯が逆さに揺れて映り、水際はない（床が最初から水面だったかのよう）。乾いた床だった写真にだけ起こる物理崩壊。大面積（床の1/3、約203,000px²）。
+- **box (x1,y1,x2,y2)**: (0,600,676,900)（676x300、大面積）
+- **最寄り既存 overlay と実測距離**: AR-05-aisle-goldfish ほか手前の小物とは重なる（大面積は重なってよい）。大面積どうしの AR-05-floor-white-cranes と排他。
+- **クロップ範囲**: (0,450)–(675,900)（675x450。3:2 のまま 1536x1024 へ約2.28倍）。box は窓内で 接地線より手前、y=340 より下の全面。
+- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
+  - テイク1: `$imagegen Edit the attached image. It is a 2.28x enlarged crop (3:2, 1536x1024) of the lower half of the photograph of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: the floor below about y=340 in the 1536x1024 frame (everything in front of the base line of the glass shop and its brick band) is covered by a thin sheet of still, perfectly black water about one centimetre deep, with no visible shoreline: the grey tile joints show faintly through it, and the long white fluorescent tube and the round ceiling lights are reflected upside-down in it with soft, gentle ripples, together with the pale shape of the shop's brick base. The glass shop front, the brick band, the pillar and everything above y=340 stay exactly as they are; no objects float or stand in the water. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク2: `$imagegen Edit the attached image. It is a 2.28x enlarged crop (3:2, 1536x1024) of the lower half of the photograph of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: turn the floor in the lower part of the frame (below about y=340, in front of the shop's base line) into a thin film of dark still water: tile joints dimly visible beneath, mirrored inverted reflections of the ceiling lights and the shop's bright base, slight ripples spreading. Do not touch the shop front, the pillar, the brick band or anything above y=340. No new object. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+  - テイク3: `$imagegen Edit the attached image. It is a 2.28x enlarged crop (3:2, 1536x1024) of the lower half of the photograph of a low-light surveillance photograph of an empty, closed underground shopping arcade corner (a closed glass-fronted shop block wrapped in grey vertical curtains with a red-brown brick base, large grey square floor tiles, a narrow side aisle on the left with small closed shops, white recessed ceiling lights and a long fluorescent tube). Edit only this: the whole foreground floor below about y=340 looks as if it had always been a shallow black water surface: faint tile seams under the water, an upside-down reflection of the long fluorescent tube and the round lamps with gentle ripples, and a darker, glossier tone overall. Keep every object, the glass shop, the brick band, the light patches above the water line and the camera look exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text other than what is specified, no logos, no watermark.`
+- **視認性の見立て**: 大面積。床全体の明るさと反射の入れ替えで、最大差分・平均差分・25以上の画素の面積比とも十分に通る見込み。
+- **台帳登録案**:
+  ```yaml
+  - id: 'AR-05-floor-water-film'
+    candidate_id: 'AR-05-floor-water-film'
+    camera_id: 'CAM05'
+    element_id: 'CAM05-E13'
+    base_photo: 'public/images/cam5.webp'
+    category: 'surreal'
+    anomaly_type: 'surreal'
+    location: 'CAM05-E13 の手前の床全面、差分左上 (0,600) 付近（貼り込み後に再計測）'
+    detail: '手前の床一面に薄く黒い水が張り、天井の灯が逆さに映る。'
+    overlay: 'assets/anomaly-overlays/cam05/floor-water-film.webp'
+    # phase / 目立ち度: late / obvious
+    note: '大面積（床の 676x300 ≒ 203,000px²、画像の約1/3）。`scripts/composite-polygon.py` の crop / restore / cutout で作る。停止線は区画根元の接地線に沿わせる（下のタイル目地の線に合わせて y≈600 付近）。大面積の AR-05-floor-white-cranes と排他。'
+  ```
+- **相互参照 / 重複精査**: 床の水は台帳の床の水たまり（局所）・同心円の波紋（1か所・別カメラ）と別で、床面全体が水に変わる。逆さに映る灯は AR-05-glass-light（ガラスに古い灯が映る）・AR-05-floor-glare-backside（床の反射に裏側が映る）と別（反射の追加でなく床の素材そのものの変化）。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-05-floor-white-cranes（床一面）/ AR-05-floor-tile-slid / AR-05-floor-turtle / AR-05-floor-glare-backside（同じ床の面）。併存可=壁・天井・ガラス・通路の異変。
+
 
 ## 追加候補 — CAM 04
 
