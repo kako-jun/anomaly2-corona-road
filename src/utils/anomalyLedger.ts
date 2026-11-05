@@ -86,7 +86,7 @@ export const parseCategory = (text: string): AnomalyCategory => {
   return category
 }
 
-/** Optional `also_category`: absent -> undefined; otherwise a valid category different from `category`. */
+/** Optional `also_category`: absent / null / blank -> undefined; otherwise a valid category different from `category`. */
 export const parseAlsoCategory = (
   value: unknown,
   category: AnomalyCategory
@@ -95,14 +95,17 @@ export const parseAlsoCategory = (
   if (typeof value !== 'string') {
     throw new Error('"also_category" is not a string')
   }
+  // Same preprocessing as the other fields (trim); a blank cell counts as "no column".
+  const text = value.trim()
+  if (text === '') return undefined
   let also: AnomalyCategory
   try {
-    also = parseCategory(value)
+    also = parseCategory(text)
   } catch {
-    throw new Error(`also_category "${value}" is unknown`)
+    throw new Error(`also_category "${text}" is unknown`)
   }
   if (also === category) {
-    throw new Error(`also_category "${value}" is the same as category`)
+    throw new Error(`also_category "${text}" is the same as category`)
   }
   return also
 }
