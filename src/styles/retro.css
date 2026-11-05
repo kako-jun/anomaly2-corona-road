@@ -1304,3 +1304,76 @@
 .save-notice[hidden] {
   display: none;
 }
+
+/* ===== Type hints: a scrap of paper taped under each report key, handwritten (#236) =====
+   Caveat (SIL OFL 1.1, license text: public/fonts/OFL-Caveat.txt), self-hosted, Latin subset only. */
+
+@font-face {
+  font-family: 'Caveat';
+  src: url('/fonts/caveat-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+.cat-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cat-item .key {
+  width: 100%;
+}
+
+.cat-note {
+  --tilt: -1.2deg;
+  position: relative;
+  display: block;
+  margin: 7px 4px 0;
+  padding: 8px 8px 6px;
+  font-family: 'Caveat', 'Segoe Print', 'Comic Sans MS', cursive;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.05;
+  text-align: center;
+  color: var(--ink);
+  background: #e6d7a3;
+  border-radius: 1px 2px 2px 1px;
+  box-shadow:
+    0 1px 2px #0006,
+    inset 0 -6px 8px -6px rgba(143, 132, 102, 0.55);
+  transform: rotate(var(--tilt));
+  transform-origin: 50% 0;
+  pointer-events: none;
+}
+
+/* tape strip holding the note to the cabinet */
+.cat-note::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  width: 30px;
+  height: 11px;
+  margin-left: -15px;
+  background: rgba(217, 206, 176, 0.75);
+  box-shadow: 0 1px 1px #0003;
+  transform: rotate(2deg);
+}
+
+.cat-item:nth-child(2) .cat-note {
+  --tilt: 1.4deg;
+}
+
+.cat-item:nth-child(3) .cat-note {
+  --tilt: -0.6deg;
+}
+
+.cat-item:nth-child(4) .cat-note {
+  --tilt: 1deg;
+}
+
+.cat-item:nth-child(5) .cat-note {
+  --tilt: -1.6deg;
+}

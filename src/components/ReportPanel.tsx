@@ -10,6 +10,15 @@ const CATEGORIES: AnomalyCategory[] = [
   'Surreal',
 ]
 
+/** One-line hint written on a note stuck under each type key (always visible). */
+const CATEGORY_HINTS: Record<AnomalyCategory, string> = {
+  Camera: 'the whole picture glitches',
+  Object: 'a thing appears, vanishes or changes',
+  Environment: 'light, or the floor, wall or ceiling surface',
+  Person: 'a figure, shadow, hand or trace of someone',
+  Surreal: 'something impossible',
+}
+
 interface ReportButtonProps {
   open: boolean
   buttonRef: RefObject<HTMLButtonElement>
@@ -106,18 +115,25 @@ export const ReportDialog = ({ onSelect, onClose }: ReportDialogProps) => {
         </div>
         <div className="cat-grid">
           {CATEGORIES.map(category => (
-            <button
-              key={category}
-              type="button"
-              className="key"
-              onClick={() => onSelect(category)}
-            >
-              {category.toUpperCase()}
-            </button>
+            <div key={category} className="cat-item">
+              <button
+                type="button"
+                className="key"
+                aria-describedby={`catHint-${category}`}
+                onClick={() => onSelect(category)}
+              >
+                {category.toUpperCase()}
+              </button>
+              <span className="cat-note" id={`catHint-${category}`}>
+                {CATEGORY_HINTS[category]}
+              </span>
+            </div>
           ))}
-          <button type="button" className="key cancel" onClick={onClose}>
-            CANCEL
-          </button>
+          <div className="cat-item">
+            <button type="button" className="key cancel" onClick={onClose}>
+              CANCEL
+            </button>
+          </div>
         </div>
       </div>
     </div>
