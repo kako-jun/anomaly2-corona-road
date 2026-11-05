@@ -281,3 +281,75 @@ describe('anomaly-ledger vite plugin', () => {
     })
   })
 })
+
+describe('anomaly-ledger vite plugin: kind / status (#77)', () => {
+  const planned = (id = 'p1', over: Record<string, string> = {}) =>
+    entryYaml({ id, ...over })
+      .split('\n')
+      .filter(l => !/overlay|dimensions/.test(l))
+      .join('\n') + `\n    status: 'planned'\n    spec: 'pool#${id}'`
+  const runtime = (id: string, fields: Record<string, string>) =>
+    Object.entries({
+      id,
+      kind: 'runtime',
+      status: 'planned',
+      detail: 'd',
+      ...fields,
+    })
+      .map(([k, v], i) => `${i === 0 ? '  - ' : '    '}${k}: '${v}'`)
+      .join('\n')
+  const mixed = () =>
+    `anomalies:\n${[
+      entryYaml(),
+      planned(),
+      runtime('r1', { anomaly_type: 'feed_glitch', category: 'camera' }),
+      runtime('r2', { anomaly_type: 'sound', category: 'environment' }),
+      runtime('r3', { anomaly_type: 'rule_break', status: 'produced' }),
+    ].join('\n')}\n`
+  const parse = (out: unknown) =>
+    JSON.parse((out as string).replace('export default ', ''))
+
+  it('emits only image+produced entries from a mixed ledger', async () => {
+    const { out } = await run(mixed())
+    expect(parse(out).map((e: { id: string }) => e.id)).toEqual(['a1'])
+  })
+
+  it('does not require overlay files for planned or runtime entries', async () => {
+    // only a1's overlay exists (beforeEach); planned/runtime have none and none is checked
+    await expect(run(mixed())).resolves.toBeDefined()
+  })
+
+  it('does not check the overlay file of a planned entry that declares one', async () => {
+    const withOverlay = `${planned('p2')}\n    overlay: 'assets/anomaly-overlays/cam01/missing.webp'\n    overlay_origin: '(1,2)'\n    dimensions: '3x4'`
+    const yaml = `anomalies:\n${entryYaml()}\n${withOverlay}\n`
+    const { out } = await run(yaml)
+    expect(parse(out)).toHaveLength(1)
+  })
+
+  it('still fails when an image+produced overlay file is missing in a mixed ledger', async () => {
+    fsMock.existing = new Set()
+    await expect(run(mixed())).rejects.toThrow(
+      /entry "a1": overlay file not found/
+    )
+  })
+
+  it('fails the build on an invalid planned entry, naming it', async () => {
+    const yaml = `anomalies:\n${entryYaml()}\n${planned('p1', { category: 'ghost' })}\n`
+    await expect(run(yaml)).rejects.toThrow(/entry "p1".*category "ghost"/)
+  })
+
+  it('fails the build on an invalid runtime entry, naming it', async () => {
+    const yaml = `anomalies:\n${entryYaml()}\n${runtime('r1', { anomaly_type: 'feed_glitch', category: 'object' })}\n`
+    await expect(run(yaml)).rejects.toThrow(/entry "r1".*feed_glitch/)
+  })
+
+  it('fails the build on an unknown status', async () => {
+    const yaml = `anomalies:\n${entryYaml()}\n    status: 'done'\n`
+    await expect(run(yaml)).rejects.toThrow(/entry "a1".*status "done"/)
+  })
+
+  it('fails the build on duplicate ids across kinds', async () => {
+    const yaml = `anomalies:\n${entryYaml()}\n${runtime('a1', { anomaly_type: 'sound', category: 'environment' })}\n`
+    await expect(run(yaml)).rejects.toThrow(/duplicate id "a1"/)
+  })
+})
