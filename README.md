@@ -35,7 +35,7 @@
 
 ### オンラインでプレイ（推奨）
 
-**https://anomaly2-corona-road.llll-ll.com/**
+**https://anomaly2.llll-ll.com/**
 
 ### ローカルで開発
 
@@ -105,7 +105,7 @@ npm run format    # Prettierフォーマット
 
 ## 🚀 デプロイ
 
-`main`ブランチにpushすると、Cloudflare Pages（Git 連携）が自動でビルド・公開します（https://anomaly2-corona-road.llll-ll.com/）。GitHub Actions の CI は lint・テスト・ビルドの検査のみ行います。
+`main`ブランチにpushすると、Cloudflare Pages（Git 連携）が自動でビルド・公開します（https://anomaly2.llll-ll.com/）。GitHub Actions の CI は lint・テスト・ビルドの検査のみ行います。
 
 ### 初回セットアップ
 
