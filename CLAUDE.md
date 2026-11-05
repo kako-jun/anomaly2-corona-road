@@ -38,10 +38,10 @@
 - **How it is wired** (#46): `vite.config.ts` reads the ledger into the `virtual:anomalies` module (only `id`, camera, category, overlay path, origin, size; a broken entry fails the build and names the entry); `src/data/anomalyLedger.ts` resolves overlay URLs; `src/utils/anomalyLedger.ts` / `anomalyData.ts` / `anomalyOverlay.ts` are the pure parse / pick / placement helpers; `CameraView.tsx` draws the overlay (order: base photo, glow, overlay, then scanlines etc.); the overlay images are preloaded on idle time once play starts (`src/utils/preload.ts`). Minimum browser: CSS container query size units (Safari 16+ / Chrome 105+ / Firefox 110+); older ones show the photo uncovered but visible, and overlay percentages still hold. Selection: a camera with no anomaly now, an entry not already used this shift, random; when the ledger runs out, spawning stops; if only no camera is free, it retries after 1 s instead of waiting a whole interval; an entry whose image cannot be resolved is skipped with a console warning. Playthrough-to-playthrough repeat avoidance needs save data (not implemented, `docs/save-data.md`).
 - **Categories**: 5 types (the ledger's `category`; the correct report is the category of the anomaly on the camera you are watching)
   - Camera: the whole feed going wrong (picture glitches). Handled as a runtime anomaly, not an image overlay, so the ledger has no `camera` entry; changes to a thing in the picture are Object
-  - 📦 Object: Physical items appearing/disappearing/changing
-  - 🌆 Environment: Lighting, structure, atmosphere changes
-  - 🚶 Person: Human figures, shadows, movements
-  - 👁️ Surreal: Reality-breaking phenomena
+  - Object: Physical items appearing/disappearing/changing
+  - Environment: Lighting, structure, atmosphere changes
+  - Person: Human figures, shadows, movements
+  - Surreal: Reality-breaking phenomena
 
 #### 3. Phase System
 
