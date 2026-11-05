@@ -345,36 +345,6 @@
 
 台帳に `planned` で載せた画像案の制作仕様の詳細。制作して昇格したら、その案の `###` 節を削除する。
 
-### AR-06-ceiling-vent-triple — 天井の黒い長方形の換気口と同じ物が、左上の天井にも三つ並ぶ
-
-- **カメラ**: CAM06（`cam6.webp`、675x900）／対象要素: CAM06-E05
-- **型 / カテゴリ / フェーズ / 目立ち度**: `multiply` / `environment` / `mid` / `medium`
-- **物と変化**: 天井中央の黒い長方形の換気口（元の物はそのまま）と同じ形・同じ黒の格子状の小さな換気口が、左上の何もない天井にも三つ、右上がりの斜めの列で並ぶ（手前ほど大きく、奥ほど小さく、遠近に沿わせる）。元と合わせて4つになる。数が増えるだけで光らず、色も変えない。
-- **box (x1,y1,x2,y2)**: (150,4,258,44)（108x40）
-- **最寄り既存 overlay と実測距離**: AR-06-lamp-squared (31.0)、次点 AR-06-teru-teru-bozu (32.0)・AR-06-ceiling-balloons (42.0)。大面積 AR-06-ceiling-umbrellas の bbox 内。（台帳の `overlay_origin`＋`dimensions` の矩形距離の実測。制作後は最終 overlay の alpha bbox で再測定する）
-- **6倍クロップ範囲**: 6倍クロップ (100,0)–(356,171)（256x171）。box は窓内で (300,24)–(948,264)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (a dark grey rough-concrete ceiling, a round white recessed light at the lower left, the top of a red-orange hanging sign at the bottom edge, and a black skewed rectangular ceiling vent at the far right edge). Edit only this: three more black rectangular ceiling vents appear in the empty ceiling at the upper left of the marked area (area about x=300 to 948, y=24 to 264 in the 1536x1024 frame), each the same flat black skewed rectangle with faint slats as the original vent at the right edge of the image, arranged in a diagonal row that gets a little smaller toward the upper left, following the perspective of the ceiling. The original vent is unchanged. The round light, the sign and the rest of the ceiling stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (a dark grey rough-concrete ceiling, a round white recessed light at the lower left, the top of a red-orange hanging sign at the bottom edge, and a black skewed rectangular ceiling vent at the far right edge). Edit only this: the ceiling has a row of identical black rectangular vents: besides the one at the right edge, three copies of the same black skewed vent sit evenly spaced along a line from about (330,230) to (900,50) in the 1536x1024 frame, each about 190 px wide at the nearest and 120 px wide at the farthest, with the same dark slat texture. Nothing else is added or moved. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (a dark grey rough-concrete ceiling, a round white recessed light at the lower left, the top of a red-orange hanging sign at the bottom edge, and a black skewed rectangular ceiling vent at the far right edge). Edit only this: in the empty rough ceiling at the upper left (area x=300 to 948, y=24 to 264) three small black rectangular ceiling vents of the same kind as the one at the right edge are lined up, each slightly smaller than the one before, parallel to the ceiling edge. Their edges are crisp black with a faint lighter rim, like the original. Keep the round recessed light, the hanging sign, the concrete speckles and everything outside the marked area unchanged. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **視認性の見立て**: 黒い換気口が灰色の天井に増えるので、黒対灰の差分は大きい（最大差分は 100 を超える見込み）。三つで面積比も十分。標準状態で見える。
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-06-ceiling-vent-triple'
-    candidate_id: 'AR-06-ceiling-vent-triple'
-    camera_id: 'CAM06'
-    element_id: 'CAM06-E05'
-    base_photo: 'public/images/cam6.webp'
-    category: 'environment'
-    anomaly_type: 'multiply'
-    location: 'CAM06-E05 の元の換気口の左上の天井、差分左上 (150,4) 付近（貼り込み後に再計測）'
-    detail: '天井の黒い長方形の換気口と同じ物が、左上の天井にも三つ斜めに並び、計4つになる。'
-    overlay: 'assets/anomaly-overlays/cam06/ceiling-vent-triple.webp'
-    # phase / 目立ち度: mid / medium
-    note: '最寄り既存 overlay は AR-06-lamp-squared（box 距離 31px）。大面積 AR-06-ceiling-umbrellas と排他。AR-06-ceiling-checker は元の換気口の面を使うが、こちらは別の天井位置なので併存可。'
-  ```
-- **相互参照 / 重複精査**: AR-08-ceiling-light-grid（CAM08、丸い天井灯が天井一面に格子状）とは物（黒い換気口と光る丸灯）も数（3つ増と一面の格子）も違う。AR-07-wall-clocks（時計が無数）・AR-01-right-wall-lattice-doors（戸の連続）は壁の面。CAM06 の天井では AR-06-ceiling-checker（換気口の面の模様変化）が同じ換気口を使うが、あちらは元の換気口の面が市松に変わるだけで、増えない。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-06-ceiling-umbrellas（天井一面。換気口が傘に隠れる）。併存可=AR-06-ceiling-balloons（距離 42px。天井が賑やかになるので同プレイは避けるのが望ましい）・壁・床・看板・右の蛍光灯の異変。
 
 ### AR-06-feet-at-edge — 画面の下端に、こちらに向かって立つ人の足先が見切れている
 
