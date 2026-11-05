@@ -3,13 +3,17 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import {
   ANOMALY_TYPES,
+  isGameRecord,
   parseAnomalyType,
   parseCameraId,
   parseCategory,
   parseDimensions,
   parseLedger,
   parseLedgerEntry,
+  parseLedgerRecord,
+  parseLedgerRecords,
   parseOrigin,
+  toLedgerEntry,
 } from './anomalyLedger'
 
 const raw = (over: Record<string, unknown> = {}) => ({
@@ -104,9 +108,9 @@ describe('parseAnomalyType', () => {
   it.each(ANOMALY_TYPES)('accepts %s', t => {
     expect(parseAnomalyType(t)).toBe(t)
   })
-  it('ANOMALY_TYPES has 12 distinct values', () => {
-    expect(ANOMALY_TYPES).toHaveLength(12)
-    expect(new Set(ANOMALY_TYPES).size).toBe(12)
+  it('ANOMALY_TYPES has 16 distinct values', () => {
+    expect(ANOMALY_TYPES).toHaveLength(16)
+    expect(new Set(ANOMALY_TYPES).size).toBe(16)
   })
   it('matches the enum table in prompts/README.md', () => {
     const md = readFileSync(
@@ -117,7 +121,7 @@ describe('parseAnomalyType', () => {
     const types = [...section.matchAll(/^\|\s*`([a-z_]+)`\s*\|/gm)].map(
       m => m[1]
     )
-    expect(types).toHaveLength(12)
+    expect(types).toHaveLength(16)
     expect([...ANOMALY_TYPES].sort()).toEqual([...types].sort())
   })
   it.each([
@@ -388,5 +392,371 @@ describe('parseLedgerEntry also_category (#236)', () => {
     expect(() =>
       parseLedgerEntry(raw({ also_category: ' object ' }), 0)
     ).toThrow(/entry "AR-01-notice".*also_category "object" is the same as/)
+  })
+})
+
+// ---- kind / status (#77) ----
+
+const planned = (over: Record<string, unknown> = {}) => ({
+  id: 'PL-01',
+  status: 'planned',
+  camera_id: 'CAM02',
+  category: 'person',
+  anomaly_type: 'add_person',
+  spec: 'candidate-pool.md#PL-01',
+  ...over,
+})
+
+const runtime = (over: Record<string, unknown> = {}) => ({
+  id: 'RT-01',
+  kind: 'runtime',
+  status: 'planned',
+  anomaly_type: 'feed_glitch',
+  category: 'camera',
+  detail: 'the feed freezes for a second',
+  ...over,
+})
+
+const without = (r: Record<string, unknown>, ...keys: string[]) => {
+  const c = { ...r }
+  for (const k of keys) delete c[k]
+  return c
+}
+
+describe('parseLedgerRecord: accepted shapes (#77)', () => {
+  it('treats missing kind/status as image + produced', () => {
+    const r = parseLedgerRecord(raw(), 0)
+    expect(r.kind).toBe('image')
+    expect(r.status).toBe('produced')
+    expect(isGameRecord(r)).toBe(true)
+    expect(r.overlay).toBe('assets/anomaly-overlays/cam01/notice.webp')
+  })
+  it('accepts explicit kind=image status=produced', () => {
+    const r = parseLedgerRecord(raw({ kind: 'image', status: 'produced' }), 0)
+    expect(r).toEqual(parseLedgerRecord(raw(), 0))
+  })
+  it('accepts image+planned without overlay fields, keeping spec', () => {
+    const r = parseLedgerRecord(planned(), 0)
+    expect(r).toMatchObject({
+      id: 'PL-01',
+      kind: 'image',
+      status: 'planned',
+      cameraId: 2,
+      category: 'Person',
+      anomalyType: 'add_person',
+      spec: 'candidate-pool.md#PL-01',
+    })
+    expect(r.overlay).toBeUndefined()
+    expect(r.origin).toBeUndefined()
+    expect(r.size).toBeUndefined()
+    expect(isGameRecord(r)).toBe(false)
+  })
+  it('accepts image+planned with all three overlay fields', () => {
+    const r = parseLedgerRecord(
+      planned({
+        overlay: 'assets/anomaly-overlays/cam02/pl.webp',
+        overlay_origin: '(1,2)',
+        dimensions: '3x4',
+      }),
+      0
+    )
+    expect(r.overlay).toBe('assets/anomaly-overlays/cam02/pl.webp')
+    expect(r.origin).toEqual({ x: 1, y: 2 })
+    expect(r.size).toEqual({ w: 3, h: 4 })
+  })
+  it('accepts spec on a produced image entry too', () => {
+    expect(parseLedgerRecord(raw({ spec: 'x#y' }), 0).spec).toBe('x#y')
+  })
+  it.each(['planned', 'produced'])(
+    'accepts runtime feed_glitch (%s) with camera_id',
+    status => {
+      const r = parseLedgerRecord(
+        runtime({ status, camera_id: 'CAM05', spec: 's' }),
+        0
+      )
+      expect(r).toMatchObject({
+        kind: 'runtime',
+        status,
+        anomalyType: 'feed_glitch',
+        category: 'Camera',
+        cameraId: 5,
+        detail: 'the feed freezes for a second',
+        spec: 's',
+      })
+      expect(r.overlay).toBeUndefined()
+      expect(isGameRecord(r)).toBe(false)
+    }
+  )
+  it('accepts runtime feed_glitch without camera_id', () => {
+    const r = parseLedgerRecord(runtime(), 0)
+    expect(r.cameraId).toBeUndefined()
+    expect('cameraId' in r).toBe(false)
+  })
+  it('accepts runtime sound with category environment', () => {
+    const r = parseLedgerRecord(
+      runtime({ anomaly_type: 'sound', category: 'environment' }),
+      0
+    )
+    expect(r.category).toBe('Environment')
+    expect(r.anomalyType).toBe('sound')
+  })
+  it.each(['ui_corruption', 'rule_break'])(
+    'accepts runtime %s with an empty or valid category',
+    type => {
+      const none = parseLedgerRecord(
+        without(runtime({ anomaly_type: type }), 'category'),
+        0
+      )
+      expect('category' in none).toBe(false)
+      expect(
+        parseLedgerRecord(runtime({ anomaly_type: type, category: null }), 0)
+          .category
+      ).toBeUndefined()
+      expect(
+        parseLedgerRecord(
+          runtime({ anomaly_type: type, category: 'surreal' }),
+          0
+        ).category
+      ).toBe('Surreal')
+    }
+  )
+  it('accepts a valid also_category on runtime entries', () => {
+    expect(
+      parseLedgerRecord(
+        runtime({
+          anomaly_type: 'sound',
+          category: 'environment',
+          also_category: 'object',
+        }),
+        0
+      ).alsoCategory
+    ).toBe('Object')
+    expect(
+      parseLedgerRecord(runtime({ also_category: 'surreal' }), 0).alsoCategory
+    ).toBe('Surreal')
+  })
+})
+
+describe('parseLedgerRecord: rejected shapes (#77)', () => {
+  it.each([
+    ['unknown status', raw({ status: 'done' }), /status "done" is unknown/],
+    ['unknown kind', raw({ kind: 'audio' }), /kind "audio" is unknown/],
+    [
+      'unknown anomaly_type on runtime',
+      runtime({ anomaly_type: 'ghost' }),
+      /anomaly_type "ghost" is unknown/,
+    ],
+    [
+      'runtime type on an image entry',
+      raw({ anomaly_type: 'sound' }),
+      /runtime type but kind is image/,
+    ],
+    [
+      'image type on a runtime entry',
+      runtime({ anomaly_type: 'add_object' }),
+      /image type but kind is runtime/,
+    ],
+    [
+      'image+planned without camera_id',
+      without(planned(), 'camera_id'),
+      /"camera_id" is missing/,
+    ],
+    [
+      'image+planned without category',
+      without(planned(), 'category'),
+      /"category" is missing/,
+    ],
+    [
+      'image+planned without anomaly_type',
+      without(planned(), 'anomaly_type'),
+      /"anomaly_type" is missing/,
+    ],
+    [
+      'runtime without anomaly_type',
+      without(runtime(), 'anomaly_type'),
+      /"anomaly_type" is missing/,
+    ],
+    [
+      'runtime without detail',
+      without(runtime(), 'detail'),
+      /"detail" is missing/,
+    ],
+    [
+      'image+produced without overlay',
+      without(raw(), 'overlay'),
+      /"overlay" is missing/,
+    ],
+    [
+      'image+produced without overlay_origin',
+      without(raw(), 'overlay_origin'),
+      /"overlay_origin" is missing/,
+    ],
+    [
+      'image+produced without dimensions',
+      without(raw(), 'dimensions'),
+      /"dimensions" is missing/,
+    ],
+    [
+      'runtime with overlay',
+      runtime({ overlay: 'assets/anomaly-overlays/cam01/x.webp' }),
+      /overlay is not allowed on a runtime entry/,
+    ],
+    [
+      'runtime with only dimensions',
+      runtime({ dimensions: '3x4' }),
+      /dimensions is not allowed on a runtime entry/,
+    ],
+    [
+      'planned with only overlay',
+      planned({ overlay: 'assets/anomaly-overlays/cam02/pl.webp' }),
+      /"overlay_origin" is missing/,
+    ],
+    [
+      'planned with overlay + origin but no dimensions',
+      planned({
+        overlay: 'assets/anomaly-overlays/cam02/pl.webp',
+        overlay_origin: '(1,2)',
+      }),
+      /"dimensions" is missing/,
+    ],
+    [
+      'planned with only dimensions',
+      planned({ dimensions: '3x4' }),
+      /"overlay" is missing/,
+    ],
+    [
+      'feed_glitch with a non-camera category',
+      runtime({ category: 'object' }),
+      /feed_glitch needs category camera/,
+    ],
+    [
+      'feed_glitch with no category',
+      without(runtime(), 'category'),
+      /feed_glitch needs category camera/,
+    ],
+    [
+      'sound without category',
+      without(runtime({ anomaly_type: 'sound' }), 'category'),
+      /sound needs one/,
+    ],
+    [
+      'also_category without category',
+      without(
+        runtime({ anomaly_type: 'ui_corruption', also_category: 'object' }),
+        'category'
+      ),
+      /also_category needs a category/,
+    ],
+    [
+      'runtime also_category camera',
+      runtime({
+        anomaly_type: 'sound',
+        category: 'environment',
+        also_category: 'camera',
+      }),
+      /also_category "camera" is not allowed/,
+    ],
+    [
+      'ui_corruption with an invalid category',
+      runtime({ anomaly_type: 'ui_corruption', category: 'ghost' }),
+      /category "ghost" is unknown/,
+    ],
+    [
+      'rule_break with an invalid category',
+      runtime({ anomaly_type: 'rule_break', category: 'ghost' }),
+      /category "ghost" is unknown/,
+    ],
+  ])('%s: error names the entry', (_n, input, problem) => {
+    const id = (input as { id: string }).id
+    expect(() => parseLedgerRecord(input, 0)).toThrow(
+      new RegExp(`^anomalies\\.yaml entry "${id}": `)
+    )
+    expect(() => parseLedgerRecord(input, 0)).toThrow(problem)
+  })
+})
+
+describe('mixed ledger (#77)', () => {
+  const mixed = () => ({
+    anomalies: [
+      raw({ id: 'img-1' }),
+      planned({ id: 'plan-1' }),
+      runtime({ id: 'rt-feed' }),
+      runtime({
+        id: 'rt-sound',
+        anomaly_type: 'sound',
+        category: 'environment',
+      }),
+      raw({ id: 'img-2', camera_id: 'CAM03' }),
+      without(
+        runtime({ id: 'rt-ui', anomaly_type: 'ui_corruption' }),
+        'category'
+      ),
+      runtime({
+        id: 'rt-rule',
+        anomaly_type: 'rule_break',
+        status: 'produced',
+      }),
+    ],
+  })
+  it('parseLedger returns only image+produced entries, in order', () => {
+    const r = parseLedger(mixed())
+    expect(r.map(e => e.id)).toEqual(['img-1', 'img-2'])
+    expect(r[1].cameraId).toBe(3)
+  })
+  it('parseLedgerRecords returns every entry', () => {
+    const r = parseLedgerRecords(mixed())
+    expect(r.map(e => e.id)).toEqual([
+      'img-1',
+      'plan-1',
+      'rt-feed',
+      'rt-sound',
+      'img-2',
+      'rt-ui',
+      'rt-rule',
+    ])
+    expect(r.filter(isGameRecord).map(e => e.id)).toEqual(['img-1', 'img-2'])
+  })
+  it('parseLedgerEntry throws for planned and runtime entries', () => {
+    expect(() => parseLedgerEntry(planned(), 0)).toThrow(
+      /entry "PL-01": not a produced image entry/
+    )
+    expect(() => parseLedgerEntry(runtime(), 0)).toThrow(
+      /entry "RT-01": not a produced image entry/
+    )
+    expect(() => parseLedgerEntry(runtime({ status: 'produced' }), 0)).toThrow(
+      /not a produced image entry/
+    )
+  })
+  it('toLedgerEntry rejects non-game records', () => {
+    expect(() => toLedgerEntry(parseLedgerRecord(planned(), 0))).toThrow(
+      /not a produced image entry/
+    )
+  })
+  it('isGameRecord is true only for image+produced', () => {
+    expect(isGameRecord(parseLedgerRecord(raw(), 0))).toBe(true)
+    expect(isGameRecord(parseLedgerRecord(planned(), 0))).toBe(false)
+    expect(
+      isGameRecord(parseLedgerRecord(runtime({ status: 'produced' }), 0))
+    ).toBe(false)
+  })
+  it('rejects duplicate ids across kinds and statuses', () => {
+    expect(() =>
+      parseLedgerRecords({
+        anomalies: [raw({ id: 'same' }), runtime({ id: 'same' })],
+      })
+    ).toThrow(/duplicate id "same"/)
+    expect(() =>
+      parseLedger({ anomalies: [planned({ id: 'same' }), raw({ id: 'same' })] })
+    ).toThrow(/duplicate id "same"/)
+  })
+  it('validates planned and runtime entries even though parseLedger drops them', () => {
+    expect(() =>
+      parseLedger({
+        anomalies: [raw(), planned({ id: 'bad', category: 'ghost' })],
+      })
+    ).toThrow(/entry "bad".*category "ghost"/)
+    expect(() =>
+      parseLedger({ anomalies: [raw(), runtime({ id: 'bad', detail: '' })] })
+    ).toThrow(/entry "bad".*"detail"/)
   })
 })

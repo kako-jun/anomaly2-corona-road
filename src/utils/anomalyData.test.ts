@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { AnomalyCategory } from '../types/game'
-import { AnomalyType, LedgerEntry } from './anomalyLedger'
+import { ImageAnomalyType, LedgerEntry } from './anomalyLedger'
 import { createAnomaly, pickLedgerEntry } from './anomalyData'
 
 const entry = (id: string, cameraId: number): LedgerEntry => ({
@@ -23,7 +23,7 @@ const mk = (
   id: string,
   cameraId: number,
   category: AnomalyCategory,
-  anomalyType: AnomalyType
+  anomalyType: ImageAnomalyType
 ): LedgerEntry => ({ ...entry(id, cameraId), category, anomalyType })
 
 /** Number of `i/N` sweeps (i = 0..N-1) of one rng stage for which `pick` returns a matching entry. */
@@ -80,7 +80,7 @@ const M = [
   mk('m4', 1, 'Person', 'add_person'),
   mk('m5', 2, 'Environment', 'state_change'),
 ]
-const person = (id: string, t: AnomalyType) => mk(id, 1, 'Person', t)
+const person = (id: string, t: ImageAnomalyType) => mk(id, 1, 'Person', t)
 const objects = (n: number) =>
   Array.from({ length: n }, (_, i) =>
     mk(`o${i + 1}`, 1, 'Object', 'add_object')

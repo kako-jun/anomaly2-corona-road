@@ -102,6 +102,11 @@ def selftest():
     return 0 if ok else 1
 
 
+def is_measurable(e):
+    """Only kind=image + status=produced entries have an overlay to measure (both default so)."""
+    return e.get("kind", "image") == "image" and e.get("status", "produced") == "produced"
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--id", action="append", help="ledger id to check (repeatable); default: every entry")
@@ -118,6 +123,14 @@ def main():
         if missing:
             p.error(f"unknown id: {', '.join(missing)}")
         entries = [by[i] for i in a.id]
+        unmeasurable = [e["id"] for e in entries if not is_measurable(e)]
+        if unmeasurable:
+            p.error(
+                "no overlay to measure (kind=runtime or status=planned): "
+                + ", ".join(unmeasurable)
+            )
+    else:
+        entries = [e for e in entries if is_measurable(e)]
     rows, below = [], []
     for e in entries:
         m = measure_entry(e)

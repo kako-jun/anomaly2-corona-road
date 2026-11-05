@@ -170,3 +170,45 @@ describe('dialogue-ledger vite plugin', () => {
     )
   })
 })
+
+describe('dialogue-ledger vite plugin: planned / runtime anomalies (#77)', () => {
+  const withExtraAnomalies = `${anomalies}  - id: 'p1'
+    status: 'planned'
+    camera_id: 'CAM01'
+    category: 'object'
+    anomaly_type: 'add_object'
+  - id: 'r1'
+    kind: 'runtime'
+    status: 'planned'
+    anomaly_type: 'sound'
+    category: 'environment'
+    detail: 'd'
+`
+
+  it('accepts lines pointing at planned and runtime anomaly ids', async () => {
+    const files = good()
+    files.anomalies = withExtraAnomalies
+    files['anomaly-lines'] =
+      `dialogues:\n${entry('an-a1-1', '    when: { anomaly: a1 }\n')}${entry('an-p1-1', '    when: { anomaly: p1 }\n')}${entry('an-r1-1', '    when: { anomaly: r1 }\n')}`
+    const { out } = await run(files)
+    const json = JSON.parse((out as string).replace('export default ', ''))
+    expect(json.entries.map((e: { id: string }) => e.id)).toEqual(
+      expect.arrayContaining(['an-p1-1', 'an-r1-1'])
+    )
+  })
+
+  it('accepts a flag that finds a planned / runtime id', async () => {
+    const files = good()
+    files.anomalies = withExtraAnomalies
+    files.flags = 'flags:\n  f1:\n    found: [p1, r1]\n'
+    await expect(run(files)).resolves.toBeDefined()
+  })
+
+  it('still rejects an id that is in no part of the ledger', async () => {
+    const files = good()
+    files.anomalies = withExtraAnomalies
+    files['anomaly-lines'] =
+      `dialogues:\n${entry('an-zzz-1', '    when: { anomaly: zzz }\n')}`
+    await expect(run(files)).rejects.toThrow(/anomaly "zzz"/)
+  })
+})

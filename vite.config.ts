@@ -4,7 +4,7 @@ import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { parse as parseYaml } from 'yaml'
-import { parseLedger } from './src/utils/anomalyLedger'
+import { parseLedger, parseLedgerRecords } from './src/utils/anomalyLedger'
 import { DIALOGUE_FILES, parseDialogueLedger } from './src/utils/dialogueLedger'
 
 const LEDGER_PATH = resolve(__dirname, 'prompts/anomalies.yaml')
@@ -13,8 +13,9 @@ const RESOLVED_ID = '\0' + VIRTUAL_ID
 
 /**
  * Exposes the anomaly ledger (prompts/anomalies.yaml, the single source of truth) to the game as
- * `virtual:anomalies`, trimmed to the fields the game needs. A broken entry fails the build and the
- * message names the entry.
+ * `virtual:anomalies`, trimmed to the fields the game needs and limited to kind=image, status=produced
+ * entries (planned / runtime ones are validated but not handed to the game). A broken entry anywhere
+ * in the ledger fails the build and the message names the entry.
  */
 const anomalyLedgerPlugin = (): Plugin => ({
   name: 'anomaly-ledger',
@@ -59,7 +60,9 @@ const dialogueLedgerPlugin = (): Plugin => ({
       return parseYaml(readFileSync(path, 'utf8'))
     }
     const anomalyIds = new Set(
-      parseLedger(parseYaml(readFileSync(LEDGER_PATH, 'utf8'))).map(e => e.id)
+      parseLedgerRecords(parseYaml(readFileSync(LEDGER_PATH, 'utf8'))).map(
+        e => e.id
+      )
     )
     const parsed = { flags: read('flags') } as Parameters<
       typeof parseDialogueLedger
