@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import {
+  ANOMALY_TYPES,
+  parseAnomalyType,
   parseCameraId,
   parseCategory,
   parseDimensions,
@@ -96,6 +100,38 @@ describe('parseCategory', () => {
   })
 })
 
+describe('parseAnomalyType', () => {
+  it.each(ANOMALY_TYPES)('accepts %s', t => {
+    expect(parseAnomalyType(t)).toBe(t)
+  })
+  it('ANOMALY_TYPES has 12 distinct values', () => {
+    expect(ANOMALY_TYPES).toHaveLength(12)
+    expect(new Set(ANOMALY_TYPES).size).toBe(12)
+  })
+  it('matches the enum table in prompts/README.md', () => {
+    const md = readFileSync(
+      resolve(__dirname, '../../prompts/README.md'),
+      'utf8'
+    )
+    const section = md.split('## 異変タイプ enum')[1].split(/\n## /)[0]
+    const types = [...section.matchAll(/^\|\s*`([a-z_]+)`\s*\|/gm)].map(
+      m => m[1]
+    )
+    expect(types).toHaveLength(12)
+    expect([...ANOMALY_TYPES].sort()).toEqual([...types].sort())
+  })
+  it.each([
+    '',
+    ' add_object',
+    'Add_Object',
+    'ADD_OBJECT',
+    'add-object',
+    'add_objects',
+  ])('rejects %j (case-sensitive, no trimming here)', t => {
+    expect(() => parseAnomalyType(t)).toThrow(/is unknown/)
+  })
+})
+
 describe('parseLedgerEntry', () => {
   it('maps every field to the game shape', () => {
     expect(parseLedgerEntry(raw(), 0)).toEqual({
@@ -120,6 +156,32 @@ describe('parseLedgerEntry', () => {
         'overlay',
         'size',
       ].sort()
+    )
+  })
+  it('reads anomaly_type, trimming surrounding whitespace', () => {
+    expect(
+      parseLedgerEntry(raw({ anomaly_type: 'displace' }), 0).anomalyType
+    ).toBe('displace')
+    expect(
+      parseLedgerEntry(raw({ anomaly_type: '  displace  ' }), 0).anomalyType
+    ).toBe('displace')
+  })
+  it.each(['Add_Object', 'add-object', 'add_objects'])(
+    'rejects anomaly_type %s through the entry parser',
+    v => {
+      expect(() => parseLedgerEntry(raw({ anomaly_type: v }), 0)).toThrow(
+        /entry "AR-01-notice": anomaly_type/
+      )
+    }
+  )
+  it.each([
+    ['null', null],
+    ['a number', 12],
+    ['whitespace only', '   '],
+    ['empty', ''],
+  ])('rejects anomaly_type that is %s, naming the entry', (_n, v) => {
+    expect(() => parseLedgerEntry(raw({ anomaly_type: v }), 0)).toThrow(
+      /entry "AR-01-notice".*"anomaly_type" is missing or not a string/
     )
   })
   it('trims surrounding whitespace in values', () => {
@@ -158,6 +220,11 @@ describe('parseLedgerEntry', () => {
   })
   it.each([
     ['unknown category', { category: 'ghost' }, /category "ghost"/],
+    [
+      'unknown anomaly_type',
+      { anomaly_type: 'ghost' },
+      /anomaly_type "ghost" is unknown/,
+    ],
     ['bad origin', { overlay_origin: '137,379' }, /overlay_origin/],
     ['bad dimensions', { dimensions: '0x9' }, /dimensions/],
     ['bad camera', { camera_id: 'CAM00' }, /camera_id/],
