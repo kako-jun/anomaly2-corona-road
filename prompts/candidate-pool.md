@@ -214,36 +214,6 @@
 
 台帳に `planned` で載せた画像案の制作仕様の詳細。制作して昇格したら、その案の `###` 節を削除する。
 
-### AR-04-ceiling-dome-gone — 天井の黒い小型ドーム器具が一つ消える
-
-- **カメラ**: CAM04（`cam4.webp`、676x900）／対象要素: CAM04-E06
-- **物と変化**: 中央左の天井にある小さな黒いドーム状の器具（x≈337,y≈162。半球で、黒く光る）。中央左の天井に付いている小さな黒いドーム状の器具が一つ、跡形もなく消え、天井板は元から何も付いていなかったように続く。取り付け跡・ビス穴・影も残さない（跡が自然に埋まる）。すぐ下の小さな煙感知器状の器具と奥の黒い器具は元のまま。
-- **box (x1,y1,x2,y2)**: (324,150,350,174)（26x24）
-- **最寄り既存 overlay と実測距離**: AR-04-ceiling-corner-fold (39.6)、次点 AR-04-sign-hollow (45.6)。
-- **6倍クロップ範囲**: 6倍クロップ (209,77)–(465,248)（256x171）。box は窓内で (690,438)–(846,582)。
-- **生成プロンプト（3 テイク。先頭は `$imagegen` で明示起動。入力は上の範囲を切り出して拡大した 1536x1024 の PNG）**:
-  - テイク1: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: the small black dome-shaped fixture hanging from the ceiling at about x=768, y=510 (a dark glossy half-sphere about 80 px wide) is gone. In its place the pale speckled ceiling board continues with the same fine speckle texture and the same soft grey shading, with no hole, no screw marks, no outline and no shadow. The edit area is about x=690 to 846, y=438 to 582. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク2: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: remove the small black dome fixture on the ceiling at about x=768, y=510 and fill the area by continuing the surrounding ceiling surface: same off-white speckled board, same gentle gradient, as if nothing had ever been mounted there. Do not leave a ghost, ring or stain. The two other small fixtures further down stay. The edit area is about x=690 to 846, y=438 to 582. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-  - テイク3: `$imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (pale speckled ceiling, blue-black glass shopfronts, pale grey polished floor tiles, white fluorescent lights). Edit only this: erase the glossy black dome (a half-sphere ceiling camera-like fixture) at about x=768, y=510. The ceiling there is plain continuous speckled board, same brightness as its surroundings. Nothing replaces it. The edit area is about x=690 to 846, y=438 to 582. Everything else stays exactly as it is. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.`
-- **視認性の見立て**: 黒い半球（約14x12 px）が明るい天井に溶けるので差分は大きい（最大差分は40を大きく超える見込み）。面積は約100〜170画素で、25%条項もあり通る見込み。check-visibility で確認し、通らなければ box を周囲の天井へ少し広げて天井の陰影を揃える。
-- **台帳登録案**:
-  ```yaml
-  - id: 'AR-04-ceiling-dome-gone'
-    candidate_id: 'AR-04-ceiling-dome-gone'
-    camera_id: 'CAM04'
-    element_id: 'CAM04-E06'
-    base_photo: 'public/images/cam4.webp'
-    category: 'object'
-    anomaly_type: 'remove_object'
-    location: 'CAM04-E06、差分左上 (324,150) 付近（貼り込み後に再計測）'
-    detail: '中央左の天井の小さな黒いドーム状の器具が一つ消え、天井板が何事もなかったように続く。'
-    overlay: 'assets/anomaly-overlays/cam04/ceiling-dome-gone.webp'
-    # phase / 目立ち度: early / subtle
-    note: '小物。最近傍 AR-04-ceiling-corner-fold（39.6px）。小さな煙感知器状の器具（x≈343,y≈197）と別の黒い器具は元のまま残す（消すのはドームだけ）。差分の縁は天井の粒状感になじませる。'
-  ```
-- **相互参照 / 重複精査**: AR-08-vent-paper-plug（ドームを紙で塞ぐ・add_object・CAM08）は『足す』、AR-07-exit-sign-gone は『跡が残る』で別。本案は物が跡なく消えるだけ。AR-04-ceiling-corner-fold（天井板の角が垂れる）とは対象も見え方も別。
-- **同カメラ内の排他と併存**: 併存可=床・壁・扉・看板の異変。同じ天井面の AR-04-ceiling-corner-fold とは近いので連続して出さない運用が望ましい（box は重ならない）。
-
 ### AR-04-rat-left-floor — 左の床際を、黒っぽいネズミが一匹横切る
 
 - **カメラ**: CAM04（`cam4.webp`、676x900）／対象要素: CAM04-E15
