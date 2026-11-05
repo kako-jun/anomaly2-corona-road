@@ -23,7 +23,7 @@ prompts/
 - 異変の全件は `anomalies.yaml`（制作済み=`produced`、未制作=`planned`、画像=`image`、画面の乱れ・音・UI・ルール=`runtime`）。まだ台帳に載せていない発想の段階の案が `candidate-pool.md`。選ぶ時は該当案を候補から削除して台帳へ一度だけ登録する（昇格ルールは下の「台帳の書式」）。
 - `queue/index.html` と `atlas/*.svg` は**生成物**。手で編集せず、元の正本を直して再生成する。
 - 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、未制作の昭和案は `candidate-pool.md` の「昭和テーマ候補」にある。
-- 4人目（令和のZ世代の子供）の「令和の異変（どれでも3つ見つければ条件成立）」の候補は `candidate-pool.md` の「令和テーマ候補」にある（制作済みの令和の画像異変は `anomalies.yaml` の `candidate_id: CR-RZ-*` で探す（#83 の 1. で本物の台帳印が入るまでの仮の見つけ方）。昭和でない令和の物。方針は `docs/story.md` の「進行」節）。
+- 4人目（令和のZ世代の子供）の「令和の異変（どれでも3つ見つければ条件成立）」の全候補は台帳 `anomalies.yaml` にある（画像は `candidate_id: CR-RZ-*`、音は planned の id `CR-RZ-07〜09` で探す（#83 の 1. で本物の台帳印が入るまでの仮の見つけ方）。昭和でない令和の物。方針は `docs/story.md` の「進行」節）。
 
 ## ワークフロー
 
@@ -80,7 +80,7 @@ prompts/
 | image + planned                    | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                           |
 | runtime（planned / produced とも） | `anomaly_type`（runtime 型）`detail`                                                        | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_categories` は image と同じ検証（camera 不可）で任意 |
 
-- `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### CR-RZ-07`）。
+- `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### AR-01-ceiling-slit-slide`）。
 - runtime の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に runtime 型、runtime に画像型）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
 - ゲーム（`virtual:anomalies`）に渡るのは `kind: image` かつ `status: produced` だけ。planned と runtime は検証されるが抽選には出ない（出現ロジックと効果は #78・#79・#80）。

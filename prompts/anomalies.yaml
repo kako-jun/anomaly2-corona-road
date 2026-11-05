@@ -5260,6 +5260,33 @@ anomalies:
   # ---- planned: elements ----
   # ---- planned: showa ----
   # ---- planned: reiwa ----
+  - id: 'CR-RZ-07'
+    status: 'planned'
+    kind: 'runtime'
+    category: 'environment'
+    anomaly_type: 'sound'
+    detail: '遠くから、無名の一般的なスマホ通知音が一度だけ鳴る。'
+    phase: 'mid'
+    subtlety: 'subtle'
+    note: '令和テーマ（4人目の子供の記憶）。音の種類と起きるカメラは出現のたびに無作為（カメラは固定しない）。選ばれたカメラを見ている間だけ鳴らし、報告は画像系と同じくそのカメラでカテゴリを選ぶ。category は environment（仮）。実在の会社名・商標・楽曲は使わない無名の一般的な音。音素材と再生機構は未実装（無音）。'
+  - id: 'CR-RZ-08'
+    status: 'planned'
+    kind: 'runtime'
+    category: 'environment'
+    anomaly_type: 'sound'
+    detail: 'ワイヤレスイヤホンから漏れるような、小さな無名のビート音。'
+    phase: 'mid'
+    subtlety: 'subtle'
+    note: '令和テーマ（4人目の子供の記憶）。音の種類と起きるカメラは出現のたびに無作為（カメラは固定しない）。選ばれたカメラを見ている間だけ鳴らし、報告は画像系と同じくそのカメラでカテゴリを選ぶ。category は environment（仮）。実在の会社名・商標・楽曲は使わない無名の一般的な音。音素材と再生機構は未実装（無音）。'
+  - id: 'CR-RZ-09'
+    status: 'planned'
+    kind: 'runtime'
+    category: 'environment'
+    anomaly_type: 'sound'
+    detail: '誰もいない通路で、自撮りのシャッター音が一度だけ鳴る。'
+    phase: 'late'
+    subtlety: 'medium'
+    note: '令和テーマ（4人目の子供の記憶）。音の種類と起きるカメラは出現のたびに無作為（カメラは固定しない）。選ばれたカメラを見ている間だけ鳴らし、報告は画像系と同じくそのカメラでカテゴリを選ぶ。category は environment（仮）。実在の会社名・商標・楽曲は使わない無名の一般的な音。音素材と再生機構は未実装（無音）。'
   # ---- planned: specs ----
   # ---- planned: runtime ----
   # ---- end of planned ----
