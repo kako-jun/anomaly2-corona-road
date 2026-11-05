@@ -69,6 +69,7 @@ const entry = (
   id,
   cameraId,
   category,
+  anomalyType: 'add_object',
   overlay: `assets/${id}.webp`,
   origin: { x: 1, y: 2 },
   size: { w: 3, h: 4 },

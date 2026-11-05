@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { ANOMALY_TYPES } from './anomalyLedger'
 
 // The Vite plugin in vite.config.ts reads the YAML and checks overlay files. Its failure modes are
 // build errors, so exercise load() directly with fs replaced for the ledger path only.
@@ -46,6 +47,7 @@ const entryYaml = (over: Record<string, string> = {}) => {
     id: 'a1',
     camera_id: 'CAM01',
     category: 'object',
+    anomaly_type: 'add_object',
     overlay: 'assets/anomaly-overlays/cam01/a1.webp',
     overlay_origin: '(1,2)',
     dimensions: '3x4',
@@ -92,6 +94,7 @@ describe('anomaly-ledger vite plugin', () => {
         id: 'a1',
         cameraId: 1,
         category: 'Object',
+        anomalyType: 'add_object',
         overlay: 'assets/anomaly-overlays/cam01/a1.webp',
         origin: { x: 1, y: 2 },
         size: { w: 3, h: 4 },
@@ -129,6 +132,77 @@ describe('anomaly-ledger vite plugin', () => {
     await expect(
       run(`anomalies:\n${entryYaml({ overlay: 'assets/other/a1.webp' })}\n`)
     ).rejects.toThrow(/entry "a1".*overlay/)
+  })
+
+  describe('anomaly_type', () => {
+    it.each([
+      ['single-quoted', `'displace'`],
+      ['double-quoted', `"displace"`],
+      ['unquoted', 'displace'],
+    ])('accepts a %s value and emits it', async (_n, v) => {
+      const yaml = `anomalies:\n${entryYaml().replace(
+        `anomaly_type: 'add_object'`,
+        `anomaly_type: ${v}`
+      )}\n`
+      const { out } = await run(yaml)
+      const json = JSON.parse((out as string).replace('export default ', ''))
+      expect(json[0].anomalyType).toBe('displace')
+    })
+
+    it('builds a ledger holding all 12 types', async () => {
+      fsMock.existing = new Set(
+        ANOMALY_TYPES.map(t => `assets/anomaly-overlays/cam01/${t}.webp`)
+      )
+      const body = ANOMALY_TYPES.map(t =>
+        entryYaml({
+          id: t,
+          anomaly_type: t,
+          overlay: `assets/anomaly-overlays/cam01/${t}.webp`,
+        })
+      ).join('\n')
+      const { out } = await run(`anomalies:\n${body}\n`)
+      const json = JSON.parse((out as string).replace('export default ', ''))
+      expect(json.map((e: { anomalyType: string }) => e.anomalyType)).toEqual([
+        ...ANOMALY_TYPES,
+      ])
+    })
+
+    it('fails the build on an unknown type, naming the entry', async () => {
+      await expect(
+        run(`anomalies:\n${entryYaml({ anomaly_type: 'ghost' })}\n`)
+      ).rejects.toThrow(/entry "a1".*anomaly_type "ghost"/)
+    })
+
+    it('fails the build when the anomaly_type line is missing', async () => {
+      const yaml = entryYaml()
+        .split('\n')
+        .filter(l => !l.includes('anomaly_type'))
+        .join('\n')
+      await expect(run(`anomalies:\n${yaml}\n`)).rejects.toThrow(
+        /entry "a1".*"anomaly_type" is missing/
+      )
+    })
+
+    it('fails the build on an empty value', async () => {
+      await expect(
+        run(`anomalies:\n${entryYaml({ anomaly_type: '' })}\n`)
+      ).rejects.toThrow(/entry "a1".*"anomaly_type" is missing/)
+    })
+
+    it('names the second entry when only it has an unknown type', async () => {
+      fsMock.existing = new Set([
+        'assets/anomaly-overlays/cam01/a1.webp',
+        'assets/anomaly-overlays/cam01/a2.webp',
+      ])
+      const yaml = `anomalies:\n${entryYaml()}\n${entryYaml({
+        id: 'a2',
+        anomaly_type: 'ghost',
+        overlay: 'assets/anomaly-overlays/cam01/a2.webp',
+      })}\n`
+      await expect(run(yaml)).rejects.toThrow(
+        /entry "a2".*anomaly_type "ghost"/
+      )
+    })
   })
 
   it('fails the build on duplicate ids', async () => {

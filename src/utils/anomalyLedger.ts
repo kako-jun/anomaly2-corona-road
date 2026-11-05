@@ -6,11 +6,29 @@ import { AnomalyCategory } from '../types/game'
  * only ever sees the trimmed `LedgerEntry` shape.
  */
 
+/** The ledger's `anomaly_type` values (source of truth: `prompts/README.md` "異変タイプ enum"). */
+export const ANOMALY_TYPES = [
+  'add_object',
+  'remove_object',
+  'add_person',
+  'add_creature',
+  'state_change',
+  'duplicate',
+  'multiply',
+  'displace',
+  'color_shift',
+  'text_change',
+  'surreal',
+  'reflection',
+] as const
+export type AnomalyType = (typeof ANOMALY_TYPES)[number]
+
 /** The only fields the game needs from one ledger entry. */
 export interface LedgerEntry {
   id: string
   cameraId: number
   category: AnomalyCategory
+  anomalyType: AnomalyType
   /** Repo-relative path of the transparent overlay, e.g. `assets/anomaly-overlays/cam01/notice.webp`. */
   overlay: string
   /** Top-left of the overlay on the base photo, in base-photo pixels. */
@@ -66,6 +84,12 @@ export const parseCategory = (text: string): AnomalyCategory => {
   return category
 }
 
+export const parseAnomalyType = (text: string): AnomalyType => {
+  const type = ANOMALY_TYPES.find(t => t === text)
+  if (!type) throw new Error(`anomaly_type "${text}" is unknown`)
+  return type
+}
+
 /** 'assets/anomaly-overlays/cam01/notice.webp' shape: the game resolves the URL by this exact path. */
 export const OVERLAY_PATH = /^assets\/anomaly-overlays\/cam\d+\/.+\.webp$/
 
@@ -90,6 +114,7 @@ export const parseLedgerEntry = (raw: unknown, index: number): LedgerEntry => {
       id: field(rec, 'id'),
       cameraId: parseCameraId(field(rec, 'camera_id')),
       category: parseCategory(field(rec, 'category')),
+      anomalyType: parseAnomalyType(field(rec, 'anomaly_type')),
       overlay: parseOverlayPath(field(rec, 'overlay')),
       origin: parseOrigin(field(rec, 'overlay_origin')),
       size: parseDimensions(field(rec, 'dimensions')),

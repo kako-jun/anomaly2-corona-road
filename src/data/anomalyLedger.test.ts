@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import ledger from 'virtual:anomalies'
 import { describe, expect, it } from 'vitest'
 import { AnomalyCategory } from '../types/game'
+import { ANOMALY_TYPES } from '../utils/anomalyLedger'
 import { CAMERAS } from '../utils/gameConfig'
 import { ANOMALY_LEDGER, overlayUrlFor } from './anomalyLedger'
 
@@ -45,6 +46,12 @@ describe('real anomaly ledger', () => {
 
   it('has at least one entry (an empty ledger would make the game unwinnable)', () => {
     expect(ANOMALY_LEDGER.length).toBeGreaterThan(0)
+  })
+
+  it('every entry has a known anomalyType (parsed as the build does)', () => {
+    for (const e of ANOMALY_LEDGER) {
+      expect(ANOMALY_TYPES, e.id).toContain(e.anomalyType)
+    }
   })
 
   it('has unique ids', () => {
