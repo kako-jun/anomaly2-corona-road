@@ -256,10 +256,10 @@
     detail: '天井の継ぎ目に、手のひら大の大きな蜘蛛が張り付く。'
     overlay: 'assets/anomaly-overlays/cam01/ceiling-spider.webp'
     # phase / 目立ち度: mid / medium
-    note: 'category は camera/object/environment/person/surreal の5分類で生き物は暫定 object（README の方針に従う）。台帳では add_creature。同じカメラの add_creature は AR-01-threshold-pigeon（右の店先の白い鳩）のみで、天井の蜘蛛とは場所も生き物も違う。天井一面の大面積 AR-01-ceiling-lanterns と box が重なる（大面積の例外。同プレイで共存させない=排他）。'
+    note: 'category は camera/object/environment/person/surreal の5分類で生き物は暫定 object（README の方針に従う）。台帳では add_creature。同じカメラの add_creature は AR-01-threshold-pigeon（右の店先の白い鳩）のみで、天井の蜘蛛とは場所も生き物も違う。天井一面の大面積 AR-01-ceiling-lanterns と右の店先の壁一面の大面積 AR-01-right-wall-lattice-doors の両方と box が重なる（大面積の例外。同プレイで共存させない=排他）。'
   ```
 - **相互参照 / 重複精査**: 鳩は床の敷居・白い鳥、本案は天井・黒い蜘蛛。CR-01-25（開口の手前の猫）は床の猫で、別。台帳に昆虫・節足動物の案は無い。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-01-ceiling-lanterns（天井一面の大面積）。併存可=床・壁・右の店先の異変。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-01-ceiling-lanterns（天井一面の大面積）・AR-01-right-wall-lattice-doors（右の店先の壁一面の大面積）。併存可=床・壁・右の店先の異変。
 
 ### AR-01-window-peeping-face — 左の窓の暗いガラスの上部から、白い顔がこちらを覗く
 
