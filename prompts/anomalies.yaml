@@ -3330,7 +3330,7 @@ anomalies:
     camera_id: 'CAM06'
     element_id: 'CAM06-E01'
     base_photo: 'public/images/cam6.webp'
-    category: 'environment'
+    category: 'object'
     anomaly_type: 'add_object'
     phase: 'mid'
     subtlety: 'obvious'
@@ -3439,7 +3439,7 @@ anomalies:
     camera_id: 'CAM01'
     element_id: 'CAM01-E01'
     base_photo: 'public/images/cam1.webp'
-    category: 'environment'
+    category: 'object'
     anomaly_type: 'add_object'
     phase: 'mid'
     subtlety: 'obvious'
@@ -3475,7 +3475,7 @@ anomalies:
     camera_id: "CAM01"
     element_id: "CAM01-E01"
     base_photo: "public/images/cam1.webp"
-    category: "environment"
+    category: "object"
     anomaly_type: "add_object"
     phase: "mid"
     subtlety: "medium"
@@ -3529,7 +3529,7 @@ anomalies:
     camera_id: 'CAM07'
     element_id: 'CAM07-E01'
     base_photo: 'public/images/cam7.webp'
-    category: 'environment'
+    category: 'object'
     anomaly_type: 'add_object'
     phase: 'mid'
     subtlety: 'medium'
@@ -3655,7 +3655,7 @@ anomalies:
     camera_id: "CAM02"
     element_id: "CAM02-E01"
     base_photo: "public/images/cam2.webp"
-    category: "environment"
+    category: "object"
     anomaly_type: "add_object"
     phase: "mid"
     subtlety: "medium"
@@ -3673,7 +3673,7 @@ anomalies:
     camera_id: "CAM02"
     element_id: "CAM02-E09"
     base_photo: "public/images/cam2.webp"
-    category: "environment"
+    category: "object"
     anomaly_type: "add_object"
     phase: "late"
     subtlety: "medium"
@@ -3799,7 +3799,7 @@ anomalies:
     camera_id: 'CAM04'
     element_id: 'CAM04-E01'
     base_photo: 'public/images/cam4.webp'
-    category: 'environment'
+    category: 'object'
     anomaly_type: 'add_object'
     phase: 'early'
     subtlety: 'medium'
@@ -4630,7 +4630,7 @@ anomalies:
     camera_id: 'CAM06'
     element_id: 'CAM06-E16'
     base_photo: 'public/images/cam6.webp'
-    category: 'surreal'
+    category: 'environment'
     anomaly_type: 'state_change'
     phase: 'late'
     subtlety: 'obvious'
@@ -4648,7 +4648,7 @@ anomalies:
     camera_id: 'CAM03'
     element_id: 'CAM03-E16'
     base_photo: 'public/images/cam3.webp'
-    category: 'object'
+    category: 'environment'
     anomaly_type: 'state_change'
     phase: 'mid'
     subtlety: 'medium'
@@ -4954,7 +4954,7 @@ anomalies:
     camera_id: 'CAM07'
     element_id: 'CAM07-E16'
     base_photo: 'public/images/cam7.webp'
-    category: 'surreal'
+    category: 'environment'
     anomaly_type: 'state_change'
     phase: 'late'
     subtlety: 'obvious'
@@ -4972,7 +4972,7 @@ anomalies:
     camera_id: 'CAM07'
     element_id: 'CAM07-E17'
     base_photo: 'public/images/cam7.webp'
-    category: 'surreal'
+    category: 'environment'
     anomaly_type: 'state_change'
     phase: 'mid'
     subtlety: 'medium'
