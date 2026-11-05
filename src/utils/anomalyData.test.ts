@@ -402,6 +402,20 @@ describe('createAnomaly', () => {
     expect(a.alsoCategories).toEqual(['Person'])
     expect(a.category).toBe('Object')
   })
+  it('carries two alsoCategories over in order', () => {
+    const a = createAnomaly(
+      { ...e, alsoCategories: ['Person', 'Surreal'] },
+      'early',
+      'u'
+    )
+    expect(a.alsoCategories).toEqual(['Person', 'Surreal'])
+  })
+  it('has no alsoCategories key for an empty array', () => {
+    expect(
+      'alsoCategories' in
+        createAnomaly({ ...e, alsoCategories: [] }, 'early', 'u')
+    ).toBe(false)
+  })
   it('has no alsoCategories key when the entry has none', () => {
     expect('alsoCategories' in createAnomaly(e, 'early', 'u')).toBe(false)
   })

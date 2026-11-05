@@ -275,6 +275,31 @@ describe('anomaly-ledger vite plugin', () => {
       ).rejects.toThrow(/entry "a1".*also_categories "ghost" is unknown/)
     })
 
+    it('emits alsoCategories from a YAML block sequence', async () => {
+      const { out } = await run(
+        withAlso('also_categories:\n      - person\n      - surreal')
+      )
+      expect(parse(out)[0].alsoCategories).toEqual(['Person', 'Surreal'])
+    })
+
+    it('emits alsoCategories from a YAML flow sequence with two items', async () => {
+      const { out } = await run(
+        withAlso("also_categories: ['person', 'surreal']")
+      )
+      expect(parse(out)[0].alsoCategories).toEqual(['Person', 'Surreal'])
+    })
+
+    it.each([
+      ['not an array', "also_categories: 'person'"],
+      ['duplicated', "also_categories: ['person', 'Person']"],
+      ['camera', "also_categories: ['person', 'camera']"],
+      ['same as category', "also_categories: ['person', 'object']"],
+    ])('fails the build when it is %s', async (_n, line) => {
+      await expect(run(withAlso(line))).rejects.toThrow(
+        /entry "a1".*also_categories/
+      )
+    })
+
     it('leaves entries without the column unchanged (no alsoCategories key)', async () => {
       const { out } = await run(`anomalies:\n${entryYaml()}\n`)
       expect('alsoCategories' in parse(out)[0]).toBe(false)

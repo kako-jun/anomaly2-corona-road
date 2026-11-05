@@ -396,6 +396,87 @@ describe('parseLedgerEntry also_categories (#236)', () => {
   })
 })
 
+describe('parseLedgerEntry also_categories array shapes (#240)', () => {
+  const also = (v: unknown, over: Record<string, unknown> = {}) =>
+    parseLedgerEntry(raw({ also_categories: v, ...over }), 0).alsoCategories
+  it('accepts two items and keeps their order', () => {
+    expect(also(['person', 'surreal'])).toEqual(['Person', 'Surreal'])
+    expect(also(['surreal', 'person'])).toEqual(['Surreal', 'Person'])
+  })
+  it('accepts three or more items and keeps their order', () => {
+    expect(also(['surreal', 'environment', 'person'])).toEqual([
+      'Surreal',
+      'Environment',
+      'Person',
+    ])
+  })
+  it.each([
+    ['an empty array', []],
+    ['only blank items', ['', '  ']],
+  ])('treats %s as no column', (_n, v) => {
+    const e = parseLedgerEntry(raw({ also_categories: v }), 0)
+    expect('alsoCategories' in e).toBe(false)
+  })
+  it('skips blank items among valid ones', () => {
+    expect(also(['person', '  ', 'surreal'])).toEqual(['Person', 'Surreal'])
+  })
+  it('trims every item', () => {
+    expect(also([' person ', '\tsurreal  '])).toEqual(['Person', 'Surreal'])
+  })
+  it.each([
+    ['a number', [12]],
+    ['null', [null]],
+    ['a nested array', [['person']]],
+    ['a valid item then a number', ['person', 3]],
+  ])('rejects an item that is %s', (_n, v) => {
+    expect(() => parseLedgerEntry(raw({ also_categories: v }), 0)).toThrow(
+      /entry "AR-01-notice".*"also_categories" has a non-string item/
+    )
+  })
+  it('rejects a bare string', () => {
+    expect(() =>
+      parseLedgerEntry(raw({ also_categories: 'person' }), 0)
+    ).toThrow(/entry "AR-01-notice".*"also_categories" is not an array/)
+  })
+  it('rejects camera mixed in with valid items', () => {
+    expect(() =>
+      parseLedgerEntry(raw({ also_categories: ['person', 'camera'] }), 0)
+    ).toThrow(/entry "AR-01-notice".*also_categories "camera" is not allowed/)
+    expect(() =>
+      parseLedgerEntry(
+        raw({ category: 'person', also_categories: ['object', 'camera'] }),
+        0
+      )
+    ).toThrow(/also_categories "camera" is not allowed/)
+  })
+  it('rejects the primary category in the middle of the array', () => {
+    expect(() =>
+      parseLedgerEntry(
+        raw({ also_categories: ['person', 'object', 'surreal'] }),
+        0
+      )
+    ).toThrow(
+      /entry "AR-01-notice".*also_categories "object" is the same as category/
+    )
+  })
+  it.each([
+    ['person', 'person'],
+    ['person', 'PERSON'],
+    [' Person ', 'person'],
+  ])('rejects duplicates (%j, %j)', (a, b) => {
+    expect(() =>
+      parseLedgerEntry(raw({ also_categories: [a, 'surreal', b] }), 0)
+    ).toThrow(/entry "AR-01-notice".*also_categories "person" is duplicated/i)
+  })
+  it('accepts every non-camera combination that avoids the primary', () => {
+    const all = ['object', 'environment', 'person', 'surreal']
+    for (const primary of all) {
+      const others = all.filter(c => c !== primary)
+      expect(also(others, { category: primary })).toHaveLength(3)
+    }
+  })
+})
+
 // ---- kind / status (#77) ----
 
 const planned = (over: Record<string, unknown> = {}) => ({
@@ -536,6 +617,28 @@ describe('parseLedgerRecord: accepted shapes (#77)', () => {
       parseLedgerRecord(runtime({ also_categories: ['surreal'] }), 0)
         .alsoCategories
     ).toEqual(['Surreal'])
+  })
+})
+
+describe('parseLedgerRecord also_categories without category (#240)', () => {
+  const noCat = (v: unknown) =>
+    without(
+      runtime({ anomaly_type: 'ui_corruption', also_categories: v }),
+      'category'
+    )
+  it.each([
+    ['an empty array', []],
+    ['null', null],
+    ['blank items only', ['', ' ']],
+  ])('tolerates %s', (_n, v) => {
+    const r = parseLedgerRecord(noCat(v), 0)
+    expect(r.alsoCategories).toBeUndefined()
+    expect('alsoCategories' in r).toBe(false)
+  })
+  it('rejects a non-empty array', () => {
+    expect(() => parseLedgerRecord(noCat(['x']), 0)).toThrow(
+      /also_categories needs a category/
+    )
   })
 })
 

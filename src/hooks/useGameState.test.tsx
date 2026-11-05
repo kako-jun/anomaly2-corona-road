@@ -323,6 +323,37 @@ describe('reporting', () => {
       expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
     })
 
+    it('every extra category in the array is correct, feedback names the primary', () => {
+      for (const c of ['Person', 'Surreal'] as const) {
+        ledger.length = 0
+        ledger.push({
+          ...entry('a', 1, 'Object'),
+          alsoCategories: ['Person', 'Surreal'],
+        })
+        const { result, unmount } = start()
+        advance(FIRST + 100)
+        act(() => result.current.reportAnomaly(c))
+        expect(result.current.stats.correctReports).toBe(1)
+        expect(result.current.stats.misreports).toBe(0)
+        expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
+        unmount()
+      }
+    })
+
+    it('a category outside the array is a false report', () => {
+      ledger.length = 0
+      ledger.push({
+        ...entry('a', 1, 'Object'),
+        alsoCategories: ['Person', 'Surreal'],
+      })
+      const { result } = start()
+      advance(FIRST + 100)
+      act(() => result.current.reportAnomaly('Environment'))
+      expect(result.current.stats.misreports).toBe(1)
+      expect(result.current.stats.correctReports).toBe(0)
+      expect(result.current.activeAnomalyHere?.id).toBe('a')
+    })
+
     it('a third category is a false report', () => {
       const { result } = withAlso()
       act(() => result.current.reportAnomaly('Camera'))
