@@ -277,3 +277,19 @@ describe('Cabinet --wear (evaluated once at module load)', () => {
     view.unmount()
   })
 })
+
+describe('Cabinet true ending screen (Issue #86)', () => {
+  const baseSrc = (c: HTMLElement) =>
+    c
+      .querySelector('.pic__frame img:not(.glow):not(.overlay)')
+      ?.getAttribute('src')
+
+  it('shows the camera photo for dawn and the bar image for the ending', () => {
+    const { container, rerender } = render(
+      <Cabinet {...makeProps({ ending: 'dawn' })} />
+    )
+    expect(baseSrc(container)).toBe(cameras[0].image)
+    rerender(<Cabinet {...makeProps({ ending: 'ending' })} />)
+    expect(baseSrc(container)).toBe('/images/ending-bar.webp')
+  })
+})

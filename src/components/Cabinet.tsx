@@ -3,7 +3,7 @@ import { Feedback } from '../hooks/useGameState'
 import { useCameraKeys } from '../hooks/useCameraKeys'
 import { FlagEvent, useSubtitle } from '../hooks/useSubtitle'
 import { Anomaly, AnomalyCategory, Camera, GameStats } from '../types/game'
-import { CAMERAS } from '../utils/gameConfig'
+import { CAMERAS, ENDING_BAR_CAMERA } from '../utils/gameConfig'
 import { KNOB_DEFAULT, brightnessFilter, contrastFilter } from '../utils/knob'
 import { parseWear } from '../utils/wear'
 import { CameraStrip } from './CameraStrip'
@@ -26,7 +26,7 @@ interface CabinetProps {
   /** Flags that just rose (their story conversation cuts into the subtitles). */
   flagEvent: FlagEvent | null
   /** Set once the shift is over: the closing conversation plays, then `onEndingDone`. */
-  ending: 'dawn' | 'withdraw' | null
+  ending: 'dawn' | 'withdraw' | 'ending' | null
   onEndingDone: () => void
   onSwitch: (to: 'prev' | 'next' | number) => void
   onReport: (category: AnomalyCategory) => void
@@ -96,8 +96,8 @@ export const Cabinet = ({
     >
       <main className="cabinet" ref={cabinetRef}>
         <CameraView
-          camera={currentCamera}
-          anomalyHere={anomalyHere}
+          camera={ending === 'ending' ? ENDING_BAR_CAMERA : currentCamera}
+          anomalyHere={ending === 'ending' ? undefined : anomalyHere}
           result={shownResult}
           resultVisible={feedback !== null}
           subtitle={subtitle}
