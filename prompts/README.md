@@ -93,6 +93,15 @@ prompts/
 - `person` — 人影、動き
 - `surreal` — 現実崩壊
 
+判定の軸は「何がおかしいか（主語）」（#236）:
+
+- 人・人影・体の一部・痕跡 → `person`
+- 物 → `object`
+- 光や、床・壁・天井の面 → `environment`
+- あり得ない現象 → `surreal`
+
+`also_category`（任意の列）: 本当に割れる異変だけに付ける、もう1つの正解カテゴリ。プレイヤーが `category` と `also_category` のどちらを選んでも正解になる（フィードバックの `CONFIRMED — …` は主カテゴリ `category` を出す）。`category` と異なる有効なカテゴリ（小文字: `camera` / `object` / `environment` / `person` / `surreal`）でなければビルドが失敗し、エントリ id が表示される。無い異変が通常で、既存の entry には付けなくてよい。
+
 線引き（#47）: 物の出現（提灯・傘・旗・シーツ・蝿取りリボン・電球・テレビなど。天井から吊るものを含む）は `object`。床・壁・天井そのものの色・向き・反射・霜などの状態の変化は `environment`（床タイル・反射・霜は `surreal` にしない）。
 
 ## フェーズ

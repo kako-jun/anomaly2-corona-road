@@ -28,6 +28,8 @@ export interface LedgerEntry {
   id: string
   cameraId: number
   category: AnomalyCategory
+  /** Optional second correct report for a genuinely split anomaly (always differs from `category`). */
+  alsoCategory?: AnomalyCategory
   anomalyType: AnomalyType
   /** Repo-relative path of the transparent overlay, e.g. `assets/anomaly-overlays/cam01/notice.webp`. */
   overlay: string
@@ -84,6 +86,27 @@ export const parseCategory = (text: string): AnomalyCategory => {
   return category
 }
 
+/** Optional `also_category`: absent -> undefined; otherwise a valid category different from `category`. */
+export const parseAlsoCategory = (
+  value: unknown,
+  category: AnomalyCategory
+): AnomalyCategory | undefined => {
+  if (value === undefined || value === null) return undefined
+  if (typeof value !== 'string') {
+    throw new Error('"also_category" is not a string')
+  }
+  let also: AnomalyCategory
+  try {
+    also = parseCategory(value)
+  } catch {
+    throw new Error(`also_category "${value}" is unknown`)
+  }
+  if (also === category) {
+    throw new Error(`also_category "${value}" is the same as category`)
+  }
+  return also
+}
+
 export const parseAnomalyType = (text: string): AnomalyType => {
   const type = ANOMALY_TYPES.find(t => t === text)
   if (!type) throw new Error(`anomaly_type "${text}" is unknown`)
@@ -110,10 +133,13 @@ export const parseLedgerEntry = (raw: unknown, index: number): LedgerEntry => {
   try {
     if (typeof raw !== 'object' || raw === null)
       throw new Error('not a mapping')
+    const category = parseCategory(field(rec, 'category'))
+    const alsoCategory = parseAlsoCategory(rec.also_category, category)
     return {
       id: field(rec, 'id'),
       cameraId: parseCameraId(field(rec, 'camera_id')),
-      category: parseCategory(field(rec, 'category')),
+      category,
+      ...(alsoCategory ? { alsoCategory } : {}),
       anomalyType: parseAnomalyType(field(rec, 'anomaly_type')),
       overlay: parseOverlayPath(field(rec, 'overlay')),
       origin: parseOrigin(field(rec, 'overlay_origin')),
