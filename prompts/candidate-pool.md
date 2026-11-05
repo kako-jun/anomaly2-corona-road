@@ -68,18 +68,6 @@
 | CR-04-11 | CAM04-E07 | 左側のガラス店先の反射にだけ、廊下を塞ぐ黒い人影が立つ。           | person / late / obvious      |
 | CR-04-12 | CAM04-E10 | 奥の両開き扉が一枚の壁になり、取手だけが元の位置に残る。           | surreal / late / obvious     |
 
-## CAM 05 — Emergency Stairwell
-
-| 候補ID   | 対象ID    | 変化案                                                       | 分類 / フェーズ / 目立ち度   |
-| -------- | --------- | ------------------------------------------------------------ | ---------------------------- |
-| CR-05-02 | CAM05-E08 | 正面カーテンの一枚だけ、裾が隣より少し高い。                 | object / early / subtle      |
-| CR-05-03 | CAM05-E12 | レンガ帯の一つだけ目地が上下にずれている。                   | environment / early / subtle |
-| CR-05-04 | CAM05-E02 | 左上の丸灯は点灯しているのに、店舗のガラス反射には映らない。 | environment / early / subtle |
-| CR-05-06 | CAM05-E07 | 正面の金属枠の縦桟が一本だけガラスの手前に重なっている。     | surreal / mid / medium       |
-| CR-05-09 | CAM05-E11 | 黒い側面に、正面カーテンの縦模様が透けて現れる。             | surreal / late / obvious     |
-| CR-05-10 | CAM05-E08 | 中央のカーテン一枚だけが内側へ膨らみ、人の肩幅の形になる。   | person / late / obvious      |
-| CR-05-11 | CAM05-E05 | 長い蛍光灯が店舗区画の角で直角に折れて続く。                 | surreal / late / obvious     |
-
 ## CAM 06 — Shop Front Row
 
 | 候補ID   | 対象ID    | 変化案                                                           | 分類 / フェーズ / 目立ち度   |
@@ -745,19 +733,6 @@ CAM 02（`cam2.webp`、676x900）の型の偏りを直すために起こした�
   ```
 - **相互参照 / 重複精査**: AR-04-shadow-behind-camera（カメラの背後の人の影）・AR-04-glass-silhouette（ガラス越しの黒い人影）は『影・人影』、本案は『実体のある手』で別。AR-02-leather-footprints・AR-06-wet-footprints（足跡）とは別。AR-05-door-fingers（扉の隙間の指の影）とは別カメラ・別の見え方。CR-02-10（床反射に足）とは見え方が別。
 - **同カメラ内の排他と併存**: 同プレイで共存させない=AR-04-floor-shoes-rows（大面積）/ AR-04-shadow-behind-camera（同じ床の下端）。併存可=左・右・天井の異変。
-
-## 追加候補 — CAM 05
-
-| 候補ID   | 対象ID    | 変化案                                           | 分類 / フェーズ / 目立ち度   |
-| -------- | --------- | ------------------------------------------------ | ---------------------------- |
-| CR-05-13 | CAM05-E13 | 床タイル一枚だけ緑がかった色になる。             | environment / early / subtle |
-| CR-05-14 | CAM05-E13 | 床タイル一枚だけ縞模様になる。                   | environment / early / subtle |
-| CR-05-15 | CAM05-E13 | 店舗角の床に小さな水たまりが現れる。             | environment / mid / medium   |
-| CR-05-18 | CAM05-E01 | 天井の一部だけ格子模様になる。                   | environment / early / subtle |
-| CR-05-23 | CAM05-E08 | カーテンの縦縞一枚分だけ横縞に変わる。           | object / mid / medium        |
-| CR-05-25 | CAM05-E06 | 奥の通路に黒猫が一匹現れる。                     | object / mid / medium        |
-| CR-05-26 | CAM05-E10 | 架空化した看板のひらがな一文字だけ左右反転する。 | object / early / subtle      |
-| CR-05-27 | CAM05-E09 | 暗い隙間の反射にだけ小さな傘が映る。             | surreal / mid / medium       |
 
 ## 制作仕様（未制作）— CAM 05
 
