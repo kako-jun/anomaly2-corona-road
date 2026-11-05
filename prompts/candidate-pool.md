@@ -1364,81 +1364,13 @@ anomaly_type の偏り（台帳は add_object・state_change が多く surreal �
 | CR-RZ-08 | 無作為（音） | ワイヤレスイヤホンから漏れるような、小さな無名のビート音。 | environment / mid / subtle  |
 | CR-RZ-09 | 無作為（音） | 誰もいない通路で、自撮りのシャッター音が一度だけ鳴る。     | environment / late / medium |
 
-## Runtime / 背景非依存の異変在庫
+## Runtime / 背景非依存の異変の方針
 
-画像差分を作らず、CSS / Canvas / Web Audio / 状態管理で出す異変の在庫（旧・異変在庫メモから移設）。写真要素に紐づかないため要素IDは持たない。採用したら `anomalies.yaml` に `kind: runtime` で載せる（効果の実装は別タスク）。
+画像差分を作らず、CSS / Canvas / Web Audio / 状態管理で出す異変（カメラ画像そのもの・カメラ・映像・音・UI・メタ・ゲームルール）。個々の項目は全て `anomalies.yaml` に `kind: runtime`（`status: planned`、id は `RT-FEED-NN` / `RT-SND-NN` / `RT-UI-NN` / `RT-RULE-NN`）で載せ済みで、ここには方針だけを残す。写真要素に紐づかないため要素IDは持たない（効果の実装は別タスク）。
 
 **報告できない系統の扱い**: 報告は「見ているカメラの異変のカテゴリを選ぶ」だけなので、カメラに結びつかない異変（UI・メタ、ゲームルール系）は現状の報告方式では受け付けられず、採用の前提に窓口の設計が要る（別議論。報告ボタンを消す案も、報告手段を失うため同様）。カメラに結びつく系統（カメラ画像そのもの、音）は現方式のまま扱える。これらは画像系と違い特定のカメラに固定せず、**出現のたびにカメラを無作為に選ぶ**（kako-jun 決定。設計は Issue #70）。
 
 分類軸: `asset`（画像差分が必要）/ `runtime`（画像生成不要）/ `hybrid`（両方）。`background-bound`（看板・シャッター・通路奥など背景依存）/ `background-free`（画面揺れ・音・camera lost など）。
-
-### カメラ画像そのもの（asset または hybrid）
-
-- frame crop: 同じカメラなのに少しズームされている。
-- angle shifted: カメラ角度が数度ずれる。
-- focus blur: 一部/全体のピントが外れる。
-- exposure shift: 白飛び、黒潰れ。
-- compression artifact: ブロックノイズが異常に増える。
-- scanline burn: 走査線や焼き付きが増える。
-- freeze frame marker: 時刻だけ進むが映像が止まったように見える。
-- duplicate feed image: 別カメラと同じ映像になる。
-- fast figure: 画像では残像、runtime で一瞬横切る。
-- flicker source: 画像差分では明滅対象を作り、runtime で点滅させる。
-
-### カメラ・映像
-
-- camera lost: カメラ一覧から1台消える、または黒画面になる。
-- camera feed swapped: ラベルと映像が入れ替わる。
-- camera label shuffle: CAM番号や場所名がランダムに変わる。
-- camera locked: 一時的に特定カメラへ切替不能。
-- camera auto switch: 勝手に別カメラへ切り替わる。
-- camera delayed: 数秒前の映像のように時刻だけ遅れる。
-- camera rewind: 短く巻き戻る。
-- camera loop: 同じ数秒をループする。
-- shake / hard shake: 画面が小刻みに揺れる / 報告を急がせる大きい揺れ。
-- distortion: 魚眼、波打ち、引き伸ばし。
-- chromatic aberration: 色ズレ。
-- static noise: ノイズが画面を覆う。
-- black frame blink: 一瞬黒フレームを挟む。
-- dead pixels: 固定点のノイズや欠けが増える。
-- overlay ghosting: 前フレームが薄く残る。
-
-### 音
-
-- ambience missing: 環境音が急に消える。
-- hum grows: 低いハム音が大きくなる。
-- fluorescent buzz: 蛍光灯のジリジリ音。
-- distant footsteps / running footsteps: 奥から足音 / 近づく速い足音。
-- knock: シャッター/壁/ガラスを叩く音。
-- whisper: 聞き取れない囁き。
-- reversed announcement: 逆再生の館内放送。
-- 令和系: 令和系の音は「令和テーマ候補」節（CR-RZ-07〜09）を参照。
-- wrong location sound: 見ていないカメラの音が鳴る。
-- report stinger: 異変中だけ短い不協和音。
-- silence after report: 正報後に一瞬無音。
-- 昭和系: 食器の音、古い館内放送がかすかに混ざる（音素材と再生機構が必要）。映像が一瞬だけ褪色する。どんちゃん騒ぎの声・古いラジオ／歌謡曲・記録映画のアナウンサー調は「昭和テーマ候補」節（CR-SH-04〜06）が正本。
-
-### UI・メタ
-
-- report button disappears / moves: 報告ボタンが短時間消える / 位置がずれる。
-- wrong category labels: カテゴリ名だけ入れ替わる。
-- disabled category: 正しいカテゴリが一時的に押せない。
-- false strike display: strike 表示が増えたように見える。
-- timer backwards / jumps / frozen: 時刻が逆走する / 0:00・6:00付近へ飛ぶ / 映像は動くが時刻が止まる。
-- text corruption: UI 文字が壊れる。
-- language drift: 英語 UI に日本語/記号が混ざる。
-- notification lies: toast が嘘を言う。
-- badge appears without anomaly / badge missing: 異変が無いのに警告バッジ / 異変中なのにバッジが出ない。
-- cursor/hover glitch: desktop 時のみカーソルや hover が乱れる。
-
-### ゲームルール
-
-- extra active anomaly: 同時発生上限を一時的に超える。
-- anomaly refuses report: 正しく報告しても一度だけ直らない。
-- wrong camera accepted: 別カメラの報告が通る。
-- category inversion: 特定時間だけカテゴリ判定が逆になる。
-- safe camera unsafe: 何もないはずのカメラで strike 誘導が起きる。
-- tutorial rule break: 画面上のルール文が変わる。
 
 ### 配分の目安（初期案。MVP 40 件想定・現状の台帳件数とは別）
 
