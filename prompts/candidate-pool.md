@@ -267,10 +267,10 @@
     detail: '右の扉の取手（銀色のレバーと小さな掛け金）が消え、扉の面だけが残る。'
     overlay: 'assets/anomaly-overlays/cam06/door-knob-gone.webp'
     # phase / 目立ち度: early / subtle
-    note: '最寄り既存 overlay は AR-06-wall-height-marks（box 距離 31px）。大面積 AR-06-wall-same-poster と排他。取手が小さいため check-visibility を必ず通す。'
+    note: '最寄り既存 overlay は AR-06-wall-height-marks（box 距離 31px）。大面積 AR-06-wall-same-poster・AR-06-wall-puddle と排他。取手が小さいため check-visibility を必ず通す。'
   ```
 - **相互参照 / 重複精査**: 同カメラの CR-06-18（取手が扉の反対側へ移る: 候補）とは別で、こちらは物が消える。他カメラ候補（CR-04-22・CR-07-03 の取手移動）とは対象も型も違う。台帳に取手そのものの異変は無い。AR-06-menu-price-old（文字）・AR-06-tilted-notice（掲示の傾き）とは別の物。他カメラの remove_object（AR-02-pillar-sign-gone・AR-03-roll-vanish・AR-07-exit-sign-gone）は看板・巻物で、金具の消失は無い。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-06-wall-same-poster（右壁一面。扉ごと別物に置き換わる）。併存可=AR-06-door-gap-light（扉の下の光。取手と別の位置）・AR-06-wall-height-marks・AR-06-wall-gecko。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-06-wall-same-poster（右壁一面。扉ごと別物に置き換わる）・AR-06-wall-puddle（大面積。box が重なる）。併存可=AR-06-door-gap-light（扉の下の光。取手と別の位置）・AR-06-wall-height-marks・AR-06-wall-gecko。
 
 ### AR-06-ceiling-vent-triple — 天井の黒い長方形の換気口と同じ物が、左上の天井にも三つ並ぶ
 
@@ -329,10 +329,10 @@
     detail: '左の鉢の手前の床のタイルに、小さな赤橙色の蟹が一匹歩いている。'
     overlay: 'assets/anomaly-overlays/cam06/floor-crab.webp'
     # phase / 目立ち度: mid / medium
-    note: '最寄り既存 overlay は AR-06-pot-tag（box 距離 35px）。大面積 AR-06-wall-puddle の bbox 内なので、alpha の実画素が水たまりと重なる場合のみ排他と明記して登録する。'
+    note: '最寄り既存 overlay は AR-06-pot-tag（box 距離 35px）。大面積 AR-06-wall-puddle と排他（box が重なる）。'
   ```
 - **相互参照 / 重複精査**: CAM06 の既存の生き物は壁のヤモリ（AR-06-wall-gecko）のみ。CR-06-26（植物の足元の茶トラ猫）・CR-06-12（葉陰の人形のような生物）とは種も場所も違う。他カメラの猫・鳩・雀・金魚・目（AR-02-cat・AR-03-walking-cat・AR-01-threshold-pigeon・AR-08-pillar-sparrow・AR-05-aisle-goldfish・AR-04-left-edge-eyes）とは種が違う。台帳に蟹は無い。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-06-wall-puddle（床の水たまり。蟹が水たまりの上になる場合）。併存可=AR-06-tile-sky・AR-06-floor-light-slant・AR-06-pot-tag（別の位置）。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-06-wall-puddle（大面積。box が重なる）。併存可=AR-06-tile-sky・AR-06-floor-light-slant・AR-06-pot-tag（別の位置）。
 
 ### AR-06-feet-at-edge — 画面の下端に、こちらに向かって立つ人の足先が見切れている
 
