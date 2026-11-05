@@ -1,5 +1,8 @@
 import type { AnomalyCategory } from '../types/game'
 
+// NOTE: scripts/ledger-summary.mjs imports this file via Node's type stripping. Use only erasable
+// TypeScript here (no enum, namespace or constructor parameter properties) or only Node breaks.
+
 /**
  * Pure helpers for the anomaly ledger (`prompts/anomalies.yaml`, the single source of truth).
  * `vite.config.ts` uses them to turn the YAML into the `virtual:anomalies` module, and the game

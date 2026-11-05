@@ -3,17 +3,29 @@
 // these numbers into docs. Uses the same parser/validation as the build (src/utils/anomalyLedger.ts,
 // loaded through Node's built-in TypeScript type stripping), so a broken entry fails here too.
 //
-//   npm run ledger:summary
+//   npm run ledger:summary [path/to/ledger.yaml]   (default: prompts/anomalies.yaml)
+//
+// Requires Node >=22.18 (package.json "engines"): the TypeScript parser is imported as-is.
 import { readFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parse as parseYaml } from 'yaml'
-import { parseLedgerRecords } from '../src/utils/anomalyLedger.ts'
+
+const [major, minor] = process.versions.node.split('.').map(Number)
+if (major < 22 || (major === 22 && minor < 18)) {
+  console.error(
+    `ledger:summary needs Node >=22.18 (found ${process.versions.node}): it imports src/utils/anomalyLedger.ts directly and relies on Node's built-in TypeScript type stripping, which is only on by default from 22.18.`
+  )
+  process.exit(1)
+}
+
+const { parse: parseYaml } = await import('yaml')
+const { parseLedgerRecords } = await import('../src/utils/anomalyLedger.ts')
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const records = parseLedgerRecords(
-  parseYaml(readFileSync(join(root, 'prompts', 'anomalies.yaml'), 'utf8'))
-)
+const ledgerPath = process.argv[2]
+  ? resolve(process.argv[2])
+  : join(root, 'prompts', 'anomalies.yaml')
+const records = parseLedgerRecords(parseYaml(readFileSync(ledgerPath, 'utf8')))
 
 const NONE = '(none)'
 const counts = keyFn => {
