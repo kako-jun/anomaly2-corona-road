@@ -101,7 +101,7 @@ describe('retro.css', () => {
     ).toBe(true)
   })
 
-  it('sets a positive px padding-top on report type keys', () => {
+  it('sets a positive px padding-top on report category keys', () => {
     const tops = decls('.cat-grid .key', 'padding-top')
     expect(tops.length).toBeGreaterThan(0)
     for (const v of tops) {

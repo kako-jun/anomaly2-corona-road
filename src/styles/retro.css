@@ -1115,7 +1115,7 @@
   right: 26px;
 }
 
-/* ===== Report type picker: modal popup (fixed overlay, does not change page layout) ===== */
+/* ===== Report category picker: modal popup (fixed overlay, does not change page layout) ===== */
 
 .scrim {
   position: fixed;
@@ -1600,7 +1600,7 @@
   padding-bottom: 8px !important;
 }
 
-/* SELECT TYPE keys: the step line of the key image sits about 40% down; put the text on the lower face, below it
+/* Report category keys (panel label SELECT CATEGORY): the step line of the key image sits about 40% down; put the text on the lower face, below it
    (padding-top only; the key height is unchanged because min-height is border-box) */
 .cat-grid .key {
   padding-top: 10px !important;

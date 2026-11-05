@@ -3,7 +3,7 @@
 # 注意: 節目の数値（20/50/100 など）は仮の例で、確定ではない（docs/story.md 未決）。確定したらここだけを直す。
 flags:
   elder1:
-    foundUnique: 20 # 仮の例。見つけた種類の数（foundIds の長さ）
+    foundUnique: 20 # 仮の例。見つけた異変の数（重複なし。foundIds の長さ）
   elder2:
     foundUnique: 50 # 仮の例
   elder3:

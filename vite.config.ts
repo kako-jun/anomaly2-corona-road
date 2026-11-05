@@ -14,7 +14,7 @@ const RESOLVED_ID = '\0' + VIRTUAL_ID
 /**
  * Exposes the anomaly ledger (prompts/anomalies.yaml, the single source of truth) to the game as
  * `virtual:anomalies`, trimmed to the fields the game needs and limited to kind=image, status=produced
- * entries (planned / runtime ones are validated but not handed to the game). A broken entry anywhere
+ * entries (planned / non_image ones are validated but not handed to the game). A broken entry anywhere
  * in the ledger fails the build and the message names the entry.
  */
 const anomalyLedgerPlugin = (): Plugin => ({

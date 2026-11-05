@@ -171,21 +171,21 @@ describe('dialogue-ledger vite plugin', () => {
   })
 })
 
-describe('dialogue-ledger vite plugin: planned / runtime anomalies (#77)', () => {
+describe('dialogue-ledger vite plugin: planned / non-image anomalies (#77)', () => {
   const withExtraAnomalies = `${anomalies}  - id: 'p1'
     status: 'planned'
     camera_id: 'CAM01'
     category: 'object'
     anomaly_type: 'add_object'
   - id: 'r1'
-    kind: 'runtime'
+    kind: 'non_image'
     status: 'planned'
     anomaly_type: 'sound'
     category: 'environment'
     detail: 'd'
 `
 
-  it('accepts lines pointing at planned and runtime anomaly ids', async () => {
+  it('accepts lines pointing at planned and non-image anomaly ids', async () => {
     const files = good()
     files.anomalies = withExtraAnomalies
     files['anomaly-lines'] =
@@ -197,7 +197,7 @@ describe('dialogue-ledger vite plugin: planned / runtime anomalies (#77)', () =>
     )
   })
 
-  it('accepts a flag that finds a planned / runtime id', async () => {
+  it('accepts a flag that finds a planned / non-image id', async () => {
     const files = good()
     files.anomalies = withExtraAnomalies
     files.flags = 'flags:\n  f1:\n    found: [p1, r1]\n'

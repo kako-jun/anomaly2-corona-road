@@ -10,7 +10,7 @@ const CATEGORIES: AnomalyCategory[] = [
   'Surreal',
 ]
 
-/** One-line hint written on a note stuck under each type key (always visible). */
+/** One-line hint written on a note stuck under each category key (always visible). */
 const CATEGORY_HINTS: Record<AnomalyCategory, string> = {
   Camera: 'the whole picture glitches',
   Object: 'a thing appears, vanishes or changes',
@@ -25,7 +25,7 @@ interface ReportButtonProps {
   onToggle: () => void
 }
 
-/** The red REPORT key with its lamp (lit while the type picker is open). */
+/** The red REPORT key with its lamp (lit while the category picker is open). */
 export const ReportButton = ({
   open,
   buttonRef,
@@ -54,7 +54,7 @@ interface ReportDialogProps {
 }
 
 /**
- * Anomaly type picker. Rendered only while open, and placed outside `.cabinet`
+ * Anomaly category picker. Rendered only while open, and placed outside `.cabinet`
  * (the caller makes `.cabinet` inert meanwhile). Esc / backdrop / CANCEL close it.
  */
 export const ReportDialog = ({ onSelect, onClose }: ReportDialogProps) => {
@@ -111,7 +111,7 @@ export const ReportDialog = ({ onSelect, onClose }: ReportDialogProps) => {
         aria-labelledby="dlgTitle"
       >
         <div className="label dlg-title" id="dlgTitle">
-          SELECT TYPE
+          SELECT CATEGORY
         </div>
         <div className="cat-grid">
           {CATEGORIES.map(category => (

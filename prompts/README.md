@@ -11,8 +11,8 @@ prompts/
 ├── README.md                    根。全体の地図・enum・ワークフロー
 ├── camera-element-inventory.md  [正本] 写真8枚の写り込み要素・固定ID・座標
 │   └── atlas/cam01〜08.svg      [派生物] 上の台帳から `npm run build:camera-atlas` で生成する視覚ガイド
-├── candidate-pool.md            [正本] 残す画像案の制作仕様の詳細（制作して昇格したら節を削除）と、runtime 在庫の配分・視点の方針
-├── anomalies.yaml               [正本] 全異変の台帳（画像・runtime、制作済み・未制作。書式は下の「台帳の書式」）
+├── candidate-pool.md            [正本] 残す画像案の制作仕様の詳細（制作して昇格したら節を削除）と、画像以外の異変の在庫の配分・視点の方針
+├── anomalies.yaml               [正本] 全異変の台帳（画像異変・画像以外の異変、制作済み・未制作。書式は下の「台帳の書式」）
 │   └── queue/index.html         [派生物] 上の台帳（のみ）から `npm run build:prompts` で生成するコピペUI
 │       件数の要約は `npm run ledger:summary`（台帳が真実。docs に固定の進捗表を書かない）
 ├── base-template.md             [正本] 共通プロンプト（背景保持の定型文）
@@ -20,10 +20,25 @@ prompts/
 ```
 
 - `.agents/skills/corona-road-anomaly/SKILL.md` — 候補選定から差分合成・レビュー・登録までの反復手順（prompts/ の外にある制作スキル）。
-- 異変の全件は `anomalies.yaml`（制作済み=`produced`、未制作=`planned`、画像=`image`、画面の乱れ・音・UI・ルール=`runtime`）。`candidate-pool.md` には、台帳の planned 画像案の制作仕様の詳細と方針の説明だけがある（採用/不採用の状態は無い。不要な案は台帳から削除する。昇格ルールは下の「台帳の書式」）。
+- 異変の全件は `anomalies.yaml`（制作済み=`produced`、未制作=`planned`、画像=`image`、画面の乱れ・音・UI・ルール=`non_image`。用語は下の「用語集」）。`candidate-pool.md` には、台帳の planned 画像案の制作仕様の詳細と方針の説明だけがある（採用/不採用の状態は無い。不要な案は台帳から削除する。昇格ルールは下の「台帳の書式」）。
 - `queue/index.html` と `atlas/*.svg` は**生成物**。手で編集せず、元の正本を直して再生成する。
-- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、昭和の音の案は台帳の `kind: runtime`（`CR-SH-04`〜`06`）にある。
-- 4人目（令和のZ世代の子供）の「令和の異変（どれでも3つ見つければ条件成立）」の異変は台帳にある（画像は `anomalies.yaml` の `candidate_id: CR-RZ-*`、音は `CR-RZ-07`〜`09`（runtime）で探す（#83 の 1. で本物の台帳印が入るまでの仮の見つけ方）。昭和でない令和の物。方針は `docs/story.md` の「進行」節）。
+- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、昭和の音の案は台帳の `kind: non_image`（`CR-SH-04`〜`06`）にある。
+- 4人目（令和のZ世代の子供）の「令和の異変（どれでも3つ見つければ条件成立）」の異変は台帳にある（画像は `anomalies.yaml` の `candidate_id: CR-RZ-*`、音は `CR-RZ-07`〜`09`（画像以外の異変）で探す（#83 の 1. で本物の台帳印が入るまでの仮の見つけ方）。昭和でない令和の物。方針は `docs/story.md` の「進行」節）。
+
+## 用語集（正本）
+
+異変まわりの語はここだけで定義する。他の docs・コード・台帳のコメントは、この節を参照するだけにして定義を書き写さない。
+
+| 語                           | 意味                                                                                                                                               | コード・台帳での名前                             |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| カテゴリ                     | 報告するときの分類。camera / object / environment / person / surreal の5つ。プレイヤーが報告パネルで選ぶ。パネルの各ボタンは「カテゴリキー」と呼ぶ | `category`、`also_categories`                    |
+| 異変の種類                   | 異変のやり方（物を足す、状態を変える、音が鳴る、など）。一覧は下の「異変の種類 enum」。カテゴリとは別の軸                                          | `anomaly_type`（`add_object` `state_change` 等） |
+| 画像異変                     | 元写真に重ねる透過 overlay を描いて作る異変。ゲームの抽選に出るのはこれだけ（`produced` のもの）                                                   | `kind: image`（省略時の既定）                    |
+| 画像以外の異変               | 画像を作らずに出す異変（画面の乱れ・音・UI の崩れ・ルール違反）。異変の種類は `feed_glitch` `sound` `ui_corruption` `rule_break` の4つだけ         | `kind: non_image`                                |
+| 見つけた異変の数（重複なし） | これまでに見つけた異変の、同じ異変を2度数えない個数。節目（老人3人、4人目の累計条件）の判定に使う。「見つけた種類の数」とは言わない                | `foundUnique`、`foundIds` の長さ                 |
+| 見つけた異変の数（延べ）     | 同じ異変を見つけ直した分も数えた正解報告の数。記録だけで判定には使わない                                                                           | `foundTotal`                                     |
+
+`kind` の旧い値（#271 で廃止、互換エイリアスなし）を台帳に書くと、ビルドが改名先を示すエラーで落ちる。
 
 ## ワークフロー
 
@@ -60,64 +75,64 @@ prompts/
 - 異変追加と同じ方法で、実在の店名・看板を架空名へ差し替える。公開用素材では、実名看板を残さない版を baseline / sanitized として先に作ってから、その画像に異変を足す。
 - 1回の生成で「看板差し替え + 異変追加」を同時に頼まない。差し替え、異変、色調整は別バリアント/別レイヤーとして作る。
 - 指示は常に「構図・照明・監視カメラ感・粒状感・既存の壁床天井を保持し、指定箇所だけ変更する」を核にする。ただし最終保証は Photoshop 側で行う。
-- 異変在庫は画像差分だけで作らない。画面揺れ、音、カメラ喪失、ノイズ、UI破壊、タイマー異常など、画像生成が不要な runtime 異変も台帳に載せて（`kind: runtime`）から配分する。
+- 異変在庫は画像差分だけで作らない。画面揺れ、音、カメラ喪失、ノイズ、UI破壊、タイマー異常など、画像生成が不要な画像以外の異変も台帳に載せて（`kind: non_image`）から配分する。
 - 背景依存の強い異変（看板、人影、通路奥、シャッター等）と、背景非依存の異変（画面揺れ、音、camera lost、UI corruption等）を分けて管理する。
 
-## 台帳の書式（status / kind / runtime）
+## 台帳の書式（status / kind）
 
-`anomalies.yaml` が**全異変の正本**（#77）。画像異変だけでなく runtime 異変（画面の乱れ・音・UI・ルール）と未制作（planned）も載せる。「載せておかないと漏れる」ため。
+`anomalies.yaml` が**全異変の正本**（#77）。画像異変だけでなく画像以外の異変（画面の乱れ・音・UI・ルール）と未制作（planned）も載せる。「載せておかないと漏れる」ため。
 
-planned の画像案は制作済みの後ろ、runtime はその後ろに置く。
+planned の画像案は制作済みの後ろ、画像以外の異変はその後ろに置く。
 
-| フィールド | 値                                               | 省略時     |
-| ---------- | ------------------------------------------------ | ---------- |
-| `status`   | `produced`（制作済み）/ `planned`（未制作）      | `produced` |
-| `kind`     | `image`（overlay を描く）/ `runtime`（画像なし） | `image`    |
+| フィールド | 値                                                 | 省略時     |
+| ---------- | -------------------------------------------------- | ---------- |
+| `status`   | `produced`（制作済み）/ `planned`（未制作）        | `produced` |
+| `kind`     | `image`（overlay を描く）/ `non_image`（画像なし） | `image`    |
 
-| kind / status                      | 必須                                                                                        | 省略可・禁止                                                                                                                 |
-| ---------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| image + produced                   | `camera_id` `category` `anomaly_type` `overlay` `overlay_origin` `dimensions`（従来どおり） |                                                                                                                              |
-| image + planned                    | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                           |
-| runtime（planned / produced とも） | `anomaly_type`（runtime 型）`detail`                                                        | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_categories` は image と同じ検証（camera 不可）で任意 |
+| kind / status                        | 必須                                                                                        | 省略可・禁止                                                                                                                 |
+| ------------------------------------ | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| image + produced                     | `camera_id` `category` `anomaly_type` `overlay` `overlay_origin` `dimensions`（従来どおり） |                                                                                                                              |
+| image + planned                      | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                           |
+| non_image（planned / produced とも） | `anomaly_type`（画像以外の種類）`detail`                                                    | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_categories` は image と同じ検証（camera 不可）で任意 |
 
 - `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### AR-01-outlets-multiply`）。
-- runtime の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
-- 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に runtime 型、runtime に画像型）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
-- ゲーム（`virtual:anomalies`）に渡るのは `kind: image` かつ `status: produced` だけ。planned と runtime は検証されるが抽選には出ない（出現ロジックと効果は #78・#79・#80）。
+- non_image の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
+- 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に画像以外の種類、non_image に画像の種類）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
+- ゲーム（`virtual:anomalies`）に渡るのは `kind: image` かつ `status: produced` だけ。planned と non_image は検証されるが抽選には出ない（出現ロジックと効果は #78・#79・#80）。
 - 件数の要約: `npm run ledger:summary`（kind / status / category / anomaly_type とそのクロス集計。ビルドと同じ検証を通る）。
 
 **昇格ルール（planned → produced）**: 制作の詳細（box・生成プロンプト・overlay など）は**台帳のエントリへ移し**、`candidate-pool.md` の該当 `###` 節を**削除**する。台帳とプールに同じ案を二重に残さない。
 
-## 異変タイプ enum
+## 異変の種類 enum（anomaly_type）
 
 `anomaly_type` に書ける値:
 
-下の表の末尾4行（`feed_glitch` / `sound` / `ui_corruption` / `rule_break`）は `kind: runtime` 専用で、先頭12行は `kind: image` 専用（食い違いはビルドが失敗する）。ゲームは image の値を異変の抽選の重み（カメラ内の型ごとの未使用件数）に使う。未知の値はビルドが落ちる。型を増やすときは `src/utils/anomalyLedger.ts` の `ANOMALY_TYPES` も更新する（この表と `ANOMALY_TYPES` の一致はテストで縛ってある）。
+下の表の末尾4行（`feed_glitch` / `sound` / `ui_corruption` / `rule_break`）は `kind: non_image` 専用で、先頭12行は `kind: image` 専用（食い違いはビルドが失敗する）。ゲームは image の値を異変の抽選の重み（カメラ内の型ごとの未使用件数）に使う。未知の値はビルドが落ちる。型を増やすときは `src/utils/anomalyLedger.ts` の `ANOMALY_TYPES` も更新する（この表と `ANOMALY_TYPES` の一致はテストで縛ってある）。
 
-| type            | 説明                      | 例                                           |
-| --------------- | ------------------------- | -------------------------------------------- |
-| `add_object`    | 物を足す                  | 看板、人形、ゴミ袋                           |
-| `remove_object` | 物を消す                  | 看板が消える                                 |
-| `add_person`    | 人物を足す                | 後ろ姿の人                                   |
-| `add_creature`  | 非人類を足す              | 宇宙人、影、何か                             |
-| `state_change`  | 状態を変える              | 扉が開く、ライトが消える、シャッターが上がる |
-| `duplicate`     | 同じ物を複数化            | 看板が2枚に増える                            |
-| `multiply`      | 数の増殖                  | 通行人が異常に増える                         |
-| `displace`      | 位置をずらす              | 看板が天井に貼り付く                         |
-| `color_shift`   | 色だけ変える              | 床だけ赤く染まる                             |
-| `text_change`   | 文字を変える              | 駅名表示が違う文字に                         |
-| `surreal`       | 物理崩壊系                | 床が消える、空間が歪む                       |
-| `reflection`    | 反射・影の異常            | 影が逆向き、鏡に映らない                     |
-| `feed_glitch`   | 画面全体の乱れ（runtime） | 映像が一瞬褪色する、ノイズ、カメラ喪失       |
-| `sound`         | 音（runtime）             | 誰もいない通路でシャッター音が鳴る           |
-| `ui_corruption` | UI の崩れ（runtime）      | 画面表示が壊れる                             |
-| `rule_break`    | ルール違反（runtime）     | タイマーの異常                               |
+| type            | 説明                       | 例                                           |
+| --------------- | -------------------------- | -------------------------------------------- |
+| `add_object`    | 物を足す                   | 看板、人形、ゴミ袋                           |
+| `remove_object` | 物を消す                   | 看板が消える                                 |
+| `add_person`    | 人物を足す                 | 後ろ姿の人                                   |
+| `add_creature`  | 非人類を足す               | 宇宙人、影、何か                             |
+| `state_change`  | 状態を変える               | 扉が開く、ライトが消える、シャッターが上がる |
+| `duplicate`     | 同じ物を複数化             | 看板が2枚に増える                            |
+| `multiply`      | 数の増殖                   | 通行人が異常に増える                         |
+| `displace`      | 位置をずらす               | 看板が天井に貼り付く                         |
+| `color_shift`   | 色だけ変える               | 床だけ赤く染まる                             |
+| `text_change`   | 文字を変える               | 駅名表示が違う文字に                         |
+| `surreal`       | 物理崩壊系                 | 床が消える、空間が歪む                       |
+| `reflection`    | 反射・影の異常             | 影が逆向き、鏡に映らない                     |
+| `feed_glitch`   | 画面全体の乱れ（画像以外） | 映像が一瞬褪色する、ノイズ、カメラ喪失       |
+| `sound`         | 音（画像以外）             | 誰もいない通路でシャッター音が鳴る           |
+| `ui_corruption` | UI の崩れ（画像以外）      | 画面表示が壊れる                             |
+| `rule_break`    | ルール違反（画像以外）     | タイマーの異常                               |
 
 ## カテゴリ（ゲーム内分類）
 
 ゲームの report 選択肢に対応:
 
-- `camera` — そのカメラの画面全体のおかしくなり方（映像の乱れ等）。画像差分(overlay)では作らず runtime 異変（`anomaly_type: feed_glitch`）で扱うため、`kind: image` の entry には付けない（付けると `also_categories` では拒否される）。物の変化は `object`
+- `camera` — そのカメラの画面全体のおかしくなり方（映像の乱れ等）。画像差分(overlay)では作らず画像以外の異変（`anomaly_type: feed_glitch`）で扱うため、`kind: image` の entry には付けない（付けると `also_categories` では拒否される）。物の変化は `object`
 - `object` — 物の出現・消失・変化
 - `environment` — 光、構造、雰囲気
 - `person` — 人影、動き
@@ -130,7 +145,7 @@ planned の画像案は制作済みの後ろ、runtime はその後ろに置く�
 - 光や、床・壁・天井の面 → `environment`
 - あり得ない現象 → `surreal`
 
-`also_categories`（任意の列）: 本当に割れる異変だけに付ける任意の配列（YAML のシーケンス。例: `also_categories: ['surreal']`）。プレイヤーが `category` と `also_categories` のどれを選んでも正解になる。3つ以上でもよい。camera 不可。主カテゴリと重複不可（要素どうしの重複も不可）。`category` が空の entry には書けない。フィードバックの `CONFIRMED — …` は主カテゴリ `category` を出す。各要素は有効なカテゴリ（小文字: `camera` / `object` / `environment` / `person` / `surreal`）でなければビルドが失敗し、エントリ id が表示される。`camera` は runtime 異変であって画像差分ではないので指定できない（拒否される）。無い異変が通常で、既存の entry には付けなくてよい。
+`also_categories`（任意の列）: 本当に割れる異変だけに付ける任意の配列（YAML のシーケンス。例: `also_categories: ['surreal']`）。プレイヤーが `category` と `also_categories` のどれを選んでも正解になる。3つ以上でもよい。camera 不可。主カテゴリと重複不可（要素どうしの重複も不可）。`category` が空の entry には書けない。フィードバックの `CONFIRMED — …` は主カテゴリ `category` を出す。各要素は有効なカテゴリ（小文字: `camera` / `object` / `environment` / `person` / `surreal`）でなければビルドが失敗し、エントリ id が表示される。`camera` は画像以外の異変であって画像差分ではないので指定できない（拒否される）。無い異変が通常で、既存の entry には付けなくてよい。
 
 線引き（#47, #236）: 物の出現（提灯・傘・旗・シーツ・蝿取りリボン・電球・テレビなど。天井から吊るものを含む）は `object`。床・壁・天井そのものの色・向き・霜などの面の状態の変化は `environment`（床タイル1枚が鏡になる、も `environment`）。反射そのものがおかしい（映るはずのものが映らない・反射の形が変わる・水鏡など）は `surreal`。映ったものが物・人なら、その物・人が主カテゴリで `also_categories: ['surreal']`。
 
@@ -160,6 +175,6 @@ Claude は enum から適切な `anomaly_type` を選び、`location` と `detai
 
 異変の多様性を確保するため、写真要素ごとの案は台帳に `planned` で載せる（猫、物の増減、反射、床壁天井の模様、文字反転、色形、段数、ノブ左右、吊り物、紙、水たまりを含む）。件数は完成素材数ではない。
 
-`anomalies.yaml` は全異変の台帳（以下は画像異変の運用）。`queue/index.html` は `kind: image` の全件（`produced` と `planned`）を表示し、status 列で区別する（`planned` は「未作成」として強調）。`kind: runtime` は画像を作らないので載せない。`produced` の行は制作済みなので、表示された項目が生成待ちとは限らない。`review_status: composited` は静止差分の試作で、完成・採用・ゲームへの実装を意味しない。`category` はゲームの報告用5分類に合わせた値で、猫などの小動物も現在は `object` に仮分類している（ゲーム側の報告分類確定時に見直す）。`camera` は画面全体の乱れ専用で、runtime の `feed_glitch` が使う（積まれた物なども `object`）。
+`anomalies.yaml` は全異変の台帳（以下は画像異変の運用）。`queue/index.html` は `kind: image` の全件（`produced` と `planned`）を表示し、status 列で区別する（`planned` は「未作成」として強調）。`kind: non_image` は画像を作らないので載せない。`produced` の行は制作済みなので、表示された項目が生成待ちとは限らない。`review_status: composited` は静止差分の試作で、完成・採用・ゲームへの実装を意味しない。`category` はゲームの報告用5分類に合わせた値で、猫などの小動物も現在は `object` に仮分類している（ゲーム側の報告分類確定時に見直す）。`camera` は画面全体の乱れ専用で、画像以外の異変の `feed_glitch` が使う（積まれた物なども `object`）。
 
 異変を追加する前に、台帳（制作済みと planned の両方）で、対象・変化・見え方・報告カテゴリの類似を照合する。画像異変の目標は約300件なので、重複する案は足さない。詳細な判断基準は制作スキルの「追加前の類似チェック」を参照。

@@ -78,19 +78,19 @@ describe('scripts/ledger-summary.mjs with a ledger path argument (#77)', () => {
     category: environment
     anomaly_type: color_shift
   - id: r1
-    kind: runtime
+    kind: non_image
     status: planned
     anomaly_type: feed_glitch
     category: camera
     detail: d
   - id: r2
-    kind: runtime
+    kind: non_image
     status: produced
     anomaly_type: sound
     category: environment
     detail: d
   - id: r3
-    kind: runtime
+    kind: non_image
     status: planned
     anomaly_type: rule_break
     detail: d
@@ -127,7 +127,7 @@ describe('scripts/ledger-summary.mjs with a ledger path argument (#77)', () => {
       expect(stdout).toContain('anomalies.yaml: 8 entries')
       expect(table(stdout, 'kind x status')).toEqual({
         image: { planned: 2, produced: 3 },
-        runtime: { planned: 2, produced: 1 },
+        non_image: { planned: 2, produced: 1 },
       })
       expect(table(stdout, 'category x status')).toEqual({
         '(none)': { planned: 1, produced: 0 },
@@ -147,8 +147,8 @@ describe('scripts/ledger-summary.mjs with a ledger path argument (#77)', () => {
       expect(table(stdout, 'category x kind/status')['Object']).toEqual({
         'image/planned': 1,
         'image/produced': 2,
-        'runtime/planned': 0,
-        'runtime/produced': 0,
+        'non_image/planned': 0,
+        'non_image/produced': 0,
       })
     } finally {
       rmSync(dir, { recursive: true, force: true })
@@ -159,7 +159,7 @@ describe('scripts/ledger-summary.mjs with a ledger path argument (#77)', () => {
     const dir = mkdtempSync(join(tmpdir(), 'ledger-summary-'))
     try {
       const path = join(dir, 'bad.yaml')
-      writeFileSync(path, 'anomalies:\n  - id: x\n    kind: runtime\n')
+      writeFileSync(path, 'anomalies:\n  - id: x\n    kind: non_image\n')
       await expect(
         promisify(execFile)(
           process.execPath,

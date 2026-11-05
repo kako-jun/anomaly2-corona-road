@@ -313,10 +313,10 @@ describe('anomaly-ledger vite plugin: kind / status (#77)', () => {
       .split('\n')
       .filter(l => !/overlay|dimensions/.test(l))
       .join('\n') + `\n    status: 'planned'\n    spec: 'pool#${id}'`
-  const runtime = (id: string, fields: Record<string, string>) =>
+  const nonImage = (id: string, fields: Record<string, string>) =>
     Object.entries({
       id,
-      kind: 'runtime',
+      kind: 'non_image',
       status: 'planned',
       detail: 'd',
       ...fields,
@@ -327,9 +327,9 @@ describe('anomaly-ledger vite plugin: kind / status (#77)', () => {
     `anomalies:\n${[
       entryYaml(),
       planned(),
-      runtime('r1', { anomaly_type: 'feed_glitch', category: 'camera' }),
-      runtime('r2', { anomaly_type: 'sound', category: 'environment' }),
-      runtime('r3', { anomaly_type: 'rule_break', status: 'produced' }),
+      nonImage('r1', { anomaly_type: 'feed_glitch', category: 'camera' }),
+      nonImage('r2', { anomaly_type: 'sound', category: 'environment' }),
+      nonImage('r3', { anomaly_type: 'rule_break', status: 'produced' }),
     ].join('\n')}\n`
   const parse = (out: unknown) =>
     JSON.parse((out as string).replace('export default ', ''))
@@ -339,8 +339,8 @@ describe('anomaly-ledger vite plugin: kind / status (#77)', () => {
     expect(parse(out).map((e: { id: string }) => e.id)).toEqual(['a1'])
   })
 
-  it('does not require overlay files for planned or runtime entries', async () => {
-    // only a1's overlay exists (beforeEach); planned/runtime have none and none is checked
+  it('does not require overlay files for planned or non-image entries', async () => {
+    // only a1's overlay exists (beforeEach); planned/non-image have none and none is checked
     await expect(run(mixed())).resolves.toBeDefined()
   })
 
@@ -363,8 +363,8 @@ describe('anomaly-ledger vite plugin: kind / status (#77)', () => {
     await expect(run(yaml)).rejects.toThrow(/entry "p1".*category "ghost"/)
   })
 
-  it('fails the build on an invalid runtime entry, naming it', async () => {
-    const yaml = `anomalies:\n${entryYaml()}\n${runtime('r1', { anomaly_type: 'feed_glitch', category: 'object' })}\n`
+  it('fails the build on an invalid non-image entry, naming it', async () => {
+    const yaml = `anomalies:\n${entryYaml()}\n${nonImage('r1', { anomaly_type: 'feed_glitch', category: 'object' })}\n`
     await expect(run(yaml)).rejects.toThrow(/entry "r1".*feed_glitch/)
   })
 
@@ -374,7 +374,7 @@ describe('anomaly-ledger vite plugin: kind / status (#77)', () => {
   })
 
   it('fails the build on duplicate ids across kinds', async () => {
-    const yaml = `anomalies:\n${entryYaml()}\n${runtime('a1', { anomaly_type: 'sound', category: 'environment' })}\n`
+    const yaml = `anomalies:\n${entryYaml()}\n${nonImage('a1', { anomaly_type: 'sound', category: 'environment' })}\n`
     await expect(run(yaml)).rejects.toThrow(/duplicate id "a1"/)
   })
 })

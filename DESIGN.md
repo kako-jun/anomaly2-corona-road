@@ -246,7 +246,7 @@ What to take from it:
 | Lamps (green camera, amber strikes, red REPORT)  | `lamp-{green,amber,red}-{on,off}.webp`                | background of `.lamp` / `.lamp-big`; the lit glow is a CSS `box-shadow`                                                                                                              |
 | Speaker grille                                   | `speaker_tile.webp`                                   | a wide strip (`repeat-x`) along the bottom edge. A small square grille block was tried and rejected: the strip is preferred and it keeps the phone page height unchanged             |
 
-Kept as CSS (not images): scanlines, noise, glow, vignette, OSD (REC / CAM n / subtitles), every label and number, the glass haze, and the handwritten note paper and tape of the SELECT TYPE dialog (`.cat-note`, #236). The start and result screens are still the older design (handled in #45).
+Kept as CSS (not images): scanlines, noise, glow, vignette, OSD (REC / CAM n / subtitles), every label and number, the glass haze, and the handwritten note paper and tape of the SELECT CATEGORY dialog (`.cat-note`, #236). The start and result screens are still the older design (handled in #45).
 
 **Known changes from the images:** DOM, sizes and the 44px touch targets are unchanged and the page height equals the pre-image build (display windows are fixed at the old height on purpose). The visible glass shrinks to about 85% of its old area on phones (about -15%) and about 80% on desktop (about -20%), and the tube's rounded corners hide a little of the picture (about 2.1% of the box). OSD texts are moved inward to stay clear of the corners.
 

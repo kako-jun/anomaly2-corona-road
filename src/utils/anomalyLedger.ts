@@ -9,7 +9,7 @@ import type { AnomalyCategory } from '../types/game'
  * only ever sees the trimmed `LedgerEntry` shape.
  */
 
-/** `anomaly_type` values of image (overlay) anomalies (source of truth: `prompts/README.md` "異変タイプ enum"). */
+/** `anomaly_type` values of image (overlay) anomalies (source of truth: `prompts/README.md` "異変の種類 enum"). */
 export const IMAGE_ANOMALY_TYPES = [
   'add_object',
   'remove_object',
@@ -26,25 +26,25 @@ export const IMAGE_ANOMALY_TYPES = [
 ] as const
 export type ImageAnomalyType = (typeof IMAGE_ANOMALY_TYPES)[number]
 
-/** `anomaly_type` values of runtime anomalies (no overlay: feed glitch, sound, UI, rules). */
-export const RUNTIME_ANOMALY_TYPES = [
+/** `anomaly_type` values of non-image anomalies (no overlay: feed glitch, sound, UI, rules). */
+export const NON_IMAGE_ANOMALY_TYPES = [
   'feed_glitch',
   'sound',
   'ui_corruption',
   'rule_break',
 ] as const
-export type RuntimeAnomalyType = (typeof RUNTIME_ANOMALY_TYPES)[number]
+export type NonImageAnomalyType = (typeof NON_IMAGE_ANOMALY_TYPES)[number]
 
 /** Every `anomaly_type` the ledger accepts (the `prompts/README.md` enum table lists exactly these). */
 export const ANOMALY_TYPES = [
   ...IMAGE_ANOMALY_TYPES,
-  ...RUNTIME_ANOMALY_TYPES,
+  ...NON_IMAGE_ANOMALY_TYPES,
 ] as const
 export type AnomalyType = (typeof ANOMALY_TYPES)[number]
 
 export const LEDGER_STATUSES = ['produced', 'planned'] as const
 export type LedgerStatus = (typeof LEDGER_STATUSES)[number]
-export const LEDGER_KINDS = ['image', 'runtime'] as const
+export const LEDGER_KINDS = ['image', 'non_image'] as const
 export type LedgerKind = (typeof LEDGER_KINDS)[number]
 
 /** The only fields the game needs from one ledger entry (kind=image, status=produced). */
@@ -138,7 +138,7 @@ export const parseAlsoCategories = (
     }
     if (also === 'Camera') {
       throw new Error(
-        `also_categories "${text}" is not allowed (camera is a runtime anomaly, not an image entry)`
+        `also_categories "${text}" is not allowed (camera is a non-image anomaly, not an image entry)`
       )
     }
     if (also === category) {
@@ -176,15 +176,15 @@ export interface LedgerRecord {
   status: LedgerStatus
   kind: LedgerKind
   anomalyType: AnomalyType
-  /** Absent only for runtime entries (the camera is drawn at random when the anomaly appears). */
+  /** Absent only for non-image entries (the camera is drawn at random when the anomaly appears). */
   cameraId?: number
-  /** Absent only for runtime `ui_corruption` / `rule_break` (no report window yet, #80); every image entry has one. */
+  /** Absent only for non-image `ui_corruption` / `rule_break` (no report window yet, #80); every image entry has one. */
   category?: AnomalyCategory
   alsoCategories?: AnomalyCategory[]
   /** Pointer to the production spec (e.g. a `### id` section of candidate-pool.md). */
   spec?: string
   detail?: string
-  /** Present for image+produced; optional for image+planned; never for runtime. */
+  /** Present for image+produced; optional for image+planned; never for non-image. */
   overlay?: string
   origin?: { x: number; y: number }
   size?: { w: number; h: number }
@@ -207,7 +207,7 @@ const oneOf = <T extends string>(
 }
 
 const IMAGE_TYPE_SET: readonly string[] = IMAGE_ANOMALY_TYPES
-const RUNTIME_TYPE_SET: readonly string[] = RUNTIME_ANOMALY_TYPES
+const NON_IMAGE_TYPE_SET: readonly string[] = NON_IMAGE_ANOMALY_TYPES
 
 /** Parse and validate one raw YAML entry of any kind/status. Throws an Error naming the entry on any problem. */
 export const parseLedgerRecord = (
@@ -222,26 +222,31 @@ export const parseLedgerRecord = (
       throw new Error('not a mapping')
     const id = field(rec, 'id')
     const status = oneOf(LEDGER_STATUSES, rec, 'status', 'produced')
+    if (rec.kind === 'runtime') {
+      throw new Error(
+        'kind "runtime" was renamed to "non_image" (see the glossary in prompts/README.md)'
+      )
+    }
     const kind = oneOf(LEDGER_KINDS, rec, 'kind', 'image')
     const anomalyType = parseAnomalyType(field(rec, 'anomaly_type'))
     if (kind === 'image' && !IMAGE_TYPE_SET.includes(anomalyType)) {
       throw new Error(
-        `anomaly_type "${anomalyType}" is a runtime type but kind is image`
+        `anomaly_type "${anomalyType}" is a non-image type but kind is image`
       )
     }
-    if (kind === 'runtime' && !RUNTIME_TYPE_SET.includes(anomalyType)) {
+    if (kind === 'non_image' && !NON_IMAGE_TYPE_SET.includes(anomalyType)) {
       throw new Error(
-        `anomaly_type "${anomalyType}" is an image type but kind is runtime`
+        `anomaly_type "${anomalyType}" is an image type but kind is non_image`
       )
     }
 
-    // camera_id: required for image; optional for runtime (drawn at random on appearance).
+    // camera_id: required for image; optional for non-image (drawn at random on appearance).
     const cameraId =
       kind === 'image' || has(rec, 'camera_id')
         ? parseCameraId(field(rec, 'camera_id'))
         : undefined
 
-    // category: required for image. Runtime: feed_glitch must be camera, sound needs one,
+    // category: required for image. Non-image: feed_glitch must be camera, sound needs one,
     // ui_corruption / rule_break may leave it empty (no report window yet, #80).
     let category: AnomalyCategory | undefined
     if (kind === 'image' || has(rec, 'category')) {
@@ -268,15 +273,15 @@ export const parseLedgerRecord = (
         ? undefined
         : parseAlsoCategories(rec.also_categories, category)
 
-    const detail = kind === 'runtime' ? field(rec, 'detail') : undefined
+    const detail = kind === 'non_image' ? field(rec, 'detail') : undefined
     const spec = has(rec, 'spec') ? field(rec, 'spec') : undefined
 
     // overlay / overlay_origin / dimensions: all required for image+produced, all-or-none for
-    // image+planned, forbidden for runtime.
+    // image+planned, forbidden for non-image.
     const overlayKeys = ['overlay', 'overlay_origin', 'dimensions']
     const present = overlayKeys.filter(k => has(rec, k))
-    if (kind === 'runtime' && present.length > 0) {
-      throw new Error(`${present[0]} is not allowed on a runtime entry`)
+    if (kind === 'non_image' && present.length > 0) {
+      throw new Error(`${present[0]} is not allowed on a non_image entry`)
     }
     let overlay: string | undefined
     let origin: LedgerRecord['origin']
