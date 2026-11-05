@@ -313,11 +313,11 @@
     detail: '左シャッターの下のほうに、同じ形の小さな凹みが十数個に増える。'
     overlay: 'assets/anomaly-overlays/cam03/shutter-dents-many.webp'
     # phase / 目立ち度: mid / medium
-    note: '最寄り既存 overlay は AR-03-shutter-fingers（box 距離 33px）。大面積 AR-03-shutter-blank-papers とはシャッターの同じ面なので排他。'
+    note: '最寄り既存 overlay は AR-03-shutter-fingers（box 距離 33px）。大面積 AR-03-shutter-blank-papers（シャッターの同じ面）・AR-03-floor-tatami（box が畳の上端と重なる）とは排他。'
   ```
 - **視認性の見立て**: 凹み1個は小さいが、十数個の合計面積と影の差で下限を満たす見立て。check-visibility を必ず通す（通らなければ凹みを大きく・数を増やす）。
 - **相互参照 / 重複精査**: AR-03-shutter-fingers（隙間から覗く白い指）・AR-03-shutter-wave（板が波形）とは別で、『傷・凹みの数が増える』だけ。
-- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-shutter-blank-papers（同じシャッター面）。併存可=床・天井・看板の異変。
+- **同カメラ内の排他と併存**: 同プレイで共存させない=AR-03-shutter-blank-papers（同じシャッター面）/ AR-03-floor-tatami（box が床の畳の上端と重なる。大面積）。併存可=天井・看板の異変。
 
 ## 追加候補 — CAM 04
 
