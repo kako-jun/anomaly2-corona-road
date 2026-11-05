@@ -36,13 +36,23 @@ const groupBy = <T, K>(list: readonly T[], key: (t: T) => K): Map<K, T[]> => {
   return map
 }
 
+/** The flag (dialogue/flags.yaml) after which Reiwa anomalies may appear: the third elder found (docs/story.md). */
+export const REIWA_UNLOCK_FLAG = 'elder3'
+
+/** The entries that may appear now: Reiwa ones only once `reiwaUnlocked` (the elder3 flag is raised). */
+export const spawnableEntries = (
+  entries: readonly LedgerEntry[],
+  reiwaUnlocked: boolean
+): readonly LedgerEntry[] =>
+  reiwaUnlocked ? entries : entries.filter(e => e.reiwa !== true)
+
 /**
  * Pick the next ledger entry to show: only on a camera that has no anomaly now, never one already
  * used this shift. Four steps so the ledger's skew (many `add_object`, few `displace`)
  * is damped instead of becoming the appearance rate: camera (uniform, among those with unused
  * entries), then category within it and `anomalyType` within that (each weighted by unused count
  * ^ `exponent`, see `DRAW_WEIGHT_EXPONENT`), then an entry (uniform). Empty categories / types never
- * appear as candidates. Returns null only when nothing is left. `rng` returns [0, 1) and is
+ * appear as candidates. Reiwa entries are candidates only when `reiwaUnlocked`. Returns null only when nothing is left. `rng` returns [0, 1) and is
  * injectable for tests.
  */
 export const pickLedgerEntry = (
@@ -50,9 +60,10 @@ export const pickLedgerEntry = (
   freeCameraIds: readonly number[],
   usedIds: ReadonlySet<string>,
   rng: () => number = Math.random,
-  exponent: number = DRAW_WEIGHT_EXPONENT
+  exponent: number = DRAW_WEIGHT_EXPONENT,
+  reiwaUnlocked: boolean = false
 ): LedgerEntry | null => {
-  const candidates = entries.filter(
+  const candidates = spawnableEntries(entries, reiwaUnlocked).filter(
     e => !usedIds.has(e.id) && freeCameraIds.includes(e.cameraId)
   )
   if (candidates.length === 0) return null

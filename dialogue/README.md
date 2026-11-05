@@ -60,6 +60,6 @@ flags:
     requires: [elder3] # 他のフラグが先に立っていること
 ```
 
-使えるキー: `foundUnique`（重複なしの異変数）、`foundTotal`（重複ありの正解報告数）、`reiwaFound`、`loops`（周回数）、`found`（見つけているべき異変 id のリスト）、`requires`（フラグ名のリスト）。定義済みのフラグ名は `elder1` `elder2` `elder3` `child` `childResponse`。`childResponse` は `child` と同時に立ち、直後に短いストーリー会話を再生する。エンディングは累計進行フラグではなく、子供発見後の同一勤務の特殊条件で起動する。節目の数値は**仮の例**で確定ではない（`docs/story.md` 未決）。
+使えるキー: `foundUnique`（重複なしの異変数）、`foundTotal`（重複ありの正解報告数）、`reiwaFound`（令和の異変 = 台帳で `reiwa: true` の画像異変を、重複なしで何個。印は台帳から自動で決まり、ここには id を書かない）、`loops`（周回数）、`found`（見つけているべき異変 id のリスト）、`requires`（フラグ名のリスト）。定義済みのフラグ名は `elder1` `elder2` `elder3` `child` `childResponse`。`childResponse` は `child` と同時に立ち、直後に短いストーリー会話を再生する。エンディングは累計進行フラグではなく、子供発見後の同一勤務の特殊条件で起動する。節目の数値は**仮の例**で確定ではない（`docs/story.md` 未決）。
 
 `unlock` はすべての会話種類に指定できる任意のフラグ名。`story.when.flag` は「立ったフラグに対応する会話」の指定であり、`unlock` はその会話が候補に入る時期を遅らせる条件。未成立の会話は抽選袋に入らず、使用済みにもならない。成立後は通常の抽選対象になる。未指定なら従来どおり常に候補になる。`flags.yaml` に無いフラグ名を指定するとビルドが失敗する。`loops` 条件のフラグは、周回が終わった次の勤務の開始時に立つ（`foundUnique` `foundTotal` は報告の瞬間に立つ）。

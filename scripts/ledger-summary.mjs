@@ -62,6 +62,7 @@ const printCross = (title, rowFn, colFn) => {
 }
 
 console.log(`anomalies.yaml: ${records.length} entries`)
+printCounts('reiwa (reiwa: true)', r => (r.reiwa ? 'reiwa' : 'other'))
 printCounts('kind', r => r.kind)
 printCounts('status', r => r.status)
 printCounts('category', r => r.category ?? NONE)
