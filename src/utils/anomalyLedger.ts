@@ -52,8 +52,8 @@ export interface LedgerEntry {
   id: string
   cameraId: number
   category: AnomalyCategory
-  /** Optional second correct report for a genuinely split anomaly (always differs from `category`). */
-  alsoCategory?: AnomalyCategory
+  /** Optional extra correct reports for a genuinely split anomaly (each differs from `category`, no duplicates). */
+  alsoCategories?: AnomalyCategory[]
   anomalyType: ImageAnomalyType
   /** Repo-relative path of the transparent overlay, e.g. `assets/anomaly-overlays/cam01/notice.webp`. */
   overlay: string
@@ -110,33 +110,46 @@ export const parseCategory = (text: string): AnomalyCategory => {
   return category
 }
 
-/** Optional `also_category`: absent / null / blank -> undefined; otherwise a valid category different from `category`. */
-export const parseAlsoCategory = (
+/**
+ * Optional `also_categories`: absent / null / empty (or only blank items) -> undefined; otherwise an
+ * array of valid categories, each different from `category`, no camera, no duplicates.
+ */
+export const parseAlsoCategories = (
   value: unknown,
   category: AnomalyCategory
-): AnomalyCategory | undefined => {
+): AnomalyCategory[] | undefined => {
   if (value === undefined || value === null) return undefined
-  if (typeof value !== 'string') {
-    throw new Error('"also_category" is not a string')
+  if (!Array.isArray(value)) {
+    throw new Error('"also_categories" is not an array')
   }
-  // Same preprocessing as the other fields (trim); a blank cell counts as "no column".
-  const text = value.trim()
-  if (text === '') return undefined
-  let also: AnomalyCategory
-  try {
-    also = parseCategory(text)
-  } catch {
-    throw new Error(`also_category "${text}" is unknown`)
+  const result: AnomalyCategory[] = []
+  for (const item of value) {
+    if (typeof item !== 'string') {
+      throw new Error('"also_categories" has a non-string item')
+    }
+    // Same preprocessing as the other fields (trim); a blank item counts as "no item".
+    const text = item.trim()
+    if (text === '') continue
+    let also: AnomalyCategory
+    try {
+      also = parseCategory(text)
+    } catch {
+      throw new Error(`also_categories "${text}" is unknown`)
+    }
+    if (also === 'Camera') {
+      throw new Error(
+        `also_categories "${text}" is not allowed (camera is a runtime anomaly, not an image entry)`
+      )
+    }
+    if (also === category) {
+      throw new Error(`also_categories "${text}" is the same as category`)
+    }
+    if (result.includes(also)) {
+      throw new Error(`also_categories "${text}" is duplicated`)
+    }
+    result.push(also)
   }
-  if (also === 'Camera') {
-    throw new Error(
-      `also_category "${text}" is not allowed (camera is a runtime anomaly, not an image entry)`
-    )
-  }
-  if (also === category) {
-    throw new Error(`also_category "${text}" is the same as category`)
-  }
-  return also
+  return result.length > 0 ? result : undefined
 }
 
 export const parseAnomalyType = (text: string): AnomalyType => {
@@ -167,7 +180,7 @@ export interface LedgerRecord {
   cameraId?: number
   /** Absent only for runtime `ui_corruption` / `rule_break` (no report window yet, #80); every image entry has one. */
   category?: AnomalyCategory
-  alsoCategory?: AnomalyCategory
+  alsoCategories?: AnomalyCategory[]
   /** Pointer to the production spec (e.g. a `### id` section of candidate-pool.md). */
   spec?: string
   detail?: string
@@ -240,16 +253,20 @@ export const parseLedgerRecord = (
     if (anomalyType === 'sound' && category === undefined) {
       throw new Error('"category" is missing (sound needs one)')
     }
-    if (category === undefined && has(rec, 'also_category')) {
-      const also = rec.also_category
-      if (typeof also !== 'string' || also.trim() !== '') {
-        throw new Error('also_category needs a category')
+    if (category === undefined && has(rec, 'also_categories')) {
+      const also = rec.also_categories
+      const blank =
+        also === null ||
+        (Array.isArray(also) &&
+          also.every(i => typeof i === 'string' && i.trim() === ''))
+      if (!blank) {
+        throw new Error('also_categories needs a category')
       }
     }
-    const alsoCategory =
+    const alsoCategories =
       category === undefined
         ? undefined
-        : parseAlsoCategory(rec.also_category, category)
+        : parseAlsoCategories(rec.also_categories, category)
 
     const detail = kind === 'runtime' ? field(rec, 'detail') : undefined
     const spec = has(rec, 'spec') ? field(rec, 'spec') : undefined
@@ -277,7 +294,7 @@ export const parseLedgerRecord = (
       anomalyType,
       ...(cameraId !== undefined ? { cameraId } : {}),
       ...(category ? { category } : {}),
-      ...(alsoCategory ? { alsoCategory } : {}),
+      ...(alsoCategories ? { alsoCategories } : {}),
       ...(spec ? { spec } : {}),
       ...(detail ? { detail } : {}),
       ...(overlay && origin && size ? { overlay, origin, size } : {}),
@@ -309,7 +326,7 @@ export const toLedgerEntry = (r: LedgerRecord): LedgerEntry => {
     id: r.id,
     cameraId: r.cameraId,
     category: r.category,
-    ...(r.alsoCategory ? { alsoCategory: r.alsoCategory } : {}),
+    ...(r.alsoCategories ? { alsoCategories: r.alsoCategories } : {}),
     anomalyType: r.anomalyType as ImageAnomalyType,
     overlay: r.overlay,
     origin: r.origin,
