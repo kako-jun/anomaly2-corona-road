@@ -422,7 +422,7 @@ src/
 │   ├── wear.ts         # ?wear= parsing
 │   └── cx.ts
 ├── styles/
-│   └── retro.css       # Cabinet UI styles (tokens scoped to .retro)
+│   └── retro.css       # Cabinet UI styles (tokens scoped to .retro); part images in public/ui/ (DESIGN.md §11)
 ├── App.tsx
 ├── main.tsx
 ├── App.css             # Start / result screen classes — values reference :root tokens

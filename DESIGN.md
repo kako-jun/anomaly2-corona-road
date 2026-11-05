@@ -214,7 +214,7 @@ Bg `--surface-1` (or `--surface-2` if nested), border `1px --outline`, radius `-
 
 **Direction (kako-jun, 2026-10-30):** the game watches a corona-era underground arcade, so the _display_ should look like old physical surveillance hardware while the _interaction_ stays modern and phone-native (touch targets, gestures, readable controls). Retro is a rendering layer, not a behavior change.
 
-**Reference:** `assets/reference/crt-monitor/panasonic-wv-bm140.jpg` — Panasonic WV-BM140 surveillance video monitor, photographed by kako-jun. Reference only: it is not bundled into the game, and the Panasonic mark must not be reproduced (use invented names, as with the signage baselines). EXIF is stripped; pixels are unchanged from the original.
+**Reference:** `assets/reference/crt-monitor/panasonic-wv-bm140.jpg` — Panasonic WV-BM140 surveillance video monitor, photographed by kako-jun. Reference only: it is not bundled into the game (the part images below only resemble it), and the Panasonic mark must not be reproduced (use invented names, as with the signage baselines). EXIF is stripped; pixels are unchanged from the original.
 
 What to take from it:
 
@@ -234,9 +234,25 @@ What to take from it:
 
 **Implementation:** the retro UI is built into the game (`src/components/`, `src/styles/retro.css`; parts table in §8). The earlier standalone prototype `prototypes/retro-ui/` was removed once integrated (it remains in git history, PR #43). Knobs are operated by horizontal drag, slider-style (right = clockwise = increase), plus arrow keys. Append `?wear=0` (clean) or `?wear=1` (default grime; values in between work) to the game URL to compare the wear overlay A/B.
 
-**Order of work (kako-jun, 2026-10-30):** generated part images (bezel, knobs, buttons, LED, speaker grille) are **reference only** until the UI is built. The final images are regenerated at the end: first review the current UI, build and fine-tune the retro UI so phone and desktop share the same design, then regenerate the part images and overlay them lightly on top. Realism favors raster parts, with CSS for the live scanlines, noise, and glow. Early generated images may be made as look targets, but nothing built on them is final, and they are deleted once superseded.
+**Part images (kako-jun approved, 2026-11-05, #48):** the cabinet is dressed with raster part images made to resemble the reference photo, in `public/ui/` (webp, about 250KB in total; the budget is 600KB). They are generated artwork and the licence is the author's. The reference photo itself is never bundled, and no real maker or model name is reproduced (the printed model name is the invented `VIDEO MONITOR CR-42`, drawn as CSS text). Generation sources and rejected takes are not kept in the repo (#48 "作業物は消す").
+
+| Part                                             | File(s)                                               | How it is applied                                                                                                                                                                    |
+| ------------------------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Cabinet face                                     | `surface.webp`                                        | seamless tile behind `.cabinet`; the wear overlay `.cabinet::before` is weakened to 30%                                                                                              |
+| Monitor frame                                    | `bezel_mon.webp`                                      | one portrait picture as `.bezel` background (the tube is always about 3:4), with a transparent opening; `.glass` sits in the opening and is cut to the tube outline with `clip-path` |
+| Display windows (SHIFT TIME / REPORTS / STRIKES) | `window9.webp`                                        | `border-image` 9-slice on `.vfd` and `.lamps` (6px top/bottom so the window height is unchanged); digits and glow stay CSS                                                           |
+| Camera keys, REPORT key                          | `cam-key(-pressed).webp`, `report-key(-pressed).webp` | `border-image` on `.key`; numbers and labels stay CSS text; pressed = second image plus a 3px drop                                                                                   |
+| Knobs                                            | `knob.webp`                                           | background of `.knob`; the index line `.mark` stays CSS and is what rotates                                                                                                          |
+| Lamps (green camera, amber strikes, red REPORT)  | `lamp-{green,amber,red}-{on,off}.webp`                | background of `.lamp` / `.lamp-big`; the lit glow is a CSS `box-shadow`                                                                                                              |
+| Speaker grille                                   | `speaker_tile.webp`                                   | a wide strip (`repeat-x`) along the bottom edge. A small square grille block was tried and rejected: the strip is preferred and it keeps the phone page height unchanged             |
+
+Kept as CSS (not images): scanlines, noise, glow, vignette, OSD (REC / CAM n / subtitles), every label and number, the glass haze, and the handwritten note paper and tape of the SELECT TYPE dialog (`.cat-note`, #236). The start and result screens are still the older design (handled in #45).
+
+**Known changes from the images:** DOM, sizes and the 44px touch targets are unchanged and the page height equals the pre-image build (display windows are fixed at the old height on purpose). The visible glass shrinks to about 85% of its old area on phones (about -15%) and about 80% on desktop (about -20%), and the tube's rounded corners hide a little of the picture (about 2.1% of the box). OSD texts are moved inward to stay clear of the corners.
+
+**Wear A/B:** `?wear=0` (clean) to `?wear=1` (default); the grime overlays on the face, windows and glass still follow `--wear`.
 
 ---
 
-**Last updated:** 2026-10-30
+**Last updated:** 2026-11-05
 **Owner:** kako-jun
