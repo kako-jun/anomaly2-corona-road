@@ -11,7 +11,7 @@ prompts/
 ├── README.md                    根。全体の地図・enum・ワークフロー
 ├── camera-element-inventory.md  [正本] 写真8枚の写り込み要素・固定ID・座標
 │   └── atlas/cam01〜08.svg      [派生物] 上の台帳から `npm run build:camera-atlas` で生成する視覚ガイド
-├── candidate-pool.md            [正本] 未採用の異変案（写真固有・昭和・令和テーマ・runtime/音/UI/ルール在庫・配分目安）
+├── candidate-pool.md            [正本] 残す画像案の制作仕様の詳細（制作して昇格したら節を削除）と、runtime 在庫の配分・視点の方針
 ├── anomalies.yaml               [正本] 全異変の台帳（画像・runtime、制作済み・未制作。書式は下の「台帳の書式」）
 │   └── queue/index.html         [派生物] 上の台帳（のみ）から `npm run build:prompts` で生成するコピペUI
 │       件数の要約は `npm run ledger:summary`（台帳が真実。docs に固定の進捗表を書かない）
@@ -20,16 +20,16 @@ prompts/
 ```
 
 - `.agents/skills/corona-road-anomaly/SKILL.md` — 候補選定から差分合成・レビュー・登録までの反復手順（prompts/ の外にある制作スキル）。
-- 異変の全件は `anomalies.yaml`（制作済み=`produced`、未制作=`planned`、画像=`image`、画面の乱れ・音・UI・ルール=`runtime`）。まだ台帳に載せていない発想の段階の案が `candidate-pool.md`。選ぶ時は該当案を候補から削除して台帳へ一度だけ登録する（昇格ルールは下の「台帳の書式」）。
+- 異変の全件は `anomalies.yaml`（制作済み=`produced`、未制作=`planned`、画像=`image`、画面の乱れ・音・UI・ルール=`runtime`）。`candidate-pool.md` には、台帳の planned 画像案の制作仕様の詳細と方針の説明だけがある（採用/不採用の状態は無い。不要な案は台帳から削除する。昇格ルールは下の「台帳の書式」）。
 - `queue/index.html` と `atlas/*.svg` は**生成物**。手で編集せず、元の正本を直して再生成する。
-- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、未制作の昭和案は `candidate-pool.md` の「昭和テーマ候補」にある。
-- 4人目（令和のZ世代の子供）の「令和の異変（どれでも3つ見つければ条件成立）」の候補は `candidate-pool.md` の「令和テーマ候補」にある（制作済みの令和の画像異変は `anomalies.yaml` の `candidate_id: CR-RZ-*` で探す（#83 の 1. で本物の台帳印が入るまでの仮の見つけ方）。昭和でない令和の物。方針は `docs/story.md` の「進行」節）。
+- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、昭和の音の案は台帳の `kind: runtime`（`CR-SH-04`〜`06`）にある。
+- 4人目（令和のZ世代の子供）の「令和の異変（どれでも3つ見つければ条件成立）」の異変は台帳にある（画像は `anomalies.yaml` の `candidate_id: CR-RZ-*`、音は `CR-RZ-07`〜`09`（runtime）で探す（#83 の 1. で本物の台帳印が入るまでの仮の見つけ方）。昭和でない令和の物。方針は `docs/story.md` の「進行」節）。
 
 ## ワークフロー
 
 1. `camera-element-inventory.md` から対象要素の固定ID・説明・座標を選ぶ
 2. 加工済みの `public/images/cam*.webp` を基準画像として使う
-3. `candidate-pool.md` から案を選ぶ。選んだ案は候補一覧から削除し、`anomalies.yaml` に生成待ちとして一度だけ登録する。カメラIDと要素IDを記録し、物体説明/座標はインベントリを参照する
+3. 台帳の `planned` から制作する案を選ぶ（新案は台帳へ `planned` で足す。足す前に既存と重複しないか確認する）。カメラIDと要素IDを記録し、物体説明/座標はインベントリを参照する
 4. `npm run build:prompts`（`node scripts/build-prompt-queue.mjs`）で `queue/index.html` を再生成する。元は `anomalies.yaml` のみ（`base-template.md` は読まない）
 5. ブラウザでキューを開き、元画像とプロンプトをChatGPTに渡す
 6. 生成出力を全面採用せず、元画像をベースに指定領域のみをマスク合成する。境界は半透明のぼかし/グラデーションでなじませる
@@ -67,7 +67,7 @@ prompts/
 
 `anomalies.yaml` が**全異変の正本**（#77）。画像異変だけでなく runtime 異変（画面の乱れ・音・UI・ルール）と未制作（planned）も載せる。「載せておかないと漏れる」ため。
 
-移行中の planned は末尾の `# ---- planned: ... ----` 区画に置く（#77 PR2。全部移し終えたらマーカーは削除する）。各担当は自分のマーカー行の直後（次のマーカー行の前）にエントリを挿入する。
+planned の画像案は制作済みの後ろ、runtime はその後ろに置く。
 
 | フィールド | 値                                               | 省略時     |
 | ---------- | ------------------------------------------------ | ---------- |
@@ -80,7 +80,7 @@ prompts/
 | image + planned                    | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                           |
 | runtime（planned / produced とも） | `anomaly_type`（runtime 型）`detail`                                                        | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_categories` は image と同じ検証（camera 不可）で任意 |
 
-- `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### CR-RZ-07`）。
+- `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### AR-01-ceiling-spider`）。
 - runtime の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に runtime 型、runtime に画像型）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
 - ゲーム（`virtual:anomalies`）に渡るのは `kind: image` かつ `status: produced` だけ。planned と runtime は検証されるが抽選には出ない（出現ロジックと効果は #78・#79・#80）。
@@ -158,8 +158,8 @@ Claude は enum から適切な `anomaly_type` を選び、`location` と `detai
 
 ゲームが読む画像異変の書式: `overlay` は `assets/anomaly-overlays/camNN/<name>.webp`、`overlay_origin` は `'(x,y)'`、`dimensions` は小文字 x の `'幅x高さ'`（`46x97`）、`camera_id` は `CAMnn`。形が違うとビルドが失敗し、エントリ id が表示される。`element_id` は変化の起点となる要素で、複製・反射・はみ出しの異変でも起点の要素を指す（overlay が要素の枠からはみ出していてもよい）。
 
-異変の多様性を確保するため、写真要素ごとの未採用案は `candidate-pool.md` に集約する。猫、物の増減、反射、床壁天井の模様、文字反転、色形、段数、ノブ左右、吊り物、紙、水たまりを含む。候補数は完成素材数ではない。
+異変の多様性を確保するため、写真要素ごとの案は台帳に `planned` で載せる（猫、物の増減、反射、床壁天井の模様、文字反転、色形、段数、ノブ左右、吊り物、紙、水たまりを含む）。件数は完成素材数ではない。
 
 `anomalies.yaml` は全異変の台帳（以下は画像異変の運用）。`queue/index.html` は `kind: image` の全件（`produced` と `planned`）を表示し、status 列で区別する（`planned` は「未作成」として強調）。`kind: runtime` は画像を作らないので載せない。`produced` の行は制作済みなので、表示された項目が生成待ちとは限らない。`review_status: composited` は静止差分の試作で、完成・採用・ゲームへの実装を意味しない。`category` はゲームの報告用5分類に合わせた値で、猫などの小動物も現在は `object` に仮分類している（ゲーム側の報告分類確定時に見直す）。`camera` は画面全体の乱れ専用で、runtime の `feed_glitch` が使う（積まれた物なども `object`）。
 
-異変を追加する前に、制作済み台帳と候補一覧の両方で、対象・変化・見え方・報告カテゴリの類似を照合する。制作に選んだ候補は台帳へ移し、二重に数えない。詳細な判断基準は制作スキルの「追加前の類似チェック」を参照。
+異変を追加する前に、台帳（制作済みと planned の両方）で、対象・変化・見え方・報告カテゴリの類似を照合する。画像異変の目標は約300件なので、重複する案は足さない。詳細な判断基準は制作スキルの「追加前の類似チェック」を参照。
