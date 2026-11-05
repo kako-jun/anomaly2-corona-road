@@ -104,9 +104,9 @@ describe('parseAnomalyType', () => {
   it.each(ANOMALY_TYPES)('accepts %s', t => {
     expect(parseAnomalyType(t)).toBe(t)
   })
-  it('ANOMALY_TYPES has 12 distinct values', () => {
-    expect(ANOMALY_TYPES).toHaveLength(12)
-    expect(new Set(ANOMALY_TYPES).size).toBe(12)
+  it('ANOMALY_TYPES has 16 distinct values', () => {
+    expect(ANOMALY_TYPES).toHaveLength(16)
+    expect(new Set(ANOMALY_TYPES).size).toBe(16)
   })
   it('matches the enum table in prompts/README.md', () => {
     const md = readFileSync(
@@ -117,7 +117,7 @@ describe('parseAnomalyType', () => {
     const types = [...section.matchAll(/^\|\s*`([a-z_]+)`\s*\|/gm)].map(
       m => m[1]
     )
-    expect(types).toHaveLength(12)
+    expect(types).toHaveLength(16)
     expect([...ANOMALY_TYPES].sort()).toEqual([...types].sort())
   })
   it.each([

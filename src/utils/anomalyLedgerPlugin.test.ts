@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ANOMALY_TYPES } from './anomalyLedger'
+import { IMAGE_ANOMALY_TYPES } from './anomalyLedger'
 
 // The Vite plugin in vite.config.ts reads the YAML and checks overlay files. Its failure modes are
 // build errors, so exercise load() directly with fs replaced for the ledger path only.
@@ -151,9 +151,9 @@ describe('anomaly-ledger vite plugin', () => {
 
     it('builds a ledger holding all 12 types', async () => {
       fsMock.existing = new Set(
-        ANOMALY_TYPES.map(t => `assets/anomaly-overlays/cam01/${t}.webp`)
+        IMAGE_ANOMALY_TYPES.map(t => `assets/anomaly-overlays/cam01/${t}.webp`)
       )
-      const body = ANOMALY_TYPES.map(t =>
+      const body = IMAGE_ANOMALY_TYPES.map(t =>
         entryYaml({
           id: t,
           anomaly_type: t,
@@ -163,7 +163,7 @@ describe('anomaly-ledger vite plugin', () => {
       const { out } = await run(`anomalies:\n${body}\n`)
       const json = JSON.parse((out as string).replace('export default ', ''))
       expect(json.map((e: { anomalyType: string }) => e.anomalyType)).toEqual([
-        ...ANOMALY_TYPES,
+        ...IMAGE_ANOMALY_TYPES,
       ])
     })
 
