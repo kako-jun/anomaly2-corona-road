@@ -43,12 +43,15 @@ describe('GameHUD', () => {
       <GameHUD gameTime="00:00" stats={makeStats({ correctReports: 2 })} />
     )
     expect(screen.getByText('2')).toBeInTheDocument()
+    expect(screen.getByText('/')).toBeInTheDocument()
     expect(
-      screen.getByText(`/ ${DEFAULT_CONFIG.minCorrectReports}`)
+      screen.getByText(String(DEFAULT_CONFIG.minCorrectReports))
     ).toBeInTheDocument()
   })
   it('shows the shift time', () => {
     render(<GameHUD gameTime="03:07" stats={makeStats()} />)
-    expect(screen.getByText('03:07')).toBeInTheDocument()
+    const clock = screen.getByLabelText('03:07')
+    expect(clock).toHaveTextContent('03:07')
+    expect(clock.querySelector('.clock-colon')).toHaveTextContent(':')
   })
 })

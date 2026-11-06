@@ -473,7 +473,6 @@
 /* printed labels: patchy, partly faded (still legible) */
 
 .label,
-.drag-hint,
 .maker {
   -webkit-mask-image: linear-gradient(
     95deg,
@@ -1047,26 +1046,29 @@
 
 /* ===== Layout fixes ===== */
 
-/* knobs: clear space between knob (incl. rim/halo) and label, label and drag hint */
+/* knobs: clear space between knob (incl. rim/halo) and label */
 
 .knob-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
+  min-width: 0;
   gap: 0;
+}
+
+.knob-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
 .knob-wrap .label {
   margin-bottom: 4px;
-}
-
-.drag-hint {
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  color: var(--ink-soft);
-  margin-top: 0;
-  white-space: nowrap;
-  line-height: 1.3;
 }
 
 .knob {
@@ -1094,6 +1096,10 @@
 
 .vfd--center {
   justify-content: center;
+}
+.vfd--reports {
+  gap: 0.18em;
+  letter-spacing: 0;
 }
 
 /* CAMERA SELECT label centred over the key group */
@@ -1386,7 +1392,8 @@
 /* ===== #48 retro parts: photo-like images (DESIGN.md section 11) ===== */
 
 /* cabinet face: seamless greige orange-peel tile (1024px image shown at 512 css px) */
-.cabinet {
+.cabinet,
+.dialog {
   background: #b7a590 url('/ui/surface.webp') 0 0 / 512px 512px repeat;
 }
 /* the old brown-cloud grime was far too strong against the real, nearly clean plastic */
@@ -1583,36 +1590,40 @@
     0 0 11px 3px #2fe05f88;
 }
 
-/* 4. knob index: pale notch with a thin dark edge, like the photo */
+/* 4. knob index: dark engraved mark, like the reference monitor */
 .knob .mark {
-  background: #f6efdc;
+  background: #67513b;
   box-shadow:
     0 0 0 1px rgba(40, 28, 16, 0.55),
     0 1px 1px 1px #0006;
 }
 
-/* 5. key labels: optical centre of the key face (the lower lip of the key image pulled them down) */
+/* Place labels on the lower face of the stepped key image without growing the key. */
 .key {
-  padding-bottom: 6px !important;
-  line-height: 1;
-}
-.key.key-report {
-  padding-bottom: 8px !important;
-}
-
-/* Report category keys (panel label SELECT CATEGORY): the step line of the key image sits about 40% down; put the text on the lower face, below it
-   (padding-top only; the key height is unchanged because min-height is border-box) */
-.cat-grid .key {
-  padding-top: 10px !important;
+  padding-top: 20px !important;
   padding-bottom: 0 !important;
+  line-height: 0.4;
 }
-@media (min-width: 900px) {
-  .cat-grid .key {
-    padding-top: 10px !important;
-  }
+/* Category labels sit slightly higher than the larger cabinet key labels. */
+.cat-grid .key {
+  padding-top: 16px !important;
 }
 
 /* 6. small display windows: remove the white haze ellipses that read as grey smudges behind the green digits */
+.clock-colon {
+  animation: clock-blink 1s ease-in-out infinite;
+}
+@keyframes clock-blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clock-colon {
+    animation: none;
+  }
+}
+
 .vfd::after,
 .lamps::after {
   display: none;
@@ -1839,5 +1850,40 @@
     width: calc((100vh - 43px) * 0.75 + 14px);
     max-width: none;
     min-width: 0;
+  }
+}
+
+/* Fit the camera and the controls together on portrait screens. */
+@media (max-width: 899px) {
+  .tube {
+    width: min(100%, max(160px, calc((100dvh - 437px) * 0.75 + 14px)));
+    align-self: center;
+  }
+  .panel {
+    gap: 4px;
+  }
+  .knob {
+    margin-bottom: 3px;
+  }
+  .knob-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+  .cam-grid {
+    row-gap: 2px;
+  }
+  .speaker {
+    display: none;
+  }
+}
+
+@media (min-width: 360px) and (max-width: 899px) {
+  .tube {
+    width: min(100%, max(160px, calc((100dvh - 364px) * 0.75 + 14px)));
+  }
+  .cam-grid {
+    grid-template-columns: repeat(8, minmax(44px, 1fr));
+    gap: 0;
+    padding: 0;
   }
 }
