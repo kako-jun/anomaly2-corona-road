@@ -100,7 +100,7 @@ describe('retro.css', () => {
   })
   it('uses the same vertical scale for the frame image and glass opening', () => {
     const scale = Number(decls('.bezel', '--bezel-y-scale')[0])
-    expect(scale).toBeCloseTo(1571 / (1571 - 29), 6)
+    expect(scale).toBeCloseTo(1571 / (1571 - 44 - 73), 6)
     expect(
       decls('.bezel', 'background').some(v =>
         v.includes('var(--bezel-y-scale)')
