@@ -115,7 +115,7 @@ describe('retro.css', () => {
       3
     )
     expect(
-      decls('.bezel', 'background').some(
+      decls('.bezel::after', 'background').some(
         v => v.includes('var(--bezel-y-scale)') && v.includes('37.6068%')
       )
     ).toBe(true)
@@ -127,6 +127,9 @@ describe('retro.css', () => {
     expect(decls('.glass', 'height').some(v => v.includes('85.933%'))).toBe(
       true
     )
+    expect(decls('.bezel::after', 'pointer-events')).toContain('none')
+    expect(decls('.bezel::after', 'z-index')).toContain('7')
+    expect(decls('.glass', 'clip-path')).toHaveLength(0)
     for (const property of ['top', 'height']) {
       expect(
         decls('.glass', property).some(v => v.includes('var(--bezel-y-scale)'))
