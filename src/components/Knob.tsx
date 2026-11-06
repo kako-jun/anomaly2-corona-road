@@ -1,4 +1,4 @@
-import { CSSProperties, useRef } from 'react'
+import { CSSProperties, useId, useRef } from 'react'
 import {
   dragKnobValue,
   keyKnobValue,
@@ -14,6 +14,7 @@ interface KnobProps {
 
 /** Horizontal-drag knob (slider semantics). Keyboard: arrows, Shift for big steps, Home/End. */
 export const Knob = ({ label, value, onChange }: KnobProps) => {
+  const hintId = useId()
   const dragRef = useRef<{
     x: number
     y: number
@@ -28,6 +29,8 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
         role="slider"
         tabIndex={0}
         aria-label={label}
+        aria-describedby={hintId}
+        aria-keyshortcuts="Enter Space"
         aria-orientation="horizontal"
         aria-valuemin={0}
         aria-valuemax={100}
@@ -49,12 +52,13 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
         }}
         onPointerUp={e => {
           const d = dragRef.current
-          if (
-            d &&
-            !d.moved &&
-            Math.hypot(e.clientX - d.x, e.clientY - d.y) <= 5
-          )
-            onChange(KNOB_DEFAULT)
+          if (d) {
+            const moved =
+              d.moved || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5
+            onChange(
+              moved ? dragKnobValue(d.value, d.x, e.clientX) : KNOB_DEFAULT
+            )
+          }
           dragRef.current = null
         }}
         onPointerCancel={() => {
@@ -77,9 +81,9 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
         <i className="mark" />
       </div>
       <div className="label">{label}</div>
-      <div className="drag-hint">
-        &#9664; DRAG LEFT/RIGHT &#9654; · CLICK TO RESET
-      </div>
+      <span id={hintId} className="knob-sr-only">
+        Use arrow keys to adjust. Press Enter or Space to reset to centre.
+      </span>
     </div>
   )
 }
