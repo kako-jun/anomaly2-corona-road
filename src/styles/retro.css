@@ -1841,3 +1841,33 @@
     min-width: 0;
   }
 }
+
+/* Fit the camera and the controls together on portrait screens. */
+@media (max-width: 899px) {
+  .tube {
+    width: min(100%, max(160px, calc((100dvh - 437px) * 0.75 + 14px)));
+    align-self: center;
+  }
+  .panel {
+    gap: 4px;
+  }
+  .knob {
+    margin-bottom: 3px;
+  }
+  .knob-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+  .cam-grid {
+    row-gap: 2px;
+  }
+  .speaker {
+    display: none;
+  }
+  .drag-hint {
+    font-size: 0.6rem;
+    letter-spacing: 0;
+    text-align: center;
+    white-space: normal;
+  }
+}
