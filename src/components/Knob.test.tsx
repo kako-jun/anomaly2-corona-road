@@ -34,6 +34,12 @@ describe('Knob a11y', () => {
     const { knob } = setup(100)
     expect(knob.style.getPropertyValue('--a')).toBe(`${knobAngle(100)}deg`)
   })
+  it('describes the keyboard reset operation', () => {
+    const { knob } = setup()
+    expect(knob).toHaveAccessibleDescription(
+      'Use arrow keys to adjust. Press Enter or Space to reset to centre.'
+    )
+  })
 })
 
 describe('Knob keyboard', () => {
@@ -83,7 +89,7 @@ describe('Knob pointer drag', () => {
     expect(Element.prototype.setPointerCapture).toHaveBeenCalled()
     ptr(fireEvent.pointerMove, knob, { clientX: 100 + PX_FULL_RANGE / 2 })
     expect(onChange).toHaveBeenLastCalledWith(100)
-    ptr(fireEvent.pointerUp, knob, { clientX: 150 })
+    ptr(fireEvent.pointerUp, knob, { clientX: 100 + PX_FULL_RANGE / 2 })
     expect(onChange).toHaveBeenLastCalledWith(100)
     onChange.mockClear()
     ptr(fireEvent.pointerMove, knob, { clientX: 10 })
@@ -94,6 +100,13 @@ describe('Knob pointer drag', () => {
     const { knob, onChange } = setup()
     ptr(fireEvent.pointerMove, knob, { clientX: 10 })
     expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('uses the release position even if no move event was delivered', () => {
+    const { knob, onChange } = setup(50)
+    ptr(fireEvent.pointerDown, knob, { clientX: 100, clientY: 100 })
+    ptr(fireEvent.pointerUp, knob, { clientX: 145, clientY: 100 })
+    expect(onChange).toHaveBeenCalledWith(75)
   })
 
   it('does not start a drag with the right button', () => {
