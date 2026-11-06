@@ -117,6 +117,7 @@ describe('retro.css', () => {
         v.includes('0 0 / 100% 100%')
       )
     ).toBe(true)
+    expect(decls('.bezel', 'background')).toContain('transparent')
     expect(decls('.bezel::after', 'pointer-events')).toContain('none')
     expect(decls('.bezel::after', 'z-index')).toContain('7')
     expect(decls('.glass', 'left')).toContain('4.811%')

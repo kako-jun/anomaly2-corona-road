@@ -1646,7 +1646,7 @@
   border-image: none;
   width: 100%;
   border-radius: 3% / 2.2%;
-  background: #060606;
+  background: transparent;
   box-shadow: 0 3px 6px 1px rgba(40, 25, 10, 0.5);
 }
 .bezel::after {
