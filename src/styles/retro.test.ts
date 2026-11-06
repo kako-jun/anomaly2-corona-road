@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { join } from 'node:path'
 import postcss from 'postcss'
 import { describe, expect, it } from 'vitest'
@@ -99,13 +100,33 @@ describe('retro.css', () => {
     expect(reduced).toBe(true)
   })
   it('uses the same vertical scale for the frame image and glass opening', () => {
+    // The source opening was measured at x=58..1104 and y=98..1443.
+    // If the image changes, remeasure its alpha opening before updating this hash.
+    const imageHash = createHash('sha256')
+      .update(readFileSync(join(uiDir, 'bezel_mon.webp')))
+      .digest('hex')
+    expect(imageHash).toBe(
+      '176482f0ee57e1898744f3f2efa3a66f3f6a39164329a5d395ca2f970fdaa441'
+    )
     const scale = Number(decls('.bezel', '--bezel-y-scale')[0])
     expect(scale).toBeCloseTo(1571 / (1571 - 44 - 73), 6)
+    expect(parseFloat(decls('.bezel', '--bezel-top-crop')[0])).toBeCloseTo(
+      (44 / 1571) * 100,
+      3
+    )
     expect(
-      decls('.bezel', 'background').some(v =>
-        v.includes('var(--bezel-y-scale)')
+      decls('.bezel', 'background').some(
+        v => v.includes('var(--bezel-y-scale)') && v.includes('37.6068%')
       )
     ).toBe(true)
+    expect(
+      decls('.glass', 'top').some(
+        v => v.includes('6.111%') && v.includes('var(--bezel-top-crop)')
+      )
+    ).toBe(true)
+    expect(decls('.glass', 'height').some(v => v.includes('85.933%'))).toBe(
+      true
+    )
     for (const property of ['top', 'height']) {
       expect(
         decls('.glass', property).some(v => v.includes('var(--bezel-y-scale)'))
