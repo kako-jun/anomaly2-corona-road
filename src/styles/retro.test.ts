@@ -112,7 +112,6 @@ describe('retro.css', () => {
         decls('.glass', property).some(v => v.includes('var(--bezel-y-scale)'))
       ).toBe(true)
     }
->>>>>>> 283-frame-balance
   })
   it('has no external URLs', () => {
     expect(css).not.toMatch(/url\(\s*['"]?https?:/i)
