@@ -16,12 +16,13 @@ const stats = {
 
 describe('case report', () => {
   it.each([
-    [true, 'DAWN'],
-    [false, 'WITHDRAWN'],
-  ] as const)('shows the result and totals', (victory, label) => {
+    ['dawn', 'DAWN'],
+    ['withdraw', 'WITHDRAWN'],
+    ['ending', 'DAWN'],
+  ] as const)('shows the result and totals', (closing, label) => {
     const restart = vi.fn()
     render(
-      <GameOverScreen victory={victory} stats={stats} onRestart={restart} />
+      <GameOverScreen closing={closing} stats={stats} onRestart={restart} />
     )
     expect(screen.getByText(label)).toBeInTheDocument()
     expect(screen.getByText('Tonight’s record: 3')).toBeInTheDocument()
