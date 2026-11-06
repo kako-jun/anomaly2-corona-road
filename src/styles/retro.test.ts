@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { join } from 'node:path'
 import postcss from 'postcss'
 import { describe, expect, it } from 'vitest'
@@ -77,6 +78,54 @@ describe('retro part images (public/ui)', () => {
 })
 
 describe('retro.css', () => {
+  it('shares the cabinet surface with the report dialog', () => {
+    expect(
+      decls('.dialog', 'background').some(v => v.includes('/ui/surface.webp'))
+    ).toBe(true)
+  })
+
+  it('stops the clock animation when reduced motion is requested', () => {
+    expect(
+      decls('.clock-colon', 'animation').some(
+        v =>
+          v.includes('clock-blink') &&
+          v.includes('ease-in-out') &&
+          !v.includes('steps(')
+      )
+    ).toBe(true)
+    let reduced = false
+    root_.walkAtRules('media', media => {
+      if (!media.params.includes('prefers-reduced-motion: reduce')) return
+      media.walkRules('.clock-colon', rule => {
+        rule.walkDecls('animation', d => {
+          if (d.value === 'none') reduced = true
+        })
+      })
+    })
+    expect(reduced).toBe(true)
+  })
+  it('shows the complete measured frame and uses its opening as the picture edge', () => {
+    // Opening measured at x=58..1104 and y=98..1443. Remeasure if the image changes.
+    const imageHash = createHash('sha256')
+      .update(readFileSync(join(uiDir, 'bezel_mon.webp')))
+      .digest('hex')
+    expect(imageHash).toBe(
+      '176482f0ee57e1898744f3f2efa3a66f3f6a39164329a5d395ca2f970fdaa441'
+    )
+    expect(
+      decls('.bezel::after', 'background').some(v =>
+        v.includes('0 0 / 100% 100%')
+      )
+    ).toBe(true)
+    expect(decls('.bezel', 'background')).toContain('transparent')
+    expect(decls('.bezel::after', 'pointer-events')).toContain('none')
+    expect(decls('.bezel::after', 'z-index')).toContain('7')
+    expect(decls('.glass', 'left')).toContain('4.811%')
+    expect(decls('.glass', 'top')).toContain('6.111%')
+    expect(decls('.glass', 'width')).toContain('90.292%')
+    expect(decls('.glass', 'height')).toContain('85.933%')
+    expect(decls('.glass', 'clip-path')).toHaveLength(0)
+  })
   it('has no external URLs', () => {
     expect(css).not.toMatch(/url\(\s*['"]?https?:/i)
     expect(css).not.toMatch(/@import\s+(url\()?\s*['"]?https?:/i)
@@ -101,13 +150,21 @@ describe('retro.css', () => {
     ).toBe(true)
   })
 
-  it('sets a positive px padding-top on report category keys', () => {
-    const tops = decls('.cat-grid .key', 'padding-top')
+  it('sets a positive px padding-top on all cabinet keys', () => {
+    const tops = decls('.key', 'padding-top')
     expect(tops.length).toBeGreaterThan(0)
     for (const v of tops) {
       const m = /^(\d+(?:\.\d+)?)px(?:\s*!important)?$/.exec(v.trim())
       expect(m, v).not.toBeNull()
       expect(Number(m![1]), v).toBeGreaterThan(0)
     }
+  })
+
+  it('positions category labels slightly above the cabinet key labels', () => {
+    const cabinet = decls('.key', 'padding-top').map(parseFloat)
+    const category = decls('.cat-grid .key', 'padding-top').map(parseFloat)
+    expect(cabinet.length).toBeGreaterThan(0)
+    expect(category.length).toBeGreaterThan(0)
+    expect(category.at(-1)!).toBeLessThan(cabinet.at(-1)!)
   })
 })
