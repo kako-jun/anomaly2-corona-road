@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Yomogi Start';
+  src: url('/fonts/yomogi-start.woff2') format('woff2');
+  font-display: block;
+}
+
 /* Start screen: equipment nameplate. All classes are start-* so they never collide with
    .screen .card .btn (result screen) or the retro cabinet classes. Colors only come from here. */
 
@@ -146,6 +152,7 @@ body.start-open #root {
   text-align: left;
   line-height: 1.35;
   pointer-events: auto;
+  font-family: 'Yomogi Start', cursive;
 }
 .start-panel .start-row.cat-note:nth-of-type(even) {
   --tilt: 0.8deg;
