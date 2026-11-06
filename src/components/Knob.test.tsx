@@ -84,6 +84,7 @@ describe('Knob pointer drag', () => {
     ptr(fireEvent.pointerMove, knob, { clientX: 100 + PX_FULL_RANGE / 2 })
     expect(onChange).toHaveBeenLastCalledWith(100)
     ptr(fireEvent.pointerUp, knob, { clientX: 150 })
+    expect(onChange).toHaveBeenLastCalledWith(100)
     onChange.mockClear()
     ptr(fireEvent.pointerMove, knob, { clientX: 10 })
     expect(onChange).not.toHaveBeenCalled()
