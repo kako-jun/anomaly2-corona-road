@@ -1875,12 +1875,6 @@
   .speaker {
     display: none;
   }
-  .drag-hint {
-    font-size: 0.6rem;
-    letter-spacing: 0;
-    text-align: center;
-    white-space: normal;
-  }
 }
 
 @media (min-width: 360px) and (max-width: 899px) {
