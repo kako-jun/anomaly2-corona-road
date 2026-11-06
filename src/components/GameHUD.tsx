@@ -14,7 +14,7 @@ export const GameHUD = ({ gameTime, stats }: GameHUDProps) => {
     <div className="row status">
       <div className="cell">
         <div className="label">SHIFT TIME</div>
-        <div className="vfd vfd--center" aria-label={gameTime}>
+        <div className="vfd vfd--center" role="timer" aria-label={gameTime}>
           <span aria-hidden="true">
             {gameTime.split(':')[0]}
             <span className="clock-colon">:</span>
