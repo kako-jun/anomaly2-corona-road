@@ -85,7 +85,12 @@ describe('retro.css', () => {
 
   it('stops the clock animation when reduced motion is requested', () => {
     expect(
-      decls('.clock-colon', 'animation').some(v => v.includes('clock-blink'))
+      decls('.clock-colon', 'animation').some(
+        v =>
+          v.includes('clock-blink') &&
+          v.includes('ease-in-out') &&
+          !v.includes('steps(')
+      )
     ).toBe(true)
     let reduced = false
     root_.walkAtRules('media', media => {
@@ -130,5 +135,13 @@ describe('retro.css', () => {
       expect(m, v).not.toBeNull()
       expect(Number(m![1]), v).toBeGreaterThan(0)
     }
+  })
+
+  it('positions category labels slightly above the cabinet key labels', () => {
+    const cabinet = decls('.key', 'padding-top').map(parseFloat)
+    const category = decls('.cat-grid .key', 'padding-top').map(parseFloat)
+    expect(cabinet.length).toBeGreaterThan(0)
+    expect(category.length).toBeGreaterThan(0)
+    expect(category.at(-1)!).toBeLessThan(cabinet.at(-1)!)
   })
 })
