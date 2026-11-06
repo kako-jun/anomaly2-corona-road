@@ -99,42 +99,26 @@ describe('retro.css', () => {
     })
     expect(reduced).toBe(true)
   })
-  it('uses the same vertical scale for the frame image and glass opening', () => {
-    // The source opening was measured at x=58..1104 and y=98..1443.
-    // If the image changes, remeasure its alpha opening before updating this hash.
+  it('shows the complete measured frame and uses its opening as the picture edge', () => {
+    // Opening measured at x=58..1104 and y=98..1443. Remeasure if the image changes.
     const imageHash = createHash('sha256')
       .update(readFileSync(join(uiDir, 'bezel_mon.webp')))
       .digest('hex')
     expect(imageHash).toBe(
       '176482f0ee57e1898744f3f2efa3a66f3f6a39164329a5d395ca2f970fdaa441'
     )
-    const scale = Number(decls('.bezel', '--bezel-y-scale')[0])
-    expect(scale).toBeCloseTo(1571 / (1571 - 44 - 73), 6)
-    expect(parseFloat(decls('.bezel', '--bezel-top-crop')[0])).toBeCloseTo(
-      (44 / 1571) * 100,
-      3
-    )
     expect(
-      decls('.bezel::after', 'background').some(
-        v => v.includes('var(--bezel-y-scale)') && v.includes('37.6068%')
+      decls('.bezel::after', 'background').some(v =>
+        v.includes('0 0 / 100% 100%')
       )
     ).toBe(true)
-    expect(
-      decls('.glass', 'top').some(
-        v => v.includes('6.111%') && v.includes('var(--bezel-top-crop)')
-      )
-    ).toBe(true)
-    expect(decls('.glass', 'height').some(v => v.includes('85.933%'))).toBe(
-      true
-    )
     expect(decls('.bezel::after', 'pointer-events')).toContain('none')
     expect(decls('.bezel::after', 'z-index')).toContain('7')
+    expect(decls('.glass', 'left')).toContain('4.811%')
+    expect(decls('.glass', 'top')).toContain('6.111%')
+    expect(decls('.glass', 'width')).toContain('90.292%')
+    expect(decls('.glass', 'height')).toContain('85.933%')
     expect(decls('.glass', 'clip-path')).toHaveLength(0)
-    for (const property of ['top', 'height']) {
-      expect(
-        decls('.glass', property).some(v => v.includes('var(--bezel-y-scale)'))
-      ).toBe(true)
-    }
   })
   it('has no external URLs', () => {
     expect(css).not.toMatch(/url\(\s*['"]?https?:/i)

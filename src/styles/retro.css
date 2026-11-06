@@ -629,10 +629,6 @@
 }
 
 .bezel {
-  /* The 1164×1571 source has opening margins 58/59px left/right and
-     98/127px top/bottom. Crop 44px above and 73px below to balance them. */
-  --bezel-y-scale: 1.0804677; /* 1571 / (1571 - 44 - 73) */
-  --bezel-top-crop: 2.8008%; /* 44 / 1571 */
   background: var(--bezel);
   border-radius: 24px;
   padding: 7px 7px 20px;
@@ -1650,15 +1646,14 @@
   z-index: 7;
   pointer-events: none;
   border-radius: inherit;
-  background: url('/ui/bezel_mon.webp') 0 37.6068% / 100%
-    calc(100% * var(--bezel-y-scale)) no-repeat;
+  background: url('/ui/bezel_mon.webp') 0 0 / 100% 100% no-repeat;
 }
 .glass {
   position: absolute;
   left: 4.811%;
-  top: calc((6.111% - var(--bezel-top-crop)) * var(--bezel-y-scale));
+  top: 6.111%;
   width: 90.292%;
-  height: calc(85.933% * var(--bezel-y-scale));
+  height: 85.933%;
   aspect-ratio: auto;
   border-radius: 0;
   box-shadow: none;
