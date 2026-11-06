@@ -77,6 +77,28 @@ describe('retro part images (public/ui)', () => {
 })
 
 describe('retro.css', () => {
+  it('shares the cabinet surface with the report dialog', () => {
+    expect(
+      decls('.dialog', 'background').some(v => v.includes('/ui/surface.webp'))
+    ).toBe(true)
+  })
+
+  it('stops the clock animation when reduced motion is requested', () => {
+    expect(
+      decls('.clock-colon', 'animation').some(v => v.includes('clock-blink'))
+    ).toBe(true)
+    let reduced = false
+    root_.walkAtRules('media', media => {
+      if (!media.params.includes('prefers-reduced-motion: reduce')) return
+      media.walkRules('.clock-colon', rule => {
+        rule.walkDecls('animation', d => {
+          if (d.value === 'none') reduced = true
+        })
+      })
+    })
+    expect(reduced).toBe(true)
+  })
+; /^>>>>>>> 283-frame-balance$/d
   it('uses the same vertical scale for the frame image and glass opening', () => {
     const scale = Number(decls('.bezel', '--bezel-y-scale')[0])
     expect(scale).toBeCloseTo(1571 / (1571 - 29), 6)
@@ -90,6 +112,7 @@ describe('retro.css', () => {
         decls('.glass', property).some(v => v.includes('var(--bezel-y-scale)'))
       ).toBe(true)
     }
+>>>>>>> 283-frame-balance
   })
   it('has no external URLs', () => {
     expect(css).not.toMatch(/url\(\s*['"]?https?:/i)
@@ -115,8 +138,8 @@ describe('retro.css', () => {
     ).toBe(true)
   })
 
-  it('sets a positive px padding-top on report category keys', () => {
-    const tops = decls('.cat-grid .key', 'padding-top')
+  it('sets a positive px padding-top on all cabinet keys', () => {
+    const tops = decls('.key', 'padding-top')
     expect(tops.length).toBeGreaterThan(0)
     for (const v of tops) {
       const m = /^(\d+(?:\.\d+)?)px(?:\s*!important)?$/.exec(v.trim())
