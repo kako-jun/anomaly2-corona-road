@@ -37,6 +37,11 @@ describe('Knob a11y', () => {
 })
 
 describe('Knob keyboard', () => {
+  it.each(['Enter', ' '])('resets with %s', key => {
+    const { knob, onChange } = setup(80)
+    fireEvent.keyDown(knob, { key })
+    expect(onChange).toHaveBeenCalledWith(50)
+  })
   it('ArrowRight increases by 4 and prevents default', () => {
     const { knob, onChange } = setup(50)
     const notPrevented = fireEvent.keyDown(knob, { key: 'ArrowRight' })
@@ -65,6 +70,13 @@ describe('Knob keyboard', () => {
 })
 
 describe('Knob pointer drag', () => {
+  it('resets on a click', () => {
+    const { knob, onChange } = setup(80)
+    ptr(fireEvent.pointerDown, knob, { clientX: 100, clientY: 100 })
+    ptr(fireEvent.pointerUp, knob, { clientX: 100, clientY: 100 })
+    expect(onChange).toHaveBeenCalledWith(50)
+  })
+
   it('drags: down -> move changes value by dx, up ends the drag', () => {
     const { knob, onChange } = setup(50)
     ptr(fireEvent.pointerDown, knob, { clientX: 100 })

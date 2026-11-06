@@ -1386,7 +1386,8 @@
 /* ===== #48 retro parts: photo-like images (DESIGN.md section 11) ===== */
 
 /* cabinet face: seamless greige orange-peel tile (1024px image shown at 512 css px) */
-.cabinet {
+.cabinet,
+.dialog {
   background: #b7a590 url('/ui/surface.webp') 0 0 / 512px 512px repeat;
 }
 /* the old brown-cloud grime was far too strong against the real, nearly clean plastic */
@@ -1583,36 +1584,36 @@
     0 0 11px 3px #2fe05f88;
 }
 
-/* 4. knob index: pale notch with a thin dark edge, like the photo */
+/* 4. knob index: dark engraved mark, like the reference monitor */
 .knob .mark {
-  background: #f6efdc;
+  background: #67513b;
   box-shadow:
     0 0 0 1px rgba(40, 28, 16, 0.55),
     0 1px 1px 1px #0006;
 }
 
-/* 5. key labels: optical centre of the key face (the lower lip of the key image pulled them down) */
+/* Place labels on the lower face of the stepped key image. */
 .key {
-  padding-bottom: 6px !important;
-  line-height: 1;
-}
-.key.key-report {
-  padding-bottom: 8px !important;
-}
-
-/* Report category keys (panel label SELECT CATEGORY): the step line of the key image sits about 40% down; put the text on the lower face, below it
-   (padding-top only; the key height is unchanged because min-height is border-box) */
-.cat-grid .key {
   padding-top: 10px !important;
   padding-bottom: 0 !important;
-}
-@media (min-width: 900px) {
-  .cat-grid .key {
-    padding-top: 10px !important;
-  }
+  line-height: 1;
 }
 
 /* 6. small display windows: remove the white haze ellipses that read as grey smudges behind the green digits */
+.clock-colon {
+  animation: clock-blink 1s steps(2, end) infinite;
+}
+@keyframes clock-blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clock-colon {
+    animation: none;
+  }
+}
+
 .vfd::after,
 .lamps::after {
   display: none;

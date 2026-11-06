@@ -1,5 +1,10 @@
 import { CSSProperties, useRef } from 'react'
-import { dragKnobValue, keyKnobValue, knobAngle } from '../utils/knob'
+import {
+  dragKnobValue,
+  keyKnobValue,
+  knobAngle,
+  KNOB_DEFAULT,
+} from '../utils/knob'
 
 interface KnobProps {
   label: string
@@ -9,7 +14,12 @@ interface KnobProps {
 
 /** Horizontal-drag knob (slider semantics). Keyboard: arrows, Shift for big steps, Home/End. */
 export const Knob = ({ label, value, onChange }: KnobProps) => {
-  const dragRef = useRef<{ x: number; value: number } | null>(null)
+  const dragRef = useRef<{
+    x: number
+    y: number
+    value: number
+    moved: boolean
+  } | null>(null)
 
   return (
     <div className="knob-wrap">
@@ -27,14 +37,24 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
         onPointerDown={e => {
           if (e.button !== 0) return // primary button / touch / pen only
           e.currentTarget.setPointerCapture(e.pointerId)
-          dragRef.current = { x: e.clientX, value }
+          dragRef.current = { x: e.clientX, y: e.clientY, value, moved: false }
           e.preventDefault()
         }}
         onPointerMove={e => {
           const d = dragRef.current
-          if (d) onChange(dragKnobValue(d.value, d.x, e.clientX))
+          if (d) {
+            if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5) d.moved = true
+            if (d.moved) onChange(dragKnobValue(d.value, d.x, e.clientX))
+          }
         }}
-        onPointerUp={() => {
+        onPointerUp={e => {
+          const d = dragRef.current
+          if (
+            d &&
+            !d.moved &&
+            Math.hypot(e.clientX - d.x, e.clientY - d.y) <= 5
+          )
+            onChange(KNOB_DEFAULT)
           dragRef.current = null
         }}
         onPointerCancel={() => {
@@ -44,7 +64,10 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
           dragRef.current = null
         }}
         onKeyDown={e => {
-          const next = keyKnobValue(value, e.key, e.shiftKey)
+          const next =
+            e.key === 'Enter' || e.key === ' '
+              ? KNOB_DEFAULT
+              : keyKnobValue(value, e.key, e.shiftKey)
           if (next === null) return
           e.preventDefault()
           e.stopPropagation()
@@ -54,7 +77,9 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
         <i className="mark" />
       </div>
       <div className="label">{label}</div>
-      <div className="drag-hint">&#9664; DRAG LEFT/RIGHT &#9654;</div>
+      <div className="drag-hint">
+        &#9664; DRAG LEFT/RIGHT &#9654; · CLICK TO RESET
+      </div>
     </div>
   )
 }

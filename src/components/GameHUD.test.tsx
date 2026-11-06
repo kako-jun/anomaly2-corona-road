@@ -49,6 +49,8 @@ describe('GameHUD', () => {
   })
   it('shows the shift time', () => {
     render(<GameHUD gameTime="03:07" stats={makeStats()} />)
-    expect(screen.getByText('03:07')).toBeInTheDocument()
+    const clock = screen.getByLabelText('03:07')
+    expect(clock).toHaveTextContent('03:07')
+    expect(clock.querySelector('.clock-colon')).toHaveTextContent(':')
   })
 })
