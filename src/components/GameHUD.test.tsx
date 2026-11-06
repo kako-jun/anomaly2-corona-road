@@ -43,8 +43,9 @@ describe('GameHUD', () => {
       <GameHUD gameTime="00:00" stats={makeStats({ correctReports: 2 })} />
     )
     expect(screen.getByText('2')).toBeInTheDocument()
+    expect(screen.getByText('/')).toBeInTheDocument()
     expect(
-      screen.getByText(`/ ${DEFAULT_CONFIG.minCorrectReports}`)
+      screen.getByText(String(DEFAULT_CONFIG.minCorrectReports))
     ).toBeInTheDocument()
   })
   it('shows the shift time', () => {

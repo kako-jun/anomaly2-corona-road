@@ -81,9 +81,6 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
         <i className="mark" />
       </div>
       <div className="label">{label}</div>
-      <div className="drag-hint">
-        &#9664; DRAG LEFT/RIGHT &#9654; · CLICK TO RESET
-      </div>
       <span id={hintId} className="knob-sr-only">
         Use arrow keys to adjust. Press Enter or Space to reset to centre.
       </span>

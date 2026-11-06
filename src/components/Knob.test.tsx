@@ -40,6 +40,10 @@ describe('Knob a11y', () => {
       'Use arrow keys to adjust. Press Enter or Space to reset to centre.'
     )
   })
+  it('does not show drag or reset instructions beside the knob', () => {
+    setup()
+    expect(screen.queryByText(/DRAG LEFT\/RIGHT|CLICK TO RESET/i)).toBeNull()
+  })
 })
 
 describe('Knob keyboard', () => {

@@ -24,9 +24,10 @@ export const GameHUD = ({ gameTime, stats }: GameHUDProps) => {
       </div>
       <div className="cell">
         <div className="label">REPORTS</div>
-        <div className="vfd vfd--center">
+        <div className="vfd vfd--center vfd--reports">
           <span>{stats.correctReports}</span>
-          <span className="dim"> / {DEFAULT_CONFIG.minCorrectReports}</span>
+          <span className="dim">/</span>
+          <span className="dim">{DEFAULT_CONFIG.minCorrectReports}</span>
         </div>
       </div>
       <div className="cell">

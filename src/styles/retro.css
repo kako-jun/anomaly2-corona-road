@@ -473,7 +473,6 @@
 /* printed labels: patchy, partly faded (still legible) */
 
 .label,
-.drag-hint,
 .maker {
   -webkit-mask-image: linear-gradient(
     95deg,
@@ -1047,7 +1046,7 @@
 
 /* ===== Layout fixes ===== */
 
-/* knobs: clear space between knob (incl. rim/halo) and label, label and drag hint */
+/* knobs: clear space between knob (incl. rim/halo) and label */
 
 .knob-wrap {
   display: flex;
@@ -1070,16 +1069,6 @@
 
 .knob-wrap .label {
   margin-bottom: 4px;
-}
-
-.drag-hint {
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  color: var(--ink-soft);
-  margin-top: 0;
-  text-align: center;
-  white-space: normal;
-  line-height: 1.3;
 }
 
 .knob {
@@ -1107,6 +1096,10 @@
 
 .vfd--center {
   justify-content: center;
+}
+.vfd--reports {
+  gap: 0.18em;
+  letter-spacing: 0;
 }
 
 /* CAMERA SELECT label centred over the key group */
@@ -1611,10 +1604,14 @@
   padding-bottom: 0 !important;
   line-height: 0.4;
 }
+/* Category labels sit slightly higher than the larger cabinet key labels. */
+.cat-grid .key {
+  padding-top: 16px !important;
+}
 
 /* 6. small display windows: remove the white haze ellipses that read as grey smudges behind the green digits */
 .clock-colon {
-  animation: clock-blink 1s steps(2, end) infinite;
+  animation: clock-blink 1s ease-in-out infinite;
 }
 @keyframes clock-blink {
   50% {
