@@ -77,6 +77,20 @@ describe('retro part images (public/ui)', () => {
 })
 
 describe('retro.css', () => {
+  it('uses the same vertical scale for the frame image and glass opening', () => {
+    const scale = Number(decls('.bezel', '--bezel-y-scale')[0])
+    expect(scale).toBeCloseTo(1571 / (1571 - 29), 6)
+    expect(
+      decls('.bezel', 'background').some(v =>
+        v.includes('var(--bezel-y-scale)')
+      )
+    ).toBe(true)
+    for (const property of ['top', 'height']) {
+      expect(
+        decls('.glass', property).some(v => v.includes('var(--bezel-y-scale)'))
+      ).toBe(true)
+    }
+  })
   it('has no external URLs', () => {
     expect(css).not.toMatch(/url\(\s*['"]?https?:/i)
     expect(css).not.toMatch(/@import\s+(url\()?\s*['"]?https?:/i)
