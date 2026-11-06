@@ -4,9 +4,10 @@ import { misreportLampCount, misreportLimitText } from '../utils/startScreen'
 
 interface StartScreenProps {
   onStart: () => void
+  loading?: boolean
 }
 
-export const StartScreen = ({ onStart }: StartScreenProps) => {
+export const StartScreen = ({ onStart, loading = false }: StartScreenProps) => {
   // Lock body scrolling only while this screen is mounted (no :has() dependency).
   useEffect(() => {
     document.body.classList.add('start-open')
@@ -79,9 +80,14 @@ export const StartScreen = ({ onStart }: StartScreenProps) => {
         </div>
       </section>
 
-      <button type="button" className="start-go" onClick={onStart}>
+      <button
+        type="button"
+        className="start-go"
+        onClick={onStart}
+        disabled={loading}
+      >
         <i aria-hidden="true" />
-        勤務開始
+        {loading ? '準備中…' : '勤務開始'}
       </button>
     </main>
   )
