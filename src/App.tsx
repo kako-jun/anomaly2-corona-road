@@ -37,7 +37,9 @@ function App() {
     return (
       <>
         <GameOverScreen
-          victory={gameState === 'win'}
+          closing={
+            ending?.closing ?? (gameState === 'win' ? 'dawn' : 'withdraw')
+          }
           stats={stats}
           onRestart={startGame}
         />
