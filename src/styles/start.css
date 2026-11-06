@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Yomogi Start';
+  src: url('/fonts/yomogi-start.woff2') format('woff2');
+  font-display: block;
+}
+
 /* Start screen: equipment nameplate. All classes are start-* so they never collide with
    .screen .card .btn (result screen) or the retro cabinet classes. Colors only come from here. */
 
@@ -7,6 +13,12 @@
   --start-lo: #b3a785;
   --start-ink: #3a2f22;
   --start-soft: #5b4d3a;
+  --ink: #3a2f22;
+  --note-paper: #e6d7a3;
+  --note-paper-shade: rgba(143, 132, 102, 0.55);
+  --note-tape: rgba(217, 206, 176, 0.75);
+  --note-shadow: #0006;
+  --note-tape-shadow: #0003;
   width: 100%;
   height: 100vh;
   height: 100dvh;
@@ -130,6 +142,20 @@ body.start-open #root {
   align-items: center;
   padding: 5px 0;
   border-top: 1px dashed rgba(58, 47, 34, 0.45);
+}
+
+.start-panel .start-row.cat-note {
+  display: grid;
+  margin: 9px 4px 0;
+  padding: 7px 8px;
+  border: 0;
+  text-align: left;
+  line-height: 1.35;
+  pointer-events: auto;
+  font-family: 'Yomogi Start', cursive;
+}
+.start-panel .start-row.cat-note:nth-of-type(even) {
+  --tilt: 0.8deg;
 }
 .start-plate + .start-row {
   border-top: 0;

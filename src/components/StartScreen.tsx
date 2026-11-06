@@ -25,14 +25,14 @@ export const StartScreen = ({ onStart }: StartScreenProps) => {
       <section className="start-panel">
         <div className="start-plate">取扱い・監視カメラ 8台</div>
 
-        <div className="start-row">
+        <div className="start-row cat-note">
           <div className="start-lab">目的</div>
           <div className="start-desc">
             地下街の監視カメラ8台を見て、おかしなところを見つけたら報告する。
           </div>
         </div>
 
-        <div className="start-row">
+        <div className="start-row cat-note">
           <div className="start-lab">切替</div>
           <div className="start-desc">
             番号ボタン / 画面を左右にスワイプ
@@ -51,7 +51,7 @@ export const StartScreen = ({ onStart }: StartScreenProps) => {
           </div>
         </div>
 
-        <div className="start-row">
+        <div className="start-row cat-note">
           <div className="start-lab">調整</div>
           <div className="start-desc">
             <span className="start-knob" aria-hidden="true" />{' '}
@@ -59,14 +59,14 @@ export const StartScreen = ({ onStart }: StartScreenProps) => {
           </div>
         </div>
 
-        <div className="start-row">
+        <div className="start-row cat-note">
           <div className="start-lab">報告</div>
           <div className="start-desc">
             <span className="start-rep">REPORT</span> を押してカテゴリを選ぶ
           </div>
         </div>
 
-        <div className="start-row">
+        <div className="start-row cat-note">
           <div className="start-lab">お手つき</div>
           <div className="start-desc">
             <span className="start-lamps" aria-hidden="true">
