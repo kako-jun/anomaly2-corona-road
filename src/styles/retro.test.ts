@@ -172,6 +172,28 @@ describe('retro.css', () => {
     ])
   })
 
+  it('centres the window digits on the glyphs, not on the line box (#314)', () => {
+    // A font's line box has more space under the digits than above, so centring the line box left the
+    // digits ~2px high (measured: 12px above / 16px below in a 44px window). Trimming each digit box to
+    // cap-height .. baseline lets the flex centring land on the glyphs; the padding fallback is for
+    // browsers without text-box. The window stays a centring flex row so TIME and REPORTS share one centre.
+    expect(decls('.vfd > *', 'text-box')).toEqual([
+      'trim-both cap alphabetic',
+    ])
+    expect(decls('.vfd', 'align-items')).toContain('center')
+    let fallback = false
+    root_.walkAtRules('supports', at => {
+      if (!/not\s*\(\s*text-box/.test(at.params)) return
+      at.walkRules(rule => {
+        if (rule.selectors.includes('.vfd'))
+          rule.walkDecls('padding-top', d => {
+            fallback = d.value.trim() === '4px'
+          })
+      })
+    })
+    expect(fallback).toBe(true)
+  })
+
   it('keeps the --wear A/B hook on the cabinet dirt layer', () => {
     expect(
       decls('.cabinet::before', 'opacity').some(v => v.includes('var(--wear)'))
