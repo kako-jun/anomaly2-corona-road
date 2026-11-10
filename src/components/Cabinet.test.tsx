@@ -341,6 +341,24 @@ describe('Cabinet model plate (#304)', () => {
     expect(css).toMatch(/background-size:\s*calc\(var\(--hole-p\) \* 9 \/ 7\)/)
   })
 
+  it('keeps the grille at exactly 2 slot rows and fits a whole number of slots across (no clipped right-end slot)', () => {
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/retro.css'),
+      'utf8'
+    )
+    const rule = css.match(/\.cabinet-foot > \.speaker\s*\{([^}]*)\}/)
+    expect(rule).not.toBeNull()
+    // height = 2 rows of pitch, tile = 2 rows tall
+    expect(rule![1]).toMatch(/height:\s*calc\(var\(--hole-p\) \* 2\)/)
+    expect(rule![1]).toMatch(
+      /background-size:\s*calc\(var\(--hole-p\) \* 9 \/ 7\)\s+calc\(var\(--hole-p\) \* 2\)/
+    )
+    // round horizontally: the tile is nudged so an integer count fills the width
+    expect(rule![1]).toMatch(/background-repeat:\s*round\s+no-repeat/)
+    // desktop pitch stays a 2-row grille inside the 40px plate strip
+    expect(css).toMatch(/--plate-h:\s*40px;\s*--hole-p:\s*14px/)
+  })
+
   it('is in the cabinet preload list of index.html', () => {
     const html = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8')
     expect(html).toMatch(/data-cabinet-image\s+href="\/ui\/model-plate\.webp"/)

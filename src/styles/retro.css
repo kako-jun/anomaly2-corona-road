@@ -1098,7 +1098,7 @@
 .cabinet {
   /* portrait: the smallest height at which the outlined "42" still reads at DPR 1 (the English part is allowed to blur); the picture's height wins over the plate */
   --plate-h: 20px;
-  /* vertical pitch of the speaker slots: 2 rows in the 20px strip, never finer than ~8px */
+  /* vertical pitch of the speaker slots: always 2 rows (kako-jun #304), 10px in the 20px strip */
   --hole-p: 10px;
 }
 .cabinet > .cabinet-foot {
@@ -1115,9 +1115,9 @@
 }
 @media (min-width: 900px) {
   .cabinet {
-    /* the strip does not cost picture height here, so the plate can be bigger: 3 rows of slots */
+    /* the strip does not cost picture height here, so the plate can be bigger; the grille stays 2 rows */
     --plate-h: 40px;
-    --hole-p: calc(var(--plate-h) / 3);
+    --hole-p: 14px;
   }
   /* the picture owns the left column: the strip spans the control panel column, which keeps room for it (--pz undoes the panel's zoom) */
   .cabinet > .cabinet-foot {
@@ -1130,11 +1130,12 @@
 .cabinet-foot > .speaker {
   flex: 1;
   min-width: 0;
-  height: 100%;
+  height: calc(var(--hole-p) * 2);
   /* one tile (27x42 source) holds two slot rows: scale it so the row pitch is --hole-p, anchored to the bottom */
   background-size: calc(var(--hole-p) * 9 / 7) calc(var(--hole-p) * 2);
   background-position: 0 100%;
-  background-repeat: repeat;
+  /* round: the tile width is nudged so a whole number of slots fills the width (no clipped slot at the right end) */
+  background-repeat: round no-repeat;
 }
 .cabinet-foot > .model-plate {
   flex: none;
