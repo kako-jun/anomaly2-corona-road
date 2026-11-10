@@ -121,12 +121,37 @@ describe('validateSave', () => {
     expect(validateSave(s)?.settings).toEqual({ brightness: 40, contrast: 60 })
   })
   it.each([
-    ['missing contrast', { brightness: 40 }],
-    ['missing brightness', { contrast: 40 }],
     ['non-number', { brightness: '40', contrast: 40 }],
+    ['non-number contrast', { contrast: null }],
+    ['an unknown language', { language: 'fr' }],
+    ['a language that is not a string', { language: 1 }],
     ['not an object', 5],
   ])('rejects settings with %s', (_n, settings) => {
     expect(validateSave({ ...save(), settings })).toBeNull()
+  })
+  it('accepts each setting alone (older saves had brightness and contrast together)', () => {
+    expect(
+      validateSave(save({ settings: { language: 'en' } }))?.settings
+    ).toEqual({
+      language: 'en',
+    })
+    expect(
+      validateSave(save({ settings: { brightness: 3 } }))?.settings
+    ).toEqual({
+      brightness: 3,
+    })
+    expect(
+      validateSave(
+        save({ settings: { brightness: 1, contrast: 2, language: 'ja' } })
+      )?.settings
+    ).toEqual({ brightness: 1, contrast: 2, language: 'ja' })
+  })
+  it('merges settings field by field, b winning where both have it', () => {
+    const m = mergeSave(
+      save({ settings: { brightness: 5, language: 'ja' } }),
+      save({ settings: { language: 'en' } })
+    )
+    expect(m.settings).toEqual({ brightness: 5, language: 'en' })
   })
   it('rejects pendingStories that is not an array', () => {
     expect(validateSave({ ...save(), pendingStories: 'x' })).toBeNull()

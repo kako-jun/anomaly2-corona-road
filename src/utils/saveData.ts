@@ -8,9 +8,13 @@ export const SAVE_KEY = 'corona-road:save'
 export const BROKEN_KEY = 'corona-road:save:broken'
 export const PROBE_KEY = 'corona-road:save:probe'
 
+export type Language = 'ja' | 'en'
+
 export interface SaveSettings {
-  brightness: number
-  contrast: number
+  brightness?: number
+  contrast?: number
+  /** The language of the investigation note and the title card (#292). Absent: follow the browser. */
+  language?: Language
 }
 
 /** How the last finished shift went (investigation note, #297). Kept in the save so the next start can show it. */
@@ -179,15 +183,16 @@ export const validateSave = (raw: unknown): SaveData | null => {
   const lastShift = validLastShift(rec.lastShift)
   if (lastShift) out.lastShift = lastShift
   if (settings !== undefined) {
-    if (
-      !isRecord(settings) ||
-      typeof settings.brightness !== 'number' ||
-      typeof settings.contrast !== 'number'
-    )
+    if (!isRecord(settings)) return null
+    const { brightness, contrast, language } = settings
+    if (brightness !== undefined && typeof brightness !== 'number') return null
+    if (contrast !== undefined && typeof contrast !== 'number') return null
+    if (language !== undefined && language !== 'ja' && language !== 'en')
       return null
     out.settings = {
-      brightness: settings.brightness,
-      contrast: settings.contrast,
+      ...(brightness !== undefined ? { brightness } : {}),
+      ...(contrast !== undefined ? { contrast } : {}),
+      ...(language !== undefined ? { language } : {}),
     }
   }
   return out
@@ -229,7 +234,9 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
       ? (a.lastShift ?? b.lastShift)
       : (b.lastShift ?? a.lastShift)
   if (lastShift) out.lastShift = lastShift
-  const settings = b.settings ?? a.settings
+  // Field by field: `b` wins where both have it, so a setting only one tab has is not lost.
+  const settings =
+    a.settings || b.settings ? { ...a.settings, ...b.settings } : undefined
   if (settings) out.settings = settings
   return out
 }

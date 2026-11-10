@@ -27,7 +27,7 @@
 
 - 📱 スマホ縦画面に最適化
 - 🎬 レトロな監視カメラ映像風
-- 🇬🇧 英語UI（監視システム風）
+- 🇬🇧 英語UI（監視システム風）。捜査メモとタイトルの説明は日本語/英語を切替（タイトルの JA / EN）
 - 👁️ メタホラー要素（後半でルールが崩壊）
 - ♿ アクセシビリティ対応（色覚サポート、シンプル操作）
 
@@ -127,3 +127,8 @@ MIT License
 ## 👤 Author
 
 kako-jun
+
+## フォントの出典
+
+- Caveat（英語の手書き）: SIL OFL 1.1、`public/fonts/OFL-Caveat.txt`
+- Zen Kurenaido・Yomogi（捜査メモの日本語の手書き風。必要な文字だけのサブセット `public/fonts/note-*.woff2`）: SIL OFL 1.1、`public/fonts/OFL-ZenKurenaido.txt`・`OFL-Yomogi.txt`。元は https://github.com/google/fonts （`ofl/zenkurenaido`・`ofl/yomogi`）。作り直しは `scripts/build-note-fonts.py`

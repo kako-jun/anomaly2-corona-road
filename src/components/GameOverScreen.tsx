@@ -1,7 +1,7 @@
 import { LABELS } from '../data/investigationNotes'
-import { buildNote, noteLang } from '../utils/investigationNote'
+import { buildNote } from '../utils/investigationNote'
 import { load } from '../utils/saveData'
-import type { LastShift } from '../utils/saveData'
+import type { LastShift, Language } from '../utils/saveData'
 import type { GameStats } from '../types/game'
 import { InvestigationNote } from './InvestigationNote'
 
@@ -10,6 +10,8 @@ interface GameOverScreenProps {
   /** win/lose of the shift; a dawn that ends in a loss is a time-up, not a survival. */
   outcome: 'win' | 'lose'
   stats: GameStats
+  /** The note's language (#292). */
+  language?: Language
   onRestart: () => void
   /** The true ending has been reached: no more shifts on this save, the key goes back to the title (#294). */
   endingReached?: boolean
@@ -23,6 +25,7 @@ interface GameOverScreenProps {
 export const GameOverScreen = ({
   closing,
   stats,
+  language = 'ja',
   onRestart,
   endingReached = false,
   onTitle,
@@ -36,7 +39,7 @@ export const GameOverScreen = ({
     closing,
     raised: [],
   }
-  const lang = noteLang()
+  const lang = language
   return (
     <InvestigationNote
       view={buildNote({ mode: 'after', save, shift }, lang)}

@@ -7,7 +7,8 @@ import { Cabinet } from './components/Cabinet'
 import { InvestigationNote } from './components/InvestigationNote'
 import { GameOverScreen } from './components/GameOverScreen'
 import { SaveNotice } from './components/SaveNotice'
-import { buildNote, noteLang } from './utils/investigationNote'
+import { buildNote } from './utils/investigationNote'
+import { useLanguage } from './utils/language'
 import { preloadCabinet } from './utils/uiPreload'
 import { SAVE_KEY, load } from './utils/saveData'
 import { resetProgress } from './utils/shiftProgress'
@@ -17,6 +18,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   // The title's start key opens the investigation note; its key starts the shift (#297).
   const [memo, setMemo] = useState(false)
+  const [language, setLanguage] = useLanguage()
   // Bumped to re-read the save: after "start over", and when another tab changes it.
   const [, refresh] = useReducer((n: number) => n + 1, 0)
   useEffect(() => {
@@ -70,7 +72,7 @@ function App() {
     return (
       <>
         <InvestigationNote
-          view={buildNote({ mode: 'before', save: load() }, noteLang())}
+          view={buildNote({ mode: 'before', save: load() }, language)}
           onAction={enterShift}
           busy={loading}
         />
@@ -84,6 +86,8 @@ function App() {
       <>
         <StartScreen
           onStart={() => setMemo(true)}
+          language={language}
+          onLanguage={setLanguage}
           endingReached={load().endingReached}
           onStartOver={() => {
             resetProgress()
@@ -104,6 +108,7 @@ function App() {
           }
           outcome={gameState}
           stats={stats}
+          language={language}
           endingReached={load().endingReached}
           onRestart={startGame}
           onTitle={returnToTitle}

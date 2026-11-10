@@ -8,13 +8,6 @@ import {
 import type { NoteLang, Outcome, Pair, Stage } from '../data/investigationNotes'
 import type { LastShift, SaveData } from './saveData'
 
-/** The note's language. #292 (language switch) is not built: follow the page language, Japanese by default. */
-export const noteLang = (): NoteLang =>
-  typeof document !== 'undefined' &&
-  document.documentElement.lang.toLowerCase().startsWith('en')
-    ? 'en'
-    : 'ja'
-
 /** The story stage the saved flags have reached (the furthest one). */
 export const stageOf = (
   save: Pick<SaveData, 'flags' | 'loops' | 'foundTotal'>

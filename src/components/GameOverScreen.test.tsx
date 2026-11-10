@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { fireEvent, render, screen } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { GameOverScreen } from './GameOverScreen'
 import { emptySave } from '../utils/saveData'
 import type { SaveData } from '../utils/saveData'
@@ -40,9 +40,6 @@ const saved = (over: Partial<SaveData> = {}) => {
 }
 
 beforeEach(() => saved())
-afterEach(() => {
-  document.documentElement.lang = 'ja'
-})
 
 describe('result = investigation note (#297)', () => {
   it('shows the night, the tonight column and the totals from the save', () => {
@@ -101,12 +98,12 @@ describe('result = investigation note (#297)', () => {
   })
 
   it('shows the English note when the page language is English', () => {
-    document.documentElement.lang = 'en'
     render(
       <GameOverScreen
         closing="dawn"
         outcome="win"
         stats={stats}
+        language="en"
         onRestart={vi.fn()}
       />
     )
