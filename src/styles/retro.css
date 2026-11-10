@@ -274,7 +274,11 @@
   /* proportional to the picture (.glass is a size container): 4.9cqw = the old desktop look, at any monitor size (#295) */
   font-size: 4.9cqw;
   line-height: 1.8;
-  font-style: italic;
+  /* JP fonts have no true italic, so font-style: italic cannot control the slant; tilt with skewX instead.
+     9deg is the value kako-jun picked from a 6/9/12 comparison (#306). */
+  font-style: normal;
+  transform: skewX(-9deg);
+  transform-origin: 50% 50%;
   font-weight: 600;
   letter-spacing: 0.04em;
   pointer-events: none;
