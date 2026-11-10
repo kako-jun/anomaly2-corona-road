@@ -125,17 +125,20 @@ export const Cabinet = ({
             buttonRef={reportBtnRef}
             onToggle={() => setReportOpen(o => !o)}
           />
-          <div className="speaker" aria-hidden="true" />
         </section>
-        <img
-          className="model-plate"
-          src="/ui/model-plate.webp"
-          alt="Video Monitor CR-42"
-          aria-label="Video Monitor CR-42"
-          width={155}
-          height={40}
-          draggable={false}
-        />
+        {/* bottom strip (#304): speaker grille on the left, model plate fixed to the right, one row */}
+        <div className="cabinet-foot">
+          <div className="speaker" aria-hidden="true" />
+          <img
+            className="model-plate"
+            src="/ui/model-plate.webp"
+            alt="Video Monitor CR-42"
+            aria-label="Video Monitor CR-42"
+            width={155}
+            height={40}
+            draggable={false}
+          />
+        </div>
       </main>
       {reportOpen && (
         <ReportDialog onSelect={handleSelect} onClose={closeReport} />

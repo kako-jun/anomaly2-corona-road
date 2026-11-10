@@ -1089,25 +1089,44 @@
   text-align: center;
 }
 
-/* model plate (#304): fixed to the cabinet's bottom-right corner, independent of the bezel size */
+/* bottom strip (#304): speaker grille (left, fills the width) + model plate (right), one row sharing the bottom edge */
 
 .cabinet {
   --plate-h: 40px;
 }
-@media (min-width: 900px) {
-  /* keep the speaker grille clear of the plate; --pz undoes the panel's zoom */
-  .speaker {
-    margin-bottom: calc(40px / var(--pz, 1));
-  }
-}
-.cabinet > .model-plate {
+.cabinet > .cabinet-foot {
   position: absolute;
+  left: 4px;
   right: 6px;
   bottom: 3px;
   height: var(--plate-h);
-  width: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
   z-index: 2;
   pointer-events: none;
+}
+@media (min-width: 900px) {
+  /* the picture owns the left column: the strip spans the control panel column, which keeps room for it (--pz undoes the panel's zoom) */
+  .cabinet > .cabinet-foot {
+    left: calc((100vh - 43px) * 0.75 + 14px + 8px + 14px);
+  }
+  .panel {
+    padding-bottom: calc((var(--plate-h) + 6px) / var(--pz, 1));
+  }
+}
+.cabinet-foot > .speaker {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  /* three rows of slots exactly as tall as the plate */
+  background-size: calc(var(--plate-h) * 9 / 42) calc(var(--plate-h) / 3);
+  background-repeat: repeat;
+}
+.cabinet-foot > .model-plate {
+  flex: none;
+  height: var(--plate-h);
+  width: auto;
 }
 @media (max-width: 440px) {
   .cabinet {
@@ -1873,9 +1892,6 @@
   }
   .cam-grid {
     row-gap: 2px;
-  }
-  .speaker {
-    display: none;
   }
 }
 

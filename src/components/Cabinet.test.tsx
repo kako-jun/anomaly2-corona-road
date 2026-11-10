@@ -300,10 +300,30 @@ describe('Cabinet model plate (#304)', () => {
   it('is an image child of .cabinet with an accessible name, and the old .maker text is gone', () => {
     const { container } = render(<Cabinet {...makeProps()} />)
     const plate = screen.getByLabelText('Video Monitor CR-42')
-    expect(plate.parentElement).toBe(cabinetEl(container))
+    expect(plate.parentElement).toBe(container.querySelector('.cabinet-foot'))
     expect(plate).toHaveAttribute('src', '/ui/model-plate.webp')
     expect(container.querySelector('.maker')).toBeNull()
     expect(container.textContent).not.toContain('VIDEO MONITOR CR-42')
+  })
+
+  it('shares one strip with the speaker grille: speaker first (left), plate last (right), both direct children of the strip under .cabinet', () => {
+    const { container } = render(<Cabinet {...makeProps()} />)
+    const foot = container.querySelector('.cabinet-foot') as HTMLElement
+    expect(foot.parentElement).toBe(cabinetEl(container))
+    expect(Array.from(foot.children).map(c => c.className)).toEqual([
+      'speaker',
+      'model-plate',
+    ])
+    expect(container.querySelectorAll('.speaker')).toHaveLength(1)
+  })
+
+  it('has no leftover speaker margin workaround in the CSS', () => {
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/retro.css'),
+      'utf8'
+    )
+    expect(css).not.toMatch(/\.speaker\s*\{[^}]*margin-bottom/)
+    expect(css).not.toMatch(/\.speaker\s*\{\s*display:\s*none/)
   })
 
   it('is in the cabinet preload list of index.html', () => {
