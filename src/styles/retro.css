@@ -268,7 +268,11 @@
   z-index: 6;
   text-align: center;
   color: #fff;
+  /* Fallback first, for browsers without container query units (a declaration with an unsupported unit
+     is dropped): 1rem is about the old desktop look (16px). */
   font-size: 1rem;
+  /* proportional to the picture (.glass is a size container): 4.9cqw = the old desktop look, at any monitor size (#295) */
+  font-size: 4.9cqw;
   line-height: 1.8;
   font-style: italic;
   font-weight: 600;
@@ -789,12 +793,6 @@
 @media (min-width: 1400px) {
   .panel {
     zoom: 1.45;
-  }
-}
-
-@media (min-width: 900px) {
-  .movie-sub {
-    font-size: 1.45rem;
   }
 }
 
@@ -1650,6 +1648,7 @@
   box-shadow: 0 3px 6px 1px rgba(40, 25, 10, 0.5);
 }
 .glass {
+  container-type: inline-size; /* subtitles size against the picture width (cqw), #295 */
   position: absolute;
   left: 4.811%;
   top: 6.111%;

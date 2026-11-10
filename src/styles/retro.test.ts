@@ -83,6 +83,14 @@ describe('retro.css', () => {
     ).toBe(true)
   })
 
+  it('sizes subtitles in cqw against the picture, with no fixed size or width @media (#295)', () => {
+    const sizes = decls('.movie-sub', 'font-size')
+    // the cqw declaration must come last so it wins; earlier ones are fallbacks for browsers without cqw
+    expect(sizes.at(-1)).toBe('4.9cqw')
+    // the picture (.glass) must be the size container the cqw resolves against
+    expect(decls('.glass', 'container-type').some(v => /inline-size|size/.test(v))).toBe(true)
+  })
+
   it('stops the clock animation when reduced motion is requested', () => {
     expect(
       decls('.clock-colon', 'animation').some(
