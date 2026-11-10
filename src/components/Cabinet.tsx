@@ -133,7 +133,6 @@ export const Cabinet = ({
             className="model-plate"
             src="/ui/model-plate.webp"
             alt="Video Monitor CR-42"
-            aria-label="Video Monitor CR-42"
             width={155}
             height={40}
             draggable={false}

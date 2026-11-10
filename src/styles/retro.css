@@ -708,20 +708,13 @@
   padding-bottom: 4px;
 }
 
-.speaker {
-  height: 14px;
-  border-radius: 8px;
-  opacity: 0.55;
-  background:
-    repeating-linear-gradient(90deg, #0000 0 6px, #0000 6px 8px),
-    radial-gradient(circle, #0006 1.4px, #0000 2px) 0 0/8px 8px;
-  box-shadow: inset 0 1px 3px #0003;
-}
-
 /* Desktop: fill the viewport, keep the 3:4 picture, scale the control panel up */
 
 @media (min-width: 900px) {
   .cabinet {
+    /* the picture's height: the viewport height, but never so tall that the 3:4 frame leaves the control column narrower than --col-min (tall screens such as 900x1000); (100vw - 8px*2 padding - 14px gap - --col-min) is the frame width left over */
+    --col-min: 340px;
+    --tube-h: min(100vh - 16px, (100vw - 30px - var(--col-min)) * 1679 / 1246);
     max-width: none;
     width: 100%;
     min-height: 100vh;
@@ -737,7 +730,7 @@
     width: auto;
     min-width: 0;
     max-width: none;
-    height: calc(100vh - 16px);
+    height: var(--tube-h);
     display: flex;
     align-self: flex-start;
   }
@@ -767,12 +760,18 @@
     zoom: 1.3;
     --pz: 1.3;
   }
+  .cabinet {
+    --col-min: 442px; /* 340px x the panel zoom above */
+  }
 }
 
 @media (min-width: 1400px) {
   .panel {
     zoom: 1.45;
     --pz: 1.45;
+  }
+  .cabinet {
+    --col-min: 493px; /* 340px x the panel zoom above */
   }
 }
 
@@ -1096,10 +1095,13 @@
 }
 .cabinet > .cabinet-foot {
   position: absolute;
+  /* 4px / 6px: the cabinet face's own bevel is a little wider on the right, so the strip is nudged to look centred */
   left: 4px;
   right: 6px;
   bottom: 3px;
   height: var(--plate-h);
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   align-items: flex-end;
   gap: 8px;
@@ -1112,9 +1114,9 @@
     --plate-h: 40px;
     --hole-p: 14px;
   }
-  /* the picture owns the left column: the strip spans the control panel column, which keeps room for it (--pz undoes the panel's zoom) */
+  /* the picture owns the left column: the strip spans the control panel column, which keeps room for it (--col-min guarantees the column is wider than the plate). --pz is the panel's zoom (1.3 / 1.45), set on .panel at the 1200 / 1400px breakpoints below; it undoes that zoom so the reserved space is in real px */
   .cabinet > .cabinet-foot {
-    left: calc((100vh - 43px) * 0.75 + 14px + 8px + 14px);
+    left: calc((var(--tube-h) - 27px) * 0.75 + 14px + 8px + 14px);
   }
   .panel {
     padding-bottom: calc((var(--plate-h) + 6px) / var(--pz, 1));
@@ -1124,6 +1126,10 @@
   flex: 1;
   min-width: 0;
   height: calc(var(--hole-p) * 2);
+  border-radius: 0;
+  opacity: 0.9;
+  box-shadow: none;
+  background-image: url('/ui/speaker_tile.webp');
   /* one tile (27x42 source) holds two slot rows: scale it so the row pitch is --hole-p, anchored to the bottom */
   background-size: calc(var(--hole-p) * 9 / 7) calc(var(--hole-p) * 2);
   background-position: 0 100%;
@@ -1131,9 +1137,14 @@
   background-repeat: round no-repeat;
 }
 .cabinet-foot > .model-plate {
-  flex: none;
+  /* never wider than the strip (defence in depth; --col-min keeps the column wider than the 155px plate): shrinks in place, picture kept whole */
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
   height: var(--plate-h);
   width: auto;
+  object-fit: contain;
+  object-position: right bottom;
 }
 
 /* ===== Report category picker: modal popup (fixed overlay, does not change page layout) ===== */
@@ -1477,17 +1488,8 @@
   .glass {
     aspect-ratio: auto;
     height: 100%;
-    width: calc((100vh - 43px) * 0.75 - 14px);
+    width: calc((var(--tube-h) - 27px) * 0.75 - 14px);
   }
-}
-
-/* speaker grille: a wide strip of rectangular slots (alpha, so the cabinet face shows through); decoration only */
-.speaker {
-  height: 14px;
-  border-radius: 0;
-  opacity: 0.9;
-  background: url('/ui/speaker_tile.webp') 0 0 / 9px 14px repeat-x;
-  box-shadow: none;
 }
 
 /* ----- keys, lamps, knobs ----- */
@@ -1836,7 +1838,7 @@
 /* the glass is out of the flow now: the tube is exactly as wide as the frame picture is at the tube's height (1246x1679) */
 @media (min-width: 900px) {
   .tube {
-    width: calc((100vh - 16px) * 1246 / 1679);
+    width: calc(var(--tube-h) * 1246 / 1679);
     max-width: none;
     min-width: 0;
   }
@@ -1854,7 +1856,10 @@
     margin-top: auto;
   }
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 389px - var(--plate-h)) * 1246 / 1679)));
+    width: min(
+      100%,
+      max(160px, calc((100dvh - 389px - var(--plate-h)) * 1246 / 1679))
+    );
     align-self: center;
   }
   .panel {
@@ -1875,7 +1880,10 @@
 
 @media (min-width: 360px) and (max-width: 899px) {
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 316px - var(--plate-h)) * 1246 / 1679)));
+    width: min(
+      100%,
+      max(160px, calc((100dvh - 316px - var(--plate-h)) * 1246 / 1679))
+    );
   }
   .cam-grid {
     grid-template-columns: repeat(8, minmax(44px, 1fr));

@@ -299,7 +299,7 @@ describe('Cabinet true ending screen (Issue #86)', () => {
 describe('Cabinet model plate (#304)', () => {
   it('is an image child of .cabinet with an accessible name, and the old .maker text is gone', () => {
     const { container } = render(<Cabinet {...makeProps()} />)
-    const plate = screen.getByLabelText('Video Monitor CR-42')
+    const plate = screen.getByAltText('Video Monitor CR-42')
     expect(plate.parentElement).toBe(container.querySelector('.cabinet-foot'))
     expect(plate).toHaveAttribute('src', '/ui/model-plate.webp')
     expect(container.querySelector('.maker')).toBeNull()
@@ -357,6 +357,32 @@ describe('Cabinet model plate (#304)', () => {
     expect(rule![1]).toMatch(/background-repeat:\s*round\s+no-repeat/)
     // desktop pitch stays a 2-row grille inside the 40px plate strip
     expect(css).toMatch(/--plate-h:\s*40px;\s*--hole-p:\s*14px/)
+  })
+
+  it('pins the strip structure: bottom-aligned row, panel reserve = strip height / zoom, column guard, no old .speaker rules', () => {
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/retro.css'),
+      'utf8'
+    )
+    const foot = css.match(/\.cabinet > \.cabinet-foot\s*\{([^}]*)\}/)
+    expect(foot).not.toBeNull()
+    expect(foot![1]).toMatch(/align-items:\s*flex-end/)
+    expect(foot![1]).toMatch(/max-width:\s*100%/)
+    expect(foot![1]).toMatch(/height:\s*var\(--plate-h\)/)
+    // the panel reserves the strip (undoing its own zoom) so the controls never sit under it
+    expect(css).toMatch(
+      /\.panel\s*\{\s*padding-bottom:\s*calc\(\(var\(--plate-h\) \+ 6px\) \/ var\(--pz, 1\)\);/
+    )
+    // desktop: the picture height is capped so the control column stays wider than the plate (tall screens)
+    expect(css).toMatch(
+      /--tube-h:\s*min\(100vh - 16px, \(100vw - 30px - var\(--col-min\)\) \* 1679 \/ 1246\)/
+    )
+    expect(css).toMatch(/--col-min:\s*340px/)
+    // one place owns the grille: no other .speaker rule
+    expect(css.match(/(^|\n)\.speaker\s*\{/g)).toBeNull()
+    // the plate never leaves the strip
+    const plate = css.match(/\.cabinet-foot > \.model-plate\s*\{([^}]*)\}/)
+    expect(plate![1]).toMatch(/max-width:\s*100%/)
   })
 
   it('is in the cabinet preload list of index.html', () => {
