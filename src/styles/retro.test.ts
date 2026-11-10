@@ -138,13 +138,20 @@ describe('retro.css', () => {
     }
   })
 
-  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (380/307) + that gap (#300, #309)', () => {
+  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (380/307) + each listed term (#300, #309, #314)', () => {
     // 9px is the value kako-jun chose in #309 (18px in #300 was too wide, 3px too tight);
     // it is also >= 0.15 of the 60px knob circle. Changing it is a design decision, so pin it.
     // The .tube width constants (100dvh - Npx) are the measured height of everything except
     // the picture and include this gap, so they must move by exactly the same amount.
     const PINNED_GAP = 9
-    const BASE = { narrow: 380, wide: 307 } // constants when the gap was 0
+    // The constants = BASE + sum of TERMS. Each PR that changes the height of something other than the
+    // picture adds/changes ONE term here (and the same row in DESIGN.md §7); nothing else moves.
+    const BASE = { narrow: 380, wide: 307 } // 44px HUD windows, knob gap 0, no other terms
+    const HUD_WINDOW = { was: 44, now: 36 } // #314: the three windows (.vfd / .lamps) are 36px tall
+    const hudWindowHeights = [
+      ...px('.vfd', 'min-height'),
+      ...px('.lamps', 'min-height'),
+    ]
     const gaps: number[] = []
     const tubeConsts: { min: boolean; n: number }[] = []
     root_.walkAtRules('media', at => {
@@ -164,14 +171,17 @@ describe('retro.css', () => {
       })
     })
     expect(gaps).toEqual([PINNED_GAP])
+    expect(new Set(hudWindowHeights)).toEqual(new Set([HUD_WINDOW.now]))
+    const hudTerm = HUD_WINDOW.was - HUD_WINDOW.now // the HUD is 8px shorter, so the constant is 8px smaller
+    const TERMS = gaps[0] - hudTerm // knob gap +9, HUD window shrink -8 (later PRs add: knob shrink, plate-h)
     expect(Math.min(...gaps)).toBeGreaterThanOrEqual(
       Math.min(...px('.knob', 'height')) * 0.15
     )
     expect(tubeConsts.filter(c => !c.min).map(c => c.n)).toEqual([
-      BASE.narrow + gaps[0],
+      BASE.narrow + TERMS,
     ])
     expect(tubeConsts.filter(c => c.min).map(c => c.n)).toEqual([
-      BASE.wide + gaps[0],
+      BASE.wide + TERMS,
     ])
   })
 
