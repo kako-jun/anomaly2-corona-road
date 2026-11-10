@@ -232,4 +232,11 @@ describe('monitor frame opening (#283)', () => {
     expect(W).toBeGreaterThan(0)
     expect(H).toBeGreaterThan(0)
   })
+
+  it('draws no CSS box outline around the frame picture (no double outline)', () => {
+    for (const prop of ['border-radius', 'box-shadow'])
+      for (const v of decls('.bezel', prop))
+        expect(v.trim(), `.bezel ${prop}`).toMatch(/^(0|0px|none)$/)
+    expect(decls('.bezel', 'filter').at(-1)).toMatch(/^drop-shadow\(/)
+  })
 })
