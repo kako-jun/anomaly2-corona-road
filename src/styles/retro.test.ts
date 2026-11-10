@@ -123,7 +123,7 @@ describe('retro.css', () => {
 
   it('keeps the knob-to-label gap at a quarter of the knob height or more (#300)', () => {
     // portrait/phone rules live in @media (max-width: 899px); the base rule has no margin
-    let portraitGap: number[] = []
+    const portraitGap: number[] = []
     root_.walkAtRules('media', at => {
       if (!/max-width:\s*899px/.test(at.params)) return
       at.walkRules(rule => {
