@@ -139,6 +139,23 @@ describe('validateSave', () => {
     delete old.pendingStories
     expect(validateSave(old)?.pendingStories).toEqual([])
   })
+  it('treats an old save without endingReached as not reached (#294)', () => {
+    const old: Record<string, unknown> = { ...save() }
+    delete old.endingReached
+    expect(validateSave(old)?.endingReached).toBe(false)
+  })
+  it('keeps endingReached true and rejects a non-boolean', () => {
+    expect(validateSave(save({ endingReached: true }))?.endingReached).toBe(
+      true
+    )
+    expect(validateSave({ ...save(), endingReached: 1 })).toBeNull()
+  })
+  it('merges endingReached with OR', () => {
+    expect(mergeSave(save({ endingReached: true }), save()).endingReached).toBe(
+      true
+    )
+    expect(mergeSave(save(), save()).endingReached).toBe(false)
+  })
   it('removes duplicates from pendingStories', () => {
     expect(
       validateSave(save({ pendingStories: ['a', 'a'] }))?.pendingStories

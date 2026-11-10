@@ -29,6 +29,8 @@ export interface SaveData {
   usedChatter: string[]
   /** Story flags that are raised but whose story conversation has not been played yet (carried to the next start). */
   pendingStories: string[]
+  /** The true ending has been reached: this save can no longer start a shift, only start over (#294). */
+  endingReached: boolean
   settings?: SaveSettings
 }
 
@@ -41,6 +43,7 @@ export const emptySave = (): SaveData => ({
   usedLines: {},
   usedChatter: [],
   pendingStories: [],
+  endingReached: false,
 })
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
@@ -90,6 +93,9 @@ export const validateSave = (raw: unknown): SaveData | null => {
   // Absent in saves written before the field existed (same version): treated as none.
   const pendingStories = rec.pendingStories ?? []
   if (!isStringArray(pendingStories)) return null
+  // Absent in saves written before the ending mark existed (same version): not reached.
+  const endingReached = rec.endingReached ?? false
+  if (typeof endingReached !== 'boolean') return null
   if (
     !isRecord(flags) ||
     !Object.values(flags).every(f => typeof f === 'boolean')
@@ -111,6 +117,7 @@ export const validateSave = (raw: unknown): SaveData | null => {
     ),
     usedChatter: uniq(usedChatter),
     pendingStories: uniq(pendingStories),
+    endingReached,
   }
   if (settings !== undefined) {
     if (
@@ -148,6 +155,7 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
     usedLines,
     usedChatter: uniq([...a.usedChatter, ...b.usedChatter]),
     pendingStories: uniq([...a.pendingStories, ...b.pendingStories]),
+    endingReached: a.endingReached || b.endingReached,
   }
   const settings = b.settings ?? a.settings
   if (settings) out.settings = settings

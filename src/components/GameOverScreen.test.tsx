@@ -60,4 +60,23 @@ describe('case report', () => {
     expect(screen.getByText('TIME UP')).toBeInTheDocument()
     expect(screen.queryByText('DAWN')).toBeNull()
   })
+
+  it('after the true ending the key returns to the title instead of restarting (#294)', () => {
+    const restart = vi.fn()
+    const title = vi.fn()
+    render(
+      <GameOverScreen
+        closing="ending"
+        outcome="win"
+        stats={stats}
+        onRestart={restart}
+        endingReached
+        onTitle={title}
+      />
+    )
+    expect(screen.queryByRole('button', { name: 'RESTART SHIFT' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'BACK TO TITLE' }))
+    expect(title).toHaveBeenCalledOnce()
+    expect(restart).not.toHaveBeenCalled()
+  })
 })

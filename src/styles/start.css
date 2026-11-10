@@ -309,3 +309,38 @@ body.start-open #root {
     min-height: 48px;
   }
 }
+
+/* After the true ending (#294): only "start over", with a confirmation step. */
+.start-over {
+  align-self: center;
+  width: min(100%, 320px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.start-over-note,
+.start-over-warn {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--start-cream);
+}
+.start-over-warn {
+  color: #ffd27a;
+}
+.start-over-cancel {
+  min-height: 44px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--start-cream);
+  background: transparent;
+  border: 2px solid var(--start-cream);
+  border-radius: 6px;
+}
+.start-over-cancel:focus-visible {
+  outline: 2px solid #ffd27a;
+  outline-offset: 3px;
+}

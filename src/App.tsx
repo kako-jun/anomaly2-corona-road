@@ -7,10 +7,14 @@ import { Cabinet } from './components/Cabinet'
 import { GameOverScreen } from './components/GameOverScreen'
 import { SaveNotice } from './components/SaveNotice'
 import { preloadCabinet } from './utils/uiPreload'
+import { load } from './utils/saveData'
+import { resetProgress } from './utils/shiftProgress'
 
 function App() {
   const ready = useRef<Promise<void>>(Promise.resolve())
   const [loading, setLoading] = useState(false)
+  // Bumped after "start over" so the title re-reads the (now wiped) save.
+  const [, setResetCount] = useState(0)
   useEffect(() => {
     ready.current = preloadCabinet()
   }, [])
@@ -25,6 +29,7 @@ function App() {
     ending,
     flagEvent,
     finishEnding,
+    returnToTitle,
     startGame,
     switchCamera,
     reportAnomaly,
@@ -48,7 +53,15 @@ function App() {
   if (gameState === 'idle') {
     return (
       <>
-        <StartScreen onStart={enterShift} loading={loading} />
+        <StartScreen
+          onStart={enterShift}
+          loading={loading}
+          endingReached={load().endingReached}
+          onStartOver={() => {
+            resetProgress()
+            setResetCount(n => n + 1)
+          }}
+        />
         <SaveNotice />
       </>
     )
@@ -63,7 +76,9 @@ function App() {
           }
           outcome={gameState}
           stats={stats}
+          endingReached={load().endingReached}
           onRestart={startGame}
+          onTitle={returnToTitle}
         />
         <SaveNotice />
       </>

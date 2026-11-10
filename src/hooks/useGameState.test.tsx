@@ -855,6 +855,29 @@ describe('after the child is found', () => {
     expect(result.current.gameState).toBe('win')
   })
 
+  it('reaching the ending is saved, and a later startGame does not start a shift (#294)', () => {
+    fill()
+    seed({ flags: { child: true } })
+    const { result } = start()
+    advance(total)
+    expect(saveData.load().endingReached).toBe(true)
+    act(() => result.current.finishEnding())
+    act(() => result.current.startGame())
+    expect(result.current.gameState).toBe('win')
+    act(() => result.current.returnToTitle())
+    expect(result.current.gameState).toBe('idle')
+    act(() => result.current.startGame())
+    expect(result.current.gameState).toBe('idle')
+  })
+
+  it('an ordinary dawn does not mark the ending', () => {
+    fill()
+    const { result } = start()
+    advance(total)
+    expect(result.current.ending?.closing).toBe('dawn')
+    expect(saveData.load().endingReached).toBe(false)
+  })
+
   it('one report of an anomaly that appeared after the child makes it an ordinary dawn', () => {
     fill()
     seed({ flags: { child: true } })
@@ -932,7 +955,13 @@ describe('after the child is found', () => {
     fill()
     seed({ flags: { child: true } })
     const { result } = start()
-    advance(total)
+    advance(FIRST + 100)
+    // End the first shift by a withdraw: after the true ending itself no shift can start (#294).
+    for (let i = 0; i < DEFAULT_CONFIG.maxMisreports; i++) {
+      act(() => result.current.switchCamera(7))
+      act(() => result.current.reportAnomaly('Person'))
+    }
+    advance(TOAST_MS + 100)
     act(() => result.current.finishEnding())
     act(() => result.current.startGame())
     advance(FIRST + 100)

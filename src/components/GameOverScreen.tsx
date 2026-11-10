@@ -8,6 +8,9 @@ interface GameOverScreenProps {
   outcome: 'win' | 'lose'
   stats: GameStats
   onRestart: () => void
+  /** The true ending has been reached: no more shifts on this save, the key goes back to the title (#294). */
+  endingReached?: boolean
+  onTitle?: () => void
 }
 
 const fmtTime = (ms: number) => {
@@ -34,6 +37,8 @@ export const GameOverScreen = ({
   outcome,
   stats,
   onRestart,
+  endingReached = false,
+  onTitle,
 }: GameOverScreenProps) => {
   const save = load()
   return (
@@ -57,8 +62,12 @@ export const GameOverScreen = ({
           {save.foundIds.length}
         </p>
       </section>
-      <button type="button" className="result-restart" onClick={onRestart}>
-        RESTART SHIFT
+      <button
+        type="button"
+        className="result-restart"
+        onClick={endingReached ? onTitle : onRestart}
+      >
+        {endingReached ? 'BACK TO TITLE' : 'RESTART SHIFT'}
       </button>
     </main>
   )

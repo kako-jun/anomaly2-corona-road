@@ -1,13 +1,23 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import '../styles/start.css'
 import { misreportLampCount, misreportLimitText } from '../utils/startScreen'
 
 interface StartScreenProps {
   onStart: () => void
   loading?: boolean
+  /** The true ending was reached: the only choice is to start over from scratch (#294). */
+  endingReached?: boolean
+  /** Wipe the progress (called after the confirmation). */
+  onStartOver?: () => void
 }
 
-export const StartScreen = ({ onStart, loading = false }: StartScreenProps) => {
+export const StartScreen = ({
+  onStart,
+  loading = false,
+  endingReached = false,
+  onStartOver,
+}: StartScreenProps) => {
+  const [confirming, setConfirming] = useState(false)
   // Lock body scrolling only while this screen is mounted (no :has() dependency).
   useEffect(() => {
     document.body.classList.add('start-open')
@@ -80,15 +90,57 @@ export const StartScreen = ({ onStart, loading = false }: StartScreenProps) => {
         </div>
       </section>
 
-      <button
-        type="button"
-        className="start-go"
-        onClick={onStart}
-        disabled={loading}
-      >
-        <i aria-hidden="true" />
-        {loading ? '準備中…' : '勤務開始'}
-      </button>
+      {endingReached ? (
+        <div className="start-over">
+          <p className="start-over-note">
+            The investigation is closed. Start over to play again.
+          </p>
+          {confirming ? (
+            <>
+              <p className="start-over-warn" role="alert">
+                All progress will be erased. This cannot be undone.
+              </p>
+              <button
+                type="button"
+                className="start-go"
+                onClick={() => {
+                  setConfirming(false)
+                  onStartOver?.()
+                }}
+              >
+                <i aria-hidden="true" />
+                ERASE AND START OVER
+              </button>
+              <button
+                type="button"
+                className="start-over-cancel"
+                onClick={() => setConfirming(false)}
+              >
+                CANCEL
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="start-go"
+              onClick={() => setConfirming(true)}
+            >
+              <i aria-hidden="true" />
+              START OVER
+            </button>
+          )}
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="start-go"
+          onClick={onStart}
+          disabled={loading}
+        >
+          <i aria-hidden="true" />
+          {loading ? '準備中…' : '勤務開始'}
+        </button>
+      )}
     </main>
   )
 }

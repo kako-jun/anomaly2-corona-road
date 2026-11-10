@@ -192,3 +192,43 @@ describe('StartScreen follows a changed config', () => {
     }
   )
 })
+
+describe('StartScreen after the true ending (#294)', () => {
+  it('offers only START OVER: no 勤務開始, and the closed notice is always shown', () => {
+    render(
+      <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
+    )
+    expect(screen.queryByRole('button', { name: '勤務開始' })).toBeNull()
+    expect(screen.getAllByRole('button')).toHaveLength(1)
+    expect(
+      screen.getByRole('button', { name: 'START OVER' })
+    ).toBeInTheDocument()
+    expect(screen.getByText(/The investigation is closed/)).toBeInTheDocument()
+  })
+  it('asks once before erasing; CANCEL backs out without erasing', async () => {
+    const onStartOver = vi.fn()
+    const onStart = vi.fn()
+    render(
+      <StartScreen onStart={onStart} endingReached onStartOver={onStartOver} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    expect(onStartOver).not.toHaveBeenCalled()
+    expect(screen.getByRole('alert')).toHaveTextContent('erased')
+    await userEvent.click(screen.getByRole('button', { name: 'CANCEL' }))
+    expect(onStartOver).not.toHaveBeenCalled()
+    expect(
+      screen.getByRole('button', { name: 'START OVER' })
+    ).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    await userEvent.click(
+      screen.getByRole('button', { name: 'ERASE AND START OVER' })
+    )
+    expect(onStartOver).toHaveBeenCalledOnce()
+    expect(onStart).not.toHaveBeenCalled()
+  })
+  it('keeps the ordinary 勤務開始 key when the ending was not reached', () => {
+    render(<StartScreen onStart={vi.fn()} />)
+    expect(screen.getByRole('button', { name: '勤務開始' })).toBeInTheDocument()
+    expect(screen.queryByText(/START OVER/)).toBeNull()
+  })
+})
