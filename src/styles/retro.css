@@ -1831,7 +1831,7 @@
     margin-top: auto;
   }
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 425px) * 0.75 + 14px)));
+    width: min(100%, max(160px, calc((100dvh - 398px) * 1246 / 1679)));
     align-self: center;
   }
   .panel {
@@ -1855,7 +1855,7 @@
 
 @media (min-width: 360px) and (max-width: 899px) {
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 352px) * 0.75 + 14px)));
+    width: min(100%, max(160px, calc((100dvh - 325px) * 1246 / 1679)));
   }
   .cam-grid {
     grid-template-columns: repeat(8, minmax(44px, 1fr));
