@@ -1863,14 +1863,15 @@
     margin-top: auto;
   }
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 410px) * 0.75 + 14px)));
+    width: min(100%, max(160px, calc((100dvh - 425px) * 0.75 + 14px)));
     align-self: center;
   }
   .panel {
     gap: 4px;
   }
+  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300); the extra 15px vs the old 3px is taken out of the picture height via the two tube-width constants above and below */
   .knob {
-    margin-bottom: 3px;
+    margin-bottom: 18px;
   }
   .knob-wrap {
     flex: 1;
@@ -1886,7 +1887,7 @@
 
 @media (min-width: 360px) and (max-width: 899px) {
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 337px) * 0.75 + 14px)));
+    width: min(100%, max(160px, calc((100dvh - 352px) * 0.75 + 14px)));
   }
   .cam-grid {
     grid-template-columns: repeat(8, minmax(44px, 1fr));
