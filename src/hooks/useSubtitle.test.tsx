@@ -3,7 +3,7 @@ import { act, renderHook } from '@testing-library/react'
 import { StrictMode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as saveData from '../utils/saveData'
-import { DIALOGUE_CONFIG } from '../utils/gameConfig'
+import { DEFAULT_CONFIG, DIALOGUE_CONFIG } from '../utils/gameConfig'
 import { SUBTITLE_GAP_MS, subtitleHoldMs } from '../utils/subtitle'
 import { SubtitleInput, useSubtitle } from './useSubtitle'
 
@@ -159,6 +159,9 @@ describe('useSubtitle', () => {
 })
 
 // ---- timing helpers ------------------------------------------------------------------------
+
+/** Midpoint of the shift in ms (the midpoint comment is due here). */
+const MID_MS = DEFAULT_CONFIG.totalDurationMs / 2
 
 const GAP = SUBTITLE_GAP_MS
 const OPEN_AT = DIALOGUE_CONFIG.openingDelayMs + GAP
@@ -420,13 +423,13 @@ describe('useSubtitle: flag stories', () => {
 })
 
 describe('useSubtitle: midpoint comment', () => {
-  it('does not come at 239999 ms, comes at 240000 ms', () => {
+  it('does not come at midpoint - 1 ms, comes at the midpoint', () => {
     const d = driver()
     advance(OPENING_END)
-    d.set({ elapsedMs: 239_999 })
+    d.set({ elapsedMs: MID_MS - 1 })
     advance(2000)
     expect(shown(d.result)).toBeNull()
-    d.set({ elapsedMs: 240_000 })
+    d.set({ elapsedMs: MID_MS })
     advance(2 * GAP - 1)
     expect(shown(d.result)).toBeNull()
     advance(1)
@@ -434,10 +437,10 @@ describe('useSubtitle: midpoint comment', () => {
   })
 
   it('comes only once however long the play goes on', () => {
-    const d = driver({ elapsedMs: 240_000 })
+    const d = driver({ elapsedMs: MID_MS })
     const w = watch(d.result)
     for (let i = 0; i < 120; i++) {
-      d.set({ elapsedMs: 240_000 + i * 1000 })
+      d.set({ elapsedMs: MID_MS + i * 1000 })
       w.step(1000)
     }
     expect(w.seen.filter(t => t === 'mfa')).toHaveLength(1)
@@ -451,21 +454,21 @@ describe('useSubtitle: midpoint comment', () => {
     [4, 'mxa'],
     [5, 'mxa'],
   ])('with %i found it picks %s', (found, first) => {
-    const d = driver({ elapsedMs: 240_000, foundThisPlay: found })
+    const d = driver({ elapsedMs: MID_MS, foundThisPlay: found })
     const w = watch(d.result)
     w.step(OPENING_END + SILENCE + GAP + 10)
     expect(w.seen[2]).toBe(first)
   })
 
   it('comes before chatter', () => {
-    const d = driver({ elapsedMs: 240_000 })
+    const d = driver({ elapsedMs: MID_MS })
     const w = watch(d.result)
     w.step(OPENING_END + SILENCE + GAP + 10)
     expect(w.seen.slice(0, 3)).toEqual(['op1a', 'op1b', 'mfa'])
   })
 
   it('comes after a false report', () => {
-    const d = driver({ elapsedMs: 240_000 })
+    const d = driver({ elapsedMs: MID_MS })
     advance(OPEN_AT)
     d.set({ wrongFeedbackId: 1 })
     const w = watch(d.result)
@@ -474,7 +477,7 @@ describe('useSubtitle: midpoint comment', () => {
   })
 
   it('comes after a flag story', () => {
-    const d = driver({ elapsedMs: 240_000 })
+    const d = driver({ elapsedMs: MID_MS })
     advance(OPEN_AT)
     d.set({ flagEvent: { seq: 1, flags: ['f1'] } })
     const w = watch(d.result)
@@ -483,7 +486,7 @@ describe('useSubtitle: midpoint comment', () => {
   })
 
   it('is not used up when a false report cuts it before its first line: it plays later', () => {
-    const d = driver({ elapsedMs: 240_000 })
+    const d = driver({ elapsedMs: MID_MS })
     advance(OPENING_END + SILENCE) // the midpoint is drawn now, its first line not yet shown
     advance(100)
     d.set({ wrongFeedbackId: 1 })
@@ -534,7 +537,7 @@ describe('useSubtitle: ending', () => {
     const d = driver()
     advance(OPEN_AT)
     d.set({ wrongFeedbackId: 1, flagEvent: { seq: 1, flags: ['f1'] } })
-    d.set({ elapsedMs: 240_000 })
+    d.set({ elapsedMs: MID_MS })
     d.set({ ending: 'dawn' })
     const w = watch(d.result)
     w.step(10_000)
@@ -676,7 +679,7 @@ describe('useSubtitle: robustness', () => {
     advance(OPEN_AT)
     d.set({ wrongFeedbackId: 1, wrongAnomalyId: 'x' })
     advance(5000)
-    d.set({ flagEvent: { seq: 1, flags: ['f1'] }, elapsedMs: 240_000 })
+    d.set({ flagEvent: { seq: 1, flags: ['f1'] }, elapsedMs: MID_MS })
     advance(60_000)
     d.set({ ending: 'withdraw' })
     advance(60_000)

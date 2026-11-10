@@ -1092,7 +1092,7 @@
   margin-bottom: 20px;
 }
 
-/* SHIFT TIME: label and digits centred in the window; REPORTS digits centred */
+/* TIME: label and digits centred in the window; REPORTS digits centred */
 
 .vfd--center {
   justify-content: center;
