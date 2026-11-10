@@ -435,7 +435,8 @@ def selftest(base_path, opts):
     aspect mismatch, no change, full redraw, bad --box. opts supplies --threshold/--dilate/--feather."""
     from PIL import ImageDraw
 
-    print("note: stderr lines such as '--box needs exactly 4 values' come from the intentional bad-input cases (bad_box / fail_*); only the PASS/FAIL table below counts.", file=sys.stderr)
+    print("note: stderr lines such as '--box needs exactly 4 values' come from the intentional bad-input cases\n"
+          "(bad_box / fail_*); only the PASS/FAIL table below counts.", file=sys.stderr)
     base = Image.open(base_path).convert("RGB")
     W, H = base.size
     rng = np.random.default_rng(1)
@@ -530,6 +531,28 @@ def selftest(base_path, opts):
         ok_all &= bool(ok)
         rows.append((name, "-", "-", "-", None, None, "PASS" if ok else "FAIL " + note))
 
+    # parser known-answer case: a tiny hand-written inventory with literal expected values, independent of the real file,
+    # so a parser bug (offset, x/y swap, wrong size) cannot cancel itself out the way a real-inventory-derived `want` would
+    fx = os.path.join(tmpd, "fixture-inventory.md")
+    with open(fx, "w", encoding="utf-8") as f:
+        f.write("## CAM 07 \u2014 Fixture (`cam7.webp`, 675\u00d7900)\n\n"
+                "| \u9806 | \u8981\u7d20ID | \u77e9\u5f62 | \u5199\u3063\u3066\u3044\u308b\u3082\u306e |\n| --: | --- | --: | --- |\n"
+                "| 1 | CAM07-E01 | `(3,4)\u2013(100,200)` | alpha |\n"
+                "| 2 | CAM07-E02 | `(12.5,20)\u2013(999.5,1000)` | beta |\n")
+    try:
+        pf = parse_inventory(fx)
+        c7 = pf.get(7, {})
+        e1 = c7.get("elements", {}).get("CAM07-E01", {})
+        e2 = c7.get("elements", {}).get("CAM07-E02", {})
+        elem_case("parser_known_answer",
+                  c7.get("file") == "cam7.webp" and c7.get("size") == (675, 900) and list(c7["elements"]) == ["CAM07-E01", "CAM07-E02"]
+                  and e1.get("rect") == (3.0, 4.0, 100.0, 200.0) and e1.get("desc") == "alpha"
+                  and e2.get("rect") == (12.5, 20.0, 999.5, 1000.0) and e2.get("desc") == "beta"
+                  and norm_to_px(e1["rect"], c7["size"]) == (2, 3, 68, 180),
+                  repr(pf))
+    except Exception as e:
+        elem_case("parser_known_answer", False, repr(e))
+
     img1 = os.path.join(os.path.dirname(os.path.abspath(INVENTORY)), "..", "public", "images")
     img1 = os.path.normpath(img1)
     b1 = os.path.join(img1, "cam1.webp")
@@ -537,7 +560,9 @@ def selftest(base_path, opts):
         W1, H1 = Image.open(b1).size
         try:
             box, info = lookup_element("CAM01-E12", b1, 0)
-            # expected px derived from the inventory rect itself (not hard-coded) so inventory corrections cannot make this stale
+            # expected px derived from the inventory rect so inventory corrections cannot make this stale; parser correctness
+            # itself is pinned by parser_known_answer above. parse_inventory() is called afresh because lookup_element
+            # returns only the resolved box, not the parsed inventory.
             r1 = parse_inventory()[1]["elements"]["CAM01-E12"]["rect"]
             want = (math.floor(r1[0] * W1 / 1000), math.floor(r1[1] * H1 / 1000), math.ceil(r1[2] * W1 / 1000), math.ceil(r1[3] * H1 / 1000))
             elem_case("element_px_conversion", tuple(box) == want and info["element_id"] == "CAM01-E12" and "店先" in info["element_description"], f"{box} vs {want}")
