@@ -221,9 +221,7 @@ describe('StartScreen after the true ending (#294)', () => {
       screen.getByRole('button', { name: 'START OVER' })
     ).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
-    await userEvent.click(
-      screen.getByRole('button', { name: 'ERASE ALL' })
-    )
+    await userEvent.click(screen.getByRole('button', { name: 'ERASE ALL' }))
     expect(onStartOver).toHaveBeenCalledOnce()
     expect(onStart).not.toHaveBeenCalled()
   })
@@ -233,7 +231,9 @@ describe('StartScreen after the true ending (#294)', () => {
     expect(screen.queryByText(/START OVER/)).toBeNull()
   })
   it('moves keyboard focus: CANCEL on confirm, START OVER after cancel or Escape', async () => {
-    render(<StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />)
+    render(
+      <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
+    )
     await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
     expect(document.activeElement).toBe(
       screen.getByRole('button', { name: 'CANCEL' })
@@ -249,6 +249,29 @@ describe('StartScreen after the true ending (#294)', () => {
     expect(document.activeElement).toBe(
       screen.getByRole('button', { name: 'START OVER' })
     )
+  })
+  it('Escape cancels even after a click on the margin moved focus to body', async () => {
+    render(
+      <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    await userEvent.click(document.body)
+    expect(document.activeElement).toBe(document.body)
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('alert')).toBeNull()
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'START OVER' })
+    )
+  })
+  it('stops listening for Escape once unmounted', async () => {
+    const spy = vi.spyOn(document, 'removeEventListener')
+    const { unmount } = render(
+      <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    unmount()
+    expect(spy.mock.calls.some(c => c[0] === 'keydown')).toBe(true)
+    spy.mockRestore()
   })
   it('moves focus to 勤務開始 after the erase has taken effect', async () => {
     const Host = () => {

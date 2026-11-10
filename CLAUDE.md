@@ -12,7 +12,7 @@
 
 > **Dialogue system direction (kako-jun, 2026-10-30):** the story advances across playthroughs (loops), so progress needs flag management. Dialogue has three patterns: fully random chatter, loop-progress story lines, and per-anomaly lines. Each anomaly gets several alternative lines and a "used once" record to avoid repeats. Design notes and open questions live in Issue #29. Save data design (storage choice, schema, rules): [`docs/save-data.md`](docs/save-data.md).
 
-> **Dialogue wiring (#74):** the ledger [`dialogue/`](dialogue/README.md) is the single source of the lines (`virtual:dialogue`, validated at build). `src/hooks/useSubtitle.ts` plays it: the opening after `openingDelayMs` (4 s), then chatter conversations (2-4 lines) with `chatterIntervalMs` (30 s) of silence between them; a false report cuts in at once (the anomaly's own lines first, then the common ones; one waiting before the opening comes right after it); a flag that just rose cuts in after the line on screen (a story already waiting at the start does not cut the opening; it plays right after it), and a flag's story is never cut by a false report or another flag (an unplayed story is kept in the save as `pendingStories` and plays at the next start); a conversation counts as used when its first line is shown; one midpoint comment at `midpointAtSec` (240 s); at the end the closing conversation plays before the result screen. Any entry may carry `unlock: <flag>`: until that flag is raised it is not a candidate and is not marked used (#266). Selection and priority are the pure functions in `src/utils/dialogueEngine.ts`; counting, flags and loops are saved by `src/utils/shiftProgress.ts` through `src/utils/saveData.ts`. Settings: `DIALOGUE_CONFIG` in `src/utils/gameConfig.ts`. `SaveNotice` shows "進行を保存できません" whenever storage fails. True ending (#86, `src/utils/endingJudge.ts`): once the `child` flag is saved, anomalies come faster and more at once (`CHILD_FOUND_PACING` in `gameConfig.ts`, placeholder values) for the rest of that shift and for later shifts (the flag persists); if time runs out and at least one anomaly appeared after the child was found but none of those was reported, the result is `ending` (a win, one loop; anomalies from before the child and false reports do not count; a withdraw is never `ending`; no `final` flag is used). On `ending` the closing conversation `result: ending` plays over `public/images/ending-bar.webp` (`ENDING_BAR_CAMERA`, shown instead of the camera; the monitor frame stays) and then the ordinary win screen follows. Reaching it saves `endingReached` (#294): `startGame` then refuses to start, the result key becomes BACK TO TITLE and the title offers START OVER only (one confirmation, then `resetProgress()` wipes everything but the display settings; `docs/save-data.md`). Reiwa anomalies (#83): an image+produced ledger entry with the explicit optional field `reiwa: true` (validated by the ledger parser; currently the six CR-RZ-01..06 entries; `candidate_id` is only a production number and is not used to decide) carries `reiwa: true` in `virtual:anomalies`, and `REIWA_IDS` in `shiftProgress.ts` is derived from those (no id list in code; the ledger is the only source). `child` therefore rises once the `dialogue/flags.yaml` condition holds (3 distinct Reiwa reports + `foundUnique` + `elder3`). Reiwa entries are not draw candidates until the `elder3` flag is saved (`pickLedgerEntry`'s `reiwaUnlocked`, read from the save at each spawn, so one raised mid-shift counts from the next spawn); after that they join the same weighted draw. The sound Reiwa anomalies (CR-RZ-07..09, non-image) are not implemented (#79). Not connected yet: the 22:00-06:00 / 8 min clock.
+> **Dialogue wiring (#74):** the ledger [`dialogue/`](dialogue/README.md) is the single source of the lines (`virtual:dialogue`, validated at build). `src/hooks/useSubtitle.ts` plays it: the opening after `openingDelayMs` (4 s), then chatter conversations (2-4 lines) with `chatterIntervalMs` (30 s) of silence between them; a false report cuts in at once (the anomaly's own lines first, then the common ones; one waiting before the opening comes right after it); a flag that just rose cuts in after the line on screen (a story already waiting at the start does not cut the opening; it plays right after it), and a flag's story is never cut by a false report or another flag (an unplayed story is kept in the save as `pendingStories` and plays at the next start); a conversation counts as used when its first line is shown; one midpoint comment at `midpointAtSec` (half of `totalDurationMs`, 240 s); at the end the closing conversation plays before the result screen. Any entry may carry `unlock: <flag>`: until that flag is raised it is not a candidate and is not marked used (#266). Selection and priority are the pure functions in `src/utils/dialogueEngine.ts`; counting, flags and loops are saved by `src/utils/shiftProgress.ts` through `src/utils/saveData.ts`. Settings: `DIALOGUE_CONFIG` in `src/utils/gameConfig.ts`. `SaveNotice` shows "進行を保存できません" whenever storage fails. True ending (#86, `src/utils/endingJudge.ts`): once the `child` flag is saved, anomalies come faster and more at once (`CHILD_FOUND_PACING` in `gameConfig.ts`, placeholder values) for the rest of that shift and for later shifts (the flag persists); if time runs out and at least one anomaly appeared after the child was found but none of those was reported, the result is `ending` (a win, one loop; anomalies from before the child and false reports do not count; a withdraw is never `ending`; no `final` flag is used). On `ending` the closing conversation `result: ending` plays over `public/images/ending-bar.webp` (`ENDING_BAR_CAMERA`, shown instead of the camera; the monitor frame stays) and then the ordinary win screen follows. Reaching it saves `endingReached` (#294): `startGame` then refuses to start, the result key becomes BACK TO TITLE and the title offers START OVER only (one confirmation, then `resetProgress()` wipes everything but the display settings and raises the save's `epoch` (generation number) so the reset also wins over other tabs' older memory; the source of truth is `docs/save-data.md`). Reiwa anomalies (#83): an image+produced ledger entry with the explicit optional field `reiwa: true` (validated by the ledger parser; currently the six CR-RZ-01..06 entries; `candidate_id` is only a production number and is not used to decide) carries `reiwa: true` in `virtual:anomalies`, and `REIWA_IDS` in `shiftProgress.ts` is derived from those (no id list in code; the ledger is the only source). `child` therefore rises once the `dialogue/flags.yaml` condition holds (3 distinct Reiwa reports + `foundUnique` + `elder3`). Reiwa entries are not draw candidates until the `elder3` flag is saved (`pickLedgerEntry`'s `reiwaUnlocked`, read from the save at each spawn, so one raised mid-shift counts from the next spawn); after that they join the same weighted draw. The sound Reiwa anomalies (CR-RZ-07..09, non-image) are not implemented (#79).
 
 ---
 
@@ -24,16 +24,17 @@
 
 #### 1. Time System
 
-- **Total Duration**: 6 minutes (360 seconds)
-- **In-game Time**: 0:00 AM - 6:00 AM
-- **Real-time Mapping**: 1 real minute = 1 in-game hour
-- **Win Condition**: Survive until 6:00 AM
+- **Total Duration**: 8 minutes (480 seconds)
+- **In-game Time**: 22:00 - 06:00 (`msToGameTime`; label `TIME`)
+- **Real-time Mapping**: 1 real second = 1 in-game minute
+- **Phases**: thirds of the shift (derived from `totalDurationMs`)
+- **Win Condition**: Survive until 06:00 AM
 
 #### 2. Anomaly System
 
 - **First Anomaly Delay**: 12 seconds
 - **Spawn Interval**: 30 seconds (cap of 2 concurrent — see Game Balance)
-- **Total Anomalies**: 6-11 per playthrough depending on report cadence
+- **Total Anomalies**: up to 16 per 8-minute playthrough (16 if every anomaly is reported promptly; about 11 when late reports stall the simultaneous-anomaly cap)
 - **Source**: the anomaly ledger `prompts/anomalies.yaml` (single source of truth for ALL anomalies: image / non*image, produced / planned; terms: glossary in `prompts/README.md`; format and promotion rule in `prompts/README.md` "台帳の書式", counts via `npm run ledger:summary [ledger path]`, Node >=22.18 for type stripping, see `engines` in package.json). The game draws only from `kind: image` + `status: produced` entries. Each of those is a transparent WebP overlay (`assets/anomaly-overlays/camNN/*.webp`) drawn over the camera's base photo at the ledger's pixel position. The game never tells the player where or what: no lamp, no description, no on-screen hint — spotting the difference \_is\* the game (#5).
 - **How it is wired** (#46): `vite.config.ts` validates every ledger entry and reads the image+produced ones into the `virtual:anomalies` module (only `id`, camera, category, optional `also_categories`, `anomaly_type`, overlay path, origin, size, and `reiwa: true` for a Reiwa entry; a broken entry fails the build and names the entry); `src/data/anomalyLedger.ts` resolves overlay URLs; `src/utils/anomalyLedger.ts` / `anomalyData.ts` / `anomalyOverlay.ts` are the pure parse / pick / placement helpers; `CameraView.tsx` draws the overlay (order: base photo, glow, overlay, then scanlines etc.); the overlay images are preloaded on idle time once play starts (`src/utils/preload.ts`). Minimum browser: CSS container query size units (Safari 16+ / Chrome 105+ / Firefox 110+); older ones show the photo uncovered but visible, and overlay percentages still hold. Selection (#221): only a camera with no anomaly now and an entry not already used this shift, drawn in four steps so the ledger's skew (many `add_object`, few `displace`) is damped: camera (uniform), then category (weighted by its unused count ^ 0.75), then `anomaly_type` (same weight), then one entry (uniform); the counts are the unused entries inside the chosen camera, and the exponent is `DRAW_WEIGHT_EXPONENT` (0.75) in `gameConfig.ts` (0 uniform, 1 proportional to count); empty categories / types are never candidates; when the ledger runs out, spawning stops; if only no camera is free, it retries after 1 s instead of waiting a whole interval; an entry whose image cannot be resolved is skipped with a console warning. Playthrough-to-playthrough repeat avoidance needs save data (not implemented, `docs/save-data.md`).
 - **Categories**: 5 types (the ledger's `category`, plus the optional `also_categories` array for a genuinely split anomaly — any of them is a correct report; definitions and the subject-based boundary are in `prompts/README.md` "カテゴリ"; the correct report is the category of the anomaly on the camera you are watching). The SELECT CATEGORY dialog shows a handwritten note under every key (always visible, English only; font Caveat self-hosted in `public/fonts/`, OFL)
@@ -49,19 +50,19 @@ Anomalies become progressively more disturbing and rule-breaking:
 
 > The phases below are the design intent. The implementation currently does not weight the ledger by phase (the entry comes from the four-step draw in "Selection" under "How it is wired": camera, then category, then `anomaly_type`, then one unused entry); `Anomaly.phase` is only recorded.
 
-**Early Phase (0:00 - 2:00)**
+**Early Phase (22:00 - 00:40 in game, 0-160 s real)**
 
 - Small, subtle anomalies
 - Focus: Objects and environment
 - Examples: Missing signs, flickering lights, frozen timestamps
 
-**Mid Phase (2:00 - 4:00)**
+**Mid Phase (00:40 - 03:20 in game, 160-320 s real)**
 
 - More obvious environmental changes
 - Introduction of human elements
 - Examples: Camera angle shifts, corridor elongation, backwards movement
 
-**Late Phase (4:00 - 6:00)**
+**Late Phase (03:20 - 06:00 in game, 320-480 s real)**
 
 - Surreal and meta-anomalies
 - Rules themselves break down
@@ -82,7 +83,7 @@ Meta-anomalies challenge the player's trust in the game interface itself (not im
 
 **Win Conditions:**
 
-- Survive until 6:00 AM
+- Survive until 06:00 AM
 - Correctly report at least 4 anomalies
 
 **Lose Conditions:**
@@ -321,7 +322,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 
 #### 4.4 Endless Mode
 
-- [ ] Continue past 6:00 AM
+- [ ] Continue past 06:00 AM
 - [ ] Increasing difficulty
 - [ ] Leaderboard integration
 - [ ] Score multipliers
@@ -471,7 +472,7 @@ src/
 ### Player Experience Goals
 
 - **First Play**: 30-40% win rate (challenging but achievable)
-- **Average Playtime**: 6 minutes (one full shift)
+- **Average Playtime**: 8 minutes (one full shift)
 - **Replay Rate**: 50%+ players try again after losing
 - **Scary Factor**: At least 1 genuine scare per playthrough
 

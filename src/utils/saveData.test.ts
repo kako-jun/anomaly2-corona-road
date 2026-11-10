@@ -509,7 +509,8 @@ describe('createSaveStore.probe', () => {
 
 describe('epoch (reset generation)', () => {
   it('reads a save without epoch as 0 and rejects a bad epoch', () => {
-    const { epoch: _e, ...old } = save()
+    const old: Partial<SaveData> = save()
+    delete old.epoch
     expect(validateSave(old)?.epoch).toBe(0)
     expect(validateSave(save({ epoch: -1 }))).toBeNull()
     expect(validateSave({ ...save(), epoch: 'x' })).toBeNull()
@@ -555,6 +556,41 @@ describe('epoch (reset generation)', () => {
       endingReached: false,
     })
     expect(b.load().endingReached).toBe(false)
+  })
+  it('rejects an epoch beyond the safe integers as broken', () => {
+    expect(validateSave({ ...save(), epoch: 1e300 })).toBeNull()
+    expect(validateSave({ ...save(), epoch: 2 ** 53 })).toBeNull()
+    expect(
+      validateSave(save({ epoch: Number.MAX_SAFE_INTEGER }))
+    ).not.toBeNull()
+    const bad = JSON.stringify({ ...save(), epoch: 1e300 })
+    const { storage, data } = fakeStorage({ [SAVE_KEY]: bad })
+    expect(createSaveStore({ getStorage: () => storage }).load()).toEqual(
+      emptySave()
+    )
+    expect(data.get(BROKEN_KEY)).toBe(bad)
+  })
+  it('latest(): a larger epoch in storage beats a smaller one in memory', () => {
+    const { storage } = fakeStorage()
+    const b = createSaveStore({ getStorage: () => storage })
+    b.update(() => save({ foundTotal: 9, foundIds: ['x'] }))
+    storage.setItem(
+      SAVE_KEY,
+      JSON.stringify(save({ epoch: 4, foundTotal: 1, foundIds: ['y'] }))
+    )
+    expect(b.load()).toMatchObject({ epoch: 4, foundTotal: 1, foundIds: ['y'] })
+  })
+  it('resumes from epoch 0 after a broken save is set aside', () => {
+    const { storage, data } = fakeStorage({ [SAVE_KEY]: '{oops' })
+    const s = createSaveStore({ getStorage: () => storage })
+    expect(s.load().epoch).toBe(0)
+    const next = s.update(cur => ({ ...cur, foundTotal: 2 }))
+    expect(next).toMatchObject({ epoch: 0, foundTotal: 2 })
+    expect(JSON.parse(data.get(SAVE_KEY) as string)).toMatchObject({
+      epoch: 0,
+      foundTotal: 2,
+    })
+    expect(data.get(BROKEN_KEY)).toBe('{oops')
   })
   it('works in memory only when storage is unusable', () => {
     const s = createSaveStore({ getStorage: () => null })

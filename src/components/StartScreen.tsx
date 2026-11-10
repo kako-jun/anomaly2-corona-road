@@ -31,6 +31,17 @@ export const StartScreen = ({
       startOverRef.current?.focus()
     }
   }, [confirming])
+  // Escape cancels the confirmation wherever the focus is (a click on the margin moves it to body).
+  useEffect(() => {
+    if (!confirming) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      focusAfter.current = 'cancel'
+      setConfirming(false)
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [confirming])
   useEffect(() => {
     if (!endingReached && focusAfter.current === 'erase') {
       focusAfter.current = null
@@ -115,15 +126,7 @@ export const StartScreen = ({
             The investigation is closed. Start over to play again.
           </p>
           {confirming ? (
-            <div
-              className="start-over-confirm"
-              onKeyDown={e => {
-                if (e.key === 'Escape') {
-                  focusAfter.current = 'cancel'
-                  setConfirming(false)
-                }
-              }}
-            >
+            <div className="start-over-confirm">
               <p className="start-over-warn" role="alert">
                 All progress will be erased. This cannot be undone.
               </p>

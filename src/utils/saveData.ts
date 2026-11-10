@@ -58,6 +58,10 @@ const isRecord = (v: unknown): v is Record<string, unknown> =>
 const isCount = (v: unknown): v is number =>
   typeof v === 'number' && Number.isInteger(v) && v >= 0
 
+// The generation number is incremented on every reset, so it must stay exactly representable.
+const isEpoch = (v: unknown): v is number =>
+  typeof v === 'number' && Number.isSafeInteger(v) && v >= 0
+
 const isStringArray = (v: unknown): v is string[] =>
   Array.isArray(v) && v.every(s => typeof s === 'string')
 
@@ -104,7 +108,7 @@ export const validateSave = (raw: unknown): SaveData | null => {
   if (typeof endingReached !== 'boolean') return null
   // Absent in saves written before generations existed (same version): generation 0.
   const epoch = rec.epoch ?? 0
-  if (!isCount(epoch)) return null
+  if (!isEpoch(epoch)) return null
   if (
     !isRecord(flags) ||
     !Object.values(flags).every(f => typeof f === 'boolean')

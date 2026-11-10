@@ -91,6 +91,14 @@ const finishLoad = (img: HTMLImageElement) => {
 const frameOf = (c: HTMLElement) =>
   c.querySelector('.pic__frame') as HTMLElement
 
+describe('CameraView subtitle container', () => {
+  it('renders .movie-sub inside .glass, the size container its cqw font-size resolves against (#295)', () => {
+    const { container } = render(<CameraView {...props()} />)
+    const sub = container.querySelector('.movie-sub') as HTMLElement
+    expect(sub.closest('.glass')).not.toBeNull()
+  })
+})
+
 describe('CameraView anomaly overlay', () => {
   it('shows no overlay before the base photo has loaded', () => {
     const { container } = render(

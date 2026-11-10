@@ -36,7 +36,7 @@ export interface Camera {
 }
 
 export interface GameConfig {
-  totalDurationMs: number // 6 minutes = 360000ms
+  totalDurationMs: number // 8 minutes = 480000ms (22:00 -> 06:00 in game)
   firstAnomalyDelayMs: number // time before the very first anomaly spawn
   anomalyIntervalMs: number // average spawn cadence
   maxConcurrentAnomalies: number // spawn skipped while at this cap
@@ -45,7 +45,7 @@ export interface GameConfig {
 }
 
 export interface GameStats {
-  currentTime: number // 0-360000ms
+  currentTime: number // 0-480000ms
   correctReports: number
   misreports: number
   totalAnomalies: number
