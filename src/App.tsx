@@ -1,5 +1,5 @@
 import './App.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useReducer, useRef, useState } from 'react'
 import './styles/retro.css'
 import { useGameState } from './hooks/useGameState'
 import { StartScreen } from './components/StartScreen'
@@ -7,14 +7,23 @@ import { Cabinet } from './components/Cabinet'
 import { GameOverScreen } from './components/GameOverScreen'
 import { SaveNotice } from './components/SaveNotice'
 import { preloadCabinet } from './utils/uiPreload'
-import { load } from './utils/saveData'
+import { SAVE_KEY, load } from './utils/saveData'
 import { resetProgress } from './utils/shiftProgress'
 
 function App() {
   const ready = useRef<Promise<void>>(Promise.resolve())
   const [loading, setLoading] = useState(false)
-  // Bumped after "start over" so the title re-reads the (now wiped) save.
-  const [, setResetCount] = useState(0)
+  // Bumped to re-read the save: after "start over", and when another tab changes it.
+  const [, refresh] = useReducer((n: number) => n + 1, 0)
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== null && e.key !== SAVE_KEY) return
+      load()
+      refresh()
+    }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
   useEffect(() => {
     ready.current = preloadCabinet()
   }, [])
@@ -59,7 +68,7 @@ function App() {
           endingReached={load().endingReached}
           onStartOver={() => {
             resetProgress()
-            setResetCount(n => n + 1)
+            refresh()
           }}
         />
         <SaveNotice />

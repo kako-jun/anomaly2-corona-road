@@ -61,6 +61,29 @@ describe('case report', () => {
     expect(screen.queryByText('DAWN')).toBeNull()
   })
 
+  it.each([
+    ['dawn', 'win'],
+    ['withdraw', 'lose'],
+  ] as const)(
+    'keeps RESTART SHIFT after %s when the ending was not reached (#294)',
+    (closing, outcome) => {
+      const restart = vi.fn()
+      render(
+        <GameOverScreen
+          closing={closing}
+          outcome={outcome}
+          stats={stats}
+          onRestart={restart}
+          endingReached={false}
+          onTitle={vi.fn()}
+        />
+      )
+      expect(screen.queryByRole('button', { name: 'BACK TO TITLE' })).toBeNull()
+      fireEvent.click(screen.getByRole('button', { name: 'RESTART SHIFT' }))
+      expect(restart).toHaveBeenCalledOnce()
+    }
+  )
+
   it('after the true ending the key returns to the title instead of restarting (#294)', () => {
     const restart = vi.fn()
     const title = vi.fn()

@@ -876,6 +876,10 @@ describe('after the child is found', () => {
     advance(total)
     expect(result.current.ending?.closing).toBe('dawn')
     expect(saveData.load().endingReached).toBe(false)
+    act(() => result.current.finishEnding())
+    act(() => result.current.returnToTitle())
+    act(() => result.current.startGame())
+    expect(result.current.gameState).toBe('playing')
   })
 
   it('one report of an anomaly that appeared after the child makes it an ordinary dawn', () => {

@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { DEFAULT_CONFIG } from '../utils/gameConfig'
 import { StartScreen } from './StartScreen'
@@ -221,7 +222,7 @@ describe('StartScreen after the true ending (#294)', () => {
     ).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
     await userEvent.click(
-      screen.getByRole('button', { name: 'ERASE AND START OVER' })
+      screen.getByRole('button', { name: 'ERASE ALL' })
     )
     expect(onStartOver).toHaveBeenCalledOnce()
     expect(onStart).not.toHaveBeenCalled()
@@ -230,5 +231,41 @@ describe('StartScreen after the true ending (#294)', () => {
     render(<StartScreen onStart={vi.fn()} />)
     expect(screen.getByRole('button', { name: '勤務開始' })).toBeInTheDocument()
     expect(screen.queryByText(/START OVER/)).toBeNull()
+  })
+  it('moves keyboard focus: CANCEL on confirm, START OVER after cancel or Escape', async () => {
+    render(<StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />)
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'CANCEL' })
+    )
+    await userEvent.keyboard('{Enter}')
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'START OVER' })
+    )
+    await userEvent.keyboard('{Enter}')
+    expect(screen.getByRole('alert')).toBeInTheDocument()
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('alert')).toBeNull()
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'START OVER' })
+    )
+  })
+  it('moves focus to 勤務開始 after the erase has taken effect', async () => {
+    const Host = () => {
+      const [ended, setEnded] = useState(true)
+      return (
+        <StartScreen
+          onStart={vi.fn()}
+          endingReached={ended}
+          onStartOver={() => setEnded(false)}
+        />
+      )
+    }
+    render(<Host />)
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    await userEvent.click(screen.getByRole('button', { name: 'ERASE ALL' }))
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: '勤務開始' })
+    )
   })
 })

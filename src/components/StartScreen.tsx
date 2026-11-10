@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import '../styles/start.css'
 import { misreportLampCount, misreportLimitText } from '../utils/startScreen'
 
@@ -18,6 +18,25 @@ export const StartScreen = ({
   onStartOver,
 }: StartScreenProps) => {
   const [confirming, setConfirming] = useState(false)
+  // Keyboard focus follows the confirmation: CANCEL (the safe side) when it opens, START OVER when
+  // it is cancelled, and 勤務開始 once the erase has taken effect.
+  const cancelRef = useRef<HTMLButtonElement>(null)
+  const startOverRef = useRef<HTMLButtonElement>(null)
+  const goRef = useRef<HTMLButtonElement>(null)
+  const focusAfter = useRef<'cancel' | 'erase' | null>(null)
+  useEffect(() => {
+    if (confirming) cancelRef.current?.focus()
+    else if (focusAfter.current === 'cancel') {
+      focusAfter.current = null
+      startOverRef.current?.focus()
+    }
+  }, [confirming])
+  useEffect(() => {
+    if (!endingReached && focusAfter.current === 'erase') {
+      focusAfter.current = null
+      goRef.current?.focus()
+    }
+  }, [endingReached])
   // Lock body scrolling only while this screen is mounted (no :has() dependency).
   useEffect(() => {
     document.body.classList.add('start-open')
@@ -96,7 +115,15 @@ export const StartScreen = ({
             The investigation is closed. Start over to play again.
           </p>
           {confirming ? (
-            <>
+            <div
+              className="start-over-confirm"
+              onKeyDown={e => {
+                if (e.key === 'Escape') {
+                  focusAfter.current = 'cancel'
+                  setConfirming(false)
+                }
+              }}
+            >
               <p className="start-over-warn" role="alert">
                 All progress will be erased. This cannot be undone.
               </p>
@@ -104,23 +131,29 @@ export const StartScreen = ({
                 type="button"
                 className="start-go"
                 onClick={() => {
+                  focusAfter.current = 'erase'
                   setConfirming(false)
                   onStartOver?.()
                 }}
               >
                 <i aria-hidden="true" />
-                ERASE AND START OVER
+                ERASE ALL
               </button>
               <button
+                ref={cancelRef}
                 type="button"
                 className="start-over-cancel"
-                onClick={() => setConfirming(false)}
+                onClick={() => {
+                  focusAfter.current = 'cancel'
+                  setConfirming(false)
+                }}
               >
                 CANCEL
               </button>
-            </>
+            </div>
           ) : (
             <button
+              ref={startOverRef}
               type="button"
               className="start-go"
               onClick={() => setConfirming(true)}
@@ -132,6 +165,7 @@ export const StartScreen = ({
         </div>
       ) : (
         <button
+          ref={goRef}
           type="button"
           className="start-go"
           onClick={onStart}

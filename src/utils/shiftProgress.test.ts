@@ -183,6 +183,7 @@ describe('recordEndingReached / resetProgress (#294)', () => {
     p.resetProgress()
     expect(p.load()).toEqual({
       ...saveData.emptySave(),
+      epoch: 1,
       settings: { brightness: 30, contrast: 70 },
     })
     expect(

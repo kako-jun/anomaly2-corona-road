@@ -75,6 +75,7 @@ export const recordEndingReached = (): void => {
 export const resetProgress = (): void => {
   update(cur => ({
     ...emptySave(),
+    epoch: cur.epoch + 1,
     ...(cur.settings ? { settings: cur.settings } : {}),
   }))
 }

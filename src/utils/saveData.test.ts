@@ -506,3 +506,60 @@ describe('createSaveStore.probe', () => {
     expect(store.canPersist()).toBe(false)
   })
 })
+
+describe('epoch (reset generation)', () => {
+  it('reads a save without epoch as 0 and rejects a bad epoch', () => {
+    const { epoch: _e, ...old } = save()
+    expect(validateSave(old)?.epoch).toBe(0)
+    expect(validateSave(save({ epoch: -1 }))).toBeNull()
+    expect(validateSave({ ...save(), epoch: 'x' })).toBeNull()
+    expect(validateSave(save({ epoch: 3 }))?.epoch).toBe(3)
+  })
+  it('a higher epoch wins whole; the older progress is dropped', () => {
+    const old = save({
+      foundTotal: 40,
+      foundIds: ['a'],
+      loops: 5,
+      flags: { child: true },
+      endingReached: true,
+      usedChatter: ['x'],
+    })
+    const reset = save({ epoch: 1 })
+    expect(mergeSave(old, reset)).toEqual(reset)
+    expect(mergeSave(reset, old)).toEqual(reset)
+  })
+  it('keeps the loser settings when the winner has none; same epoch still merges', () => {
+    const s = { brightness: 1, contrast: 2 }
+    expect(
+      mergeSave(save({ settings: s }), save({ epoch: 1 })).settings
+    ).toEqual(s)
+    const m = mergeSave(
+      save({ epoch: 2, foundTotal: 1, foundIds: ['a'] }),
+      save({ epoch: 2, foundTotal: 4, foundIds: ['b'] })
+    )
+    expect(m).toMatchObject({ epoch: 2, foundTotal: 4, foundIds: ['a', 'b'] })
+  })
+  it('a stale tab (memory) cannot undo a reset written by another tab', () => {
+    const { storage, data } = fakeStorage()
+    const a = createSaveStore({ getStorage: () => storage })
+    const b = createSaveStore({ getStorage: () => storage })
+    a.update(() => save({ foundTotal: 40, loops: 5, endingReached: true }))
+    b.load()
+    a.update(cur => ({ ...save(), epoch: cur.epoch + 1 }))
+    b.update(cur => ({ ...cur, foundTotal: cur.foundTotal + 1 }))
+    const stored = JSON.parse(data.get(SAVE_KEY) as string)
+    expect(stored).toMatchObject({
+      epoch: 1,
+      foundTotal: 1,
+      loops: 0,
+      endingReached: false,
+    })
+    expect(b.load().endingReached).toBe(false)
+  })
+  it('works in memory only when storage is unusable', () => {
+    const s = createSaveStore({ getStorage: () => null })
+    s.update(cur => ({ ...cur, foundTotal: 3 }))
+    s.update(cur => ({ ...save(), epoch: cur.epoch + 1 }))
+    expect(s.load()).toMatchObject({ epoch: 1, foundTotal: 0 })
+  })
+})
