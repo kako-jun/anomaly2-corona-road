@@ -5,12 +5,12 @@ import type { NoteRow, NoteView } from '../utils/investigationNote'
 import './investigationNote.css'
 
 /** The paper is drawn at this fixed size and scaled to fit the screen, so it never scrolls. */
-export const PAPER_W = 340
-export const PAPER_H = 620
+const PAPER_W = 340
+const PAPER_H = 620
 const MARGIN = 12
 
 /** The scale that fits the paper into the window (both width and height), recomputed on resize. */
-export const fitScale = (winW: number, winH: number): number =>
+const fitScale = (winW: number, winH: number): number =>
   Math.max(0.1, Math.min((winW - MARGIN) / PAPER_W, (winH - MARGIN) / PAPER_H))
 
 const useFitScale = (): number => {
@@ -29,13 +29,13 @@ const useFitScale = (): number => {
 
 /** Sketches of the four missing people (the detective's poor drawings), in frame order. */
 const FOUND_SKETCH = [
-  '/ui/note/elder1.svg',
-  '/ui/note/elder2.svg',
-  '/ui/note/elder3.svg',
-  '/ui/note/child.svg',
+  '/note/elder1.svg',
+  '/note/elder2.svg',
+  '/note/elder3.svg',
+  '/note/child.svg',
 ]
 const unknownSketch = (i: number) =>
-  i === 3 ? '/ui/note/unknown-last.svg' : '/ui/note/unknown.svg'
+  i === 3 ? '/note/unknown-last.svg' : '/note/unknown.svg'
 
 const Rows = ({ rows }: { rows: NoteRow[] }) => (
   <>
@@ -54,6 +54,8 @@ interface InvestigationNoteProps {
   onAction: () => void
   /** The key's label (default: START SHIFT before a night, ONE MORE SHIFT after it). */
   actionLabel?: string
+  /** The key is waiting (assets loading): it shows the loading label and cannot be pressed. */
+  busy?: boolean
 }
 
 /**
@@ -65,12 +67,14 @@ export const InvestigationNote = ({
   view,
   onAction,
   actionLabel,
+  busy = false,
 }: InvestigationNoteProps) => {
   const scale = useFitScale()
   const lang: NoteLang = view.lang
-  const label =
-    actionLabel ??
-    (view.mode === 'before' ? LABELS.btnStart[lang] : LABELS.btnAgain[lang])
+  const label = busy
+    ? LABELS.btnLoading[lang]
+    : (actionLabel ??
+      (view.mode === 'before' ? LABELS.btnStart[lang] : LABELS.btnAgain[lang]))
   return (
     <main className={`note-screen note-${lang}`} lang={lang}>
       <div
@@ -128,7 +132,7 @@ export const InvestigationNote = ({
             {view.doodle && (
               <img
                 className="note-doodle"
-                src="/ui/note/corridor.svg"
+                src="/note/corridor.svg"
                 width={100}
                 height={67}
                 alt=""
@@ -145,7 +149,12 @@ export const InvestigationNote = ({
               <Rows rows={view.right.rows} />
             </div>
           </div>
-          <button type="button" className="note-btn" onClick={onAction}>
+          <button
+            type="button"
+            className="note-btn"
+            onClick={onAction}
+            disabled={busy}
+          >
             {label}
           </button>
         </article>

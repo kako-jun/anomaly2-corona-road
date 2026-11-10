@@ -209,7 +209,7 @@ export const LAST_NIGHT: Record<'noProgress' | 'withdraw', Pair> = {
   },
   withdraw: {
     ja: '前回は、お手つきが重なり席を立った。',
-    en: 'Last time: left the post after false reports.',
+    en: 'Last time: left after false reports.',
   },
 }
 
@@ -239,4 +239,7 @@ export const LABELS = {
   unitTimes: { ja: '回', en: '' },
   btnStart: { ja: '勤務を始める', en: 'START SHIFT' },
   btnAgain: { ja: 'もう一度、勤務', en: 'ONE MORE SHIFT' },
+  /** After the true ending the key returns to the title (#294). */
+  btnTitle: { ja: 'タイトルへ戻る', en: 'BACK TO TITLE' },
+  btnLoading: { ja: '準備中…', en: 'LOADING…' },
 } as const

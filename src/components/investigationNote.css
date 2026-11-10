@@ -68,7 +68,8 @@
   transform: rotate(-1.5deg);
 }
 .note-ja {
-  font-family: 'NoteZen', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
+  font-family:
+    'NoteZen', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
 }
 .note-en {
   font-family: 'Caveat', cursive;

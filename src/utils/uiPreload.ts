@@ -12,10 +12,8 @@ export function preloadCabinet(): Promise<void> {
     image.src = link.href
     return image.decode().catch(() => {})
   })
-  const fonts = [
-    '500 16px Caveat',
-    '16px NoteZen',
-    '16px NoteYomogi',
-  ].map(spec => document.fonts?.load(spec, '捜査メモ0').catch(() => {}))
+  const fonts = ['500 16px Caveat', '16px NoteZen', '16px NoteYomogi'].map(
+    spec => document.fonts?.load(spec, '捜査メモ0').catch(() => {})
+  )
   return Promise.all([...images, ...fonts]).then(() => {})
 }

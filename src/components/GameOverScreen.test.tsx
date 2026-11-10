@@ -1,11 +1,16 @@
 // @vitest-environment jsdom
 import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { GameOverScreen } from './GameOverScreen'
+import { emptySave } from '../utils/saveData'
+import type { SaveData } from '../utils/saveData'
 
-vi.mock('../utils/saveData', () => ({
-  load: () => ({ foundTotal: 17, foundIds: ['a', 'b'] }),
+let current: SaveData
+vi.mock('../utils/saveData', async importOriginal => ({
+  ...(await importOriginal<typeof import('../utils/saveData')>()),
+  load: () => current,
 }))
+
 const stats = {
   currentTime: 125000,
   correctReports: 3,
@@ -13,42 +18,76 @@ const stats = {
   totalAnomalies: 4,
   detectedAnomalies: 3,
 }
+const shift = (over = {}) => ({
+  found: 3,
+  fresh: 1,
+  misreports: 2,
+  durationMs: 125000,
+  closing: 'dawn' as const,
+  raised: [] as string[],
+  ...over,
+})
+const saved = (over: Partial<SaveData> = {}) => {
+  current = {
+    ...emptySave(),
+    loops: 4,
+    foundTotal: 17,
+    foundIds: ['a', 'b'],
+    flags: { elder1: true },
+    lastShift: shift(),
+    ...over,
+  }
+}
 
-describe('case report', () => {
-  it.each([
-    ['dawn', 'DAWN'],
-    ['withdraw', 'WITHDRAWN'],
-    ['ending', 'THE TRUTH AT DAWN'],
-  ] as const)('shows the result and totals', (closing, label) => {
-    const restart = vi.fn()
+beforeEach(() => saved())
+afterEach(() => {
+  document.documentElement.lang = 'ja'
+})
+
+describe('result = investigation note (#297)', () => {
+  it('shows the night, the tonight column and the totals from the save', () => {
     render(
       <GameOverScreen
-        closing={closing}
-        outcome={closing === 'withdraw' ? 'lose' : 'win'}
+        closing="dawn"
+        outcome="win"
         stats={stats}
-        onRestart={restart}
+        onRestart={vi.fn()}
       />
     )
-    expect(screen.getByText(label)).toBeInTheDocument()
-    expect(screen.getByText('Tonight’s record: 3')).toBeInTheDocument()
-    expect(
-      screen.getByText('Total reports: 17 · Distinct anomalies: 2')
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText(
-        (_, el) =>
-          el?.tagName === 'P' &&
-          el.textContent === 'False reports: 2 · Shift duration: 2m 05s'
-      )
-    ).toBeInTheDocument()
-    expect(screen.getByText('Shift duration: 2m 05s')).toHaveClass(
-      'result-nowrap'
+    expect(screen.getByRole('article')).toHaveAccessibleName(
+      '捜査メモ 4夜目 今夜の捜査 夜明け'
     )
-    fireEvent.click(screen.getByRole('button', { name: 'RESTART SHIFT' }))
-    expect(restart).toHaveBeenCalledOnce()
+    expect(screen.getByText('今夜も異変を報告。')).toBeInTheDocument()
+    expect(screen.getByText('今夜')).toBeInTheDocument()
+    expect(screen.getByText('2:05')).toBeInTheDocument()
+    expect(screen.getByText('17')).toBeInTheDocument()
   })
 
-  it('does not say the player survived when dawn came with too few reports', () => {
+  it.each([
+    ['withdraw', 'lose', '撤収', 'お手つきが重なり、席を立つ。'],
+    ['ending', 'win', '夜明け', '異変を、すべて見送った。'],
+  ] as const)(
+    '%s uses its stamp and stock line',
+    (closing, outcome, stamp, line) => {
+      saved({
+        lastShift: shift({ closing }),
+        flags: { elder1: true, child: true },
+      })
+      render(
+        <GameOverScreen
+          closing={closing}
+          outcome={outcome}
+          stats={stats}
+          onRestart={vi.fn()}
+        />
+      )
+      expect(screen.getByText(stamp)).toBeInTheDocument()
+      expect(screen.getByText(line)).toBeInTheDocument()
+    }
+  )
+
+  it('says there was no progress when no new kind was found', () => {
+    saved({ lastShift: shift({ fresh: 0 }) })
     render(
       <GameOverScreen
         closing="dawn"
@@ -57,15 +96,44 @@ describe('case report', () => {
         onRestart={vi.fn()}
       />
     )
-    expect(screen.getByText('TIME UP')).toBeInTheDocument()
-    expect(screen.queryByText('DAWN')).toBeNull()
+    expect(screen.getByText('今夜の捜査は進捗がなかった。')).toBeInTheDocument()
+    expect(screen.queryByText('今夜も異変を報告。')).toBeNull()
+  })
+
+  it('shows the English note when the page language is English', () => {
+    document.documentElement.lang = 'en'
+    render(
+      <GameOverScreen
+        closing="dawn"
+        outcome="win"
+        stats={stats}
+        onRestart={vi.fn()}
+      />
+    )
+    expect(screen.getByText('CASE MEMO')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'ONE MORE SHIFT' })
+    ).toBeInTheDocument()
+  })
+
+  it('falls back to the shift stats when the save has no lastShift', () => {
+    saved({ lastShift: undefined })
+    render(
+      <GameOverScreen
+        closing="withdraw"
+        outcome="lose"
+        stats={stats}
+        onRestart={vi.fn()}
+      />
+    )
+    expect(screen.getByText('撤収')).toBeInTheDocument()
   })
 
   it.each([
     ['dawn', 'win'],
     ['withdraw', 'lose'],
   ] as const)(
-    'keeps RESTART SHIFT after %s when the ending was not reached (#294)',
+    'keeps the restart key after %s when the ending was not reached (#294)',
     (closing, outcome) => {
       const restart = vi.fn()
       render(
@@ -78,8 +146,10 @@ describe('case report', () => {
           onTitle={vi.fn()}
         />
       )
-      expect(screen.queryByRole('button', { name: 'BACK TO TITLE' })).toBeNull()
-      fireEvent.click(screen.getByRole('button', { name: 'RESTART SHIFT' }))
+      expect(
+        screen.queryByRole('button', { name: 'タイトルへ戻る' })
+      ).toBeNull()
+      fireEvent.click(screen.getByRole('button', { name: 'もう一度、勤務' }))
       expect(restart).toHaveBeenCalledOnce()
     }
   )
@@ -97,8 +167,8 @@ describe('case report', () => {
         onTitle={title}
       />
     )
-    expect(screen.queryByRole('button', { name: 'RESTART SHIFT' })).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: 'BACK TO TITLE' }))
+    expect(screen.queryByRole('button', { name: 'もう一度、勤務' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'タイトルへ戻る' }))
     expect(title).toHaveBeenCalledOnce()
     expect(restart).not.toHaveBeenCalled()
   })
