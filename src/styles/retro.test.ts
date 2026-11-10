@@ -91,6 +91,12 @@ describe('retro.css', () => {
     expect(decls('.glass', 'container-type').some(v => /inline-size|size/.test(v))).toBe(true)
   })
 
+  it('tilts subtitles with skewX(-9deg), not font-style italic, keeping the cqw size (#306)', () => {
+    expect(decls('.movie-sub', 'transform').at(-1)).toBe('skewX(-9deg)')
+    expect(decls('.movie-sub', 'font-style').at(-1)).toBe('normal')
+    expect(decls('.movie-sub', 'font-size').at(-1)).toBe('4.9cqw')
+  })
+
   it('stops the clock animation when reduced motion is requested', () => {
     expect(
       decls('.clock-colon', 'animation').some(
