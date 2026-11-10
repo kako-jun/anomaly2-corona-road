@@ -162,22 +162,6 @@
   }
 }
 
-.maker {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px 6px 2px;
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  color: var(--ink-soft);
-  font-weight: 600;
-}
-
-.maker .model {
-  font-weight: 400;
-  letter-spacing: 0.1em;
-}
-
 /* Panel */
 
 .label {
@@ -476,8 +460,7 @@
 
 /* printed labels: patchy, partly faded (still legible) */
 
-.label,
-.maker {
+.label {
   -webkit-mask-image: linear-gradient(
     95deg,
     rgba(0, 0, 0, calc(1 - 0.3 * var(--wear))) 0%,
@@ -655,8 +638,6 @@
   isolation: isolate;
 }
 
-/* maker/model print lives on the bezel's lower rim, not on its own row */
-
 /* panel is not a separate box any more */
 
 .panel {
@@ -787,12 +768,14 @@
   .panel {
     /* zoom: used to enlarge the controls at desktop width; non-standard, can be replaced by transform later */
     zoom: 1.3;
+    --pz: 1.3;
   }
 }
 
 @media (min-width: 1400px) {
   .panel {
     zoom: 1.45;
+    --pz: 1.45;
   }
 }
 
@@ -1106,17 +1089,30 @@
   text-align: center;
 }
 
-/* model print on the right of the bezel's lower rim, clear of the rounded corner */
+/* model plate (#304): fixed to the cabinet's bottom-right corner, independent of the bezel size */
 
-.tube > .maker {
+.cabinet {
+  --plate-h: 40px;
+}
+@media (min-width: 900px) {
+  /* keep the speaker grille clear of the plate; --pz undoes the panel's zoom */
+  .speaker {
+    margin-bottom: calc(40px / var(--pz, 1));
+  }
+}
+.cabinet > .model-plate {
   position: absolute;
-  left: auto;
-  bottom: 4px;
-  padding: 0;
+  right: 6px;
+  bottom: 3px;
+  height: var(--plate-h);
+  width: auto;
   z-index: 2;
-  color: #a99d7e;
-  font-size: 0.58rem;
-  right: 26px;
+  pointer-events: none;
+}
+@media (max-width: 440px) {
+  .cabinet {
+    --plate-h: 28px;
+  }
 }
 
 /* ===== Report category picker: modal popup (fixed overlay, does not change page layout) ===== */
@@ -1416,9 +1412,6 @@
     0 0 5px 3px rgba(40, 34, 28, 0.4),
     inset 0 0 40px 8px #000c,
     inset 0 0 8px 1px #000;
-}
-.tube > .maker {
-  color: #6e6554;
 }
 
 /* display windows: moulded greige recess frame, inside filled black by the element's own background */
@@ -1857,12 +1850,14 @@
   /* constants below = height of everything except the picture (measured); when the picture is width-limited the cabinet still fills the screen */
   .cabinet {
     min-height: 100dvh;
+    /* room under REPORT for the model plate in the bottom-right corner (#304) */
+    padding-bottom: calc(var(--plate-h) + 6px);
   }
   .panel {
     margin-top: auto;
   }
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 425px) * 0.75 + 14px)));
+    width: min(100%, max(160px, calc((100dvh - 425px - var(--plate-h)) * 0.75 + 14px)));
     align-self: center;
   }
   .panel {
@@ -1886,7 +1881,7 @@
 
 @media (min-width: 360px) and (max-width: 899px) {
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 352px) * 0.75 + 14px)));
+    width: min(100%, max(160px, calc((100dvh - 352px - var(--plate-h)) * 0.75 + 14px)));
   }
   .cam-grid {
     grid-template-columns: repeat(8, minmax(44px, 1fr));

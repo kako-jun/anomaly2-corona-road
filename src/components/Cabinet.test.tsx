@@ -1,4 +1,6 @@
 // @vitest-environment jsdom
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ComponentProps } from 'react'
@@ -291,5 +293,21 @@ describe('Cabinet true ending screen (Issue #86)', () => {
     expect(baseSrc(container)).toBe(cameras[0].image)
     rerender(<Cabinet {...makeProps({ ending: 'ending' })} />)
     expect(baseSrc(container)).toBe('/images/ending-bar.webp')
+  })
+})
+
+describe('Cabinet model plate (#304)', () => {
+  it('is an image child of .cabinet with an accessible name, and the old .maker text is gone', () => {
+    const { container } = render(<Cabinet {...makeProps()} />)
+    const plate = screen.getByLabelText('Video Monitor CR-42')
+    expect(plate.parentElement).toBe(cabinetEl(container))
+    expect(plate).toHaveAttribute('src', '/ui/model-plate.webp')
+    expect(container.querySelector('.maker')).toBeNull()
+    expect(container.textContent).not.toContain('VIDEO MONITOR CR-42')
+  })
+
+  it('is in the cabinet preload list of index.html', () => {
+    const html = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8')
+    expect(html).toMatch(/data-cabinet-image\s+href="\/ui\/model-plate\.webp"/)
   })
 })
