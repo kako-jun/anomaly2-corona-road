@@ -7,13 +7,13 @@ interface GameHUDProps {
   stats: GameStats
 }
 
-/** Display windows: SHIFT TIME / REPORTS (VFD) and STRIKES (lamps). */
+/** Display windows: TIME / REPORTS (VFD) and STRIKES (lamps). */
 export const GameHUD = ({ gameTime, stats }: GameHUDProps) => {
   const max = DEFAULT_CONFIG.maxMisreports
   return (
     <div className="row status">
       <div className="cell">
-        <div className="label">SHIFT TIME</div>
+        <div className="label">TIME</div>
         <div className="vfd vfd--center" role="timer" aria-label={gameTime}>
           <span aria-hidden="true">
             {gameTime.split(':')[0]}

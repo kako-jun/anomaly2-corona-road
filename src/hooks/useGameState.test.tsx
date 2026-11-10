@@ -106,7 +106,7 @@ const start = () => {
 describe('rule constants are unchanged by the ledger connection', () => {
   it('keeps the shift rules', () => {
     expect(DEFAULT_CONFIG).toEqual({
-      totalDurationMs: 360_000,
+      totalDurationMs: 480_000,
       firstAnomalyDelayMs: 12_000,
       anomalyIntervalMs: 30_000,
       maxConcurrentAnomalies: 2,
@@ -581,12 +581,12 @@ describe('dawn ending (time ran out)', () => {
     expect(result.current.gameState).toBe('playing')
   })
 
-  it('ends at 360000 ms', () => {
+  it('ends at 480000 ms', () => {
     const { result } = playWith(0, total)
     expect(result.current.gameState).toBe('ending')
   })
 
-  it('ends at 360001 ms without ending twice', () => {
+  it('ends at 480001 ms without ending twice', () => {
     const { result } = playWith(0, total + 1)
     advance(10_000)
     expect(result.current.gameState).toBe('ending')
@@ -689,7 +689,7 @@ describe('time running out around the false-report limit', () => {
     expect(saveData.load().loops).toBe(1)
   })
 
-  it('boundary below the limit: playing at 359999 ms, dawn at 360000 ms', () => {
+  it('boundary below the limit: playing at 479999 ms, dawn at 480000 ms', () => {
     const { result } = start()
     wrong(result, DEFAULT_CONFIG.maxMisreports - 1)
     advance(total - 1)
@@ -698,7 +698,7 @@ describe('time running out around the false-report limit', () => {
     expect(result.current.ending).toEqual({ closing: 'dawn', outcome: 'lose' })
   })
 
-  it('boundary at the limit: playing at 359999 ms, withdraw at 360000 ms (toast still pending)', () => {
+  it('boundary at the limit: playing at 479999 ms, withdraw at 480000 ms (toast still pending)', () => {
     const { result } = start()
     advance(total - 1000)
     wrong(result, DEFAULT_CONFIG.maxMisreports)

@@ -1,7 +1,7 @@
 import { GameConfig, Camera } from '../types/game'
 
 export const DEFAULT_CONFIG: GameConfig = {
-  totalDurationMs: 360_000, // 6 minutes
+  totalDurationMs: 480_000, // 8 real minutes = 22:00 -> 06:00 in game
   firstAnomalyDelayMs: 12_000, // first anomaly within 12 s — no dead opening
   anomalyIntervalMs: 30_000, // 30 s between spawns
   maxConcurrentAnomalies: 2,
@@ -60,17 +60,22 @@ export const CAMERAS: Camera[] = [
   },
 ]
 
-// 1 real minute = 1 in-game hour. 6 real minutes -> 00:00 → 06:00.
+/** In-game clock starts at 22:00 (night shift). 1 real second = 1 in-game minute, so 480 s -> 06:00. */
+export const GAME_START_MINUTE_OF_DAY = 22 * 60
+
 export const msToGameTime = (ms: number): string => {
-  const totalMinutes = Math.floor(ms / 60_000)
-  const hours = Math.floor(totalMinutes / 60)
-  const minutes = totalMinutes % 60
+  const elapsedGameMinutes = Math.floor(Math.max(0, ms) / 1000)
+  const minuteOfDay = (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
+  const hours = Math.floor(minuteOfDay / 60)
+  const minutes = minuteOfDay % 60
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
 }
 
+// Phases are thirds of the whole shift (derived from totalDurationMs, no separate constants).
 export const getGamePhase = (ms: number): 'early' | 'mid' | 'late' => {
-  if (ms < 120_000) return 'early'
-  if (ms < 240_000) return 'mid'
+  const third = DEFAULT_CONFIG.totalDurationMs / 3
+  if (ms < third) return 'early'
+  if (ms < third * 2) return 'mid'
   return 'late'
 }
 
@@ -91,8 +96,8 @@ export const DIALOGUE_CONFIG = {
   openingDelayMs: 4_000,
   /** Silence between conversations (chatter, and after any other conversation). */
   chatterIntervalMs: 30_000,
-  /** When the single midpoint comment is due, in seconds of play time (4 min of the current 6 min shift). */
-  midpointAtSec: 240,
+  /** When the single midpoint comment is due, in seconds of play time (the middle of the shift, derived from totalDurationMs). */
+  midpointAtSec: DEFAULT_CONFIG.totalDurationMs / 2 / 1000,
   /** Quiet time after a `serious` conversation before chatter may appear. */
   seriousQuietMs: 20_000,
 }
