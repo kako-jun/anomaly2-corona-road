@@ -1092,7 +1092,10 @@
 /* bottom strip (#304): speaker grille (left, fills the width) + model plate (right), one row sharing the bottom edge */
 
 .cabinet {
-  --plate-h: 40px;
+  /* portrait: the smallest height at which the outlined "42" still reads at DPR 1 (the English part is allowed to blur); the picture's height wins over the plate */
+  --plate-h: 20px;
+  /* vertical pitch of the speaker slots: 2 rows in the 20px strip, never finer than ~8px */
+  --hole-p: 10px;
 }
 .cabinet > .cabinet-foot {
   position: absolute;
@@ -1107,6 +1110,11 @@
   pointer-events: none;
 }
 @media (min-width: 900px) {
+  .cabinet {
+    /* the strip does not cost picture height here, so the plate can be bigger: 3 rows of slots */
+    --plate-h: 40px;
+    --hole-p: calc(var(--plate-h) / 3);
+  }
   /* the picture owns the left column: the strip spans the control panel column, which keeps room for it (--pz undoes the panel's zoom) */
   .cabinet > .cabinet-foot {
     left: calc((100vh - 43px) * 0.75 + 14px + 8px + 14px);
@@ -1119,19 +1127,15 @@
   flex: 1;
   min-width: 0;
   height: 100%;
-  /* three rows of slots exactly as tall as the plate */
-  background-size: calc(var(--plate-h) * 9 / 42) calc(var(--plate-h) / 3);
+  /* one tile (27x42 source) holds two slot rows: scale it so the row pitch is --hole-p, anchored to the bottom */
+  background-size: calc(var(--hole-p) * 9 / 7) calc(var(--hole-p) * 2);
+  background-position: 0 100%;
   background-repeat: repeat;
 }
 .cabinet-foot > .model-plate {
   flex: none;
   height: var(--plate-h);
   width: auto;
-}
-@media (max-width: 440px) {
-  .cabinet {
-    --plate-h: 28px;
-  }
 }
 
 /* ===== Report category picker: modal popup (fixed overlay, does not change page layout) ===== */

@@ -326,6 +326,21 @@ describe('Cabinet model plate (#304)', () => {
     expect(css).not.toMatch(/\.speaker\s*\{\s*display:\s*none/)
   })
 
+  it('keeps the strip small on portrait (20px) and the speaker slots coarse (pitch >= 8px)', () => {
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/retro.css'),
+      'utf8'
+    )
+    const base = css.match(
+      /\.cabinet\s*\{\s*(?:\/\*[^]*?\*\/\s*)?--plate-h:\s*(\d+)px;[^}]*--hole-p:\s*(\d+)px/
+    )
+    expect(base).not.toBeNull()
+    expect(Number(base![1])).toBe(20)
+    expect(Number(base![2])).toBeGreaterThanOrEqual(8)
+    expect(css).not.toMatch(/--plate-h:\s*28px/)
+    expect(css).toMatch(/background-size:\s*calc\(var\(--hole-p\) \* 9 \/ 7\)/)
+  })
+
   it('is in the cabinet preload list of index.html', () => {
     const html = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8')
     expect(html).toMatch(/data-cabinet-image\s+href="\/ui\/model-plate\.webp"/)
