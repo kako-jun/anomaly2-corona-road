@@ -48,8 +48,10 @@ describe('GameHUD', () => {
       screen.getByText(String(DEFAULT_CONFIG.minCorrectReports))
     ).toBeInTheDocument()
   })
-  it('shows the shift time', () => {
+  it('shows the in-game time under the TIME label', () => {
     render(<GameHUD gameTime="03:07" stats={makeStats()} />)
+    expect(screen.getByText('TIME')).toBeInTheDocument()
+    expect(screen.queryByText(/SHIFT/)).toBeNull()
     const clock = screen.getByLabelText('03:07')
     expect(clock).toHaveTextContent('03:07')
     expect(clock.querySelector('.clock-colon')).toHaveTextContent(':')

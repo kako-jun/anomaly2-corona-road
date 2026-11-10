@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
 import { join } from 'node:path'
 import postcss from 'postcss'
 import { describe, expect, it } from 'vitest'
@@ -80,6 +81,16 @@ describe('retro.css', () => {
   it('shares the cabinet surface with the report dialog', () => {
     expect(
       decls('.dialog', 'background').some(v => v.includes('/ui/surface.webp'))
+    ).toBe(true)
+  })
+
+  it('sizes subtitles in cqw against the picture, with no fixed size or width @media (#295)', () => {
+    const sizes = decls('.movie-sub', 'font-size')
+    // the cqw declaration must come last so it wins; earlier ones are fallbacks for browsers without cqw
+    expect(sizes.at(-1)).toBe('4.9cqw')
+    // the picture (.glass) must be the size container the cqw resolves against
+    expect(
+      decls('.glass', 'container-type').some(v => /inline-size|size/.test(v))
     ).toBe(true)
   })
 
@@ -200,18 +211,47 @@ describe('monitor frame opening (#283)', () => {
     expect(h).toBe(prop('--img-h'))
   })
 
-  it('keeps the visible frame equally thick on all four sides', () => {
+  it('gives .bezel exactly the picture pixel aspect, so 100% 100% is an unstretched fit', () => {
+    const buf = readFileSync(join(uiDir, 'bezel_mon.webp'))
+    const w = buf.readUIntLE(24, 3) + 1
+    const h = buf.readUIntLE(27, 3) + 1
+    const ratios = decls('.bezel', 'aspect-ratio').map(v => {
+      const [n, d] = v.split('/').map(parseFloat)
+      return n / d
+    })
+    expect(ratios.length).toBeGreaterThan(0)
+    expect(ratios.at(-1)! / (w / h)).toBeCloseTo(1, 3)
+    expect(decls('.bezel', 'background').at(-1)).toMatch(/\/ 100% 100%/)
+    // no explicit height left on phones: a fixed height would bring the stretch back
+    expect(
+      root_.nodes.some(
+        n =>
+          n.type === 'atrule' &&
+          /max-width: 899px/.test((n as postcss.AtRule).params) &&
+          (n as postcss.AtRule).nodes?.some(
+            r =>
+              r.type === 'rule' &&
+              (r as postcss.Rule).selector === '.bezel' &&
+              (r as postcss.Rule).some(
+                d =>
+                  d.type === 'decl' && d.prop === 'height' && d.value !== 'auto'
+              )
+          )
+      )
+    ).toBe(false)
+  })
+
+  it('keeps the four rim bands of the picture equal (so the frame looks equally thick on all sides)', () => {
     const W = prop('--img-w')
     const H = prop('--img-h')
-    const l = prop('--open-l')
-    const t = prop('--open-t')
-    const r = W - prop('--open-r')
-    const b = H - prop('--open-b')
-    // the box ratio is the picture ratio (+-2%), so equal picture thickness after the aspect stretch means:
-    // horizontal margin * (picture h / w) ~ vertical margin
-    const stretch = W / H / 0.741
-    for (const v of [t * stretch, b * stretch, r])
-      expect(Math.abs(v - l) / l).toBeLessThan(0.04)
+    const bands = [
+      prop('--open-l'),
+      prop('--open-t'),
+      W - prop('--open-r'),
+      H - prop('--open-b'),
+    ]
+    // the box has the picture aspect, so equal picture px bands are equal screen thickness
+    for (const v of bands) expect(Math.abs(v - bands[0])).toBeLessThanOrEqual(2)
   })
 
   it('traces the clip-path from the same opening (outline spans the glass box minus the pad)', () => {
@@ -232,6 +272,23 @@ describe('monitor frame opening (#283)', () => {
     expect(W).toBeGreaterThan(0)
     expect(H).toBeGreaterThan(0)
   })
+
+  // the numbers and the polygon must come from the picture's real alpha, not from copies: scripts/bezel-frame.py reads the
+  // webp (opening bbox, area difference and max deviation of the polygon <= 1 picture px). CI runs the same command.
+  const hasUv = spawnSync('uv', ['--version']).status === 0
+  it.skipIf(!hasUv)(
+    'binds the group and the clip-path polygon to the transparent opening of bezel_mon.webp (alpha)',
+    () => {
+      const r = spawnSync(
+        'uv',
+        ['run', '--script', join(root, 'scripts/bezel-frame.py'), 'check'],
+        { encoding: 'utf8' }
+      )
+      expect(r.stdout + r.stderr).toMatch(/max deviation/)
+      expect(r.status, r.stdout + r.stderr).toBe(0)
+    },
+    120_000
+  )
 
   it('draws no CSS box outline around the frame picture (no double outline)', () => {
     for (const prop of ['border-radius', 'box-shadow'])

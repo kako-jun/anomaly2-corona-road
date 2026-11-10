@@ -34,5 +34,8 @@ jobs:
       - name: Selftest composite-polygon.py
         run: uv run --script scripts/composite-polygon.py --selftest
 
+      - name: Monitor frame picture vs CSS opening and clip-path
+        run: uv run --script scripts/bezel-frame.py check
+
       - name: Type check & Build
         run: npm run build

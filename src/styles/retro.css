@@ -268,7 +268,11 @@
   z-index: 6;
   text-align: center;
   color: #fff;
+  /* Fallback first, for browsers without container query units (a declaration with an unsupported unit
+     is dropped): 1rem is about the old desktop look (16px). */
   font-size: 1rem;
+  /* proportional to the picture (.glass is a size container): 4.9cqw = the old desktop look, at any monitor size (#295) */
+  font-size: 4.9cqw;
   line-height: 1.8;
   font-style: italic;
   font-weight: 600;
@@ -785,12 +789,6 @@
   }
 }
 
-@media (min-width: 900px) {
-  .movie-sub {
-    font-size: 1.45rem;
-  }
-}
-
 /* ===== Grunge pass: large soft stains / soot / drips / grease instead of fine grain or hairlines =====
    No thresholded cell patterns: every SVG layer is low-frequency, gently ramped and blurred, so edges stay soft.
    Static, fixed seeds. Strength is still --wear (?wear=0 turns it all off). */
@@ -1085,7 +1083,7 @@
   margin-bottom: 20px;
 }
 
-/* SHIFT TIME: label and digits centred in the window; REPORTS digits centred */
+/* TIME: label and digits centred in the window; REPORTS digits centred */
 
 .vfd--center {
   justify-content: center;
@@ -1439,14 +1437,13 @@
   background-color: #0b0a08;
 }
 
-/* keep the tube's OUTER size exactly as before: the frame is 14px per side instead of 7px, so the glass gives
-   up its strict 3:4 and fills the box the old 3:4 glass + 7/7/20/7 padding made. */
+/* phones: the frame box is the tube's width at the frame picture's own aspect (set on the last .bezel rule); the glass fills the opening of that picture. */
 @media (max-width: 899px) {
   .tube {
     container-type: inline-size;
   }
   .bezel {
-    height: calc((100cqw - 14px) * 4 / 3 + 27px);
+    height: auto;
     display: block;
   }
   .glass {
@@ -1636,6 +1633,8 @@
   border: 0;
   border-image: none;
   width: 100%;
+  /* the box has EXACTLY the picture's pixel aspect (1246x1679, checked by scripts/bezel-frame.py), so 100% 100% is an unstretched fit */
+  aspect-ratio: 1246 / 1679;
   background: url('/ui/bezel_mon.webp') 0 0 / 100% 100% no-repeat;
   /* no CSS box outline (no border-radius, no box-shadow): only the picture's own outer edge is visible (#283). The soft shadow follows the picture's transparent corners. Variant M (see DESIGN.md): border-radius 4.4% / 3.6% + box-shadow 0 3px 6px 1px instead of this filter. */
   filter: drop-shadow(0 3px 3px rgba(40, 25, 10, 0.5));
@@ -1644,177 +1643,136 @@
   /* ONE numeric group describes the frame picture's transparent opening, in picture pixels (measured on bezel_mon.webp).
      The glass box is the opening plus --open-pad on every side; the clip-path below is traced from the same opening. */
   --img-w: 1246;
-  --img-h: 1526;
+  --img-h: 1679;
   --open-l: 99;
-  --open-t: 90;
+  --open-t: 99;
   --open-r: 1146;
-  --open-b: 1436;
+  --open-b: 1580;
   --open-pad: 2;
+  container-type: inline-size; /* subtitles size against the picture width (cqw), #295 */
   position: absolute;
   left: calc((var(--open-l) - var(--open-pad)) / var(--img-w) * 100%);
   top: calc((var(--open-t) - var(--open-pad)) / var(--img-h) * 100%);
-  width: calc((var(--open-r) - var(--open-l) + 2 * var(--open-pad)) / var(--img-w) * 100%);
-  height: calc((var(--open-b) - var(--open-t) + 2 * var(--open-pad)) / var(--img-h) * 100%);
+  width: calc(
+    (var(--open-r) - var(--open-l) + 2 * var(--open-pad)) / var(--img-w) * 100%
+  );
+  height: calc(
+    (var(--open-b) - var(--open-t) + 2 * var(--open-pad)) / var(--img-h) * 100%
+  );
   aspect-ratio: auto;
   border-radius: 0;
   box-shadow: none;
   background: #050505;
   /* tube face: big rounded corners, sides bulge slightly outward. outline traced from the frame picture's opening. */
   clip-path: polygon(
-    51.332% 99.852%,
-    41.246% 99.704%,
-    41.151% 99.630%,
-    38.963% 99.630%,
-    38.868% 99.556%,
-    38.392% 99.630%,
-    38.297% 99.556%,
-    36.394% 99.556%,
-    36.299% 99.481%,
-    30.304% 99.333%,
-    25.452% 98.963%,
-    21.456% 98.815%,
-    20.409% 98.667%,
-    20.314% 98.741%,
-    18.696% 98.519%,
-    14.795% 98.296%,
-    8.706% 97.704%,
-    6.993% 97.185%,
-    5.756% 96.519%,
-    4.853% 95.815%,
-    4.091% 95.000%,
-    3.235% 93.519%,
-    2.950% 92.556%,
-    2.950% 91.889%,
-    2.759% 91.148%,
-    2.759% 90.259%,
-    1.713% 82.185%,
-    1.237% 75.667%,
-    1.142% 75.593%,
-    0.951% 71.815%,
-    0.856% 71.741%,
-    0.761% 69.074%,
-    0.571% 68.185%,
-    0.571% 66.481%,
-    0.476% 66.407%,
-    0.285% 57.148%,
-    0.190% 57.074%,
-    0.190% 45.815%,
-    0.285% 45.741%,
-    0.285% 41.370%,
-    0.381% 41.296%,
-    0.285% 41.000%,
-    0.381% 40.926%,
-    0.571% 33.370%,
-    0.666% 33.296%,
-    1.142% 25.296%,
-    1.237% 25.222%,
-    1.427% 21.815%,
-    1.808% 18.778%,
-    1.808% 17.667%,
-    1.903% 17.593%,
-    1.903% 16.778%,
-    2.093% 15.963%,
-    2.284% 13.370%,
-    2.474% 12.556%,
-    3.045% 7.222%,
-    3.520% 6.037%,
-    4.186% 5.000%,
-    5.138% 4.037%,
-    6.898% 2.963%,
-    8.706% 2.370%,
-    11.370% 2.148%,
-    12.702% 1.926%,
-    13.463% 1.926%,
-    14.795% 1.704%,
-    15.747% 1.704%,
-    22.027% 1.111%,
-    24.500% 1.037%,
-    29.163% 0.667%,
-    32.493% 0.593%,
-    34.301% 0.444%,
-    34.586% 0.519%,
-    36.204% 0.370%,
-    38.392% 0.370%,
-    38.487% 0.296%,
-    43.149% 0.222%,
-    43.245% 0.148%,
-    56.185% 0.148%,
-    56.280% 0.222%,
-    61.227% 0.296%,
-    61.323% 0.370%,
-    69.125% 0.593%,
-    69.220% 0.667%,
-    71.979% 0.741%,
-    75.404% 1.037%,
-    80.162% 1.259%,
-    80.733% 1.407%,
-    85.205% 1.704%,
-    86.537% 1.926%,
-    87.298% 1.926%,
-    87.869% 2.074%,
-    91.389% 2.370%,
-    93.482% 3.111%,
-    94.148% 3.481%,
-    95.243% 4.333%,
-    96.289% 5.593%,
-    96.860% 6.704%,
-    97.146% 7.741%,
-    97.146% 8.704%,
-    97.716% 13.000%,
-    98.002% 16.630%,
-    98.287% 18.185%,
-    98.763% 24.630%,
-    98.953% 25.741%,
-    99.429% 34.333%,
-    99.524% 34.407%,
-    99.429% 34.704%,
-    99.524% 34.778%,
-    99.715% 42.556%,
-    99.810% 42.630%,
-    99.715% 42.704%,
-    99.810% 43.222%,
-    99.810% 58.778%,
-    99.715% 58.926%,
-    99.810% 59.148%,
-    99.715% 59.222%,
-    99.524% 66.926%,
-    99.429% 67.000%,
-    99.429% 68.407%,
-    99.334% 68.481%,
-    99.334% 69.741%,
-    99.239% 69.815%,
-    99.144% 72.481%,
-    98.953% 73.667%,
-    98.573% 79.444%,
-    98.478% 79.519%,
-    98.478% 80.481%,
-    98.382% 80.556%,
-    98.002% 84.778%,
-    97.812% 85.444%,
-    97.716% 87.296%,
-    97.526% 87.963%,
-    97.526% 88.852%,
-    97.241% 90.481%,
-    97.146% 92.111%,
-    96.955% 93.074%,
-    96.670% 93.741%,
-    95.814% 95.148%,
-    94.244% 96.519%,
-    93.007% 97.185%,
-    91.294% 97.704%,
-    89.106% 97.852%,
-    86.156% 98.222%,
-    80.733% 98.593%,
-    79.876% 98.741%,
-    79.781% 98.667%,
-    77.402% 98.889%,
-    75.785% 98.889%,
-    75.690% 98.963%,
-    71.028% 99.185%,
-    69.791% 99.333%,
-    62.084% 99.556%,
-    61.989% 99.630%,
-    51.427% 99.778%
+    49.619% 99.79%,
+    51.338% 99.832%,
+    57.897% 99.742%,
+    58.754% 99.672%,
+    64.082% 99.577%,
+    64.558% 99.507%,
+    66.27% 99.488%,
+    67.983% 99.355%,
+    71.503% 99.232%,
+    71.694% 99.18%,
+    74.643% 99.051%,
+    75.785% 98.927%,
+    77.307% 98.897%,
+    79.876% 98.718%,
+    90.723% 97.772%,
+    91.294% 97.694%,
+    92.341% 97.43%,
+    93.387% 96.995%,
+    94.339% 96.462%,
+    95.018% 95.926%,
+    95.768% 95.185%,
+    96.58% 93.906%,
+    96.914% 93.098%,
+    97.123% 92.155%,
+    97.528% 88.788%,
+    98.564% 79.428%,
+    99.16% 71.953%,
+    99.481% 66.97%,
+    99.626% 62.054%,
+    99.695% 61.852%,
+    99.711% 59.36%,
+    99.798% 59.091%,
+    99.729% 58.889%,
+    99.797% 58.687%,
+    99.83% 49.461%,
+    99.698% 39.764%,
+    99.624% 39.562%,
+    99.361% 31.684%,
+    98.964% 26.094%,
+    98.464% 20.236%,
+    97.128% 7.778%,
+    96.913% 6.902%,
+    96.682% 6.364%,
+    96.288% 5.623%,
+    95.588% 4.68%,
+    94.244% 3.551%,
+    93.102% 2.934%,
+    92.15% 2.571%,
+    91.009% 2.309%,
+    89.391% 2.186%,
+    85.109% 1.704%,
+    81.304% 1.416%,
+    80.257% 1.285%,
+    78.164% 1.169%,
+    77.973% 1.104%,
+    67.317% 0.515%,
+    59.8% 0.256%,
+    52.854% 0.139%,
+    43.245% 0.164%,
+    43.054% 0.214%,
+    36.87% 0.341%,
+    36.679% 0.391%,
+    34.776% 0.423%,
+    29.258% 0.679%,
+    24.5% 0.994%,
+    23.359% 1.018%,
+    23.168% 1.079%,
+    22.027% 1.104%,
+    19.933% 1.335%,
+    14.891% 1.704%,
+    9.087% 2.309%,
+    8.23% 2.497%,
+    6.613% 3.089%,
+    5.376% 3.862%,
+    4.805% 4.35%,
+    4.203% 5.017%,
+    3.6% 5.892%,
+    3.072% 7.172%,
+    2.276% 13.569%,
+    1.434% 21.852%,
+    0.618% 33.098%,
+    0.675% 33.232%,
+    0.505% 35.253%,
+    0.365% 40.842%,
+    0.299% 41.044%,
+    0.363% 41.313%,
+    0.297% 41.448%,
+    0.172% 49.192%,
+    0.197% 57.003%,
+    0.505% 66.364%,
+    1.635% 81.246%,
+    2.763% 91.077%,
+    2.964% 92.559%,
+    3.278% 93.569%,
+    3.811% 94.579%,
+    4.31% 95.253%,
+    4.988% 95.926%,
+    5.661% 96.462%,
+    6.422% 96.909%,
+    7.659% 97.43%,
+    8.706% 97.695%,
+    9.277% 97.773%,
+    14.891% 98.297%,
+    20.314% 98.718%,
+    32.017% 99.405%,
+    42.293% 99.741%,
+    47.621% 99.788%,
+    47.812% 99.837%
   );
 }
 /* faint glass: soft glare band + darker corners/edges. weak on purpose, the picture stays readable. */
@@ -1854,10 +1812,10 @@
   right: 7%;
   top: 6%;
 }
-/* the glass is out of the flow now: the tube keeps its old outer size */
+/* the glass is out of the flow now: the tube is exactly as wide as the frame picture is at the tube's height (1246x1679) */
 @media (min-width: 900px) {
   .tube {
-    width: calc((100vh - 43px) * 0.75 + 14px);
+    width: calc((100vh - 16px) * 1246 / 1679);
     max-width: none;
     min-width: 0;
   }
