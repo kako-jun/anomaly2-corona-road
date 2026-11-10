@@ -129,6 +129,24 @@ describe('retro.css', () => {
     }
   })
 
+  it('keeps the knob-to-label gap at a quarter of the knob height or more (#300)', () => {
+    // portrait/phone rules live in @media (max-width: 899px); the base rule has no margin
+    const portraitGap: number[] = []
+    root_.walkAtRules('media', at => {
+      if (!/max-width:\s*899px/.test(at.params)) return
+      at.walkRules(rule => {
+        if (!rule.selectors.includes('.knob')) return
+        rule.walkDecls('margin-bottom', d => {
+          const m = /^(\d+(?:\.\d+)?)px$/.exec(d.value.trim())
+          if (m) portraitGap.push(Number(m[1]))
+        })
+      })
+    })
+    const knobH = Math.min(...px('.knob', 'height'))
+    expect(portraitGap.length).toBeGreaterThan(0)
+    expect(Math.min(...portraitGap)).toBeGreaterThanOrEqual(knobH / 4)
+  })
+
   it('keeps the --wear A/B hook on the cabinet dirt layer', () => {
     expect(
       decls('.cabinet::before', 'opacity').some(v => v.includes('var(--wear)'))
