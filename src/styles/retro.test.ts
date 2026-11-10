@@ -145,3 +145,91 @@ describe('retro.css', () => {
     expect(category.at(-1)!).toBeLessThan(cabinet.at(-1)!)
   })
 })
+
+describe('monitor frame opening (#283)', () => {
+  // the last .glass rule that declares clip-path carries the opening group and the outline
+  const glass = (() => {
+    let found: postcss.Rule | undefined
+    root_.walkRules(rule => {
+      if (
+        rule.selectors.includes('.glass') &&
+        rule.some(n => n.type === 'decl' && n.prop === '--img-w')
+      )
+        found = rule
+    })
+    return found!
+  })()
+  const prop = (name: string) =>
+    Number(
+      glass.nodes
+        .find(n => n.type === 'decl' && n.prop === name)!
+        .toString()
+        .split(':')[1]
+    )
+  const val = (name: string) =>
+    (
+      glass.nodes.find(
+        n => n.type === 'decl' && n.prop === name
+      ) as postcss.Declaration
+    ).value
+
+  it('holds the opening as one numeric group that the glass box derives from', () => {
+    expect(glass).toBeDefined()
+    for (const k of [
+      '--img-w',
+      '--img-h',
+      '--open-l',
+      '--open-t',
+      '--open-r',
+      '--open-b',
+      '--open-pad',
+    ])
+      expect(Number.isFinite(prop(k)), k).toBe(true)
+    for (const side of ['left', 'top', 'width', 'height']) {
+      expect(val(side), side).toMatch(/var\(--open-/)
+      expect(val(side), side).not.toMatch(/^\d/)
+    }
+  })
+
+  it('matches the real pixel size of bezel_mon.webp', () => {
+    const buf = readFileSync(join(uiDir, 'bezel_mon.webp'))
+    expect(buf.subarray(12, 16).toString('ascii')).toBe('VP8X')
+    const w = buf.readUIntLE(24, 3) + 1
+    const h = buf.readUIntLE(27, 3) + 1
+    expect(w).toBe(prop('--img-w'))
+    expect(h).toBe(prop('--img-h'))
+  })
+
+  it('keeps the visible frame equally thick on all four sides', () => {
+    const W = prop('--img-w')
+    const H = prop('--img-h')
+    const l = prop('--open-l')
+    const t = prop('--open-t')
+    const r = W - prop('--open-r')
+    const b = H - prop('--open-b')
+    // the box ratio is the picture ratio (+-2%), so equal picture thickness after the aspect stretch means:
+    // horizontal margin * (picture h / w) ~ vertical margin
+    const stretch = W / H / 0.741
+    for (const v of [t * stretch, b * stretch, r])
+      expect(Math.abs(v - l) / l).toBeLessThan(0.04)
+  })
+
+  it('traces the clip-path from the same opening (outline spans the glass box minus the pad)', () => {
+    const W = prop('--img-w')
+    const H = prop('--img-h')
+    const pad = prop('--open-pad')
+    const gw = prop('--open-r') - prop('--open-l') + 2 * pad
+    const gh = prop('--open-b') - prop('--open-t') + 2 * pad
+    const m = /polygon\(([^)]*)\)/.exec(val('clip-path'))!
+    const pts = m[1].split(',').map(p => p.trim().split(/\s+/).map(parseFloat))
+    const xs = pts.map(p => p[0])
+    const ys = pts.map(p => p[1])
+    expect(pts.length).toBeGreaterThan(60)
+    expect(Math.min(...xs)).toBeCloseTo((pad / gw) * 100, 0)
+    expect(Math.max(...xs)).toBeCloseTo(100 - (pad / gw) * 100, 0)
+    expect(Math.min(...ys)).toBeCloseTo((pad / gh) * 100, 0)
+    expect(Math.max(...ys)).toBeCloseTo(100 - (pad / gh) * 100, 0)
+    expect(W).toBeGreaterThan(0)
+    expect(H).toBeGreaterThan(0)
+  })
+})
