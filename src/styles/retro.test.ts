@@ -88,7 +88,15 @@ describe('retro.css', () => {
     // the cqw declaration must come last so it wins; earlier ones are fallbacks for browsers without cqw
     expect(sizes.at(-1)).toBe('4.9cqw')
     // the picture (.glass) must be the size container the cqw resolves against
-    expect(decls('.glass', 'container-type').some(v => /inline-size|size/.test(v))).toBe(true)
+    expect(
+      decls('.glass', 'container-type').some(v => /inline-size|size/.test(v))
+    ).toBe(true)
+  })
+
+  it('tilts subtitles with skewX(-9deg), not font-style italic, keeping the cqw size (#306)', () => {
+    expect(decls('.movie-sub', 'transform').at(-1)).toBe('skewX(-9deg)')
+    expect(decls('.movie-sub', 'font-style').at(-1)).toBe('normal')
+    expect(decls('.movie-sub', 'font-size').at(-1)).toBe('4.9cqw')
   })
 
   it('stops the clock animation when reduced motion is requested', () => {
@@ -129,22 +137,45 @@ describe('retro.css', () => {
     }
   })
 
-  it('keeps the knob-to-label gap at a quarter of the knob height or more (#300)', () => {
-    // portrait/phone rules live in @media (max-width: 899px); the base rule has no margin
-    const portraitGap: number[] = []
+  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (407/334) + that gap (#300, #309)', () => {
+    // 9px is the value kako-jun chose in #309 (18px in #300 was too wide, 3px too tight);
+    // it is also >= 0.15 of the 60px knob circle. Changing it is a design decision, so pin it.
+    // The .tube width constants (100dvh - Npx) are the measured height of everything except
+    // the picture and include this gap, so they must move by exactly the same amount.
+    const PINNED_GAP = 9
+    const BASE = { narrow: 407, wide: 334 } // constants when the gap was 0
+    const gaps: number[] = []
+    const tubeConsts: { min: boolean; n: number }[] = []
     root_.walkAtRules('media', at => {
       if (!/max-width:\s*899px/.test(at.params)) return
+      const min = /min-width/.test(at.params)
       at.walkRules(rule => {
-        if (!rule.selectors.includes('.knob')) return
-        rule.walkDecls('margin-bottom', d => {
-          const m = /^(\d+(?:\.\d+)?)px$/.exec(d.value.trim())
-          if (m) portraitGap.push(Number(m[1]))
-        })
+        if (rule.selectors.includes('.knob'))
+          rule.walkDecls('margin-bottom', d => {
+            const m = /^(\d+(?:\.\d+)?)px$/.exec(d.value.trim())
+            if (m) gaps.push(Number(m[1]))
+          })
+        if (rule.selectors.includes('.tube'))
+          rule.walkDecls('width', d => {
+            const m =
+              /100dvh\s*-\s*(\d+(?:\.\d+)?)px\s*-\s*var\(--plate-h\)/.exec(
+                d.value
+              )
+            // tube width constant = base + gap, then minus the bottom strip height (#304)
+            if (m) tubeConsts.push({ min, n: Number(m[1]) })
+          })
       })
     })
-    const knobH = Math.min(...px('.knob', 'height'))
-    expect(portraitGap.length).toBeGreaterThan(0)
-    expect(Math.min(...portraitGap)).toBeGreaterThanOrEqual(knobH / 4)
+    expect(gaps).toEqual([PINNED_GAP])
+    expect(Math.min(...gaps)).toBeGreaterThanOrEqual(
+      Math.min(...px('.knob', 'height')) * 0.15
+    )
+    expect(tubeConsts.filter(c => !c.min).map(c => c.n)).toEqual([
+      BASE.narrow + gaps[0],
+    ])
+    expect(tubeConsts.filter(c => c.min).map(c => c.n)).toEqual([
+      BASE.wide + gaps[0],
+    ])
   })
 
   it('keeps the --wear A/B hook on the cabinet dirt layer', () => {
