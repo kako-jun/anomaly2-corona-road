@@ -223,7 +223,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
   - Mid phase: 4-5 variants per camera (16-20 images)
   - Late phase: 5-6 variants per camera (20-24 images)
   - **Total: ~50-60 anomaly images**
-- [ ] Implement image preloading system
+- [x] Implement image preloading system (#284, see DESIGN.md §7; overlays on idle: `src/utils/preload.ts`)
 - [ ] Create image transition system
 
 **Anomaly Types to Visualize:**
@@ -425,7 +425,7 @@ src/
 │   └── retro.css       # Cabinet UI styles (tokens scoped to .retro); part images in public/ui/ (DESIGN.md §11)
 ├── App.tsx
 ├── main.tsx
-├── App.css             # Start / result screen classes — values reference :root tokens
+├── App.css             # Page background for wide viewports only
 └── index.css           # Design tokens (:root vars), reset, keyframes
 ```
 
@@ -496,7 +496,6 @@ src/
 
 ### Technical Debt
 
-- Image preloading system needed
 - Sound system architecture needed
 - Better mobile gesture detection
 - Reduce re-renders in game loop

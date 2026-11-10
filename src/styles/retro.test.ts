@@ -77,6 +77,32 @@ describe('retro part images (public/ui)', () => {
 })
 
 describe('retro.css', () => {
+  it('shares the cabinet surface with the report dialog', () => {
+    expect(
+      decls('.dialog', 'background').some(v => v.includes('/ui/surface.webp'))
+    ).toBe(true)
+  })
+
+  it('stops the clock animation when reduced motion is requested', () => {
+    expect(
+      decls('.clock-colon', 'animation').some(
+        v =>
+          v.includes('clock-blink') &&
+          v.includes('ease-in-out') &&
+          !v.includes('steps(')
+      )
+    ).toBe(true)
+    let reduced = false
+    root_.walkAtRules('media', media => {
+      if (!media.params.includes('prefers-reduced-motion: reduce')) return
+      media.walkRules('.clock-colon', rule => {
+        rule.walkDecls('animation', d => {
+          if (d.value === 'none') reduced = true
+        })
+      })
+    })
+    expect(reduced).toBe(true)
+  })
   it('has no external URLs', () => {
     expect(css).not.toMatch(/url\(\s*['"]?https?:/i)
     expect(css).not.toMatch(/@import\s+(url\()?\s*['"]?https?:/i)
@@ -101,13 +127,21 @@ describe('retro.css', () => {
     ).toBe(true)
   })
 
-  it('sets a positive px padding-top on report category keys', () => {
-    const tops = decls('.cat-grid .key', 'padding-top')
+  it('sets a positive px padding-top on all cabinet keys', () => {
+    const tops = decls('.key', 'padding-top')
     expect(tops.length).toBeGreaterThan(0)
     for (const v of tops) {
       const m = /^(\d+(?:\.\d+)?)px(?:\s*!important)?$/.exec(v.trim())
       expect(m, v).not.toBeNull()
       expect(Number(m![1]), v).toBeGreaterThan(0)
     }
+  })
+
+  it('positions category labels slightly above the cabinet key labels', () => {
+    const cabinet = decls('.key', 'padding-top').map(parseFloat)
+    const category = decls('.cat-grid .key', 'padding-top').map(parseFloat)
+    expect(cabinet.length).toBeGreaterThan(0)
+    expect(category.length).toBeGreaterThan(0)
+    expect(category.at(-1)!).toBeLessThan(cabinet.at(-1)!)
   })
 })

@@ -1,12 +1,19 @@
 import './App.css'
+import { useEffect, useRef, useState } from 'react'
 import './styles/retro.css'
 import { useGameState } from './hooks/useGameState'
 import { StartScreen } from './components/StartScreen'
 import { Cabinet } from './components/Cabinet'
 import { GameOverScreen } from './components/GameOverScreen'
 import { SaveNotice } from './components/SaveNotice'
+import { preloadCabinet } from './utils/uiPreload'
 
 function App() {
+  const ready = useRef<Promise<void>>(Promise.resolve())
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    ready.current = preloadCabinet()
+  }, [])
   const {
     gameState,
     stats,
@@ -24,10 +31,24 @@ function App() {
     gameTime,
   } = useGameState()
 
+  const enterShift = async () => {
+    setLoading(true)
+    let timer: ReturnType<typeof setTimeout> | undefined
+    await Promise.race([
+      ready.current,
+      new Promise<void>(resolve => {
+        timer = setTimeout(resolve, 5000)
+      }),
+    ])
+    clearTimeout(timer)
+    setLoading(false)
+    startGame()
+  }
+
   if (gameState === 'idle') {
     return (
       <>
-        <StartScreen onStart={startGame} />
+        <StartScreen onStart={enterShift} loading={loading} />
         <SaveNotice />
       </>
     )
@@ -37,7 +58,10 @@ function App() {
     return (
       <>
         <GameOverScreen
-          victory={gameState === 'win'}
+          closing={
+            ending?.closing ?? (gameState === 'win' ? 'dawn' : 'withdraw')
+          }
+          outcome={gameState}
           stats={stats}
           onRestart={startGame}
         />
