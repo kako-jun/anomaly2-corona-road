@@ -154,13 +154,13 @@ Two easings (in/standard + emphasized-out) and four durations.
 
 ## 7. Layout
 
-The in-game screen is a single cabinet (`.cabinet` in `src/styles/retro.css`): the CRT monitor on top and the control panel below on phones (tube first, panel under it, full-bleed up to 440 px and at most 560 px wide); at ≥ 900 px the cabinet fills the viewport with the 3:4 monitor on the left and the control panel on the right (panel scaled up with `zoom` from 1200 px). The result screen keeps the old 480 px column (`.screen`). The start screen is a single-viewport equipment nameplate (`src/styles/start.css`, `start-*` classes, max 460 px wide, no scrolling): logo, cream nameplate panel with the rules, and the "勤務開始" key.
+The in-game screen is a single cabinet (`.cabinet` in `src/styles/retro.css`): the CRT monitor on top and the control panel below on phones (tube first, panel under it, full-bleed up to 440 px and at most 560 px wide); at ≥ 900 px the cabinet fills the viewport with the 3:4 monitor on the left and the control panel on the right (panel scaled up with `zoom` from 1200 px). Image preload (#284): `index.html` preloads the cabinet images with `link[data-cabinet-image]`, `src/utils/uiPreload.ts` decodes them and the Caveat font, and the start key waits for that for at most 5 s (the timer is cleared when preload finishes first) before the shift starts. On portrait the `.tube` width constants in `retro.css` (`100dvh - 410px` / `- 337px`) are the measured height of everything except the picture; the cabinet has `min-height: 100dvh` so no band is left under it. The result screen is its own layout (`.result-screen`, max 460 px, `src/components/result.css`): logo, the taped investigation note (status line, tonight's correct reports, false reports and shift duration, totals) and a RESTART SHIFT key. Its status reads WITHDRAWN (3 false reports), DAWN (enough reports at dawn), TIME UP (dawn with too few reports) or THE TRUTH AT DAWN (true ending). The start screen is a single-viewport equipment nameplate (`src/styles/start.css`, `start-*` classes, max 460 px wide, no scrolling): logo, cream nameplate panel with the rules, and the "勤務開始" key.
 
 ---
 
 ## 8. Components
 
-The in-game components are the retro hardware parts from §11, implemented in `src/components/` with styling in `src/styles/retro.css` (tokens scoped to `.retro`). `Cabinet.tsx` assembles them and owns the local UI state (knob positions, report dialog, last result OSD, subtitles). The result screen uses the title image and a taped investigation note (`GameOverScreen.tsx` and `result.css`); the start screen is the nameplate described in §7. The Material-style Button and Card below remain general design references.
+The in-game components are the retro hardware parts from §11, implemented in `src/components/` with styling in `src/styles/retro.css` (tokens scoped to `.retro`). `Cabinet.tsx` assembles them and owns the local UI state (knob positions, report dialog, last result OSD, subtitles). The result screen is described in §7; the start screen is the nameplate described in §7. The Material-style Button and Card below remain general design references.
 
 | Part                       | File                                                            | Notes                                                                                                                                                                                                                                                                                                                                                                               |
 | -------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -174,7 +174,7 @@ The in-game components are the retro hardware parts from §11, implemented in `s
 
 Keyboard (playing, report dialog closed): ← / → and A / D switch cameras, 1-8 select one (`useCameraKeys.ts`).
 
-### 8.1 Button (result screen)
+### 8.1 Button (general reference; not used by the result screen)
 
 Three variants. All share radius `--radius-md`, padding `--space-3 --space-4`, type `--text-label`, motion `--dur-fast`.
 
@@ -184,7 +184,7 @@ Three variants. All share radius `--radius-md`, padding `--space-3 --space-4`, t
 
 Disabled = opacity 0.38, pointer-events none, no hover.
 
-### 8.2 Card / Panel (result screen)
+### 8.2 Card / Panel (general reference; not used by the result screen)
 
 Bg `--surface-1` (or `--surface-2` if nested), border `1px --outline`, radius `--radius-lg`, padding `--space-4`. Elevation 1.
 
@@ -246,7 +246,7 @@ What to take from it:
 | Lamps (green camera, amber strikes, red REPORT)  | `lamp-{green,amber,red}-{on,off}.webp`                | background of `.lamp` / `.lamp-big`; the lit glow is a CSS `box-shadow`                                                                                                              |
 | Speaker grille                                   | `speaker_tile.webp`                                   | a wide strip (`repeat-x`) along the bottom edge. A small square grille block was tried and rejected: the strip is preferred and it keeps the phone page height unchanged             |
 
-Kept as CSS (not images): scanlines, noise, glow, vignette, OSD (REC / CAM n / subtitles), every label and number, the glass haze, and the handwritten note paper and tape of the SELECT CATEGORY dialog (`.cat-note`, #236). The start and result screens are still the older design (handled in #45).
+Kept as CSS (not images): scanlines, noise, glow, vignette, OSD (REC / CAM n / subtitles), every label and number, the glass haze, and the handwritten note paper and tape of the SELECT CATEGORY dialog (`.cat-note`, #236). The start screen is still the older design (handled in #45); the result screen is already the new one.
 
 **Known changes from the images:** DOM, sizes and the 44px touch targets are unchanged and the page height equals the pre-image build (display windows are fixed at the old height on purpose). The visible glass shrinks to about 85% of its old area on phones (about -15%) and about 80% on desktop (about -20%), and the tube's rounded corners hide a little of the picture (about 2.1% of the box). OSD texts are moved inward to stay clear of the corners.
 

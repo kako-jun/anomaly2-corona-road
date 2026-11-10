@@ -33,10 +33,14 @@ function App() {
 
   const enterShift = async () => {
     setLoading(true)
+    let timer: ReturnType<typeof setTimeout> | undefined
     await Promise.race([
       ready.current,
-      new Promise<void>(resolve => setTimeout(resolve, 5000)),
+      new Promise<void>(resolve => {
+        timer = setTimeout(resolve, 5000)
+      }),
     ])
+    clearTimeout(timer)
     setLoading(false)
     startGame()
   }
@@ -57,6 +61,7 @@ function App() {
           closing={
             ending?.closing ?? (gameState === 'win' ? 'dawn' : 'withdraw')
           }
+          outcome={gameState}
           stats={stats}
           onRestart={startGame}
         />

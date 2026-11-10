@@ -4,12 +4,34 @@ import './result.css'
 
 interface GameOverScreenProps {
   closing: 'dawn' | 'withdraw' | 'ending'
+  /** win/lose of the shift; a dawn that ends in a loss is a time-up, not a survival. */
+  outcome?: 'win' | 'lose'
   stats: GameStats
   onRestart: () => void
 }
 
+const fmtTime = (ms: number) => {
+  const total = Math.floor(ms / 1000)
+  const m = Math.floor(total / 60)
+  const s = total % 60
+  return `${m}m ${s.toString().padStart(2, '0')}s`
+}
+
+export const statusLabel = (
+  closing: 'dawn' | 'withdraw' | 'ending',
+  outcome: 'win' | 'lose'
+) =>
+  closing === 'withdraw'
+    ? 'WITHDRAWN'
+    : closing === 'ending'
+      ? 'THE TRUTH AT DAWN'
+      : outcome === 'win'
+        ? 'DAWN'
+        : 'TIME UP'
+
 export const GameOverScreen = ({
   closing,
+  outcome = closing === 'withdraw' ? 'lose' : 'win',
   stats,
   onRestart,
 }: GameOverScreenProps) => {
@@ -23,9 +45,13 @@ export const GameOverScreen = ({
       >
         <h1 id="result-heading">INVESTIGATION NOTES</h1>
         <p className="result-status">
-          {closing === 'withdraw' ? 'WITHDRAWN' : 'DAWN'}
+          {statusLabel(closing, outcome)}
         </p>
         <p className="result-line">Tonight’s record: {stats.correctReports}</p>
+        <p className="result-total">
+          False reports: {stats.misreports} · Shift duration:{' '}
+          {fmtTime(stats.currentTime)}
+        </p>
         <p className="result-total">
           Total reports: {save.foundTotal} · Distinct anomalies:{' '}
           {save.foundIds.length}

@@ -1,5 +1,5 @@
 /* Start screen: equipment nameplate. All classes are start-* so they never collide with
-   .screen .card .btn (result screen) or the retro cabinet classes. Colors only come from here. */
+   the old App.css classes (.screen .card .btn, no longer used by the result screen) or the retro cabinet classes. Colors only come from here. */
 
 .start-screen {
   --start-cream: #d9ceb0;
