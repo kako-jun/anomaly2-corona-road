@@ -637,14 +637,7 @@
 
 .bezel {
   background: var(--bezel);
-  border-radius: 24px;
   padding: 7px 7px 20px;
-  box-shadow:
-    inset 0 0 0 2px #222,
-    inset 0 4px 12px #000,
-    0 0 0 2px rgba(60, 40, 18, 0.35),
-    0 3px 6px 1px rgba(40, 25, 10, 0.5),
-    0 -1px 0 1px #fff6;
 }
 
 .glass {
@@ -1410,8 +1403,6 @@
   border-style: solid;
   border-color: transparent;
   border-width: 10px 14px 20px 14px;
-  border-radius: 0;
-  box-shadow: none;
 }
 .glass {
   border-radius: 9px / 10px;
@@ -1450,14 +1441,13 @@
   background-color: #0b0a08;
 }
 
-/* keep the tube's OUTER size exactly as before: the frame is 14px per side instead of 7px, so the glass gives
-   up its strict 3:4 and fills the box the old 3:4 glass + 7/7/20/7 padding made. */
+/* phones: the frame box is the tube's width at the frame picture's own aspect (set on the last .bezel rule); the glass fills the opening of that picture. */
 @media (max-width: 899px) {
   .tube {
     container-type: inline-size;
   }
   .bezel {
-    height: calc((100cqw - 14px) * 4 / 3 + 27px);
+    height: auto;
     display: block;
   }
   .glass {
@@ -1660,167 +1650,146 @@
   border: 0;
   border-image: none;
   width: 100%;
-  border-radius: 3% / 2.2%;
+  /* the box has EXACTLY the picture's pixel aspect (1246x1679, checked by scripts/bezel-frame.py), so 100% 100% is an unstretched fit */
+  aspect-ratio: 1246 / 1679;
   background: url('/ui/bezel_mon.webp') 0 0 / 100% 100% no-repeat;
-  box-shadow: 0 3px 6px 1px rgba(40, 25, 10, 0.5);
+  /* no CSS box outline (no border-radius, no box-shadow): only the picture's own outer edge is visible (#283). The soft shadow follows the picture's transparent corners. Variant M (see DESIGN.md): border-radius 4.4% / 3.6% + box-shadow 0 3px 6px 1px instead of this filter. */
+  filter: drop-shadow(0 3px 3px rgba(40, 25, 10, 0.5));
 }
 .glass {
+  /* ONE numeric group describes the frame picture's transparent opening, in picture pixels (measured on bezel_mon.webp).
+     The glass box is the opening plus --open-pad on every side; the clip-path below is traced from the same opening. */
+  --img-w: 1246;
+  --img-h: 1679;
+  --open-l: 99;
+  --open-t: 99;
+  --open-r: 1146;
+  --open-b: 1580;
+  --open-pad: 2;
   container-type: inline-size; /* subtitles size against the picture width (cqw), #295 */
   position: absolute;
-  left: 4.811%;
-  top: 6.111%;
-  width: 90.292%;
-  height: 85.933%;
+  left: calc((var(--open-l) - var(--open-pad)) / var(--img-w) * 100%);
+  top: calc((var(--open-t) - var(--open-pad)) / var(--img-h) * 100%);
+  width: calc(
+    (var(--open-r) - var(--open-l) + 2 * var(--open-pad)) / var(--img-w) * 100%
+  );
+  height: calc(
+    (var(--open-b) - var(--open-t) + 2 * var(--open-pad)) / var(--img-h) * 100%
+  );
   aspect-ratio: auto;
   border-radius: 0;
   box-shadow: none;
   background: #050505;
   /* tube face: big rounded corners, sides bulge slightly outward. outline traced from the frame picture's opening. */
   clip-path: polygon(
-    51.284% 99.94%,
-    48.362% 99.963%,
-    45.426% 99.889%,
-    42.489% 99.815%,
-    39.552% 99.741%,
-    36.631% 99.667%,
-    33.701% 99.521%,
-    30.765% 99.444%,
-    27.85% 99.241%,
-    24.927% 99.074%,
-    22.002% 98.926%,
-    19.084% 98.704%,
-    16.171% 98.481%,
-    13.258% 98.255%,
-    10.356% 97.963%,
-    7.513% 97.467%,
-    5.117% 96.169%,
-    3.451% 94.296%,
-    2.712% 92.1%,
-    2.426% 89.832%,
-    2.141% 87.564%,
-    1.901% 85.292%,
-    1.577% 83.025%,
-    1.38% 80.748%,
-    1.189% 78.471%,
-    0.999% 76.194%,
-    0.809% 73.917%,
-    0.63% 71.639%,
-    0.523% 69.354%,
-    0.333% 67.077%,
-    0.238% 64.79%,
-    0.143% 62.504%,
-    0.048% 60.218%,
-    0.048% 57.923%,
-    -0.048% 55.636%,
-    -0.048% 53.341%,
-    -0.048% 51.046%,
-    -0.048% 48.75%,
-    -0.048% 46.455%,
-    0.048% 44.169%,
-    0.048% 41.874%,
-    0.143% 39.594%,
-    0.238% 37.307%,
-    0.326% 35.021%,
-    0.428% 32.735%,
-    0.616% 30.458%,
-    0.714% 28.172%,
-    0.904% 25.895%,
-    1.094% 23.617%,
-    1.284% 21.34%,
-    1.475% 19.063%,
-    1.682% 16.787%,
-    1.951% 14.518%,
-    2.236% 12.25%,
-    2.467% 9.977%,
-    2.72% 7.705%,
-    3.603% 5.537%,
-    5.318% 3.694%,
-    7.779% 2.464%,
-    10.632% 1.993%,
-    13.531% 1.686%,
-    16.442% 1.439%,
-    19.35% 1.189%,
-    22.257% 0.926%,
-    25.182% 0.777%,
-    28.095% 0.56%,
-    31.02% 0.408%,
-    33.957% 0.332%,
-    36.881% 0.185%,
-    39.818% 0.111%,
-    42.754% 0.037%,
-    45.691% -0.037%,
-    48.639% -0.037%,
-    51.588% -0.037%,
-    54.536% -0.037%,
-    57.473% 0.037%,
-    60.409% 0.111%,
-    63.346% 0.186%,
-    66.275% 0.333%,
-    69.202% 0.463%,
-    72.125% 0.623%,
-    75.05% 0.779%,
-    77.969% 0.962%,
-    80.876% 1.221%,
-    83.789% 1.444%,
-    86.691% 1.74%,
-    89.592% 2.037%,
-    92.43% 2.543%,
-    94.815% 3.852%,
-    96.501% 5.713%,
-    97.288% 7.905%,
-    97.479% 10.182%,
-    97.764% 12.45%,
-    97.961% 14.727%,
-    98.253% 16.995%,
-    98.517% 19.263%,
-    98.715% 21.54%,
-    98.906% 23.817%,
-    99.096% 26.094%,
-    99.257% 28.374%,
-    99.382% 30.658%,
-    99.556% 32.936%,
-    99.667% 35.219%,
-    99.762% 37.505%,
-    99.856% 39.792%,
-    99.857% 42.087%,
-    99.952% 44.371%,
-    99.952% 46.666%,
-    99.952% 48.961%,
-    99.952% 51.257%,
-    99.952% 53.552%,
-    99.952% 55.847%,
-    99.952% 58.143%,
-    99.857% 60.423%,
-    99.762% 62.709%,
-    99.667% 64.995%,
-    99.572% 67.281%,
-    99.474% 69.567%,
-    99.286% 71.845%,
-    99.096% 74.122%,
-    98.906% 76.399%,
-    98.716% 78.676%,
-    98.525% 80.953%,
-    98.259% 83.222%,
-    97.962% 85.489%,
-    97.757% 87.766%,
-    97.479% 90.034%,
-    97.194% 92.302%,
-    96.353% 94.479%,
-    94.613% 96.305%,
-    92.164% 97.547%,
-    89.304% 97.963%,
-    86.402% 98.26%,
-    83.489% 98.482%,
-    80.585% 98.755%,
-    77.658% 98.927%,
-    74.739% 99.111%,
-    71.82% 99.296%,
-    68.895% 99.444%,
-    65.97% 99.593%,
-    63.034% 99.667%,
-    60.097% 99.741%,
-    57.16% 99.815%,
-    54.224% 99.889%
+    49.619% 99.79%,
+    51.338% 99.832%,
+    57.897% 99.742%,
+    58.754% 99.672%,
+    64.082% 99.577%,
+    64.558% 99.507%,
+    66.27% 99.488%,
+    67.983% 99.355%,
+    71.503% 99.232%,
+    71.694% 99.18%,
+    74.643% 99.051%,
+    75.785% 98.927%,
+    77.307% 98.897%,
+    79.876% 98.718%,
+    90.723% 97.772%,
+    91.294% 97.694%,
+    92.341% 97.43%,
+    93.387% 96.995%,
+    94.339% 96.462%,
+    95.018% 95.926%,
+    95.768% 95.185%,
+    96.58% 93.906%,
+    96.914% 93.098%,
+    97.123% 92.155%,
+    97.528% 88.788%,
+    98.564% 79.428%,
+    99.16% 71.953%,
+    99.481% 66.97%,
+    99.626% 62.054%,
+    99.695% 61.852%,
+    99.711% 59.36%,
+    99.798% 59.091%,
+    99.729% 58.889%,
+    99.797% 58.687%,
+    99.83% 49.461%,
+    99.698% 39.764%,
+    99.624% 39.562%,
+    99.361% 31.684%,
+    98.964% 26.094%,
+    98.464% 20.236%,
+    97.128% 7.778%,
+    96.913% 6.902%,
+    96.682% 6.364%,
+    96.288% 5.623%,
+    95.588% 4.68%,
+    94.244% 3.551%,
+    93.102% 2.934%,
+    92.15% 2.571%,
+    91.009% 2.309%,
+    89.391% 2.186%,
+    85.109% 1.704%,
+    81.304% 1.416%,
+    80.257% 1.285%,
+    78.164% 1.169%,
+    77.973% 1.104%,
+    67.317% 0.515%,
+    59.8% 0.256%,
+    52.854% 0.139%,
+    43.245% 0.164%,
+    43.054% 0.214%,
+    36.87% 0.341%,
+    36.679% 0.391%,
+    34.776% 0.423%,
+    29.258% 0.679%,
+    24.5% 0.994%,
+    23.359% 1.018%,
+    23.168% 1.079%,
+    22.027% 1.104%,
+    19.933% 1.335%,
+    14.891% 1.704%,
+    9.087% 2.309%,
+    8.23% 2.497%,
+    6.613% 3.089%,
+    5.376% 3.862%,
+    4.805% 4.35%,
+    4.203% 5.017%,
+    3.6% 5.892%,
+    3.072% 7.172%,
+    2.276% 13.569%,
+    1.434% 21.852%,
+    0.618% 33.098%,
+    0.675% 33.232%,
+    0.505% 35.253%,
+    0.365% 40.842%,
+    0.299% 41.044%,
+    0.363% 41.313%,
+    0.297% 41.448%,
+    0.172% 49.192%,
+    0.197% 57.003%,
+    0.505% 66.364%,
+    1.635% 81.246%,
+    2.763% 91.077%,
+    2.964% 92.559%,
+    3.278% 93.569%,
+    3.811% 94.579%,
+    4.31% 95.253%,
+    4.988% 95.926%,
+    5.661% 96.462%,
+    6.422% 96.909%,
+    7.659% 97.43%,
+    8.706% 97.695%,
+    9.277% 97.773%,
+    14.891% 98.297%,
+    20.314% 98.718%,
+    32.017% 99.405%,
+    42.293% 99.741%,
+    47.621% 99.788%,
+    47.812% 99.837%
   );
 }
 /* faint glass: soft glare band + darker corners/edges. weak on purpose, the picture stays readable. */
@@ -1860,10 +1829,10 @@
   right: 7%;
   top: 6%;
 }
-/* the glass is out of the flow now: the tube keeps its old outer size */
+/* the glass is out of the flow now: the tube is exactly as wide as the frame picture is at the tube's height (1246x1679) */
 @media (min-width: 900px) {
   .tube {
-    width: calc((100vh - 43px) * 0.75 + 14px);
+    width: calc((100vh - 16px) * 1246 / 1679);
     max-width: none;
     min-width: 0;
   }
@@ -1879,13 +1848,13 @@
     margin-top: auto;
   }
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 416px) * 0.75 + 14px)));
+    width: min(100%, max(160px, calc((100dvh - 389px) * 1246 / 1679)));
     align-self: center;
   }
   .panel {
     gap: 4px;
   }
-  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300, set to 9px by kako-jun in #309); the tube-width constants (416 / 343) = base 407 / 334 + this gap, so when the gap changes move both constants by the same amount */
+  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300, set to 9px by kako-jun in #309); the tube-width constants (389 / 316, times the frame picture ratio 1246/1679) = base 380 / 307 + this gap, so when the gap changes move both constants by the same amount */
   .knob {
     margin-bottom: 9px;
   }
@@ -1903,7 +1872,7 @@
 
 @media (min-width: 360px) and (max-width: 899px) {
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 343px) * 0.75 + 14px)));
+    width: min(100%, max(160px, calc((100dvh - 316px) * 1246 / 1679)));
   }
   .cam-grid {
     grid-template-columns: repeat(8, minmax(44px, 1fr));
