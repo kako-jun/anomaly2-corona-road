@@ -435,6 +435,7 @@ def selftest(base_path, opts):
     aspect mismatch, no change, full redraw, bad --box. opts supplies --threshold/--dilate/--feather."""
     from PIL import ImageDraw
 
+    print("note: stderr lines such as '--box needs exactly 4 values' come from the intentional bad-input cases (bad_box / fail_*); only the PASS/FAIL table below counts.", file=sys.stderr)
     base = Image.open(base_path).convert("RGB")
     W, H = base.size
     rng = np.random.default_rng(1)
@@ -536,7 +537,9 @@ def selftest(base_path, opts):
         W1, H1 = Image.open(b1).size
         try:
             box, info = lookup_element("CAM01-E12", b1, 0)
-            want = (math.floor(660 * W1 / 1000), math.floor(245 * H1 / 1000), math.ceil(1000 * W1 / 1000), math.ceil(690 * H1 / 1000))
+            # expected px derived from the inventory rect itself (not hard-coded) so inventory corrections cannot make this stale
+            r1 = parse_inventory()[1]["elements"]["CAM01-E12"]["rect"]
+            want = (math.floor(r1[0] * W1 / 1000), math.floor(r1[1] * H1 / 1000), math.ceil(r1[2] * W1 / 1000), math.ceil(r1[3] * H1 / 1000))
             elem_case("element_px_conversion", tuple(box) == want and info["element_id"] == "CAM01-E12" and "店先" in info["element_description"], f"{box} vs {want}")
             box8, _ = lookup_element("CAM01-E12", b1, 8)
             elem_case("element_margin(+8,clamped)", box8 == (want[0] - 8, want[1] - 8, min(W1, want[2] + 8), want[3] + 8), str(box8))
