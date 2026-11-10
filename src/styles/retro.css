@@ -1872,7 +1872,7 @@
   .panel {
     gap: 4px;
   }
-  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300, set to 9px by kako-jun in #309); the extra 6px vs the old 3px is taken out of the picture height via the two tube-width constants above and below */
+  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300, set to 9px by kako-jun in #309); the tube-width constants (416 / 343) = base 407 / 334 + this gap, so when the gap changes move both constants by the same amount */
   .knob {
     margin-bottom: 9px;
   }
