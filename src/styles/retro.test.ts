@@ -135,22 +135,41 @@ describe('retro.css', () => {
     }
   })
 
-  it('keeps the knob-to-label gap at a quarter of the knob height or more (#300)', () => {
-    // portrait/phone rules live in @media (max-width: 899px); the base rule has no margin
-    const portraitGap: number[] = []
+  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (407/334) + that gap (#300, #309)', () => {
+    // 9px is the value kako-jun chose in #309 (18px in #300 was too wide, 3px too tight);
+    // it is also >= 0.15 of the 60px knob circle. Changing it is a design decision, so pin it.
+    // The .tube width constants (100dvh - Npx) are the measured height of everything except
+    // the picture and include this gap, so they must move by exactly the same amount.
+    const PINNED_GAP = 9
+    const BASE = { narrow: 407, wide: 334 } // constants when the gap was 0
+    const gaps: number[] = []
+    const tubeConsts: { min: boolean; n: number }[] = []
     root_.walkAtRules('media', at => {
       if (!/max-width:\s*899px/.test(at.params)) return
+      const min = /min-width/.test(at.params)
       at.walkRules(rule => {
-        if (!rule.selectors.includes('.knob')) return
-        rule.walkDecls('margin-bottom', d => {
-          const m = /^(\d+(?:\.\d+)?)px$/.exec(d.value.trim())
-          if (m) portraitGap.push(Number(m[1]))
-        })
+        if (rule.selectors.includes('.knob'))
+          rule.walkDecls('margin-bottom', d => {
+            const m = /^(\d+(?:\.\d+)?)px$/.exec(d.value.trim())
+            if (m) gaps.push(Number(m[1]))
+          })
+        if (rule.selectors.includes('.tube'))
+          rule.walkDecls('width', d => {
+            const m = /100dvh\s*-\s*(\d+(?:\.\d+)?)px/.exec(d.value)
+            if (m) tubeConsts.push({ min, n: Number(m[1]) })
+          })
       })
     })
-    const knobH = Math.min(...px('.knob', 'height'))
-    expect(portraitGap.length).toBeGreaterThan(0)
-    expect(Math.min(...portraitGap)).toBeGreaterThanOrEqual(knobH / 4)
+    expect(gaps).toEqual([PINNED_GAP])
+    expect(Math.min(...gaps)).toBeGreaterThanOrEqual(
+      Math.min(...px('.knob', 'height')) * 0.15
+    )
+    expect(tubeConsts.filter(c => !c.min).map(c => c.n)).toEqual([
+      BASE.narrow + gaps[0],
+    ])
+    expect(tubeConsts.filter(c => c.min).map(c => c.n)).toEqual([
+      BASE.wide + gaps[0],
+    ])
   })
 
   it('keeps the --wear A/B hook on the cabinet dirt layer', () => {
