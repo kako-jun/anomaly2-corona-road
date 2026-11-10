@@ -1835,15 +1835,21 @@
     margin-top: auto;
   }
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 389px) * 1246 / 1679)));
+    width: min(100%, max(160px, calc((100dvh - 377px) * 1246 / 1679)));
     align-self: center;
   }
   .panel {
     gap: 4px;
   }
-  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300, set to 9px by kako-jun in #309); the tube-width constants (389 / 316, times the frame picture ratio 1246/1679) = base 380 / 307 + this gap, so when the gap changes move both constants by the same amount */
+  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300, set to 9px by kako-jun in #309); the tube-width constants (377 / 304, times the frame picture ratio 1246/1679) = base 380 / 307 + this gap - the knob shrink (60px -> 48px on portrait = 12px, #313), so when the gap or the knob size changes move both constants by the same amount. The knob stays >= 44px for touch; the .mark is scaled with the circle */
   .knob {
+    width: 48px;
+    height: 48px;
     margin-bottom: 9px;
+  }
+  .knob .mark {
+    top: 4px;
+    height: 17.5px;
   }
   .knob-wrap {
     flex: 1;
@@ -1859,7 +1865,7 @@
 
 @media (min-width: 360px) and (max-width: 899px) {
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 316px) * 1246 / 1679)));
+    width: min(100%, max(160px, calc((100dvh - 304px) * 1246 / 1679)));
   }
   .cam-grid {
     grid-template-columns: repeat(8, minmax(44px, 1fr));

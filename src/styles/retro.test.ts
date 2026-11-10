@@ -138,13 +138,14 @@ describe('retro.css', () => {
     }
   })
 
-  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (380/307) + that gap (#300, #309)', () => {
+  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (380/307) + that gap - the portrait knob shrink (#300, #309, #313)', () => {
     // 9px is the value kako-jun chose in #309 (18px in #300 was too wide, 3px too tight);
     // it is also >= 0.15 of the 60px knob circle. Changing it is a design decision, so pin it.
     // The .tube width constants (100dvh - Npx) are the measured height of everything except
     // the picture and include this gap, so they must move by exactly the same amount.
     const PINNED_GAP = 9
-    const BASE = { narrow: 380, wide: 307 } // constants when the gap was 0
+    const BASE = { narrow: 380, wide: 307 } // constants when the gap was 0 and the knob was 60px
+    const KNOB_SHRINK = 60 - 48 // portrait knob 60px -> 48px (#313): the height goes to the picture
     const gaps: number[] = []
     const tubeConsts: { min: boolean; n: number }[] = []
     root_.walkAtRules('media', at => {
@@ -164,14 +165,15 @@ describe('retro.css', () => {
       })
     })
     expect(gaps).toEqual([PINNED_GAP])
+    expect(Math.min(...px('.knob', 'height'))).toBe(48)
     expect(Math.min(...gaps)).toBeGreaterThanOrEqual(
       Math.min(...px('.knob', 'height')) * 0.15
     )
     expect(tubeConsts.filter(c => !c.min).map(c => c.n)).toEqual([
-      BASE.narrow + gaps[0],
+      BASE.narrow + gaps[0] - KNOB_SHRINK,
     ])
     expect(tubeConsts.filter(c => c.min).map(c => c.n)).toEqual([
-      BASE.wide + gaps[0],
+      BASE.wide + gaps[0] - KNOB_SHRINK,
     ])
   })
 
