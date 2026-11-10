@@ -425,7 +425,7 @@ src/
 │   └── retro.css       # Cabinet UI styles (tokens scoped to .retro); part images in public/ui/ (DESIGN.md §11)
 ├── App.tsx
 ├── main.tsx
-├── App.css             # General screen, button and card classes
+├── App.css             # Page background for wide viewports only
 └── index.css           # Design tokens (:root vars), reset, keyframes
 ```
 

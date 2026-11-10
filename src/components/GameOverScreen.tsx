@@ -5,7 +5,7 @@ import './result.css'
 interface GameOverScreenProps {
   closing: 'dawn' | 'withdraw' | 'ending'
   /** win/lose of the shift; a dawn that ends in a loss is a time-up, not a survival. */
-  outcome?: 'win' | 'lose'
+  outcome: 'win' | 'lose'
   stats: GameStats
   onRestart: () => void
 }
@@ -31,7 +31,7 @@ export const statusLabel = (
 
 export const GameOverScreen = ({
   closing,
-  outcome = closing === 'withdraw' ? 'lose' : 'win',
+  outcome,
   stats,
   onRestart,
 }: GameOverScreenProps) => {
@@ -44,13 +44,13 @@ export const GameOverScreen = ({
         aria-labelledby="result-heading"
       >
         <h1 id="result-heading">INVESTIGATION NOTES</h1>
-        <p className="result-status">
-          {statusLabel(closing, outcome)}
-        </p>
+        <p className="result-status">{statusLabel(closing, outcome)}</p>
         <p className="result-line">Tonight’s record: {stats.correctReports}</p>
         <p className="result-total">
-          False reports: {stats.misreports} · Shift duration:{' '}
-          {fmtTime(stats.currentTime)}
+          False reports: {stats.misreports} ·{' '}
+          <span className="result-nowrap">
+            Shift duration: {fmtTime(stats.currentTime)}
+          </span>
         </p>
         <p className="result-total">
           Total reports: {save.foundTotal} · Distinct anomalies:{' '}

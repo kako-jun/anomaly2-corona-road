@@ -22,7 +22,12 @@ describe('case report', () => {
   ] as const)('shows the result and totals', (closing, label) => {
     const restart = vi.fn()
     render(
-      <GameOverScreen closing={closing} stats={stats} onRestart={restart} />
+      <GameOverScreen
+        closing={closing}
+        outcome={closing === 'withdraw' ? 'lose' : 'win'}
+        stats={stats}
+        onRestart={restart}
+      />
     )
     expect(screen.getByText(label)).toBeInTheDocument()
     expect(screen.getByText('Tonight’s record: 3')).toBeInTheDocument()
@@ -30,8 +35,15 @@ describe('case report', () => {
       screen.getByText('Total reports: 17 · Distinct anomalies: 2')
     ).toBeInTheDocument()
     expect(
-      screen.getByText('False reports: 2 · Shift duration: 2m 05s')
+      screen.getByText(
+        (_, el) =>
+          el?.tagName === 'P' &&
+          el.textContent === 'False reports: 2 · Shift duration: 2m 05s'
+      )
     ).toBeInTheDocument()
+    expect(screen.getByText('Shift duration: 2m 05s')).toHaveClass(
+      'result-nowrap'
+    )
     fireEvent.click(screen.getByRole('button', { name: 'RESTART SHIFT' }))
     expect(restart).toHaveBeenCalledOnce()
   })
