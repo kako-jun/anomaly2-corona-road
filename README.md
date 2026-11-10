@@ -92,6 +92,7 @@ npm run preview
 ```bash
 npm test            # Vitest（1回実行）
 npm run test:watch  # Vitest（監視）
+npm run check:bezel # モニター枠画像の透明開口と retro.css の数値群・clip-path の一致検査（要 uv）
 ```
 
 詳細は CLAUDE.md の「Testing」を参照。

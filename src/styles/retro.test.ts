@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
 import { join } from 'node:path'
 import postcss from 'postcss'
 import { describe, expect, it } from 'vitest'
@@ -88,7 +89,9 @@ describe('retro.css', () => {
     // the cqw declaration must come last so it wins; earlier ones are fallbacks for browsers without cqw
     expect(sizes.at(-1)).toBe('4.9cqw')
     // the picture (.glass) must be the size container the cqw resolves against
-    expect(decls('.glass', 'container-type').some(v => /inline-size|size/.test(v))).toBe(true)
+    expect(
+      decls('.glass', 'container-type').some(v => /inline-size|size/.test(v))
+    ).toBe(true)
   })
 
   it('tilts subtitles with skewX(-9deg), not font-style italic, keeping the cqw size (#306)', () => {
@@ -135,13 +138,13 @@ describe('retro.css', () => {
     }
   })
 
-  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (407/334) + that gap (#300, #309)', () => {
+  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (380/307) + that gap (#300, #309)', () => {
     // 9px is the value kako-jun chose in #309 (18px in #300 was too wide, 3px too tight);
     // it is also >= 0.15 of the 60px knob circle. Changing it is a design decision, so pin it.
     // The .tube width constants (100dvh - Npx) are the measured height of everything except
     // the picture and include this gap, so they must move by exactly the same amount.
     const PINNED_GAP = 9
-    const BASE = { narrow: 407, wide: 334 } // constants when the gap was 0
+    const BASE = { narrow: 380, wide: 307 } // constants when the gap was 0
     const gaps: number[] = []
     const tubeConsts: { min: boolean; n: number }[] = []
     root_.walkAtRules('media', at => {
@@ -194,5 +197,146 @@ describe('retro.css', () => {
     expect(cabinet.length).toBeGreaterThan(0)
     expect(category.length).toBeGreaterThan(0)
     expect(category.at(-1)!).toBeLessThan(cabinet.at(-1)!)
+  })
+})
+
+describe('monitor frame opening (#283)', () => {
+  // the last .glass rule that declares clip-path carries the opening group and the outline
+  const glass = (() => {
+    let found: postcss.Rule | undefined
+    root_.walkRules(rule => {
+      if (
+        rule.selectors.includes('.glass') &&
+        rule.some(n => n.type === 'decl' && n.prop === '--img-w')
+      )
+        found = rule
+    })
+    return found!
+  })()
+  const prop = (name: string) =>
+    Number(
+      glass.nodes
+        .find(n => n.type === 'decl' && n.prop === name)!
+        .toString()
+        .split(':')[1]
+    )
+  const val = (name: string) =>
+    (
+      glass.nodes.find(
+        n => n.type === 'decl' && n.prop === name
+      ) as postcss.Declaration
+    ).value
+
+  it('holds the opening as one numeric group that the glass box derives from', () => {
+    expect(glass).toBeDefined()
+    for (const k of [
+      '--img-w',
+      '--img-h',
+      '--open-l',
+      '--open-t',
+      '--open-r',
+      '--open-b',
+      '--open-pad',
+    ])
+      expect(Number.isFinite(prop(k)), k).toBe(true)
+    for (const side of ['left', 'top', 'width', 'height']) {
+      expect(val(side), side).toMatch(/var\(--open-/)
+      expect(val(side), side).not.toMatch(/^\d/)
+    }
+  })
+
+  it('matches the real pixel size of bezel_mon.webp', () => {
+    const buf = readFileSync(join(uiDir, 'bezel_mon.webp'))
+    expect(buf.subarray(12, 16).toString('ascii')).toBe('VP8X')
+    const w = buf.readUIntLE(24, 3) + 1
+    const h = buf.readUIntLE(27, 3) + 1
+    expect(w).toBe(prop('--img-w'))
+    expect(h).toBe(prop('--img-h'))
+  })
+
+  it('gives .bezel exactly the picture pixel aspect, so 100% 100% is an unstretched fit', () => {
+    const buf = readFileSync(join(uiDir, 'bezel_mon.webp'))
+    const w = buf.readUIntLE(24, 3) + 1
+    const h = buf.readUIntLE(27, 3) + 1
+    const ratios = decls('.bezel', 'aspect-ratio').map(v => {
+      const [n, d] = v.split('/').map(parseFloat)
+      return n / d
+    })
+    expect(ratios.length).toBeGreaterThan(0)
+    expect(ratios.at(-1)! / (w / h)).toBeCloseTo(1, 3)
+    expect(decls('.bezel', 'background').at(-1)).toMatch(/\/ 100% 100%/)
+    // no explicit height left on phones: a fixed height would bring the stretch back
+    expect(
+      root_.nodes.some(
+        n =>
+          n.type === 'atrule' &&
+          /max-width: 899px/.test((n as postcss.AtRule).params) &&
+          (n as postcss.AtRule).nodes?.some(
+            r =>
+              r.type === 'rule' &&
+              (r as postcss.Rule).selector === '.bezel' &&
+              (r as postcss.Rule).some(
+                d =>
+                  d.type === 'decl' && d.prop === 'height' && d.value !== 'auto'
+              )
+          )
+      )
+    ).toBe(false)
+  })
+
+  it('keeps the four rim bands of the picture equal (so the frame looks equally thick on all sides)', () => {
+    const W = prop('--img-w')
+    const H = prop('--img-h')
+    const bands = [
+      prop('--open-l'),
+      prop('--open-t'),
+      W - prop('--open-r'),
+      H - prop('--open-b'),
+    ]
+    // the box has the picture aspect, so equal picture px bands are equal screen thickness
+    for (const v of bands) expect(Math.abs(v - bands[0])).toBeLessThanOrEqual(2)
+  })
+
+  it('traces the clip-path from the same opening (outline spans the glass box minus the pad)', () => {
+    const W = prop('--img-w')
+    const H = prop('--img-h')
+    const pad = prop('--open-pad')
+    const gw = prop('--open-r') - prop('--open-l') + 2 * pad
+    const gh = prop('--open-b') - prop('--open-t') + 2 * pad
+    const m = /polygon\(([^)]*)\)/.exec(val('clip-path'))!
+    const pts = m[1].split(',').map(p => p.trim().split(/\s+/).map(parseFloat))
+    const xs = pts.map(p => p[0])
+    const ys = pts.map(p => p[1])
+    expect(pts.length).toBeGreaterThan(60)
+    expect(Math.min(...xs)).toBeCloseTo((pad / gw) * 100, 0)
+    expect(Math.max(...xs)).toBeCloseTo(100 - (pad / gw) * 100, 0)
+    expect(Math.min(...ys)).toBeCloseTo((pad / gh) * 100, 0)
+    expect(Math.max(...ys)).toBeCloseTo(100 - (pad / gh) * 100, 0)
+    expect(W).toBeGreaterThan(0)
+    expect(H).toBeGreaterThan(0)
+  })
+
+  // the numbers and the polygon must come from the picture's real alpha, not from copies: scripts/bezel-frame.py reads the
+  // webp (opening bbox, area difference and max deviation of the polygon <= 1 picture px). CI runs the same command.
+  const hasUv = spawnSync('uv', ['--version']).status === 0
+  it.skipIf(!hasUv)(
+    'binds the group and the clip-path polygon to the transparent opening of bezel_mon.webp (alpha)',
+    () => {
+      const r = spawnSync(
+        'uv',
+        ['run', '--script', join(root, 'scripts/bezel-frame.py'), 'check'],
+        { encoding: 'utf8' }
+      )
+      expect(r.stdout + r.stderr).toMatch(/max deviation/)
+      expect(r.status, r.stdout + r.stderr).toBe(0)
+    },
+    120_000
+  )
+
+  it('draws no CSS box outline around the frame picture (no double outline)', () => {
+    for (const prop of ['border-radius', 'box-shadow'])
+      for (const v of decls('.bezel', prop))
+        expect(v.trim(), `.bezel ${prop}`).toMatch(/^(0|0px|none)$/)
+    expect(decls('.bezel', 'filter').at(-1)).toMatch(/^drop-shadow\(/)
   })
 })
