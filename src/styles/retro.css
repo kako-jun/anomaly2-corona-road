@@ -268,6 +268,9 @@
   z-index: 6;
   text-align: center;
   color: #fff;
+  /* Fallback first, for browsers without container query units (a declaration with an unsupported unit
+     is dropped): 1rem is about the old desktop look (16px). */
+  font-size: 1rem;
   /* proportional to the picture (.glass is a size container): 4.9cqw = the old desktop look, at any monitor size (#295) */
   font-size: 4.9cqw;
   line-height: 1.8;
