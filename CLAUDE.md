@@ -28,13 +28,13 @@
 - **In-game Time**: 22:00 - 06:00 (`msToGameTime`; label `TIME`)
 - **Real-time Mapping**: 1 real second = 1 in-game minute
 - **Phases**: thirds of the shift (derived from `totalDurationMs`)
-- **Win Condition**: Survive until 6:00 AM
+- **Win Condition**: Survive until 06:00 AM
 
 #### 2. Anomaly System
 
 - **First Anomaly Delay**: 12 seconds
 - **Spawn Interval**: 30 seconds (cap of 2 concurrent — see Game Balance)
-- **Total Anomalies**: 6-11 per playthrough depending on report cadence
+- **Total Anomalies**: up to 16 per 8-minute playthrough (16 if every anomaly is reported promptly; about 11 when late reports stall the simultaneous-anomaly cap)
 - **Source**: the anomaly ledger `prompts/anomalies.yaml` (single source of truth for ALL anomalies: image / non*image, produced / planned; terms: glossary in `prompts/README.md`; format and promotion rule in `prompts/README.md` "台帳の書式", counts via `npm run ledger:summary [ledger path]`, Node >=22.18 for type stripping, see `engines` in package.json). The game draws only from `kind: image` + `status: produced` entries. Each of those is a transparent WebP overlay (`assets/anomaly-overlays/camNN/*.webp`) drawn over the camera's base photo at the ledger's pixel position. The game never tells the player where or what: no lamp, no description, no on-screen hint — spotting the difference \_is\* the game (#5).
 - **How it is wired** (#46): `vite.config.ts` validates every ledger entry and reads the image+produced ones into the `virtual:anomalies` module (only `id`, camera, category, optional `also_categories`, `anomaly_type`, overlay path, origin, size, and `reiwa: true` for a Reiwa entry; a broken entry fails the build and names the entry); `src/data/anomalyLedger.ts` resolves overlay URLs; `src/utils/anomalyLedger.ts` / `anomalyData.ts` / `anomalyOverlay.ts` are the pure parse / pick / placement helpers; `CameraView.tsx` draws the overlay (order: base photo, glow, overlay, then scanlines etc.); the overlay images are preloaded on idle time once play starts (`src/utils/preload.ts`). Minimum browser: CSS container query size units (Safari 16+ / Chrome 105+ / Firefox 110+); older ones show the photo uncovered but visible, and overlay percentages still hold. Selection (#221): only a camera with no anomaly now and an entry not already used this shift, drawn in four steps so the ledger's skew (many `add_object`, few `displace`) is damped: camera (uniform), then category (weighted by its unused count ^ 0.75), then `anomaly_type` (same weight), then one entry (uniform); the counts are the unused entries inside the chosen camera, and the exponent is `DRAW_WEIGHT_EXPONENT` (0.75) in `gameConfig.ts` (0 uniform, 1 proportional to count); empty categories / types are never candidates; when the ledger runs out, spawning stops; if only no camera is free, it retries after 1 s instead of waiting a whole interval; an entry whose image cannot be resolved is skipped with a console warning. Playthrough-to-playthrough repeat avoidance needs save data (not implemented, `docs/save-data.md`).
 - **Categories**: 5 types (the ledger's `category`, plus the optional `also_categories` array for a genuinely split anomaly — any of them is a correct report; definitions and the subject-based boundary are in `prompts/README.md` "カテゴリ"; the correct report is the category of the anomaly on the camera you are watching). The SELECT CATEGORY dialog shows a handwritten note under every key (always visible, English only; font Caveat self-hosted in `public/fonts/`, OFL)
@@ -50,19 +50,19 @@ Anomalies become progressively more disturbing and rule-breaking:
 
 > The phases below are the design intent. The implementation currently does not weight the ledger by phase (the entry comes from the four-step draw in "Selection" under "How it is wired": camera, then category, then `anomaly_type`, then one unused entry); `Anomaly.phase` is only recorded.
 
-**Early Phase (0:00 - 2:00)**
+**Early Phase (22:00 - 00:40 in game, 0-160 s real)**
 
 - Small, subtle anomalies
 - Focus: Objects and environment
 - Examples: Missing signs, flickering lights, frozen timestamps
 
-**Mid Phase (2:00 - 4:00)**
+**Mid Phase (00:40 - 03:20 in game, 160-320 s real)**
 
 - More obvious environmental changes
 - Introduction of human elements
 - Examples: Camera angle shifts, corridor elongation, backwards movement
 
-**Late Phase (4:00 - 6:00)**
+**Late Phase (03:20 - 06:00 in game, 320-480 s real)**
 
 - Surreal and meta-anomalies
 - Rules themselves break down
@@ -83,7 +83,7 @@ Meta-anomalies challenge the player's trust in the game interface itself (not im
 
 **Win Conditions:**
 
-- Survive until 6:00 AM
+- Survive until 06:00 AM
 - Correctly report at least 4 anomalies
 
 **Lose Conditions:**
@@ -322,7 +322,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 
 #### 4.4 Endless Mode
 
-- [ ] Continue past 6:00 AM
+- [ ] Continue past 06:00 AM
 - [ ] Increasing difficulty
 - [ ] Leaderboard integration
 - [ ] Score multipliers

@@ -21,6 +21,11 @@ describe('msToGameTime (22:00 -> 06:00 over 480 s)', () => {
     expect(msToGameTime(120_000)).toBe('00:00')
     expect(msToGameTime(121_000)).toBe('00:01')
   })
+  it('clamps below 0 to 22:00 and beyond the end to 06:00', () => {
+    expect(msToGameTime(-1_000)).toBe('22:00')
+    expect(msToGameTime(480_001)).toBe('06:00')
+    expect(msToGameTime(900_000)).toBe('06:00')
+  })
   it('reaches 06:00 at the end of the shift', () => {
     expect(DEFAULT_CONFIG.totalDurationMs).toBe(480_000)
     expect(msToGameTime(DEFAULT_CONFIG.totalDurationMs - 1000)).toBe('05:59')

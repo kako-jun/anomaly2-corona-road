@@ -64,7 +64,9 @@ export const CAMERAS: Camera[] = [
 export const GAME_START_MINUTE_OF_DAY = 22 * 60
 
 export const msToGameTime = (ms: number): string => {
-  const elapsedGameMinutes = Math.floor(Math.max(0, ms) / 1000)
+  // Clamp to the shift: before 0 -> 22:00, after the end -> stop at 06:00.
+  const clamped = Math.min(Math.max(0, ms), DEFAULT_CONFIG.totalDurationMs)
+  const elapsedGameMinutes = Math.floor(clamped / 1000)
   const minuteOfDay = (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
   const hours = Math.floor(minuteOfDay / 60)
   const minutes = minuteOfDay % 60
@@ -84,7 +86,7 @@ export const getGamePhase = (ms: number): 'early' | 'mid' | 'late' => {
  * The count is the unused entries inside the camera already chosen. 0 = uniform, 1 = proportional
  * to count (at these two steps; the old behaviour there. The camera step and the final entry step
  * are always uniform). 0.75 was picked by simulating the real ledger (299 entries,
- * 6-11 per shift, 50k shifts): at 0.5 an entry that is the only one of its category in a camera
+ * 6-11 per shift, 50k shifts; the shift was 6 minutes at the time of that simulation, now 8): at 0.5 an entry that is the only one of its category in a camera
  * showed up about 3x as often as before (up to 9.5%), which worsens repeats; at 0.75 the maximum
  * is about 5.4% (about 1.9x the mean) and the add_object share falls from 36% to 28%.
  */
