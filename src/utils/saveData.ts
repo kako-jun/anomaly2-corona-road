@@ -29,6 +29,13 @@ export interface SaveData {
   usedChatter: string[]
   /** Story flags that are raised but whose story conversation has not been played yet (carried to the next start). */
   pendingStories: string[]
+  /** The true ending has been reached: this save can no longer start a shift, only start over (#294). */
+  endingReached: boolean
+  /**
+   * Generation number. START OVER raises it by one; a higher epoch wins a merge whole, so a reset
+   * is not undone by an older tab that still holds the old progress. Absent = 0.
+   */
+  epoch: number
   settings?: SaveSettings
 }
 
@@ -41,6 +48,8 @@ export const emptySave = (): SaveData => ({
   usedLines: {},
   usedChatter: [],
   pendingStories: [],
+  endingReached: false,
+  epoch: 0,
 })
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
@@ -48,6 +57,10 @@ const isRecord = (v: unknown): v is Record<string, unknown> =>
 
 const isCount = (v: unknown): v is number =>
   typeof v === 'number' && Number.isInteger(v) && v >= 0
+
+// The generation number is incremented on every reset, so it must stay exactly representable.
+const isEpoch = (v: unknown): v is number =>
+  typeof v === 'number' && Number.isSafeInteger(v) && v >= 0
 
 const isStringArray = (v: unknown): v is string[] =>
   Array.isArray(v) && v.every(s => typeof s === 'string')
@@ -90,6 +103,12 @@ export const validateSave = (raw: unknown): SaveData | null => {
   // Absent in saves written before the field existed (same version): treated as none.
   const pendingStories = rec.pendingStories ?? []
   if (!isStringArray(pendingStories)) return null
+  // Absent in saves written before the ending mark existed (same version): not reached.
+  const endingReached = rec.endingReached ?? false
+  if (typeof endingReached !== 'boolean') return null
+  // Absent in saves written before generations existed (same version): generation 0.
+  const epoch = rec.epoch ?? 0
+  if (!isEpoch(epoch)) return null
   if (
     !isRecord(flags) ||
     !Object.values(flags).every(f => typeof f === 'boolean')
@@ -111,6 +130,8 @@ export const validateSave = (raw: unknown): SaveData | null => {
     ),
     usedChatter: uniq(usedChatter),
     pendingStories: uniq(pendingStories),
+    endingReached,
+    epoch,
   }
   if (settings !== undefined) {
     if (
@@ -128,10 +149,16 @@ export const validateSave = (raw: unknown): SaveData | null => {
 }
 
 /**
- * Merge two saves of the same player (two tabs). Data only grows: counts take the larger value,
+ * Merge two saves of the same player (two tabs). Within one epoch data only grows: counts take the larger value,
  * ids and flags are unions. `b` wins for settings.
  */
 export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
+  // A higher epoch (a reset happened) wins whole: the older generation's progress is dropped.
+  if (a.epoch !== b.epoch) {
+    const [win, lose] = a.epoch > b.epoch ? [a, b] : [b, a]
+    const settings = win.settings ?? lose.settings
+    return settings ? { ...win, settings } : win
+  }
   const usedLines: Record<string, string[]> = {}
   for (const k of new Set([
     ...Object.keys(a.usedLines),
@@ -148,6 +175,8 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
     usedLines,
     usedChatter: uniq([...a.usedChatter, ...b.usedChatter]),
     pendingStories: uniq([...a.pendingStories, ...b.pendingStories]),
+    endingReached: a.endingReached || b.endingReached,
+    epoch: a.epoch,
   }
   const settings = b.settings ?? a.settings
   if (settings) out.settings = settings
