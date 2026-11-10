@@ -146,6 +146,41 @@ describe('validateSave', () => {
   })
 })
 
+describe('lastShift (investigation note, #297)', () => {
+  const shift = {
+    found: 4,
+    fresh: 2,
+    misreports: 1,
+    durationMs: 480000,
+    closing: 'dawn' as const,
+    raised: ['elder1'],
+  }
+  it('is absent in an old save and in an empty one', () => {
+    expect(validateSave(save())?.lastShift).toBeUndefined()
+    expect(emptySave().lastShift).toBeUndefined()
+  })
+  it('is read back as saved', () => {
+    expect(validateSave(save({ lastShift: shift }))?.lastShift).toEqual(shift)
+  })
+  it.each([
+    ['a negative count', { ...shift, found: -1 }],
+    ['an unknown closing', { ...shift, closing: 'quit' }],
+    ['raised that is not strings', { ...shift, raised: [1] }],
+    ['not an object', 5],
+  ])('drops a damaged one (%s) without rejecting the save', (_n, bad) => {
+    const out = validateSave({ ...save({ foundTotal: 7 }), lastShift: bad })
+    expect(out?.foundTotal).toBe(7)
+    expect(out?.lastShift).toBeUndefined()
+  })
+  it('merges to the shift that ended later', () => {
+    const early = save({ loops: 1, lastShift: { ...shift, found: 1 } })
+    const late = save({ loops: 2, lastShift: shift })
+    expect(mergeSave(early, late).lastShift).toEqual(shift)
+    expect(mergeSave(late, early).lastShift).toEqual(shift)
+    expect(mergeSave(save(), late).lastShift).toEqual(shift)
+  })
+})
+
 describe('mergeSave keeps what only one side has', () => {
   const side = (own: string[]) =>
     save({ foundIds: own, usedChatter: own, pendingStories: own })

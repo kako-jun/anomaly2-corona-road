@@ -3,7 +3,7 @@ import anomalies from 'virtual:anomalies'
 import { reiwaIdsOf } from './anomalyLedger'
 import { newlyRaisedFlags, storyFlagNames } from './dialogueEngine'
 import { update } from './saveData'
-import type { SaveData } from './saveData'
+import type { LastShift, SaveData } from './saveData'
 
 /**
  * Ids of the Reiwa anomalies: ledger entries (image + produced) marked `reiwa: true`, passed in through
@@ -54,9 +54,12 @@ export const recordFound = (anomalyId: string): string[] => {
   return out
 }
 
-/** A shift ended (dawn or withdraw): one more loop. Flags that depend on loops rise at the next shift start. */
-export const recordShiftEnd = (): void => {
-  update(cur => ({ ...cur, loops: cur.loops + 1 }))
+/**
+ * A shift ended (dawn, withdraw or the true ending): one more loop, and how it went is kept for the
+ * investigation note (#297). Flags that depend on loops rise at the next shift start.
+ */
+export const recordShiftEnd = (shift: LastShift): void => {
+  update(cur => ({ ...cur, loops: cur.loops + 1, lastShift: shift }))
 }
 
 /** Shift start: raise flags that became true between shifts (loop-based ones) and return them. */

@@ -1,0 +1,323 @@
+/* Investigation note (#297). The paper is drawn at a fixed 340x620 and scaled by InvestigationNote.tsx.
+   Body text: Zen Kurenaido (Japanese) / Caveat (English); scribbles and numbers: Yomogi / Caveat. Both
+   Japanese fonts are subsets (SIL OFL 1.1, texts in public/fonts/OFL-*.txt, see README). */
+@font-face {
+  font-family: 'NoteZen';
+  src: url('/fonts/note-zen-kurenaido.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NoteYomogi';
+  src: url('/fonts/note-yomogi.woff2') format('woff2');
+  font-display: swap;
+}
+
+.note-screen {
+  --ink: #3a2f22;
+  --paper: #f0e7cd;
+  --paper-edge: #d9cba4;
+  --tape: rgba(217, 206, 176, 0.78);
+  --blue: #27427a;
+  --red: #a93326;
+  --stamp: #8c2b20;
+  --rule: rgba(110, 92, 60, 0.28);
+  box-sizing: border-box;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #0a0a0a;
+  color: var(--ink);
+}
+.note-screen *,
+.note-screen *::before,
+.note-screen *::after {
+  box-sizing: border-box;
+}
+.note-fit {
+  position: relative;
+  flex: none;
+}
+.note-paper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 340px;
+  height: 620px;
+  transform-origin: 0 0;
+  background: var(--paper);
+  box-shadow:
+    0 1px 3px #000a,
+    inset 0 0 0 1px var(--paper-edge);
+  padding: 18px 16px 14px;
+  display: flex;
+  flex-direction: column;
+}
+.note-paper::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -7px;
+  width: 74px;
+  height: 15px;
+  margin-left: -37px;
+  background: var(--tape);
+  box-shadow: 0 1px 1px #0003;
+  transform: rotate(-1.5deg);
+}
+.note-ja {
+  font-family: 'NoteZen', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
+}
+.note-en {
+  font-family: 'Caveat', cursive;
+}
+.note-ja .note-hw {
+  font-family: 'NoteYomogi', 'NoteZen', sans-serif;
+}
+.note-en .note-hw {
+  font-family: 'Caveat', cursive;
+}
+
+.note-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.note-hdr h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 30px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+.note-en .note-hdr h1 {
+  font-size: 32px;
+  letter-spacing: 0.04em;
+}
+.note-night {
+  font-size: 15px;
+  line-height: 20px;
+}
+.note-en .note-night {
+  font-size: 21px;
+}
+
+.note-stamps {
+  margin: 6px 0 4px;
+  min-height: 28px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.note-stamp {
+  display: inline-block;
+  border: 2px solid var(--stamp);
+  color: var(--stamp);
+  padding: 1px 8px;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.14em;
+  transform: rotate(-5deg);
+  opacity: 0.88;
+  border-radius: 3px;
+  mix-blend-mode: multiply;
+  white-space: nowrap;
+}
+.note-en .note-stamp {
+  font-size: 19px;
+  letter-spacing: 0.06em;
+}
+.note-stamp.note-big {
+  font-size: 26px;
+  line-height: 30px;
+  padding: 2px 12px;
+  border-width: 3px;
+}
+.note-en .note-stamp.note-big {
+  font-size: 30px;
+}
+
+.note-board {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+.note-slot {
+  position: relative;
+  width: 68px;
+  text-align: center;
+}
+.note-slot img {
+  display: block;
+  width: 68px;
+  height: 68px;
+}
+.note-slot-l {
+  display: block;
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 14px;
+}
+.note-en .note-slot-l {
+  font-size: 16px;
+}
+.note-slot-new {
+  position: absolute;
+  right: -4px;
+  top: -8px;
+  font-size: 12px;
+  line-height: 12px;
+  color: var(--red);
+  background: var(--paper);
+  padding: 0 2px;
+  transform: rotate(6deg);
+}
+.note-en .note-slot-new {
+  font-size: 16px;
+}
+
+.note-syn {
+  margin-top: 8px;
+  min-height: 154px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 21px,
+    var(--rule) 21px,
+    var(--rule) 22px
+  );
+  background-position: 0 1px;
+}
+.note-syn p {
+  margin: 0;
+  line-height: 22px;
+  font-size: 15px;
+}
+.note-en .note-syn p {
+  font-size: 20px;
+}
+.note-syn p.note-mut {
+  color: #7a6b50;
+}
+
+.note-sc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 68px;
+}
+.note-scrib {
+  flex: 1;
+  margin: 2px 8px 0 4px;
+  font-size: 15px;
+  line-height: 19px;
+  color: var(--blue);
+  transform: rotate(-2deg);
+  transform-origin: 0 50%;
+}
+.note-en .note-scrib {
+  font-size: 22px;
+  line-height: 20px;
+}
+.note-scrib p {
+  margin: 0;
+}
+.note-doodle {
+  display: block;
+  width: 100px;
+  height: 67px;
+}
+
+.note-form {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1.5px solid #6b5f45;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.18);
+}
+.note-fcol {
+  flex: 1.1;
+}
+.note-fcol + .note-fcol {
+  flex: 1;
+  border-left: 1.5px dashed #8a7d5e;
+  padding-left: 12px;
+}
+.note-fh {
+  font-size: 13px;
+  line-height: 16px;
+  border-bottom: 1.5px solid #6b5f45;
+  margin-bottom: 3px;
+  letter-spacing: 0.1em;
+}
+.note-en .note-fh {
+  font-size: 18px;
+  line-height: 18px;
+}
+.note-fr {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  line-height: 24px;
+  font-size: 13px;
+}
+.note-en .note-fr {
+  font-size: 18px;
+}
+.note-fl {
+  flex: 1;
+  white-space: nowrap;
+}
+.note-fr b {
+  font-weight: 400;
+  font-size: 21px;
+  color: var(--blue);
+  min-width: 30px;
+  text-align: right;
+}
+.note-en .note-fr b {
+  font-size: 26px;
+}
+.note-fcol + .note-fcol .note-fr b {
+  font-size: 19px;
+}
+.note-fr small {
+  font-size: 12px;
+  width: 14px;
+}
+.note-blank {
+  display: inline-block;
+  width: 26px;
+  height: 16px;
+  border-bottom: 1.5px solid #8a7d5e;
+}
+
+.note-btn {
+  margin-top: auto;
+  height: 44px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0b0b0a;
+  border-radius: 5px;
+  background: #e3d8b8;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 16px;
+  box-shadow: 0 2px 0 #7a6f52;
+  cursor: pointer;
+}
+.note-en .note-btn {
+  font-size: 22px;
+}
+.note-btn:focus-visible {
+  outline: 2px solid #ffd27a;
+  outline-offset: 3px;
+}

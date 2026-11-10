@@ -13,6 +13,20 @@ export interface SaveSettings {
   contrast: number
 }
 
+/** How the last finished shift went (investigation note, #297). Kept in the save so the next start can show it. */
+export interface LastShift {
+  /** Correct reports in that shift (duplicates counted). */
+  found: number
+  /** Distinct anomalies found for the first time in that shift. */
+  fresh: number
+  misreports: number
+  /** Real time the shift lasted, in ms. */
+  durationMs: number
+  closing: 'dawn' | 'withdraw' | 'ending'
+  /** Story flags (elder1..3, child) that rose during that shift. */
+  raised: string[]
+}
+
 export interface SaveData {
   v: typeof SAVE_VERSION
   /** Total correct finds across all plays, duplicates counted. May drive foundTotal flag thresholds. */
@@ -29,6 +43,8 @@ export interface SaveData {
   usedChatter: string[]
   /** Story flags that are raised but whose story conversation has not been played yet (carried to the next start). */
   pendingStories: string[]
+  /** The shift that ended last. Absent until one has ended (and in older saves). */
+  lastShift?: LastShift
   settings?: SaveSettings
 }
 
@@ -51,6 +67,31 @@ const isCount = (v: unknown): v is number =>
 
 const isStringArray = (v: unknown): v is string[] =>
   Array.isArray(v) && v.every(s => typeof s === 'string')
+
+const CLOSINGS: readonly string[] = ['dawn', 'withdraw', 'ending']
+
+const validLastShift = (v: unknown): LastShift | null => {
+  if (!isRecord(v)) return null
+  const { found, fresh, misreports, durationMs, closing, raised } = v
+  if (
+    !isCount(found) ||
+    !isCount(fresh) ||
+    !isCount(misreports) ||
+    !isCount(durationMs) ||
+    typeof closing !== 'string' ||
+    !CLOSINGS.includes(closing) ||
+    !isStringArray(raised)
+  )
+    return null
+  return {
+    found,
+    fresh,
+    misreports,
+    durationMs,
+    closing: closing as LastShift['closing'],
+    raised: [...new Set(raised)],
+  }
+}
 
 const uniq = (a: readonly string[]): string[] => [...new Set(a)]
 
@@ -112,6 +153,10 @@ export const validateSave = (raw: unknown): SaveData | null => {
     usedChatter: uniq(usedChatter),
     pendingStories: uniq(pendingStories),
   }
+  // Absent in saves written before the field existed (same version): treated as none. A damaged one is dropped,
+  // not a reason to throw the whole save away (it is only a memo of the last shift).
+  const lastShift = validLastShift(rec.lastShift)
+  if (lastShift) out.lastShift = lastShift
   if (settings !== undefined) {
     if (
       !isRecord(settings) ||
@@ -149,6 +194,9 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
     usedChatter: uniq([...a.usedChatter, ...b.usedChatter]),
     pendingStories: uniq([...a.pendingStories, ...b.pendingStories]),
   }
+  // The shift that ended later (more loops) is the last one; on a tie `b` (the fresher read) wins.
+  const lastShift = a.loops > b.loops ? (a.lastShift ?? b.lastShift) : (b.lastShift ?? a.lastShift)
+  if (lastShift) out.lastShift = lastShift
   const settings = b.settings ?? a.settings
   if (settings) out.settings = settings
   return out
