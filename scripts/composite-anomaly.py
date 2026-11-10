@@ -441,162 +441,169 @@ def selftest(base_path, opts):
     W, H = base.size
     rng = np.random.default_rng(1)
     tmpd = tempfile.mkdtemp(prefix="composite-selftest-")
-    margin = int(opts.feather * 3 + opts.dilate + 1) + 3  # allowed overshoot of the detected bbox
-    tol = 3  # allowed shortfall (threshold erodes the faint rim)
-
-    def patch(box, shape="ellipse", color=(235, 50, 40)):
-        im = base.copy()
-        d = ImageDraw.Draw(im)
-        (d.ellipse if shape == "ellipse" else d.rectangle)(box, fill=color)
-        return im
-
-    def make(name, gen):
-        path = os.path.join(tmpd, name + ".png")
-        gen.save(path)
-        return path
-
-    def shifted(img, dx, dy):
-        arr, _ = shift_zero(np.asarray(img), dx, dy)
-        return Image.fromarray(arr)
-
-    def bb(b):  # drawn inclusive box -> exclusive bbox
-        return (b[0], b[1], b[2] + 1, b[3] + 1)
-
-    cases = []  # (name, gen_path, box, expect_statuses, planted_bbox|None, expected_shift|None, need_warning_text)
-    bx = (W // 2 - 40, H // 2 - 50, W // 2 + 40, H // 2 + 50)
-    pl = (bx[0] + 15, bx[1] + 20, bx[2] - 15, bx[3] - 20)
-    cases.append(("ok_clean", make("a", patch(pl)), bx, {"ok"}, bb(pl), [0, 0], None))
-    cases.append(("ok_shift(+5,-3)+rescale", make("b", shifted(patch(pl), 5, -3).resize((int(W * 1.6), int(H * 1.6)))), bx, {"ok"}, bb(pl), [-5, 3], None))
-    eb = (0, 0, 70, 70)
-    cases.append(("ok_edge_region+shift(4,3)", make("c", shifted(patch((0, 0, 55, 55), "rect"), 4, 3)), eb, {"ok", "warn"}, (0, 0, 56, 56), [-4, -3], None))
-    big = (W - 200, 150, W - 20, 450)
-    plb = (big[0] + 10, big[1] + 10, big[2] - 10, big[3] - 10)
-    cases.append(("large_change(85%)+shift(4,3)", make("d", shifted(patch(plb, "rect"), 4, 3)), big, {"ok", "warn"}, bb(plb), [-4, -3], None))
-    full = (3, 3, W - 3, H - 3)
-    plf = (W // 2 - 60, H // 2 - 60, W // 2 + 60, H // 2 + 60)
-    cases.append(("near_full_box(skip align)", make("h", patch(plf)), full, {"ok", "warn"}, bb(plf), [0, 0], "nearly the whole frame"))
-    cases.append(("fail_aspect", make("e", patch(pl).resize((W, W))), bx, {"fail"}, None, None, None))
-    cases.append(("fail_no_change", make("f", base), bx, {"fail"}, None, None, None))
-    noise = Image.fromarray(np.clip(np.asarray(base).astype(np.int16) + rng.normal(0, 40, (H, W, 3)), 0, 255).astype(np.uint8))
-    cases.append(("fail_full_redraw", make("g", noise.transpose(Image.FLIP_LEFT_RIGHT)), bx, {"fail"}, None, None, None))
-
-    rows, ok_all = [], True
-    for name, gp, box, expect, planted, want_shift, want_warn in cases:
-        out = os.path.join(tmpd, "".join(ch if ch.isalnum() else "_" for ch in name) + ".webp")
-        a = build_parser().parse_args(["--base", base_path, "--gen", gp, "--box", ",".join(map(str, box)), "--out", out,
-                                       "--threshold", str(opts.threshold), "--dilate", str(opts.dilate), "--feather", str(opts.feather)])
-        notes = []
-        try:
-            res, code = process(a)
-        except Exception as e:  # selftest must report, not crash
-            res, code = {"status": "error", "warnings": [repr(e)]}, 99
-        st = res["status"]
-        exists = os.path.exists(out)
-        good = st in expect and code == (2 if st == "fail" else 0) and exists == (st != "fail")
-        if good and st != "fail":
-            if want_shift is not None and res.get("align_shift") != want_shift:
-                good = False
-                notes.append(f"shift {res.get('align_shift')}")
-            if res.get("pixels_changed_outside_alpha") != 0:
-                good = False
-                notes.append("changed outside alpha")
-            if want_warn and not any(want_warn in w for w in res["warnings"]):
-                good = False
-                notes.append("expected warning missing")
-            if planted is not None and res.get("bbox"):
-                dx1, dy1, dx2, dy2 = res["bbox"]
-                px1, py1, px2, py2 = planted
-                if dx1 > px1 + tol or dy1 > py1 + tol or dx2 < px2 - tol or dy2 < py2 - tol:
-                    good = False
-                    notes.append(f"bbox {res['bbox']} does not cover planted {list(planted)}")
-                if dx1 < px1 - margin or dy1 < py1 - margin or dx2 > px2 + margin or dy2 > py2 + margin:
-                    good = False
-                    notes.append(f"bbox {res['bbox']} overshoots planted {list(planted)}")
-        elif st == "error":
-            good = False
-            notes.append(res["warnings"][0])
-        ok_all &= bool(good)
-        rows.append((name, st, code, "yes" if exists else "no", res.get("align_shift"), res.get("bbox"), "PASS" if good else "FAIL " + "; ".join(notes)))
-    for bad in ("1,2,3", "50,50,10,10", "a,b,c,d"):
-        try:
-            build_parser().parse_args(["--base", base_path, "--gen", base_path, "--box", bad, "--out", os.path.join(tmpd, "x.webp")])
-            code = 0
-        except SystemExit as e:
-            code = e.code
-        good = code == 2
-        ok_all &= good
-        rows.append((f"bad_box {bad}", "argparse error", code, "no", None, None, "PASS" if good else "FAIL"))
-    def elem_case(name, ok, note=""):
-        nonlocal ok_all
-        ok_all &= bool(ok)
-        rows.append((name, "-", "-", "-", None, None, "PASS" if ok else "FAIL " + note))
-
-    # parser known-answer case: a tiny hand-written inventory with literal expected values, independent of the real file,
-    # so a parser bug (offset, x/y swap, wrong size) cannot cancel itself out the way a real-inventory-derived `want` would
-    fx = os.path.join(tmpd, "fixture-inventory.md")
-    with open(fx, "w", encoding="utf-8") as f:
-        f.write("## CAM 07 \u2014 Fixture (`cam7.webp`, 675\u00d7900)\n\n"
-                "| \u9806 | \u8981\u7d20ID | \u77e9\u5f62 | \u5199\u3063\u3066\u3044\u308b\u3082\u306e |\n| --: | --- | --: | --- |\n"
-                "| 1 | CAM07-E01 | `(3,4)\u2013(100,200)` | alpha |\n"
-                "| 2 | CAM07-E02 | `(12.5,20)\u2013(999.5,1000)` | beta |\n")
     try:
-        pf = parse_inventory(fx)
-        c7 = pf.get(7, {})
-        e1 = c7.get("elements", {}).get("CAM07-E01", {})
-        e2 = c7.get("elements", {}).get("CAM07-E02", {})
-        elem_case("parser_known_answer",
-                  c7.get("file") == "cam7.webp" and c7.get("size") == (675, 900) and list(c7["elements"]) == ["CAM07-E01", "CAM07-E02"]
-                  and e1.get("rect") == (3.0, 4.0, 100.0, 200.0) and e1.get("desc") == "alpha"
-                  and e2.get("rect") == (12.5, 20.0, 999.5, 1000.0) and e2.get("desc") == "beta"
-                  and norm_to_px(e1["rect"], c7["size"]) == (2, 3, 68, 180),
-                  repr(pf))
-    except Exception as e:
-        elem_case("parser_known_answer", False, repr(e))
+        margin = int(opts.feather * 3 + opts.dilate + 1) + 3  # allowed overshoot of the detected bbox
+        tol = 3  # allowed shortfall (threshold erodes the faint rim)
 
-    img1 = os.path.join(os.path.dirname(os.path.abspath(INVENTORY)), "..", "public", "images")
-    img1 = os.path.normpath(img1)
-    b1 = os.path.join(img1, "cam1.webp")
-    if os.path.exists(b1):
-        W1, H1 = Image.open(b1).size
-        try:
-            box, info = lookup_element("CAM01-E12", b1, 0)
-            # expected px derived from the inventory rect so inventory corrections cannot make this stale; parser correctness
-            # itself is pinned by parser_known_answer above. parse_inventory() is called afresh because lookup_element
-            # returns only the resolved box, not the parsed inventory.
-            r1 = parse_inventory()[1]["elements"]["CAM01-E12"]["rect"]
-            want = (math.floor(r1[0] * W1 / 1000), math.floor(r1[1] * H1 / 1000), math.ceil(r1[2] * W1 / 1000), math.ceil(r1[3] * H1 / 1000))
-            elem_case("element_px_conversion", tuple(box) == want and info["element_id"] == "CAM01-E12" and "店先" in info["element_description"], f"{box} vs {want}")
-            box8, _ = lookup_element("CAM01-E12", b1, 8)
-            elem_case("element_margin(+8,clamped)", box8 == (want[0] - 8, want[1] - 8, min(W1, want[2] + 8), want[3] + 8), str(box8))
-            boxc, _ = lookup_element("CAM01-E01", b1, 50)
-            elem_case("element_clamp_to_image", boxc[0] == 0 and boxc[1] == 0 and boxc[2] == W1, str(boxc))
-        except Exception as e:
-            elem_case("element_px_conversion", False, repr(e))
-        for nm, eid, bp in (("fail_unknown_element", "CAM01-E99", b1), ("fail_bad_element_syntax", "CAM1-12", b1),
-                            ("fail_camera_mismatch", "CAM02-E01", b1)):
+        def patch(box, shape="ellipse", color=(235, 50, 40)):
+            im = base.copy()
+            d = ImageDraw.Draw(im)
+            (d.ellipse if shape == "ellipse" else d.rectangle)(box, fill=color)
+            return im
+
+        def make(name, gen):
+            path = os.path.join(tmpd, name + ".png")
+            gen.save(path)
+            return path
+
+        def shifted(img, dx, dy):
+            arr, _ = shift_zero(np.asarray(img), dx, dy)
+            return Image.fromarray(arr)
+
+        def bb(b):  # drawn inclusive box -> exclusive bbox
+            return (b[0], b[1], b[2] + 1, b[3] + 1)
+
+        cases = []  # (name, gen_path, box, expect_statuses, planted_bbox|None, expected_shift|None, need_warning_text)
+        bx = (W // 2 - 40, H // 2 - 50, W // 2 + 40, H // 2 + 50)
+        pl = (bx[0] + 15, bx[1] + 20, bx[2] - 15, bx[3] - 20)
+        cases.append(("ok_clean", make("a", patch(pl)), bx, {"ok"}, bb(pl), [0, 0], None))
+        cases.append(("ok_shift(+5,-3)+rescale", make("b", shifted(patch(pl), 5, -3).resize((int(W * 1.6), int(H * 1.6)))), bx, {"ok"}, bb(pl), [-5, 3], None))
+        eb = (0, 0, 70, 70)
+        cases.append(("ok_edge_region+shift(4,3)", make("c", shifted(patch((0, 0, 55, 55), "rect"), 4, 3)), eb, {"ok", "warn"}, (0, 0, 56, 56), [-4, -3], None))
+        big = (W - 200, 150, W - 20, 450)
+        plb = (big[0] + 10, big[1] + 10, big[2] - 10, big[3] - 10)
+        cases.append(("large_change(85%)+shift(4,3)", make("d", shifted(patch(plb, "rect"), 4, 3)), big, {"ok", "warn"}, bb(plb), [-4, -3], None))
+        full = (3, 3, W - 3, H - 3)
+        plf = (W // 2 - 60, H // 2 - 60, W // 2 + 60, H // 2 + 60)
+        cases.append(("near_full_box(skip align)", make("h", patch(plf)), full, {"ok", "warn"}, bb(plf), [0, 0], "nearly the whole frame"))
+        cases.append(("fail_aspect", make("e", patch(pl).resize((W, W))), bx, {"fail"}, None, None, None))
+        cases.append(("fail_no_change", make("f", base), bx, {"fail"}, None, None, None))
+        noise = Image.fromarray(np.clip(np.asarray(base).astype(np.int16) + rng.normal(0, 40, (H, W, 3)), 0, 255).astype(np.uint8))
+        cases.append(("fail_full_redraw", make("g", noise.transpose(Image.FLIP_LEFT_RIGHT)), bx, {"fail"}, None, None, None))
+
+        rows, ok_all = [], True
+        for name, gp, box, expect, planted, want_shift, want_warn in cases:
+            out = os.path.join(tmpd, "".join(ch if ch.isalnum() else "_" for ch in name) + ".webp")
+            a = build_parser().parse_args(["--base", base_path, "--gen", gp, "--box", ",".join(map(str, box)), "--out", out,
+                                           "--threshold", str(opts.threshold), "--dilate", str(opts.dilate), "--feather", str(opts.feather)])
+            notes = []
             try:
-                lookup_element(eid, bp, 0)
-                elem_case(nm, False, "did not raise")
-            except ValueError:
-                elem_case(nm, True)
-        for nm, extra in (("fail_element_with_box", ["--box", "1,1,5,5"]), ("fail_margin_without_element", ["--margin", "3"])):
-            argv = ["--base", b1, "--gen", b1, "--out", os.path.join(tmpd, "x.webp")] + (["--element", "CAM01-E12"] if "box" in nm else []) + extra
+                res, code = process(a)
+            except Exception as e:  # selftest must report, not crash
+                res, code = {"status": "error", "warnings": [repr(e)]}, 99
+            st = res["status"]
+            exists = os.path.exists(out)
+            good = st in expect and code == (2 if st == "fail" else 0) and exists == (st != "fail")
+            if good and st != "fail":
+                if want_shift is not None and res.get("align_shift") != want_shift:
+                    good = False
+                    notes.append(f"shift {res.get('align_shift')}")
+                if res.get("pixels_changed_outside_alpha") != 0:
+                    good = False
+                    notes.append("changed outside alpha")
+                if want_warn and not any(want_warn in w for w in res["warnings"]):
+                    good = False
+                    notes.append("expected warning missing")
+                if planted is not None and res.get("bbox"):
+                    dx1, dy1, dx2, dy2 = res["bbox"]
+                    px1, py1, px2, py2 = planted
+                    if dx1 > px1 + tol or dy1 > py1 + tol or dx2 < px2 - tol or dy2 < py2 - tol:
+                        good = False
+                        notes.append(f"bbox {res['bbox']} does not cover planted {list(planted)}")
+                    if dx1 < px1 - margin or dy1 < py1 - margin or dx2 > px2 + margin or dy2 > py2 + margin:
+                        good = False
+                        notes.append(f"bbox {res['bbox']} overshoots planted {list(planted)}")
+            elif st == "error":
+                good = False
+                notes.append(res["warnings"][0])
+            ok_all &= bool(good)
+            rows.append((name, st, code, "yes" if exists else "no", res.get("align_shift"), res.get("bbox"), "PASS" if good else "FAIL " + "; ".join(notes)))
+        for bad in ("1,2,3", "50,50,10,10", "a,b,c,d"):
             try:
-                code = run_cli(argv)
+                build_parser().parse_args(["--base", base_path, "--gen", base_path, "--box", bad, "--out", os.path.join(tmpd, "x.webp")])
+                code = 0
             except SystemExit as e:
                 code = e.code
-            elem_case(nm, code == 2, f"exit {code}")
-        n, ncam, bad = check_inventory()
-        elem_case(f"inventory_all_valid({ncam}cams,{n}el)", not bad and ncam == 8, "; ".join(bad[:3]))
-    else:
-        elem_case("element_cases", False, f"{b1} missing")
-    print("%-30s %-14s %-5s %-6s %-9s %-22s %s" % ("case", "status", "exit", "--out", "align", "bbox", "result"))
-    for r in rows:
-        print("%-30s %-14s %-5s %-6s %-9s %-22s %s" % tuple(str(x) for x in r))
-    print("SELFTEST", "PASSED" if ok_all else "FAILED")
-    for f in os.listdir(tmpd):
-        os.remove(os.path.join(tmpd, f))
-    os.rmdir(tmpd)
+            good = code == 2
+            ok_all &= good
+            rows.append((f"bad_box {bad}", "argparse error", code, "no", None, None, "PASS" if good else "FAIL"))
+        def elem_case(name, ok, note=""):
+            nonlocal ok_all
+            ok_all &= bool(ok)
+            rows.append((name, "-", "-", "-", None, None, "PASS" if ok else "FAIL " + note))
+
+        # parser known-answer case: a tiny hand-written inventory with literal expected values, independent of the real file,
+        # so a parser bug (offset, x/y swap, wrong size) cannot cancel itself out the way a real-inventory-derived `want` would
+        fx = os.path.join(tmpd, "fixture-inventory.md")
+        with open(fx, "w", encoding="utf-8") as f:
+            f.write("## CAM 07 \u2014 Fixture (`cam7.webp`, 675\u00d7900)\n\n"
+                    "| \u9806 | \u8981\u7d20ID | \u77e9\u5f62 | \u5199\u3063\u3066\u3044\u308b\u3082\u306e |\n| --: | --- | --: | --- |\n"
+                    "| 1 | CAM07-E01 | `(3,4)\u2013(100,200)` | alpha |\n"
+                    "| 2 | CAM07-E02 | `(12.5,20)\u2013(999.5,1000)` | beta |\n"
+                    "| 3 | CAM07-E03 | `(10,20)\u2014(500,600)` | gamma |\n"
+                    "| 4 | CAM07-E04 | `(1,2)~(3,4)` | delta |\n")
+        try:
+            pf = parse_inventory(fx)
+            c7 = pf.get(7, {})
+            e1 = c7.get("elements", {}).get("CAM07-E01", {})
+            e2 = c7.get("elements", {}).get("CAM07-E02", {})
+            e3 = c7.get("elements", {}).get("CAM07-E03", {})
+            e4 = c7.get("elements", {}).get("CAM07-E04", {})
+            elem_case("parser_known_answer",
+                      c7.get("file") == "cam7.webp" and c7.get("size") == (675, 900) and list(c7["elements"]) == ["CAM07-E01", "CAM07-E02", "CAM07-E03", "CAM07-E04"]
+                      and e1.get("rect") == (3.0, 4.0, 100.0, 200.0) and e1.get("desc") == "alpha"
+                      and e2.get("rect") == (12.5, 20.0, 999.5, 1000.0) and e2.get("desc") == "beta"
+                      and norm_to_px(e1["rect"], c7["size"]) == (2, 3, 68, 180)
+                      # em dash / tilde separators; x1=10,y1=20 give different floors for W=675 vs H=900 (6,18 / swapped 9,13)
+                      and e3.get("rect") == (10.0, 20.0, 500.0, 600.0) and e4.get("rect") == (1.0, 2.0, 3.0, 4.0)
+                      and norm_to_px(e3["rect"], c7["size"]) == (6, 18, 338, 540),
+                      repr(pf))
+        except Exception as e:
+            elem_case("parser_known_answer", False, repr(e))
+
+        img1 = os.path.join(os.path.dirname(os.path.abspath(INVENTORY)), "..", "public", "images")
+        img1 = os.path.normpath(img1)
+        b1 = os.path.join(img1, "cam1.webp")
+        if os.path.exists(b1):
+            W1, H1 = Image.open(b1).size
+            try:
+                box, info = lookup_element("CAM01-E12", b1, 0)
+                # expected px derived from the inventory rect so inventory corrections cannot make this stale; parser correctness
+                # itself is pinned by parser_known_answer above. parse_inventory() is called afresh because lookup_element
+                # returns only the resolved box, not the parsed inventory.
+                r1 = parse_inventory()[1]["elements"]["CAM01-E12"]["rect"]
+                want = (math.floor(r1[0] * W1 / 1000), math.floor(r1[1] * H1 / 1000), math.ceil(r1[2] * W1 / 1000), math.ceil(r1[3] * H1 / 1000))
+                elem_case("element_px_conversion", tuple(box) == want and info["element_id"] == "CAM01-E12" and "店先" in info["element_description"], f"{box} vs {want}")
+                box8, _ = lookup_element("CAM01-E12", b1, 8)
+                elem_case("element_margin(+8,clamped)", box8 == (want[0] - 8, want[1] - 8, min(W1, want[2] + 8), want[3] + 8), str(box8))
+                boxc, _ = lookup_element("CAM01-E01", b1, 50)
+                elem_case("element_clamp_to_image", boxc[0] == 0 and boxc[1] == 0 and boxc[2] == W1, str(boxc))
+            except Exception as e:
+                elem_case("element_px_conversion", False, repr(e))
+            for nm, eid, bp in (("fail_unknown_element", "CAM01-E99", b1), ("fail_bad_element_syntax", "CAM1-12", b1),
+                                ("fail_camera_mismatch", "CAM02-E01", b1)):
+                try:
+                    lookup_element(eid, bp, 0)
+                    elem_case(nm, False, "did not raise")
+                except ValueError:
+                    elem_case(nm, True)
+            for nm, extra in (("fail_element_with_box", ["--box", "1,1,5,5"]), ("fail_margin_without_element", ["--margin", "3"])):
+                argv = ["--base", b1, "--gen", b1, "--out", os.path.join(tmpd, "x.webp")] + (["--element", "CAM01-E12"] if "box" in nm else []) + extra
+                try:
+                    code = run_cli(argv)
+                except SystemExit as e:
+                    code = e.code
+                elem_case(nm, code == 2, f"exit {code}")
+            n, ncam, bad = check_inventory()
+            elem_case(f"inventory_all_valid({ncam}cams,{n}el)", not bad and ncam == 8, "; ".join(bad[:3]))
+        else:
+            elem_case("element_cases", False, f"{b1} missing")
+        print("%-30s %-14s %-5s %-6s %-9s %-22s %s" % ("case", "status", "exit", "--out", "align", "bbox", "result"))
+        for r in rows:
+            print("%-30s %-14s %-5s %-6s %-9s %-22s %s" % tuple(str(x) for x in r))
+        print("SELFTEST", "PASSED" if ok_all else "FAILED")
+    finally:
+        shutil.rmtree(tmpd, ignore_errors=True)
     return 0 if ok_all else 1
 
 
