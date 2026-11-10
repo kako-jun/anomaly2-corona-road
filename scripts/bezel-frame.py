@@ -17,6 +17,10 @@ tool is what ties them to the picture's real alpha instead of to hand-copied num
   apply             rewrite the group and the polygon in src/styles/retro.css from the picture
   check             verify 1-3 against src/styles/retro.css (exit 1 on a mismatch); wired to `npm run check:bezel`, CI, and vitest
   stretch           resample a picture to --height with the same width (premultiplied Lanczos, rim and grain untouched) and save it
+  smooth-corners    smooth the two lower corners of the picture (see cmd_smooth_corners); needs --ref (the original main picture)
+
+Cautions: `apply` REWRITES the tracked src/styles/retro.css, and `stretch --out` / `smooth-corners --out` can overwrite
+public/ui/bezel_mon.webp when pointed at it. Work on a copy first, then `apply` and `check`.
 
 Run: `uv run --script scripts/bezel-frame.py check`
 """
@@ -114,7 +118,7 @@ def cmd_measure(_):
 def cmd_trace(_):
     a = load_alpha()
     b = opening_box(a)
-    pad = 2
+    pad = int(parse_css(CSS.read_text())["open-pad"])
     gw, gh = b["r"] - b["l"] + 2 * pad, b["b"] - b["t"] + 2 * pad
     pts = trace(a, pad)
     print(len(pts), "points")
@@ -197,6 +201,60 @@ def cmd_stretch(args):
     print("saved", args.out, w, "x", args.height)
 
 
+def _ramp(v, a, b):
+    return np.clip((v - a) / (b - a), 0, 1)
+
+
+def cmd_smooth_corners(args):
+    """Smooth the two LOWER corners (the opening, the outer silhouette and the visible band widths are not touched; only RGB).
+
+    Two seams were there (#283): (1) the lower inner corners of the recess ("dent") are sharp, because adding the side rims
+    overwrote the original rounded corner; the original corner is transplanted from the ORIGINAL main picture (--ref),
+    shifted by the rim that was added on each side and by the recess bottom ridge position, blended with a soft mask;
+    (2) where the lighter outer side band meets the rounded outer corner there is a hard horizontal step (it is in the
+    original picture too); the band is cross-faded into the corner colour over ~18 rows, grain kept.
+    """
+    cur = np.asarray(Image.open(args.src).convert("RGBA")).astype(np.float32)
+    ref = np.asarray(Image.open(args.ref).convert("RGBA")).astype(np.float32)
+    H, W = cur.shape[:2]
+    Hm, Wm = ref.shape[:2]
+    dx = (W - Wm) // 2  # rim added on each side
+    ridge_cur, ridge_ref = 82, 78  # px from the bottom edge to the bright ridge line at the recess bottom (cur / ref)
+    dy = H - Hm - (ridge_cur - ridge_ref)  # cur y = ref y + dy (bottoms aligned, then the ridge difference)
+    yy, xx = np.mgrid[0:H, 0:W]
+    sh = ref[np.clip(yy - dy, 0, Hm - 1), np.clip(xx - dx, 0, Wm - 1)]
+    ridge = H - ridge_cur
+    out = cur.copy()
+    for side in "LR":
+        d = xx if side == "L" else W - 1 - xx  # distance from this side's outer edge
+        m = _ramp(d, 62, 70) * (1 - _ramp(d, 100, 140)) * (1 - _ramp(yy, ridge - 6, ridge + 6)) * _ramp(yy, ridge - 62, ridge - 30)
+        m = m * (sh[..., 3] > 200) * (cur[..., 3] > 200)
+        # the original recess wall is a little brighter than the re-built one: correct dark recess pixels only
+        win = (slice(H - 200, H - 150), slice(90, 130) if side == "L" else slice(W - 130, W - 90))
+        off = cur[..., :3][win].mean((0, 1)) - sh[..., :3][win].mean((0, 1))
+        lum = ndimage.gaussian_filter(sh[..., :3].mean(2), 3)
+        k = np.clip((165 - lum) / 30, 0, 1)[..., None]
+        out[..., :3] = out[..., :3] * (1 - m[..., None]) + (sh[..., :3] + off * k) * m[..., None]
+    y0 = H - 42  # last row of the straight outer band (the step)
+    for side in "LR":
+        xs = slice(0, 38) if side == "L" else slice(W - 38, W)
+        blk = out[:, xs, :3]
+        top, bot = blk[y0 - 6 : y0 - 3].mean(0), blk[y0 + 2 : y0 + 4].mean(0)
+        for i, y in enumerate(range(y0 - 3, y0 + 2)):  # drop the bright step line itself
+            blk[y] = (1 - (i + 1) / 6) * top + (i + 1) / 6 * bot
+        target = blk[y0 + 1 : y0 + 5].mean(0)
+        rows = slice(y0 - 30, y0 + 1)
+        hf = blk[rows] - ndimage.gaussian_filter(blk[rows], (0, 1.5, 0))
+        w = _ramp(np.arange(y0 - 30, y0 + 1), y0 - 18, y0 + 1)
+        w = (w * w * (3 - 2 * w))[:, None, None]
+        new = (1 - w) * blk[rows] + w * (target[None] + hf)
+        vis = out[rows, xs, 3][..., None] > 0
+        out[rows, xs, :3] = np.where(vis, new, blk[rows])
+    out[..., 3] = cur[..., 3]
+    Image.fromarray(np.clip(out, 0, 255).round().astype(np.uint8), "RGBA").save(args.out, quality=90, alpha_quality=100, method=6)
+    print("saved", args.out)
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -207,6 +265,11 @@ def main():
     s.add_argument("--out", required=True)
     s.add_argument("--height", type=int, required=True)
     s.set_defaults(fn=cmd_stretch)
+    c = sub.add_parser("smooth-corners")
+    c.add_argument("--src", required=True)
+    c.add_argument("--ref", required=True, help="the ORIGINAL main picture (git show origin/main:public/ui/bezel_mon.webp)")
+    c.add_argument("--out", required=True)
+    c.set_defaults(fn=cmd_smooth_corners)
     args = p.parse_args()
     args.fn(args)
 
