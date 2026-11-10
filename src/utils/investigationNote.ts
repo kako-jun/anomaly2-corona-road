@@ -85,7 +85,8 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
       text: t(stage === 'start' ? LABELS.stampStart : LABELS.stampBefore),
       big: false,
     })
-    for (const l of STAGES[stage].lines) lines.push({ text: t(l), muted: false })
+    for (const l of STAGES[stage].lines)
+      lines.push({ text: t(l), muted: false })
     if (stage !== 'start' && shift) {
       const o = outcomeOf(shift)
       if (o === 'noProgress' || o === 'withdraw')
@@ -95,9 +96,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     const outcome = outcomeOf(input.shift)
     stamps.push({ text: t(LABELS.stampAfter), big: false })
     stamps.push({
-      text: t(
-        outcome === 'withdraw' ? LABELS.stampWithdraw : LABELS.stampDawn
-      ),
+      text: t(outcome === 'withdraw' ? LABELS.stampWithdraw : LABELS.stampDawn),
       big: true,
     })
     for (const l of OUTCOMES[outcome].lines)
@@ -130,10 +129,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
       row(LABELS.rowFound, num(shift?.found), LABELS.unitCount),
       row(LABELS.rowFresh, num(shift?.fresh), LABELS.unitKinds),
       row(LABELS.rowFalse, num(shift?.misreports), LABELS.unitTimes),
-      row(
-        LABELS.rowShift,
-        shift ? fmtShift(shift.durationMs) : null
-      ),
+      row(LABELS.rowShift, shift ? fmtShift(shift.durationMs) : null),
     ],
   }
   const right = {
@@ -145,7 +141,8 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
   }
 
   // The night being written: the next one before a shift, the one that just ended after it.
-  const nightNo = input.mode === 'before' ? save.loops + 1 : Math.max(1, save.loops)
+  const nightNo =
+    input.mode === 'before' ? save.loops + 1 : Math.max(1, save.loops)
   const night = t(LABELS.night(nightNo))
   return {
     lang,

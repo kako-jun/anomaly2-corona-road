@@ -139,6 +139,23 @@ describe('validateSave', () => {
     delete old.pendingStories
     expect(validateSave(old)?.pendingStories).toEqual([])
   })
+  it('treats an old save without endingReached as not reached (#294)', () => {
+    const old: Record<string, unknown> = { ...save() }
+    delete old.endingReached
+    expect(validateSave(old)?.endingReached).toBe(false)
+  })
+  it('keeps endingReached true and rejects a non-boolean', () => {
+    expect(validateSave(save({ endingReached: true }))?.endingReached).toBe(
+      true
+    )
+    expect(validateSave({ ...save(), endingReached: 1 })).toBeNull()
+  })
+  it('merges endingReached with OR', () => {
+    expect(mergeSave(save({ endingReached: true }), save()).endingReached).toBe(
+      true
+    )
+    expect(mergeSave(save(), save()).endingReached).toBe(false)
+  })
   it('removes duplicates from pendingStories', () => {
     expect(
       validateSave(save({ pendingStories: ['a', 'a'] }))?.pendingStories
@@ -522,5 +539,98 @@ describe('createSaveStore.probe', () => {
     store.probe()
     store.probe()
     expect(store.canPersist()).toBe(false)
+  })
+})
+
+describe('epoch (reset generation)', () => {
+  it('reads a save without epoch as 0 and rejects a bad epoch', () => {
+    const old: Partial<SaveData> = save()
+    delete old.epoch
+    expect(validateSave(old)?.epoch).toBe(0)
+    expect(validateSave(save({ epoch: -1 }))).toBeNull()
+    expect(validateSave({ ...save(), epoch: 'x' })).toBeNull()
+    expect(validateSave(save({ epoch: 3 }))?.epoch).toBe(3)
+  })
+  it('a higher epoch wins whole; the older progress is dropped', () => {
+    const old = save({
+      foundTotal: 40,
+      foundIds: ['a'],
+      loops: 5,
+      flags: { child: true },
+      endingReached: true,
+      usedChatter: ['x'],
+    })
+    const reset = save({ epoch: 1 })
+    expect(mergeSave(old, reset)).toEqual(reset)
+    expect(mergeSave(reset, old)).toEqual(reset)
+  })
+  it('keeps the loser settings when the winner has none; same epoch still merges', () => {
+    const s = { brightness: 1, contrast: 2 }
+    expect(
+      mergeSave(save({ settings: s }), save({ epoch: 1 })).settings
+    ).toEqual(s)
+    const m = mergeSave(
+      save({ epoch: 2, foundTotal: 1, foundIds: ['a'] }),
+      save({ epoch: 2, foundTotal: 4, foundIds: ['b'] })
+    )
+    expect(m).toMatchObject({ epoch: 2, foundTotal: 4, foundIds: ['a', 'b'] })
+  })
+  it('a stale tab (memory) cannot undo a reset written by another tab', () => {
+    const { storage, data } = fakeStorage()
+    const a = createSaveStore({ getStorage: () => storage })
+    const b = createSaveStore({ getStorage: () => storage })
+    a.update(() => save({ foundTotal: 40, loops: 5, endingReached: true }))
+    b.load()
+    a.update(cur => ({ ...save(), epoch: cur.epoch + 1 }))
+    b.update(cur => ({ ...cur, foundTotal: cur.foundTotal + 1 }))
+    const stored = JSON.parse(data.get(SAVE_KEY) as string)
+    expect(stored).toMatchObject({
+      epoch: 1,
+      foundTotal: 1,
+      loops: 0,
+      endingReached: false,
+    })
+    expect(b.load().endingReached).toBe(false)
+  })
+  it('rejects an epoch beyond the safe integers as broken', () => {
+    expect(validateSave({ ...save(), epoch: 1e300 })).toBeNull()
+    expect(validateSave({ ...save(), epoch: 2 ** 53 })).toBeNull()
+    expect(
+      validateSave(save({ epoch: Number.MAX_SAFE_INTEGER }))
+    ).not.toBeNull()
+    const bad = JSON.stringify({ ...save(), epoch: 1e300 })
+    const { storage, data } = fakeStorage({ [SAVE_KEY]: bad })
+    expect(createSaveStore({ getStorage: () => storage }).load()).toEqual(
+      emptySave()
+    )
+    expect(data.get(BROKEN_KEY)).toBe(bad)
+  })
+  it('latest(): a larger epoch in storage beats a smaller one in memory', () => {
+    const { storage } = fakeStorage()
+    const b = createSaveStore({ getStorage: () => storage })
+    b.update(() => save({ foundTotal: 9, foundIds: ['x'] }))
+    storage.setItem(
+      SAVE_KEY,
+      JSON.stringify(save({ epoch: 4, foundTotal: 1, foundIds: ['y'] }))
+    )
+    expect(b.load()).toMatchObject({ epoch: 4, foundTotal: 1, foundIds: ['y'] })
+  })
+  it('resumes from epoch 0 after a broken save is set aside', () => {
+    const { storage, data } = fakeStorage({ [SAVE_KEY]: '{oops' })
+    const s = createSaveStore({ getStorage: () => storage })
+    expect(s.load().epoch).toBe(0)
+    const next = s.update(cur => ({ ...cur, foundTotal: 2 }))
+    expect(next).toMatchObject({ epoch: 0, foundTotal: 2 })
+    expect(JSON.parse(data.get(SAVE_KEY) as string)).toMatchObject({
+      epoch: 0,
+      foundTotal: 2,
+    })
+    expect(data.get(BROKEN_KEY)).toBe('{oops')
+  })
+  it('works in memory only when storage is unusable', () => {
+    const s = createSaveStore({ getStorage: () => null })
+    s.update(cur => ({ ...cur, foundTotal: 3 }))
+    s.update(cur => ({ ...save(), epoch: cur.epoch + 1 }))
+    expect(s.load()).toMatchObject({ epoch: 1, foundTotal: 0 })
   })
 })

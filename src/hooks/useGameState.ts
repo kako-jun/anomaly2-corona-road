@@ -25,6 +25,7 @@ import {
   raiseFlagsAtStart,
   recordFound,
   recordShiftEnd,
+  recordEndingReached,
 } from '../utils/shiftProgress'
 import {
   ANOMALY_LEDGER,
@@ -114,6 +115,8 @@ export const useGameState = () => {
   }, [activeAnomalies])
 
   const startGame = useCallback(() => {
+    // After the true ending the save cannot start a shift; the title offers "start over" only (#294).
+    if (load().endingReached) return
     setStats({
       currentTime: 0,
       correctReports: 0,
@@ -197,6 +200,7 @@ export const useGameState = () => {
         closing,
         raised: [...raisedRef.current],
       })
+      if (closing === 'ending') recordEndingReached()
       const e = { closing, outcome }
       endingRef.current = e
       setEnding(e)
@@ -204,6 +208,8 @@ export const useGameState = () => {
     },
     []
   )
+
+  const returnToTitle = useCallback(() => setGameState('idle'), [])
 
   const finishEnding = useCallback(() => {
     const e = endingRef.current
@@ -422,6 +428,7 @@ export const useGameState = () => {
     ending,
     flagEvent,
     finishEnding,
+    returnToTitle,
     startGame,
     switchCamera,
     reportAnomaly,

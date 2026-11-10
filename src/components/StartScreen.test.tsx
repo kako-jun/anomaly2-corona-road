@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { DEFAULT_CONFIG } from '../utils/gameConfig'
 import { StartScreen } from './StartScreen'
@@ -191,4 +192,103 @@ describe('StartScreen follows a changed config', () => {
       expect(view.getByText(`${n}回まで`)).toBeInTheDocument()
     }
   )
+})
+
+describe('StartScreen after the true ending (#294)', () => {
+  it('offers only START OVER: no 勤務開始, and the closed notice is always shown', () => {
+    render(
+      <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
+    )
+    expect(screen.queryByRole('button', { name: '勤務開始' })).toBeNull()
+    expect(screen.getAllByRole('button')).toHaveLength(1)
+    expect(
+      screen.getByRole('button', { name: 'START OVER' })
+    ).toBeInTheDocument()
+    expect(screen.getByText(/The investigation is closed/)).toBeInTheDocument()
+  })
+  it('asks once before erasing; CANCEL backs out without erasing', async () => {
+    const onStartOver = vi.fn()
+    const onStart = vi.fn()
+    render(
+      <StartScreen onStart={onStart} endingReached onStartOver={onStartOver} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    expect(onStartOver).not.toHaveBeenCalled()
+    expect(screen.getByRole('alert')).toHaveTextContent('erased')
+    await userEvent.click(screen.getByRole('button', { name: 'CANCEL' }))
+    expect(onStartOver).not.toHaveBeenCalled()
+    expect(
+      screen.getByRole('button', { name: 'START OVER' })
+    ).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    await userEvent.click(screen.getByRole('button', { name: 'ERASE ALL' }))
+    expect(onStartOver).toHaveBeenCalledOnce()
+    expect(onStart).not.toHaveBeenCalled()
+  })
+  it('keeps the ordinary 勤務開始 key when the ending was not reached', () => {
+    render(<StartScreen onStart={vi.fn()} />)
+    expect(screen.getByRole('button', { name: '勤務開始' })).toBeInTheDocument()
+    expect(screen.queryByText(/START OVER/)).toBeNull()
+  })
+  it('moves keyboard focus: CANCEL on confirm, START OVER after cancel or Escape', async () => {
+    render(
+      <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'CANCEL' })
+    )
+    await userEvent.keyboard('{Enter}')
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'START OVER' })
+    )
+    await userEvent.keyboard('{Enter}')
+    expect(screen.getByRole('alert')).toBeInTheDocument()
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('alert')).toBeNull()
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'START OVER' })
+    )
+  })
+  it('Escape cancels even after a click on the margin moved focus to body', async () => {
+    render(
+      <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    await userEvent.click(document.body)
+    expect(document.activeElement).toBe(document.body)
+    await userEvent.keyboard('{Escape}')
+    expect(screen.queryByRole('alert')).toBeNull()
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'START OVER' })
+    )
+  })
+  it('stops listening for Escape once unmounted', async () => {
+    const spy = vi.spyOn(document, 'removeEventListener')
+    const { unmount } = render(
+      <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    unmount()
+    expect(spy.mock.calls.some(c => c[0] === 'keydown')).toBe(true)
+    spy.mockRestore()
+  })
+  it('moves focus to 勤務開始 after the erase has taken effect', async () => {
+    const Host = () => {
+      const [ended, setEnded] = useState(true)
+      return (
+        <StartScreen
+          onStart={vi.fn()}
+          endingReached={ended}
+          onStartOver={() => setEnded(false)}
+        />
+      )
+    }
+    render(<Host />)
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    await userEvent.click(screen.getByRole('button', { name: 'ERASE ALL' }))
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: '勤務開始' })
+    )
+  })
 })

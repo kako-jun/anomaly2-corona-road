@@ -168,3 +168,50 @@ describe('raiseFlagsAtStart', () => {
     expect(raiseFlagsAtStart()).toEqual([])
   })
 })
+
+describe('recordEndingReached / resetProgress (#294)', () => {
+  it('marks the ending and persists it', async () => {
+    const p = await fresh()
+    expect(p.load().endingReached).toBe(false)
+    p.recordEndingReached()
+    expect(p.load().endingReached).toBe(true)
+    expect(
+      JSON.parse(localStorage.getItem('corona-road:save') ?? '{}')
+    ).toMatchObject({
+      endingReached: true,
+    })
+  })
+
+  it('wipes all progress but keeps the display settings', async () => {
+    const p = await fresh()
+    const saveData = await import('./saveData')
+    saveData.update(cur => ({
+      ...cur,
+      foundTotal: 9,
+      foundIds: ['a', 'b'],
+      loops: 3,
+      flags: { child: true },
+      usedLines: { a: ['x'] },
+      usedChatter: ['c'],
+      pendingStories: ['child'],
+      endingReached: true,
+      settings: { brightness: 30, contrast: 70 },
+    }))
+    p.resetProgress()
+    expect(p.load()).toEqual({
+      ...saveData.emptySave(),
+      epoch: 1,
+      settings: { brightness: 30, contrast: 70 },
+    })
+    expect(
+      JSON.parse(localStorage.getItem('corona-road:save') ?? '{}').endingReached
+    ).toBe(false)
+  })
+
+  it('leaves a save without settings without settings', async () => {
+    const p = await fresh()
+    p.recordEndingReached()
+    p.resetProgress()
+    expect(p.load().settings).toBeUndefined()
+  })
+})

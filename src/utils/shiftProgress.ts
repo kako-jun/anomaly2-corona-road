@@ -2,7 +2,7 @@ import ledger from 'virtual:dialogue'
 import anomalies from 'virtual:anomalies'
 import { reiwaIdsOf } from './anomalyLedger'
 import { newlyRaisedFlags, storyFlagNames } from './dialogueEngine'
-import { update } from './saveData'
+import { emptySave, update } from './saveData'
 import type { LastShift, SaveData } from './saveData'
 
 /**
@@ -67,4 +67,18 @@ export const raiseFlagsAtStart = (): string[] => {
   const out: string[] = []
   update(cur => withRaisedFlags(cur, out))
   return out
+}
+
+/** The true ending was reached: from now on this save only offers "start over" (#294). */
+export const recordEndingReached = (): void => {
+  update(cur => ({ ...cur, endingReached: true }))
+}
+
+/** Start over (#294): wipe all progress. Only the display settings survive; they are not progress. */
+export const resetProgress = (): void => {
+  update(cur => ({
+    ...emptySave(),
+    epoch: cur.epoch + 1,
+    ...(cur.settings ? { settings: cur.settings } : {}),
+  }))
 }

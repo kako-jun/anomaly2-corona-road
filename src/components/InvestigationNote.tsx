@@ -42,11 +42,7 @@ const Rows = ({ rows }: { rows: NoteRow[] }) => (
     {rows.map(r => (
       <div className="note-fr" key={r.label}>
         <span className="note-fl">{r.label}</span>
-        {r.value === null ? (
-          <span className="note-blank" />
-        ) : (
-          <b>{r.value}</b>
-        )}
+        {r.value === null ? <span className="note-blank" /> : <b>{r.value}</b>}
         <small>{r.unit}</small>
       </div>
     ))}
