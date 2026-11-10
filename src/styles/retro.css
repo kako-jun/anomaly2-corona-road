@@ -131,25 +131,39 @@
   z-index: 3;
 }
 
+/* OSD sizes and positions are ratios of the picture width (.glass is a size container, cqw), like the subtitles (#295, #316).
+   Each cqw line is preceded by a fallback for browsers without container query units. The cqw values are the 1280x720
+   desktop look (picture 441px wide: 16px = 3.6cqw). max() is a floor so the text stays readable on a tiny picture
+   (360x640 phone: picture 203px wide). Corner distances keep the text clear of the rounded corners of the frame opening. */
 .osd-cam {
-  left: 14px;
-  bottom: 14px;
+  left: 8%;
+  bottom: 7%;
+  left: 8cqw;
+  bottom: 9cqw;
   font-size: 1rem;
+  font-size: max(10px, 3.6cqw);
 }
 
 .osd-rec {
-  right: 14px;
-  top: 12px;
+  right: 7%;
+  top: 6%;
+  right: 7cqw;
+  top: 7.7cqw;
   color: #ff8d84;
   text-shadow: 0 0 6px #f44;
   display: flex;
   align-items: center;
   gap: 6px;
+  gap: 1.4cqw;
+  font-size: 0.8rem;
+  font-size: max(9px, 2.9cqw);
 }
 
 .rec-dot {
   width: 8px;
   height: 8px;
+  width: max(5px, 1.8cqw);
+  height: max(5px, 1.8cqw);
   border-radius: 50%;
   background: #ff3b30;
   box-shadow: 0 0 6px #f33;
@@ -1200,9 +1214,16 @@
   left: 0;
   right: 0;
   top: 12%;
+  top: 15.4cqw;
+  padding: 0 5cqw;
   text-align: center;
   font-size: 0.85rem;
+  font-size: max(10px, 4.5cqw);
   letter-spacing: 0.18em;
+  /* a long message wraps only between words, two balanced lines (#316) */
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: keep-all;
   color: #7dff9e;
   text-shadow:
     0 0 6px #2f6,
@@ -1210,6 +1231,11 @@
   opacity: 0;
   transition: opacity 0.7s ease;
   pointer-events: none;
+}
+
+.osd-result .w {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .osd-result.show {
@@ -1222,12 +1248,6 @@
   text-shadow:
     0 0 6px #f33,
     0 0 2px #fcc;
-}
-
-@media (min-width: 900px) {
-  .osd-result {
-    font-size: 1.25rem;
-  }
 }
 
 /* all status labels centred over their windows; letter-spaced key text optically centred */
@@ -1806,15 +1826,6 @@
       rgba(0, 0, 0, 0.3) 82%,
       rgba(0, 0, 0, 0.6) 100%
     );
-}
-/* keep the OSD texts clear of the rounded corners */
-.osd-cam {
-  left: 8%;
-  bottom: 7%;
-}
-.osd-rec {
-  right: 7%;
-  top: 6%;
 }
 /* the glass is out of the flow now: the tube is exactly as wide as the frame picture is at the tube's height (1246x1679) */
 @media (min-width: 900px) {

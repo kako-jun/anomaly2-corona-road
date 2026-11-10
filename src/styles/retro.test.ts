@@ -100,6 +100,43 @@ describe('retro.css', () => {
     expect(decls('.movie-sub', 'font-size').at(-1)).toBe('4.9cqw')
   })
 
+  it('sizes the OSD texts in cqw against the picture, with no fixed size or width @media (#316)', () => {
+    for (const sel of ['.osd-cam', '.osd-rec', '.osd-result']) {
+      // the cqw declaration must come last so it wins; earlier ones are fallbacks for browsers without cqw
+      expect(decls(sel, 'font-size').at(-1), sel).toMatch(/cqw\)?$/)
+      expect(decls(sel, 'font-size').length, sel).toBeGreaterThan(1)
+    }
+    for (const [sel, props] of [
+      ['.osd-cam', ['left', 'bottom']],
+      ['.osd-rec', ['right', 'top', 'gap']],
+      ['.osd-result', ['top', 'padding']],
+      ['.rec-dot', ['width', 'height']],
+    ] as const)
+      for (const prop of props)
+        expect(decls(sel, prop).at(-1), `${sel} ${prop}`).toMatch(/cqw\)?$/)
+    // no @media rule may change an OSD size
+    root_.walkAtRules('media', at =>
+      at.walkRules(rule => {
+        if (!/\.(osd|rec-dot)/.test(rule.selector)) return
+        rule.walkDecls(d => {
+          expect(d.prop, `${rule.selector} in @media`).not.toMatch(
+            /font-size|width|height|left|right|top|bottom|gap|letter-spacing/
+          )
+        })
+      })
+    )
+  })
+
+  it('wraps the result text only between words, never inside one (#316)', () => {
+    expect(decls('.osd-result .w', 'white-space').at(-1)).toBe('nowrap')
+    expect(decls('.osd-result .w', 'display').at(-1)).toBe('inline-block')
+    expect(decls('.osd-result', 'text-wrap').at(-1)).toBe('balance')
+    // nothing may allow a break inside a word
+    for (const prop of ['overflow-wrap', 'word-wrap', 'word-break'])
+      for (const v of decls('.osd-result', prop))
+        expect(v).not.toMatch(/break-word|anywhere|break-all/)
+  })
+
   it('stops the clock animation when reduced motion is requested', () => {
     expect(
       decls('.clock-colon', 'animation').some(
