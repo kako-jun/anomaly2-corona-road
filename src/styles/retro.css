@@ -274,7 +274,10 @@
   /* proportional to the picture (.glass is a size container): 4.9cqw = the old desktop look, at any monitor size (#295) */
   font-size: 4.9cqw;
   line-height: 1.8;
-  font-style: italic;
+  /* tilt by an exact angle: JP fonts have no true italic, and font-style: italic is a browser-chosen synthetic angle (#306) */
+  font-style: normal;
+  transform: skewX(calc(var(--sub-skew, 9) * -1deg));
+  transform-origin: 50% 50%;
   font-weight: 600;
   letter-spacing: 0.04em;
   pointer-events: none;
