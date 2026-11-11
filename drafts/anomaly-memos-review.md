@@ -11,7 +11,7 @@
 | AR-02-cat | シャッターの脇に猫。 | A cat by the shutter. |
 | AR-02-cigarette | 床に煙草の吸い殻。 | A cigarette butt on the floor. |
 | AR-02-coffee | 台にコーヒーのカップ。 | A coffee cup on the stand. |
-| AR-02-newspaper | シャッターの足元に新聞。 | A newspaper by the shutter. |
+| AR-02-newspaper | 左シャッターの床際に新聞。 | A newspaper at the floor edge of the left shutter. |
 | AR-02-open-sign | 閉まった店に「営業中」。 | An OPEN sign on a closed shop. |
 | AR-02-pot-duplicate | 鉢が二つになった。 | The pot became two. |
 | AR-02-puddle | 床に水たまり。 | A puddle on the floor. |
@@ -22,7 +22,7 @@
 | AR-02-stool | 鉢の台が通路へ動いた。 | The plant stand moved into the aisle. |
 | AR-02-tile-color | 床の一枚だけ茶色。 | One floor tile turned brown. |
 | AR-02-tile | 床に幾何学模様。 | A geometric pattern on the floor. |
-| AR-03-newspaper | シャッター際の床に新聞。 | A newspaper on the floor by the shutter. |
+| AR-03-newspaper | 床の左シャッター際に新聞。 | A newspaper on the floor beside the left shutter. |
 | AR-04-puddle | 点検口の横に水たまり。 | A puddle beside the hatch. |
 | AR-05-glass-light | ガラスに古い店の灯り。 | An old shop's lights in the glass. |
 | AR-06-reflected-umbrella | ガラスだけに赤い傘。 | A red umbrella, only in the glass. |
@@ -88,7 +88,7 @@
 | AR-07-purple-floor-tile | 床タイルが一枚だけ紫。 | One floor tile turned purple. |
 | AR-02-duplicate-coffee-sign | 同じ文字の緑看板が二枚。 | Two green signs with the same words. |
 | AR-02-flower-ornament | 星の飾りが一つ花形に。 | One star ornament became a flower. |
-| AR-02-red-star | 白い星の飾りが一つ赤に。 | One white star ornament turned red. |
+| AR-02-red-star | 白い飾りが一つだけ淡い赤に。 | One white ornament turned pale red. |
 | AR-02-pillar-notice | 柱に小さな案内が増えた。 | Another small notice on the pillar. |
 | AR-03-amber-lamp-glow | 丸灯の光が橙色に。 | The round lamp's glow turned orange. |
 | AR-03-coffee-text-missing | 看板の COFFEE だけ消えた。 | Only COFFEE vanished from the sign. |
@@ -176,14 +176,14 @@
 | AR-02-leather-footprints | 誰もいない床に革靴の足跡。 | Shoeprints on an empty floor. |
 | AR-03-sunken-opening-floor | 奥の開口の床だけ一段低い。 | The floor at the far opening sits lower. |
 | AR-05-floor-glare-backside | 床の反射にだけガラスの裏側。 | The back of the glass, only in the floor reflection. |
-| AR-06-fluorescent-tag | 蛍光灯の端から紙札。 | A paper tag hanging from the fluorescent light. |
+| AR-06-fluorescent-tag | 蛍光灯の端から紐で下がる無地の紙札。 | A blank paper tag hangs by a string from the end of a fluorescent light. |
 | AR-07-pictogram-flip | 扉のピクトグラムが逆さに。 | The door pictogram turned upside down. |
-| AR-07-paper-tag-lamp | 蛍光灯の端に紙札。 | A paper tag on the end of the fluorescent light. |
+| AR-07-paper-tag-lamp | 長方形の蛍光灯の端に貼られた無地の紙札。 | A blank paper tag stuck to the end of a rectangular fluorescent light. |
 | AR-08-vent-paper-plug | 天井の黒い丸が紙で塞がれた。 | The black ceiling dome is plugged with paper. |
 | AR-01-ceiling-fan-showa | 天井に古い木の羽根の扇風機。 | An old wooden ceiling fan. |
-| AR-01-red-rubber-ball | 床に赤いゴムまり。 | A red rubber ball on the floor. |
+| AR-01-red-rubber-ball | 最前景の床に白い帯のある赤いゴムまり。 | A red rubber ball with a white band on the foreground floor. |
 | AR-02-chalk-hopscotch | 床にチョークの石蹴り。 | A chalk hopscotch grid on the floor. |
-| AR-02-tricycle | 床に色褪せた赤い三輪車。 | A faded red tricycle on the floor. |
+| AR-02-tricycle | 右手前の床に色褪せた赤い子供用三輪車。 | A faded red children's tricycle on the lower-right floor. |
 | AR-03-pendant-lamp | 昔の電球が天井から下がる。 | An old lamp hangs from the ceiling. |
 | AR-03-kerosene-heater | 古い石油ストーブが灯る。 | An old kerosene heater glows. |
 | AR-04-ceiling-balloon | 天井に赤い風船。 | A red balloon against the ceiling. |
@@ -203,7 +203,7 @@
 | AR-04-window-alley | 窓の外に夕焼けの路地。 | A sunset alley beyond the windows. |
 | AR-08-floor-water-mirror | 水鏡に映る夕焼けの商店街。 | A shopping street at sunset in the water's reflection. |
 | AR-05-curtains-open-cafe | カーテンの奥に無人の喫茶店。 | An empty coffee shop beyond the curtains. |
-| AR-04-glass-fog-handprints | 曇りガラスに大小の手形。 | Handprints large and small on the fogged glass. |
+| AR-04-glass-fog-handprints | 曇ったガラスに大小の手形と指で描いた絵。 | Handprints and finger-drawn doodles on fogged glass. |
 | AR-05-floor-white-cranes | 床一面に白い折り鶴。 | White paper cranes cover the floor. |
 | AR-01-ceiling-lanterns | 天井に赤白の提灯。 | Red and white lanterns across the ceiling. |
 | AR-02-shutter-crayon-drawings | 同じ家族の絵が一面に。 | Drawings of the same family cover the storefront. |
@@ -220,7 +220,7 @@
 | AR-02-tanabata-paper-chain | 天井に色紙の輪つなぎ。 | A colored paper chain across the ceiling. |
 | AR-02-bw-television | 暗い店内で白黒テレビの砂嵐。 | Static on a black-and-white TV in the dark shop. |
 | AR-02-mint-suitcase | 床にミント色の小さなスーツケース。 | A small mint-green suitcase on the floor. |
-| AR-03-tricycle | 床に赤い三輪車。 | A red tricycle on the floor. |
+| AR-03-tricycle | 手前右寄りの床に昭和風の赤い三輪車。 | A Showa-era red tricycle on the floor toward the front right. |
 | AR-03-wash-tub | 黄色い洗面桶が伏せてある。 | A yellow washbasin lies upside down. |
 | AR-03-insect-cage | 影の中に竹の虫かご。 | A bamboo insect cage in the shadows. |
 | AR-03-sake-bottle | 床に茶色い一升瓶。 | A large brown bottle on the floor. |
@@ -232,7 +232,7 @@
 | AR-07-n4 | 床のスマホの画面が点いている。 | A phone screen glows on the floor. |
 | AR-08-n1 | 床に木の洗濯板。 | A wooden washboard on the floor. |
 | AR-08-n2 | 床に閉じた透明な傘。 | A closed clear umbrella on the floor. |
-| AR-08-n3 | 暗い床に赤いゴムまり。 | A red rubber ball on the dark floor. |
+| AR-08-n3 | 左手前の暗い床に無地の赤いゴムまり。 | A plain red rubber ball on the dark floor at the front left. |
 | AR-08-n5 | 床に小さな段ボール箱。 | A small cardboard box on the floor. |
 | AR-08-n6 | 天井に赤い凧が引っかかる。 | A red kite caught on the ceiling. |
 | AR-05-beach-ball | 床にビーチボール。 | A beach ball on the floor. |
@@ -353,7 +353,7 @@
 | RT-SND-01 | 周囲の音が急に消えた。 | The ambient sound suddenly stopped. |
 | RT-SND-02 | 低い唸りが大きくなる。 | A low hum grows louder. |
 | RT-SND-03 | 蛍光灯のジリジリという音。 | The buzz of a fluorescent light. |
-| RT-SND-04 | 奥から足音がする。 | Footsteps from down the corridor. |
+| RT-SND-04 | 奥から聞こえる足音、または近づく速い足音。 | Footsteps from down the corridor, or quick footsteps approaching. |
 | RT-SND-05 | 何かを叩く音がする。 | A knocking sound. |
 | RT-SND-06 | 聞き取れない囁き声。 | An indistinct whisper. |
 | RT-SND-07 | 館内放送が逆向きに聞こえる。 | An announcement plays backward. |
