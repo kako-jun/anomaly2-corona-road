@@ -38,7 +38,7 @@ dialogues:
   - id: chatter-06
     tone: light
     lines:
-      - { who: M, text: '出河さん　金沢のバス　もう慣れました?', en: "Ms. Idokawa, are you used to the buses in Kanazawa yet?" }
+      - { who: M, text: '出河さん　金沢のバス　もう慣れました?', en: "Ms. Dekawa, are you used to the buses in Kanazawa yet?" }
       - { who: A, text: 'まだ迷うよ　東京なら歩いてた距離でも　乗るんだね', en: "I still get lost. In Tokyo I'd walk this far, but here you take the bus." }
       - { who: M, text: 'はい　この辺は電車の本数も　少ないですよ', en: "Yes, and there aren't many trains around here either." }
   - id: chatter-07
@@ -50,10 +50,10 @@ dialogues:
   - id: chatter-08
     tone: light
     lines:
-      - { who: A, text: 'あれ　今日は席が違うね', en: "Huh, your seat's different today." }
-      - { who: M, text: 'はい　資料を広げやすいように　空けましたよ', en: "Yes, I cleared some space so you can spread out your papers." }
+      - { who: A, text: 'あれ　今日は席が違うね', en: "Hey, you're sitting somewhere different today." }
+      - { who: M, text: 'はい　資料を広げやすいように　空けましたよ', en: "Yes. I moved over so you could spread out your papers." }
       - { who: A, text: 'ありがとう!　助かった', en: "Thanks! That helps." }
-      - { who: M, text: '邪魔にならない位置に　したつもりです', en: "I tried to put it somewhere it wouldn't get in your way." }
+      - { who: M, text: '邪魔にならない位置に　したつもりです', en: "I tried to stay out of your way." }
   - id: chatter-09
     tone: light
     lines:
@@ -92,7 +92,7 @@ dialogues:
   - id: chatter-14
     tone: light
     lines:
-      - { who: M, text: '出河さん　血液型って何ですか', en: "Ms. Idokawa, what's your blood type?" }
+      - { who: M, text: '出河さん　血液型って何ですか', en: "Ms. Dekawa, what's your blood type?" }
       - { who: A, text: 'えっ　何に使うの?　占い?', en: "Huh? What for? Is this about fortune-telling?" }
       - { who: M, text: 'いえ　聞いただけですよ', en: "No, I was just asking." }
       - { who: A, text: '信じてないよ　順位だけ見るけど', en: "I don't believe in it. I only check the rankings." }
@@ -113,7 +113,7 @@ dialogues:
   - id: chatter-17
     tone: light
     lines:
-      - { who: M, text: '出河さん　メモの字　読みやすいですね', en: "Ms. Idokawa, your notes are easy to read." }
+      - { who: M, text: '出河さん　メモの字　読みやすいですね', en: "Ms. Dekawa, your notes are easy to read." }
       - { who: A, text: '現場で読めないと困るからね', en: "They'd be no use on a case if you couldn't read them." }
       - { who: M, text: '俺の字は読めないって言われます', en: "People say they can't read my handwriting." }
       - { who: A, text: 'えっ　自分では読めるの?', en: "Huh, can you read it yourself?" }
@@ -121,7 +121,7 @@ dialogues:
     tone: light
     lines:
       - { who: A, text: '眠気覚まし　何してる?', en: "What do you do to stay awake?" }
-      - { who: M, text: 'ガムを噛みます　出河さんは?', en: "I chew gum. What about you, Ms. Idokawa?" }
+      - { who: M, text: 'ガムを噛みます　出河さんは?', en: "I chew gum. What about you, Ms. Dekawa?" }
       - { who: A, text: '立って水を飲む　それだけで少し変わるよ', en: "I stand up and drink some water. That helps a little." }
       - { who: M, text: 'はい　試してみますよ', en: "Yes, I'll give that a try." }
   - id: chatter-19
@@ -130,7 +130,7 @@ dialogues:
       - { who: A, text: '夜勤明けって　温かいもの食べたくならない?', en: "After a night shift, don't you want something warm to eat?" }
       - { who: M, text: 'はい　味噌汁とかいいですよ', en: "Yes, miso soup is nice." }
       - { who: A, text: 'そうなの!　それだけのために　店を探す日もある', en: "Exactly! Some days I go looking for a place just for that." }
-      - { who: M, text: '出河さんは　食べる店を決めるのが早いですね', en: "Ms. Idokawa is quick to pick a place to eat." }
+      - { who: M, text: '出河さんは　食べる店を決めるのが早いですね', en: "Ms. Dekawa is quick to pick a place to eat." }
   - id: chatter-20
     tone: light
     lines:
@@ -148,7 +148,7 @@ dialogues:
   - id: chatter-22
     tone: light
     lines:
-      - { who: M, text: '出河さん　傘は折りたたみ派ですか', en: "Ms. Idokawa, do you use a folding umbrella?" }
+      - { who: M, text: '出河さん　傘は折りたたみ派ですか', en: "Ms. Dekawa, do you use a folding umbrella?" }
       - { who: A, text: '普通の傘　折りたたむのが苦手でね', en: "A regular one. I'm bad at folding them up." }
       - { who: M, text: '俺はたたむのが面倒で　長いのを持ち歩きます', en: "I hate folding them, so I carry a long umbrella around." }
       - { who: A, text: 'それはそれで大変そう!', en: "That sounds like a hassle too!" }
@@ -161,7 +161,7 @@ dialogues:
   - id: chatter-24
     tone: light
     lines:
-      - { who: M, text: '出河さん　カップの飲み物は混ぜる派ですか', en: "Ms. Idokawa, do you stir your drink in the cup?" }
+      - { who: M, text: '出河さん　カップの飲み物は混ぜる派ですか', en: "Ms. Dekawa, do you stir your drink in the cup?" }
       - { who: A, text: '混ぜるよ　底に残ると悔しいから', en: "I do. It bugs me when some stays at the bottom." }
       - { who: M, text: '俺は最後まで気づかずに飲みます', en: "I drink mine without noticing until the very end." }
       - { who: A, text: 'えっ　最後の一口で分かるでしょ!', en: "Huh? You can tell by the last sip!" }
@@ -174,7 +174,7 @@ dialogues:
   - id: chatter-26
     tone: light
     lines:
-      - { who: M, text: '出河さん　買い物のメモは紙ですか', en: "Ms. Idokawa, do you write your shopping list on paper?" }
+      - { who: M, text: '出河さん　買い物のメモは紙ですか', en: "Ms. Dekawa, do you write your shopping list on paper?" }
       - { who: A, text: '紙に書いて　その紙を忘れていく', en: "I write it on paper, then forget the paper." }
       - { who: M, text: 'メモの意味が薄いですね', en: "That makes the list less useful." }
       - { who: A, text: 'そうなの　帰ってから思い出す', en: "I know. Then I remember everything when I get home." }
@@ -187,7 +187,7 @@ dialogues:
   - id: chatter-28
     tone: light
     lines:
-      - { who: M, text: '出河さん　家で時計を見ますか', en: "Ms. Idokawa, do you look at clocks at home?" }
+      - { who: M, text: '出河さん　家で時計を見ますか', en: "Ms. Dekawa, do you look at clocks at home?" }
       - { who: A, text: '見るよ　腕時計も壁の時計も', en: "I do. My wristwatch and the wall clock." }
       - { who: M, text: '俺は時間を見すぎて　まだ一分かと思います', en: "I check the time too much and think, only one minute?" }
       - { who: A, text: '分かる　待ってる時ほど進まないよね', en: "I know. Time crawls when you're waiting." }
@@ -201,7 +201,7 @@ dialogues:
   - id: chatter-30
     tone: light
     lines:
-      - { who: M, text: '出河さん　冬は手袋を使いますか', en: "Ms. Idokawa, do you wear gloves in winter?" }
+      - { who: M, text: '出河さん　冬は手袋を使いますか', en: "Ms. Dekawa, do you wear gloves in winter?" }
       - { who: A, text: '使うよ　片方だけ見つからなくなるけど', en: "I do, but one of them always goes missing." }
       - { who: M, text: '片方だけで出るんですか', en: "Do you go out wearing just one?" }
       - { who: A, text: '出ないよ!　探すの', en: "Of course not! I look for it." }
@@ -214,7 +214,7 @@ dialogues:
   - id: chatter-32
     tone: light
     lines:
-      - { who: M, text: '出河さん　パンの耳は食べますか', en: "Ms. Idokawa, do you eat the crusts on bread?" }
+      - { who: M, text: '出河さん　パンの耳は食べますか', en: "Ms. Dekawa, do you eat the crusts on bread?" }
       - { who: A, text: '食べるよ　そこが好きな人もいるよね', en: "I do. Some people like that part best." }
       - { who: M, text: '俺は最後に取っておきます', en: "I save mine for last." }
       - { who: A, text: '好きなの?　苦手なの?', en: "Do you like them, or not?" }
@@ -227,7 +227,7 @@ dialogues:
   - id: chatter-34
     tone: light
     lines:
-      - { who: M, text: '出河さん　家の鍵はどこに入れてますか', en: "Ms. Idokawa, where do you keep your house keys?" }
+      - { who: M, text: '出河さん　家の鍵はどこに入れてますか', en: "Ms. Dekawa, where do you keep your house keys?" }
       - { who: A, text: '鞄の内ポケット　たまに別の所に移す', en: "In my bag's inner pocket. Sometimes I move them somewhere else." }
       - { who: M, text: '戻す場所を決めると楽ですよ', en: "It's easier if you always put them in the same place." }
       - { who: A, text: 'それができたら苦労しないよ!', en: "If I could do that, I wouldn't have a problem!" }
@@ -240,7 +240,7 @@ dialogues:
   - id: chatter-36
     tone: light
     lines:
-      - { who: M, text: '出河さん　駅で迷うことありますか', en: "Ms. Idokawa, do you ever get lost at the station?" }
+      - { who: M, text: '出河さん　駅で迷うことありますか', en: "Ms. Dekawa, do you ever get lost at the station?" }
       - { who: A, text: 'あるよ　案内を読んだのに逆へ行く', en: "I do. I read the signs, then walk the wrong way." }
       - { who: M, text: '読んだ内容と反対へ進んでますね', en: "So you go the opposite way from what you read." }
       - { who: A, text: '言葉にすると　ひどいね!', en: "That sounds terrible when you put it that way!" }
@@ -253,7 +253,7 @@ dialogues:
   - id: chatter-38
     tone: light
     lines:
-      - { who: M, text: '出河さん　料理はレシピを見ますか', en: "Ms. Idokawa, do you follow recipes when you cook?" }
+      - { who: M, text: '出河さん　料理はレシピを見ますか', en: "Ms. Dekawa, do you follow recipes when you cook?" }
       - { who: A, text: '見るよ　途中から目分量になるけど', en: "I do, then I start eyeballing things halfway through." }
       - { who: M, text: 'レシピの意味が　なくなってませんか', en: "Doesn't that make the recipe pointless?" }
       - { who: A, text: '最初はあるの　最初はね', en: "It helps at first. At first." }
@@ -266,7 +266,7 @@ dialogues:
   - id: chatter-40
     tone: light
     lines:
-      - { who: M, text: '出河さん　写真を撮る時は構えますか', en: "Ms. Idokawa, do you pose when you take photos?" }
+      - { who: M, text: '出河さん　写真を撮る時は構えますか', en: "Ms. Dekawa, do you pose when you take photos?" }
       - { who: A, text: '構えないよ　後で見たら全部ぶれてる', en: "No. Later I find they're all blurry." }
       - { who: M, text: '撮る前に一秒止まると違いますよ', en: "Try holding still for a second before you shoot." }
       - { who: A, text: '分かった　次は一秒だけ頑張る', en: "Okay, I'll try for one whole second next time." }
@@ -279,7 +279,7 @@ dialogues:
   - id: chatter-42
     tone: light
     lines:
-      - { who: M, text: '出河さん　イヤホンは片方だけ使いますか', en: "Ms. Idokawa, do you use just one earbud at a time?" }
+      - { who: M, text: '出河さん　イヤホンは片方だけ使いますか', en: "Ms. Dekawa, do you use just one earbud at a time?" }
       - { who: A, text: '家では片方だけ　呼ばれたら気づきたいから', en: "At home, yes. I want to hear if someone calls me." }
       - { who: M, text: '仕事の癖が出てますね', en: "Your work habits are showing." }
       - { who: A, text: 'そうかも　家でも周りを気にしちゃう', en: "Maybe. I keep paying attention to everything at home too." }
@@ -305,7 +305,7 @@ dialogues:
   - id: chatter-46
     tone: light
     lines:
-      - { who: M, text: '出河さん　休憩中は何をしていますか', en: "Ms. Idokawa, what do you do on your break?" }
+      - { who: M, text: '出河さん　休憩中は何をしていますか', en: "Ms. Dekawa, what do you do on your break?" }
       - { who: A, text: '座って目を閉じる　眠れなくても楽になる', en: "I sit and close my eyes. It helps even if I can't sleep." }
       - { who: M, text: '俺は動画を見て　休憩が終わります', en: "I watch videos, then my break is over." }
       - { who: A, text: '休んだ気がしないやつだね', en: "That's the kind where you don't feel rested." }
@@ -318,7 +318,7 @@ dialogues:
   - id: chatter-48
     tone: light
     lines:
-      - { who: M, text: '出河さん　家で靴をそろえますか', en: "Ms. Idokawa, do you line up your shoes at home?" }
+      - { who: M, text: '出河さん　家で靴をそろえますか', en: "Ms. Dekawa, do you line up your shoes at home?" }
       - { who: A, text: 'そろえるつもりで　だいたい忘れる', en: "I mean to, but usually forget." }
       - { who: M, text: 'つま先を向けるだけでも　違いますよ', en: "Even just pointing the toes forward helps." }
       - { who: A, text: '今度こそやる　見ててね', en: "I'll do it this time. Watch me." }
@@ -331,7 +331,7 @@ dialogues:
   - id: chatter-50
     tone: light
     lines:
-      - { who: M, text: '出河さん　手帳は何色ですか', en: "Ms. Idokawa, what color is your planner?" }
+      - { who: M, text: '出河さん　手帳は何色ですか', en: "Ms. Dekawa, what color is your planner?" }
       - { who: A, text: '紺色　汚れが目立たないから', en: "Navy. Dirt doesn't show as much." }
       - { who: M, text: '俺は明るい色です　鞄の中で見つかるんで', en: "Mine's a bright color, so I can find it in my bag." }
       - { who: A, text: 'それは合理的だね', en: "That's practical." }
@@ -357,7 +357,7 @@ dialogues:
   - id: chatter-54
     tone: light
     lines:
-      - { who: M, text: '出河さん　目覚ましは何回鳴らしますか', en: "Ms. Idokawa, how many times does your alarm go off?" }
+      - { who: M, text: '出河さん　目覚ましは何回鳴らしますか', en: "Ms. Dekawa, how many times does your alarm go off?" }
       - { who: A, text: '一回のつもり　止めてから何回も寝る', en: "I mean to do it once, then keep falling asleep again." }
       - { who: M, text: 'それは実質　何回も鳴らしてますね', en: "So in practice, it goes off lots of times." }
       - { who: A, text: 'そうなの　自覚はある!', en: "I know. I'm aware of it!" }
@@ -370,7 +370,7 @@ dialogues:
   - id: chatter-56
     tone: light
     lines:
-      - { who: M, text: '出河さん　靴の手入れってしますか', en: "Ms. Idokawa, do you take care of your shoes?" }
+      - { who: M, text: '出河さん　靴の手入れってしますか', en: "Ms. Dekawa, do you take care of your shoes?" }
       - { who: A, text: '汚れた時だけ　普段は見ないふり', en: "Only when they're dirty. Usually I pretend not to see it." }
       - { who: M, text: '見ないふりの期間が　長くなりそうですね', en: "That could be a long time pretending." }
       - { who: A, text: 'そうなの　今日は見てみる', en: "I know. I'll take a look today." }
@@ -383,7 +383,7 @@ dialogues:
   - id: chatter-58
     tone: light
     lines:
-      - { who: M, text: '出河さん　家の中でも眼鏡ですか', en: "Ms. Idokawa, do you wear your glasses at home too?" }
+      - { who: M, text: '出河さん　家の中でも眼鏡ですか', en: "Ms. Dekawa, do you wear your glasses at home too?" }
       - { who: A, text: '外すと何も見えないからね', en: "I can't see anything when I take them off." }
       - { who: M, text: '俺もです　眼鏡を探す時に困ります', en: "Same here. It's hard when I have to look for my glasses." }
       - { who: A, text: 'かけたまま探してるのにね', en: "Even though you're wearing them while you look." }
@@ -396,7 +396,7 @@ dialogues:
   - id: chatter-60
     tone: light
     lines:
-      - { who: M, text: '出河さん　休日に予定を詰めるほうですか', en: "Ms. Idokawa, do you pack your days off with plans?" }
+      - { who: M, text: '出河さん　休日に予定を詰めるほうですか', en: "Ms. Dekawa, do you pack your days off with plans?" }
       - { who: A, text: '詰めるよ　でも最初の予定で疲れちゃう', en: "I do, but I get tired after the first one." }
       - { who: M, text: '予定表が気合いを入れすぎですね', en: "Your schedule is trying a little too hard." }
       - { who: A, text: 'うん　次の休みは空けておく!', en: "Yeah. I'll leave my next day off open!" }
@@ -413,7 +413,7 @@ dialogues:
     unlock: elder1
     lines:
       - { who: A, text: 'このファイル　端がそろわないなあ', en: "This file's edges won't line up." }
-      - { who: M, text: '出河さん　角を机に当てるとそろいますよ', en: "Ms. Idokawa, tap the corner against the desk and it'll line up." }
+      - { who: M, text: '出河さん　角を机に当てるとそろいますよ', en: "Ms. Dekawa, tap the corner against the desk and it'll line up." }
       - { who: A, text: 'えっ　本当だ!　きれいになった', en: "Huh, you're right! It's neat now." }
       - { who: M, text: '見ていて気持ちいいですね', en: "It's satisfying to look at." }
   - id: chatter-63
@@ -428,7 +428,7 @@ dialogues:
     tone: light
     unlock: elder2
     lines:
-      - { who: M, text: '出河さん　そのペン　持ちやすそうですね', en: "Ms. Idokawa, that pen looks comfortable to hold." }
+      - { who: M, text: '出河さん　そのペン　持ちやすそうですね', en: "Ms. Dekawa, that pen looks comfortable to hold." }
       - { who: A, text: '握りやすいの　昔からこればかり', en: "It fits my hand. I've used this kind for years." }
       - { who: M, text: '手に合う道具って　替えにくいですよね', en: "Tools that fit your hand are hard to replace." }
       - { who: A, text: 'そうなの!　同じのを見つけると安心する', en: "Exactly! I feel better when I find the same one." }
@@ -436,7 +436,7 @@ dialogues:
     tone: light
     unlock: elder3
     lines:
-      - { who: M, text: '出河さん　その眼鏡　少しずれてますよ', en: "Ms. Idokawa, your glasses are a little crooked." }
+      - { who: M, text: '出河さん　その眼鏡　少しずれてますよ', en: "Ms. Dekawa, your glasses are a little crooked." }
       - { who: A, text: 'えっ　ほんと?　ずっとこのままだった?', en: "Huh, really? Have they been like that this whole time?" }
       - { who: M, text: '今気づきました　直すと見やすいですよ', en: "I just noticed. They'll be easier to see through once you adjust them." }
       - { who: A, text: 'ありがとう　見てくれてたんだね', en: "Thanks for noticing." }

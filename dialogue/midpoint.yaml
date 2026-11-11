@@ -153,7 +153,7 @@ dialogues:
     when: { stage: many }
     lines:
       - { who: A, text: '今日は目が冴えてる!　こんなに分かるなんて', en: "I'm wide awake tonight! I can't believe I'm spotting all these." }
-      - { who: M, text: 'はい　出河さん　よく見つけていますよ', en: "Yes, Ms. Idokawa, you're doing great." }
+      - { who: M, text: 'はい　出河さん　よく見つけていますよ', en: "Yes, Ms. Dekawa, you're doing great." }
   - id: midpoint-25
     tone: light
     when: { stage: many }
