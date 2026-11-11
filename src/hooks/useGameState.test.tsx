@@ -698,6 +698,16 @@ describe('time running out around the false-report limit', () => {
     expect(result.current.ending).toEqual({ closing: 'dawn', outcome: 'lose' })
   })
 
+  it('records a dawn as the whole shift (8:00) even though a tick lands a little late or early', () => {
+    const { result } = start()
+    advance(total + 7)
+    expect(result.current.ending?.closing).toBe('dawn')
+    expect(saveData.load().lastShift).toMatchObject({
+      closing: 'dawn',
+      durationMs: total,
+    })
+  })
+
   it('boundary at the limit: playing at 479999 ms, withdraw at 480000 ms (toast still pending)', () => {
     const { result } = start()
     advance(total - 1000)

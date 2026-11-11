@@ -36,11 +36,11 @@ describe('stageOf', () => {
 })
 
 describe('outcomeOf', () => {
-  it('withdraw and ending win over the counts; fresh finds mean progress', () => {
+  it('withdraw and ending win over the counts; fresh finds mean a new kind (new lead)', () => {
     expect(outcomeOf(shift({ closing: 'withdraw', fresh: 5 }))).toBe('withdraw')
     expect(outcomeOf(shift({ closing: 'ending' }))).toBe('ending')
-    expect(outcomeOf(shift({ fresh: 1 }))).toBe('progress')
-    expect(outcomeOf(shift({ fresh: 0, found: 7 }))).toBe('noProgress')
+    expect(outcomeOf(shift({ fresh: 1 }))).toBe('newKinds')
+    expect(outcomeOf(shift({ fresh: 0, found: 7 }))).toBe('noNewKinds')
   })
 })
 
@@ -87,7 +87,7 @@ describe('buildNote before a shift', () => {
     expect(v.left.rows.map(r => r.value)).toEqual(['9', '4', '1', '8:00'])
     expect(v.right.rows.map(r => r.value)).toEqual(['143', '63'])
   })
-  it('adds the last-night line after a night without progress or a withdraw', () => {
+  it('adds the last-night line after a night without new kinds or a withdraw', () => {
     const base = { loops: 5, flags: { elder1: true } }
     const none = buildNote(
       {
@@ -96,7 +96,7 @@ describe('buildNote before a shift', () => {
       },
       'ja'
     )
-    expect(texts(none).at(-1)).toBe('前回の捜査は進捗がなかった。')
+    expect(texts(none).at(-1)).toBe('前回は、新しい手がかりがなかった。')
     const wd = buildNote(
       {
         mode: 'before',
@@ -149,7 +149,7 @@ describe('buildNote after a shift', () => {
       },
       'ja'
     )
-  it('progress: stock lines, then the last two stage lines muted; night = loops', () => {
+  it('new kinds: stock lines, then the kept tail of the stage muted; night = loops', () => {
     const v = after(shift())
     expect(v.night).toBe('8夜目')
     expect(v.stamps).toEqual([
@@ -159,7 +159,9 @@ describe('buildNote after a shift', () => {
     expect(v.lines).toEqual([
       { text: '今夜も異変を報告。', muted: false },
       { text: '捜査は一歩前へ。', muted: false },
-      { text: '1人目と同じことを言う。', muted: true },
+      { text: '老人2人目を見つけたが、', muted: true },
+      { text: '帰りたくないという。', muted: true },
+      { text: '老人1人目と同じことを言う。', muted: true },
       { text: '人当たりがよく、こちらを気遣う。', muted: true },
     ])
     expect(v.scrib).toEqual(STAGES.elder2.scrib.map(s => s.ja))
@@ -168,7 +170,7 @@ describe('buildNote after a shift', () => {
   it('no progress and withdraw swap the stock lines and the scribble', () => {
     const np = after(shift({ fresh: 0 }))
     expect(texts(np).slice(0, 2)).toEqual([
-      '今夜の捜査は進捗がなかった。',
+      '新しい手がかりはなかった。',
       '新しい異変は見つからず。',
     ])
     expect(np.scrib).toEqual(['見落としはないか?'])
@@ -183,7 +185,7 @@ describe('buildNote after a shift', () => {
     })
     expect(texts(v).slice(0, 2)).toEqual([
       '異変を、すべて見送った。',
-      '指摘ではなく、子供の家を調べる。',
+      '指摘ではなく、家族を調べる。',
     ])
   })
   it('English mirrors the structure', () => {

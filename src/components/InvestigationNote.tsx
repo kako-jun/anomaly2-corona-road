@@ -76,7 +76,7 @@ export const InvestigationNote = ({
     : (actionLabel ??
       (view.mode === 'before' ? LABELS.btnStart[lang] : LABELS.btnAgain[lang]))
   return (
-    <main className={`note-screen note-${lang}`} lang={lang}>
+    <main className={`note-screen note-${lang} note-${view.mode}`} lang={lang}>
       <div
         className="note-fit"
         style={{ width: PAPER_W * scale, height: PAPER_H * scale }}
@@ -133,8 +133,8 @@ export const InvestigationNote = ({
               <img
                 className="note-doodle"
                 src="/note/corridor.svg"
-                width={100}
-                height={67}
+                width={90}
+                height={60}
                 alt=""
               />
             )}

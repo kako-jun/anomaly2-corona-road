@@ -19,15 +19,15 @@ export const stageOf = (
   return save.loops === 0 && save.foundTotal === 0 ? 'start' : 'none'
 }
 
-/** What kind of night the last shift was, for the stock lines. Fresh finds = progress. */
+/** What kind of night the last shift was, for the stock lines. Fresh finds = new kinds (a new lead; every night still moves the case forward). */
 export const outcomeOf = (shift: LastShift): Outcome =>
   shift.closing === 'withdraw'
     ? 'withdraw'
     : shift.closing === 'ending'
       ? 'ending'
       : shift.fresh > 0
-        ? 'progress'
-        : 'noProgress'
+        ? 'newKinds'
+        : 'noNewKinds'
 
 /** Real time of a shift as m:ss (the shift is 8 real minutes). */
 export const fmtShift = (ms: number): string => {
@@ -82,7 +82,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
       lines.push({ text: t(l), muted: false })
     if (stage !== 'start' && shift) {
       const o = outcomeOf(shift)
-      if (o === 'noProgress' || o === 'withdraw')
+      if (o === 'noNewKinds' || o === 'withdraw')
         lines.push({ text: t(LAST_NIGHT[o]), muted: false })
     }
   } else {
@@ -94,7 +94,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     })
     for (const l of OUTCOMES[outcome].lines)
       lines.push({ text: t(l), muted: false })
-    for (const l of STAGES[stage].lines.slice(-2))
+    for (const l of STAGES[stage].lines.slice(-STAGES[stage].tail))
       lines.push({ text: t(l), muted: true })
     scrib = OUTCOMES[outcome].scrib ?? scrib
   }
@@ -144,7 +144,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     stamps,
     slots,
     lines,
-    scrib: scrib.map(t),
+    scrib: scrib.map(t).filter(s => s !== ''),
     doodle: stage === 'start' && input.mode === 'before',
     left,
     right,

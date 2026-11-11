@@ -83,7 +83,7 @@ describe('result = investigation note (#297)', () => {
     }
   )
 
-  it('says there was no progress when no new kind was found', () => {
+  it('says there were no new leads when no new kind was found', () => {
     saved({ lastShift: shift({ fresh: 0 }) })
     render(
       <GameOverScreen
@@ -93,7 +93,7 @@ describe('result = investigation note (#297)', () => {
         onRestart={vi.fn()}
       />
     )
-    expect(screen.getByText('今夜の捜査は進捗がなかった。')).toBeInTheDocument()
+    expect(screen.getByText('新しい手がかりはなかった。')).toBeInTheDocument()
     expect(screen.queryByText('今夜も異変を報告。')).toBeNull()
   })
 

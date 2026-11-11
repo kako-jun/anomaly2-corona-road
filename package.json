@@ -20,6 +20,8 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
     "prepare": "husky",
     "check:bezel": "uv run --script scripts/bezel-frame.py check",
+    "check:note-fonts": "uv run --script scripts/build-note-fonts.py check",
+    "check:note-wrap": "uv run --script scripts/check-note-wrap.py",
     "build:prompts": "node scripts/build-prompt-queue.mjs",
     "build:camera-atlas": "node scripts/build-camera-atlas.mjs",
     "ledger:summary": "node scripts/ledger-summary.mjs",

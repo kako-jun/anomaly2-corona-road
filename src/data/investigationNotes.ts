@@ -19,14 +19,20 @@ export interface Pair {
 }
 
 export interface StageText {
-  /** Synopsis lines. The last two are the ones kept (muted) under the stock lines of an end-of-night memo. */
+  /**
+   * Synopsis, one entry per handwritten line: every entry fits the paper in one line and is never wrapped by the
+   * browser (a long sentence is split here, at a phrase boundary, in both languages alike; Issue #297 wrap rules).
+   */
   lines: Pair[]
+  /** How many of the last lines are kept (muted) under the stock lines of an end-of-night memo. */
+  tail: number
   /** The detective's scribbles (blue). */
   scrib: Pair[]
 }
 
 export const STAGES: Record<Stage, StageText> = {
   start: {
+    tail: 2,
     lines: [
       {
         ja: 'コロナロードで行方不明が4人。',
@@ -58,13 +64,13 @@ export const STAGES: Record<Stage, StageText> = {
       },
     ],
     scrib: [
-      {
-        ja: '昭和の異変のとき、シャッターの向こうへ行ったまま?',
-        en: 'Went past the shutter and never came back?',
-      },
+      { ja: '昭和の異変のとき、', en: 'Went past the shutter' },
+      { ja: 'シャッターの向こうへ', en: 'and never came back?' },
+      { ja: '行ったまま?', en: '' },
     ],
   },
   none: {
+    tail: 2,
     lines: [
       { ja: '行方不明は4人。', en: '4 people missing.' },
       { ja: 'まだ、誰も見つかっていない。', en: 'No one found yet.' },
@@ -74,13 +80,13 @@ export const STAGES: Record<Stage, StageText> = {
       },
     ],
     scrib: [
-      {
-        ja: '昭和の異変のとき、シャッターの向こうへ行ったまま?',
-        en: 'Went past the shutter and never came back?',
-      },
+      { ja: '昭和の異変のとき、', en: 'Went past the shutter' },
+      { ja: 'シャッターの向こうへ', en: 'and never came back?' },
+      { ja: '行ったまま?', en: '' },
     ],
   },
   elder1: {
+    tail: 4,
     lines: [
       { ja: '1人目の老人を見つけた。', en: 'Found the 1st old person.' },
       { ja: '帰りたくないという。', en: 'Doesn’t want to go home.' },
@@ -89,42 +95,41 @@ export const STAGES: Record<Stage, StageText> = {
         en: 'Even an oddity beats reality, they say.',
       },
       {
-        ja: '話は早いが、少し頑固。',
-        en: 'Straight to the point, a bit stubborn.',
+        ja: '老人1人目は実務的で、少し頑固。',
+        en: 'First elder: practical, a bit stubborn.',
       },
     ],
     scrib: [{ ja: 'どこへいったのか?', en: 'Where did they go?' }],
   },
   elder2: {
+    tail: 4,
     lines: [
+      { ja: '老人2人目を見つけたが、', en: 'Found the 2nd old person.' },
+      { ja: '帰りたくないという。', en: 'Doesn’t want to go home.' },
       {
-        ja: '老人2人目を見つけたが、帰りたくないという。',
-        en: 'Found the 2nd old person. Doesn’t want to go home.',
+        ja: '老人1人目と同じことを言う。',
+        en: 'Says the same thing as the first elder.',
       },
-      { ja: '1人目と同じことを言う。', en: 'Says the same as the 1st.' },
       {
         ja: '人当たりがよく、こちらを気遣う。',
         en: 'Warm, and worries about us.',
       },
     ],
-    scrib: [
-      {
-        ja: '異変の食べ物で生きている?',
-        en: 'Living on the oddity’s food?',
-      },
-      { ja: 'どこへいったのか?', en: 'Where did they go?' },
-    ],
+    scrib: [{ ja: 'どこへいったのか?', en: 'Where did they go?' }],
   },
   elder3: {
+    tail: 3,
     lines: [
+      { ja: '老人3人目を見つけた。', en: 'Found the 3rd.' },
       {
-        ja: '老人3人目を見つけた。やはり帰りたくないという。',
-        en: 'Found the 3rd. Doesn’t want to go home either.',
+        ja: 'やはり帰りたくないという。',
+        en: 'Doesn’t want to go home either.',
       },
       { ja: '乾いた冗談を言う。', en: 'Dry jokes.' },
+      { ja: '3人とも同じ。', en: 'All three agree:' },
       {
-        ja: '3人とも同じ。現実よりマシな優しい異変だと。',
-        en: 'All three agree: a kinder oddity than reality.',
+        ja: '現実よりマシな優しい異変だと。',
+        en: 'a kinder oddity than reality.',
       },
       { ja: '残るは4人目。子供。', en: 'One left. The child.' },
     ],
@@ -136,9 +141,9 @@ export const STAGES: Record<Stage, StageText> = {
     ],
   },
   child: {
+    tail: 2,
     lines: [
       { ja: '4人目、子供を見つけた。', en: 'Found the 4th. A child.' },
-      { ja: '異変が増えている。', en: 'More oddities are showing up.' },
       {
         ja: '子供の家は、今どうなっているのか。',
         en: 'What is the child’s home like now?',
@@ -154,7 +159,7 @@ export const STAGES: Record<Stage, StageText> = {
 }
 
 /** How a night went (end-of-night memo). Placeholder wording where the issue says so: #297 未決・仮置き. */
-export type Outcome = 'progress' | 'noProgress' | 'withdraw' | 'ending'
+export type Outcome = 'newKinds' | 'noNewKinds' | 'withdraw' | 'ending'
 
 export interface OutcomeText {
   lines: Pair[]
@@ -163,15 +168,15 @@ export interface OutcomeText {
 }
 
 export const OUTCOMES: Record<Outcome, OutcomeText> = {
-  progress: {
+  newKinds: {
     lines: [
       { ja: '今夜も異変を報告。', en: 'More oddities reported tonight.' },
       { ja: '捜査は一歩前へ。', en: 'One step forward.' },
     ],
   },
-  noProgress: {
+  noNewKinds: {
     lines: [
-      { ja: '今夜の捜査は進捗がなかった。', en: 'No progress tonight.' },
+      { ja: '新しい手がかりはなかった。', en: 'No new leads tonight.' },
       { ja: '新しい異変は見つからず。', en: 'No new oddities found.' },
     ],
     scrib: [{ ja: '見落としはないか?', en: 'Did we miss something?' }],
@@ -194,18 +199,18 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
     lines: [
       { ja: '異変を、すべて見送った。', en: 'Let every oddity pass.' },
       {
-        ja: '指摘ではなく、子供の家を調べる。',
-        en: 'Look into the child’s family instead.',
+        ja: '指摘ではなく、家族を調べる。',
+        en: 'Look into the family instead.',
       },
     ],
   },
 }
 
 /** Added to the synopsis of a start-of-night memo when the last night gave nothing, or ended in a withdraw. */
-export const LAST_NIGHT: Record<'noProgress' | 'withdraw', Pair> = {
-  noProgress: {
-    ja: '前回の捜査は進捗がなかった。',
-    en: 'Last time: no progress.',
+export const LAST_NIGHT: Record<'noNewKinds' | 'withdraw', Pair> = {
+  noNewKinds: {
+    ja: '前回は、新しい手がかりがなかった。',
+    en: 'Last time: no new leads.',
   },
   withdraw: {
     ja: '前回は、お手つきが重なり席を立った。',

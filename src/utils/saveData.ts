@@ -200,13 +200,17 @@ export const validateSave = (raw: unknown): SaveData | null => {
 
 /**
  * Merge two saves of the same player (two tabs). Within one epoch data only grows: counts take the larger value,
- * ids and flags are unions. `b` wins for settings.
+ * ids and flags are unions. Settings merge field by field, `b` winning where both have a field.
  */
 export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
   // A higher epoch (a reset happened) wins whole: the older generation's progress is dropped.
   if (a.epoch !== b.epoch) {
     const [win, lose] = a.epoch > b.epoch ? [a, b] : [b, a]
-    const settings = win.settings ?? lose.settings
+    // Settings are not progress: they merge field by field like within one epoch (the winner's fields win).
+    const settings =
+      win.settings || lose.settings
+        ? { ...lose.settings, ...win.settings }
+        : undefined
     return settings ? { ...win, settings } : win
   }
   const usedLines: Record<string, string[]> = {}

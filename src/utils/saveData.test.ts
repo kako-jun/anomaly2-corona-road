@@ -223,6 +223,28 @@ describe('lastShift (investigation note, #297)', () => {
   })
 })
 
+describe('mergeSave across epochs', () => {
+  it('progress follows the higher epoch but settings still merge field by field', () => {
+    const old = save({
+      epoch: 0,
+      foundTotal: 50,
+      settings: { language: 'en', brightness: 4 },
+    })
+    const reset = save({ epoch: 1, foundTotal: 0, settings: { contrast: 9 } })
+    const m = mergeSave(old, reset)
+    expect(m.foundTotal).toBe(0)
+    expect(m.settings).toEqual({ language: 'en', brightness: 4, contrast: 9 })
+    expect(mergeSave(reset, old).settings).toEqual(m.settings)
+  })
+  it('the winner wins a field both have', () => {
+    const m = mergeSave(
+      save({ epoch: 0, settings: { language: 'en' } }),
+      save({ epoch: 2, settings: { language: 'ja' } })
+    )
+    expect(m.settings).toEqual({ language: 'ja' })
+  })
+})
+
 describe('mergeSave keeps what only one side has', () => {
   const side = (own: string[]) =>
     save({ foundIds: own, usedChatter: own, pendingStories: own })

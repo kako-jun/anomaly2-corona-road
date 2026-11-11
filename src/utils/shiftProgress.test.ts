@@ -117,6 +117,21 @@ const SHIFT = {
   raised: [],
 }
 
+describe('shiftDurationMs', () => {
+  it('is the whole shift when time ran out, even if the last tick read a little less', async () => {
+    const { shiftDurationMs } = await fresh()
+    expect(shiftDurationMs('dawn', 479990)).toBe(480000)
+    expect(shiftDurationMs('ending', 479000)).toBe(480000)
+    expect(shiftDurationMs('dawn', 480013)).toBe(480000)
+  })
+  it('keeps the real time of a withdraw, within the shift', async () => {
+    const { shiftDurationMs } = await fresh()
+    expect(shiftDurationMs('withdraw', 221000)).toBe(221000)
+    expect(shiftDurationMs('withdraw', 480500)).toBe(480000)
+    expect(shiftDurationMs('withdraw', -1)).toBe(0)
+  })
+})
+
 describe('recordShiftEnd', () => {
   it('keeps how the shift went for the investigation note, the later one replacing the earlier', async () => {
     const { recordShiftEnd, load } = await fresh()

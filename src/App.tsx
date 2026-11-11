@@ -19,6 +19,12 @@ function App() {
   // The title's start key opens the investigation note; its key starts the shift (#297).
   const [memo, setMemo] = useState(false)
   const [language, setLanguage] = useLanguage()
+  // The ending reached in another tab closes the note (storage events re-render this): without this the note
+  // would open by itself after START OVER, without START SHIFT being pressed.
+  const endingReached = load().endingReached
+  useEffect(() => {
+    if (endingReached) setMemo(false)
+  }, [endingReached])
   // Bumped to re-read the save: after "start over", and when another tab changes it.
   const [, refresh] = useReducer((n: number) => n + 1, 0)
   useEffect(() => {
@@ -68,7 +74,7 @@ function App() {
     startGame()
   }
 
-  if (gameState === 'idle' && memo && !load().endingReached) {
+  if (gameState === 'idle' && memo && !endingReached) {
     return (
       <>
         <InvestigationNote

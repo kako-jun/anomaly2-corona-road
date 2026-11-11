@@ -107,6 +107,7 @@
 
 .note-stamps {
   margin: 6px 0 4px;
+  padding-top: 4px; /* the tilted stamp rises into the title otherwise */
   min-height: 28px;
   display: flex;
   gap: 14px;
@@ -137,7 +138,8 @@
   border-width: 3px;
 }
 .note-en .note-stamp.note-big {
-  font-size: 25px;
+  font-size: 22px;
+  letter-spacing: 0.02em;
 }
 
 .note-board {
@@ -166,7 +168,7 @@
 }
 .note-slot-new {
   position: absolute;
-  right: -4px;
+  right: 0;
   top: -8px;
   font-size: 12px;
   line-height: 12px;
@@ -180,7 +182,7 @@
 }
 
 .note-syn {
-  margin-top: 8px;
+  margin-top: 6px;
   min-height: 154px;
   background-image: repeating-linear-gradient(
     to bottom,
@@ -191,8 +193,13 @@
   );
   background-position: 0 1px;
 }
+.note-after .note-syn {
+  /* The after-night stamp row is taller (the big stamp); the synopsis there is 6 lines at most. */
+  min-height: 132px;
+}
 .note-syn p {
   margin: 0;
+  white-space: nowrap; /* every data line is one handwritten line: the browser never wraps it */
   line-height: 22px;
   font-size: 15px;
 }
@@ -207,7 +214,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 68px;
+  min-height: 62px;
 }
 .note-scrib {
   flex: 1;
@@ -224,18 +231,19 @@
 }
 .note-scrib p {
   margin: 0;
+  white-space: nowrap;
 }
 .note-doodle {
   display: block;
-  width: 100px;
-  height: 67px;
+  width: 90px;
+  height: 60px;
 }
 
 .note-form {
   display: flex;
   gap: 14px;
   margin-top: 8px;
-  padding: 8px 10px;
+  padding: 6px 10px;
   border: 1.5px solid #6b5f45;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.18);
@@ -263,6 +271,7 @@
   display: flex;
   align-items: baseline;
   gap: 4px;
+  height: 24px; /* a big number never pushes the next row down */
   line-height: 24px;
   font-size: 13px;
 }
@@ -279,6 +288,7 @@
   color: var(--blue);
   min-width: 30px;
   text-align: right;
+  line-height: 1;
 }
 .note-en .note-fr b {
   font-size: 26px;

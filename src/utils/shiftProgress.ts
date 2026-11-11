@@ -2,6 +2,7 @@ import ledger from 'virtual:dialogue'
 import anomalies from 'virtual:anomalies'
 import { reiwaIdsOf } from './anomalyLedger'
 import { newlyRaisedFlags, storyFlagNames } from './dialogueEngine'
+import { DEFAULT_CONFIG } from './gameConfig'
 import { emptySave, update } from './saveData'
 import type { LastShift, SaveData } from './saveData'
 
@@ -82,3 +83,16 @@ export const resetProgress = (): void => {
     ...(cur.settings ? { settings: cur.settings } : {}),
   }))
 }
+
+/**
+ * The shift length for the investigation note. Time ran out (dawn, true ending) = the whole shift, whatever the
+ * last animation frame happened to read (a tick can land a few ms before the end and show 7:59). A withdraw is
+ * cut short, so it keeps the real time.
+ */
+export const shiftDurationMs = (
+  closing: LastShift['closing'],
+  elapsedMs: number
+): number =>
+  closing === 'withdraw'
+    ? Math.min(Math.max(0, elapsedMs), DEFAULT_CONFIG.totalDurationMs)
+    : DEFAULT_CONFIG.totalDurationMs

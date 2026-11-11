@@ -25,6 +25,7 @@ import {
   raiseFlagsAtStart,
   recordFound,
   recordShiftEnd,
+  shiftDurationMs,
   recordEndingReached,
 } from '../utils/shiftProgress'
 import {
@@ -193,10 +194,7 @@ export const useGameState = () => {
         found: statsRef.current.correctReports,
         fresh: Math.max(0, load().foundIds.length - startUniqueRef.current),
         misreports: statsRef.current.misreports,
-        durationMs: Math.min(
-          statsRef.current.currentTime,
-          DEFAULT_CONFIG.totalDurationMs
-        ),
+        durationMs: shiftDurationMs(closing, statsRef.current.currentTime),
         closing,
         raised: [...raisedRef.current],
       })
