@@ -1012,8 +1012,21 @@
   white-space: nowrap;
 }
 
+.knob-wrap {
+  /* #353: how far the label is drawn up toward the knob. A transform, so layout, the tap area and the
+     portrait .tube height constants (which include the knob gap) do not change. Panel px (desktop is
+     zoomed, so 3px there is about 4px on screen). */
+  --knob-label-pull: 4px;
+}
+@media (min-width: 900px) {
+  .knob-wrap {
+    --knob-label-pull: 3px;
+  }
+}
+
 .knob-wrap .label {
   margin-bottom: 4px;
+  transform: translateY(calc(-1 * var(--knob-label-pull)));
 }
 
 .knob {

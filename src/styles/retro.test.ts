@@ -255,6 +255,17 @@ describe('retro.css', () => {
     ])
   })
 
+  it('draws the knob label up toward the knob with one variable and a transform, not layout (#353)', () => {
+    // A transform keeps the tap area, the 9px layout gap and the portrait .tube constants (which include
+    // that gap) unchanged. The pull is one variable on .knob-wrap (4px; 3px on the zoomed desktop panel).
+    expect(decls('.knob-wrap .label', 'transform')).toEqual([
+      'translateY(calc(-1 * var(--knob-label-pull)))',
+    ])
+    const pulls = decls('.knob-wrap', '--knob-label-pull')
+    expect(pulls).toEqual(['4px', '3px'])
+    for (const v of pulls) expect(parseFloat(v)).toBeLessThanOrEqual(5)
+  })
+
   it('centres the window digits on the glyphs, not on the line box (#314)', () => {
     // A font's line box has more space under the digits than above, so centring the line box left the
     // digits ~2px high (measured: 12px above / 16px below in a 44px window). Trimming each digit box to
