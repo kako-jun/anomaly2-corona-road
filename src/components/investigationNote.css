@@ -222,7 +222,11 @@
 .note-scrib {
   /* Continues right under the last synopsis line, tilted like a note jotted in the margin. */
   width: fit-content;
-  margin: 17px 0 0 4px; /* a gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun) */
+  /* A gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun). It is one rule
+     pitch (22px), not a free number: with this handwriting font that puts the middle of each scribble line about 5px
+     above its rule, like the synopsis, so the turned line (+-6px at its ends) crosses a rule only slightly. The old
+     17px put the middle of the line 10px up, so the rules ran through the letters (check:note-wrap, RULEFIT). */
+  margin: 22px 0 0 4px;
   color: var(--blue);
 }
 .note-scrib p {

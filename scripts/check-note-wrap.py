@@ -14,6 +14,8 @@ fixed 340x620, so the result does not depend on the screen), in Japanese and Eng
     makes the page scroll at 360x640, 390x844, 768x1024 or 1280x720,
   - a line starts with a closing mark / small kana (kinsoku),
   - a stamp collides with the night number, the title or the first sketch frame (WITHDRAWN at its longest).
+  - a synopsis / scribble line sits off its ruled line: at either end of the line (a scribble is turned) the letters' base
+    must be within RULE_BELOW_MAX below .. RULE_ABOVE_MAX above its rule, so the rules never run through the memo.
 
 Usage: start the dev server (`npm run dev`), then `npm run check:note-wrap` (URL: NOTE_URL, default
 http://127.0.0.1:5173; Chromium: CHROME or the Playwright default). Exit code 1 on any problem.
@@ -239,9 +241,9 @@ async () => {
   const notes = document.querySelector('.note-notes'), syn = document.querySelector('.note-syn'), sc = document.querySelector('.note-scrib')
   const synBottom = syn.offsetTop + syn.offsetHeight
   const gapAbove = sc ? sc.offsetTop - synBottom : 0
-  // A scribble is a separate jotting: about one ruled line below the synopsis (normally 14-18px; never under 10px).
+  // A scribble is a separate jotting: a little below the synopsis (14-24px; the exact gap is tuned to the rules, see RULEFIT).
   const minGap = 14
-  if (sc && (gapAbove < minGap || gapAbove > 20)) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want ${minGap}-20px)`)
+  if (sc && (gapAbove < minGap || gapAbove > 24)) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want ${minGap}-24px)`)
   const lastSyn = syn.querySelector('p:last-child').getBoundingClientRect()
   const clear = scribBox() ? scribBox().top - lastSyn.bottom : 99
   if (clear < 8) res.push(`the tilted scribble is only ${clear.toFixed(1)}px below the last synopsis line (need 8)`)
@@ -278,6 +280,37 @@ FOCUS = """
   return res
 }
 """
+
+RULEFIT = """
+([lo, hi, pitch, first]) => {
+  // Every synopsis / scribble line sits on the ruled sheet (the rules are CSS, the lines are text). For both ends of each
+  // line (a scribble line is turned, so its ends differ) the baseline must be within [lo, hi] px above its rule
+  // (negative = below it), measured on the 340px paper (the fit scale divided out). Past that the rule cuts through the
+  // letters ("the ruled lines overlap the memo", kako-jun), or the letters climb into the line above.
+  const res = []
+  const scale = document.querySelector('.note-paper').getBoundingClientRect().width / 340
+  const top = document.querySelector('.note-notes').getBoundingClientRect().top
+  for (const p of document.querySelectorAll('.note-syn p, .note-scrib p')) {
+    const mk = () => { const e = document.createElement('span'); e.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline'; return e }
+    const a = mk(), b = mk()
+    p.insertBefore(a, p.firstChild); p.appendChild(b)
+    const ends = [a, b].map(e => (e.getBoundingClientRect().bottom - top) / scale)
+    a.remove(); b.remove()
+    ends.forEach((y, i) => {
+      const k = Math.ceil((y + lo - first) / pitch)
+      const above = first + k * pitch - y
+      if (above < lo || above > hi) res.push(`"${p.textContent.slice(0, 14)}" ${i ? 'right' : 'left'} end sits ${above.toFixed(1)}px above its rule (allowed ${lo}..${hi})`)
+    })
+  }
+  return res
+}
+"""
+
+# The one place for how far a line may drift from its rule (px above the rule; negative = below it).
+RULE_BELOW_MAX = 4
+RULE_ABOVE_MAX = 14
+RULE_PITCH = 22  # the ruled sheet's line spacing (investigationNote.css .note-notes)
+RULE_FIRST = 22  # y of the first rule from the top of .note-notes
 
 VIEWPORTS = ((360, 640), (390, 844), (768, 1024), (1280, 720))
 FLAGS = {
@@ -318,6 +351,8 @@ def main():
                         page.set_viewport_size({"width": w, "height": h})
                         page.wait_for_timeout(60)
                         for msg in page.evaluate(LAYOUT):
+                            problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                        for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX, RULE_PITCH, RULE_FIRST]):
                             problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
                     if (stage, variant) in (("start", "plain"), ("child", "fresh")):
                         for w, h in VIEWPORTS:
