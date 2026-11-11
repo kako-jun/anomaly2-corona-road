@@ -785,7 +785,7 @@
 
 @media (min-width: 1200px) {
   .panel {
-    /* zoom: used to enlarge the controls at desktop width; non-standard, can be replaced by transform later */
+    /* zoom: enlarges the controls at desktop width (standardised CSS zoom; Firefox 126 and later). --pz must equal it (retro.test.ts pins that) */
     zoom: 1.3;
     --pz: 1.3;
   }
@@ -1000,6 +1000,10 @@
   flex: 1;
   min-width: 0;
   gap: 0;
+  /* #353: how far the label is drawn up toward the knob, 4px on screen in every width band (--pz is the
+     panel zoom set at 1200 / 1400px, undone here; unset = 1). A transform, so layout, the tap area and the
+     portrait .tube height constants (which include the knob gap) do not change. */
+  --knob-label-pull: calc(4px / var(--pz, 1));
 }
 
 .knob-sr-only {
@@ -1014,6 +1018,7 @@
 
 .knob-wrap .label {
   margin-bottom: 4px;
+  transform: translateY(calc(-1 * var(--knob-label-pull)));
 }
 
 .knob {

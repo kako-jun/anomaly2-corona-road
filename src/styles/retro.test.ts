@@ -255,6 +255,32 @@ describe('retro.css', () => {
     ])
   })
 
+  it('draws the knob label up toward the knob with one variable and a transform, not layout (#353)', () => {
+    // A transform keeps the tap area, the 9px layout gap and the portrait .tube constants (which include
+    // that gap) unchanged. One variable on .knob-wrap: 4px on screen in every band, so the panel zoom
+    // (--pz, 1.3 from 1200px, 1.45 from 1400px; unset = 1) is divided out.
+    expect(decls('.knob-wrap .label', 'transform')).toEqual([
+      'translateY(calc(-1 * var(--knob-label-pull)))',
+    ])
+    expect(decls('.knob-wrap', '--knob-label-pull')).toEqual([
+      'calc(4px / var(--pz, 1))',
+    ])
+    // .panel sets zoom and --pz to the same value; if they drift apart the 4px on screen drifts silently.
+    const zooms = decls('.panel', 'zoom').map(Number)
+    expect(decls('.panel', '--pz').map(Number)).toEqual(zooms)
+    expect(zooms).toEqual([1.3, 1.45])
+    // Evaluate the declared calc() in each band (unset --pz = 1, zoom 1): pull px / pz * zoom = on-screen px.
+    const m = /^calc\(\s*(\d+(?:\.\d+)?)px\s*\/\s*var\(--pz,\s*(\d+(?:\.\d+)?)\)\s*\)$/.exec(
+      decls('.knob-wrap', '--knob-label-pull')[0]
+    )
+    expect(m).not.toBeNull()
+    const [num, fallback] = [Number(m![1]), Number(m![2])]
+    for (const z of [undefined, ...zooms]) {
+      const pz = z ?? fallback
+      expect((num / pz) * (z ?? 1)).toBeCloseTo(4, 5)
+    }
+  })
+
   it('centres the window digits on the glyphs, not on the line box (#314)', () => {
     // A font's line box has more space under the digits than above, so centring the line box left the
     // digits ~2px high (measured: 12px above / 16px below in a 44px window). Trimming each digit box to
