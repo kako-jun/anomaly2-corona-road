@@ -4,39 +4,39 @@ dialogues:
     tone: serious
     when: { stage: few }
     lines:
-      - { who: A, text: 'あれ　まだこれだけ?　そんなに時間たったの?', en: "Huh, only this many? Has that much time passed already?" }
+      - { who: A, text: 'あれ　まだこれだけ？　そんなに時間たったの？', en: "Huh, only this many? Has that much time passed already?" }
       - { who: M, text: 'はい　折り返しですよ　焦らなくて大丈夫です', en: "Yes, we are halfway. No need to panic." }
   - id: midpoint-02
     tone: serious
     when: { stage: few }
     lines:
-      - { who: A, text: 'うそ　まだ少ししか見つけてない?　私なにしてたの', en: "No way, we have found so few? What have I been doing?" }
+      - { who: A, text: 'うそ　まだ少ししか見つけてない？　私なにしてたの', en: "No way, we have found so few? What have I been doing?" }
       - { who: M, text: 'はい　記録はそうなってます　まだ時間はありますよ', en: "Yes, that's what the log says. There's still time." }
   - id: midpoint-03
     tone: serious
     when: { stage: few }
     lines:
-      - { who: A, text: '見落としたかな　私　ちゃんと見てるよね?', en: "Did I miss something? I'm paying attention, right?" }
+      - { who: A, text: '見落としたかな　私　ちゃんと見てるよね？', en: "Did I miss something? I'm paying attention, right?" }
       - { who: M, text: 'はい　見ていますよ　今夜は少ないだけです', en: "Yes, you are. It's just a quiet night." }
   - id: midpoint-04
     tone: light
     when: { stage: few }
     lines:
-      - { who: A, text: '今夜は静かだね　静かすぎない?', en: "It's quiet tonight. A little too quiet, don't you think?" }
+      - { who: A, text: '今夜は静かだね　静かすぎない？', en: "It's quiet tonight. A little too quiet, don't you think?" }
       - { who: M, text: 'はい　今のところ静かです', en: "Yes, it is quiet so far." }
-      - { who: A, text: 'そのまま言わなくていいよ　余計気になる!', en: "You don't have to put it like that. Now I'm worried!" }
+      - { who: A, text: 'そのまま言わなくていいよ　余計気になる！', en: "You don't have to put it like that. Now I'm worried!" }
   - id: midpoint-05
     tone: serious
     when: { stage: few }
     lines:
       - { who: M, text: '見つけた数は　まだ少なめですよ', en: "The number we've found is still low." }
-      - { who: A, text: 'そんなに少ないの?　もっと見た気がする', en: "That few? I thought we'd seen more." }
+      - { who: A, text: 'そんなに少ないの？　もっと見た気がする', en: "That few? I thought we'd seen more." }
       - { who: M, text: 'はい　体感より少ないです', en: "Yes, it's fewer than it feels." }
   - id: midpoint-06
     tone: light
     when: { stage: few }
     lines:
-      - { who: A, text: 'このまま何もなかったら　私ずっと座ってただけ?', en: "If nothing happens, did I just sit here all night?" }
+      - { who: A, text: 'このまま何もなかったら　私ずっと座ってただけ？', en: "If nothing happens, did I just sit here all night?" }
       - { who: M, text: 'はい　そういう夜もありますよ', en: "Yes, some nights are like that." }
   - id: midpoint-07
     tone: serious
@@ -49,7 +49,7 @@ dialogues:
     tone: light
     when: { stage: few }
     lines:
-      - { who: A, text: '樫原くん　眠くない?　私は少し眠い', en: "Kashihara, are you sleepy? I am a little." }
+      - { who: A, text: '樫原くん　眠くない？　私は少し眠い', en: "Kashihara, are you sleepy? I am a little." }
       - { who: M, text: 'はい　少しだけです', en: "Yes, just a little." }
       - { who: A, text: '少しって顔じゃないよ', en: "You don't look a little sleepy." }
   - id: midpoint-09
@@ -62,14 +62,14 @@ dialogues:
     tone: light
     when: { stage: few }
     lines:
-      - { who: A, text: 'えっ　もう半分?　何もしてない気がする!', en: "What, already halfway? I feel like I've done nothing!" }
+      - { who: A, text: 'えっ　もう半分？　何もしてない気がする！', en: "What, already halfway? I feel like I've done nothing!" }
       - { who: M, text: 'はい　時刻は半分です　仕事は残ってますよ', en: "Yes, half the shift is gone. There's still work to do." }
   - id: midpoint-11
     tone: light
     when: { stage: mid }
     lines:
       - { who: M, text: 'はい　時刻は半分ですよ', en: "Yes, we're halfway through the shift." }
-      - { who: A, text: 'もう折り返し?　早いね', en: "Already halfway? That went fast." }
+      - { who: A, text: 'もう折り返し？　早いね', en: "Already halfway? That went fast." }
   - id: midpoint-12
     tone: light
     when: { stage: mid }
@@ -80,9 +80,9 @@ dialogues:
     tone: light
     when: { stage: mid }
     lines:
-      - { who: A, text: '私　今夜は調子いいかも!', en: "I might be on a roll tonight!" }
+      - { who: A, text: '私　今夜は調子いいかも！', en: "I might be on a roll tonight!" }
       - { who: M, text: 'はい　今夜はいくつか見つけていますよ', en: "Yes, you've found a few tonight." }
-      - { who: A, text: 'そうなの?　うれしい!', en: "Really? That makes me happy!" }
+      - { who: A, text: 'そうなの？　うれしい！', en: "Really? That makes me happy!" }
   - id: midpoint-14
     tone: serious
     when: { stage: mid }
@@ -96,27 +96,27 @@ dialogues:
     lines:
       - { who: A, text: '今夜は見つけるたびに　驚いてる気がする', en: "I feel like I'm startled every time we find one tonight." }
       - { who: M, text: 'はい　声に出てますよ', en: "Yes, it shows." }
-      - { who: A, text: 'えっ　そんなに大きい?', en: "Huh? Am I that loud?" }
+      - { who: A, text: 'えっ　そんなに大きい？', en: "Huh? Am I that loud?" }
   - id: midpoint-16
     tone: light
     when: { stage: mid }
     lines:
       - { who: M, text: '今夜は半分まで来ましたね', en: "We're halfway through the night now." }
-      - { who: A, text: 'まだ半分?　もう半分?　どっちなんだろう', en: "Is it halfway gone, or halfway left? I wonder." }
+      - { who: A, text: 'まだ半分？　もう半分？　どっちなんだろう', en: "Is it halfway gone, or halfway left? I wonder." }
       - { who: M, text: 'はい　どちらでも同じ時刻ですよ', en: "Yes, it's the same time either way." }
   - id: midpoint-17
     tone: serious
     when: { stage: mid }
     lines:
       - { who: A, text: 'この調子で朝まで　見落とさずにいけるかな', en: "Can we make it to morning without missing anything?" }
-      - { who: M, text: 'はい　一つずつ見ていけば大丈夫ですよ', en: "Yes, just take them one at a time." }
+      - { who: M, text: 'はい　１つずつ見ていけば大丈夫ですよ', en: "Yes, just take them one at a time." }
   - id: midpoint-18
     tone: light
     when: { stage: mid }
     lines:
       - { who: A, text: 'あっ　もう半分なんだ　コーヒー飲みすぎたかも', en: "Oh, it's already halfway. Maybe I've had too much coffee." }
       - { who: M, text: 'はい　カップが増えてますよ', en: "Yes, the cups are piling up." }
-      - { who: A, text: 'それは見ないで!', en: "Don't look at those!" }
+      - { who: A, text: 'それは見ないで！', en: "Don't look at those!" }
   - id: midpoint-19
     tone: light
     when: { stage: mid }
@@ -133,13 +133,13 @@ dialogues:
     tone: light
     when: { stage: many }
     lines:
-      - { who: A, text: 'わあ　今夜こんなに見つけたんだね!', en: "Wow, we've found this many tonight!" }
+      - { who: A, text: 'わあ　今夜こんなに見つけたんだね！', en: "Wow, we've found this many tonight!" }
       - { who: M, text: 'はい　今のところ多いですよ', en: "Yes, it's a lot so far." }
   - id: midpoint-22
     tone: light
     when: { stage: many }
     lines:
-      - { who: A, text: 'えっ　まだ時間あるのに　もうこんな数?', en: "What, this many already, and there's still time?" }
+      - { who: A, text: 'えっ　まだ時間あるのに　もうこんな数？', en: "What, this many already, and there's still time?" }
       - { who: M, text: 'はい　記録上は多いです', en: "Yes, the log says it's a lot." }
       - { who: A, text: 'すごいね　私たち', en: "We're amazing!" }
   - id: midpoint-23
@@ -147,20 +147,20 @@ dialogues:
     when: { stage: many }
     lines:
       - { who: A, text: '見つけた数が多いね　少し怖くなってきた', en: "We've found a lot. It's starting to scare me." }
-      - { who: M, text: 'はい　でも一つずつ確認しましょう', en: "Yes, but let's check them one at a time." }
+      - { who: M, text: 'はい　でも１つずつ確認しましょう', en: "Yes, but let's check them one at a time." }
   - id: midpoint-24
     tone: light
     when: { stage: many }
     lines:
-      - { who: A, text: '今日は目が冴えてる!　こんなに分かるなんて', en: "I'm wide awake tonight! I can't believe I'm spotting all these." }
+      - { who: A, text: '今日は目が冴えてる！　こんなに分かるなんて', en: "I'm wide awake tonight! I can't believe I'm spotting all these." }
       - { who: M, text: 'はい　出河さん　よく見つけていますよ', en: "Yes, Ms. Dekawa, you're doing great." }
   - id: midpoint-25
     tone: light
     when: { stage: many }
     lines:
-      - { who: A, text: 'こんなに見つけてた?　私　自分でもびっくり', en: "We found this many? I'm surprised myself." }
+      - { who: A, text: 'こんなに見つけてた？　私　自分でもびっくり', en: "We found this many? I'm surprised myself." }
       - { who: M, text: 'はい　驚くところまで含めて　いつもどおりです', en: "Yes, even being surprised is typical of you." }
-      - { who: A, text: 'いつもどおりって何!', en: "What do you mean, typical?!" }
+      - { who: A, text: 'いつもどおりって何！', en: "What do you mean, typical?!" }
   - id: midpoint-26
     tone: serious
     when: { stage: many }
@@ -178,7 +178,7 @@ dialogues:
     tone: light
     when: { stage: many }
     lines:
-      - { who: A, text: 'やった　今夜はたくさん見つけた!', en: "Yes! We've found loads tonight!" }
+      - { who: A, text: 'やった　今夜はたくさん見つけた！', en: "Yes! We've found loads tonight!" }
       - { who: M, text: 'はい　まだ時間はありますよ', en: "Yes, there's still time." }
       - { who: A, text: '分かってる　喜ぶのは少しだけ', en: "I know. I'll celebrate just a little." }
   - id: midpoint-29
@@ -192,6 +192,6 @@ dialogues:
     tone: light
     when: { stage: many }
     lines:
-      - { who: A, text: 'すごい　今夜は私の勘が冴えてる!', en: "Amazing! My instincts are sharp tonight!" }
+      - { who: A, text: 'すごい　今夜は私の勘が冴えてる！', en: "Amazing! My instincts are sharp tonight!" }
       - { who: M, text: 'はい　勘だけではないですよ', en: "Yes, it's not just instinct." }
-      - { who: A, text: 'えっ　どういう意味?', en: "Huh? What do you mean?" }
+      - { who: A, text: 'えっ　どういう意味？', en: "Huh? What do you mean?" }

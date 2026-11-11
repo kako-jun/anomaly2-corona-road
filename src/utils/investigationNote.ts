@@ -8,6 +8,7 @@ import {
 } from '../data/investigationNotes'
 import type { NoteLang, Outcome, Pair, Stage } from '../data/investigationNotes'
 import { DEFAULT_CONFIG, msToGameTime } from './gameConfig'
+import { toFullWidthDigits } from './fullWidth'
 import { MEMO_INDEX } from './memoIndex'
 import { MEMO_FLAGS } from './anomalyLedger'
 import type { MemoFlag } from './anomalyLedger'
@@ -131,8 +132,11 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     }
   })
 
+  // Japanese counts are written in full-width digits (#352); English keeps ASCII.
+  const digits = (v: number): string =>
+    lang === 'ja' ? toFullWidthDigits(v) : String(v)
   const num = (v: number | undefined): string | null =>
-    v === undefined ? null : String(v)
+    v === undefined ? null : digits(v)
   const row = (label: Pair, value: string | null, unit?: Pair): NoteRow => ({
     label: t(label),
     value,
@@ -153,8 +157,8 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
   const right = {
     head: t(LABELS.headTotal),
     rows: [
-      row(LABELS.rowTotal, String(save.foundTotal), LABELS.unitCount),
-      row(LABELS.rowKinds, String(save.foundIds.length), LABELS.unitKinds),
+      row(LABELS.rowTotal, digits(save.foundTotal), LABELS.unitCount),
+      row(LABELS.rowKinds, digits(save.foundIds.length), LABELS.unitKinds),
     ],
   }
 

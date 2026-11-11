@@ -6,6 +6,7 @@
  */
 
 import type { MemoFlag } from '../utils/anomalyLedger'
+import { toFullWidthDigits } from '../utils/fullWidth'
 
 /** Story flags (dialogue/flags.yaml) that fill the four missing-person frames, in order. */
 export const STAGE_FLAGS = ['elder1', 'elder2', 'elder3', 'child'] as const
@@ -70,18 +71,18 @@ export const STAGES: Record<Stage, StageText> = {
     lines: [
       k(
         'start',
-        'コロナロードで行方不明が4人。',
+        'コロナロードで行方不明が４人。',
         '4 people missing in Corona Road.'
       ),
       k('start', '殺人とは、まだ断定できない。', 'Murder? Can’t say that yet.'),
       k(
         'start',
-        '1人目は、警察も本気ではなかった。',
+        '１人目は、警察も本気ではなかった。',
         'Police didn’t take #1 seriously.'
       ),
       k(
         'start',
-        '4人目は子供。警察は急に本気になった。',
+        '４人目は子供。警察は急に本気になった。',
         '#4 is a child. Now they do.'
       ),
       k(
@@ -100,7 +101,7 @@ export const STAGES: Record<Stage, StageText> = {
   none: {
     tail: 2,
     lines: [
-      k('start', '行方不明は4人。', '4 people missing.'),
+      k('start', '行方不明は４人。', '4 people missing.'),
       k(
         'start',
         'まだ、行方不明の誰も見つかっていない。',
@@ -117,11 +118,11 @@ export const STAGES: Record<Stage, StageText> = {
   elder1: {
     tail: 2,
     lines: [
-      k('elder1', '老人1人目を見つけた。', 'Found the 1st old person.'),
+      k('elder1', '老人１人目を見つけた。', 'Found the 1st old person.'),
       k('elder1', '帰りたくないという。', 'Doesn’t want to go home.'),
       k(
         'elder1',
-        '老人1人目は実務的で、少し頑固。',
+        '老人１人目は実務的で、少し頑固。',
         'First elder: practical, a bit stubborn.'
       ),
       k(
@@ -135,11 +136,11 @@ export const STAGES: Record<Stage, StageText> = {
   elder2: {
     tail: 2,
     lines: [
-      k('elder2', '老人2人目を見つけたが、', 'Found the 2nd old person, but'),
+      k('elder2', '老人２人目を見つけたが、', 'Found the 2nd old person, but'),
       k('elder2', '帰りたくないという。', 'they don’t want to go home.'),
       k(
         'elder2',
-        '2人目も、老人1人目と同じことを言う。',
+        '２人目も、老人１人目と同じことを言う。',
         'Elder 2 says the same as elder 1.'
       ),
       k(
@@ -153,7 +154,7 @@ export const STAGES: Record<Stage, StageText> = {
   elder3: {
     tail: 2,
     lines: [
-      k('elder3', '老人3人目を見つけた。', 'Found the 3rd old person.'),
+      k('elder3', '老人３人目を見つけた。', 'Found the 3rd old person.'),
       k(
         'elder3',
         'やはり帰りたくないという。',
@@ -162,15 +163,15 @@ export const STAGES: Record<Stage, StageText> = {
       k('elder3', '乾いた冗談を言う。', 'Dry jokes.'),
       k(
         'elder3',
-        '3人とも現実よりマシな優しい異変だと。',
+        '３人とも現実よりマシな優しい異変だと。',
         'All three: a kinder oddity than reality.'
       ),
-      k('elder3', '残るは4人目。子供。', 'One left. The child.'),
+      k('elder3', '残るは４人目。子供。', 'One left. The child.'),
     ],
     scrib: [
       k(
         'elder3',
-        '子供も見つかったら同じことを…?',
+        '子供も見つかったら同じことを…？',
         'The child will say the same, too…?'
       ),
     ],
@@ -178,14 +179,14 @@ export const STAGES: Record<Stage, StageText> = {
   child: {
     tail: 2,
     lines: [
-      k('child', '4人目、子供を見つけた。', 'Found the 4th. A child.'),
+      k('child', '４人目、子供を見つけた。', 'Found the 4th. A child.'),
       k(
         'child',
         '子供の家は、今どうなっているのか。',
         'What is the child’s home like now?'
       ),
     ],
-    scrib: [k('child', '帰りたくないのは、なぜ?', 'Why not want to go home?')],
+    scrib: [k('child', '帰りたくないのは、なぜ？', 'Why not want to go home?')],
   },
 }
 
@@ -294,13 +295,19 @@ export const LAST_NIGHT: Record<'noNewKinds' | 'withdraw', KnownPair> = {
 
 export const LABELS = {
   title: { ja: '捜査メモ', en: 'CASE MEMO' },
-  night: (n: number): Pair => ({ ja: `${n}夜目`, en: `Night ${n}` }),
+  night: (n: number): Pair => ({
+    ja: `${toFullWidthDigits(n)}夜目`,
+    en: `Night ${n}`,
+  }),
   stampStart: { ja: '捜査の経緯', en: 'BACKGROUND' },
   stampBefore: { ja: '前回まで', en: 'SO FAR' },
   stampAfter: { ja: '今夜の捜査', en: 'TONIGHT' },
   stampDawn: { ja: '夜明け', en: 'DAWN' },
   stampWithdraw: { ja: '撤収', en: 'WITHDRAWN' },
-  slot: (n: number): Pair => ({ ja: `${n}人目`, en: `#${n}` }),
+  slot: (n: number): Pair => ({
+    ja: `${toFullWidthDigits(n)}人目`,
+    en: `#${n}`,
+  }),
   slotNew: { ja: '見つけた', en: 'found' },
   sketchFound: { ja: '似顔', en: 'sketch' },
   sketchUnknown: { ja: '未発見', en: 'not found yet' },
@@ -313,11 +320,11 @@ export const LABELS = {
   rowShift: { ja: '勤務', en: 'Shift' },
   /** The Shift row shows in-game clock time: the shift ran until dawn, or the detective withdrew at that time. */
   shiftUntil: (clock: string): Pair => ({
-    ja: `${clock}まで`,
+    ja: `${toFullWidthDigits(clock)}まで`,
     en: `Until ${clock}`,
   }),
   shiftWithdrew: (clock: string): Pair => ({
-    ja: `${clock}で撤収`,
+    ja: `${toFullWidthDigits(clock)}で撤収`,
     en: `Withdrew at ${clock}`,
   }),
   rowTotal: { ja: '延べ', en: 'Total' },

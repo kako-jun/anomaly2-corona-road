@@ -225,7 +225,7 @@
   width: fit-content;
   /* A gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun). It is one rule
      pitch, not a free number: with this handwriting font that puts the middle of each scribble line about 5px above
-     its rule, like the synopsis, so the turned line (its ends move up to +-8px: the longest line, 232px wide at -3.85 degrees, measures 15.6px end to end) crosses
+     its rule, like the synopsis, so the turned line (its ends move up to +-8px: the longest line, 232px wide at -3.81 degrees, about 15.4px end to end) crosses
      a rule only slightly. The old 17px put the middle of the line 10px up, so the rules ran through the letters
      (check:note-wrap, RULEFIT). */
   margin: var(--note-rule) 0 0 4px;

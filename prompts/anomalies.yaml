@@ -158,7 +158,7 @@ anomalies:
     location: 'CAM02-E19 の周辺、差分左上 (510,511) px'
     detail: '右手前の鉢が二つに増える'
     memo:
-      ja: '手前の鉢が二つに増えた。'
+      ja: '手前の鉢が２つに増えた。'
       en: 'The front pot, now two.'
     overlay: 'assets/anomaly-overlays/cam02/pot-duplicate.webp'
     overlay_origin: '(510,511)'
@@ -630,7 +630,7 @@ anomalies:
     location: 'CAM03-E05、差分左上 (316,66) px'
     detail: '天井の小型点検板から細い赤い紐が下がる'
     memo:
-      ja: '点検板から赤い紐が一本。'
+      ja: '点検板から赤い紐が１本。'
       en: 'A red string from the access panel.'
     generation_prompt: 'CAM03-E05 の点検板から細い赤い紐を一本下げ、周囲を保持する。'
     overlay: 'assets/anomaly-overlays/cam03/red-string.webp'
@@ -693,7 +693,7 @@ anomalies:
     location: 'CAM05-E12、差分左上 (329,530) px'
     detail: '店舗下端のレンガ帯の一枚だけ青いタイルになる'
     memo:
-      ja: 'レンガ帯の青いタイル一枚。差し替えか？'
+      ja: 'レンガ帯の青いタイル１枚。差し替えか？'
       en: 'One blue tile in brick band. Replaced?'
     generation_prompt: 'CAM05-E12 の店舗下端のレンガ帯の一枚だけ青くし、ほかは保持する。'
     overlay: 'assets/anomaly-overlays/cam05/blue-brick.webp'
@@ -778,7 +778,7 @@ anomalies:
     location: 'CAM03-E06、差分左上 (103,532) px'
     detail: '左シャッター下端に白い紙袋が一つ現れる'
     memo:
-      ja: 'シャッター下端に白い紙袋が一つ。'
+      ja: 'シャッター下端に白い紙袋が１つ。'
       en: 'A white paper bag under the shutter.'
     generation_prompt: 'CAM03 の左シャッターの下端に白い紙袋を一つ置き、周囲を保つ。'
     overlay: 'assets/anomaly-overlays/cam03/paper-bag.webp'
@@ -1031,7 +1031,7 @@ anomalies:
     location: 'CAM03-E15、差分左上 (281,367) px'
     detail: '緑看板横の木箱の前に同型の木箱がもう一つ現れる'
     memo:
-      ja: '緑看板横の木箱。その前にもう一つ。'
+      ja: '緑看板横の木箱。その前にもう１つ。'
       en: 'A second crate in front of the first.'
     generation_prompt: 'CAM03-E15 の木箱の近くに同型の木箱を一つ追加し、背景を保持する。'
     overlay: 'assets/anomaly-overlays/cam03/crate-duplicate.webp'
@@ -1115,7 +1115,7 @@ anomalies:
     location: 'CAM06-E10、差分左上 (134,425) px'
     detail: '鉢植えの小さな橙色の花が一輪消える'
     memo:
-      ja: 'オレンジの花が一輪ない。どこへ？'
+      ja: 'オレンジの花が１輪ない。どこへ？'
       en: 'One orange flower gone. Where?'
     generation_prompt: 'CAM06 の左下の鉢植えにある橙色の花一輪だけを消し、残りの葉・鉢・背景を保持する。'
     overlay: 'assets/anomaly-overlays/cam06/missing-flower.webp'
@@ -1136,7 +1136,7 @@ anomalies:
     location: 'CAM03-E08、差分左上 (379,216) px'
     detail: '黒い店壁の白い装飾一つだけが淡い桃色になる'
     memo:
-      ja: '壁の白い飾りの一つが桃色に。'
+      ja: '壁の白い飾りの１つが桃色に。'
       en: 'A white ornament, now pink.'
     generation_prompt: 'CAM03-E08 黒い店壁の右側に並ぶ既存の白い花飾りのうち一つだけを淡い桃色にし、形と他の装飾を保つ。'
     overlay: 'assets/anomaly-overlays/cam03/pink-ornament.webp'
@@ -1158,7 +1158,7 @@ anomalies:
     location: "CAM03-E06、差分左上 (13,234) px"
     detail: "シャッターの横板一枚が波形に変わる。"
     memo:
-      ja: '横板が一枚だけ波打つ。'
+      ja: '横板が１枚だけ波打つ。'
       en: 'One slat ripples.'
     generation_prompt: "CAM03-E06 の左シャッターの横板一枚を緩い波形に曲げ、他の横板、看板、床、照明と構図を保つ。"
     overlay: "assets/anomaly-overlays/cam03/shutter-wave.webp"
@@ -1200,7 +1200,7 @@ anomalies:
     location: "CAM07-E09、差分左上 (91,264) px"
     detail: "左階段の一段の段鼻だけ白く塗られる。"
     memo:
-      ja: '階段の縁が一段だけ白い。'
+      ja: '階段の縁が１段だけ白い。'
       en: 'One stair edge turned white.'
     generation_prompt: "CAM07-E09 の候補「左階段の一段の段鼻だけ白く塗られる。」を一変更として指定し、周囲を保持。"
     overlay: "assets/anomaly-overlays/cam07/white-step.webp"
@@ -1306,7 +1306,7 @@ anomalies:
     location: "CAM05-E05、差分左上 (335,41) px"
     detail: "蛍光灯の隣に同じ長さの照明がもう一本増える。"
     memo:
-      ja: '蛍光灯がもう一本。'
+      ja: '蛍光灯がもう１本。'
       en: 'A second fluorescent light.'
     generation_prompt: "Edit the attached exact 676×900 surveillance camera photo. Only one change: Duplicate the long fluorescent ceiling light directly beside itself, adding exactly one parallel light of the same shape and length. Keep the original light unchanged. Change no sign or other object. Keep camera framing, lighting, architecture, floor, all text and signs, reflections outside the target, grain, texture and colors intact. Output the entire frame at the same aspect ratio."
     overlay: "assets/anomaly-overlays/cam05/duplicate-light.webp"
@@ -1349,7 +1349,7 @@ anomalies:
     location: "CAM05-E08、差分左上 (400,214) px"
     detail: "正面ガラスの一枚だけ淡い琥珀色になる。"
     memo:
-      ja: 'ガラス一枚が琥珀色に。'
+      ja: 'ガラス１枚が琥珀色に。'
       en: 'One pane turned amber.'
     generation_prompt: "Edit the attached exact 676×900 surveillance camera photo. Only one change: Change only one pane of the front storefront glass to a faint translucent amber tint. Keep the gray curtain visible through it and the metal framing, other panes, lighting and reflections unchanged. Choose the large lower pane centered near x=350 y=350. Preserve camera framing, lights, architecture, floor, all text and signs, reflections outside the target, grain, texture and colors. Output full frame at same aspect ratio."
     overlay: "assets/anomaly-overlays/cam05/amber-pane.webp"
@@ -1412,7 +1412,7 @@ anomalies:
     location: "CAM08-E12、差分左上 (251,227) px"
     detail: "柱の横長器具が二つ並ぶ。"
     memo:
-      ja: '柱の器具が二つ並ぶ。'
+      ja: '柱の器具が２つ並ぶ。'
       en: 'Two matching fixtures on the pillar.'
     generation_prompt: "Edit this surveillance photograph. On the central white pillar, duplicate the existing small gray horizontal rectangular projecting fixture so that there are exactly two identical fixtures side by side on the pillar face. The original remains in place; the new one has matching perspective, scale, material and immediate contact shadow. Preserve the pillar, floor, signs, walls, lights, reflections, framing, grain and every other element. Make only the new fixture. Return the full frame."
     overlay: "assets/anomaly-overlays/cam08/fixture-duplicate.webp"
@@ -1433,7 +1433,7 @@ anomalies:
     location: "CAM01-E17、差分左上 (126,787) px"
     detail: "床タイルの一枚だけ斜め格子模様になる。"
     memo:
-      ja: '一枚だけ斜め格子のタイル。'
+      ja: '１枚だけ斜め格子のタイル。'
       en: 'One tile with a diagonal lattice.'
     generation_prompt: "Edit the attached surveillance photo. Make only one change: one existing floor tile in the open foreground near x=320,y=700 on the 675×900 reference gains a subtle diagonal crisscross lattice pattern, confined inside that single tile. Preserve the tile’s outline and perspective and all other tiles, lights, signs, walls, framing, color, grain and reflections. No added objects. Return the entire image at original composition."
     overlay: "assets/anomaly-overlays/cam01/lattice-tile.webp"
@@ -1454,7 +1454,7 @@ anomalies:
     location: "CAM04-E15、差分左上 (87,632) px"
     detail: "床タイル一枚が淡い橙色になる。"
     memo:
-      ja: 'タイルが一枚、淡い橙色に。'
+      ja: 'タイルが１枚、淡い橙色に。'
       en: 'One tile has gone pale orange.'
     generation_prompt: "Edit the attached surveillance photo. Make one change only: change a single floor tile near x=240,y=570 on the original 676×900 frame to a faint pale orange. Keep that tile’s outlines, texture, shadows and reflections and all other floor tiles, architecture, signs, lights, framing and grain unchanged. No new objects. Return the full original composition."
     overlay: "assets/anomaly-overlays/cam04/orange-tile.webp"
@@ -1475,7 +1475,7 @@ anomalies:
     location: "CAM08-E15、差分左上 (567,242) px"
     detail: "発光パネルの一枚だけ淡い青色になる。"
     memo:
-      ja: '光るパネルが一枚だけ青い。'
+      ja: '光るパネルが１枚だけ青い。'
       en: 'One lit panel turned blue.'
     generation_prompt: "Edit the attached surveillance photo. On the far-right black pillar, change only the upper of the two existing luminous frosted panels from warm white to a faint soft blue, keeping it lit. Keep the lower panel warm white and preserve all shapes, floor reflections, walls, framing, lighting elsewhere, grain and every other element. Change only the color of this upper panel and its immediate edge. Return the full frame."
     overlay: "assets/anomaly-overlays/cam08/blue-panel.webp"
@@ -1538,7 +1538,7 @@ anomalies:
     location: "CAM03-E19、差分左上 (149,656) px"
     detail: "床タイル一枚だけ濃い青色になる。"
     memo:
-      ja: '一枚だけ濃い青に沈んだ床。'
+      ja: '１枚だけ濃い青に沈んだ床。'
       en: 'Deep blue on a single tile.'
     generation_prompt: "Use case: precise-object-edit. Edit the supplied exact CAM03 676×900 surveillance photograph. Make exactly one change: one existing large foreground floor tile around x=300,y=750 becomes dark desaturated blue, while retaining the exact original tile shape, grout lines, floor texture, reflections and perspective. All surrounding tiles remain their original gray. Preserve the camera framing, shutter, green sign, objects, walls, ceiling, lights, all text, color outside that one tile, blur, grain and compression. Output the complete original composition."
     overlay: "assets/anomaly-overlays/cam03/blue-floor-tile.webp"
@@ -1580,7 +1580,7 @@ anomalies:
     location: "CAM02-E14、差分左上 (488,290) px"
     detail: "緑色の自立看板が少し右にもう一つ現れ、二枚が同じ文字を表示する。"
     memo:
-      ja: '同じ文字の緑看板が二枚。'
+      ja: '同じ文字の緑看板が２枚。'
       en: 'Two green signs with the same words.'
     generation_prompt: "Edit the attached exact CAM02 surveillance photograph. Make just one change: duplicate the existing green freestanding sign and place the identical second sign immediately to the right of the original, with matching scale, perspective, stand, illumination, shadow and exactly the same existing lettering. Preserve the original sign and every other object, framing, walls, floor, lights, grain and blur. Add no other object. Return full frame."
     overlay: "assets/anomaly-overlays/cam02/duplicate-coffee-sign.webp"
@@ -1601,7 +1601,7 @@ anomalies:
     location: "CAM02-E17、差分左上 (646,154) px"
     detail: "白い星形装飾が一つだけ花形になる。"
     memo:
-      ja: '星の飾りが一つ花形に。'
+      ja: '星の飾りが１つ花形に。'
       en: 'One star ornament became a flower.'
     generation_prompt: "Edit the attached exact CAM02 surveillance photograph. On the far right dark wall, change exactly one existing small white star decoration near the upper right into a small simple white five-petaled flower of the same size and same position. Do not add an extra decoration; preserve every other decoration, sign, frame, lighting, grain and blur. Return full frame."
     overlay: "assets/anomaly-overlays/cam02/flower-ornament.webp"
@@ -1622,7 +1622,7 @@ anomalies:
     location: "CAM02-E17、差分左上 (653,155) px"
     detail: "壁の白い装飾が一つだけ淡い赤に変わる。"
     memo:
-      ja: '壁の飾りが一つ、淡い赤に。'
+      ja: '壁の飾りが１つ、淡い赤に。'
       en: 'One wall ornament took on pale red.'
     generation_prompt: "Edit the attached exact CAM02 surveillance photo. On the dark wall at the far right there are several small white star and bird ornaments. Change exactly one existing small white star ornament near the upper right to a faint muted red, retaining its exact shape and position. Do not add an ornament or change any other ornament, signs, framing, lighting, blur or grain. Return the entire frame."
     overlay: "assets/anomaly-overlays/cam02/red-star.webp"
@@ -1748,7 +1748,7 @@ anomalies:
     location: "CAM07-E16、差分左上 (348,617) px"
     detail: "床タイル一枚だけひし形模様になる。"
     memo:
-      ja: 'タイル一枚がひし形の柄に。'
+      ja: 'タイル１枚がひし形の柄に。'
       en: 'One tile now has diamonds.'
     generation_prompt: "Use case: precise-object-edit. Edit the attached 675x900 surveillance photo. Only one change: add a delicate repeating diamond lattice pattern on the surface of one single foreground floor tile near the center, with tile edges and grout lines unchanged. Pattern is muted and fits the worn tile surface. Keep the entire rest of the corridor, stairs, doors, lights, signs, floor texture, reflections, camera geometry and grain unchanged. Return the full image."
     overlay: "assets/anomaly-overlays/cam07/diamond-tile.webp"
@@ -1981,7 +1981,7 @@ anomalies:
     location: 'CAM04-E09、差分左上 (101,205) px'
     detail: '左のガラス内の小さなポスターの隣に、同じポスターがもう一枚現れる。'
     memo:
-      ja: 'ポスターがもう一枚。'
+      ja: 'ポスターがもう１枚。'
       en: 'A second copy of the poster.'
     generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: an identical copy of the small orange poster (approx x=63-90, y=205-250) appears in the neighbouring glass pane (approx x=95-150, y=200-260), illegible. Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
     overlay: 'assets/anomaly-overlays/cam04/poster.webp'
@@ -2088,7 +2088,7 @@ anomalies:
     location: 'CAM04-E10、差分左上 (345,297) px'
     detail: '奥のガラス扉の縦長取手が二つに増える。'
     memo:
-      ja: 'ガラス扉の取手が二つに。'
+      ja: 'ガラス扉の取手が２つに。'
       en: 'The glass door handle became two.'
     generation_prompt: 'Edit the attached surveillance camera photo. Make ONLY this single change: a second identical vertical handle appears beside the vertical handle on the far glass double door (approx x=330-370, y=300-345 of 676x900). Keep camera angle, framing, lighting, floor reflections, grain, compression and every other object unchanged. No new readable text.'
     overlay: 'assets/anomaly-overlays/cam04/handle.webp'
@@ -2511,7 +2511,7 @@ anomalies:
     location: 'CAM04-E17、差分左上 (191,436) px'
     detail: '床中央左の縦長の白い反射の中に、点検口の像が実物より奥にもう一つ映る'
     memo:
-      ja: '床の反射に点検口がもう一つ。'
+      ja: '床の反射に点検口がもう１つ。'
       en: 'Another hatch in the floor''s reflection.'
     generation_prompt: 'Edit the attached surveillance camera photo (an empty shopping-arcade corridor, 676x900 px reference). Make ONLY this single change: inside the long vertical white light reflection on the floor left of center (approx x=169-386, y=414-810 of 676x900, extending from the foreground rectangular floor hatch toward the back), add a second reflected image of the floor hatch, appearing farther back (higher up in the reflection, around y=450-560) than the real one, as if the reflection shows an extra hatch that does not exist. Soft and glossy like the existing reflection. CRITICAL: keep everything else PIXEL-IDENTICAL to the source: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, highlights, film grain, JPEG compression, low-fi surveillance look, and all existing objects. Do not regenerate or redraw the scene; only inject the specified change. Photo-realistic, matching the surveillance aesthetic exactly. Any text must be illegible or fictional; do not add real brand or store names.'
     overlay: 'assets/anomaly-overlays/cam04/hatch-reflection-extra.webp'
@@ -2553,7 +2553,7 @@ anomalies:
     location: 'CAM04-E11、差分左上 (367,258) px'
     detail: '奥右の鉢植えが、同じ形・同じ大きさでもう一鉢横に増える'
     memo:
-      ja: '奥右の鉢植えの隣に同じ鉢がもう一つ。'
+      ja: '奥右の鉢植えの隣に同じ鉢がもう１つ。'
       en: 'Same plant again beside it, back right.'
     generation_prompt: 'Edit the attached surveillance camera photo (an empty shopping-arcade corridor, 676x900 px reference). Make ONLY this single change: the large dark-green-leaved potted plant at back right (approx x=385-457, y=252-432 of 676x900) is duplicated: one more pot of exactly the same shape and size stands directly to its right, at the same floor level, with the same perspective and lighting. CRITICAL: keep everything else PIXEL-IDENTICAL to the source: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, highlights, film grain, JPEG compression, low-fi surveillance look, and all existing objects. Do not regenerate or redraw the scene; only inject the specified change. Photo-realistic, matching the surveillance aesthetic exactly. Any text must be illegible or fictional; do not add real brand or store names.'
     overlay: 'assets/anomaly-overlays/cam04/pot-duplicate.webp'
@@ -2783,7 +2783,7 @@ anomalies:
     location: 'CAM05-E12、差分左上 (390,494) px'
     detail: '赤茶のレンガ調の帯の一枚が、淡いクリーム色の円形の板に変わる。'
     memo:
-      ja: 'レンガの一枚が丸い板に。'
+      ja: 'レンガの１枚が丸い板に。'
       en: 'One brick became a round panel.'
     generation_prompt: 'The attached image is a 6x enlarged close-up crop (3:2) of a surveillance camera photo (low-fi CCTV look, empty shopping arcade). A red-brown brick-pattern tiled band at the base of a glass shop wall (running diagonally from upper right to lower left across the middle, roughly x=210-1050, y=330-810 in this enlarged image), with a grey metal frame above and grey floor tiles below. Make ONLY this single change: in the middle of the band (around x=500-720, y=480-680), replace one brick with a clearly CIRCULAR disc-shaped plate about 230 pixels across in this enlarged image, in a distinctly PALER cream-beige color with a dark outline, set into the band so its round shape against the rectangular red-brown bricks is obvious at a glance. All other bricks stay rectangular and unchanged. CRITICAL: keep everything else PIXEL-IDENTICAL: framing, perspective, positions of every object, lighting, grain, compression, surveillance look. Do not redraw the scene. Do not move or resize other objects. No readable text.'
     overlay: 'assets/anomaly-overlays/cam05/brick-round.webp'
@@ -2804,7 +2804,7 @@ anomalies:
     location: 'CAM05-E10、差分左上 (616,142) px'
     detail: '右上の緑看板の末尾の数字「300」の下二桁が消え、「3」になる。'
     memo:
-      ja: '看板の300が3に。残りの二桁は？'
+      ja: '看板の３００が３に。残りの２桁は？'
       en: '300 is now 3. Where did two digits go?'
     generation_prompt: 'The attached image is a 6x enlarged close-up crop (3:2) of a surveillance camera photo (low-fi CCTV look, empty shopping arcade). At the right part there is a green rectangular sign (roughly x=0-1440, y=260-1040 in this enlarged image) with orange handwriting-like Japanese lettering ending in the number "300" at its right end (the number is around x=900-1290, y=480-700). Make ONLY this single change: remove the LAST TWO zeros so the number reads just "3" followed by clean empty green sign background where the two zeros were. Paint the green background cleanly and smoothly there. The Japanese characters before the number and the "3" stay exactly as they are. CRITICAL: keep everything else PIXEL-IDENTICAL: framing, perspective, positions of every object, lighting, grain, compression, surveillance look. Do not redraw the scene. Do not move or resize other objects. No readable text.'
     overlay: 'assets/anomaly-overlays/cam05/sign-digit-missing.webp'
@@ -2825,7 +2825,7 @@ anomalies:
     location: 'CAM06-E12、差分左上 (256,367) px'
     detail: '自立メニュー板の上部の価格表示が、昔の安い価格(「¥80」「¥50」の二桁)に書き換わる。'
     memo:
-      ja: 'メニューの値段が二桁に。'
+      ja: 'メニューの値段が２桁に。'
       en: 'The menu prices dropped to two digits.'
     generation_prompt: 'Edit the attached surveillance camera photo (a shopping arcade corridor, low-fi CCTV look). Make ONLY this single change: - Text change on the free-standing white vertical menu board standing left of the aisle (approx x=172-314, y=360-693 of a 675x900 frame; the white tall board with small pictures and rows of text, on thin slanted black legs, just right of the big potted plant). In the lower half of the board (approx y=520-640), the printed price numbers on the text rows change to cheaper old-fashioned prices: two-digit numbers such as "80" and "50" with a yen mark, tiny and illegible-looking like the rest of the small print. Fictional, no shop name. CRITICAL - keep everything else PIXEL-IDENTICAL to the source image: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, film grain, JPEG artifacts, surveillance look, people and objects. Do not regenerate or redraw the scene. Only change the price digits on that board. Subtle.'
     overlay: 'assets/anomaly-overlays/cam06/menu-price-old.webp'
@@ -3097,7 +3097,7 @@ anomalies:
     location: 'CAM08-E11、差分左上 (358,234) px'
     detail: '中央の柱の裏側に、同じ幅の柱がもう一本連続して立ち、柱が二本分の奥行きに見える。'
     memo:
-      ja: '柱の裏に同じ柱がもう一本。'
+      ja: '柱の裏に同じ柱がもう１本。'
       en: 'Second pillar directly behind the first.'
     generation_prompt: 'Edit the attached surveillance camera photo (675x900 reference, empty shopping arcade corridor with a large square pillar in the center). Make ONLY this single change: duplicate: a second pillar of exactly the same width, same gray-white front face and dark blue-gray left side, continues directly behind and to the right-rear of the big central square pillar, so that the pillar looks two pillars deep, at approximately x=430-520, y=270-600 of the 675x900 frame (right of the central pillar, receding slightly smaller toward the vanishing point). Keep camera angle, framing, lens distortion, lighting color temperature, shadows, floor reflections, film grain, JPEG artifacts and every other object pixel-identical. Do not regenerate or redraw the scene. No new readable text.'
     overlay: 'assets/anomaly-overlays/cam08/pillar-second.webp'
@@ -3118,7 +3118,7 @@ anomalies:
     location: 'CAM08-E18、差分左上 (252,676) px'
     detail: '柱左手前の床の丸い白反射の一つが、右壁の光る長方形パネルと同じ上下二段の形になる。'
     memo:
-      ja: '床の反射が二段パネル形に。'
+      ja: '床の反射が２段パネル形に。'
       en: 'Floor glare mimics a two-tier panel.'
     generation_prompt: 'Edit the attached surveillance camera photo (675x900 reference, empty shopping arcade corridor with a large square pillar in the center). Make ONLY this single change: state change: the front-most round white floor reflection among the several round reflections at the lower right of the pillar (approx x=300-420, y=700-840 of the 675x900 frame) changes shape into a two-tier shape: a taller rounded rectangle split by a thin dark horizontal band into an upper glowing panel and a lower glowing panel, like the glowing milky-white vertical panels on the right wall. The other round reflections stay unchanged. Keep camera angle, framing, lens distortion, lighting color temperature, shadows, floor reflections, film grain, JPEG artifacts and every other object pixel-identical. Do not regenerate or redraw the scene. No new readable text.'
     overlay: 'assets/anomaly-overlays/cam08/floor-reflection-two-tier.webp'
@@ -3223,7 +3223,7 @@ anomalies:
     location: 'CAM08-E05、差分左上 (366,110) px'
     detail: '奥の短い天井器具の一つだけが、暗い赤色に変わる。'
     memo:
-      ja: '天井器具が一つだけ暗い赤。'
+      ja: '天井器具が１つだけ暗い赤。'
       en: 'One ceiling fixture turned dark red.'
     generation_prompt: 'Edit the attached surveillance camera photo (675x900 reference, empty shopping arcade corridor with a large square pillar in the center). Make ONLY this single change: color shift: among the short rectangular ceiling fixtures in the right-far ceiling (approx x=384-561, y=103-198 of the 675x900 frame), only the nearest one (the front-most one, around x=440-520, y=140-198) turns a dark red color (deep maroon), same shape and size. Keep camera angle, framing, lens distortion, lighting color temperature, shadows, floor reflections, film grain, JPEG artifacts and every other object pixel-identical. Do not regenerate or redraw the scene. No new readable text.'
     overlay: 'assets/anomaly-overlays/cam08/fixture-dark-red.webp'
@@ -3440,7 +3440,7 @@ anomalies:
     location: 'CAM03-E13、差分左上 (552,212) px'
     detail: '通路奥の暗い開口の床だけが、手前の床より一段低く沈んで見える。'
     memo:
-      ja: '奥の開口の床だけ一段低い。'
+      ja: '奥の開口の床だけ１段低い。'
       en: 'The floor at the far opening sits lower.'
     generation_prompt: 'Method: the target area was enlarged about 6x into a 1536x1024 crop of the baseline, edited with $imagegen (three takes, the best take picked by eye), shrunk back and pasted into the baseline PNG, then cut out with scripts/composite-anomaly.py. Change: The floor inside the dark opening at the far end of the passage looks one step lower than the floor in front of it.'
     overlay: 'assets/anomaly-overlays/cam03/sunken-opening-floor.webp'
@@ -3725,7 +3725,7 @@ anomalies:
     location: 'CAM05-E13、差分左上 (125,791) px'
     detail: '左手前の暗い床に、ビー玉が7個散らばる。'
     memo:
-      ja: 'ビー玉が七つ散らばる。'
+      ja: 'ビー玉が７つ散らばる。'
       en: 'Seven marbles scattered about.'
     generation_prompt: 'Method: the baseline was edited with $imagegen using the prompt below, then cut out with scripts/composite-anomaly.py. Change: Keep the same framing and zoom; do not recompose, re-crop or enlarge. Keep the low-fi CCTV look, grain, perspective, lighting and every other object unchanged. Make ONLY this single change: on the dark floor tiles at the lower left foreground, scatter 7 glass marbles (translucent blue, green and amber with bright white highlights), spread diagonally over about 110x55 px, each with a small dark contact shadow. Make them about 2x larger than real scale so they stay visible. No text or logos. Do not touch the light pools.'
     overlay: 'assets/anomaly-overlays/cam05/marbles-scattered.webp'
@@ -3914,7 +3914,7 @@ anomalies:
     location: 'CAM01-E09、差分左上 (0,216) px'
     detail: '左壁一面に、4 種の無表情な白黒の顔写真（老人男性 2・老婆 1・子供 1）が格子状に隙間なく貼られる'
     memo:
-      ja: '壁一面に四人の顔写真。'
+      ja: '壁一面に４人の顔写真。'
       en: 'Four faces repeated across the wall.'
     generation_prompt: 'Method: a flat 2x2 contact sheet of four fictional black-and-white ID-style photographs (elderly man, elderly man in a flat cap, elderly woman, young child; neutral expressions, no text) was generated with $imagegen (prompt: ''Create a flat, front-facing 2x2 contact sheet of four small black-and-white ID-style photographs ... very coarse, low-resolution black-and-white surveillance-camera still, heavy film grain ... nothing printed anywhere: no captions, no names, no dates, no numbers, no text, no logos''), the four photos were cut out and laid on the left wall in perspective with scripts/composite-polygon.py tile (three quads that avoid the windows: right of the window, the pier between the two windows, under the window), then cut out with cutout. The wall is photo-only; the windows are kept.'
     overlay: 'assets/anomaly-overlays/cam01/wall-faces.webp'
@@ -4279,7 +4279,7 @@ anomalies:
     location: "CAM02-E20、差分左上 (14,621) px"
     detail: "床に無地の臙脂色の座布団が一枚置かれる（昭和の居間・喫茶店の記憶）"
     memo:
-      ja: 'えんじ色の座布団が一枚。'
+      ja: 'えんじ色の座布団が１枚。'
       en: 'One maroon floor cushion.'
     generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2; box (16,622,132,722), the generated cushion is slightly right of the original box). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the gray floor tiles at the left, place one plain square floor cushion (zabuton) in a saturated deep crimson-maroon cotton fabric, lying flat and slightly plump, with plain stitched corners and no pattern, no piping print and no tag. Keep it near real scale (the box is already large). Give it a soft but clearly visible dark contact shadow along its lower edges. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white light reflection band on the floor, the tile joints or the shutter at the left edge. Place the object, including its shadow, centered at about 27% from the left and 50% from the top of the image, occupying roughly 39% of the image width and 56% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
     overlay: "assets/anomaly-overlays/cam02/maroon-cushion.webp"
@@ -4574,7 +4574,7 @@ anomalies:
     location: 'CAM07-E16、差分左上 (97,381) px'
     detail: '左手前の床に、無地の木の下駄が一足そろえて置かれる'
     memo:
-      ja: '木の下駄が一足揃っている。'
+      ja: '木の下駄が１足揃っている。'
       en: 'A pair of wooden geta stands together.'
     generation_prompt: 'Method: the crop around the target was edited with $imagegen using the prompt below (3 takes, best chosen by eye), pasted back into the baseline, then cut out with scripts/composite-anomaly.py. Prompt: Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the wide gray floor tiles at the left foreground, place one pair of plain wooden geta sandals neatly side by side: flat pale wood boards with two wooden teeth under each and plain black thong straps, no text and no print. Make them about 1.4x larger than real scale. Give them a strong dark contact shadow under the teeth and along the boards. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the white fluorescent reflections on the floor, the tile joints or the stair area above. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 39% of the image width and 36% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam07/geta.webp'
@@ -4679,7 +4679,7 @@ anomalies:
     location: 'CAM08-E16、差分左上 (390,730) px'
     detail: '右手前の床に、無地の小さな段ボール箱が一つ置かれる（伝票・ロゴなし）'
     memo:
-      ja: '小さな段ボール箱が一つ。'
+      ja: '小さな段ボール箱が１つ。'
       en: 'One small cardboard box.'
     generation_prompt: 'Method: the crop around the target was edited with $imagegen using the prompt below (3 takes, best chosen by eye), pasted back into the baseline, then cut out with scripts/composite-anomaly.py. Prompt: Edit the attached image, which is a 5x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the gray floor tiles at the lower right foreground, place one small plain brown corrugated cardboard box, closed and sealed with plain brown tape, completely plain with no shipping label, no printed text, no logo and no arrows. Keep it near real scale (the box is already large). Give it a strong large dark contact shadow on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark wall base and the glowing panel on the right, the tile joints or the floor grain. Place the object, including its shadow, centered at about 50% from the left and 56% from the top of the image, occupying roughly 52% of the image width and 73% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam08/cardboard-box.webp'
@@ -4805,7 +4805,7 @@ anomalies:
     location: 'CAM06-E16、右手前の床、差分左上 (542,719) px'
     detail: '右手前の広い床に、無地の赤いポリバケツが一つ置かれる'
     memo:
-      ja: '赤いバケツが一つ。'
+      ja: '赤いバケツが１つ。'
       en: 'A single red bucket.'
     generation_prompt: '$imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark gray floor tiles in the lower right foreground, stand one plain bright red plastic bucket upright with its plastic handle folded down, completely plain with no label, no embossed letters and no print. Keep it near real scale (the box is already large). Give it a strong dark contact shadow and a soft vertical highlight on the plastic. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the dark wall base and the rough wall on the right, the tile joints or the white light reflection to the left. Place the object, including its shadow, centered at about 66% from the left and 50% from the top of the image, occupying roughly 33% of the image width and 82% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam06/red-bucket.webp'
@@ -4997,7 +4997,7 @@ anomalies:
     location: 'CAM01-E01、差分左上 (286,212) px'
     detail: '天井の中央に、濡れた丸い染みが広がり、その下に水滴が一つ垂れかかる'
     memo:
-      ja: '天井の濡れ染みから一滴。'
+      ja: '天井の濡れ染みから１滴。'
       en: 'Drop beneath a wet ceiling stain.'
     generation_prompt: 'Method: the 6x crop 202,144,458,315 of cam1 (256x171 px) was edited with $imagegen (3 takes, take 2 chosen), pasted back into the baseline and cut out with scripts/composite-anomaly.py (box 268,200,392,256, then the cutout was scaled to 0.65x and moved to origin (286,212)). Prompt: Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the plain speckled ceiling in the middle of the frame, below the large round vent, a wet water stain appears: one roundish dark brown-grey ring, flattened sideways by the ceiling perspective, darker at its rim and paler inside, following the speckled texture of the ceiling, and a single drop of water hangs from the lowest point of the stain, glossy with a small bright highlight, about to fall. The stain is an irregular blotch with a darker lower edge. Do not touch the large round vent above, the dark ceiling fixtures further down, the lamps or anything else. Place the object, including the drop, centered at about 51% from the left and 52% from the top of the image, occupying roughly 31% of the image width and 21% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam01/ceiling-wet-stain.webp'
@@ -5165,7 +5165,7 @@ anomalies:
     location: 'CAM02-E20、差分左上 (365,357) px'
     detail: '柱と看板の間の床で、奥へ伸びるタイル目地の一本が細い光の線になる'
     memo:
-      ja: '床の目地が一本光っている。'
+      ja: '床の目地が１本光っている。'
       en: 'One floor seam glows.'
     generation_prompt: 'Method: the 6x crop 257,304,513,475 of cam2 (256x171 px) was edited with $imagegen (3 takes, take 1 chosen), pasted back into the baseline and cut out with scripts/composite-anomaly.py (box 367,350,412,430 --dilate 0 --feather 1). Prompt: Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the gray floor between the pillar and the green standing sign, exactly one of the tile joint lines running from the near side toward the far end of the corridor glows as a thin, steady cool-white line of light, as if light were leaking up through the crack. The line follows the existing joint exactly, does not bend or branch, and has a faint soft halo on the two neighboring tiles. No light source, no object and no person is visible. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any glow, centered at about 51% from the left and 50% from the top of the image, occupying roughly 16% of the image width and 43% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam02/floor-seam-glow.webp'
@@ -5186,7 +5186,7 @@ anomalies:
     location: 'CAM02-E17、差分左上 (626,388) px'
     detail: '右壁の黒い店舗ガラスの白い鳥の装飾が、同じ向き・大きさで三羽に増える'
     memo:
-      ja: 'ガラスの白い鳥が三羽に。いつ増えた？'
+      ja: 'ガラスの白い鳥が３羽に。いつ増えた？'
       en: 'Three white birds on glass. When?'
     generation_prompt: 'Method: the 6x crop 420,316,676,487 of cam2 (256x171 px) was edited with $imagegen (3 takes, take 1 chosen), pasted back into the baseline and cut out with scripts/composite-anomaly.py (box 612,352,676,466 --dilate 0 --feather 1.5, then the cutout was scaled to 0.85x and moved to origin (626,388)). Prompt: Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the nearly black shop glass wall at the right edge, the white decorative bird-shaped decal in this area is multiplied: three identical white bird decals, same direction, same size, evenly spaced along the wall''s perspective one below the other, each as bright as the original. The other stars and decals on the glass and the wooden easel in front stay unchanged. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 86% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 53% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam02/wall-bird-triplet.webp'
@@ -5405,7 +5405,7 @@ anomalies:
     location: 'CAM03-E16 の奥右〜中央の床、差分左上 (262,258) px'
     detail: '右壁の根元から手前左へ、人の形の長い影だけが13本ほぼ平行に床へ落ちる（本人は写らない）。'
     memo:
-      ja: '床に人影が十三本。人数は？'
+      ja: '床に人影が１３本。人数は？'
       en: '13 floor shadows. How many people?'
     generation_prompt: 'Method: baseline window y225-675 (3:2) edited with $imagegen (take 2), restored into the full frame with scripts/composite-polygon.py restore, then the shadow polygons (luminance-drop mask of the generation vs baseline, opened/dilated 1px, one polygon per connected shadow) were cut out with cutout. Prompt: ''Edit the attached image ... Add only this: thirteen tall, thin, long human-shaped dark shadows lying on the grey tile floor, parallel to each other, as if thirteen people stood in a row just behind the right-hand wall, out of the camera''s view. Each shadow has a round head, narrow shoulders and legs, stretched far in perspective toward the lower left of the frame at a shallow slope ... Soft, slightly blurred edges, dark grey-blue, tile joints visible through them. No people, no objects, only shadows on the floor. Preserve the green sign, crate, shutter, reflections, ceiling and everything else exactly ... No text, no letters, no numbers, no logos, no watermark.'''
     overlay: 'assets/anomaly-overlays/cam03/floor-shadows.webp'
@@ -5770,7 +5770,7 @@ anomalies:
     location: 'CAM04-E17 の周辺、差分左上 (229,571) px'
     detail: '床中央の白い反射の中で、タイル一枚ぶんだけ反射が途切れて暗い灰色の素のタイルになる'
     memo:
-      ja: '床の反射が一枚分だけ途切れる。'
+      ja: '床の反射が１枚分だけ途切れる。'
       en: 'The floor reflection stops for one tile.'
     generation_prompt: 'Method: 6x enlarged crop edited with $imagegen (take 2), resized back and pasted into the baseline, then cut with scripts/composite-anomaly.py. Prompt: $imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). On the white glare patch on the floor (x 504-1032, y 366-666), one tile is unlit: a clean rectangle the size of a single tile in perspective, uniformly dim blue-grey without any highlight, sharply bounded by the joints, surrounded by glossy glare-lit tiles. No hole, no object, no change to the other tiles. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.'
     overlay: 'assets/anomaly-overlays/cam04/floor-reflection-gap.webp'
@@ -5835,7 +5835,7 @@ anomalies:
     location: 'CAM04-E18 の周辺（左端の床際の黒い縦枠の影）、差分左上 (4,649) px'
     detail: '左端の暗がりの床際に、正体の見えない小さな二つの目だけが光る'
     memo:
-      ja: '暗がりの床際に二つの目。'
+      ja: '暗がりの床際に２つの目。'
       en: 'Two eyes near the floor in the dark.'
     generation_prompt: 'Method: 6x enlarged crop edited with $imagegen (take 1), resized back and pasted into the baseline, then cut with scripts/composite-anomaly.py. Prompt: $imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, enlarged crop). In the darkest shadow at the left edge of the frame near the floor, under the black vertical storefront frame (x 0-300, y 312-684), add exactly two small round eyes glowing pale yellow-white, side by side, close to the floor level, with a faint soft halo. Nothing else of the creature is visible: no head, no body, no outline, only the two glowing points swallowed by darkness. The eyes are about 20 px wide in this enlarged frame with a 60 px halo. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.'
     overlay: 'assets/anomaly-overlays/cam04/left-edge-eyes.webp'
@@ -6005,7 +6005,7 @@ anomalies:
     location: 'CAM07-E01、差分左上 (439,16) px'
     detail: '天井板の1枚だけが淡い黄色になる'
     memo:
-      ja: '天井板が一枚だけ黄色い。'
+      ja: '天井板が１枚だけ黄色い。'
       en: 'One ceiling panel turned yellow.'
     generation_prompt: 'Method: 6x enlarged crop (336,0)-(594,172) edited with $imagegen (3 takes of the prompt with an explicit panel size added; take 3 chosen), resized back and pasted into the baseline, then cut with scripts/composite-polygon.py cutout (polygon 449,16 506,16 494,44 439,43, feather 2). Prompt: $imagegen In this surveillance frame, tint a single small ceiling panel that occupies only the area x 619-976, y 71-274 (frame pixels; the panel is only about 357 pixels wide and 203 pixels tall, do not make it larger, its neighbours stay the ordinary blue-grey) to a soft clean lemon yellow, slightly brighter than the panels around it, following the panel''s own seams and perspective so the panel edges stay sharp and the seam lines of its neighbours stay visible. The fine speckle texture of the ceiling stays visible through the yellow. Change nothing else: the floor tiles, joints, reflections, walls, stairs, doors, lights and every other object stay exactly as in the source. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.'
     overlay: 'assets/anomaly-overlays/cam07/ceiling-tile-yellow.webp'
@@ -6181,7 +6181,7 @@ anomalies:
     location: 'CAM01-E12 右側の店先、中央の金色の木格子パネル（x516〜542）の格子一本、差分左上 (517,370) px'
     detail: '右側の店先の金色の木格子パネルで、格子一本だけが枠から手前へ飛び出して下へずれ、黒い影の隙間ができている。'
     memo:
-      ja: '格子が一本、枠から飛び出す。'
+      ja: '格子が１本、枠から飛び出す。'
       en: 'One lattice slat sticks out.'
     generation_prompt: '$imagegen Edit the attached image. It is a 10x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of a closed Showa-era underground shopping arcade: a shop front with a glass display door at the left and, in the middle of the frame, a rectangular panel of thin golden-brown vertical wooden lattice slats (the panel spans roughly x=665 to 940, y=0 to 1000). Edit only this: ONE single vertical slat in the middle of the lattice panel (around x=800) has been pulled out of line: it juts forward toward the camera, shifted about 70 px to the left of its slot and about 100 px lower so that its lower end sticks out below the bottom rail of the panel, and it casts a clear dark shadow on the neighbouring slats. The slat is the same wood, same colour and width as the others. All other slats, the frames, the glass door, the wall and the lights stay exactly the same. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression. No text, no letters, no numbers, no logos, no watermark.'
     overlay: 'assets/anomaly-overlays/cam01/lattice-slat-protrudes.webp'
@@ -6202,7 +6202,7 @@ anomalies:
     location: 'CAM02-E17 の右壁ガラス、差分左上 (635,252) px'
     detail: '右壁の黒い店舗ガラスの白い鳥の装飾が一羽だけ消える。'
     memo:
-      ja: 'ガラスの白い鳥が一羽消えた。'
+      ja: 'ガラスの白い鳥が１羽消えた。'
       en: 'One white bird vanished from the glass.'
     generation_prompt: '(codex image_gen・テイク1・6倍クロップ1536x1024を入力) Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed Showa-era underground shopping arcade corridor (grey speckled floor tiles, a closed grey roll-up shutter on the left, a green glowing standing sign in the middle right, white fluorescent lights). Edit only this: In the lower-right of the frame, on the large dark glass storefront wall (right edge of the crop), there is a row of white decorative silhouettes (stars and flying birds). The tall white bird with spread wings located at about x=1296 to 1464, y=350 to 670 in the 1536x1024 frame is removed completely: that area becomes the same plain near-black glass with the same faint reflections and grain as the glass around it, as if the bird had never been there. The other stars and birds, including the small bird further down and the one at the right edge, stay exactly as they are. Add nothing. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. No text, no letters, no numbers, no logos, no watermark.'
     overlay: 'assets/anomaly-overlays/cam02/wall-bird-gone.webp'
