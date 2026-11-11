@@ -414,8 +414,6 @@
   .tube {
     align-self: center;
     flex: 0 0 auto;
-    width: min(60vh * 0.9, 560px);
-    width: calc((100vh - 120px) * 0.75 + 56px);
     max-width: 600px;
     min-width: 420px;
   }
@@ -598,7 +596,7 @@
 
 .retro {
   width: 100%;
-  min-height: 100vh;
+  min-height: var(--vh);
   background: radial-gradient(
     ellipse at 50% 30%,
     var(--desk) 0%,
@@ -745,10 +743,10 @@
   .cabinet {
     /* the picture's height: the viewport height, but never so tall that the 3:4 frame leaves the control column narrower than --col-min (tall screens such as 900x1000); (100vw - 8px*2 padding - 14px gap - --col-min) is the frame width left over */
     --col-min: 340px;
-    --tube-h: min(100vh - 16px, (100vw - 30px - var(--col-min)) * 1679 / 1246);
+    --tube-h: min(var(--vh) - 16px, (100vw - 30px - var(--col-min)) * 1679 / 1246);
     max-width: none;
     width: 100%;
-    min-height: 100vh;
+    min-height: var(--vh);
     margin: 0;
     padding: 8px;
     flex-direction: row;
