@@ -3,13 +3,9 @@ import { join } from 'node:path'
 import { parse } from 'yaml'
 import { describe, expect, it } from 'vitest'
 import { DIALOGUE_FILES } from './dialogueLedger'
+import { MAX_PHRASE_CHARS } from './subtitle'
 
-/**
- * A subtitle line breaks only between phrases (the text between two full-width spaces, #323), so a phrase longer than
- * one line cannot be shown whole. A line holds about 16-18 characters at every picture size (the subtitle is 4.9cqw of
- * the picture), so a phrase of up to 17 always fits. `npm run check:subtitle` measures the real wrapping in a browser.
- */
-const MAX_PHRASE = 17
+/** A phrase longer than MAX_PHRASE_CHARS (src/utils/subtitle.ts) may not fit one subtitle line (#323). */
 
 const texts = DIALOGUE_FILES.flatMap(file => {
   const doc = parse(
@@ -25,11 +21,11 @@ describe('dialogue phrases (#323)', () => {
     expect(texts.length).toBeGreaterThan(1000)
   })
 
-  it(`no phrase is longer than ${MAX_PHRASE} characters, so every phrase fits one subtitle line`, () => {
+  it(`no phrase is longer than ${MAX_PHRASE_CHARS} characters, so every phrase fits one subtitle line`, () => {
     const tooLong = texts.flatMap(({ where, text }) =>
       text
         .split('　')
-        .filter(p => [...p].length > MAX_PHRASE)
+        .filter(p => [...p].length > MAX_PHRASE_CHARS)
         .map(p => `${where}: ${p}`)
     )
     expect(tooLong).toEqual([])

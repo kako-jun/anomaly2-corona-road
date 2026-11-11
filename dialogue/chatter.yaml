@@ -39,8 +39,8 @@ dialogues:
     tone: light
     lines:
       - { who: M, text: '出河さん　金沢のバス　もう慣れました?' }
-      - { who: A, text: 'まだ迷うよ　東京なら歩いてた距離でも乗るんだね' }
-      - { who: M, text: 'はい　この辺は電車の本数も少ないですよ' }
+      - { who: A, text: 'まだ迷うよ　東京なら歩いてた距離でも　乗るんだね' }
+      - { who: M, text: 'はい　この辺は電車の本数も　少ないですよ' }
   - id: chatter-07
     tone: light
     lines:
@@ -51,9 +51,9 @@ dialogues:
     tone: light
     lines:
       - { who: A, text: 'あれ　今日は席が違うね' }
-      - { who: M, text: 'はい　資料を広げやすいように空けましたよ' }
+      - { who: M, text: 'はい　資料を広げやすいように　空けましたよ' }
       - { who: A, text: 'ありがとう!　助かった' }
-      - { who: M, text: '邪魔にならない位置にしたつもりです' }
+      - { who: M, text: '邪魔にならない位置に　したつもりです' }
   - id: chatter-09
     tone: light
     lines:
@@ -129,14 +129,14 @@ dialogues:
     lines:
       - { who: A, text: '夜勤明けって　温かいもの食べたくならない?' }
       - { who: M, text: 'はい　味噌汁とかいいですよ' }
-      - { who: A, text: 'そうなの!　それだけのために店を探す日もある' }
+      - { who: A, text: 'そうなの!　それだけのために　店を探す日もある' }
       - { who: M, text: '出河さんは　食べる店を決めるのが早いですね' }
   - id: chatter-20
     tone: light
     lines:
       - { who: M, text: '休みの日も　夜に眠くならないんですよね' }
       - { who: A, text: 'ああ　分かる!　私も朝寝て昼に起きる' }
-      - { who: M, text: '体が勤務時間を覚えてるんですかね' }
+      - { who: M, text: '体が勤務時間を　覚えてるんですかね' }
       - { who: A, text: '休みの日までこの生活　困るよね' }
   - id: chatter-21
     tone: light
@@ -255,7 +255,7 @@ dialogues:
     lines:
       - { who: M, text: '出河さん　料理はレシピを見ますか' }
       - { who: A, text: '見るよ　途中から目分量になるけど' }
-      - { who: M, text: 'レシピの意味がなくなってませんか' }
+      - { who: M, text: 'レシピの意味が　なくなってませんか' }
       - { who: A, text: '最初はあるの　最初はね' }
   - id: chatter-39
     tone: light
@@ -286,7 +286,7 @@ dialogues:
   - id: chatter-43
     tone: light
     lines:
-      - { who: A, text: 'そろそろ新しい鞄が欲しいんだけど' }
+      - { who: A, text: 'そろそろ新しい鞄が　欲しいんだけど' }
       - { who: M, text: '今の鞄　まだ使えそうに見えますよ' }
       - { who: A, text: 'そうなの　だから買う理由を探してる' }
   - id: chatter-44
@@ -320,7 +320,7 @@ dialogues:
     lines:
       - { who: M, text: '出河さん　家で靴をそろえますか' }
       - { who: A, text: 'そろえるつもりで　だいたい忘れる' }
-      - { who: M, text: 'つま先を向けるだけでも違いますよ' }
+      - { who: M, text: 'つま先を向けるだけでも　違いますよ' }
       - { who: A, text: '今度こそやる　見ててね' }
   - id: chatter-49
     tone: light
@@ -338,7 +338,7 @@ dialogues:
   - id: chatter-51
     tone: light
     lines:
-      - { who: A, text: '昨日　冷凍庫から何か出したはずなんだけど' }
+      - { who: A, text: '昨日　冷凍庫から　何か出したはずなんだけど' }
       - { who: M, text: '解凍して食べたんじゃないですか' }
       - { who: A, text: 'そうだった　食べたことまで忘れてた' }
   - id: chatter-52
@@ -351,7 +351,7 @@ dialogues:
   - id: chatter-53
     tone: light
     lines:
-      - { who: A, text: '今週　洗濯物をたたむのを後回しにしてる' }
+      - { who: A, text: '今週　洗濯物をたたむのを　後回しにしてる' }
       - { who: M, text: '着るものがなくなる前に　片づけましょう' }
       - { who: A, text: 'その期限まで　まだ少しあるんだよね' }
   - id: chatter-54
@@ -377,8 +377,8 @@ dialogues:
   - id: chatter-57
     tone: light
     lines:
-      - { who: A, text: 'コンビニで同じものばかり買っちゃう' }
-      - { who: M, text: '決めていると迷わなくていいですよ' }
+      - { who: A, text: 'コンビニで　同じものばかり買っちゃう' }
+      - { who: M, text: '決めていると　迷わなくていいですよ' }
       - { who: A, text: 'そう思ってたけど　今日は違うのにする!' }
   - id: chatter-58
     tone: light
@@ -390,9 +390,9 @@ dialogues:
   - id: chatter-59
     tone: light
     lines:
-      - { who: A, text: '最近　小さい観葉植物を置こうか迷ってる' }
+      - { who: A, text: '最近　小さい観葉植物を　置こうか迷ってる' }
       - { who: M, text: '水やりを忘れないか心配ですか' }
-      - { who: A, text: 'そう　植物に申し訳ないことになりそうで' }
+      - { who: A, text: 'そう　植物に申し訳ないことに　なりそうで' }
   - id: chatter-60
     tone: light
     lines:

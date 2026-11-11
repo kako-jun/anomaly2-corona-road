@@ -11,8 +11,8 @@ dialogues:
     tone: serious
     when: { flag: elder2 }
     lines:
-      - { who: A, text: 'また?　二人目も帰りたくないって言ったの?' }
-      - { who: M, text: 'はい　帰らないと言ったあと　こちらの体調まで気づかってました' }
+      - { who: A, text: 'また?　二人目も　帰りたくないって言ったの?' }
+      - { who: M, text: 'はい　帰らないと言ったあと　こちらの体調まで　気づかってました' }
       - { who: A, text: '自分のことより?　やさしい人なんだね…' }
   - id: story-elder3
     tone: serious

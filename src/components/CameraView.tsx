@@ -37,8 +37,8 @@ const PHRASE_SEPARATOR = '\u3000'
 
 /**
  * Splits a subtitle at the full-width spaces the script puts between phrases, so a line breaks only between phrases,
- * never inside one (#323). The separators stay as text (the browser hangs a full-width space at the end of a line, so it
- * does not push the centred text aside), so the text content is the original string.
+ * never inside one (#323). The separators stay as text, so the text content is the original string. A full-width space at
+ * the end of a line is hung (not counted for centring) by Chromium; other browsers are not verified.
  */
 function phraseSpans(text: string) {
   return partSpans(text.split(PHRASE_SEPARATOR), PHRASE_SEPARATOR, 'seg')

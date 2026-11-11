@@ -16,7 +16,7 @@ dialogues:
     tone: light
     lines:
       - { who: A, text: 'あっ　この椅子　少し借りてもいい?' }
-      - { who: M, text: 'はい　出河さんの席として空けてありますよ' }
+      - { who: M, text: 'はい　出河さんの席として　空けてありますよ' }
   - id: opening-04
     tone: light
     lines:
@@ -54,7 +54,7 @@ dialogues:
     tone: light
     lines:
       - { who: A, text: '飲み物　ここに置いて大丈夫?' }
-      - { who: M, text: 'はい　機械の近くを避ければ大丈夫ですよ' }
+      - { who: M, text: 'はい　機械の近くを　避ければ大丈夫ですよ' }
   - id: opening-11
     tone: light
     lines:
@@ -70,7 +70,7 @@ dialogues:
   - id: opening-13
     tone: light
     lines:
-      - { who: M, text: '荷物は棚の下に置いておきましたよ' }
+      - { who: M, text: '荷物は棚の下に　置いておきましたよ' }
       - { who: A, text: 'ありがとう　あっ　これなら邪魔にならないね' }
   - id: opening-14
     tone: light
@@ -114,5 +114,5 @@ dialogues:
     lines:
       - { who: A, text: '樫原くん　無理はしないで' }
       - { who: M, text: 'はい　出河さんも休憩を取ってください' }
-      - { who: A, text: '私?　そんなに無理してるように見える?' }
+      - { who: A, text: '私?　そんなに　無理してるように見える?' }
       - { who: M, text: '少し' }

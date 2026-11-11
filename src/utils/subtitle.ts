@@ -7,3 +7,11 @@ const PER_CHAR_MS = 120
 /** How long a subtitle stays on screen, by its length. */
 export const subtitleHoldMs = (text: string): number =>
   Math.max(MIN_HOLD_MS, BASE_HOLD_MS + text.length * PER_CHAR_MS)
+
+/**
+ * The longest phrase (the text between two full-width spaces, dialogue/README.md) a line of the script may have. A
+ * subtitle breaks only between phrases (#323), and a line holds about 16-18 characters, so this leaves a margin
+ * for the picture sizes and fonts that fit a little less. The single source of this number: the vitest
+ * `dialoguePhrases.test.ts` and `npm run check:subtitle` (it reads this line) both use it.
+ */
+export const MAX_PHRASE_CHARS = 15

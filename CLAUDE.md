@@ -8,7 +8,7 @@
 
 "Monitor the cameras. Report the anomalies. Trust your eyes... or don't."
 
-> **Setting and story:** the single master is [`docs/story.md`](docs/story.md) (era, case, characters, the twist, open questions). Dialogue is shown as movie-style subtitles (white, tilted 9°, one speaker at a time, no 、 or 。; a line breaks only between the phrases the script marks with full-width spaces, a phrase is 17 characters or fewer, `npm run check:subtitle`, #323). The second person exists so that the small hint for each wrong report (お手つき) can be delivered naturally as their lines.
+> **Setting and story:** the single master is [`docs/story.md`](docs/story.md) (era, case, characters, the twist, open questions). Dialogue is shown as movie-style subtitles (white, tilted 9°, one speaker at a time, no 、 or 。; a line breaks only between the phrases the script marks with full-width spaces, a phrase is at most `MAX_PHRASE_CHARS` (`src/utils/subtitle.ts`) characters, `npm run check:subtitle`, #323). The second person exists so that the small hint for each wrong report (お手つき) can be delivered naturally as their lines.
 
 > **Dialogue system direction (kako-jun, 2026-10-30):** the story advances across playthroughs (loops), so progress needs flag management. Dialogue has three patterns: fully random chatter, loop-progress story lines, and per-anomaly lines. Each anomaly gets several alternative lines and a "used once" record to avoid repeats. Design notes and open questions live in Issue #29. Save data design (storage choice, schema, rules): [`docs/save-data.md`](docs/save-data.md).
 
