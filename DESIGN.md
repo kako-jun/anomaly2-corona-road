@@ -147,6 +147,7 @@ Two easings (in/standard + emphasized-out) and four durations.
 | Button press          | 120 ms   | `--ease`                  |
 | Camera switch (fade)  | 240 ms   | `--ease`                  |
 | Report panel slide-up | 240 ms   | `--ease`                  |
+| Screen change (fade)  | 400 ms   | linear (200 out + 200 in) |
 | Feedback flash        | 600 ms   | `cubic-bezier(0,0,0.2,1)` |
 | Anomaly alert pulse   | 1200 ms  | linear, infinite          |
 
@@ -200,11 +201,17 @@ The general-purpose button and card classes (`.btn`, `.card`) were removed with 
 
 ---
 
+### Screen transitions (#336)
+
+The four screens (title, note before a shift, monitor, note after a shift) change with a dip to black: the old screen goes dark for 200 ms, the new one comes up from black for 200 ms (`SCREEN_FADE_MS = 400` in `src/utils/screenTransition.ts`, the only place the length is set). The game state is committed at once; `ScreenTransition` only decides what is shown. While the veil goes black it keeps rendering the old screen element in the same wrapper at the same place (never remounted, so it keeps its own state: camera, knobs, the pan of the title picture), with `inert` switched on and a window capture listener stopping keydown/keyup/keypress so that the old screen's global key handlers (it has old props) cannot drive the live game. The new screen is mounted when the veil's `transitionend` fires (a timer of 200 + 150 ms is the fallback), so a heavy mount cannot swap the screens before it is black. Neither picture can be pressed during the change, so a double tap cannot run an action twice. Consequence of committing at once: the game clock and spawns of a new shift start running while the veil goes black, so the first ~200-400 ms of the clock is not seen. Accepted. In-screen changes (START OVER confirmation, report dialog, camera switch, language) are not screen transitions and keep their own motion. `prefers-reduced-motion` and `?transition=none` switch the fade off.
+
+Comparing looks (dev server only; a production build ignores the parameter): `?transition=fade` (default), `?transition=cross` (the old screen fades away over the new one; dev only, with side effects: a second, remounted copy of the old screen lives for 400 ms, so two Cabinets and doubled window key handlers), `?transition=none` (cut).
+
 ## 9. Accessibility Tokens
 
 - **Focus ring:** 2 px solid `--outline-strong`, offset 2 px. Always visible on keyboard focus.
 - **Tap target:** minimum 44 × 44 px.
-- **Reduced motion:** `@media (prefers-reduced-motion: reduce)` disables anomaly pulse, flash, and camera fade.
+- **Reduced motion:** `@media (prefers-reduced-motion: reduce)` disables anomaly pulse, flash, camera fade, and the screen-change fade.
 - **Color-blind safety:** every semantic color paired with a text label (lamps are always next to or inside a labelled control).
 
 ---
