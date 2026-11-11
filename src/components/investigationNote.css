@@ -186,15 +186,16 @@
 
 .note-notes {
   /* The synopsis and the scribbles share one ruled sheet: every line, printed or scribbled, sits on the rules. */
+  --note-rule: 22px; /* the one line pitch: rules, line height and the scribble gap; check:note-wrap reads it from here */
   position: relative;
   margin-top: 6px;
   min-height: 196px;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0,
-    transparent 21px,
-    var(--rule) 21px,
-    var(--rule) 22px
+    transparent calc(var(--note-rule) - 1px),
+    var(--rule) calc(var(--note-rule) - 1px),
+    var(--rule) var(--note-rule)
   );
   background-position: 0 1px;
 }
@@ -213,7 +214,7 @@
 .note-scrib p {
   margin: 0;
   white-space: nowrap; /* every data line is one handwritten line: the browser never wraps it */
-  line-height: 22px;
+  line-height: var(--note-rule);
   font-size: 15px;
 }
 .note-en .note-syn p {
@@ -222,7 +223,12 @@
 .note-scrib {
   /* Continues right under the last synopsis line, tilted like a note jotted in the margin. */
   width: fit-content;
-  margin: 18px 0 0 4px; /* a gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun) */
+  /* A gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun). It is one rule
+     pitch, not a free number: with this handwriting font that puts the middle of each scribble line about 5px above
+     its rule, like the synopsis, so the turned line (its ends move up to +-8px: the longest line, 232px wide at -3.85 degrees, measures 15.6px end to end) crosses
+     a rule only slightly. The old 17px put the middle of the line 10px up, so the rules ran through the letters
+     (check:note-wrap, RULEFIT). */
+  margin: var(--note-rule) 0 0 4px;
   color: var(--blue);
 }
 .note-scrib p {
