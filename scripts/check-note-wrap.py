@@ -45,7 +45,7 @@ def open_note(browser, save):
     page = browser.new_page(viewport={"width": 390, "height": 844})
     page.add_init_script(seed(save))
     page.goto(URL, wait_until="domcontentloaded")
-    page.click("button.start-go")
+    page.click(".start-deck button.start-key")
     page.wait_for_selector(".note-paper")
     page.evaluate("document.fonts.ready")
     page.wait_for_timeout(300)

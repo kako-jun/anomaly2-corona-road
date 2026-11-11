@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { preloadCabinet } from './uiPreload'
+import { preloadCabinet, titleNoteUrls } from './uiPreload'
 
 describe('preloadCabinet', () => {
   afterEach(() => {
@@ -31,5 +31,16 @@ describe('preloadCabinet', () => {
     finish()
     await pending
     expect(ready).toHaveBeenCalledOnce()
+  })
+})
+
+describe('titleNoteUrls (#296)', () => {
+  it('lists the chosen language only', () => {
+    const ja = titleNoteUrls('ja')
+    const en = titleNoteUrls('en')
+    expect(ja).toHaveLength(3)
+    expect(en).toHaveLength(3)
+    expect(ja.every(u => u.includes('/ja-'))).toBe(true)
+    expect(en.every(u => u.includes('/en-'))).toBe(true)
   })
 })

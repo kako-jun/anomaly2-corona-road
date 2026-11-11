@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
-import { load, update } from './saveData'
+import { useEffect, useState } from 'react'
 import type { Language } from './saveData'
 
 export type { Language }
@@ -15,31 +14,24 @@ export const languageFromBrowser = (
     : 'en'
 }
 
-/** The language in use: the saved choice (settings.language), else the browser's. */
-export const currentLanguage = (): Language =>
-  load().settings?.language ??
-  languageFromBrowser(
-    typeof navigator === 'undefined' ? undefined : navigator.language
+/**
+ * The language in use, decided from the browser at every start and never saved (#292): the first of
+ * `navigator.languages` (else `navigator.language`) says ja -> ja, anything else -> en. A language
+ * saved in an old save's `settings.language` is read by the save code but not used here.
+ */
+export const currentLanguage = (): Language => {
+  if (typeof navigator === 'undefined') return 'en'
+  const list = navigator.languages
+  return languageFromBrowser(
+    list && list.length > 0 ? list : navigator.language
   )
-
-/** Remember the choice in the save settings (the rest of the settings are kept). */
-export const saveLanguage = (language: Language): void => {
-  update(cur => ({ ...cur, settings: { ...cur.settings, language } }))
 }
 
-/**
- * The language and its setter. Choosing re-renders at once and is saved; another tab's change is
- * picked up on the next render of the caller (App re-reads the save on `storage`). The page's `lang`
- * follows so assistive technology reads the notes in the right language.
- */
-export const useLanguage = (): [Language, (l: Language) => void] => {
-  const [language, setState] = useState<Language>(currentLanguage)
+/** The language, read once when the app starts. The page's `lang` follows so assistive technology reads the notes in the right language. */
+export const useLanguage = (): Language => {
+  const [language] = useState<Language>(currentLanguage)
   useEffect(() => {
     document.documentElement.lang = language
   }, [language])
-  const setLanguage = useCallback((l: Language) => {
-    saveLanguage(l)
-    setState(l)
-  }, [])
-  return [language, setLanguage]
+  return language
 }

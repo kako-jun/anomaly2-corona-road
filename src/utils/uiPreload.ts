@@ -1,3 +1,20 @@
+import { titleNotes } from '../data/titleNotes'
+import type { Language } from './saveData'
+
+/** The title notes' pictures of one language only (#296): the other language is fetched when the player switches. */
+export const titleNoteUrls = (language: Language): string[] =>
+  titleNotes(language).map(n => n.src)
+
+export function preloadTitleNotes(language: Language): Promise<void> {
+  return Promise.all(
+    titleNoteUrls(language).map(src => {
+      const image = new Image()
+      image.src = src
+      return Promise.resolve(image.decode?.()).catch(() => {})
+    })
+  ).then(() => {})
+}
+
 /**
  * Decode the images already requested by the preload links (the cabinet parts and the investigation-note
  * sketches) and load the fonts before the screens that use them appear.

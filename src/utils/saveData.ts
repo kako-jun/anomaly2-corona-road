@@ -13,7 +13,7 @@ export type Language = 'ja' | 'en'
 export interface SaveSettings {
   brightness?: number
   contrast?: number
-  /** The language of the investigation note and the title card (#292). Absent: follow the browser. */
+  /** Reserved for a future settings screen (#292). Read for compatibility with old saves, but neither written nor used: the language comes from the browser at every start. */
   language?: Language
 }
 

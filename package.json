@@ -21,6 +21,7 @@
     "prepare": "husky",
     "check:bezel": "uv run --script scripts/bezel-frame.py check",
     "check:foot": "uv run --script scripts/check-foot.py",
+    "check:title": "uv run --script scripts/check-title.py",
     "check:note-fonts": "uv run --script scripts/build-note-fonts.py check",
     "check:note-wrap": "uv run --script scripts/check-note-wrap.py",
     "check:subtitle": "uv run --script scripts/check-subtitle-wrap.py",

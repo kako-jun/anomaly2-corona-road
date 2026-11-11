@@ -9,7 +9,7 @@ import { GameOverScreen } from './components/GameOverScreen'
 import { SaveNotice } from './components/SaveNotice'
 import { buildNote } from './utils/investigationNote'
 import { useLanguage } from './utils/language'
-import { preloadCabinet } from './utils/uiPreload'
+import { preloadCabinet, preloadTitleNotes } from './utils/uiPreload'
 import { SAVE_KEY, load } from './utils/saveData'
 import { resetProgress } from './utils/shiftProgress'
 
@@ -18,7 +18,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   // The title's start key opens the investigation note; its key starts the shift (#297).
   const [memo, setMemo] = useState(false)
-  const [language, setLanguage] = useLanguage()
+  const language = useLanguage()
   // The ending reached in another tab closes the note (storage events re-render this): without this the note
   // would open by itself after START OVER, without START SHIFT being pressed.
   const endingReached = load().endingReached
@@ -39,6 +39,10 @@ function App() {
   useEffect(() => {
     ready.current = preloadCabinet()
   }, [])
+  // The title notes of the chosen language only (a switch fetches the other one).
+  useEffect(() => {
+    void preloadTitleNotes(language)
+  }, [language])
   const {
     gameState,
     stats,
@@ -93,7 +97,6 @@ function App() {
         <StartScreen
           onStart={() => setMemo(true)}
           language={language}
-          onLanguage={setLanguage}
           endingReached={load().endingReached}
           onStartOver={() => {
             resetProgress()
