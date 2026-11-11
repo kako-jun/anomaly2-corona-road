@@ -79,9 +79,7 @@ describe('frameEdges (geometry)', () => {
 })
 
 describe('hand-ruled frames of the sketches (public/note/*.svg)', () => {
-  const files = readdirSync('public/note').filter(
-    f => f.endsWith('.svg') && f !== 'corridor.svg'
-  )
+  const files = readdirSync('public/note').filter(f => f.endsWith('.svg'))
   const frameOf = (f: string) => {
     const svg = readFileSync(`public/note/${f}`, 'utf8')
     const g = svg.match(/<g id="frame">(.*?)<\/g>/s)

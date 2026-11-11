@@ -77,13 +77,21 @@ describe('fmtShiftEnd (in-game clock, not real time)', () => {
 })
 
 describe('buildNote before a shift', () => {
+  it('the first night (stage start) never shows a last-night line, even if a stale lastShift exists', () => {
+    const v = buildNote(
+      { mode: 'before', save: save({ lastShift: shift({ fresh: 0 }) }) },
+      'ja'
+    )
+    expect(texts(v)).toEqual(STAGES.start.lines.map(l => l.ja))
+  })
   it('first play: the background, empty frames, blank last-night column, night 1', () => {
     const v = buildNote({ mode: 'before', save: save() }, 'ja')
     expect(v.night).toBe('1夜目')
     expect(v.stamps).toEqual([{ text: '捜査の経緯', big: false }])
     expect(texts(v)).toEqual(STAGES.start.lines.map(l => l.ja))
     expect(v.slots.every(s => !s.found)).toBe(true)
-    expect(v.doodle).toBe(true)
+    expect(v.scrib).toEqual([]) // nothing to jot before an oddity has been seen
+    expect(v.slots.every(s => !s.found && s.alt === '未発見')).toBe(true) // no sketch on the first night
     expect(v.left.head).toBe('前回の夜')
     expect(v.left.rows.every(r => r.value === null)).toBe(true)
     expect(v.right.rows.map(r => r.value)).toEqual(['0', '0'])
@@ -106,7 +114,6 @@ describe('buildNote before a shift', () => {
     expect(v.stamps[0].text).toBe('前回まで')
     expect(texts(v)).toEqual(STAGES.elder2.lines.map(l => l.ja))
     expect(v.slots.map(s => s.found)).toEqual([true, true, false, false])
-    expect(v.doodle).toBe(false)
     expect(v.left.rows.map(r => r.value)).toEqual(['9', '4', '1'])
     expect(v.shiftRow).toMatchObject({ label: '勤務', value: '06:00まで' })
     expect(v.right.rows.map(r => r.value)).toEqual(['143', '63'])
@@ -183,7 +190,7 @@ describe('buildNote after a shift', () => {
     expect(v.lines).toEqual([
       { text: '今夜も異変を報告。' },
       { text: '捜査は一歩前へ。' },
-      { text: '老人2人目も、1人目と同じことを言う。' },
+      { text: '2人目も、老人1人目と同じことを言う。' },
       { text: '人当たりがよく、こちらを気遣う。' },
     ])
     expect(v.scrib).toEqual(STAGES.elder2.scrib.map(s => s.ja))
@@ -193,11 +200,20 @@ describe('buildNote after a shift', () => {
     const np = after(shift({ fresh: 0 }))
     expect(texts(np)[0]).toBe('新しい手がかりはなかった。')
     expect(texts(np)).not.toContain('新しい異変は見つからず。')
-    expect(np.scrib).toEqual(['見落としはないか?'])
+    expect(np.scrib).toEqual([]) // no jotting without a basis in story.md (no leads: nothing to add)
     const wd = after(shift({ closing: 'withdraw', durationMs: 221000 }))
     expect(wd.stamps[1].text).toBe('撤収')
     expect(wd.scrib).toEqual(['今夜はここまで。'])
     expect(wd.shiftRow.value).toBe('01:41で撤収')
+  })
+  it('the first night says "tonight", not "also"; a withdraw that found nothing does not say the finds count', () => {
+    const first = after(shift(), { loops: 1, flags: {} })
+    expect(texts(first)[0]).toBe('今夜は異変を報告。')
+    expect(texts(after(shift(), { loops: 2 }))[0]).toBe('今夜も異変を報告。')
+    const none = after(shift({ closing: 'withdraw', found: 0, fresh: 0 }))
+    expect(texts(none).join('')).not.toContain('見つけた分')
+    const some = after(shift({ closing: 'withdraw', found: 2 }))
+    expect(texts(some)).toContain('見つけた分は、捜査に加わった。')
   })
   it('the true ending has its own stock lines', () => {
     const v = after(shift({ closing: 'ending' }), {

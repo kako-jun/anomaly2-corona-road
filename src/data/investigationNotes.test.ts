@@ -2,13 +2,14 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import ledger from 'virtual:dialogue'
 import {
+  STAGE_ORDER,
   LABELS,
   LAST_NIGHT,
   OUTCOMES,
   STAGES,
   STAGE_FLAGS,
 } from './investigationNotes'
-import type { Pair } from './investigationNotes'
+import type { KnownPair, Pair, Stage } from './investigationNotes'
 
 const pairs = (v: unknown): Pair[] => {
   if (typeof v === 'function') {
@@ -34,8 +35,6 @@ const ALL = [STAGES, OUTCOMES, LAST_NIGHT, LABELS].flatMap(pairs)
 const JA_MAX = 20
 const EN_MAX = 40
 const MAX_RULED = 7
-const SCRIB_JA_MAX = 13 // beside the corridor sketch the scribble column is 196px
-const SCRIB_EN_MAX = 24
 
 describe('investigation note data', () => {
   it('stage flags exist in dialogue/flags.yaml', () => {
@@ -56,7 +55,11 @@ describe('investigation note data', () => {
       expect(t.tail).toBeLessThanOrEqual(Math.min(2, t.lines.length)) // the kept tail is two lines at most
     }
     for (const o of Object.values(OUTCOMES))
-      for (const l of o.lines) {
+      for (const l of [
+        ...o.lines,
+        ...(o.firstNight ?? []),
+        ...(o.ifFound ?? []),
+      ]) {
         expect(l.ja.length, l.ja).toBeLessThanOrEqual(JA_MAX)
         expect(l.en.length, l.en).toBeLessThanOrEqual(EN_MAX)
       }
@@ -95,20 +98,18 @@ describe('investigation note data', () => {
       for (const l of t.lines) expect(l.en, `${stage} ${l.ja}`).not.toBe('')
     }
   })
-  it('scribbles are lines too: at most 3, and narrow ones beside the corridor sketch (first night only)', () => {
+  it('scribbles are lines too: at most 3, each a single line of the same width as the synopsis', () => {
     for (const [name, t] of Object.entries({ ...STAGES, ...OUTCOMES })) {
       expect(t.scrib?.length ?? 0, name).toBeLessThanOrEqual(3)
-      // The corridor sketch is drawn on the very first night only; `none` reuses its words without the sketch.
-      const narrow = name === 'start'
       for (const l of t.scrib ?? []) {
-        expect(l.ja.length, l.ja).toBeLessThanOrEqual(
-          narrow ? SCRIB_JA_MAX : JA_MAX
-        )
-        expect(l.en.length, l.en).toBeLessThanOrEqual(
-          narrow ? SCRIB_EN_MAX : EN_MAX
-        )
+        expect(l.ja.length, l.ja).toBeLessThanOrEqual(JA_MAX)
+        expect(l.en.length, l.en).toBeLessThanOrEqual(EN_MAX)
       }
     }
+  })
+  it('the first night is short: six lines at most, no scribble', () => {
+    expect(STAGES.start.lines.length).toBeLessThanOrEqual(6)
+    expect(STAGES.start.scrib).toEqual([])
   })
   it('does not state what the story has not established', () => {
     // docs/story.md: the family\'s deed and the cause of the incident are not stated; the child is not said to have spoken.
@@ -135,5 +136,126 @@ describe('investigation note data', () => {
       for (const c of p.en) if (c !== ' ' && !chars.has(c)) missing.add(c)
     expect([...missing]).toEqual([])
     expect(chars.has('\u2019') && chars.has('\u2026')).toBe(true)
+  })
+})
+
+/**
+ * No spoilers (#297). `knownFrom` is the writer's own claim of the earliest stage that may show a sentence, grounded
+ * in docs/story.md (DESIGN.md lists which sentences are `start` and where story.md says so). It is NOT a mechanical
+ * match against story.md, and the word list below is only a net under it: it catches a wrong annotation for the
+ * facts it names, nothing more. A new sentence still needs its story.md source checked by a human.
+ * Two nets: (1) no stage shows a sentence whose `knownFrom` is later than itself; (2) words for facts that are
+ * learned only at a given stage are banned from every sentence annotated earlier.
+ */
+describe('no spoilers: every sentence is shown only from the stage where it is known', () => {
+  const idx = (s: Stage) => STAGE_ORDER.indexOf(s)
+  const NOT_STORY = '段階の根拠が story.md に無いので、どの段階にも出さない'
+  /** [pattern, first stage that may say it, reason (docs/story.md)] */
+  const LEARNED: [RegExp, Stage, string][] = [
+    [/シャッター|shutter/i, 'child', `作業仮説。${NOT_STORY}`],
+    [/昭和|Showa/i, 'child', `昭和の異変・昭和の記憶。${NOT_STORY}`],
+    [
+      /帰りたくない|帰らない|戻らない|帰ろうとしない|go home|come back/i,
+      'elder1',
+      '老人に会って初めて分かる',
+    ],
+    [/現実|reality|主張|達観/i, 'elder1', '老人が主張する'],
+    [/懐かし|nostalg|記憶|memor/i, 'elder1', '老人の様子・記憶'],
+    [/食べ物|餓死|starv|food/i, 'elder1', '老人たちの様子から分かること'],
+    [
+      /おじいさん|おばあさん|老婆|old man|old lady|old woman/i,
+      'elder1',
+      '老人を見つけて初めて分かる',
+    ],
+    [/老人|old person|elder/i, 'elder1', '老人を見つけて初めて分かる'],
+    [/様子|個性|trait/i, 'elder1', '老人に会って初めて分かる'],
+    [/実務的|practical|頑固|stubborn/i, 'elder1', '老人1人目の個性'],
+    [/人当たり|Warm|気遣|worries/i, 'elder2', '老人2人目の個性'],
+    [/乾いた|冗談|Dry jokes|joke/i, 'elder3', '老人3人目の個性'],
+    [
+      /優しい|kind|3人とも|All three/i,
+      'elder3',
+      '3人とも、と言えるのは3人目から',
+    ],
+    [
+      /家族|family|子供の家|(?<!go )home|親|parents|虐待/i,
+      'child',
+      '子供を見つけて初めて出る疑問',
+    ],
+  ]
+  const entries = (): { where: string; stage: Stage; p: KnownPair }[] => [
+    ...Object.entries(STAGES).flatMap(([st, t]) =>
+      [...t.lines, ...t.scrib].map(p => ({
+        where: `stage ${st}`,
+        stage: st as Stage,
+        p,
+      }))
+    ),
+    // outcomes and last-night lines are usable from `start` unless annotated later; they are never tied to one stage
+    ...Object.entries(OUTCOMES).flatMap(([o, t]) =>
+      [
+        ...t.lines,
+        ...(t.firstNight ?? []),
+        ...(t.ifFound ?? []),
+        ...(t.scrib ?? []),
+      ].map(p => ({
+        where: `outcome ${o}`,
+        stage: p.knownFrom,
+        p,
+      }))
+    ),
+    ...Object.entries(LAST_NIGHT).map(([o, p]) => ({
+      where: `last night ${o}`,
+      stage: p.knownFrom,
+      p,
+    })),
+  ]
+  it('every sentence has a knownFrom that is a real stage', () => {
+    for (const { where, p } of entries())
+      expect(STAGE_ORDER, `${where} ${p.ja}`).toContain(p.knownFrom)
+  })
+  it('no stage shows a sentence that is known only from a later stage', () => {
+    for (const { where, stage, p } of entries())
+      expect(idx(p.knownFrom), `${where}: ${p.ja}`).toBeLessThanOrEqual(
+        idx(stage)
+      )
+  })
+  it('words for facts learned later are never in a sentence allowed earlier', () => {
+    for (const { where, p } of entries())
+      for (const [re, from, why] of LEARNED)
+        if (re.test(p.ja) || re.test(p.en))
+          expect(
+            idx(p.knownFrom),
+            `${where} "${p.ja}" says a fact known only from ${from} (${why})`
+          ).toBeGreaterThanOrEqual(idx(from))
+  })
+  it('the first two stages show only what story.md gives at the start', () => {
+    for (const st of ['start', 'none'] as const)
+      for (const l of [...STAGES[st].lines, ...STAGES[st].scrib])
+        expect(l.knownFrom, l.ja).toBe('start')
+  })
+  it('the true-ending lines are only known from the child', () => {
+    for (const l of OUTCOMES.ending.lines) expect(l.knownFrom).toBe('child')
+  })
+})
+
+describe('stock lines that depend on the night', () => {
+  it('the first-night result has no "also" and no line that says more than it knows', () => {
+    expect(OUTCOMES.newKinds.firstNight?.map(l => l.ja).join('')).not.toContain(
+      'も'
+    )
+    expect(OUTCOMES.newKinds.firstNight?.map(l => l.en).join(' ')).not.toMatch(
+      /\bMore\b/
+    )
+  })
+  it('"found counts" is conditional on having found something; nothing story.md lacks is jotted for a no-lead night', () => {
+    expect(OUTCOMES.withdraw.lines.map(l => l.ja).join('')).not.toContain(
+      '見つけた分'
+    )
+    expect(OUTCOMES.withdraw.ifFound?.length).toBe(1)
+    expect(OUTCOMES.noNewKinds.scrib).toBeUndefined()
+  })
+  it('last-night lines are known from the start but are never part of the first-night (start) synopsis', () => {
+    for (const l of Object.values(LAST_NIGHT)) expect(l.knownFrom).toBe('start')
   })
 })
