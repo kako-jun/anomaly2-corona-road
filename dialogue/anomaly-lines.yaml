@@ -18,7 +18,7 @@ dialogues:
     when: { anomaly: AR-02-ashtray }
     lines:
       - { who: A, text: '念のため　右手前も確かめておこう' }
-      - { who: M, text: 'はい　右手前の端も見落とさないようにします' }
+      - { who: M, text: 'はい　右手前の端も　見落とさないようにします' }
   - id: an-AR-02-ashtray-02
     tone: serious
     when: { anomaly: AR-02-ashtray }
@@ -59,8 +59,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-cat }
     lines:
-      - { who: M, text: 'はい　今度は左のシャッターに注目してみてください' }
-      - { who: A, text: '左のシャッターを見てるつもりだったのに　だめだね' }
+      - { who: M, text: 'はい　今度は左のシャッターに　注目してみてください' }
+      - { who: A, text: '左のシャッターを　見てるつもりだったのに　だめだね' }
   - id: an-AR-02-cigarette-01
     tone: serious
     when: { anomaly: AR-02-cigarette }
@@ -156,7 +156,7 @@ dialogues:
     when: { anomaly: AR-02-shop-reopens }
     lines:
       - { who: M, text: '左のシャッターの見え方を　周りと比べてください' }
-      - { who: A, text: 'ああ　左のシャッターは見ていたつもりなのに' }
+      - { who: A, text: 'ああ　左のシャッターは　見ていたつもりなのに' }
   - id: an-AR-02-smoke-01
     tone: serious
     when: { anomaly: AR-02-smoke }
@@ -186,7 +186,7 @@ dialogues:
     when: { anomaly: AR-02-stool }
     lines:
       - { who: A, text: '見ているつもりだったけど　右中段の通路に戻ろう' }
-      - { who: M, text: 'そうですね　右中段の通路だけで決めないようにします' }
+      - { who: M, text: 'そうですね　右中段の通路だけで　決めないようにします' }
   - id: an-AR-02-stool-02
     tone: serious
     when: { anomaly: AR-02-stool }
@@ -227,7 +227,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-newspaper }
     lines:
-      - { who: M, text: 'はい　左のシャッターをもう一度見てみてください' }
+      - { who: M, text: 'はい　左のシャッターを　もう一度見てみてください' }
       - { who: A, text: '分かった　左のシャッターと隣を比べてみよう' }
   - id: an-AR-04-puddle-01
     tone: serious
@@ -257,7 +257,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-reflected-umbrella }
     lines:
-      - { who: A, text: 'あっ　中央の店先をちゃんと見てなかったかも' }
+      - { who: A, text: 'あっ　中央の店先をちゃんと　見てなかったかも' }
       - { who: M, text: '分かりました　中央の店先まで目を通します' }
   - id: an-AR-06-reflected-umbrella-02
     tone: serious
@@ -270,7 +270,7 @@ dialogues:
     when: { anomaly: AR-06-reflection }
     lines:
       - { who: A, text: '自信あったのに　中央上部のガラスを見落としてた?' }
-      - { who: M, text: 'はい　中央上部のガラスにも視線を向け直してみます' }
+      - { who: M, text: 'はい　中央上部のガラスにも　視線を向け直してみます' }
   - id: an-AR-06-reflection-02
     tone: serious
     when: { anomaly: AR-06-reflection }
@@ -293,14 +293,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-soda }
     lines:
-      - { who: A, text: 'あっ　左寄りの通路をちゃんと見てなかったかも' }
+      - { who: A, text: 'あっ　左寄りの通路をちゃんと　見てなかったかも' }
       - { who: M, text: '分かりました　左寄りの通路まで目を通します' }
   - id: an-AR-06-soda-02
     tone: serious
     when: { anomaly: AR-06-soda }
     lines:
       - { who: M, text: '左寄りの通路を一度見て　隣の範囲とも比べてください' }
-      - { who: A, text: 'うそ　左寄りの通路を見たつもりだったのに!' }
+      - { who: A, text: 'うそ　左寄りの通路を　見たつもりだったのに!' }
   - id: an-AR-06-umbrella-01
     tone: serious
     when: { anomaly: AR-06-umbrella }
@@ -335,7 +335,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-crane }
     lines:
-      - { who: M, text: 'はい　中央上部の天井をもう一度見てみてください' }
+      - { who: M, text: 'はい　中央上部の天井を　もう一度見てみてください' }
       - { who: A, text: '分かった　中央上部の天井と隣を比べてみよう' }
   - id: an-AR-07-notice-01
     tone: serious
@@ -509,19 +509,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-shutter-light }
     lines:
-      - { who: A, text: 'あっ　中央のシャッターをちゃんと見てなかったかも' }
+      - { who: A, text: 'あっ　中央のシャッターを　ちゃんと見てなかったかも' }
       - { who: M, text: '分かりました　中央のシャッターまで目を通します' }
   - id: an-AR-01-shutter-light-02
     tone: serious
     when: { anomaly: AR-01-shutter-light }
     lines:
       - { who: M, text: '中央のシャッターを一度見て　隣の範囲とも比べてください' }
-      - { who: A, text: 'うそ　中央のシャッターを見たつもりだったのに!' }
+      - { who: A, text: 'うそ　中央のシャッターを　見たつもりだったのに!' }
   - id: an-AR-03-ceiling-dots-01
     tone: serious
     when: { anomaly: AR-03-ceiling-dots }
     lines:
-      - { who: A, text: 'あっ　左上の天井をちゃんと見てなかったかも' }
+      - { who: A, text: 'あっ　左上の天井をちゃんと　見てなかったかも' }
       - { who: M, text: '分かりました　左上の天井まで目を通します' }
   - id: an-AR-03-ceiling-dots-02
     tone: serious
@@ -582,13 +582,13 @@ dialogues:
     when: { anomaly: AR-03-striped-sign }
     lines:
       - { who: A, text: '中央上部のシャッターのあたり　もう一度見てもらえる?' }
-      - { who: M, text: 'はい　中央上部のシャッターの周りも含めて見ます' }
+      - { who: M, text: 'はい　中央上部のシャッターの周りも　含めて見ます' }
   - id: an-AR-03-striped-sign-02
     tone: serious
     when: { anomaly: AR-03-striped-sign }
     lines:
-      - { who: M, text: '視線の位置を変えて　中央上部のシャッターを見直しましょう' }
-      - { who: A, text: 'ああ　悔しい!　中央上部のシャッターをもう一度確認する' }
+      - { who: M, text: '視線の位置を変えて　中央上部のシャッターを　見直しましょう' }
+      - { who: A, text: 'ああ　悔しい!　中央上部のシャッターを　もう一度確認する' }
   - id: an-AR-04-door-gap-01
     tone: serious
     when: { anomaly: AR-04-door-gap }
@@ -750,7 +750,7 @@ dialogues:
     when: { anomaly: AR-03-shutter-wave }
     lines:
       - { who: A, text: 'うーん　視線が止まってたね　左上のシャッターも見よう' }
-      - { who: M, text: '了解です　左上のシャッターをもう一度確認します' }
+      - { who: M, text: '了解です　左上のシャッターを　もう一度確認します' }
   - id: an-AR-03-shutter-wave-02
     tone: serious
     when: { anomaly: AR-03-shutter-wave }
@@ -810,7 +810,7 @@ dialogues:
     when: { anomaly: AR-07-duplicate-green-sign }
     lines:
       - { who: A, text: '念のため　右の階段も確かめておこう' }
-      - { who: M, text: 'はい　右の階段の端も見落とさないようにします' }
+      - { who: M, text: 'はい　右の階段の端も　見落とさないようにします' }
   - id: an-AR-07-duplicate-green-sign-02
     tone: serious
     when: { anomaly: AR-07-duplicate-green-sign }
@@ -858,13 +858,13 @@ dialogues:
     when: { anomaly: AR-05-amber-pane }
     lines:
       - { who: A, text: '今度は中央上部のガラスを　少し違う角度から見たい' }
-      - { who: M, text: '了解です　中央上部のガラスの辺りを比べてみます' }
+      - { who: M, text: '了解です　中央上部のガラスの辺りを　比べてみます' }
   - id: an-AR-05-amber-pane-02
     tone: serious
     when: { anomaly: AR-05-amber-pane }
     lines:
       - { who: M, text: '中央上部のガラスの見え方を　周りと比べてください' }
-      - { who: A, text: 'ああ　中央上部のガラスは見ていたつもりなのに' }
+      - { who: A, text: 'ああ　中央上部のガラスは　見ていたつもりなのに' }
   - id: an-AR-04-paper-cup-01
     tone: serious
     when: { anomaly: AR-04-paper-cup }
@@ -893,7 +893,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-fixture-duplicate }
     lines:
-      - { who: A, text: 'ちょっと待って　中央上部の柱に見落としがないか見たい' }
+      - { who: A, text: 'ちょっと待って　中央上部の柱に　見落としがないか見たい' }
       - { who: M, text: 'はい　中央上部の柱の見え方を比べます' }
   - id: an-AR-08-fixture-duplicate-02
     tone: serious
@@ -954,13 +954,13 @@ dialogues:
     when: { anomaly: AR-02-wrapping-paper }
     lines:
       - { who: A, text: '少し引いて見よう　左中段のシャッターの周りも含めて' }
-      - { who: M, text: 'そうですね　左中段のシャッターに視線を戻しましょう' }
+      - { who: M, text: 'そうですね　左中段のシャッターに　視線を戻しましょう' }
   - id: an-AR-02-wrapping-paper-02
     tone: serious
     when: { anomaly: AR-02-wrapping-paper }
     lines:
       - { who: M, text: '左中段のシャッターの近くも　続けて見てください' }
-      - { who: A, text: 'あっ　左中段のシャッターを先走って見てたかも' }
+      - { who: A, text: 'あっ　左中段のシャッターを　先走って見てたかも' }
   - id: an-AR-03-blue-floor-tile-01
     tone: serious
     when: { anomaly: AR-03-blue-floor-tile }
@@ -983,7 +983,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-purple-floor-tile }
     lines:
-      - { who: M, text: '少し引いて　中央下部の床の周囲まで見てみましょう' }
+      - { who: M, text: '少し引いて　中央下部の床の周囲まで　見てみましょう' }
       - { who: A, text: '決めつけないで　中央下部の床を見直そう' }
   - id: an-AR-02-duplicate-coffee-sign-01
     tone: serious
@@ -1079,19 +1079,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-round-puddle }
     lines:
-      - { who: M, text: '中央の床　前後と比べて気になるところはありませんか' }
+      - { who: M, text: '中央の床　前後と比べて　気になるところは　ありませんか' }
       - { who: A, text: 'そうなの?　中央の床の見方を変えてみるね' }
   - id: an-AR-07-diamond-tile-01
     tone: serious
     when: { anomaly: AR-07-diamond-tile }
     lines:
-      - { who: A, text: 'ええと　中央下部の床の先まで視線を動かしてみて' }
+      - { who: A, text: 'ええと　中央下部の床の先まで　視線を動かしてみて' }
       - { who: M, text: 'そうですね　まず中央下部の床を落ち着いて見ます' }
   - id: an-AR-07-diamond-tile-02
     tone: serious
     when: { anomaly: AR-07-diamond-tile }
     lines:
-      - { who: M, text: '中央下部の床　前後と比べて気になるところはありませんか' }
+      - { who: M, text: '中央下部の床　前後と比べて　気になるところは　ありませんか' }
       - { who: A, text: 'そうなの?　中央下部の床の見方を変えてみるね' }
   - id: an-AR-07-floor-puddle-01
     tone: serious
@@ -1205,13 +1205,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-basket }
     lines:
-      - { who: A, text: 'ええと　左のガラスの先まで視線を動かしてみて' }
+      - { who: A, text: 'ええと　左のガラスの先まで　視線を動かしてみて' }
       - { who: M, text: 'そうですね　まず左のガラスを落ち着いて見ます' }
   - id: an-AR-04-basket-02
     tone: serious
     when: { anomaly: AR-04-basket }
     lines:
-      - { who: M, text: '左のガラス　前後と比べて気になるところはありませんか' }
+      - { who: M, text: '左のガラス　前後と比べて　気になるところは　ありませんか' }
       - { who: A, text: 'そうなの?　左のガラスの見方を変えてみるね' }
   - id: an-AR-04-poster-01
     tone: serious
@@ -1247,7 +1247,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-sign }
     lines:
-      - { who: M, text: '奥のほう　前後と比べて気になるところはありませんか' }
+      - { who: M, text: '奥のほう　前後と比べて　気になるところは　ありませんか' }
       - { who: A, text: 'ああ　悔しい!　奥のほうをもう一度確認する' }
   - id: an-AR-08-suit-01
     tone: serious
@@ -1283,7 +1283,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-handle }
     lines:
-      - { who: M, text: 'はい　奥のガラスをもう一度見てみてください' }
+      - { who: M, text: 'はい　奥のガラスを　もう一度見てみてください' }
       - { who: A, text: '分かった　奥のガラスと隣を比べてみよう' }
   - id: an-AR-08-pillar-notice-01
     tone: serious
@@ -1319,14 +1319,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-back-view-paper-bag }
     lines:
-      - { who: M, text: '奥の通路　前後と比べて気になるところはありませんか' }
+      - { who: M, text: '奥の通路　前後と比べて　気になるところは　ありませんか' }
       - { who: A, text: 'そうなの?　奥の通路の見方を変えてみるね' }
   - id: an-AR-01-cat-in-frosted-window-01
     tone: serious
     when: { anomaly: AR-01-cat-in-frosted-window }
     lines:
       - { who: A, text: '念のため　左中段の窓も確かめておこう' }
-      - { who: M, text: 'はい　左中段の窓の端も見落とさないようにします' }
+      - { who: M, text: 'はい　左中段の窓の端も　見落とさないようにします' }
   - id: an-AR-01-cat-in-frosted-window-02
     tone: serious
     when: { anomaly: AR-01-cat-in-frosted-window }
@@ -1361,13 +1361,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-vent-hole-triangle }
     lines:
-      - { who: A, text: 'ええと　中央上部の天井の先まで視線を動かしてみて' }
-      - { who: M, text: 'そうですね　まず中央上部の天井を落ち着いて見ます' }
+      - { who: A, text: 'ええと　中央上部の天井の先まで　視線を動かしてみて' }
+      - { who: M, text: 'そうですね　まず中央上部の天井を　落ち着いて見ます' }
   - id: an-AR-01-vent-hole-triangle-02
     tone: serious
     when: { anomaly: AR-01-vent-hole-triangle }
     lines:
-      - { who: M, text: '中央上部の天井　前後と比べて気になるところはありませんか' }
+      - { who: M, text: '中央上部の天井　前後と比べて　気になるところは　ありませんか' }
       - { who: A, text: 'そうなの?　中央上部の天井の見方を変えてみるね' }
   - id: an-AR-01-wall-repaint-patch-01
     tone: serious
@@ -1409,20 +1409,20 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-shutter-stripe-break }
     lines:
-      - { who: A, text: 'ええと　左のシャッターの先まで視線を動かしてみて' }
-      - { who: M, text: 'そうですね　まず左のシャッターを落ち着いて見ます' }
+      - { who: A, text: 'ええと　左のシャッターの先まで　視線を動かしてみて' }
+      - { who: M, text: 'そうですね　まず左のシャッターを　落ち着いて見ます' }
   - id: an-AR-01-shutter-stripe-break-02
     tone: serious
     when: { anomaly: AR-01-shutter-stripe-break }
     lines:
-      - { who: M, text: '左のシャッター　前後と比べて気になるところはありませんか' }
+      - { who: M, text: '左のシャッター　前後と比べて　気になるところは　ありませんか' }
       - { who: A, text: 'そうなの?　左のシャッターの見方を変えてみるね' }
   - id: an-AR-01-ceiling-seam-circle-01
     tone: serious
     when: { anomaly: AR-01-ceiling-seam-circle }
     lines:
       - { who: A, text: '念のため　左上の天井も確かめておこう' }
-      - { who: M, text: 'はい　左上の天井の端も見落とさないようにします' }
+      - { who: M, text: 'はい　左上の天井の端も　見落とさないようにします' }
   - id: an-AR-01-ceiling-seam-circle-02
     tone: serious
     when: { anomaly: AR-01-ceiling-seam-circle }
@@ -1440,7 +1440,7 @@ dialogues:
     when: { anomaly: AR-03-shutter-faded-poster }
     lines:
       - { who: M, text: '右のシャッターの見え方を　周りと比べてください' }
-      - { who: A, text: 'ああ　右のシャッターは見ていたつもりなのに' }
+      - { who: A, text: 'ああ　右のシャッターは　見ていたつもりなのに' }
   - id: an-AR-03-sign-glow-blue-01
     tone: serious
     when: { anomaly: AR-03-sign-glow-blue }
@@ -1487,14 +1487,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-sign-frame-square }
     lines:
-      - { who: M, text: 'はい　今度は奥の店先に注目してみてください' }
+      - { who: M, text: 'はい　今度は奥の店先に　注目してみてください' }
       - { who: A, text: '奥の店先を見てるつもりだったのに　だめだね' }
   - id: an-AR-04-poster-colour-restore-01
     tone: serious
     when: { anomaly: AR-04-poster-colour-restore }
     lines:
       - { who: A, text: '見ているつもりだったけど　左のガラスに戻ろう' }
-      - { who: M, text: 'そうですね　左のガラスだけで決めないようにします' }
+      - { who: M, text: 'そうですね　左のガラスだけで　決めないようにします' }
   - id: an-AR-04-poster-colour-restore-02
     tone: serious
     when: { anomaly: AR-04-poster-colour-restore }
@@ -1614,7 +1614,7 @@ dialogues:
     when: { anomaly: AR-05-curtain-open }
     lines:
       - { who: A, text: 'うーん　視線が止まってたね　中央上部のガラスも見よう' }
-      - { who: M, text: '了解です　中央上部のガラスをもう一度確認します' }
+      - { who: M, text: '了解です　中央上部のガラスを　もう一度確認します' }
   - id: an-AR-05-curtain-open-02
     tone: serious
     when: { anomaly: AR-05-curtain-open }
@@ -1626,13 +1626,13 @@ dialogues:
     when: { anomaly: AR-05-old-woman-in-glass }
     lines:
       - { who: A, text: 'えっ　中央上部のガラスって　さっきも見たかな?' }
-      - { who: M, text: 'はい　中央上部のガラスを含めて確認を続けます' }
+      - { who: M, text: 'はい　中央上部のガラスを　含めて確認を続けます' }
   - id: an-AR-05-old-woman-in-glass-02
     tone: serious
     when: { anomaly: AR-05-old-woman-in-glass }
     lines:
       - { who: M, text: '中央上部のガラスのあたり　何度か見比べてみましょう' }
-      - { who: A, text: '中央上部のガラスを見落としたの悔しい!　次は見つける' }
+      - { who: A, text: '中央上部のガラスを　見落としたの悔しい!　次は見つける' }
   - id: an-AR-05-film-poster-01
     tone: serious
     when: { anomaly: AR-05-film-poster }
@@ -1673,14 +1673,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-brick-round }
     lines:
-      - { who: A, text: 'あっ　店舗区画の下端をちゃんと見てなかったかも' }
+      - { who: A, text: 'あっ　店舗区画の下端を　ちゃんと見てなかったかも' }
       - { who: M, text: '分かりました　店舗区画の下端まで目を通します' }
   - id: an-AR-05-brick-round-02
     tone: serious
     when: { anomaly: AR-05-brick-round }
     lines:
       - { who: M, text: '店舗区画の下端を一度見て　隣の範囲とも比べてください' }
-      - { who: A, text: 'うそ　店舗区画の下端を見たつもりだったのに!' }
+      - { who: A, text: 'うそ　店舗区画の下端を　見たつもりだったのに!' }
   - id: an-AR-05-sign-digit-missing-01
     tone: serious
     when: { anomaly: AR-05-sign-digit-missing }
@@ -1853,7 +1853,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-pillar-second }
     lines:
-      - { who: A, text: 'ええと　中央上部の柱の先まで視線を動かしてみて' }
+      - { who: A, text: 'ええと　中央上部の柱の先まで　視線を動かしてみて' }
       - { who: M, text: 'はい　中央上部の柱の周りも含めて見ます' }
   - id: an-AR-08-pillar-second-02
     tone: serious
@@ -1878,7 +1878,7 @@ dialogues:
     when: { anomaly: AR-08-tile-concentric }
     lines:
       - { who: A, text: '見ているつもりだったけど　左中段の床に戻ろう' }
-      - { who: M, text: 'そうですね　左中段の床だけで決めないようにします' }
+      - { who: M, text: 'そうですね　左中段の床だけで　決めないようにします' }
   - id: an-AR-08-tile-concentric-02
     tone: serious
     when: { anomaly: AR-08-tile-concentric }
@@ -1926,7 +1926,7 @@ dialogues:
     when: { anomaly: AR-08-fixture-dark-red }
     lines:
       - { who: A, text: '念のため　奥の天井も確かめておこう' }
-      - { who: M, text: 'はい　奥の天井の端も見落とさないようにします' }
+      - { who: M, text: 'はい　奥の天井の端も　見落とさないようにします' }
   - id: an-AR-08-fixture-dark-red-02
     tone: serious
     when: { anomaly: AR-08-fixture-dark-red }
@@ -1955,7 +1955,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-hatch-stain }
     lines:
-      - { who: M, text: '少し引いて　中央上部の天井の周囲まで見てみましょう' }
+      - { who: M, text: '少し引いて　中央上部の天井の周囲まで　見てみましょう' }
       - { who: A, text: '決めつけないで　中央上部の天井を見直そう' }
   - id: an-AR-02-smartphone-facedown-01
     tone: serious
@@ -1974,7 +1974,7 @@ dialogues:
     when: { anomaly: AR-04-earbud-single }
     lines:
       - { who: A, text: '念のため　中央下部の床も確かめておこう' }
-      - { who: M, text: 'はい　中央下部の床の端も見落とさないようにします' }
+      - { who: M, text: 'はい　中央下部の床の端も　見落とさないようにします' }
   - id: an-AR-04-earbud-single-02
     tone: serious
     when: { anomaly: AR-04-earbud-single }
@@ -2297,14 +2297,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-shutter-blank-papers }
     lines:
-      - { who: A, text: 'ちょっと待って　左のシャッターに見落としがないか見たい' }
+      - { who: A, text: 'ちょっと待って　左のシャッターに　見落としがないか見たい' }
       - { who: M, text: 'はい　左のシャッターの見え方を比べます' }
   - id: an-AR-03-shutter-blank-papers-02
     tone: serious
     when: { anomaly: AR-03-shutter-blank-papers }
     lines:
-      - { who: M, text: '焦らずに　左のシャッターのあたりを見てください' }
-      - { who: A, text: '分かった　少し休んでから左のシャッターを見るね' }
+      - { who: M, text: '焦らずに　左のシャッターのあたりを　見てください' }
+      - { who: A, text: '分かった　少し休んでから　左のシャッターを見るね' }
   - id: an-AR-03-floor-tatami-01
     tone: serious
     when: { anomaly: AR-03-floor-tatami }
@@ -2351,7 +2351,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-ceiling-umbrellas }
     lines:
-      - { who: M, text: 'はい　今度は左上の天井に注目してみてください' }
+      - { who: M, text: 'はい　今度は左上の天井に　注目してみてください' }
       - { who: A, text: 'そこかあ　左上の天井をもう一度確かめる' }
   - id: an-AR-04-window-alley-01
     tone: serious
@@ -2382,13 +2382,13 @@ dialogues:
     when: { anomaly: AR-05-curtains-open-cafe }
     lines:
       - { who: A, text: '私　急いでたかも　中央上部のガラスを見直したい' }
-      - { who: M, text: 'はい　中央上部のガラスの周囲から見直します' }
+      - { who: M, text: 'はい　中央上部のガラスの周囲から　見直します' }
   - id: an-AR-05-curtains-open-cafe-02
     tone: serious
     when: { anomaly: AR-05-curtains-open-cafe }
     lines:
       - { who: M, text: 'その中央上部のガラス　全体の中で確かめてください' }
-      - { who: A, text: 'ありがとう　中央上部のガラスを落ち着いて確認する' }
+      - { who: A, text: 'ありがとう　中央上部のガラスを　落ち着いて確認する' }
   - id: an-AR-04-glass-fog-handprints-01
     tone: serious
     when: { anomaly: AR-04-glass-fog-handprints }
@@ -2406,7 +2406,7 @@ dialogues:
     when: { anomaly: AR-05-floor-white-cranes }
     lines:
       - { who: A, text: '念のため　左下の床も確かめておこう' }
-      - { who: M, text: 'はい　左下の床の端も見落とさないようにします' }
+      - { who: M, text: 'はい　左下の床の端も　見落とさないようにします' }
   - id: an-AR-05-floor-white-cranes-02
     tone: serious
     when: { anomaly: AR-05-floor-white-cranes }
@@ -2442,7 +2442,7 @@ dialogues:
     when: { anomaly: AR-01-bunting-flags }
     lines:
       - { who: A, text: 'あの中央上部の天井　端のほうまで見てもらえる?' }
-      - { who: M, text: 'そうですね　中央上部の天井を含めて全体を見直します' }
+      - { who: M, text: 'そうですね　中央上部の天井を　含めて全体を見直します' }
   - id: an-AR-01-bunting-flags-02
     tone: serious
     when: { anomaly: AR-01-bunting-flags }
@@ -2454,7 +2454,7 @@ dialogues:
     when: { anomaly: AR-01-straw-hat }
     lines:
       - { who: A, text: '中央下部の床の辺り　見方を変えたら分かるかな' }
-      - { who: M, text: 'はい　中央下部の床から順に確認していきます' }
+      - { who: M, text: 'はい　中央下部の床から順に　確認していきます' }
   - id: an-AR-01-straw-hat-02
     tone: serious
     when: { anomaly: AR-01-straw-hat }
@@ -2550,7 +2550,7 @@ dialogues:
     when: { anomaly: AR-02-jump-rope }
     lines:
       - { who: A, text: '自信あったのに　中央下部の床を見落としてた?' }
-      - { who: M, text: 'はい　中央下部の床にも視線を向け直してみます' }
+      - { who: M, text: 'はい　中央下部の床にも　視線を向け直してみます' }
   - id: an-AR-02-jump-rope-02
     tone: serious
     when: { anomaly: AR-02-jump-rope }
@@ -2620,7 +2620,7 @@ dialogues:
       anomaly: AR-03-tricycle
     lines:
       - who: M
-        text: はい　今度は手前の床に注目してみてください
+        text: はい　今度は手前の床に　注目してみてください
       - who: A
         text: 手前の床を見てるつもりだったのに　だめだね
   - id: an-AR-03-wash-tub-01
@@ -2631,7 +2631,7 @@ dialogues:
       - who: A
         text: 念のため　左手前の床も確かめておこう
       - who: M
-        text: はい　左手前の床の端も見落とさないようにします
+        text: はい　左手前の床の端も　見落とさないようにします
   - id: an-AR-03-wash-tub-02
     tone: serious
     when:
@@ -2647,7 +2647,7 @@ dialogues:
       anomaly: AR-03-insect-cage
     lines:
       - who: A
-        text: ええと　左手前の床の先まで視線を動かしてみて
+        text: ええと　左手前の床の先まで　視線を動かしてみて
       - who: M
         text: そうですね　まず左手前の床を落ち着いて見ます
   - id: an-AR-03-insect-cage-02
@@ -2656,7 +2656,7 @@ dialogues:
       anomaly: AR-03-insect-cage
     lines:
       - who: M
-        text: 左手前の床　前後と比べて気になるところはありませんか
+        text: 左手前の床　前後と比べて　気になるところは　ありませんか
       - who: A
         text: そうなの?　左手前の床の見方を変えてみるね
   - id: an-AR-03-sake-bottle-01
@@ -2674,7 +2674,7 @@ dialogues:
       anomaly: AR-03-sake-bottle
     lines:
       - who: M
-        text: 手前の床　前後と比べて気になるところはありませんか
+        text: 手前の床　前後と比べて　気になるところは　ありませんか
       - who: A
         text: そうなの?　手前の床の見方を変えてみるね
   - id: an-AR-04-thermos-01
@@ -2818,7 +2818,7 @@ dialogues:
       anomaly: AR-08-n2
     lines:
       - who: M
-        text: はい　左手前の床をもう一度見てみてください
+        text: はい　左手前の床を　もう一度見てみてください
       - who: A
         text: 分かった　左手前の床と隣を比べてみよう
   - id: an-AR-08-n3-01
@@ -2865,7 +2865,7 @@ dialogues:
       - who: A
         text: 今度は右上の天井を　少し違う角度から見たい
       - who: M
-        text: そうですね　右上の天井だけで決めないようにします
+        text: そうですね　右上の天井だけで　決めないようにします
   - id: an-AR-08-n6-02
     tone: serious
     when:
@@ -2890,7 +2890,7 @@ dialogues:
       anomaly: AR-05-beach-ball
     lines:
       - who: M
-        text: はい　右手前の床をもう一度見てみてください
+        text: はい　右手前の床を　もう一度見てみてください
       - who: A
         text: 分かった　右手前の床と隣を比べてみよう
   - id: an-AR-05-watering-can-01
@@ -2899,7 +2899,7 @@ dialogues:
       anomaly: AR-05-watering-can
     lines:
       - who: A
-        text: あっ　手前中央の床をちゃんと見てなかったかも
+        text: あっ　手前中央の床をちゃんと　見てなかったかも
       - who: M
         text: 分かりました　手前中央の床まで目を通します
   - id: an-AR-05-watering-can-02
@@ -2910,7 +2910,7 @@ dialogues:
       - who: M
         text: 手前中央の床を一度見て　隣の範囲とも比べてください
       - who: A
-        text: うそ　手前中央の床を見たつもりだったのに!
+        text: うそ　手前中央の床を　見たつもりだったのに!
   - id: an-AR-05-paper-streamers-01
     tone: serious
     when:
@@ -2935,7 +2935,7 @@ dialogues:
       anomaly: AR-05-baseball-glove
     lines:
       - who: A
-        text: あっ　右手前の床をちゃんと見てなかったかも
+        text: あっ　右手前の床をちゃんと　見てなかったかも
       - who: M
         text: 分かりました　右手前の床まで目を通します
   - id: an-AR-05-baseball-glove-02
@@ -3027,7 +3027,7 @@ dialogues:
       - who: A
         text: あの左の壁　端のほうまで見てもらえる?
       - who: M
-        text: はい　左の壁の端も見落とさないようにします
+        text: はい　左の壁の端も　見落とさないようにします
   - id: an-AR-06-yellow-raincoat-02
     tone: serious
     when:
@@ -3106,7 +3106,7 @@ dialogues:
       anomaly: AR-01-ceiling-tile-drop
     lines:
       - who: M
-        text: 右上の天井　前後と比べて気になるところはありませんか
+        text: 右上の天井　前後と比べて　気になるところは　ありませんか
       - who: A
         text: 決めつけないで　右上の天井を見直そう
   - id: an-AR-01-ceiling-wet-stain-01
@@ -3115,7 +3115,7 @@ dialogues:
       anomaly: AR-01-ceiling-wet-stain
     lines:
       - who: A
-        text: あっ　中央上部の天井をちゃんと見てなかったかも
+        text: あっ　中央上部の天井を　ちゃんと見てなかったかも
       - who: M
         text: 分かりました　中央上部の天井まで目を通します
   - id: an-AR-01-ceiling-wet-stain-02
@@ -3126,7 +3126,7 @@ dialogues:
       - who: M
         text: 中央上部の天井を一度見て　隣の範囲とも比べてください
       - who: A
-        text: うそ　中央上部の天井を見たつもりだったのに!
+        text: うそ　中央上部の天井を　見たつもりだったのに!
   - id: an-AR-01-floor-light-orphan-01
     tone: serious
     when:
@@ -3160,7 +3160,7 @@ dialogues:
       anomaly: AR-01-crouching-silhouette
     lines:
       - who: M
-        text: 右の通路　前後と比べて気になるところはありませんか
+        text: 右の通路　前後と比べて　気になるところは　ありませんか
       - who: A
         text: そうなの?　右の通路の見方を変えてみるね
   - id: an-AR-01-threshold-pigeon-01
@@ -3207,14 +3207,14 @@ dialogues:
       - who: A
         text: 右のシャッターの辺り　見方を変えたら分かるかな
       - who: M
-        text: はい　右のシャッターから順に確認していきます
+        text: はい　右のシャッターから順に　確認していきます
   - id: an-AR-02-shutter-shadow-02
     tone: serious
     when:
       anomaly: AR-02-shutter-shadow
     lines:
       - who: M
-        text: 焦らずに　右のシャッターのあたりを見てください
+        text: 焦らずに　右のシャッターのあたりを　見てください
       - who: A
         text: えっ　右のシャッターまで見るの?　ちゃんと見る!
   - id: an-AR-02-fluorescent-half-off-01
@@ -3243,7 +3243,7 @@ dialogues:
       - who: A
         text: あの中央上部の柱　端のほうまで見てもらえる?
       - who: M
-        text: そうですね　中央上部の柱を含めて全体を見直します
+        text: そうですね　中央上部の柱を含めて　全体を見直します
   - id: an-AR-02-pillar-sign-gone-02
     tone: serious
     when:
@@ -3295,7 +3295,7 @@ dialogues:
       anomaly: AR-02-floor-ripple
     lines:
       - who: A
-        text: あっ　中央下部の床をちゃんと見てなかったかも
+        text: あっ　中央下部の床をちゃんと　見てなかったかも
       - who: M
         text: 分かりました　中央下部の床まで目を通します
   - id: an-AR-02-floor-ripple-02
@@ -3306,7 +3306,7 @@ dialogues:
       - who: M
         text: 中央下部の床を一度見て　隣の範囲とも比べてください
       - who: A
-        text: うそ　中央下部の床を見たつもりだったのに!
+        text: うそ　中央下部の床を　見たつもりだったのに!
   - id: an-AR-02-ceiling-starry-sky-01
     tone: serious
     when:
@@ -3333,7 +3333,7 @@ dialogues:
       - who: A
         text: 念のため　左の柱も確かめておこう
       - who: M
-        text: はい　左の柱の端も見落とさないようにします
+        text: はい　左の柱の端も　見落とさないようにします
   - id: an-AR-05-morning-glory-wall-02
     tone: serious
     when:
@@ -3358,7 +3358,7 @@ dialogues:
       anomaly: AR-05-aisle-silhouette
     lines:
       - who: M
-        text: 左の通路　前後と比べて気になるところはありませんか
+        text: 左の通路　前後と比べて　気になるところは　ありませんか
       - who: A
         text: そうなの?　左の通路の見方を変えてみるね
   - id: an-AR-05-aisle-light-streak-01
@@ -3441,7 +3441,7 @@ dialogues:
       - who: A
         text: 右手前の床　もう一度確かめようか
       - who: M
-        text: はい　右手前の床にも視線を向け直してみます
+        text: はい　右手前の床にも　視線を向け直してみます
   - id: an-AR-05-floor-child-shadow-02
     tone: serious
     when:
@@ -3475,7 +3475,7 @@ dialogues:
       anomaly: AR-03-shutter-fingers
     lines:
       - who: A
-        text: あっ　左のシャッターをちゃんと見てなかったかも
+        text: あっ　左のシャッターを　ちゃんと見てなかったかも
       - who: M
         text: はい　左のシャッターの近くも確かめます
   - id: an-AR-03-shutter-fingers-02
@@ -3486,7 +3486,7 @@ dialogues:
       - who: M
         text: 左のシャッターを一度見て　隣の範囲とも比べてください
       - who: A
-        text: うそ　左のシャッターを見たつもりだったのに!
+        text: うそ　左のシャッターを　見たつもりだったのに!
   - id: an-AR-03-tube-light-bent-01
     tone: serious
     when:
@@ -3513,7 +3513,7 @@ dialogues:
       - who: A
         text: 念のため　右の天井も確かめておこう
       - who: M
-        text: はい　右の天井の端も見落とさないようにします
+        text: はい　右の天井の端も　見落とさないようにします
   - id: an-AR-03-ceiling-eye-02
     tone: serious
     when:
@@ -3639,7 +3639,7 @@ dialogues:
       - who: A
         text: 私　急いでたかも　奥側のガラス周辺を見直したい
       - who: M
-        text: はい　奥側のガラス周辺の周囲から見直します
+        text: はい　奥側のガラス周辺の　周囲から見直します
   - id: an-AR-04-glass-silhouette-02
     tone: serious
     when:
@@ -3648,7 +3648,7 @@ dialogues:
       - who: M
         text: その奥側のガラス周辺　全体の中で確かめてください
       - who: A
-        text: ありがとう　奥側のガラス周辺を落ち着いて確認する
+        text: ありがとう　奥側のガラス周辺を　落ち着いて確認する
   - id: an-AR-06-wall-gecko-01
     tone: serious
     when:
@@ -3835,7 +3835,7 @@ dialogues:
       anomaly: AR-04-floor-shoes-rows
     lines:
       - who: A
-        text: ええと　左中段の床の先まで視線を動かしてみて
+        text: ええと　左中段の床の先まで　視線を動かしてみて
       - who: M
         text: はい　左中段の床の周りも含めて見ます
   - id: an-AR-04-floor-shoes-rows-02
@@ -3898,7 +3898,7 @@ dialogues:
       anomaly: AR-07-tile-mirror
     lines:
       - who: M
-        text: はい　今度は左下の床に注目してみてください
+        text: はい　今度は左下の床に　注目してみてください
       - who: A
         text: 分かった　左下の床は後でもう一度見るね
   - id: an-AR-07-mini-door-01
@@ -3934,7 +3934,7 @@ dialogues:
       anomaly: AR-07-glass-crack
     lines:
       - who: M
-        text: はい　今度は左のガラスに注目してみてください
+        text: はい　今度は左のガラスに　注目してみてください
       - who: A
         text: 左のガラスを見てるつもりだったのに　だめだね
   - id: an-AR-07-exit-sign-gone-01
@@ -3963,7 +3963,7 @@ dialogues:
       - who: A
         text: えっ　中央上部の天井って　さっきも見たかな?
       - who: M
-        text: はい　中央上部の天井を含めて確認を続けます
+        text: はい　中央上部の天井を　含めて確認を続けます
   - id: an-AR-07-ceiling-tile-yellow-02
     tone: serious
     when:
@@ -3972,7 +3972,7 @@ dialogues:
       - who: M
         text: 中央上部の天井のあたり　何度か見比べてみましょう
       - who: A
-        text: 中央上部の天井を見落としたの悔しい!　次は見つける
+        text: 中央上部の天井を　見落としたの悔しい!　次は見つける
   - id: an-AR-08-floor-tile-groove-01
     tone: serious
     when:
@@ -4017,7 +4017,7 @@ dialogues:
       - who: A
         text: 自信あったのに　右上の天井を見落としてた?
       - who: M
-        text: はい　右上の天井にも視線を向け直してみます
+        text: はい　右上の天井にも視線を　向け直してみます
   - id: an-AR-08-ceiling-light-inverse-02
     tone: serious
     when:
@@ -4071,7 +4071,7 @@ dialogues:
       - who: A
         text: 見ているつもりだったけど　左上の天井に戻ろう
       - who: M
-        text: そうですね　左上の天井だけで決めないようにします
+        text: そうですね　左上の天井だけで　決めないようにします
   - id: an-AR-08-ceiling-light-grid-02
     tone: serious
     when:
@@ -4125,7 +4125,7 @@ dialogues:
       - who: A
         text: 念のため　右の壁も確かめておこう
       - who: M
-        text: はい　右の壁の端も見落とさないようにします
+        text: はい　右の壁の端も　見落とさないようにします
   - id: an-AR-02-wall-bird-gone-02
     tone: serious
     when:
@@ -4267,7 +4267,7 @@ dialogues:
       anomaly: AR-08-floor-tile-upright
     lines:
       - who: A
-        text: あっ　左手前の床をちゃんと見てなかったかも
+        text: あっ　左手前の床をちゃんと　見てなかったかも
       - who: M
         text: 分かりました　左手前の床まで目を通します
   - id: an-AR-08-floor-tile-upright-02
@@ -4312,7 +4312,7 @@ dialogues:
       anomaly: AR-04-rat-left-floor
     lines:
       - who: M
-        text: はい　今度は左手前の床に注目してみてください
+        text: はい　今度は左手前の床に　注目してみてください
       - who: A
         text: 左手前の床を見てるつもりだったのに　だめだね
   - id: an-AR-05-floor-turtle-01

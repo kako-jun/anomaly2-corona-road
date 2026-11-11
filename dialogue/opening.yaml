@@ -11,7 +11,7 @@ dialogues:
     tone: light
     lines:
       - { who: M, text: 'お疲れさまです　机の上を片づけましたよ' }
-      - { who: A, text: '助かった　これじゃ資料を広げられないって困ってたの' }
+      - { who: A, text: '助かった　これじゃ資料を　広げられないって　困ってたの' }
   - id: opening-03
     tone: light
     lines:

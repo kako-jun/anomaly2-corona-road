@@ -248,7 +248,7 @@ dialogues:
     tone: light
     lines:
       - { who: A, text: '最近　目薬をどこに置いたか忘れる' }
-      - { who: M, text: '使った場所に置いてあることが多いですよ' }
+      - { who: M, text: '使った場所に　置いてあることが多いですよ' }
       - { who: A, text: '机の上にあった　見つけた!' }
   - id: chatter-38
     tone: light
@@ -352,7 +352,7 @@ dialogues:
     tone: light
     lines:
       - { who: A, text: '今週　洗濯物をたたむのを後回しにしてる' }
-      - { who: M, text: '着るものがなくなる前に片づけましょう' }
+      - { who: M, text: '着るものがなくなる前に　片づけましょう' }
       - { who: A, text: 'その期限まで　まだ少しあるんだよね' }
   - id: chatter-54
     tone: light
@@ -372,7 +372,7 @@ dialogues:
     lines:
       - { who: M, text: '出河さん　靴の手入れってしますか' }
       - { who: A, text: '汚れた時だけ　普段は見ないふり' }
-      - { who: M, text: '見ないふりの期間が長くなりそうですね' }
+      - { who: M, text: '見ないふりの期間が　長くなりそうですね' }
       - { who: A, text: 'そうなの　今日は見てみる' }
   - id: chatter-57
     tone: light
@@ -406,7 +406,7 @@ dialogues:
     lines:
       - { who: M, text: '一人目の聞き取り記録　何度も読み返してましたね' }
       - { who: A, text: '言葉を間違えたくなくて　同じところで止まっちゃう' }
-      - { who: M, text: '見やすいように行を分けておきましたよ' }
+      - { who: M, text: '見やすいように行を　分けておきましたよ' }
       - { who: A, text: 'ありがとう　そういう細かいところ　よく気づくね' }
   - id: chatter-62
     tone: light

@@ -19,7 +19,7 @@ dialogues:
     when: { flag: elder3 }
     lines:
       - { who: A, text: '三人とも帰らないなんて　そんなことある?' }
-      - { who: M, text: '三人目は「帰りたい場所なら　とっくに帰ってますよ」と笑ってました' }
+      - { who: M, text: '三人目は「帰りたい場所なら　とっくに　帰ってますよ」と笑ってました' }
       - { who: A, text: 'そんなふうに言われたら　怒れないよ…' }
   - id: story-child
     tone: serious
