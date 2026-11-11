@@ -378,6 +378,11 @@ describe('Cabinet model plate (#304)', () => {
       /--tube-h:\s*min\(100vh - 16px, \(100vw - 30px - var\(--col-min\)\) \* 1679 \/ 1246\)/
     )
     expect(css).toMatch(/--col-min:\s*340px/)
+    // the column minimum scales with the panel zoom (1.3 from 1200px, 1.45 from 1400px): 340 x 1.3 = 442, 340 x 1.45 = 493
+    const cols = [...css.matchAll(/--col-min:\s*(\d+)px/g)].map(m =>
+      Number(m[1])
+    )
+    expect(cols).toEqual([340, Math.round(340 * 1.3), Math.round(340 * 1.45)])
     // one place owns the grille: no other .speaker rule
     expect(css.match(/(^|\n)\.speaker\s*\{/g)).toBeNull()
     // the plate never leaves the strip
