@@ -99,9 +99,11 @@ describe('App: title -> investigation note (#297) and the language switch (#292)
 
   it('follows the browser language at first, and the choice made on the title is kept and applied at once', async () => {
     render(<App />)
-    expect(screen.getByText('GOAL')).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: 'How to play' })
+    ).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'JA' }))
-    expect(screen.getByText('目的')).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: '遊び方' })).toBeInTheDocument()
     expect(document.documentElement.lang).toBe('ja')
     expect(JSON.parse(localStorage.getItem(SAVE_KEY)!).settings.language).toBe(
       'ja'
@@ -113,7 +115,7 @@ describe('App: title -> investigation note (#297) and the language switch (#292)
   it('a saved language is used after a reload', () => {
     seed({ settings: { language: 'ja' } })
     render(<App />)
-    expect(screen.getByText('目的')).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: '遊び方' })).toBeInTheDocument()
   })
 
   it('after the true ending the title offers only START OVER (no note), and still has the language switch', () => {

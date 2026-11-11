@@ -35,7 +35,7 @@ describe('investigation note assets (#297)', () => {
     for (const f of ['note-zen-kurenaido', 'note-yomogi'])
       expect(html).toContain(`href="/fonts/${f}.woff2"`)
   })
-  it('keeps the UI image budget (600KB, DESIGN.md) including the note fonts', () => {
+  it('keeps the UI image budget (600KB, DESIGN.md) including the note fonts and the title notes (both languages)', () => {
     const size = (dir: string): number =>
       readdirSync(dir, { withFileTypes: true }).reduce(
         (n, e) =>
@@ -48,8 +48,11 @@ describe('investigation note assets (#297)', () => {
     const fonts = readdirSync('public/fonts')
       .filter(n => n.startsWith('note-') && n.endsWith('.woff2'))
       .reduce((n, f) => n + statSync(`public/fonts/${f}`).size, 0)
-    expect(size('public/ui') + size('public/note') + fonts).toBeLessThanOrEqual(
-      600 * 1024
-    )
+    expect(
+      size('public/ui') +
+        size('public/note') +
+        size('public/title-notes') +
+        fonts
+    ).toBeLessThanOrEqual(600 * 1024)
   })
 })

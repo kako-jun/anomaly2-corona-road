@@ -1,0 +1,77 @@
+{
+  "notes": [
+    {
+      "id": "camera",
+      "ja": {
+        "file": "ja-1.webp",
+        "heading": "① カメラ切替",
+        "lines": ["番号ボタンをタップ。", "または、画面を左右にスワイプ。"],
+        "alt": "カメラ切替。番号ボタンをタップ。または、画面を左右にスワイプ。",
+        "width": 600,
+        "height": 450
+      },
+      "en": {
+        "file": "en-1.webp",
+        "heading": "1. SWITCH CAMERA",
+        "lines": ["Tap a number button,", "or swipe the screen left or right."],
+        "alt": "Switch camera. Tap a number button, or swipe the screen left or right.",
+        "width": 600,
+        "height": 450
+      }
+    },
+    {
+      "id": "knobs",
+      "ja": {
+        "file": "ja-2.webp",
+        "heading": "② つまみ",
+        "lines": [
+          "明るさとコントラストは、",
+          "つまみを左右にドラッグ。",
+          "タップすると中央に戻る。"
+        ],
+        "alt": "つまみ。明るさとコントラストは、つまみを左右にドラッグ。タップすると中央に戻る。",
+        "width": 600,
+        "height": 450
+      },
+      "en": {
+        "file": "en-2.webp",
+        "heading": "2. KNOBS",
+        "lines": [
+          "Drag a knob left or right",
+          "for brightness and contrast.",
+          "Tap it to go back to the centre."
+        ],
+        "alt": "Knobs. Drag a knob left or right for brightness and contrast. Tap it to go back to the centre.",
+        "width": 600,
+        "height": 450
+      }
+    },
+    {
+      "id": "report",
+      "ja": {
+        "file": "ja-3.webp",
+        "heading": "③ 報告",
+        "lines": [
+          "おかしなところを見つけたら、",
+          "REPORT を押してカテゴリを選ぶ。",
+          "まちがいは3回まで。"
+        ],
+        "alt": "報告。おかしなところを見つけたら、REPORT を押してカテゴリを選ぶ。まちがいは3回まで。",
+        "width": 600,
+        "height": 450
+      },
+      "en": {
+        "file": "en-3.webp",
+        "heading": "3. REPORT",
+        "lines": [
+          "When you see something strange,",
+          "press REPORT and pick a category.",
+          "You can be wrong up to 3 times."
+        ],
+        "alt": "Report. When you see something strange, press REPORT and pick a category. You can be wrong up to 3 times.",
+        "width": 600,
+        "height": 450
+      }
+    }
+  ]
+}

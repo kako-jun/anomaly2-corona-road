@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { DEFAULT_CONFIG } from '../utils/gameConfig'
+import { describe, expect, it, vi } from 'vitest'
+import { titleNotes } from '../data/titleNotes'
 import { StartScreen } from './StartScreen'
 
 const setup = () => {
@@ -24,7 +24,11 @@ describe('StartScreen start button', () => {
     expect(
       screen
         .getAllByRole('button')
-        .filter(b => !b.classList.contains('start-lang-key'))
+        .filter(
+          b =>
+            !b.classList.contains('start-lang-key') &&
+            !b.classList.contains('start-page')
+        )
     ).toHaveLength(1)
   })
   it('calls onStart once per click', async () => {
@@ -47,9 +51,7 @@ describe('StartScreen start button', () => {
   })
   it('marks its lamp glyph as decorative', () => {
     setup()
-    const icon = screen
-      .getByRole('button', { name: 'START SHIFT' })
-      .querySelector('i')!
+    const icon = document.querySelector('.start-lamp')!
     expect(icon).toHaveAttribute('aria-hidden', 'true')
   })
 })
@@ -67,61 +69,10 @@ describe('StartScreen headings and logo', () => {
   })
   it('treats the logo image as decorative (the h1 carries the name)', () => {
     const { q } = setup()
-    const img = q('.start-logo img')[0]
+    const img = q('.start-photo img')[0]
     expect(img.getAttribute('alt')).toBe('')
     expect(img).toHaveAttribute('src', '/images/logo.webp')
-    expect(screen.queryByRole('img')).toBeNull()
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
-  })
-})
-
-describe('StartScreen misreport row', () => {
-  it('shows as many lamps as maxMisreports', () => {
-    const { q } = setup()
-    expect(q('.start-lamps .start-lamp')).toHaveLength(
-      DEFAULT_CONFIG.maxMisreports
-    )
-  })
-  it('hides the lamps from assistive tech', () => {
-    const { q } = setup()
-    expect(q('.start-lamps')[0]).toHaveAttribute('aria-hidden', 'true')
-  })
-  it('states the limit as text derived from the config', () => {
-    setup()
-    expect(
-      screen.getByText(`${DEFAULT_CONFIG.maxMisreports}回まで`)
-    ).toBeInTheDocument()
-  })
-})
-
-describe('StartScreen decoration and keyboard note', () => {
-  it('hides the key caps, the knob picture and the lamps with aria-hidden', () => {
-    const { q } = setup()
-    for (const el of [
-      ...q('.start-keys'),
-      ...q('.start-knob'),
-      ...q('.start-lamps'),
-    ]) {
-      expect(el).toHaveAttribute('aria-hidden', 'true')
-    }
-    expect(q('.start-keys')).toHaveLength(1)
-    expect(q('.start-knob')).toHaveLength(1)
-  })
-  it('does not leave key-cap letters readable outside aria-hidden', () => {
-    const { q } = setup()
-    const visibleToAT = q('.start-key').filter(
-      k => !k.closest('[aria-hidden="true"]')
-    )
-    expect(visibleToAT).toEqual([])
-  })
-  it('conveys the keyboard controls in an sr-only sentence', () => {
-    const { q } = setup()
-    const note = q('.start-sr-only').find(e => e.tagName !== 'H1')!
-    expect(note).toBeDefined()
-    expect(note.closest('[aria-hidden="true"]')).toBeNull()
-    expect(note.textContent).toMatch(/矢印キー/)
-    expect(note.textContent).toMatch(/A と D/)
-    expect(note.textContent).toMatch(/1から8/)
   })
 })
 
@@ -129,39 +80,123 @@ describe('StartScreen content', () => {
   it('has no emoji', () => {
     const { container } = setup()
     expect(container.textContent).not.toMatch(
-      /\p{Extended_Pictographic}|\p{Emoji_Presentation}|️/u
+      /\p{Extended_Pictographic}|\p{Emoji_Presentation}|\uFE0F/u
     )
   })
-  it.each([
-    'MISSION',
-    'CAMERA',
-    'KNOB',
-    'v1.1.0',
-    'Anomaly Detection System',
-    'UNDERGROUND SURVEILLANCE SYSTEM',
-    '00:00',
-  ])('no longer shows the removed text %j', text => {
-    const { container } = setup()
-    expect(container.textContent).not.toContain(text)
+  it("shows the START key as the cabinet's own key part, with a lamp beside it, and no plate under it", () => {
+    const { q } = setup()
+    expect(
+      screen.getByRole('button', { name: 'START SHIFT' }).className
+    ).toContain('key')
+    expect(q('.start-deck .lamp')).toHaveLength(1)
+    expect(q('.start-foot')).toHaveLength(0)
   })
-  it('keeps REPORT only as the key graphic, not as an English row label', () => {
-    const { container, q } = setup()
-    const labels = q('.start-lab').map(e => e.textContent)
-    expect(labels).toEqual(['目的', '切替', '調整', '報告', 'お手つき'])
-    expect(q('.start-rep')).toHaveLength(1)
-    expect(q('.start-rep')[0].textContent).toBe('REPORT')
-    expect(container.textContent!.match(/REPORT/g)).toHaveLength(1)
+  it('turns the lamp amber and disables the key while loading', () => {
+    const { container } = render(<StartScreen onStart={vi.fn()} loading />)
+    expect(container.querySelector('.lamp')).toHaveClass('amber')
+    expect(screen.getByRole('button', { name: 'LOADING…' })).toBeDisabled()
   })
-  it.each(['クリア', '勝利', '勝ち', '敗北', '6分', '制限時間', '分間', '秒'])(
-    'does not mention time or win/lose conditions (%s)',
-    word => {
-      const { container } = setup()
-      expect(container.textContent).not.toContain(word)
-    }
-  )
-  it('states the camera count matching the game', () => {
-    const { container } = setup()
-    expect(container.textContent).toContain('8台')
+})
+
+describe('StartScreen notes (#296)', () => {
+  it('puts the three notes in a labelled bundle: every picture is there, the page shown carries the wording as alt', () => {
+    render(<StartScreen onStart={vi.fn()} language="ja" />)
+    const region = screen.getByRole('region', { name: '遊び方' })
+    const imgs = region.querySelectorAll('img')
+    expect(imgs).toHaveLength(3)
+    for (const [i, n] of titleNotes('ja').entries())
+      expect(imgs[i]).toHaveAttribute('src', n.src)
+    expect(imgs[0]).toHaveAttribute('alt', titleNotes('ja')[0].alt)
+  })
+  it('swaps to the other language at once, and only that language is in the page', () => {
+    const { rerender, container } = render(
+      <StartScreen onStart={vi.fn()} language="ja" />
+    )
+    rerender(<StartScreen onStart={vi.fn()} language="en" />)
+    expect(
+      screen.getByRole('region', { name: 'How to play' })
+    ).toBeInTheDocument()
+    const srcs = [...container.querySelectorAll('.start-notes img')].map(i =>
+      i.getAttribute('src')
+    )
+    expect(srcs).toEqual(titleNotes('en').map(n => n.src))
+    expect(screen.getByAltText(titleNotes('en')[0].alt)).toBeInTheDocument()
+  })
+  it('keeps the photo decorative and the h1 as the name', () => {
+    const { q } = setup()
+    expect(q('.start-photo')[0]).toHaveAttribute('aria-hidden', 'true')
+    expect(q('.start-photo img')[0]).toHaveAttribute('src', '/images/logo.webp')
+  })
+
+  describe('paging (the same on every screen width)', () => {
+    const shown = () =>
+      [...document.querySelectorAll('.start-stack img')].filter(
+        i => !i.classList.contains('start-off')
+      )
+    it('shows one note with "1/3", moves on a tap, wraps from the last to the first', async () => {
+      render(<StartScreen onStart={vi.fn()} language="ja" />)
+      const notes = titleNotes('ja')
+      expect(shown().map(i => i.getAttribute('alt'))).toEqual([notes[0].alt])
+      expect(screen.getByRole('status')).toHaveTextContent('1/3')
+      const page = document.querySelector('.start-page')!
+      await userEvent.click(page)
+      expect(screen.getByRole('status')).toHaveTextContent('2/3')
+      expect(shown()[0]).toHaveAttribute('alt', notes[1].alt)
+      await userEvent.click(page)
+      await userEvent.click(page)
+      expect(screen.getByRole('status')).toHaveTextContent('1/3')
+    })
+    it('hides the other pages from assistive technology (empty alt, aria-hidden)', () => {
+      render(<StartScreen onStart={vi.fn()} language="en" />)
+      const off = [...document.querySelectorAll('.start-off')]
+      expect(off).toHaveLength(2)
+      for (const i of off) {
+        expect(i).toHaveAttribute('alt', '')
+        expect(i).toHaveAttribute('aria-hidden', 'true')
+      }
+    })
+    it('turns the page by swipe or mouse drag (left = next, right = previous) without a second click', () => {
+      render(<StartScreen onStart={vi.fn()} language="ja" />)
+      const page = document.querySelector('.start-page')!
+      fireEvent.pointerDown(page, { clientX: 200 })
+      fireEvent.pointerUp(page, { clientX: 100 })
+      fireEvent.click(page) // the click that follows a drag is ignored
+      expect(screen.getByRole('status')).toHaveTextContent('2/3')
+      fireEvent.pointerDown(page, { clientX: 100 })
+      fireEvent.pointerUp(page, { clientX: 200 })
+      expect(screen.getByRole('status')).toHaveTextContent('1/3')
+    })
+    it('a swipe that sends no click does not swallow the next tap', () => {
+      render(<StartScreen onStart={vi.fn()} language="ja" />)
+      const page = document.querySelector('.start-page')!
+      fireEvent.pointerDown(page, { clientX: 200 })
+      fireEvent.pointerUp(page, { clientX: 100 })
+      fireEvent.pointerDown(page, { clientX: 100 })
+      fireEvent.pointerUp(page, { clientX: 100 })
+      fireEvent.click(page)
+      expect(screen.getByRole('status')).toHaveTextContent('3/3')
+    })
+    it('turns the page from the keyboard (Enter, Space, arrows) with no hint on screen', async () => {
+      render(<StartScreen onStart={vi.fn()} language="ja" />)
+      const page = document.querySelector<HTMLElement>('.start-page')!
+      page.focus()
+      await userEvent.keyboard('{Enter}')
+      expect(screen.getByRole('status')).toHaveTextContent('2/3')
+      await userEvent.keyboard(' ')
+      expect(screen.getByRole('status')).toHaveTextContent('3/3')
+      await userEvent.keyboard('{ArrowLeft}')
+      expect(screen.getByRole('status')).toHaveTextContent('2/3')
+      await userEvent.keyboard('{ArrowRight}')
+      expect(screen.getByRole('status')).toHaveTextContent('3/3')
+      // the only visible words are the picture and the pager: the hint is sr-only
+      expect(page.querySelector('.start-sr-only')).not.toBeNull()
+    })
+    it('keeps START SHIFT and the language keys working', async () => {
+      const onStart = vi.fn()
+      render(<StartScreen onStart={onStart} language="ja" />)
+      await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
+      expect(onStart).toHaveBeenCalledOnce()
+    })
   })
 })
 
@@ -174,32 +209,6 @@ describe('StartScreen body class', () => {
   })
 })
 
-describe('StartScreen follows a changed config', () => {
-  afterEach(() => {
-    vi.doUnmock('../utils/gameConfig')
-    vi.resetModules()
-  })
-  it.each([1, 5])(
-    'maxMisreports=%i changes the text and the lamp count',
-    async n => {
-      vi.resetModules()
-      vi.doMock('../utils/gameConfig', async importOriginal => {
-        const actual =
-          await importOriginal<typeof import('../utils/gameConfig')>()
-        return {
-          ...actual,
-          DEFAULT_CONFIG: { ...actual.DEFAULT_CONFIG, maxMisreports: n },
-        }
-      })
-      const rtl = await import('@testing-library/react')
-      const { StartScreen: Fresh } = await import('./StartScreen')
-      const view = rtl.render(<Fresh onStart={() => {}} />)
-      expect(view.container.querySelectorAll('.start-lamp')).toHaveLength(n)
-      expect(view.getByText(`${n}回まで`)).toBeInTheDocument()
-    }
-  )
-})
-
 describe('StartScreen after the true ending (#294)', () => {
   it('offers only START OVER: no START SHIFT, and the closed notice is always shown', () => {
     render(
@@ -209,7 +218,11 @@ describe('StartScreen after the true ending (#294)', () => {
     expect(
       screen
         .getAllByRole('button')
-        .filter(b => !b.classList.contains('start-lang-key'))
+        .filter(
+          b =>
+            !b.classList.contains('start-lang-key') &&
+            !b.classList.contains('start-page')
+        )
     ).toHaveLength(1)
     expect(
       screen.getByRole('button', { name: 'START OVER' })
@@ -332,14 +345,12 @@ describe('StartScreen language switch (#292)', () => {
     await userEvent.click(screen.getByRole('button', { name: 'EN' }))
     expect(onLanguage).toHaveBeenCalledWith('en')
   })
-  it('shows the card in the chosen language while the key stays English', () => {
+  it('keeps the machine key English in both languages', () => {
     const { rerender } = render(<StartScreen onStart={vi.fn()} language="ja" />)
-    expect(screen.getByText('目的')).toBeInTheDocument()
-    expect(screen.getByText('3回まで')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'START SHIFT' })
+    ).toBeInTheDocument()
     rerender(<StartScreen onStart={vi.fn()} language="en" />)
-    expect(screen.getByText('GOAL')).toBeInTheDocument()
-    expect(screen.getByText('Up to 3')).toBeInTheDocument()
-    expect(screen.queryByText('目的')).toBeNull()
     expect(
       screen.getByRole('button', { name: 'START SHIFT' })
     ).toBeInTheDocument()
