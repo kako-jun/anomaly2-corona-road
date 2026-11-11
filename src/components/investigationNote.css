@@ -223,7 +223,7 @@
 .note-scrib {
   /* Continues right under the last synopsis line, tilted like a note jotted in the margin. */
   width: fit-content;
-  margin: 4px 0 0 4px; /* clear air above, so the lifted right end never touches the last synopsis line */
+  margin: 6px 0 0 4px; /* clear air above, so the lifted right end never touches the last synopsis line */
   color: var(--blue);
   transform: rotate(var(--tilt-scrib));
   transform-origin: 50% 50%; /* about its own middle: the left end dips and the right end lifts by the same few px, so no line runs into its neighbour */
