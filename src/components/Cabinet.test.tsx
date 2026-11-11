@@ -1,4 +1,6 @@
 // @vitest-environment jsdom
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ComponentProps } from 'react'
@@ -291,5 +293,105 @@ describe('Cabinet true ending screen (Issue #86)', () => {
     expect(baseSrc(container)).toBe(cameras[0].image)
     rerender(<Cabinet {...makeProps({ ending: 'ending' })} />)
     expect(baseSrc(container)).toBe('/images/ending-bar.webp')
+  })
+})
+
+describe('Cabinet model plate (#304)', () => {
+  it('is an image child of .cabinet with an accessible name, and the old .maker text is gone', () => {
+    const { container } = render(<Cabinet {...makeProps()} />)
+    const plate = screen.getByAltText('Video Monitor CR-42')
+    expect(plate.parentElement).toBe(container.querySelector('.cabinet-foot'))
+    expect(plate).toHaveAttribute('src', '/ui/model-plate.webp')
+    expect(container.querySelector('.maker')).toBeNull()
+    expect(container.textContent).not.toContain('VIDEO MONITOR CR-42')
+  })
+
+  it('shares one strip with the speaker grille: speaker first (left), plate last (right), both direct children of the strip under .cabinet', () => {
+    const { container } = render(<Cabinet {...makeProps()} />)
+    const foot = container.querySelector('.cabinet-foot') as HTMLElement
+    expect(foot.parentElement).toBe(cabinetEl(container))
+    expect(Array.from(foot.children).map(c => c.className)).toEqual([
+      'speaker',
+      'model-plate',
+    ])
+    expect(container.querySelectorAll('.speaker')).toHaveLength(1)
+  })
+
+  it('has no leftover speaker margin workaround in the CSS', () => {
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/retro.css'),
+      'utf8'
+    )
+    expect(css).not.toMatch(/\.speaker\s*\{[^}]*margin-bottom/)
+    expect(css).not.toMatch(/\.speaker\s*\{\s*display:\s*none/)
+  })
+
+  it('keeps the strip small on portrait (20px) and the speaker slots coarse (pitch >= 8px)', () => {
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/retro.css'),
+      'utf8'
+    )
+    const base = css.match(
+      /\.cabinet\s*\{\s*(?:\/\*[^]*?\*\/\s*)?--plate-h:\s*(\d+)px;[^}]*--hole-p:\s*(\d+)px/
+    )
+    expect(base).not.toBeNull()
+    expect(Number(base![1])).toBe(20)
+    expect(Number(base![2])).toBeGreaterThanOrEqual(8)
+    expect(css).not.toMatch(/--plate-h:\s*28px/)
+    expect(css).toMatch(/background-size:\s*calc\(var\(--hole-p\) \* 9 \/ 7\)/)
+  })
+
+  it('keeps the grille at exactly 2 slot rows and fits a whole number of slots across (no clipped right-end slot)', () => {
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/retro.css'),
+      'utf8'
+    )
+    const rule = css.match(/\.cabinet-foot > \.speaker\s*\{([^}]*)\}/)
+    expect(rule).not.toBeNull()
+    // height = 2 rows of pitch, tile = 2 rows tall
+    expect(rule![1]).toMatch(/height:\s*calc\(var\(--hole-p\) \* 2\)/)
+    expect(rule![1]).toMatch(
+      /background-size:\s*calc\(var\(--hole-p\) \* 9 \/ 7\)\s+calc\(var\(--hole-p\) \* 2\)/
+    )
+    // round horizontally: the tile is nudged so an integer count fills the width
+    expect(rule![1]).toMatch(/background-repeat:\s*round\s+no-repeat/)
+    // desktop pitch stays a 2-row grille inside the 40px plate strip
+    expect(css).toMatch(/--plate-h:\s*40px;\s*--hole-p:\s*14px/)
+  })
+
+  it('pins the strip structure: bottom-aligned row, panel reserve = strip height / zoom, column guard, no old .speaker rules', () => {
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/retro.css'),
+      'utf8'
+    )
+    const foot = css.match(/\.cabinet > \.cabinet-foot\s*\{([^}]*)\}/)
+    expect(foot).not.toBeNull()
+    expect(foot![1]).toMatch(/align-items:\s*flex-end/)
+    expect(foot![1]).toMatch(/max-width:\s*100%/)
+    expect(foot![1]).toMatch(/height:\s*var\(--plate-h\)/)
+    // the panel reserves the strip (undoing its own zoom) so the controls never sit under it
+    expect(css).toMatch(
+      /\.panel\s*\{\s*padding-bottom:\s*calc\(\(var\(--plate-h\) \+ 6px\) \/ var\(--pz, 1\)\);/
+    )
+    // desktop: the picture height is capped so the control column stays wider than the plate (tall screens)
+    expect(css).toMatch(
+      /--tube-h:\s*min\(100vh - 16px, \(100vw - 30px - var\(--col-min\)\) \* 1679 \/ 1246\)/
+    )
+    expect(css).toMatch(/--col-min:\s*340px/)
+    // the column minimum scales with the panel zoom (1.3 from 1200px, 1.45 from 1400px): 340 x 1.3 = 442, 340 x 1.45 = 493
+    const cols = [...css.matchAll(/--col-min:\s*(\d+)px/g)].map(m =>
+      Number(m[1])
+    )
+    expect(cols).toEqual([340, Math.round(340 * 1.3), Math.round(340 * 1.45)])
+    // one place owns the grille: no other .speaker rule
+    expect(css.match(/(^|\n)\.speaker\s*\{/g)).toBeNull()
+    // the plate never leaves the strip
+    const plate = css.match(/\.cabinet-foot > \.model-plate\s*\{([^}]*)\}/)
+    expect(plate![1]).toMatch(/max-width:\s*100%/)
+  })
+
+  it('is in the cabinet preload list of index.html', () => {
+    const html = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8')
+    expect(html).toMatch(/data-cabinet-image\s+href="\/ui\/model-plate\.webp"/)
   })
 })

@@ -213,7 +213,11 @@ describe('retro.css', () => {
           })
         if (rule.selectors.includes('.tube'))
           rule.walkDecls('width', d => {
-            const m = /100dvh\s*-\s*(\d+(?:\.\d+)?)px/.exec(d.value)
+            const m =
+              /100dvh\s*-\s*(\d+(?:\.\d+)?)px\s*-\s*var\(--plate-h\)/.exec(
+                d.value
+              )
+            // tube width constant = base + gap, then minus the bottom strip height (#304)
             if (m) tubeConsts.push({ min, n: Number(m[1]) })
           })
       })
@@ -222,7 +226,9 @@ describe('retro.css', () => {
     expect(Math.min(...px('.knob', 'height'))).toBe(KNOB.now)
     expect(new Set(hudWindowHeights)).toEqual(new Set([HUD_WINDOW.now]))
     // One named term per thing that changes the non-picture height (px; + = taller, - = shorter).
-    // Later PRs add their own line here (plate-h #311) and the same row in DESIGN.md §7.
+    // Later PRs add their own line here and the same row in DESIGN.md §7.
+    // plateH (#311) is the one VARIABLE term: it is written as `- var(--plate-h)` in the constants (the regex above
+    // requires it), so it is not in this fixed sum; the constant N = BASE + sum(TERMS) - var(--plate-h).
     const TERMS = {
       knobGap: gaps[0], // knob circle to its label
       hudWindows: HUD_WINDOW.now - HUD_WINDOW.was, // TIME / REPORTS / STRIKES 44 -> 36px
