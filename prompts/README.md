@@ -155,6 +155,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 線引き（#47, #236）: 物の出現（提灯・傘・旗・シーツ・蝿取りリボン・電球・テレビなど。天井から吊るものを含む）は `object`。床・壁・天井そのものの色・向き・霜などの面の状態の変化は `environment`（床タイル1枚が鏡になる、も `environment`）。反射そのものがおかしい（映るはずのものが映らない・反射の形が変わる・水鏡など）は `surreal`。映ったものが物・人なら、その物・人が主カテゴリで `also_categories: ['surreal']`。
 
 `also_categories` の使い方の例: 映り込み = 主カテゴリ（物・人）+ `surreal`、扉の開閉 = `environment` と `object`、面の全面置換 = `environment` + `surreal`。
+「かすっても正解」（#347）: プレイヤーが自然に選びそうな割れは、主カテゴリを変えずに `also_categories` で受ける。類型と足す先: 水たまり・足跡・床の石蹴り（床に「現れた物」）= `environment` / `person` 主 + `object`、顔・人面の装飾（シール）= `surreal` 主 + `person` と `object`、床の反射・光の乱れ = `surreal` 主 + `environment`、扉・シャッターの開閉 = `environment` + `object`、天井板・腰壁・格子などのずれ = `object` 主 + `environment`、灯具・器具そのものの形・色の変化 = `environment` 主 + `object`、ありえない生き物・テレビの映像・ガラス内の複製 = `object` 主 + `surreal`、人の持ち物（半纏）= `object` 主 + `person`。床の物と床の状態の境界（物が現れたのか、面の状態か）は割れとみて両方を許す。反対に、影だけの `person`・光が漏れる扉・数が多いだけの物の並置・床タイル1枚の色は上の通り付けない。どの異変にどれを足したかは台帳が真実で、足す指示の入力は `scripts/also-categories-input.tsv`（行頭 `#` でその行だけ無効にできる）、反映は `uv run python3 scripts/apply-also-categories.py`（再実行できる）。件数・当たり率は `npm run ledger:summary`。
 割れない・付けないもの: 影だけの `person`（ボタンの説明に影が明記されている）、数が多いだけの物の並置（ポスター・提灯・シーツ・靴・テレビ）は `object` のみ。物理的にあり得ない並び（全部違う時刻の時計など）は `object` + `also_categories: ['surreal']`。光が漏れる扉・シャッターも付けない。床・壁・天井の面に変化が出る異変は、あり得ない景色なら `surreal` 主 + `also_categories: ['environment']`、反射・光の形がおかしいなら `environment` 主 + `also_categories: ['surreal']`。
 
 ## フェーズ

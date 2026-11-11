@@ -986,3 +986,38 @@ describe('the real ledger carries the memo marks (#325)', () => {
     }
   })
 })
+
+describe('the real ledger keeps also_categories well-formed and applied (#347)', () => {
+  const records = parseLedgerRecords(
+    parseYaml(
+      readFileSync(resolve(__dirname, '../../prompts/anomalies.yaml'), 'utf8')
+    )
+  )
+  const byId = new Map(records.map(r => [r.id, r]))
+  it('no entry lists its primary category, camera, or a repeat in also_categories', () => {
+    for (const r of records) {
+      const also = r.alsoCategories ?? []
+      expect(also, r.id).not.toContain(r.category)
+      expect(also, r.id).not.toContain('Camera')
+      expect(new Set(also).size, r.id).toBe(also.length)
+      if (also.length) expect(r.category, r.id).toBeDefined()
+    }
+  })
+  it('every active row of scripts/also-categories-input.tsv is in the ledger (apply-also-categories.py)', () => {
+    const input = resolve(__dirname, '../../scripts/also-categories-input.tsv')
+    if (!existsSync(input)) return
+    const rows = readFileSync(input, 'utf8')
+      .split('\n')
+      .filter(l => l.trim() && !l.startsWith('#'))
+    expect(rows.length).toBeGreaterThan(0)
+    for (const line of rows) {
+      const [id, , , also] = line.split('\t')
+      const r = byId.get(id)
+      expect(r, `${id} is not in the ledger`).toBeDefined()
+      for (const a of also.split(',')) {
+        const cat = parseCategory(a)
+        expect(r?.alsoCategories, `${id} lacks ${a}`).toContain(cat)
+      }
+    }
+  })
+})
