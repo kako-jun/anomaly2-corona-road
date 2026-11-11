@@ -88,6 +88,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* The height of the screen as it is now. On a phone 100vh is the LARGE viewport (address bar hidden), taller than what is
+   visible, so a min-height of 100vh scrolls into a black strip at the bottom (#333); 100dvh follows the visible one. */
+:root {
+  --vh: 100vh;
+}
+@supports (height: 100dvh) {
+  :root {
+    --vh: 100dvh;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -98,7 +109,7 @@
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: var(--vh);
   background: var(--surface-0);
   color: var(--text-hi);
   overscroll-behavior: none;
@@ -106,7 +117,7 @@ body {
 
 #root {
   width: 100%;
-  min-height: 100vh;
+  min-height: var(--vh);
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
