@@ -77,6 +77,13 @@ describe('fmtShiftEnd (in-game clock, not real time)', () => {
 })
 
 describe('buildNote before a shift', () => {
+  it('the first night (stage start) never shows a last-night line, even if a stale lastShift exists', () => {
+    const v = buildNote(
+      { mode: 'before', save: save({ lastShift: shift({ fresh: 0 }) }) },
+      'ja'
+    )
+    expect(texts(v)).toEqual(STAGES.start.lines.map(l => l.ja))
+  })
   it('first play: the background, empty frames, blank last-night column, night 1', () => {
     const v = buildNote({ mode: 'before', save: save() }, 'ja')
     expect(v.night).toBe('1夜目')
@@ -183,7 +190,7 @@ describe('buildNote after a shift', () => {
     expect(v.lines).toEqual([
       { text: '今夜も異変を報告。' },
       { text: '捜査は一歩前へ。' },
-      { text: '老人2人目も、1人目と同じことを言う。' },
+      { text: '2人目も、老人1人目と同じことを言う。' },
       { text: '人当たりがよく、こちらを気遣う。' },
     ])
     expect(v.scrib).toEqual(STAGES.elder2.scrib.map(s => s.ja))
@@ -193,11 +200,20 @@ describe('buildNote after a shift', () => {
     const np = after(shift({ fresh: 0 }))
     expect(texts(np)[0]).toBe('新しい手がかりはなかった。')
     expect(texts(np)).not.toContain('新しい異変は見つからず。')
-    expect(np.scrib).toEqual(['見落としはないか?'])
+    expect(np.scrib).toEqual([]) // no jotting without a basis in story.md (no leads: nothing to add)
     const wd = after(shift({ closing: 'withdraw', durationMs: 221000 }))
     expect(wd.stamps[1].text).toBe('撤収')
     expect(wd.scrib).toEqual(['今夜はここまで。'])
     expect(wd.shiftRow.value).toBe('01:41で撤収')
+  })
+  it('the first night says "tonight", not "also"; a withdraw that found nothing does not say the finds count', () => {
+    const first = after(shift(), { loops: 1, flags: {} })
+    expect(texts(first)[0]).toBe('今夜は異変を報告。')
+    expect(texts(after(shift(), { loops: 2 }))[0]).toBe('今夜も異変を報告。')
+    const none = after(shift({ closing: 'withdraw', found: 0, fresh: 0 }))
+    expect(texts(none).join('')).not.toContain('見つけた分')
+    const some = after(shift({ closing: 'withdraw', found: 2 }))
+    expect(texts(some)).toContain('見つけた分は、捜査に加わった。')
   })
   it('the true ending has its own stock lines', () => {
     const v = after(shift({ closing: 'ending' }), {

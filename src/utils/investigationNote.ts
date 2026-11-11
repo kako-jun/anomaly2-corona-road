@@ -100,7 +100,12 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
       text: t(outcome === 'withdraw' ? LABELS.stampWithdraw : LABELS.stampDawn),
       big: true,
     })
-    for (const l of OUTCOMES[outcome].lines) lines.push({ text: t(l) })
+    const o = OUTCOMES[outcome]
+    const firstNight = Math.max(1, save.loops) === 1 // no earlier night: "also" would be false
+    for (const l of (firstNight && o.firstNight) || o.lines)
+      lines.push({ text: t(l) })
+    if (input.shift.found > 0)
+      for (const l of o.ifFound ?? []) lines.push({ text: t(l) })
     for (const l of STAGES[stage].lines.slice(-STAGES[stage].tail))
       lines.push({ text: t(l) })
     scrib = OUTCOMES[outcome].scrib ?? scrib

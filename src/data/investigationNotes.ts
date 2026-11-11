@@ -99,7 +99,11 @@ export const STAGES: Record<Stage, StageText> = {
     tail: 2,
     lines: [
       k('start', '行方不明は4人。', '4 people missing.'),
-      k('start', 'まだ、誰も見つかっていない。', 'No one found yet.'),
+      k(
+        'start',
+        'まだ、行方不明の誰も見つかっていない。',
+        'No missing person found yet.'
+      ),
       k(
         'start',
         'コロナロードの異変が、手がかりでは。',
@@ -111,7 +115,7 @@ export const STAGES: Record<Stage, StageText> = {
   elder1: {
     tail: 2,
     lines: [
-      k('elder1', '1人目の老人を見つけた。', 'Found the 1st old person.'),
+      k('elder1', '老人1人目を見つけた。', 'Found the 1st old person.'),
       k('elder1', '帰りたくないという。', 'Doesn’t want to go home.'),
       k(
         'elder1',
@@ -129,11 +133,11 @@ export const STAGES: Record<Stage, StageText> = {
   elder2: {
     tail: 2,
     lines: [
-      k('elder2', '老人2人目を見つけたが、', 'Found the 2nd old person.'),
-      k('elder2', '帰りたくないという。', 'Doesn’t want to go home.'),
+      k('elder2', '老人2人目を見つけたが、', 'Found the 2nd old person, but'),
+      k('elder2', '帰りたくないという。', 'they don’t want to go home.'),
       k(
         'elder2',
-        '老人2人目も、1人目と同じことを言う。',
+        '2人目も、老人1人目と同じことを言う。',
         'Elder 2 says the same as elder 1.'
       ),
       k(
@@ -147,7 +151,7 @@ export const STAGES: Record<Stage, StageText> = {
   elder3: {
     tail: 2,
     lines: [
-      k('elder3', '老人3人目を見つけた。', 'Found the 3rd.'),
+      k('elder3', '老人3人目を見つけた。', 'Found the 3rd old person.'),
       k(
         'elder3',
         'やはり帰りたくないという。',
@@ -188,6 +192,10 @@ export type Outcome = 'newKinds' | 'noNewKinds' | 'withdraw' | 'ending'
 
 export interface OutcomeText {
   lines: KnownPair[]
+  /** Replaces `lines` on the very first night (no earlier night to say "also" about). */
+  firstNight?: KnownPair[]
+  /** Added after `lines` only when the night found at least one anomaly (nothing found: the line would be false). */
+  ifFound?: KnownPair[]
   /** Scribbles that replace the stage's own (absent: the stage's are used). */
   scrib?: KnownPair[]
 }
@@ -198,10 +206,13 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
       k('start', '今夜も異変を報告。', 'More oddities reported tonight.'),
       k('start', '捜査は一歩前へ。', 'One step forward.'),
     ],
+    firstNight: [
+      k('start', '今夜は異変を報告。', 'Oddities reported tonight.'),
+      k('start', '捜査は一歩前へ。', 'One step forward.'),
+    ],
   },
   noNewKinds: {
     lines: [k('start', '新しい手がかりはなかった。', 'No new leads tonight.')],
-    scrib: [k('start', '見落としはないか?', 'Did we miss something?')],
   },
   withdraw: {
     lines: [
@@ -210,6 +221,8 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
         'お手つきが重なり、席を立つ。',
         'Too many false reports. Left the post.'
       ),
+    ],
+    ifFound: [
       k(
         'start',
         '見つけた分は、捜査に加わった。',

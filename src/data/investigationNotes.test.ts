@@ -55,7 +55,11 @@ describe('investigation note data', () => {
       expect(t.tail).toBeLessThanOrEqual(Math.min(2, t.lines.length)) // the kept tail is two lines at most
     }
     for (const o of Object.values(OUTCOMES))
-      for (const l of o.lines) {
+      for (const l of [
+        ...o.lines,
+        ...(o.firstNight ?? []),
+        ...(o.ifFound ?? []),
+      ]) {
         expect(l.ja.length, l.ja).toBeLessThanOrEqual(JA_MAX)
         expect(l.en.length, l.en).toBeLessThanOrEqual(EN_MAX)
       }
@@ -136,34 +140,45 @@ describe('investigation note data', () => {
 })
 
 /**
- * No spoilers (#297): what is learned by seeing an oddity or meeting a missing person must not appear before
- * that. Two independent nets: (1) every sentence carries `knownFrom`, the earliest stage allowed to show it, and no
- * stage shows a sentence from a later one; (2) words for facts that are only learned at a given stage are banned
- * from every sentence that is allowed earlier (so a wrong annotation cannot hide a spoiler).
+ * No spoilers (#297). `knownFrom` is the writer's own claim of the earliest stage that may show a sentence, grounded
+ * in docs/story.md (DESIGN.md lists which sentences are `start` and where story.md says so). It is NOT a mechanical
+ * match against story.md, and the word list below is only a net under it: it catches a wrong annotation for the
+ * facts it names, nothing more. A new sentence still needs its story.md source checked by a human.
+ * Two nets: (1) no stage shows a sentence whose `knownFrom` is later than itself; (2) words for facts that are
+ * learned only at a given stage are banned from every sentence annotated earlier.
  */
 describe('no spoilers: every sentence is shown only from the stage where it is known', () => {
   const idx = (s: Stage) => STAGE_ORDER.indexOf(s)
+  const NOT_STORY = '段階の根拠が story.md に無いので、どの段階にも出さない'
   /** [pattern, first stage that may say it, reason (docs/story.md)] */
   const LEARNED: [RegExp, Stage, string][] = [
+    [/シャッター|shutter/i, 'child', `作業仮説。${NOT_STORY}`],
+    [/昭和|Showa/i, 'child', `昭和の異変・昭和の記憶。${NOT_STORY}`],
     [
-      /シャッター|shutter/i,
-      'child',
-      '作業仮説。段階の根拠が story.md に無いので、どの段階にも出さない',
-    ],
-    [/昭和の異変|Showa oddit/i, 'child', '同上（根拠のない段階では出さない）'],
-    [
-      /帰りたくない|go home|want to go home/i,
+      /帰りたくない|帰らない|戻らない|帰ろうとしない|go home|come back/i,
       'elder1',
       '老人に会って初めて分かる',
     ],
-    [/現実よりマシ|beats reality|kinder/i, 'elder1', '老人が主張する'],
-    [/優しい異変|kinder oddity/i, 'elder3', '3人とも、と言えるのは3人目から'],
-    [/実務的|practical|頑固|stubborn/i, 'elder1', '老人1人目の個性'],
-    [/人当たり|Warm|気遣/i, 'elder2', '老人2人目の個性'],
-    [/乾いた冗談|Dry jokes/i, 'elder3', '老人3人目の個性'],
-    [/老人|old person|elder/i, 'elder1', '老人を見つけて初めて分かる'],
+    [/現実|reality|主張|達観/i, 'elder1', '老人が主張する'],
+    [/懐かし|nostalg|記憶|memor/i, 'elder1', '老人の様子・記憶'],
+    [/食べ物|餓死|starv|food/i, 'elder1', '老人たちの様子から分かること'],
     [
-      /家族|family|子供の家|child’s home/i,
+      /おじいさん|おばあさん|老婆|old man|old lady|old woman/i,
+      'elder1',
+      '老人を見つけて初めて分かる',
+    ],
+    [/老人|old person|elder/i, 'elder1', '老人を見つけて初めて分かる'],
+    [/様子|個性|trait/i, 'elder1', '老人に会って初めて分かる'],
+    [/実務的|practical|頑固|stubborn/i, 'elder1', '老人1人目の個性'],
+    [/人当たり|Warm|気遣|worries/i, 'elder2', '老人2人目の個性'],
+    [/乾いた|冗談|Dry jokes|joke/i, 'elder3', '老人3人目の個性'],
+    [
+      /優しい|kind|3人とも|All three/i,
+      'elder3',
+      '3人とも、と言えるのは3人目から',
+    ],
+    [
+      /家族|family|子供の家|(?<!go )home|親|parents|虐待/i,
       'child',
       '子供を見つけて初めて出る疑問',
     ],
@@ -178,7 +193,12 @@ describe('no spoilers: every sentence is shown only from the stage where it is k
     ),
     // outcomes and last-night lines are usable from `start` unless annotated later; they are never tied to one stage
     ...Object.entries(OUTCOMES).flatMap(([o, t]) =>
-      [...t.lines, ...(t.scrib ?? [])].map(p => ({
+      [
+        ...t.lines,
+        ...(t.firstNight ?? []),
+        ...(t.ifFound ?? []),
+        ...(t.scrib ?? []),
+      ].map(p => ({
         where: `outcome ${o}`,
         stage: p.knownFrom,
         p,
@@ -216,5 +236,26 @@ describe('no spoilers: every sentence is shown only from the stage where it is k
   })
   it('the true-ending lines are only known from the child', () => {
     for (const l of OUTCOMES.ending.lines) expect(l.knownFrom).toBe('child')
+  })
+})
+
+describe('stock lines that depend on the night', () => {
+  it('the first-night result has no "also" and no line that says more than it knows', () => {
+    expect(OUTCOMES.newKinds.firstNight?.map(l => l.ja).join('')).not.toContain(
+      'も'
+    )
+    expect(OUTCOMES.newKinds.firstNight?.map(l => l.en).join(' ')).not.toMatch(
+      /\bMore\b/
+    )
+  })
+  it('"found counts" is conditional on having found something; nothing story.md lacks is jotted for a no-lead night', () => {
+    expect(OUTCOMES.withdraw.lines.map(l => l.ja).join('')).not.toContain(
+      '見つけた分'
+    )
+    expect(OUTCOMES.withdraw.ifFound?.length).toBe(1)
+    expect(OUTCOMES.noNewKinds.scrib).toBeUndefined()
+  })
+  it('last-night lines are known from the start but are never part of the first-night (start) synopsis', () => {
+    for (const l of Object.values(LAST_NIGHT)) expect(l.knownFrom).toBe('start')
   })
 })
