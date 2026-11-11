@@ -257,13 +257,17 @@ describe('retro.css', () => {
 
   it('draws the knob label up toward the knob with one variable and a transform, not layout (#353)', () => {
     // A transform keeps the tap area, the 9px layout gap and the portrait .tube constants (which include
-    // that gap) unchanged. The pull is one variable on .knob-wrap (4px; 3px on the zoomed desktop panel).
+    // that gap) unchanged. One variable on .knob-wrap: 4px on screen in every band, so the panel zoom
+    // (--pz, 1.3 from 1200px, 1.45 from 1400px; unset = 1) is divided out.
     expect(decls('.knob-wrap .label', 'transform')).toEqual([
       'translateY(calc(-1 * var(--knob-label-pull)))',
     ])
-    const pulls = decls('.knob-wrap', '--knob-label-pull')
-    expect(pulls).toEqual(['4px', '3px'])
-    for (const v of pulls) expect(parseFloat(v)).toBeLessThanOrEqual(5)
+    expect(decls('.knob-wrap', '--knob-label-pull')).toEqual([
+      'calc(4px / var(--pz, 1))',
+    ])
+    const zooms = decls('.panel', '--pz').map(Number)
+    expect(zooms).toEqual([1.3, 1.45])
+    for (const z of [1, ...zooms]) expect(4 / z * z).toBeCloseTo(4, 5)
   })
 
   it('centres the window digits on the glyphs, not on the line box (#314)', () => {

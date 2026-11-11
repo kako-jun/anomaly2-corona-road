@@ -1000,6 +1000,10 @@
   flex: 1;
   min-width: 0;
   gap: 0;
+  /* #353: how far the label is drawn up toward the knob, 4px on screen in every width band (--pz is the
+     panel zoom set at 1200 / 1400px, undone here; unset = 1). A transform, so layout, the tap area and the
+     portrait .tube height constants (which include the knob gap) do not change. */
+  --knob-label-pull: calc(4px / var(--pz, 1));
 }
 
 .knob-sr-only {
@@ -1010,18 +1014,6 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-}
-
-.knob-wrap {
-  /* #353: how far the label is drawn up toward the knob. A transform, so layout, the tap area and the
-     portrait .tube height constants (which include the knob gap) do not change. Panel px (desktop is
-     zoomed, so 3px there is about 4px on screen). */
-  --knob-label-pull: 4px;
-}
-@media (min-width: 900px) {
-  .knob-wrap {
-    --knob-label-pull: 3px;
-  }
 }
 
 .knob-wrap .label {
