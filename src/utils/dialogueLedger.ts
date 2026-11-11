@@ -14,6 +14,8 @@ export type MidpointStage = 'few' | 'mid' | 'many'
 export interface DialogueLine {
   who: Who
   text: string
+  /** Optional English subtitle of the same line (#326); a line without it stays Japanese. */
+  en?: string
 }
 
 interface Base {
@@ -122,6 +124,35 @@ export const checkSubtitleText = (text: string): void => {
   }
 }
 
+/**
+ * The English subtitle of a line (#326): a non-empty string with no full-width space (the Japanese phrase separator,
+ * English wraps by words), line break or tab. Ordinary punctuation and half-width spaces are fine.
+ */
+export const checkSubtitleEn = (en: unknown): void => {
+  if (typeof en !== 'string') throw new Error('line en is not a string')
+  if (en.trim() === '') throw new Error('line en is empty')
+  if (/[\u3000\r\n\t]/.test(en)) {
+    throw new Error(
+      `line en "${en}" contains a full-width space, line break or tab (English wraps by words)`
+    )
+  }
+}
+
+/** Lines with and without an `en`, over the whole ledger or per source file (for `npm run check:subtitle-en`). */
+export const countEnglish = (
+  entries: readonly { lines: readonly { en?: string }[] }[]
+): { total: number; translated: number; untranslated: number } => {
+  let total = 0
+  let translated = 0
+  for (const e of entries) {
+    for (const l of e.lines) {
+      total++
+      if (l.en !== undefined) translated++
+    }
+  }
+  return { total, translated, untranslated: total - translated }
+}
+
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v)
 
@@ -160,14 +191,20 @@ const parseLines = (raw: unknown): DialogueLine[] => {
   }
   return raw.map((l, i) => {
     if (!isRecord(l)) throw new Error(`lines[${i}] is not a mapping`)
-    onlyKeys(l, ['who', 'text'], `lines[${i}]`)
+    onlyKeys(l, ['who', 'text', 'en'], `lines[${i}]`)
     const who = oneOf<Who>(str(l, 'who'), WHO, `lines[${i}].who`)
     // Not trimmed: a leading or trailing full-width space is kept as written.
     const text = l.text
     if (typeof text !== 'string')
       throw new Error(`lines[${i}].text is not a string`)
     checkSubtitleText(text)
-    return { who, text }
+    if (l.en === undefined) return { who, text }
+    try {
+      checkSubtitleEn(l.en)
+    } catch (e) {
+      throw new Error(`lines[${i}]: ${(e as Error).message}`)
+    }
+    return { who, text, en: l.en as string }
   })
 }
 

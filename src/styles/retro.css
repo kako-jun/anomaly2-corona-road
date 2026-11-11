@@ -312,6 +312,12 @@
   overflow-wrap: anywhere;
 }
 
+/* An English subtitle (#326): plain words, wrapped by words (the phrase rules above are for the Japanese script). */
+.movie-sub div.en {
+  line-break: auto;
+  overflow-wrap: break-word;
+}
+
 /* Knobs */
 
 .knob::after {

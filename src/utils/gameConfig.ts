@@ -105,6 +105,13 @@ export const DIALOGUE_CONFIG = {
 }
 
 /**
+ * Master switch of the English subtitles (#326). While false, the subtitles stay Japanese even in an English
+ * environment; turn it on once the `en` lines of `dialogue/` are in and the Japanese has been playtested enough
+ * (language policy, 2026-11-10). The only place this is read is `useSubtitle.ts` (through `pickSubtitle`).
+ */
+export const SUBTITLE_EN_ENABLED = false
+
+/**
  * Pacing once the child has been found (the `child` flag is raised), Issue #86. kako-jun only said
  * "more anomalies appear after the child is found"; these two values are PLACEHOLDERS, not decided.
  * They replace `anomalyIntervalMs` / `maxConcurrentAnomalies` of `DEFAULT_CONFIG` for the rest of the shift.

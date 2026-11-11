@@ -50,7 +50,8 @@ interface CameraViewProps {
   /** Last report result, kept after it is cleared so it can fade out. */
   result: Feedback | null
   resultVisible: boolean
-  subtitle: { text: string; visible: boolean }
+  /** `english`: the text is an English `en` line (#326): shown as plain text, wrapped by words (no phrase spans). */
+  subtitle: { text: string; visible: boolean; english?: boolean }
   /** CSS filter multipliers from the knobs. */
   brightness: number
   contrast: number
@@ -201,7 +202,14 @@ export const CameraView = ({
           </div>
 
           <div className={cx('movie-sub', subtitle.visible && 'show')}>
-            {subtitle.text && <div>{phraseSpans(subtitle.text)}</div>}
+            {subtitle.text &&
+              (subtitle.english ? (
+                <div className="en" lang="en">
+                  {subtitle.text}
+                </div>
+              ) : (
+                <div>{phraseSpans(subtitle.text)}</div>
+              ))}
           </div>
           <div
             className={cx(
