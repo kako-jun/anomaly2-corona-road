@@ -91,8 +91,7 @@ def edge(a, b, spec, dashed):
 def frame(name):
     dashed = name in DASHED
     out = ['<g id="frame">']
-    if not dashed:  # the paper behind the face: fill only, no outline
-        out.append('<path d="M4 5L63 3L65 62L5 64Z" fill="#f7f0dc"/>')
+    # No fill behind the face: the frame is transparent so a found person sits on the same paper as an unfound one.
     for i, nm in enumerate(EDGES):
         out.append(edge(CORNERS[i], CORNERS[(i + 1) % 4], SPECS[name][nm], dashed))
     out.append("</g>")

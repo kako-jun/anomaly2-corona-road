@@ -108,6 +108,13 @@ describe('hand-ruled frames of the sketches (public/note/*.svg)', () => {
     })
   }
   it('has the six sketch frames', () => expect(files).toHaveLength(6))
+  it('has no paper-coloured or white fill behind a face: the frame group is only the four edges', () => {
+    for (const f of files) {
+      const fr = frameOf(f)
+      expect(fr.match(/<path /g), f).toHaveLength(4)
+      expect(fr, f).not.toMatch(/#f7f0dc|#fff|white/i)
+    }
+  })
   for (const f of files) {
     it(`${f}: four separate straight edges, opposite edges not parallel, nothing curved`, () => {
       const fr = frameOf(f)

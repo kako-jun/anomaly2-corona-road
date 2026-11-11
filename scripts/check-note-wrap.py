@@ -141,6 +141,24 @@ async () => {
 }
 """
 
+FRAMEPX = """
+async () => {
+  // A found person's frame must show the same paper as an unfound one: no fill behind the drawing. Sample the empty
+  // corners inside each sketch frame (transparent = paper shows through).
+  const res = []
+  for (const n of ['elder1', 'elder2', 'elder3', 'child', 'unknown', 'unknown-last']) {
+    const img = new Image(); img.src = `/note/${n}.svg`; await img.decode()
+    const c = document.createElement('canvas'); c.width = c.height = 136
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0, 136, 136)
+    for (const [x, y] of [[12, 14], [120, 12], [122, 120], [14, 120]]) {
+      const [r, gr, b, a] = g.getImageData(x, y, 1, 1).data
+      if (a > 8) res.push(`${n}: the frame has a ${a > 250 ? 'solid' : 'partial'} fill at (${x},${y}) rgb(${r},${gr},${b}) a=${a}; it must be transparent paper`)
+    }
+  }
+  return res
+}
+"""
+
 LAYOUT = """
 () => {
   const r = s => document.querySelector(s).getBoundingClientRect()
@@ -167,9 +185,12 @@ LAYOUT = """
   const notes = document.querySelector('.note-notes'), syn = document.querySelector('.note-syn'), sc = document.querySelector('.note-scrib')
   const synBottom = syn.offsetTop + syn.offsetHeight
   const gapAbove = sc.offsetTop - synBottom
-  if (gapAbove < 3 || gapAbove > 6) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (must follow it closely, 3-6px of air)`)
+  // A scribble is a separate jotting: about one ruled line below the synopsis (normally 14-18px; never under 10px).
+  const minGap = document.querySelector('.note-first') ? 10 : 14 // the fullest page may shrink the gap to 10px, never less
+  if (gapAbove < minGap || gapAbove > 20) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want ${minGap}-20px)`)
   const lastSyn = syn.querySelector('p:last-child').getBoundingClientRect()
-  if (sc.getBoundingClientRect().top < lastSyn.bottom - 0.5) res.push('the tilted scribble runs into the last synopsis line')
+  const clear = sc.getBoundingClientRect().top - lastSyn.bottom
+  if (clear < 8) res.push(`the tilted scribble is only ${clear.toFixed(1)}px below the last synopsis line (need 8)`)
   for (const fl of document.querySelectorAll('.note-fl')) if (fl.scrollWidth > fl.clientWidth + 1) res.push(`form label "${fl.textContent}" does not fit its column`)
   const nr = notes.getBoundingClientRect(), sr = sc.getBoundingClientRect(), fr = r('.note-form')
   if (sr.bottom > nr.bottom || sr.top < nr.top) res.push('the tilted scribble leaves the ruled sheet')
@@ -203,6 +224,9 @@ def main():
                 page.wait_for_timeout(100)
                 for msg in page.evaluate(LAYOUT):
                     problems.append(f"[{lang}] {label}: {msg}")
+                if label == "later night" and lang == "ja":
+                    for msg in page.evaluate(FRAMEPX):
+                        problems.append(msg)
                 if label == "new frame":
                     for msg in page.evaluate(ROT):
                         problems.append(f"[{lang}] {msg}")

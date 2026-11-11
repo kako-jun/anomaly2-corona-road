@@ -219,10 +219,14 @@
 .note-scrib {
   /* Continues right under the last synopsis line, tilted like a note jotted in the margin. */
   width: fit-content;
-  margin: 6px 0 0 4px; /* clear air above, so the lifted right end never touches the last synopsis line */
+  margin: 16px 0 0 4px; /* a gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun) */
   color: var(--blue);
   transform: rotate(var(--tilt-scrib));
   transform-origin: 50% 50%; /* about its own middle: the left end dips and the right end lifts by the same few px, so no line runs into its neighbour */
+}
+.note-first .note-scrib {
+  /* the very first night is the fullest page (seven lines + three scribble lines + the sketch): 12px, never under 10 */
+  margin-top: 12px;
 }
 .note-en .note-scrib p {
   font-size: 20px;
@@ -238,7 +242,7 @@
 
 .note-form {
   position: relative;
-  margin-top: 8px;
+  margin-top: 6px;
   padding: 7.5px 11.5px; /* 6/10 + the 1.5px hand-ruled frame (HandFrame) that replaces the old border */
   background: rgba(255, 255, 255, 0.18);
 }
