@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { parse as parseYaml } from 'yaml'
 import {
   ANOMALY_TYPES,
   isGameRecord,
@@ -882,5 +883,78 @@ describe('mixed ledger (#77)', () => {
     expect(() =>
       parseLedger({ anomalies: [raw(), nonImage({ id: 'bad', detail: '' })] })
     ).toThrow(/entry "bad".*"detail"/)
+  })
+})
+
+describe('memo_flag and memo (#325)', () => {
+  it('reads a name or a list of names, and a Japanese and English one-liner', () => {
+    const one = parseLedgerRecord(raw({ memo_flag: 'shutter' }), 0)
+    expect(one.memoFlags).toEqual(['shutter'])
+    const two = parseLedgerRecord(raw({ memo_flag: ['food', 'reiwa'] }), 0)
+    expect(two.memoFlags).toEqual(['food', 'reiwa'])
+    const withMemo = parseLedgerRecord(
+      raw({ memo: { ja: ' 古い紙。 ', en: 'An old paper.' } }),
+      0
+    )
+    expect(withMemo.memo).toEqual({ ja: '古い紙。', en: 'An old paper.' })
+    expect(parseLedgerRecord(raw(), 0).memoFlags).toBeUndefined()
+    expect(parseLedgerRecord(raw(), 0).memo).toBeUndefined()
+  })
+  it('hands both to the game entry', () => {
+    const e = toLedgerEntry(
+      parseLedgerRecord(
+        raw({ memo_flag: 'food', memo: { ja: 'あ', en: 'a' } }),
+        0
+      )
+    )
+    expect(e.memoFlags).toEqual(['food'])
+    expect(e.memo).toEqual({ ja: 'あ', en: 'a' })
+    expect(toLedgerEntry(parseLedgerRecord(raw(), 0))).not.toHaveProperty(
+      'memo'
+    )
+  })
+  it.each([
+    [{ memo_flag: 'nope' }, 'unknown flag'],
+    [{ memo_flag: ['food', 'food'] }, 'a flag twice'],
+    [{ memo: 'text' }, 'a memo that is not a mapping'],
+    [{ memo: { ja: 'あ' } }, 'a memo without English'],
+    [{ memo: { ja: 'あ', en: ' ' } }, 'a blank English memo'],
+    [{ memo: { ja: 'あ\nい', en: 'a' } }, 'a two-line memo'],
+    [{ memo: { ja: 'あ', en: 'a', fr: 'b' } }, 'an unknown memo key'],
+  ] as [Record<string, unknown>, string][])(
+    'rejects %j (%s) and names the entry',
+    over => {
+      expect(() => parseLedgerRecord(raw(over), 0)).toThrow(/AR-01-notice/)
+    }
+  )
+})
+
+describe('the real ledger carries the memo marks (#325)', () => {
+  const records = parseLedgerRecords(
+    parseYaml(
+      readFileSync(resolve(__dirname, '../../prompts/anomalies.yaml'), 'utf8')
+    )
+  )
+  const withFlag = (f: string) =>
+    records.filter(r => r.memoFlags?.includes(f as 'food')).map(r => r.id)
+  it('marks the shutter anomalies named in the issue', () => {
+    expect(withFlag('shutter')).toEqual(
+      expect.arrayContaining([
+        'AR-01-shutter-light',
+        'AR-02-shutter-crayon-drawings',
+        'AR-03-shutter-wave',
+        'AR-01-shutter-stripe-break',
+      ])
+    )
+  })
+  it('marks food anomalies, and every flagged entry is a produced image one the game can draw', () => {
+    expect(withFlag('food')).toContain('AR-02-coffee')
+    for (const r of records.filter(r => r.memoFlags))
+      expect(isGameRecord(r), r.id).toBe(true)
+  })
+  it('keeps the sample one-liners to a few entries', () => {
+    const n = records.filter(r => r.memo).length
+    expect(n).toBeGreaterThanOrEqual(2)
+    expect(n).toBeLessThanOrEqual(3)
   })
 })

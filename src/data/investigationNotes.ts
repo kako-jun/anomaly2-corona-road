@@ -5,6 +5,8 @@
  * may say what the story has not established. `src/utils/investigationNote.ts` chooses among these.
  */
 
+import type { MemoFlag } from '../utils/anomalyLedger'
+
 /** Story flags (dialogue/flags.yaml) that fill the four missing-person frames, in order. */
 export const STAGE_FLAGS = ['elder1', 'elder2', 'elder3', 'child'] as const
 export type StageFlag = (typeof STAGE_FLAGS)[number]
@@ -186,6 +188,37 @@ export const STAGES: Record<Stage, StageText> = {
     scrib: [k('child', '帰りたくないのは、なぜ?', 'Why not want to go home?')],
   },
 }
+
+/**
+ * Hypothesis memos (#325): a flag that rises when a ledger anomaly marked with it (`memo_flag`, or `reiwa: true`
+ * for `reiwa`) is reported, and the one line it adds to the end-of-night memo. The wording is a draft awaiting
+ * kako-jun's approval. `knownFrom` gates it exactly like every other sentence: below that stage the flag stays
+ * waiting (not lost) and is shown at the first result at or after it. The stage is the earliest the existing net
+ * (`LEARNED` in investigationNotes.test.ts) lets these words appear: story.md calls the shutter line a working
+ * hypothesis and names Showa as the era of the oddities without saying at which point the detective knows either,
+ * so both wait for `child`; the food line rests on what the elders' state shows (`elder1`).
+ * Like the synopsis lines, each is one handwritten line (JA_MAX / EN_MAX, `npm run check:note-wrap`).
+ */
+export const MEMO_FLAG_TEXT: Record<MemoFlag, KnownPair> = {
+  shutter: k(
+    'child',
+    'シャッターの向こうへ行ったまま、か。',
+    'Went beyond the shutter, never back?'
+  ),
+  food: k(
+    'elder1',
+    '異変の食べ物は、口にして大丈夫らしい。',
+    'Oddity food seems safe to eat.'
+  ),
+  reiwa: k(
+    'child',
+    '昭和の通路に、令和の物が混じっている。',
+    'Reiwa things in the Showa passage.'
+  ),
+}
+
+/** The stage from which an anomaly's own one-line memo (the ledger's `memo`) may be shown: it says only what was seen. */
+export const MEMO_LINE_KNOWN_FROM: Stage = 'none'
 
 /** How a night went (end-of-night memo). Placeholder wording where the issue says so: #297 未決・仮置き. */
 export type Outcome = 'newKinds' | 'noNewKinds' | 'withdraw' | 'ending'

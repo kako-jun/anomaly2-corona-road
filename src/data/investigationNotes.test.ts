@@ -1,10 +1,13 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import ledger from 'virtual:dialogue'
+import anomalies from 'virtual:anomalies'
 import {
   STAGE_ORDER,
   LABELS,
   LAST_NIGHT,
+  MEMO_FLAG_TEXT,
+  MEMO_LINE_KNOWN_FROM,
   OUTCOMES,
   STAGES,
   STAGE_FLAGS,
@@ -25,7 +28,16 @@ const pairs = (v: unknown): Pair[] => {
   }
   return []
 }
-const ALL = [STAGES, OUTCOMES, LAST_NIGHT, LABELS].flatMap(pairs)
+/** The one-liners in the anomaly ledger (#325): they are handwritten lines on the same paper. */
+const LEDGER_MEMOS: Pair[] = anomalies.flatMap(e => (e.memo ? [e.memo] : []))
+const ALL = [
+  STAGES,
+  OUTCOMES,
+  LAST_NIGHT,
+  LABELS,
+  MEMO_FLAG_TEXT,
+  LEDGER_MEMOS,
+].flatMap(pairs)
 
 /**
  * One data entry = one handwritten line, never wrapped by the browser (white-space: nowrap). The real width is
@@ -67,6 +79,21 @@ describe('investigation note data', () => {
       expect(l.ja.length).toBeLessThanOrEqual(JA_MAX)
       expect(l.en.length).toBeLessThanOrEqual(EN_MAX)
     }
+  })
+  it('every memo line (the hypotheses and the ledger one-liners) fits one handwritten line, in both languages', () => {
+    for (const [flag, l] of Object.entries(MEMO_FLAG_TEXT)) {
+      expect(l.ja.length, `${flag} ja`).toBeLessThanOrEqual(JA_MAX)
+      expect(l.en.length, `${flag} en`).toBeLessThanOrEqual(EN_MAX)
+      expect(l.en, flag).not.toBe('')
+    }
+    for (const l of LEDGER_MEMOS) {
+      expect(l.ja.length, l.ja).toBeLessThanOrEqual(JA_MAX)
+      expect(l.en.length, l.en).toBeLessThanOrEqual(EN_MAX)
+    }
+  })
+  it('a memo line never uses the word 進捗 (kako-jun)', () => {
+    for (const p of [...Object.values(MEMO_FLAG_TEXT), ...LEDGER_MEMOS])
+      expect(p.ja).not.toContain('進捗')
   })
   it('a line is never cut inside a counted phrase (3人目, 2件, 8:00) and never begins with a closing mark', () => {
     for (const p of ALL)
@@ -208,6 +235,17 @@ describe('no spoilers: every sentence is shown only from the stage where it is k
       where: `last night ${o}`,
       stage: p.knownFrom,
       p,
+    })),
+    // memo lines (#325): the hypotheses are shown from their own stage, the ledger one-liners from MEMO_LINE_KNOWN_FROM
+    ...Object.entries(MEMO_FLAG_TEXT).map(([f, p]) => ({
+      where: `memo flag ${f}`,
+      stage: p.knownFrom,
+      p,
+    })),
+    ...LEDGER_MEMOS.map(m => ({
+      where: 'ledger memo',
+      stage: MEMO_LINE_KNOWN_FROM,
+      p: { ...m, knownFrom: MEMO_LINE_KNOWN_FROM },
     })),
   ]
   it('every sentence has a knownFrom that is a real stage', () => {

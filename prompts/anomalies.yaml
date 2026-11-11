@@ -10,6 +10,10 @@ anomalies:
     base_photo: 'public/images/cam1.webp'
     category: 'object'
     anomaly_type: 'add_object'
+    # sample: 受け皿の動作確認用の仮文。本文の量産は #325 の2段目
+    memo:
+      ja: '左の壁に、古い貼り紙。'
+      en: 'An old notice on the left wall.'
     location: 'CAM01-E09 の周辺、差分左上 (137,379) px'
     detail: '左壁に古い紙掲示が現れる'
     overlay: 'assets/anomaly-overlays/cam01/notice.webp'
@@ -88,6 +92,11 @@ anomalies:
     base_photo: 'public/images/cam2.webp'
     category: 'object'
     anomaly_type: 'add_object'
+    memo_flag: food
+    # sample: 受け皿の動作確認用の仮文。本文の量産は #325 の2段目
+    memo:
+      ja: '右の台に、コーヒーが一杯。'
+      en: 'A cup of coffee on the right stand.'
     location: 'CAM02-E19 の周辺、差分左上 (554,533) px'
     detail: '右手前の台にコーヒーのカップが現れる'
     overlay: 'assets/anomaly-overlays/cam02/coffee.webp'
@@ -166,6 +175,7 @@ anomalies:
     base_photo: 'public/images/cam2.webp'
     category: 'environment'
     anomaly_type: 'state_change'
+    memo_flag: shutter
     location: 'CAM02-E07 の周辺、差分左上 (0,308) px'
     detail: '左シャッターが少し開き暖かな光が漏れる'
     overlay: 'assets/anomaly-overlays/cam02/shop-reopens.webp'
@@ -601,6 +611,7 @@ anomalies:
     base_photo: 'public/images/cam1.webp'
     category: 'environment'
     anomaly_type: 'state_change'
+    memo_flag: shutter
     phase: 'mid'
     subtlety: 'medium'
     mask_box_1000: '(355,543)–(427,595)'
@@ -962,6 +973,7 @@ anomalies:
     base_photo: "public/images/cam3.webp"
     category: "environment"
     anomaly_type: "state_change"
+    memo_flag: shutter
     phase: "mid"
     subtlety: "medium"
     mask_box_1000: "(19,260)–(324,344)"
@@ -1940,6 +1952,7 @@ anomalies:
     base_photo: 'public/images/cam1.webp'
     category: 'object'
     anomaly_type: 'state_change'
+    memo_flag: food
     phase: 'mid'
     subtlety: 'medium'
     mask_box_1000: '(904,778)–(1000,927)'
@@ -1958,6 +1971,7 @@ anomalies:
     base_photo: 'public/images/cam1.webp'
     category: 'environment'
     anomaly_type: 'surreal'
+    memo_flag: shutter
     phase: 'early'
     subtlety: 'subtle'
     mask_box_1000: '(273,341)–(443,629)'
@@ -1994,6 +2008,7 @@ anomalies:
     base_photo: 'public/images/cam3.webp'
     category: 'object'
     anomaly_type: 'add_object'
+    memo_flag: shutter
     phase: 'early'
     subtlety: 'subtle'
     mask_box_1000: '(707,96)–(1000,699)'
@@ -2841,6 +2856,11 @@ anomalies:
     base_photo: 'public/images/cam3.webp'
     category: 'object'
     anomaly_type: 'add_object'
+    memo_flag: food
+    # sample: 受け皿の動作確認用の仮文。本文の量産は #325 の2段目
+    memo:
+      ja: '床に、銀色の缶が一本。'
+      en: 'A silver can lies on the floor.'
     phase: 'early'
     subtlety: 'subtle'
     mask_box_1000: '(607,761)–(725,819)'
@@ -2860,6 +2880,7 @@ anomalies:
     base_photo: 'public/images/cam5.webp'
     category: 'object'
     anomaly_type: 'add_object'
+    memo_flag: food
     phase: 'early'
     subtlety: 'medium'
     mask_box_1000: '(476,711)–(556,831)'
@@ -3281,6 +3302,7 @@ anomalies:
     base_photo: 'public/images/cam3.webp'
     category: 'object'
     anomaly_type: 'duplicate'
+    memo_flag: shutter
     phase: 'late'
     subtlety: 'obvious'
     mask_box_1000: '(0,113)–(382,722)'
@@ -3487,6 +3509,7 @@ anomalies:
     base_photo: 'public/images/cam2.webp'
     category: 'object'
     anomaly_type: 'duplicate'
+    memo_flag: shutter
     phase: 'late'
     subtlety: 'obvious'
     mask_box_1000: '(0,63)–(244,664)'
@@ -3613,6 +3636,7 @@ anomalies:
     base_photo: "public/images/cam1.webp"
     category: "object"
     anomaly_type: "add_object"
+    memo_flag: food
     phase: "mid"
     subtlety: "medium"
     mask_box_1000: "(781,770)–(853,856)"
@@ -3793,6 +3817,7 @@ anomalies:
     base_photo: 'public/images/cam3.webp'
     category: 'object'
     anomaly_type: 'add_object'
+    memo_flag: food
     phase: 'mid'
     subtlety: 'medium'
     mask_box_1000: '(623,591)–(732,727)'
@@ -4335,6 +4360,7 @@ anomalies:
     base_photo: 'public/images/cam2.webp'
     category: 'person'
     anomaly_type: 'reflection'
+    memo_flag: shutter
     phase: 'late'
     subtlety: 'medium'
     mask_box_1000: '(608,222)–(666,324)'
@@ -4614,6 +4640,7 @@ anomalies:
     base_photo: 'public/images/cam3.webp'
     category: 'person'
     anomaly_type: 'add_person'
+    memo_flag: shutter
     phase: 'early'
     subtlety: 'medium'
     mask_box_1000: '(154,422)–(237,469)'
@@ -4706,6 +4733,7 @@ anomalies:
     base_photo: 'public/images/cam3.webp'
     category: 'environment'
     anomaly_type: 'state_change'
+    memo_flag: shutter
     phase: 'mid'
     subtlety: 'medium'
     mask_box_1000: '(959,389)–(1000,436)'
