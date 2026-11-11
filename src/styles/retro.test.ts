@@ -265,9 +265,20 @@ describe('retro.css', () => {
     expect(decls('.knob-wrap', '--knob-label-pull')).toEqual([
       'calc(4px / var(--pz, 1))',
     ])
-    const zooms = decls('.panel', '--pz').map(Number)
+    // .panel sets zoom and --pz to the same value; if they drift apart the 4px on screen drifts silently.
+    const zooms = decls('.panel', 'zoom').map(Number)
+    expect(decls('.panel', '--pz').map(Number)).toEqual(zooms)
     expect(zooms).toEqual([1.3, 1.45])
-    for (const z of [1, ...zooms]) expect(4 / z * z).toBeCloseTo(4, 5)
+    // Evaluate the declared calc() in each band (unset --pz = 1, zoom 1): pull px / pz * zoom = on-screen px.
+    const m = /^calc\(\s*(\d+(?:\.\d+)?)px\s*\/\s*var\(--pz,\s*(\d+(?:\.\d+)?)\)\s*\)$/.exec(
+      decls('.knob-wrap', '--knob-label-pull')[0]
+    )
+    expect(m).not.toBeNull()
+    const [num, fallback] = [Number(m![1]), Number(m![2])]
+    for (const z of [undefined, ...zooms]) {
+      const pz = z ?? fallback
+      expect((num / pz) * (z ?? 1)).toBeCloseTo(4, 5)
+    }
   })
 
   it('centres the window digits on the glyphs, not on the line box (#314)', () => {

@@ -785,7 +785,7 @@
 
 @media (min-width: 1200px) {
   .panel {
-    /* zoom: used to enlarge the controls at desktop width; non-standard, can be replaced by transform later */
+    /* zoom: enlarges the controls at desktop width (standardised CSS zoom; Firefox 126 and later). --pz must equal it (retro.test.ts pins that) */
     zoom: 1.3;
     --pz: 1.3;
   }
