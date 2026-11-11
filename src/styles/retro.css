@@ -207,7 +207,7 @@
   box-shadow:
     inset 0 2px 5px #000,
     0 1px 0 #fff8;
-  min-height: 44px;
+  min-height: 36px;
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -222,7 +222,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  min-height: 44px;
+  min-height: 36px;
   padding: 0 6px;
   background: #14110c;
   border-radius: 8px;
@@ -684,7 +684,7 @@
 .vfd,
 .lamps {
   position: relative;
-  min-height: 44px;
+  min-height: 36px;
 }
 
 .knobs {
@@ -1420,8 +1420,8 @@
 .vfd,
 .lamps {
   box-sizing: border-box;
-  /* 6px top/bottom keeps the window height identical to before the frame image (page height must not grow) */
-  min-height: 44px;
+  /* 6px top/bottom frame; the window is 36px tall (was 44px, -8px by kako-jun in #314). The .tube width constants include the 8px (see the HUD window term in retro.test.ts and DESIGN.md §7) */
+  min-height: 36px;
   border-style: solid;
   border-color: transparent;
   border-width: 6px 8px;
@@ -1613,6 +1613,23 @@
 @media (prefers-reduced-motion: reduce) {
   .clock-colon {
     animation: none;
+  }
+}
+
+/* #314: centre the digits in the window. A font's line box is taller below the digits than above them (ascender /
+   descender space), so with the plain line box the digits sat 2px above the middle of the window (TIME and REPORTS
+   alike). Trimming each digit box to cap height ... baseline makes the flex centring land on the glyphs themselves,
+   whatever the monospace font on the device is. text-box is in Chrome 133+, Safari 18.2+, Firefox 154+; only older
+   browsers take the fallback below: a 1em line box keeps the window at 36px (a normal line box would make TIME and
+   REPORTS taller than STRIKES), and the nudge moves the digits to about the middle. */
+.vfd > * {
+  text-box: trim-both cap alphabetic;
+}
+@supports not (text-box: trim-both cap alphabetic) {
+  .vfd > * {
+    line-height: 1;
+    position: relative;
+    top: 1px;
   }
 }
 
@@ -1835,13 +1852,13 @@
     margin-top: auto;
   }
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 377px) * 1246 / 1679)));
+    width: min(100%, max(160px, calc((100dvh - 369px) * 1246 / 1679)));
     align-self: center;
   }
   .panel {
     gap: 4px;
   }
-  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300, set to 9px by kako-jun in #309); the tube-width constants (377 / 304, times the frame picture ratio 1246/1679) = base 380 / 307 + this gap - the knob shrink (60px -> 48px on portrait = 12px, #313), so when the gap or the knob size changes move both constants by the same amount. The knob stays >= 44px for touch; the .mark is scaled with the circle */
+  /* knob circle (portrait 48px, #313; the .mark is scaled with it) and its gap to the label (9px, #300/#309): both are terms of the tube-width constants above, see DESIGN.md §7 and retro.test.ts */
   .knob {
     width: 48px;
     height: 48px;
@@ -1865,7 +1882,7 @@
 
 @media (min-width: 360px) and (max-width: 899px) {
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 304px) * 1246 / 1679)));
+    width: min(100%, max(160px, calc((100dvh - 296px) * 1246 / 1679)));
   }
   .cam-grid {
     grid-template-columns: repeat(8, minmax(44px, 1fr));
