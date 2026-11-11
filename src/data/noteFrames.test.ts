@@ -115,8 +115,7 @@ describe('hand-ruled frames of the sketches (public/note/*.svg)', () => {
       for (const m of fr.matchAll(/ d="([^"]+)"/g))
         expect(m[1]).not.toMatch(/[CcQqSsAa]/) // straight segments only
       const a = edgeAngles(f)
-      const norm = (x: number, y: number) => abs(((x - y + 540) % 360) - 180) // angle between two directions
-      // top (0) vs bottom (2): both run left to right, so compare directly; same for right (1) / left (3), reversed
+      // top / bottom both run left to right; right / left both run top to bottom
       expect(abs(a[0] - a[2])).toBeGreaterThanOrEqual(0.2)
       expect(abs(a[1] - a[3])).toBeGreaterThanOrEqual(0.2)
     })
