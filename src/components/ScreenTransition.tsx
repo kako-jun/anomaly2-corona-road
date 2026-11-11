@@ -10,6 +10,9 @@ import {
 // React 18 knows no `inert` prop; the empty string sets the attribute.
 const INERT = { inert: '' } as Record<string, string>
 
+/** Slack after the veil's own half of the fade before the timer swaps the screens anyway. */
+const FALLBACK_MS = 150
+
 interface ScreenTransitionProps {
   /** Which screen `children` is. A change of it is a transition. */
   screenKey: string
@@ -41,12 +44,30 @@ export const ScreenTransition = ({
     if (shownKey === screenKey) lastNode.current = children
   })
 
-  // fade: show the new screen when the veil is black.
+  // fade: show the new screen once the veil is black. The veil's own `transitionend` is the signal (so a heavy
+  // frame cannot swap the screens before it is black); the timer is the fallback if that event never comes.
+  const showNew = () => setShownKey(screenKey)
   useEffect(() => {
     if (!dipping) return
-    const timer = setTimeout(() => setShownKey(screenKey), SCREEN_FADE_MS / 2)
+    const timer = setTimeout(
+      () => setShownKey(screenKey),
+      SCREEN_FADE_MS / 2 + FALLBACK_MS
+    )
     return () => clearTimeout(timer)
   }, [dipping, screenKey])
+
+  // While the old screen is held, nothing it listens to globally may act: it has old props, and its handlers
+  // would drive the live game. A window capture listener runs before every bubbling listener on window/document.
+  useLayoutEffect(() => {
+    if (!dipping) return
+    const stop = (e: Event) => {
+      e.stopImmediatePropagation()
+      e.preventDefault()
+    }
+    const types = ['keydown', 'keyup', 'keypress'] as const
+    types.forEach(t => window.addEventListener(t, stop, true))
+    return () => types.forEach(t => window.removeEventListener(t, stop, true))
+  }, [dipping])
 
   // none / reduced motion: nothing to wait for.
   useEffect(() => {
@@ -73,13 +94,11 @@ export const ScreenTransition = ({
       className="screen-fade-root"
       style={{ '--screen-fade-ms': `${SCREEN_FADE_MS}ms` } as CSSProperties}
     >
-      {dipping ? (
-        <div className="screen-fade-root" {...INERT}>
-          {lastNode.current}
-        </div>
-      ) : (
-        children
-      )}
+      {/* The same wrapper at the same place whether dipping or not: the old screen is never remounted, it keeps its
+          own state (camera, knobs, the pan of the title picture); only `inert` is switched on. */}
+      <div className="screen-fade-root" {...(dipping ? INERT : {})}>
+        {dipping ? lastNode.current : children}
+      </div>
       {ghost && (
         <div className="screen-fade-ghost" key={ghost.key} {...INERT}>
           {ghost.node}
@@ -89,6 +108,9 @@ export const ScreenTransition = ({
         className="screen-fade-veil"
         data-dark={dipping ? 'true' : 'false'}
         aria-hidden="true"
+        onTransitionEnd={e => {
+          if (dipping && e.target === e.currentTarget) showNew()
+        }}
       />
     </div>
   )

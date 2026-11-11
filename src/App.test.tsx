@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { act, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
@@ -205,5 +205,25 @@ describe('App: title -> investigation note (#297) and the language from the brow
     expect(
       screen.getByRole('button', { name: 'START SHIFT' })
     ).toBeInTheDocument()
+  })
+
+  it('with the fade on, the title stays (inert) until the veil is black; the note is not mounted early', async () => {
+    window.history.pushState({}, '', '/?transition=fade')
+    const { container } = render(<App />)
+    await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
+    expect(screen.queryByText('CASE MEMO')).toBeNull()
+    expect(container.querySelector('[inert]')).not.toBeNull()
+    fireEvent.transitionEnd(container.querySelector('.screen-fade-veil')!)
+    expect(screen.getByText('CASE MEMO')).toBeInTheDocument()
+    expect(container.querySelector('[inert]')).toBeNull()
+  })
+
+  it('a production build ignores ?transition= (fade stays on)', async () => {
+    vi.stubEnv('DEV', false)
+    window.history.pushState({}, '', '/?transition=none')
+    render(<App />)
+    await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
+    expect(screen.queryByText('CASE MEMO')).toBeNull()
+    vi.unstubAllEnvs()
   })
 })

@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
-import { act, render } from '@testing-library/react'
+import { act, fireEvent, render } from '@testing-library/react'
+import { useState } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ScreenTransition } from './ScreenTransition'
 import { SCREEN_FADE_MS, parseTransitionMode } from '../utils/screenTransition'
@@ -23,6 +24,8 @@ describe('parseTransitionMode', () => {
     expect(parseTransitionMode('?transition=none', false)).toBe('fade')
     expect(parseTransitionMode('?transition=bogus', true)).toBe('fade')
     expect(parseTransitionMode('', true)).toBe('fade')
+    expect(parseTransitionMode('?transition=FADE', true)).toBe('fade')
+    expect(parseTransitionMode('?transition=None', true)).toBe('fade')
   })
 })
 
@@ -61,9 +64,7 @@ describe('ScreenTransition (fade)', () => {
     expect(container.textContent).toBe('A')
     expect(container.querySelector('[inert]')).not.toBeNull()
     expect(veil(container).dataset.dark).toBe('true')
-    act(() => {
-      vi.advanceTimersByTime(SCREEN_FADE_MS / 2)
-    })
+    fireEvent.transitionEnd(veil(container))
     expect(container.textContent).toBe('B')
     expect(container.querySelector('[inert]')).toBeNull()
     expect(veil(container).dataset.dark).toBe('false')
@@ -82,9 +83,7 @@ describe('ScreenTransition (fade)', () => {
       </ScreenTransition>
     )
     expect(container.querySelector('button')?.textContent).toBe('A')
-    act(() => {
-      vi.advanceTimersByTime(SCREEN_FADE_MS / 2)
-    })
+    fireEvent.transitionEnd(veil(container))
     container.querySelector('button')?.click()
     expect(onB).toHaveBeenCalledTimes(1)
   })
@@ -101,9 +100,7 @@ describe('ScreenTransition (fade)', () => {
       vi.advanceTimersByTime(SCREEN_FADE_MS / 4)
     })
     rerender(view('c'))
-    act(() => {
-      vi.advanceTimersByTime(SCREEN_FADE_MS / 2)
-    })
+    fireEvent.transitionEnd(veil(container))
     expect(container.textContent).toBe('c')
   })
 
@@ -185,5 +182,122 @@ describe('ScreenTransition (fade)', () => {
     })
     expect(container.querySelector('.screen-fade-ghost')).toBeNull()
     expect(container.textContent).toBe('B')
+  })
+
+  it('swaps by the timer when transitionend never comes', () => {
+    const { container, rerender } = render(
+      <ScreenTransition screenKey="a">
+        <button>A</button>
+      </ScreenTransition>
+    )
+    rerender(
+      <ScreenTransition screenKey="b">
+        <button>B</button>
+      </ScreenTransition>
+    )
+    act(() => {
+      vi.advanceTimersByTime(SCREEN_FADE_MS / 2 + 200)
+    })
+    expect(container.textContent).toBe('B')
+  })
+
+  it('keeps the old screen own state while it is dark (no remount)', () => {
+    const Counter = ({ label }: { label: string }) => {
+      const [n, setN] = useState(0)
+      return (
+        <button onClick={() => setN(n + 1)}>
+          {label}:{n}
+        </button>
+      )
+    }
+    const { container, rerender } = render(
+      <ScreenTransition screenKey="a">
+        <Counter label="A" />
+      </ScreenTransition>
+    )
+    fireEvent.click(container.querySelector('button')!)
+    expect(container.textContent).toBe('A:1')
+    rerender(
+      <ScreenTransition screenKey="b">
+        <p>B</p>
+      </ScreenTransition>
+    )
+    expect(container.textContent).toBe('A:1')
+  })
+
+  it('stops global key handlers of the old screen while it is dark', () => {
+    const onKey = vi.fn()
+    window.addEventListener('keydown', onKey)
+    const { container, rerender } = render(
+      <ScreenTransition screenKey="a">
+        <button>A</button>
+      </ScreenTransition>
+    )
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+    expect(onKey).toHaveBeenCalledTimes(1)
+    rerender(
+      <ScreenTransition screenKey="b">
+        <button>B</button>
+      </ScreenTransition>
+    )
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+    expect(onKey).toHaveBeenCalledTimes(1)
+    fireEvent.transitionEnd(veil(container))
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
+    expect(onKey).toHaveBeenCalledTimes(2)
+    window.removeEventListener('keydown', onKey)
+  })
+
+  it('leaves no timer behind when it unmounts in the dark', () => {
+    const { unmount, rerender } = render(
+      <ScreenTransition screenKey="a">
+        <button>A</button>
+      </ScreenTransition>
+    )
+    rerender(
+      <ScreenTransition screenKey="b">
+        <button>B</button>
+      </ScreenTransition>
+    )
+    unmount()
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it('returns to the very same old picture when the key goes back (A to B to A)', () => {
+    const Counter = () => {
+      const [n, setN] = useState(0)
+      return <button onClick={() => setN(n + 1)}>A:{n}</button>
+    }
+    const view = (k: string) => (
+      <ScreenTransition screenKey={k}>
+        {k === 'a' ? <Counter /> : <p>B</p>}
+      </ScreenTransition>
+    )
+    const { container, rerender } = render(view('a'))
+    fireEvent.click(container.querySelector('button')!)
+    rerender(view('b'))
+    rerender(view('a'))
+    expect(container.textContent).toBe('A:1')
+  })
+
+  it('can be switched fade to cross to none between changes', () => {
+    const view = (k: string) => (
+      <ScreenTransition screenKey={k}>
+        <button>{k}</button>
+      </ScreenTransition>
+    )
+    const { container, rerender } = render(view('a'))
+    rerender(view('b'))
+    fireEvent.transitionEnd(veil(container))
+    expect(container.textContent).toBe('b')
+    window.history.pushState({}, '', '/?transition=cross')
+    rerender(view('c'))
+    expect(container.querySelector('.screen-fade-ghost')?.textContent).toBe('b')
+    act(() => {
+      vi.advanceTimersByTime(SCREEN_FADE_MS)
+    })
+    window.history.pushState({}, '', '/?transition=none')
+    rerender(view('d'))
+    expect(container.textContent).toBe('d')
   })
 })
