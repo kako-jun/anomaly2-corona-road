@@ -149,7 +149,7 @@ describe('buildNote after a shift', () => {
       },
       'ja'
     )
-  it('new kinds: stock lines, then the kept tail of the stage muted; night = loops', () => {
+  it('new kinds: stock lines, then the kept tail of the stage (all one colour); night = loops', () => {
     const v = after(shift())
     expect(v.night).toBe('8夜目')
     expect(v.stamps).toEqual([
@@ -157,12 +157,12 @@ describe('buildNote after a shift', () => {
       { text: '夜明け', big: true },
     ])
     expect(v.lines).toEqual([
-      { text: '今夜も異変を報告。', muted: false },
-      { text: '捜査は一歩前へ。', muted: false },
-      { text: '老人2人目を見つけたが、', muted: true },
-      { text: '帰りたくないという。', muted: true },
-      { text: '老人1人目と同じことを言う。', muted: true },
-      { text: '人当たりがよく、こちらを気遣う。', muted: true },
+      { text: '今夜も異変を報告。' },
+      { text: '捜査は一歩前へ。' },
+      { text: '老人2人目を見つけたが、' },
+      { text: '帰りたくないという。' },
+      { text: '老人1人目と同じことを言う。' },
+      { text: '人当たりがよく、こちらを気遣う。' },
     ])
     expect(v.scrib).toEqual(STAGES.elder2.scrib.map(s => s.ja))
     expect(v.left.head).toBe('今夜')

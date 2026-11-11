@@ -57,7 +57,8 @@ async ([lang, kind]) => {
   screen.classList.remove('note-ja', 'note-en'); screen.classList.add('note-' + lang)
   await document.fonts.ready
   const host = document.querySelector(kind === 'syn' ? '.note-syn' : '.note-scrib')
-  const avail = host.clientWidth
+  // Beside the corridor sketch (first night) a scribble line may only use what is left of the sheet.
+  const avail = document.querySelector('.note-notes').clientWidth - (kind === 'scrib' && document.querySelector('.note-doodle') ? 100 + 8 : 0) - (kind === 'scrib' ? 4 : 0)
   const lines = []
   const take = (where, pairs) => pairs.forEach(p => { if (p[lang]) lines.push([where, p[lang]]) })
   if (kind === 'syn') {
@@ -116,6 +117,30 @@ async (lang) => {
 """
 
 
+ROT = """
+async () => {
+  const d = await import('/src/data/noteTilt.ts')
+  const box = document.querySelector('.note-stamps')
+  if (!box.querySelector('.note-big')) { const s = document.createElement('span'); s.className = 'note-stamp note-big'; s.textContent = 'X'; box.appendChild(s) }
+  const ang = el => { const m = new DOMMatrix(getComputedStyle(el).transform); return Math.atan2(m.b, m.a) * 180 / Math.PI }
+  const tapeM = new DOMMatrix(getComputedStyle(document.querySelector('.note-paper'), '::before').transform)
+  const labels = [...document.querySelectorAll('.note-slot-l')]
+  const el = { tape: null, night: document.querySelector('.note-night'), stamp: box.querySelector('.note-stamp:not(.note-big)'), stampBig: box.querySelector('.note-big'),
+    tag: document.querySelector('.note-slot-new'), scrib: document.querySelector('.note-scrib'), label0: labels[0], label1: labels[1], label2: labels[2], label3: labels[3] }
+  const got = {}
+  for (const [k, e] of Object.entries(el)) got[k] = k === 'tape' ? Math.atan2(tapeM.b, tapeM.a) * 180 / Math.PI : (e ? ang(e) : null)
+  const res = []
+  for (const [k, v] of Object.entries(got)) {
+    if (v === null) { res.push('no element for tilt ' + k); continue }
+    if (Math.abs(v - d.TILT_BY_NAME[k]) > 0.05) res.push(`${k} is tilted ${v.toFixed(2)} deg on the page, the table says ${d.TILT_BY_NAME[k]}`)
+  }
+  for (const [a, b] of d.NEIGHBOURS) if (got[a] !== null && got[b] !== null && Math.abs(got[a] - got[b]) < d.MIN_NEIGHBOUR_GAP) res.push(`neighbours ${a} and ${b} tilt alike (${got[a].toFixed(2)} / ${got[b].toFixed(2)})`)
+  const names = Object.keys(got)
+  for (let i = 0; i < names.length; i++) for (let j = i + 1; j < names.length; j++) if (Math.abs(got[names[i]] - got[names[j]]) < d.MIN_ANY_GAP) res.push(`${names[i]} and ${names[j]} tilt alike`)
+  return res
+}
+"""
+
 LAYOUT = """
 () => {
   const r = s => document.querySelector(s).getBoundingClientRect()
@@ -131,8 +156,20 @@ LAYOUT = """
     const own = tag.parentElement.getBoundingClientRect()
     for (const s of slots) if (s !== own && s.left !== own.left && Math.min(tr.right, s.right) - Math.max(tr.left, s.left) > 0 && Math.min(tr.bottom, s.bottom) - Math.max(tr.top, s.top) > 0) res.push('the "found" tag overlaps the neighbouring frame')
   }
-  const syn = document.querySelector('.note-syn')
-  if (syn.scrollHeight > syn.clientHeight + 1) res.push('synopsis overflows its ruled area')
+  // Scribbles continue right under the last synopsis line (on the next rule) and stay inside the ruled sheet.
+  const notes = document.querySelector('.note-notes'), syn = document.querySelector('.note-syn'), sc = document.querySelector('.note-scrib')
+  const synBottom = syn.offsetTop + syn.offsetHeight
+  if (sc.offsetTop !== synBottom) res.push(`the scribble starts ${sc.offsetTop - synBottom}px from the last synopsis line (must follow it directly)`)
+  const nr = notes.getBoundingClientRect(), sr = sc.getBoundingClientRect(), fr = r('.note-form')
+  if (sr.bottom > nr.bottom || sr.top < nr.top) res.push('the tilted scribble leaves the ruled sheet')
+  if (fr.top - sr.bottom < 6) res.push(`the scribble is only ${(fr.top - sr.bottom).toFixed(1)}px above the form`)
+  const dd = document.querySelector('.note-doodle')
+  if (dd) {
+    const dr = dd.getBoundingClientRect(), lines = [...syn.querySelectorAll('p')].map(p => { const s = document.createRange(); s.selectNodeContents(p); return s.getBoundingClientRect() })
+    for (const l of lines) if (Math.min(dr.right, l.right) - Math.max(dr.left, l.left) > 0 && Math.min(dr.bottom, l.bottom) - Math.max(dr.top, l.top) > 0) res.push('the corridor sketch overlaps a synopsis line')
+    const sw = [...sc.querySelectorAll('p')].map(p => { const s = document.createRange(); s.selectNodeContents(p); return s.getBoundingClientRect() })
+    for (const l of sw) if (Math.min(dr.right, l.right) - Math.max(dr.left, l.left) > 0 && Math.min(dr.bottom, l.bottom) - Math.max(dr.top, l.top) > 0) res.push('the corridor sketch overlaps a scribble')
+  }
   return res
 }
 """
@@ -156,6 +193,8 @@ def main():
                 for msg in page.evaluate(LAYOUT):
                     problems.append(f"[{lang}] {label}: {msg}")
                 if label == "new frame":
+                    for msg in page.evaluate(ROT):
+                        problems.append(f"[{lang}] {msg}")
                     continue
                 kinds = ("syn", "scrib")
                 for kind in kinds:

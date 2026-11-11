@@ -65,7 +65,7 @@
   margin-left: -37px;
   background: var(--tape);
   box-shadow: 0 1px 1px #0003;
-  transform: rotate(-1.5deg);
+  transform: rotate(var(--tilt-tape));
 }
 .note-ja {
   font-family:
@@ -98,6 +98,8 @@
   letter-spacing: 0.04em;
 }
 .note-night {
+  transform: rotate(var(--tilt-night));
+  transform-origin: 100% 100%;
   font-size: 15px;
   line-height: 20px;
 }
@@ -121,9 +123,11 @@
   font-size: 16px;
   line-height: 20px;
   letter-spacing: 0.14em;
-  transform: rotate(-5deg);
+  /* a stamp pressed by hand: slightly off the line, not a perfect rectangle (uneven border and corners) */
+  transform: translate(0.6px, -0.5px) rotate(var(--tilt-stamp));
   opacity: 0.88;
-  border-radius: 3px;
+  border-width: 2px 2.4px 1.8px 2.2px;
+  border-radius: 3px 4.5px 2.5px 4px;
   mix-blend-mode: multiply;
   white-space: nowrap;
 }
@@ -135,7 +139,9 @@
   font-size: 26px;
   line-height: 30px;
   padding: 2px 12px;
-  border-width: 3px;
+  border-width: 3px 3.6px 2.7px 3.3px;
+  border-radius: 5px 3px 6px 3.5px;
+  transform: translate(-0.9px, 1.1px) rotate(var(--tilt-stamp-big));
 }
 .note-en .note-stamp.note-big {
   font-size: 22px;
@@ -159,6 +165,7 @@
 }
 .note-slot-l {
   display: block;
+  transform-origin: 50% 50%;
   margin-top: 1px;
   font-size: 12px;
   line-height: 14px;
@@ -175,15 +182,17 @@
   color: var(--red);
   background: var(--paper);
   padding: 0 2px;
-  transform: rotate(6deg);
+  transform: rotate(var(--tilt-tag));
 }
 .note-en .note-slot-new {
   font-size: 16px;
 }
 
-.note-syn {
+.note-notes {
+  /* The synopsis and the scribbles share one ruled sheet: every line, printed or scribbled, sits on the rules. */
+  position: relative;
   margin-top: 6px;
-  min-height: 154px;
+  min-height: 214px;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0,
@@ -193,11 +202,16 @@
   );
   background-position: 0 1px;
 }
-.note-after .note-syn {
-  /* The after-night stamp row is taller (the big stamp); the synopsis there is 6 lines at most. */
-  min-height: 132px;
+.note-first .note-notes {
+  /* seven synopsis lines + three scribble lines, and the corridor sketch in the bottom corner clear of them */
+  min-height: 230px;
 }
-.note-syn p {
+.note-after .note-notes {
+  /* The after-night stamp row is taller (the big stamp); the synopsis there is 6 lines at most. */
+  min-height: 194px;
+}
+.note-syn p,
+.note-scrib p {
   margin: 0;
   white-space: nowrap; /* every data line is one handwritten line: the browser never wraps it */
   line-height: 22px;
@@ -206,37 +220,24 @@
 .note-en .note-syn p {
   font-size: 20px;
 }
-.note-syn p.note-mut {
-  color: #7a6b50;
-}
-
-.note-sc-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 62px;
-}
 .note-scrib {
-  flex: 1;
-  margin: 2px 8px 0 4px;
-  font-size: 15px;
-  line-height: 19px;
+  /* Continues right under the last synopsis line, tilted like a note jotted in the margin. */
+  width: fit-content;
+  margin: 0 0 0 4px;
   color: var(--blue);
-  transform: rotate(-2deg);
-  transform-origin: 0 50%;
+  transform: rotate(var(--tilt-scrib));
+  transform-origin: 50% 50%; /* about its own middle: the left end dips and the right end lifts by the same few px, so no line runs into its neighbour */
 }
-.note-en .note-scrib {
-  font-size: 22px;
-  line-height: 20px;
-}
-.note-scrib p {
-  margin: 0;
-  white-space: nowrap;
+.note-en .note-scrib p {
+  font-size: 20px;
 }
 .note-doodle {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
   display: block;
-  width: 90px;
-  height: 60px;
+  width: 100px;
+  height: 67px;
 }
 
 .note-form {

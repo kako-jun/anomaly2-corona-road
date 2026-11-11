@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { LABELS } from '../data/investigationNotes'
 import type { NoteLang } from '../data/investigationNotes'
 import type { NoteRow, NoteView } from '../utils/investigationNote'
+import { TILT, tiltVars } from '../data/noteTilt'
 import './investigationNote.css'
 
 /** The paper is drawn at this fixed size and scaled to fit the screen, so it never scrolls. */
@@ -76,7 +78,18 @@ export const InvestigationNote = ({
     : (actionLabel ??
       (view.mode === 'before' ? LABELS.btnStart[lang] : LABELS.btnAgain[lang]))
   return (
-    <main className={`note-screen note-${lang} note-${view.mode}`} lang={lang}>
+    <main
+      className={[
+        'note-screen',
+        `note-${lang}`,
+        `note-${view.mode}`,
+        view.doodle ? 'note-first' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      lang={lang}
+      style={tiltVars() as CSSProperties}
+    >
       <div
         className="note-fit"
         style={{ width: PAPER_W * scale, height: PAPER_H * scale }}
@@ -109,21 +122,24 @@ export const InvestigationNote = ({
                   height={68}
                   alt={s.alt}
                 />
-                <span className="note-slot-l">{s.label}</span>
+                <span
+                  className="note-slot-l"
+                  style={{ transform: `rotate(${TILT.label[i]}deg)` }}
+                >
+                  {s.label}
+                </span>
                 {s.isNew && (
                   <span className="note-slot-new">{LABELS.slotNew[lang]}</span>
                 )}
               </div>
             ))}
           </div>
-          <div className="note-syn">
-            {view.lines.map(l => (
-              <p key={l.text} className={l.muted ? 'note-mut' : undefined}>
-                {l.text}
-              </p>
-            ))}
-          </div>
-          <div className="note-sc-row">
+          <div className="note-notes">
+            <div className="note-syn">
+              {view.lines.map(l => (
+                <p key={l.text}>{l.text}</p>
+              ))}
+            </div>
             <div className="note-scrib note-hw">
               {view.scrib.map(s => (
                 <p key={s}>{s}</p>
@@ -133,8 +149,8 @@ export const InvestigationNote = ({
               <img
                 className="note-doodle"
                 src="/note/corridor.svg"
-                width={90}
-                height={60}
+                width={100}
+                height={67}
                 alt=""
               />
             )}
