@@ -5,7 +5,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-notice }
     lines:
-      - { who: A, text: '焦るとだめだね　左の壁をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the left wall." }
+      - { who: A, text: '焦るとだめだね　左の壁をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the left wall." }
       - { who: M, text: 'そうですね　左の壁を少し引いて見ます', en: "Right. I'll take a closer look at the left wall." }
   - id: an-AR-01-notice-02
     tone: serious
@@ -17,38 +17,38 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-ashtray }
     lines:
-      - { who: A, text: '念のため　右手前も確かめておこう', en: "Let's check the near right side too, just in case." }
-      - { who: M, text: 'はい　右手前の端も　見落とさないようにします', en: "Yes. I'll make sure not to miss the near-right edge." }
+      - { who: A, text: '念のため　右手前も確かめておこう', en: "Let's check the front right side too, just in case." }
+      - { who: M, text: 'はい　右手前の端も　見落とさないようにします', en: "Yes. I'll make sure not to miss the front-right edge." }
   - id: an-AR-02-ashtray-02
     tone: serious
     when: { anomaly: AR-02-ashtray }
     lines:
-      - { who: M, text: '視点を少しずらして　右手前を見てみましょう', en: "Shift your view a little and take a look at the near right side." }
-      - { who: A, text: 'そうか　右手前の前後も見てみるね', en: "I see. I'll check around the near right side too." }
+      - { who: M, text: '視点を少しずらして　右手前を見てみましょう', en: "Shift your view a little and take a look at the front right side." }
+      - { who: A, text: 'そうか　右手前の前後も見てみるね', en: "I see. I'll check around the front right side too." }
   - id: an-AR-02-bag-01
     tone: serious
     when: { anomaly: AR-02-bag }
     lines:
       - { who: A, text: '右手前の床の辺り　見方を変えたら分かるかな', en: "Maybe a different angle will reveal something around the floor on the right?" }
-      - { who: M, text: 'はい　右手前の床から順に　確認していきます', en: "Yes. I'll start at the near-right floor and check from there." }
+      - { who: M, text: 'はい　右手前の床から順に　確認していきます', en: "Yes. I'll start at the front-right floor and check from there." }
   - id: an-AR-02-bag-02
     tone: serious
     when: { anomaly: AR-02-bag }
     lines:
-      - { who: M, text: '焦らずに　右手前の床のあたりを　見てください', en: "Please take your time and check around the near-right floor." }
-      - { who: A, text: 'えっ　右手前の床まで見るの?　ちゃんと見る!', en: "Huh? Even the near-right floor? I'll check properly!" }
+      - { who: M, text: '焦らずに　右手前の床のあたりを　見てください', en: "Please take your time and check around the front-right floor." }
+      - { who: A, text: 'えっ　右手前の床まで見るの?　ちゃんと見る!', en: "Huh? Even the front-right floor? I'll check properly!" }
   - id: an-AR-02-blue-pot-01
     tone: serious
     when: { anomaly: AR-02-blue-pot }
     lines:
       - { who: A, text: 'うーん　視線が止まってたね　右手前も見よう', en: "Hmm, I got fixated. Let's check the right side too." }
-      - { who: M, text: '了解です　右手前をもう一度確認します', en: "Got it. I'll check the near right side again." }
+      - { who: M, text: '了解です　右手前をもう一度確認します', en: "Got it. I'll check the front right side again." }
   - id: an-AR-02-blue-pot-02
     tone: serious
     when: { anomaly: AR-02-blue-pot }
     lines:
-      - { who: M, text: '今度は右手前のほうへ　目を向けてみましょう', en: "This time, try looking toward the near right side." }
-      - { who: A, text: 'えっ　右手前?　もう一度見る!', en: "Huh? the near-right side? I'll look again!" }
+      - { who: M, text: '今度は右手前のほうへ　目を向けてみましょう', en: "This time, try looking toward the front right side." }
+      - { who: A, text: 'えっ　右手前?　もう一度見る!', en: "Huh? the front-right side? I'll look again!" }
   - id: an-AR-02-cat-01
     tone: serious
     when: { anomaly: AR-02-cat }
@@ -59,8 +59,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-cat }
     lines:
-      - { who: M, text: 'はい　今度は左のシャッターに　注目してみてください', en: "Please yes. This time, focus on the shutter on the left." }
-      - { who: A, text: '左のシャッターを　見てるつもりだったのに　だめだね', en: "I thought I was watching the shutter on the left. Guess not." }
+      - { who: M, text: 'はい　今度は左のシャッターに　注目してみてください', en: "Yes. Please focus on the left shutter this time." }
+      - { who: A, text: '左のシャッターを　見てるつもりだったのに　だめだね', en: "I thought I was watching the left shutter. Guess not." }
   - id: an-AR-02-cigarette-01
     tone: serious
     when: { anomaly: AR-02-cigarette }
@@ -77,14 +77,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-coffee }
     lines:
-      - { who: A, text: '焦るとだめだね　右手前をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the near right side." }
-      - { who: M, text: 'はい　右手前の周囲から見直します', en: "Yes. I'll take another look around the near right side." }
+      - { who: A, text: '焦るとだめだね　右手前をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the front right side." }
+      - { who: M, text: 'はい　右手前の周囲から見直します', en: "Yes. I'll take another look around the front right side." }
   - id: an-AR-02-coffee-02
     tone: serious
     when: { anomaly: AR-02-coffee }
     lines:
-      - { who: M, text: '右手前の辺り　何か違って見えませんか', en: "Does anything look different around the near right side?" }
-      - { who: A, text: 'ああ　右手前は見ていたつもりなのに', en: "Ah, I thought I was looking at the near right side." }
+      - { who: M, text: '右手前の辺り　何か違って見えませんか', en: "Does anything look different around the front right side?" }
+      - { who: A, text: 'ああ　右手前は見ていたつもりなのに', en: "Ah, I thought I was looking at the front right side." }
   - id: an-AR-02-newspaper-01
     tone: serious
     when: { anomaly: AR-02-newspaper }
@@ -108,19 +108,19 @@ dialogues:
     when: { anomaly: AR-02-open-sign }
     lines:
       - { who: M, text: '左のシャッターの前後を　順に見ていきましょう', en: "Let's check the area around the shutter on the left, bit by bit." }
-      - { who: A, text: 'よし　左のシャッターを落ち着いて探す', en: "All right. I'll look carefully for carefully around the shutter on the left." }
+      - { who: A, text: 'よし　左のシャッターを落ち着いて探す', en: "All right. I'll take a careful look around the shutter on the left." }
   - id: an-AR-02-pot-duplicate-01
     tone: serious
     when: { anomaly: AR-02-pot-duplicate }
     lines:
-      - { who: A, text: 'あっ　右手前をちゃんと　見てなかったかも', en: "Oh, maybe I didn't really check the near right side." }
-      - { who: M, text: '分かりました　右手前まで目を通します', en: "Understood. I'll make sure to check the near right side." }
+      - { who: A, text: 'あっ　右手前をちゃんと　見てなかったかも', en: "Oh, maybe I didn't really check the front right side." }
+      - { who: M, text: '分かりました　右手前まで目を通します', en: "Understood. I'll make sure to check the front right side." }
   - id: an-AR-02-pot-duplicate-02
     tone: serious
     when: { anomaly: AR-02-pot-duplicate }
     lines:
-      - { who: M, text: '右手前を一度見て　隣の範囲とも比べてください', en: "Please compare the near right side with the area beside it." }
-      - { who: A, text: 'うそ　右手前を見たつもりだったのに!', en: "No way! I thought I'd checked the near right side!" }
+      - { who: M, text: '右手前を一度見て　隣の範囲とも比べてください', en: "Please compare the front right side with the area beside it." }
+      - { who: A, text: 'うそ　右手前を見たつもりだったのに!', en: "No way! I thought I'd checked the front right side!" }
   - id: an-AR-02-puddle-01
     tone: serious
     when: { anomaly: AR-02-puddle }
@@ -174,12 +174,12 @@ dialogues:
     when: { anomaly: AR-02-square-pot }
     lines:
       - { who: A, text: '見ているつもりだったけど　右手前に戻ろう', en: "I thought I was watching the front right. Let's check it again." }
-      - { who: M, text: 'そうですね　右手前だけで　決めないようにします', en: "Right. I'll avoid judging by the near-right side alone." }
+      - { who: M, text: 'そうですね　右手前だけで　決めないようにします', en: "Right. I'll avoid judging by the front-right side alone." }
   - id: an-AR-02-square-pot-02
     tone: serious
     when: { anomaly: AR-02-square-pot }
     lines:
-      - { who: M, text: '少し気になる範囲です　右手前を確認してください', en: "This is an area of concern. Please check the near-right side." }
+      - { who: M, text: '少し気になる範囲です　右手前を確認してください', en: "This is an area of concern. Please check the front-right side." }
       - { who: A, text: 'えっ　右手前に気づかなかった　もう一度!', en: "Huh? I missed the right. I'll check again!" }
   - id: an-AR-02-stool-01
     tone: serious
@@ -252,7 +252,7 @@ dialogues:
     when: { anomaly: AR-05-glass-light }
     lines:
       - { who: M, text: '視線の位置を変えて　中央上部の店舗を見直しましょう', en: "Let's shift our gaze and take another look at the store in the upper center." }
-      - { who: A, text: 'ああ　悔しい!　中央上部の店舗を　もう一度確認する', en: "Ugh, I missed it. I'll check it again." }
+      - { who: A, text: 'ああ　悔しい!　中央上部の店舗を　もう一度確認する', en: "Ugh, I missed the store in the upper center. I'll check it again." }
   - id: an-AR-06-reflected-umbrella-01
     tone: serious
     when: { anomaly: AR-06-reflected-umbrella }
@@ -444,7 +444,7 @@ dialogues:
     when: { anomaly: AR-04-purple-leaves }
     lines:
       - { who: M, text: '少し引いて　奥のほうの周囲まで　見てみましょう', en: "Let's pull back a little and take a look around the back." }
-      - { who: A, text: '決めつけないで　奥のほうを見直そう', en: "Don't make decisions, let's look deeper" }
+      - { who: A, text: '決めつけないで　奥のほうを見直そう', en: "Let's not jump to conclusions. Let's look farther back" }
   - id: an-AR-03-red-string-01
     tone: serious
     when: { anomaly: AR-03-red-string }
@@ -473,7 +473,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-warm-light }
     lines:
-      - { who: A, text: '焦るとだめだね　奥の開口をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the opening at the back." }
+      - { who: A, text: '焦るとだめだね　奥の開口をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the opening at the back." }
       - { who: M, text: 'そうですね　奥の開口を少し引いて見ます', en: "Well, let's pull back the opening at the back a little and take a look." }
   - id: an-AR-07-warm-light-02
     tone: serious
@@ -485,19 +485,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-blue-brick }
     lines:
-      - { who: A, text: 'さっき決めつけたね　中央の店舗から見直そう', en: "You've already made a decision. Let's start with the store in the center." }
+      - { who: A, text: 'さっき決めつけたね　中央の店舗から見直そう', en: "We jumped to conclusions earlier. Let's start with the store in the center." }
       - { who: M, text: '分かりました　中央の店舗のあたりから見ます', en: "Okay, I can see it from around the central store." }
   - id: an-AR-05-blue-brick-02
     tone: serious
     when: { anomaly: AR-05-blue-brick }
     lines:
       - { who: M, text: '中央の店舗に見落としがないか　確かめてください', en: "Please check if there is anything overlooked in the central store." }
-      - { who: A, text: 'よし　中央の店舗を落ち着いて探す', en: "All right. I'll look carefully for carefully for the store in the center." }
+      - { who: A, text: 'よし　中央の店舗を落ち着いて探す', en: "All right. I'll carefully look for the store in the center." }
   - id: an-AR-06-tilted-notice-01
     tone: serious
     when: { anomaly: AR-06-tilted-notice }
     lines:
-      - { who: A, text: '焦るとだめだね　右の壁をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the wall on the right." }
+      - { who: A, text: '焦るとだめだね　右の壁をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the wall on the right." }
       - { who: M, text: 'そうですね　右の壁を少し引いて見ます', en: "Well, let's pull back the wall on the right a little and take a look." }
   - id: an-AR-06-tilted-notice-02
     tone: serious
@@ -510,7 +510,7 @@ dialogues:
     when: { anomaly: AR-01-shutter-light }
     lines:
       - { who: A, text: 'あっ　中央のシャッターを　ちゃんと見てなかったかも', en: "Oh, I may not have checked the central shutter carefully." }
-      - { who: M, text: '分かりました　中央のシャッターまで　目を通します', en: "Okay, I'll look through the shutter in the center." }
+      - { who: M, text: '分かりました　中央のシャッターまで　目を通します', en: "Okay, I'll make sure to check the shutter in the center." }
   - id: an-AR-01-shutter-light-02
     tone: serious
     when: { anomaly: AR-01-shutter-light }
@@ -588,7 +588,7 @@ dialogues:
     when: { anomaly: AR-03-striped-sign }
     lines:
       - { who: M, text: '視線の位置を変えて　中央上部のシャッターを　見直しましょう', en: "Change your line of sight and look at the shutter at the top center" }
-      - { who: A, text: 'ああ　悔しい!　中央上部のシャッターを　もう一度確認する', en: "Ugh, I missed it. I'll check it again." }
+      - { who: A, text: 'ああ　悔しい!　中央上部のシャッターを　もう一度確認する', en: "Ugh, I missed the shutter in the upper center. I'll check it again." }
   - id: an-AR-04-door-gap-01
     tone: serious
     when: { anomaly: AR-04-door-gap }
@@ -653,7 +653,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-tile-diagonal }
     lines:
-      - { who: A, text: 'さっき決めつけたね　左下の床から見直そう', en: "We jumped to conclusions. Let's check the lower-left floor again." }
+      - { who: A, text: 'さっき決めつけたね　左下の床から見直そう', en: "We jumped to conclusions earlier. Let's check the lower-left floor again." }
       - { who: M, text: '分かりました　左下の床のあたりから見ます', en: "Understood. I'll look from the floor in the bottom left." }
   - id: an-AR-03-tile-diagonal-02
     tone: serious
@@ -761,14 +761,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-white-cap }
     lines:
-      - { who: A, text: 'さっき決めつけたね　奥の開口から見直そう', en: "We jumped to conclusions. Let's check the back opening again." }
+      - { who: A, text: 'さっき決めつけたね　奥の開口から見直そう', en: "We jumped to conclusions earlier. Let's check the back opening again." }
       - { who: M, text: '分かりました　奥の開口のあたりから見ます', en: "Okay, I'll look at it from around the opening in the back." }
   - id: an-AR-03-white-cap-02
     tone: serious
     when: { anomaly: AR-03-white-cap }
     lines:
       - { who: M, text: '奥の開口に見落としがないか　確かめてください', en: "Please check if there is anything overlooked in the opening at the back." }
-      - { who: A, text: 'よし　奥の開口を落ち着いて探す', en: "All right. I'll look carefully for carefully for the opening in the back." }
+      - { who: A, text: 'よし　奥の開口を落ち着いて探す', en: "All right. I'll carefully look for the opening in the back." }
   - id: an-AR-07-white-step-01
     tone: serious
     when: { anomaly: AR-07-white-step }
@@ -780,7 +780,7 @@ dialogues:
     when: { anomaly: AR-07-white-step }
     lines:
       - { who: M, text: '少し引いて　左の階段の周囲まで　見てみましょう', en: "Let's pull back a little and take a look around the stairs on the left." }
-      - { who: A, text: '決めつけないで　左の階段を見直そう', en: "Let's keep an open mind and check the stairs on the left again." }
+      - { who: A, text: '決めつけないで　左の階段を見直そう', en: "Let's not jump to conclusions. Let's check the stairs on the left again." }
   - id: an-AR-07-stairs-cat-01
     tone: serious
     when: { anomaly: AR-07-stairs-cat }
@@ -804,7 +804,7 @@ dialogues:
     when: { anomaly: AR-07-opening-paper }
     lines:
       - { who: M, text: '視線の位置を変えて　奥の開口を見直しましょう', en: "Change your line of sight and reconsider the opening at the back." }
-      - { who: A, text: 'ああ　悔しい!　奥の開口をもう一度確認する', en: "Ugh, I missed it. I'll check it again." }
+      - { who: A, text: 'ああ　悔しい!　奥の開口をもう一度確認する', en: "Ugh, I missed the opening in the back. I'll check it again." }
   - id: an-AR-07-duplicate-green-sign-01
     tone: serious
     when: { anomaly: AR-07-duplicate-green-sign }
@@ -881,7 +881,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-wall-stripes }
     lines:
-      - { who: A, text: 'さっき決めつけたね　右中段の壁から見直そう', en: "We jumped to conclusions. Let's check the mid-right wall again." }
+      - { who: A, text: 'さっき決めつけたね　右中段の壁から見直そう', en: "We jumped to conclusions earlier. Let's check the mid-right wall again." }
       - { who: M, text: '分かりました　右中段の壁のあたりから見ます', en: "Okay, I can see it from around the middle right wall." }
   - id: an-AR-06-wall-stripes-02
     tone: serious
@@ -941,7 +941,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-rusty-vent }
     lines:
-      - { who: A, text: '焦るとだめだね　天井をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the ceiling." }
+      - { who: A, text: '焦るとだめだね　天井をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the ceiling." }
       - { who: M, text: 'そうですね　天井を少し引いて見ます', en: "Well, let's pull back the ceiling a little and take a look." }
   - id: an-AR-02-rusty-vent-02
     tone: serious
@@ -984,7 +984,7 @@ dialogues:
     when: { anomaly: AR-07-purple-floor-tile }
     lines:
       - { who: M, text: '少し引いて　中央下部の床の周囲まで　見てみましょう', en: "Let's pull back a little and take a look around the lower-center floor." }
-      - { who: A, text: '決めつけないで　中央下部の床を見直そう', en: "Let's keep an open mind and check the lower-center floor again." }
+      - { who: A, text: '決めつけないで　中央下部の床を見直そう', en: "Let's not jump to conclusions. Let's check the lower-center floor again." }
   - id: an-AR-02-duplicate-coffee-sign-01
     tone: serious
     when: { anomaly: AR-02-duplicate-coffee-sign }
@@ -1025,14 +1025,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-pillar-notice }
     lines:
-      - { who: A, text: 'さっき決めつけたね　中央上部の柱から見直そう', en: "We jumped to conclusions. Let's start by checking the upper-center pillar." }
+      - { who: A, text: 'さっき決めつけたね　中央上部の柱から見直そう', en: "We jumped to conclusions. Let's start with the upper-center pillar." }
       - { who: M, text: '分かりました　中央上部の柱のあたりから見ます', en: "I understand. View from around the pillar at the top center." }
   - id: an-AR-02-pillar-notice-02
     tone: serious
     when: { anomaly: AR-02-pillar-notice }
     lines:
       - { who: M, text: '中央上部の柱に見落としがないか　確かめてください', en: "Please check if there is anything overlooked in the upper-center pillar." }
-      - { who: A, text: 'よし　中央上部の柱を落ち着いて探す', en: "All right. I'll look carefully for carefully for the pillar in the upper center." }
+      - { who: A, text: 'よし　中央上部の柱を落ち着いて探す', en: "All right. I'll carefully look for the pillar in the upper center." }
   - id: an-AR-03-amber-lamp-glow-01
     tone: serious
     when: { anomaly: AR-03-amber-lamp-glow }
@@ -1044,7 +1044,7 @@ dialogues:
     when: { anomaly: AR-03-amber-lamp-glow }
     lines:
       - { who: M, text: '右側の近くも　続けて見てください', en: "Please continue looking near the right side." }
-      - { who: A, text: 'あっ　右側を先走って見てたかも', en: "Ah, I might have been running ahead on the right side." }
+      - { who: A, text: 'あっ　右側を先走って見てたかも', en: "Ah, I may have rushed past the right side." }
   - id: an-AR-03-coffee-text-missing-01
     tone: serious
     when: { anomaly: AR-03-coffee-text-missing }
@@ -1079,7 +1079,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-round-puddle }
     lines:
-      - { who: M, text: '中央の床　前後と比べて　気になるところは　ありませんか', en: "Compare the center floor with the areas ahead and behind. Anything odd?" }
+      - { who: M, text: '中央の床　前後と比べて　気になるところは　ありませんか', en: "Compare the center floor with the areas around it. Anything odd?" }
       - { who: A, text: 'そうなの?　中央の床の見方を変えてみるね', en: "Is that so? Let's try changing the way we look at the floor in the center." }
   - id: an-AR-07-diamond-tile-01
     tone: serious
@@ -1091,7 +1091,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-diamond-tile }
     lines:
-      - { who: M, text: '中央下部の床　前後と比べて　気になるところは　ありませんか', en: "Compare the lower-center floor with the areas ahead and behind. Anything odd?" }
+      - { who: M, text: '中央下部の床　前後と比べて　気になるところは　ありませんか', en: "Compare the lower-center floor with the areas around it. Anything odd?" }
       - { who: A, text: 'そうなの?　中央下部の床の見方を　変えてみるね', en: "Is that so? Let's try changing the way we look at the lower-center floor." }
   - id: an-AR-07-floor-puddle-01
     tone: serious
@@ -1157,7 +1157,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-noren }
     lines:
-      - { who: A, text: '焦るとだめだね　左の店先をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the storefront on the left." }
+      - { who: A, text: '焦るとだめだね　左の店先をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the storefront on the left." }
       - { who: M, text: 'そうですね　左の店先を少し引いて見ます', en: "Well, let's look at the storefront on the left a little further back." }
   - id: an-AR-01-noren-02
     tone: serious
@@ -1211,7 +1211,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-basket }
     lines:
-      - { who: M, text: '左のガラス　前後と比べて　気になるところは　ありませんか', en: "Compare the left glass with the areas ahead and behind. Anything odd?" }
+      - { who: M, text: '左のガラス　前後と比べて　気になるところは　ありませんか', en: "Compare the left glass with the areas around it. Anything odd?" }
       - { who: A, text: 'そうなの?　左のガラスの見方を変えてみるね', en: "Is that so? Let's try looking at the glass on the left differently." }
   - id: an-AR-04-poster-01
     tone: serious
@@ -1247,8 +1247,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-sign }
     lines:
-      - { who: M, text: '奥のほう　前後と比べて　気になるところは　ありませんか', en: "Are there any areas of concern in the back compared to the front and back?" }
-      - { who: A, text: 'ああ　悔しい!　奥のほうをもう一度確認する', en: "Ugh, I missed it. I'll check it again." }
+      - { who: M, text: '奥のほう　前後と比べて　気になるところは　ありませんか', en: "Compare the back area with the areas around it. Anything stand out?" }
+      - { who: A, text: 'ああ　悔しい!　奥のほうをもう一度確認する', en: "Ugh, I missed the area in the back. I'll check it again." }
   - id: an-AR-08-suit-01
     tone: serious
     when: { anomaly: AR-08-suit }
@@ -1272,7 +1272,7 @@ dialogues:
     when: { anomaly: AR-01-sign-rim }
     lines:
       - { who: M, text: '視線の位置を変えて　右側を見直しましょう', en: "Change your line of sight and look at the right side." }
-      - { who: A, text: '右側を見てるつもりだったのに　だめだね', en: "I was trying to look to the right, but it's no good." }
+      - { who: A, text: '右側を見てるつもりだったのに　だめだね', en: "I thought I was looking to the right. Guess I wasn't really looking." }
   - id: an-AR-04-handle-01
     tone: serious
     when: { anomaly: AR-04-handle }
@@ -1289,7 +1289,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-pillar-notice }
     lines:
-      - { who: A, text: '焦るとだめだね　中央上部の柱を　ゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the pillar at the top center." }
+      - { who: A, text: '焦るとだめだね　中央上部の柱を　ゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the pillar at the top center." }
       - { who: M, text: 'そうですね　中央上部の柱を少し引いて見ます', en: "Well, let's look at the pillar at the top center by pulling it out a little." }
   - id: an-AR-08-pillar-notice-02
     tone: serious
@@ -1301,14 +1301,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-sign-old-shop }
     lines:
-      - { who: A, text: 'さっき決めつけたね　右側から見直そう', en: "We jumped to conclusions. Let's check the right side again." }
+      - { who: A, text: 'さっき決めつけたね　右側から見直そう', en: "We jumped to conclusions earlier. Let's check the right side again." }
       - { who: M, text: '分かりました　右側のあたりから見ます', en: "Okay, I'll look from the right side." }
   - id: an-AR-01-sign-old-shop-02
     tone: serious
     when: { anomaly: AR-01-sign-old-shop }
     lines:
       - { who: M, text: '右側に見落としがないか　確かめてください', en: "Please check if there is anything overlooked on the right side." }
-      - { who: A, text: 'よし　右側を落ち着いて探す', en: "All right. I'll look carefully for carefully for the right side." }
+      - { who: A, text: 'よし　右側を落ち着いて探す', en: "All right. I'll carefully look for the right side." }
   - id: an-AR-01-back-view-paper-bag-01
     tone: serious
     when: { anomaly: AR-01-back-view-paper-bag }
@@ -1319,7 +1319,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-back-view-paper-bag }
     lines:
-      - { who: M, text: '奥の通路　前後と比べて　気になるところは　ありませんか', en: "Compare the back corridor with the areas ahead and behind. Anything odd?" }
+      - { who: M, text: '奥の通路　前後と比べて　気になるところは　ありませんか', en: "Compare the back corridor with the areas around it. Anything odd?" }
       - { who: A, text: 'そうなの?　奥の通路の見方を変えてみるね', en: "Is that so? Let's try changing the way we look at the back passage." }
   - id: an-AR-01-cat-in-frosted-window-01
     tone: serious
@@ -1367,7 +1367,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-vent-hole-triangle }
     lines:
-      - { who: M, text: '中央上部の天井　前後と比べて　気になるところは　ありませんか', en: "Compare the upper-center ceiling with the areas ahead and behind. Anything odd?" }
+      - { who: M, text: '中央上部の天井　前後と比べて　気になるところは　ありませんか', en: "Compare the upper-center ceiling with the areas around it. Anything odd?" }
       - { who: A, text: 'そうなの?　中央上部の天井の見方を　変えてみるね', en: "Really? I'll try looking at the upper-center ceiling differently." }
   - id: an-AR-01-wall-repaint-patch-01
     tone: serious
@@ -1415,7 +1415,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-shutter-stripe-break }
     lines:
-      - { who: M, text: '左のシャッター　前後と比べて　気になるところは　ありませんか', en: "Compare of the left shutter with the areas ahead and behind. Anything stand out?" }
+      - { who: M, text: '左のシャッター　前後と比べて　気になるところは　ありませんか', en: "Compare the left shutter with the areas around it. Anything stand out?" }
       - { who: A, text: 'そうなの?　左のシャッターの見方を　変えてみるね', en: "Is that so? Let's try changing the way we look at the shutter on the left." }
   - id: an-AR-01-ceiling-seam-circle-01
     tone: serious
@@ -1469,7 +1469,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-face-ornament }
     lines:
-      - { who: A, text: '焦るとだめだね　中央上部の壁を　ゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the wall at the top center." }
+      - { who: A, text: '焦るとだめだね　中央上部の壁を　ゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the wall at the top center." }
       - { who: M, text: 'そうですね　中央上部の壁を少し引いて見ます', en: "Well, let's pull back the wall at the top center a little and take a look." }
   - id: an-AR-03-face-ornament-02
     tone: serious
@@ -1488,7 +1488,7 @@ dialogues:
     when: { anomaly: AR-03-sign-frame-square }
     lines:
       - { who: M, text: 'はい　今度は奥の店先に　注目してみてください', en: "Yes, next time please pay attention to the storefront in the back." }
-      - { who: A, text: '奥の店先を　見てるつもりだったのに　だめだね', en: "I was going to look at the storefront in the back, but I can't." }
+      - { who: A, text: '奥の店先を　見てるつもりだったのに　だめだね', en: "I thought I was watching the storefront in back. Guess I wasn't." }
   - id: an-AR-04-poster-colour-restore-01
     tone: serious
     when: { anomaly: AR-04-poster-colour-restore }
@@ -1512,7 +1512,7 @@ dialogues:
     when: { anomaly: AR-04-sign-hollow }
     lines:
       - { who: M, text: '奥の天井の近くも　続けて見てください', en: "Please continue looking near the ceiling in the back." }
-      - { who: A, text: 'あっ　奥の天井を先走って見てたかも', en: "Ah, I might have looked ahead at the ceiling in the back." }
+      - { who: A, text: 'あっ　奥の天井を先走って見てたかも', en: "Ah, I may have rushed past the ceiling in the back." }
   - id: an-AR-04-hatch-reflection-extra-01
     tone: serious
     when: { anomaly: AR-04-hatch-reflection-extra }
@@ -1536,7 +1536,7 @@ dialogues:
     when: { anomaly: AR-04-hatch-frame-round }
     lines:
       - { who: M, text: '少し引いて　左下の床の周囲まで　見てみましょう', en: "Let's pull back a little and look around the floor at the bottom left." }
-      - { who: A, text: '決めつけないで　左下の床を見直そう', en: "Let's keep an open mind and check the floor at the bottom left again." }
+      - { who: A, text: '決めつけないで　左下の床を見直そう', en: "Let's not jump to conclusions. Let's check the floor at the bottom left again." }
   - id: an-AR-04-pot-duplicate-01
     tone: serious
     when: { anomaly: AR-04-pot-duplicate }
@@ -1644,7 +1644,7 @@ dialogues:
     when: { anomaly: AR-05-film-poster }
     lines:
       - { who: M, text: '左側の近くも　続けて見てください', en: "Please continue looking near the left side." }
-      - { who: A, text: 'あっ　左側を先走って見てたかも', en: "Ah, I might have been running ahead on the left." }
+      - { who: A, text: 'あっ　左側を先走って見てたかも', en: "Ah, I may have rushed past the left." }
   - id: an-AR-05-sign-in-glass-01
     tone: serious
     when: { anomaly: AR-05-sign-in-glass }
@@ -1656,7 +1656,7 @@ dialogues:
     when: { anomaly: AR-05-sign-in-glass }
     lines:
       - { who: M, text: '少し引いて　左の通路の周囲まで　見てみましょう', en: "Let's pull back a little and take a look around the left corridor." }
-      - { who: A, text: '決めつけないで　左の通路を見直そう', en: "Let's keep an open mind and check the left corridor again." }
+      - { who: A, text: '決めつけないで　左の通路を見直そう', en: "Let's not jump to conclusions. Let's check the left corridor again." }
   - id: an-AR-05-joint-into-glass-01
     tone: serious
     when: { anomaly: AR-05-joint-into-glass }
@@ -1685,7 +1685,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-sign-digit-missing }
     lines:
-      - { who: A, text: '焦るとだめだね　右上の店舗をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the upper-right store." }
+      - { who: A, text: '焦るとだめだね　右上の店舗をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the upper-right store." }
       - { who: M, text: 'そうですね　右上の店舗を少し引いて見ます', en: "Well, let's look at the store on the top right by pulling back a little." }
   - id: an-AR-05-sign-digit-missing-02
     tone: serious
@@ -1757,7 +1757,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-ceiling-checker }
     lines:
-      - { who: A, text: '焦るとだめだね　中央上部の天井を　ゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the ceiling in the upper center." }
+      - { who: A, text: '焦るとだめだね　中央上部の天井を　ゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the ceiling in the upper center." }
       - { who: M, text: 'そうですね　中央上部の天井を　少し引いて見ます', en: "Well, let's look at the ceiling in the upper center by pulling back a little." }
   - id: an-AR-06-ceiling-checker-02
     tone: serious
@@ -1800,7 +1800,7 @@ dialogues:
     when: { anomaly: AR-06-crt-tv-glow }
     lines:
       - { who: M, text: '視線の位置を変えて　左端の店先を見直しましょう', en: "Change your line of sight and look at the storefront on the far left." }
-      - { who: A, text: 'ああ　悔しい!　左端の店先をもう一度確認する', en: "Ugh, I missed it. I'll check it again." }
+      - { who: A, text: 'ああ　悔しい!　左端の店先をもう一度確認する', en: "Ugh, I missed the storefront on the far left. I'll check it again." }
   - id: an-AR-06-wet-footprints-01
     tone: serious
     when: { anomaly: AR-06-wet-footprints }
@@ -1908,7 +1908,7 @@ dialogues:
     when: { anomaly: AR-08-wall-band-wave }
     lines:
       - { who: M, text: 'はい　今度は右の壁に　注目してみてください', en: "Yes, this time please pay attention to the wall on the right." }
-      - { who: A, text: '右の壁を見てるつもりだったのに　だめだね', en: "I thought I was looking at the wall on the right, but I can't." }
+      - { who: A, text: '右の壁を見てるつもりだったのに　だめだね', en: "I thought I was looking at the wall on the right. Guess I wasn't really looking." }
   - id: an-AR-08-light-blue-bleed-01
     tone: serious
     when: { anomaly: AR-08-light-blue-bleed }
@@ -1956,7 +1956,7 @@ dialogues:
     when: { anomaly: AR-05-hatch-stain }
     lines:
       - { who: M, text: '少し引いて　中央上部の天井の周囲まで　見てみましょう', en: "Let's pull back a little and take a look around the ceiling in the upper center." }
-      - { who: A, text: '決めつけないで　中央上部の天井を見直そう', en: "Let's keep an open mind and check the ceiling in the upper center again." }
+      - { who: A, text: '決めつけないで　中央上部の天井を見直そう', en: "Let's not jump to conclusions. Let's recheck the upper-center ceiling." }
   - id: an-AR-02-smartphone-facedown-01
     tone: serious
     when: { anomaly: AR-02-smartphone-facedown }
@@ -2010,7 +2010,7 @@ dialogues:
     when: { anomaly: AR-05-pet-bottle }
     lines:
       - { who: A, text: 'あっ　手前の床をちゃんと　見てなかったかも', en: "Ah, maybe I wasn't looking at the near-side floor properly." }
-      - { who: M, text: '分かりました　手前の床まで目を通します', en: "Understood. I'll Look down to the near-side floor." }
+      - { who: M, text: '分かりました　手前の床まで目を通します', en: "Understood. I'll look down to the near-side floor." }
   - id: an-AR-05-pet-bottle-02
     tone: serious
     when: { anomaly: AR-05-pet-bottle }
@@ -2028,7 +2028,7 @@ dialogues:
     when: { anomaly: AR-07-mask-on-floor }
     lines:
       - { who: M, text: '視線の位置を変えて　中央の床を見直しましょう', en: "Change your line of sight and look at the floor in the center." }
-      - { who: A, text: 'ああ　悔しい!　中央の床をもう一度確認する', en: "Ugh, I missed it. I'll check it again." }
+      - { who: A, text: 'ああ　悔しい!　中央の床をもう一度確認する', en: "Ugh, I missed the floor in the center. I'll check it again." }
   - id: an-AR-02-leather-footprints-01
     tone: serious
     when: { anomaly: AR-02-leather-footprints }
@@ -2129,7 +2129,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-red-rubber-ball }
     lines:
-      - { who: A, text: '焦るとだめだね　右の床をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the floor on the right." }
+      - { who: A, text: '焦るとだめだね　右の床をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the floor on the right." }
       - { who: M, text: 'そうですね　右の床を少し引いて見ます', en: "Well, let's look at the floor on the right by pulling back a little." }
   - id: an-AR-01-red-rubber-ball-02
     tone: serious
@@ -2153,14 +2153,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-tricycle }
     lines:
-      - { who: A, text: '私　急いでたかも　右手前の床を見直したい', en: "I may have rushed. I want to check the near-right floor again." }
-      - { who: M, text: 'はい　右手前の床の周囲から見直します', en: "Yes. I'll look around the near-right floor." }
+      - { who: A, text: '私　急いでたかも　右手前の床を見直したい', en: "I may have rushed. I want to check the front-right floor again." }
+      - { who: M, text: 'はい　右手前の床の周囲から見直します', en: "Yes. I'll look around the front-right floor." }
   - id: an-AR-02-tricycle-02
     tone: serious
     when: { anomaly: AR-02-tricycle }
     lines:
-      - { who: M, text: 'その右手前の床　全体の中で確かめてください', en: "Please check the entire near-right floor." }
-      - { who: A, text: 'ありがとう　右手前の床を落ち着いて確認する', en: "Thanks. I'll check the near-right floor carefully." }
+      - { who: M, text: 'その右手前の床　全体の中で確かめてください', en: "Please check the entire front-right floor." }
+      - { who: A, text: 'ありがとう　右手前の床を落ち着いて確認する', en: "Thanks. I'll check the front-right floor carefully." }
   - id: an-AR-03-pendant-lamp-01
     tone: serious
     when: { anomaly: AR-03-pendant-lamp }
@@ -2172,19 +2172,19 @@ dialogues:
     when: { anomaly: AR-03-pendant-lamp }
     lines:
       - { who: M, text: '視線の位置を変えて　左上の天井を見直しましょう', en: "Change your line of sight and look at the ceiling in the upper left" }
-      - { who: A, text: 'ああ　悔しい!　左上の天井をもう一度確認する', en: "Ugh, I missed it. I'll check it again." }
+      - { who: A, text: 'ああ　悔しい!　左上の天井をもう一度確認する', en: "Ugh, I missed the ceiling in the upper left. I'll check it again." }
   - id: an-AR-03-kerosene-heater-01
     tone: serious
     when: { anomaly: AR-03-kerosene-heater }
     lines:
-      - { who: A, text: '今度は右手前の床を　少し違う角度から見たい', en: "Let's view the near-right floor from a new angle this time." }
-      - { who: M, text: '了解です　右手前の床の辺りを比べてみます', en: "Understood. Let's compare the area on the near-right floor." }
+      - { who: A, text: '今度は右手前の床を　少し違う角度から見たい', en: "Let's view the front-right floor from a new angle this time." }
+      - { who: M, text: '了解です　右手前の床の辺りを比べてみます', en: "Understood. Let's compare the area on the front-right floor." }
   - id: an-AR-03-kerosene-heater-02
     tone: serious
     when: { anomaly: AR-03-kerosene-heater }
     lines:
-      - { who: M, text: '右手前の床の見え方を　周りと比べてください', en: "Please compare the near-right floor with its surroundings." }
-      - { who: A, text: 'ああ　右手前の床は　見ていたつもりなのに', en: "Ah, I thought I was looking at the near-right floor." }
+      - { who: M, text: '右手前の床の見え方を　周りと比べてください', en: "Please compare the front-right floor with its surroundings." }
+      - { who: A, text: 'ああ　右手前の床は　見ていたつもりなのに', en: "Ah, I thought I was looking at the front-right floor." }
   - id: an-AR-04-ceiling-balloon-01
     tone: serious
     when: { anomaly: AR-04-ceiling-balloon }
@@ -2261,7 +2261,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-bamboo-broom }
     lines:
-      - { who: A, text: 'さっき決めつけたね　左中段の床から見直そう', en: "We jumped to conclusions. Let's check the mid-left floor again." }
+      - { who: A, text: 'さっき決めつけたね　左中段の床から見直そう', en: "We jumped to conclusions earlier. Let's check the mid-left floor again." }
       - { who: M, text: '分かりました　左中段の床のあたりから見ます', en: "Understood. I'll start by checking around the mid-left floor." }
   - id: an-AR-01-bamboo-broom-02
     tone: serious
@@ -2309,13 +2309,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-floor-tatami }
     lines:
-      - { who: A, text: 'あの右手前の床　端のほうまで見てもらえる?', en: "Can you take a look at the edge of that near-right floor?" }
+      - { who: A, text: 'あの右手前の床　端のほうまで見てもらえる?', en: "Can you take a look at the edge of that front-right floor?" }
       - { who: M, text: 'そうですね　右手前の床を　含めて全体を見直します', en: "Well, let's review the whole scene, including the floor on the right." }
   - id: an-AR-03-floor-tatami-02
     tone: serious
     when: { anomaly: AR-03-floor-tatami }
     lines:
-      - { who: M, text: '見落としやすい場所です　右手前の床を確かめましょう', en: "This is an easy place to overlook. Check the near-right floor." }
+      - { who: M, text: '見落としやすい場所です　右手前の床を確かめましょう', en: "This is an easy place to overlook. Check the front-right floor." }
       - { who: A, text: '今度は焦らない　右手前の床をゆっくり見るね', en: "I'll take my time and check the near-side floor on your right this time." }
   - id: an-AR-01-wall-faces-01
     tone: serious
@@ -2333,7 +2333,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-wall-clocks }
     lines:
-      - { who: A, text: '焦るとだめだね　左上の壁をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the wall in the upper left." }
+      - { who: A, text: '焦るとだめだね　左上の壁をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the wall in the upper left." }
       - { who: M, text: 'そうですね　左上の壁を少し引いて見ます', en: "Well, let's look at the upper left wall by pulling back a little." }
   - id: an-AR-07-wall-clocks-02
     tone: serious
@@ -2400,7 +2400,7 @@ dialogues:
     when: { anomaly: AR-04-glass-fog-handprints }
     lines:
       - { who: M, text: '左のガラスの近くも　続けて見てください', en: "Please continue looking near the glass on the left." }
-      - { who: A, text: 'あっ　左のガラスを先走って見てたかも', en: "Ah, I might have looked ahead at the glass on the left." }
+      - { who: A, text: 'あっ　左のガラスを先走って見てたかも', en: "Ah, I may have rushed past the glass on the left." }
   - id: an-AR-05-floor-white-cranes-01
     tone: serious
     when: { anomaly: AR-05-floor-white-cranes }
@@ -2430,7 +2430,7 @@ dialogues:
     when: { anomaly: AR-02-shutter-crayon-drawings }
     lines:
       - { who: A, text: '少し引いて見よう　左のシャッターの周りも含めて', en: "Let's zoom out and check around the left shutter too." }
-      - { who: M, text: '分かりました　左のシャッターまで目を通します', en: "Okay, I'll look through the shutter on the left." }
+      - { who: M, text: '分かりました　左のシャッターまで目を通します', en: "Okay, I'll make sure to check the shutter on the left." }
   - id: an-AR-02-shutter-crayon-drawings-02
     tone: serious
     when: { anomaly: AR-02-shutter-crayon-drawings }
@@ -2484,7 +2484,7 @@ dialogues:
     when: { anomaly: AR-07-ceiling-white-sheets }
     lines:
       - { who: M, text: '少し引いて　左上の天井の周囲まで　見てみましょう', en: "Let's pull back a little and look around the ceiling in the upper left." }
-      - { who: A, text: '決めつけないで　左上の天井を見直そう', en: "Let's keep an open mind and check the ceiling in the upper left again." }
+      - { who: A, text: '決めつけないで　左上の天井を見直そう', en: "Let's not jump to conclusions. Let's check the ceiling in the upper left again." }
   - id: an-AR-08-stacked-crt-tvs-01
     tone: serious
     when: { anomaly: AR-08-stacked-crt-tvs }
@@ -2520,7 +2520,7 @@ dialogues:
     when: { anomaly: AR-01-bubble-tea-cup }
     lines:
       - { who: M, text: '少し引いて　右下の床の周囲まで　見てみましょう', en: "Let's pull back a little and look around the floor in the bottom right." }
-      - { who: A, text: '決めつけないで　右下の床を見直そう', en: "Let's keep an open mind and check the floor in the bottom right again." }
+      - { who: A, text: '決めつけないで　右下の床を見直そう', en: "Let's not jump to conclusions. Let's check the floor in the bottom right again." }
   - id: an-AR-02-maroon-cushion-01
     tone: serious
     when: { anomaly: AR-02-maroon-cushion }
@@ -2532,7 +2532,7 @@ dialogues:
     when: { anomaly: AR-02-maroon-cushion }
     lines:
       - { who: M, text: '視線の位置を変えて　左下の床を見直しましょう', en: "Change your line of sight and look at the floor on the bottom left." }
-      - { who: A, text: 'ああ　悔しい!　左下の床をもう一度確認する', en: "Ugh, I missed it. I'll check it again." }
+      - { who: A, text: 'ああ　悔しい!　左下の床をもう一度確認する', en: "Ugh, I missed the floor in the lower left. I'll check it again." }
   - id: an-AR-02-navy-handy-fan-01
     tone: serious
     when: { anomaly: AR-02-navy-handy-fan }
@@ -2634,7 +2634,7 @@ dialogues:
         en: "Yes, this time please pay attention to the near-side floor."
       - who: A
         text: 手前の床を　見てるつもりだったのに　だめだね
-        en: "I thought I was looking at the near-side floor, but I can't."
+        en: "I thought I was looking at the near-side floor. Guess I wasn't really looking."
   - id: an-AR-03-wash-tub-01
     tone: serious
     when:
@@ -2675,7 +2675,7 @@ dialogues:
     lines:
       - who: M
         text: 左手前の床　前後と比べて　気になるところは　ありませんか
-        en: "Compare the near-left floor with the areas ahead and behind. Anything stand out?"
+        en: "Compare the near-left floor with the areas around it. Anything stand out?"
       - who: A
         text: そうなの?　左手前の床の見方を変えてみるね
         en: "Is that so? Try changing the way you look at the near-left floor."
@@ -2697,7 +2697,7 @@ dialogues:
     lines:
       - who: M
         text: 手前の床　前後と比べて　気になるところは　ありませんか
-        en: "Compare the near-side floor with the areas ahead and behind. Anything stand out?"
+        en: "Compare the near-side floor with the areas around it. Anything stand out?"
       - who: A
         text: そうなの?　手前の床の見方を変えてみるね
         en: "Is that so? Let's try changing the way we look at the near-side floor."
@@ -2711,7 +2711,7 @@ dialogues:
         en: "Huh? Did I already check that floor on the right?"
       - who: M
         text: はい　右手前の床を　含めて確認を続けます
-        en: "Yes. I'll keep checking, including the near-right floor."
+        en: "Yes. I'll keep checking, including the front-right floor."
   - id: an-AR-04-thermos-02
     tone: serious
     when:
@@ -2719,10 +2719,10 @@ dialogues:
     lines:
       - who: M
         text: 右手前の床のあたり　何度か見比べてみましょう
-        en: "Let's compare the area on the floor in front of the right hand several times."
+        en: "Let's compare the floor at the front right several times."
       - who: A
         text: 右手前の床を　見落としたの悔しい!　次は見つける
-        en: "I hate that I missed the near-right floor! I'll catch it next time."
+        en: "I hate that I missed the front-right floor! I'll catch it next time."
   - id: an-AR-04-flypaper-01
     tone: serious
     when:
@@ -2810,7 +2810,7 @@ dialogues:
         en: "Please also check the edge of the near-left floor."
       - who: A
         text: 決めつけないで　左手前の床を見直そう
-        en: "Let's keep an open mind and check the near-left floor again."
+        en: "Let's not jump to conclusions. Let's check the near-left floor again."
   - id: an-AR-07-n4-01
     tone: serious
     when:
@@ -2818,10 +2818,10 @@ dialogues:
     lines:
       - who: A
         text: もう少し視線を動かして　右手前の床も見てみよう
-        en: "Move your gaze a little more and look at the near-right floor."
+        en: "Move your gaze a little more and look at the front-right floor."
       - who: M
         text: 分かりました　右手前の床を全体の中で見ます
-        en: "Understood. I'll check the near-right floor."
+        en: "Understood. I'll check the front-right floor."
   - id: an-AR-07-n4-02
     tone: serious
     when:
@@ -2829,10 +2829,10 @@ dialogues:
     lines:
       - who: M
         text: 少し気になる範囲です　右手前の床を確認してください
-        en: "Something seems off. Please check the near-right floor."
+        en: "Something seems off. Please check the front-right floor."
       - who: A
         text: ああ　右手前の床を急いで見てた　見直そう
-        en: "Ah, I rushed past the near-right floor. Let's check it again."
+        en: "Ah, I rushed past the front-right floor. Let's check it again."
   - id: an-AR-08-n1-01
     tone: serious
     when:
@@ -2909,7 +2909,7 @@ dialogues:
         en: "Would you like to compare the near-side floor to the right?"
       - who: M
         text: 分かりました　右手前の床の端まで確認します
-        en: "Understood. I'll check to the edge of the near-right floor."
+        en: "Understood. I'll check to the edge of the front-right floor."
   - id: an-AR-08-n5-02
     tone: serious
     when:
@@ -2917,10 +2917,10 @@ dialogues:
     lines:
       - who: M
         text: 右手前の床の端も　確認してみてください
-        en: "Please also check the edge of the near-right floor."
+        en: "Please also check the edge of the front-right floor."
       - who: A
         text: 分かった　右手前の床の周りと比べてみる
-        en: "Got it. I'll compare it with the area around the near-right floor."
+        en: "Got it. I'll compare it with the area around the front-right floor."
   - id: an-AR-08-n6-01
     tone: serious
     when:
@@ -2942,7 +2942,7 @@ dialogues:
         en: "Let's pull back a little and look around the upper-right ceiling."
       - who: A
         text: あっ　右上の天井を先走って見てたかも
-        en: "Ah, I might have looked ahead at the ceiling in the upper right."
+        en: "Ah, I may have rushed past the ceiling in the upper right."
   - id: an-AR-05-beach-ball-01
     tone: serious
     when:
@@ -2953,7 +2953,7 @@ dialogues:
         en: "Did floor on the right look the same as before?"
       - who: M
         text: 了解です　右手前の床の前後も見てみます
-        en: "Understood. I'll check around the near-right floor too."
+        en: "Understood. I'll check around the front-right floor too."
   - id: an-AR-05-beach-ball-02
     tone: serious
     when:
@@ -2961,7 +2961,7 @@ dialogues:
     lines:
       - who: M
         text: はい　右手前の床を　もう一度見てみてください
-        en: "Yes, please take another look at the near-right floor."
+        en: "Yes, please take another look at the front-right floor."
       - who: A
         text: 分かった　右手前の床と隣を比べてみよう
         en: "Got it. I'll compare the floor in front on the right with the one next to it."
@@ -3016,10 +3016,10 @@ dialogues:
     lines:
       - who: A
         text: あっ　右手前の床をちゃんと　見てなかったかも
-        en: "Ah, maybe I wasn't looking properly at the near-right floor."
+        en: "Ah, maybe I wasn't looking properly at the front-right floor."
       - who: M
         text: 分かりました　右手前の床まで目を通します
-        en: "Understood. I'll Look down to the near-right floor."
+        en: "Understood. I'll look down to the front-right floor."
   - id: an-AR-05-baseball-glove-02
     tone: serious
     when:
@@ -3027,10 +3027,10 @@ dialogues:
     lines:
       - who: M
         text: 右手前の床を一度見て　隣の範囲とも比べてください
-        en: "Please compare the near-right floor with the area beside it."
+        en: "Please compare the front-right floor with the area beside it."
       - who: A
         text: うそ　右手前の床を　見たつもりだったのに!
-        en: "No way! I thought I'd checked the near-right floor!"
+        en: "No way! I thought I'd checked the front-right floor!"
   - id: an-AR-06-red-bucket-01
     tone: serious
     when:
@@ -3038,10 +3038,10 @@ dialogues:
     lines:
       - who: A
         text: 右手前の床のあたり　もう一度見てもらえる?
-        en: "Can you take another look at the area on the near-right floor?"
+        en: "Can you take another look at the area on the front-right floor?"
       - who: M
         text: はい　右手前の床の周りも含めて見ます
-        en: "Yes. I'll look including the area around the near-right floor."
+        en: "Yes. I'll look including the area around the front-right floor."
   - id: an-AR-06-red-bucket-02
     tone: serious
     when:
@@ -3052,7 +3052,7 @@ dialogues:
         en: "Change your line of sight and look at the near-side floor on your right."
       - who: A
         text: ああ　悔しい!　右手前の床をもう一度確認する
-        en: "Ugh, I missed it. I'll check it again."
+        en: "Ugh, I missed the floor at the front right. I'll check it again."
   - id: an-AR-06-styrofoam-box-01
     tone: serious
     when:
@@ -3225,10 +3225,10 @@ dialogues:
     lines:
       - who: M
         text: 右上の天井　前後と比べて　気になるところは　ありませんか
-        en: "Compare the upper-right ceiling with the areas ahead and behind. Anything odd?"
+        en: "Compare the upper-right ceiling with the areas around it. Anything odd?"
       - who: A
         text: 決めつけないで　右上の天井を見直そう
-        en: "Let's keep an open mind and check the ceiling in the upper right again."
+        en: "Let's not jump to conclusions. Let's check the ceiling in the upper right again."
   - id: an-AR-01-ceiling-wet-stain-01
     tone: serious
     when:
@@ -3291,7 +3291,7 @@ dialogues:
     lines:
       - who: M
         text: 右の通路　前後と比べて　気になるところは　ありませんか
-        en: "Compare the right aisle with the areas ahead and behind. Anything stand out?"
+        en: "Compare the right aisle with the areas around it. Anything stand out?"
       - who: A
         text: そうなの?　右の通路の見方を変えてみるね
         en: "Is that so? Let's try changing the way we look at the right corridor."
@@ -3382,7 +3382,7 @@ dialogues:
         en: "Change your line of sight and look at the top left"
       - who: A
         text: ああ　悔しい!　左上をもう一度確認する
-        en: "Ugh, I missed it. I'll check it again."
+        en: "Ugh, I missed the upper left. I'll check it again."
   - id: an-AR-02-pillar-sign-gone-01
     tone: serious
     when:
@@ -3412,7 +3412,7 @@ dialogues:
     lines:
       - who: A
         text: さっき決めつけたね　中央の柱から見直そう
-        en: "We jumped to conclusions. Let's check the center pillar again."
+        en: "We jumped to conclusions earlier. Let's check the center pillar again."
       - who: M
         text: 分かりました　中央の柱のあたりから見ます
         en: "Okay, I'll look at it from around the central pillar."
@@ -3426,7 +3426,7 @@ dialogues:
         en: "Please check if there is anything overlooked in the center pillar."
       - who: A
         text: よし　中央の柱を落ち着いて探す
-        en: "All right. I'll look carefully for carefully for the central pillar."
+        en: "All right. I'll carefully look for the central pillar."
   - id: an-AR-02-wall-bird-triplet-01
     tone: serious
     when:
@@ -3448,7 +3448,7 @@ dialogues:
         en: "Let's pull back a little and look around the wall on the right."
       - who: A
         text: 決めつけないで　右の壁を見直そう
-        en: "Let's keep an open mind and check the wall on the right again."
+        en: "Let's not jump to conclusions. Let's check the wall on the right again."
   - id: an-AR-02-floor-ripple-01
     tone: serious
     when:
@@ -3478,7 +3478,7 @@ dialogues:
     lines:
       - who: A
         text: 焦るとだめだね　左上の天井をゆっくり確認しよう
-        en: "No good rushing. Let's take a slow look at the ceiling in the upper left."
+        en: "Rushing won't help. Let's take a slow look at the ceiling in the upper left."
       - who: M
         text: そうですね　左上の天井を少し引いて見ます
         en: "Well, let's look at the ceiling in the upper left by pulling back a little."
@@ -3533,7 +3533,7 @@ dialogues:
     lines:
       - who: M
         text: 左の通路　前後と比べて　気になるところは　ありませんか
-        en: "Compare the left aisle with the areas ahead and behind. Anything stand out?"
+        en: "Compare the left aisle with the areas around it. Anything stand out?"
       - who: A
         text: そうなの?　左の通路の見方を変えてみるね
         en: "Is that so? Let's change the way we look at the left corridor."
@@ -3624,7 +3624,7 @@ dialogues:
         en: "Please continue looking near the ceiling in the upper center."
       - who: A
         text: あっ　中央上部の天井を　先走って見てたかも
-        en: "Ah, I might have looked ahead at the ceiling in the upper center."
+        en: "Ah, I may have rushed past the ceiling in the upper center."
   - id: an-AR-05-floor-child-shadow-01
     tone: serious
     when:
@@ -3635,7 +3635,7 @@ dialogues:
         en: "Let's check the floor on the right side again."
       - who: M
         text: はい　右手前の床にも　視線を向け直してみます
-        en: "Yes, I will also redirect my gaze to the near-right floor."
+        en: "Yes, I will also redirect my gaze to the front-right floor."
   - id: an-AR-05-floor-child-shadow-02
     tone: serious
     when:
@@ -3643,10 +3643,10 @@ dialogues:
     lines:
       - who: M
         text: 全体を見てから　右手前の床を見直しましょう
-        en: "Let's check the near-right floor after looking at the whole scene."
+        en: "Let's check the front-right floor after looking at the whole scene."
       - who: A
         text: そうなの?　右手前の床の見方を変えてみるね
-        en: "Really? I'll try looking at the near-right floor differently."
+        en: "Really? I'll try looking at the front-right floor differently."
   - id: an-AR-03-floor-shadows-01
     tone: serious
     when:
@@ -3830,7 +3830,7 @@ dialogues:
     lines:
       - who: A
         text: さっき決めつけたね　右の扉から見直そう
-        en: "We jumped to conclusions. Let's check the right again."
+        en: "We jumped to conclusions earlier. Let's start with the door on the right."
       - who: M
         text: そうですね　右の扉を少し引いて見ます
         en: "Well, let's pull the door on the right a little and take a look."
@@ -3866,7 +3866,7 @@ dialogues:
         en: "Change your line of sight and look at the floor on the left."
       - who: A
         text: ああ　悔しい!　左の床をもう一度確認する
-        en: "Ugh, I missed it. I'll check it again."
+        en: "Ugh, I missed the floor on the left. I'll check it again."
   - id: an-AR-04-glass-silhouette-01
     tone: serious
     when:
@@ -3910,7 +3910,7 @@ dialogues:
         en: "Change your line of sight and look at the wall on the right."
       - who: A
         text: ああ　悔しい!　右の壁をもう一度確認する
-        en: "Ugh, I missed it. I'll check it again."
+        en: "Ugh, I missed the wall on the right. I'll check it again."
   - id: an-AR-04-shadow-behind-camera-01
     tone: serious
     when:
@@ -4108,7 +4108,7 @@ dialogues:
         en: "Change your line of sight and look at the floor on the far left."
       - who: A
         text: ああ　悔しい!　左端の床をもう一度確認する
-        en: "Ugh, I missed it. I'll check it again."
+        en: "Ugh, I missed the floor at the far left. I'll check it again."
   - id: an-AR-04-floor-shoes-rows-01
     tone: serious
     when:
@@ -4152,7 +4152,7 @@ dialogues:
         en: "Let's pull back a little and take a look around the middle left floor."
       - who: A
         text: 左中段の床を　見てるつもりだったのに　だめだね
-        en: "I thought I was looking at the mid-left floor, but I can't."
+        en: "I thought I was looking at the mid-left floor. Guess I wasn't really looking."
   - id: an-AR-07-reflection-cut-01
     tone: serious
     when:
@@ -4240,7 +4240,7 @@ dialogues:
         en: "Yes, this time please pay attention to the glass on the left."
       - who: A
         text: 左のガラスを　見てるつもりだったのに　だめだね
-        en: "I thought I was looking at the glass on the left, but I can't."
+        en: "I thought I was looking at the glass on the left. Guess I wasn't really looking."
   - id: an-AR-07-exit-sign-gone-01
     tone: serious
     when:
@@ -4328,7 +4328,7 @@ dialogues:
         en: "Please continue looking near the pillar on the left."
       - who: A
         text: あっ　左の柱を先走って見てたかも
-        en: "Ah, I might have looked ahead at the pillar on the left."
+        en: "Ah, I may have rushed past the pillar on the left."
   - id: an-AR-08-ceiling-light-inverse-01
     tone: serious
     when:
@@ -4380,7 +4380,7 @@ dialogues:
     lines:
       - who: A
         text: さっき決めつけたね　左の床から見直そう
-        en: "We jumped to conclusions. Let's check the left again."
+        en: "We jumped to conclusions earlier. Let's start with the floor on the left."
       - who: M
         text: 分かりました　左の床のあたりから見ます
         en: "Okay, I'll look at it from around the floor on the left."
@@ -4446,7 +4446,7 @@ dialogues:
     lines:
       - who: A
         text: さっき決めつけたね　右の店先から見直そう
-        en: "We jumped to conclusions. Let's check the right again."
+        en: "We jumped to conclusions earlier. Let's start with the storefront on the right."
       - who: M
         text: 分かりました　右の店先のあたりから見ます
         en: "Okay, I can see it from around the storefront on the right."
@@ -4460,7 +4460,7 @@ dialogues:
         en: "Please check if there is anything overlooked in the storefront on the right."
       - who: A
         text: よし　右の店先を落ち着いて探す
-        en: "All right. I'll look carefully for carefully for the storefront on the right."
+        en: "All right. I'll carefully look for the storefront on the right."
   - id: an-AR-02-wall-bird-gone-01
     tone: serious
     when:
@@ -4526,7 +4526,7 @@ dialogues:
         en: "Yes, this time please pay attention to the window on the left."
       - who: A
         text: 左の窓を見てるつもりだったのに　だめだね
-        en: "I was trying to look out the window on the left, but no."
+        en: "I thought I was watching the window on the left. Guess I wasn't."
   - id: an-AR-01-outlets-multiply-01
     tone: serious
     when:
@@ -4592,7 +4592,7 @@ dialogues:
         en: "Yes, this time please pay attention to the center."
       - who: A
         text: 中央を見てるつもりだったのに　だめだね
-        en: "I thought I was looking at the center, but I can't."
+        en: "I thought I was looking at the center. Guess I wasn't really looking."
   - id: an-AR-04-wall-small-door-01
     tone: serious
     when:
@@ -4647,7 +4647,7 @@ dialogues:
         en: "Ah, maybe I wasn't looking properly at the near-left floor."
       - who: M
         text: 分かりました　左手前の床まで目を通します
-        en: "Understood. I'll Look down to the near-left floor."
+        en: "Understood. I'll look down to the near-left floor."
   - id: an-AR-08-floor-tile-upright-02
     tone: serious
     when:
@@ -4702,7 +4702,7 @@ dialogues:
         en: "Yes, this time please pay attention to the near-left floor."
       - who: A
         text: 左手前の床を　見てるつもりだったのに　だめだね
-        en: "I thought I was looking at the near-left floor, but I can't."
+        en: "I thought I was looking at the near-left floor. Guess I wasn't really looking."
   - id: an-AR-05-floor-turtle-01
     tone: serious
     when:
@@ -4724,7 +4724,7 @@ dialogues:
         en: "Change your line of sight and look at the front-center floor."
       - who: A
         text: ああ　悔しい!　手前中央の床をもう一度確認する
-        en: "Ugh, I missed it. I'll check it again."
+        en: "Ugh, I missed the floor in the center. I'll check it again."
   - id: an-AR-06-feet-at-edge-01
     tone: serious
     when:
