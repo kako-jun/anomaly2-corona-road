@@ -145,8 +145,13 @@ export const InvestigationNote = ({
               ))}
             </div>
             <div className="note-scrib note-hw">
-              {view.scrib.map(s => (
-                <p key={s}>{s}</p>
+              {view.scrib.map((s, i) => (
+                <p
+                  key={s}
+                  style={{ transform: `rotate(var(--tilt-scrib-${i}))` }}
+                >
+                  {s}
+                </p>
               ))}
             </div>
             {view.doodle && (

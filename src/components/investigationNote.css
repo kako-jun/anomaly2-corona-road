@@ -229,8 +229,11 @@
   width: fit-content;
   margin: 16px 0 0 4px; /* a gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun) */
   color: var(--blue);
-  transform: rotate(var(--tilt-scrib));
-  transform-origin: 50% 50%; /* about its own middle: the left end dips and the right end lifts by the same few px, so no line runs into its neighbour */
+}
+.note-scrib p {
+  /* Every line is turned as one piece (the glyphs lean with it, no per-letter offsets), each by its own angle
+     (noteTilt.ts), about its own middle: the left end dips and the right end lifts by the same few px. */
+  transform-origin: 50% 50%;
 }
 .note-first .note-scrib {
   /* the very first night is the fullest page (seven lines + three scribble lines + the sketch): 12px, never under 10 */
