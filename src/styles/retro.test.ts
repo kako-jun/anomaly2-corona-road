@@ -102,18 +102,28 @@ describe('retro.css', () => {
 
   it('sizes the OSD texts in cqw against the picture, with no fixed size or width @media (#316)', () => {
     for (const sel of ['.osd-cam', '.osd-rec', '.osd-result']) {
-      // the cqw declaration must come last so it wins; earlier ones are fallbacks for browsers without cqw
-      expect(decls(sel, 'font-size').at(-1), sel).toMatch(/cqw\)?$/)
+      // earlier declarations are fallbacks for browsers without cqw; the cqw one must come last so it wins
       expect(decls(sel, 'font-size').length, sel).toBeGreaterThan(1)
     }
-    for (const [sel, props] of [
-      ['.osd-cam', ['left', 'bottom']],
-      ['.osd-rec', ['right', 'top', 'gap']],
-      ['.osd-result', ['top', 'padding']],
-      ['.rec-dot', ['width', 'height']],
-    ] as const)
-      for (const prop of props)
-        expect(decls(sel, prop).at(-1), `${sel} ${prop}`).toMatch(/cqw\)?$/)
+    // The ratios are the 1280x720 desktop look (picture 441px wide: CAM 16px, REC 12.8px, dot 8px, result 20px),
+    // chosen by kako-jun. The max() floor keeps the text readable on a 203px picture (360x640 phone); it only
+    // binds below picture widths of about 278px (CAM) / 310px (REC) / 222px (result) / 278px (dot).
+    const expected: [string, string, string][] = [
+      ['.osd-cam', 'font-size', 'max(10px, 3.6cqw)'],
+      ['.osd-cam', 'left', '8cqw'],
+      ['.osd-cam', 'bottom', '9cqw'],
+      ['.osd-rec', 'font-size', 'max(9px, 2.9cqw)'],
+      ['.osd-rec', 'right', '7cqw'],
+      ['.osd-rec', 'top', '7.7cqw'],
+      ['.osd-rec', 'gap', '1.4cqw'],
+      ['.rec-dot', 'width', 'max(5px, 1.8cqw)'],
+      ['.rec-dot', 'height', 'max(5px, 1.8cqw)'],
+      ['.osd-result', 'font-size', 'max(10px, 4.5cqw)'],
+      ['.osd-result', 'top', '15.4cqw'],
+      ['.osd-result', 'padding', '0 5cqw'],
+    ]
+    for (const [sel, prop, value] of expected)
+      expect(decls(sel, prop).at(-1), `${sel} ${prop}`).toBe(value)
     // no @media rule may change an OSD size
     root_.walkAtRules('media', at =>
       at.walkRules(rule => {

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { ComponentProps } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { makeAnomaly, makeCameras } from '../test/factories'
@@ -96,6 +96,58 @@ describe('CameraView subtitle container', () => {
     const { container } = render(<CameraView {...props()} />)
     const sub = container.querySelector('.movie-sub') as HTMLElement
     expect(sub.closest('.glass')).not.toBeNull()
+  })
+})
+
+describe('CameraView result text (#316)', () => {
+  const resultOf = (message: string) => {
+    const { container } = render(
+      <CameraView
+        {...props({
+          result: { id: 1, kind: 'wrong', message },
+          resultVisible: true,
+        })}
+      />
+    )
+    const el = container.querySelector('.osd-result') as HTMLElement
+    const words = [...el.querySelectorAll('.w')].map(w => w.textContent)
+    return { el, words }
+  }
+
+  it('splits a wrong report into word spans, the dash stays with the word before it', () => {
+    const { el, words } = resultOf('FALSE REPORT — NO ANOMALY HERE')
+    expect(words).toEqual(['FALSE', 'REPORT —', 'NO', 'ANOMALY', 'HERE'])
+    expect(el.textContent).toBe('FALSE REPORT — NO ANOMALY HERE')
+  })
+
+  it('splits a confirmed report the same way', () => {
+    const { el, words } = resultOf('CONFIRMED — Environment')
+    expect(words).toEqual(['CONFIRMED —', 'Environment'])
+    expect(el.textContent).toBe('CONFIRMED — Environment')
+  })
+
+  it('never makes the dash a span of its own', () => {
+    const { words } = resultOf('A — B — C')
+    expect(words).toEqual(['A —', 'B —', 'C'])
+    expect(words).not.toContain('—')
+  })
+
+  it('keeps the text unchanged and does not throw on odd input', () => {
+    for (const message of [
+      '',
+      ' ',
+      '   ',
+      ' lead',
+      'trail ',
+      '  both  ',
+      'one',
+      'a  b',
+      '— leading dash',
+    ]) {
+      const { el } = resultOf(message)
+      expect(el.textContent, JSON.stringify(message)).toBe(message)
+      cleanup()
+    }
   })
 })
 
