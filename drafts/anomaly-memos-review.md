@@ -159,7 +159,7 @@
 | AR-08-old-man-back | 奥の看板の下に帽子の老人。 | Hatted old man below the far sign. |
 | AR-08-barber-pole | 通路に床屋のサインポール。 | A barber pole in the aisle. |
 | AR-08-pillar-second | 柱の裏に同じ柱がもう一本。 | Second pillar directly behind the first. |
-| AR-08-floor-reflection-two-tier | 床の反射に二段パネル。 | Two-tier panel reflected on the floor. |
+| AR-08-floor-reflection-two-tier | 床の反射が二段パネル形に。 | Floor glare mimics a two-tier panel. |
 | AR-08-tile-concentric | 床タイル一枚に同心円。 | Concentric circles on one floor tile. |
 | AR-08-vent-square | 天井に四角い換気口。 | A square vent in the ceiling. |
 | AR-08-wall-band-wave | 壁の帯が波打っている。 | The wall strip is wavy. |

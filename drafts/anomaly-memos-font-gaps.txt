@@ -1,5 +1,5 @@
 Missing glyphs in note-chars.txt, scanned from 374 Japanese memo lines.
-Unique glyphs: 486; occurrences: 2225.
+Unique glyphs: 486; occurrences: 2226.
 
 Glyphs, deduplicated (80 per line):
 壁古掲示灰皿吸煙草台そば紙袋鉢色青脇猫床殻ヒカプ左際聞閉店「営業」？二水小さ切れ隙間先丸四角形動枚茶幾何学模様点検口横ガラス灯赤傘物買客喫ニュクリムソダ奥後ろ姿
@@ -57,7 +57,7 @@ Occurrence count per glyph:
 丸	20
 四	9
 角	13
-形	7
+形	8
 動	3
 枚	18
 茶	5
