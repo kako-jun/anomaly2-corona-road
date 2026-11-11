@@ -94,7 +94,7 @@ dialogues:
     tone: light
     when: { stage: mid }
     lines:
-      - { who: A, text: '今夜は見つけるたびに驚いてる気がする' }
+      - { who: A, text: '今夜は見つけるたびに　驚いてる気がする' }
       - { who: M, text: 'はい　声に出てますよ' }
       - { who: A, text: 'えっ　そんなに大きい?' }
   - id: midpoint-16
@@ -108,7 +108,7 @@ dialogues:
     tone: serious
     when: { stage: mid }
     lines:
-      - { who: A, text: 'この調子で朝まで見落とさずにいけるかな' }
+      - { who: A, text: 'この調子で朝まで　見落とさずにいけるかな' }
       - { who: M, text: 'はい　一つずつ見ていけば大丈夫ですよ' }
   - id: midpoint-18
     tone: light
@@ -159,7 +159,7 @@ dialogues:
     when: { stage: many }
     lines:
       - { who: A, text: 'こんなに見つけてた?　私　自分でもびっくり' }
-      - { who: M, text: 'はい　驚くところまで含めていつもどおりです' }
+      - { who: M, text: 'はい　驚くところまで含めて　いつもどおりです' }
       - { who: A, text: 'いつもどおりって何!' }
   - id: midpoint-26
     tone: serious

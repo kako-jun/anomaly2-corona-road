@@ -299,6 +299,17 @@
   margin: 0 auto;
   width: fit-content;
   max-width: 100%;
+  /* Lines break only between phrases (the full-width spaces of the script), and the two lines come out about equally long (#323). */
+  text-wrap: balance;
+  /* No punctuation, small kana or long-vowel mark at the start of a line. */
+  line-break: strict;
+}
+
+/* One phrase never breaks inside; a phrase longer than the picture is wide is the last resort and breaks anywhere. */
+.movie-sub .seg {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 /* Knobs */
