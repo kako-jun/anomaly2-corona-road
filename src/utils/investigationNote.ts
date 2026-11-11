@@ -59,8 +59,6 @@ export interface NoteView {
   slots: { label: string; found: boolean; isNew: boolean; alt: string }[]
   lines: { text: string }[]
   scrib: string[]
-  /** The sketch of the corridor: only on the very first night. */
-  doodle: boolean
   left: { head: string; rows: NoteRow[] }
   right: { head: string; rows: NoteRow[] }
   /** The Shift row sits under both columns (its text is longer than a number). */
@@ -102,7 +100,12 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
       text: t(outcome === 'withdraw' ? LABELS.stampWithdraw : LABELS.stampDawn),
       big: true,
     })
-    for (const l of OUTCOMES[outcome].lines) lines.push({ text: t(l) })
+    const o = OUTCOMES[outcome]
+    const firstNight = Math.max(1, save.loops) === 1 // no earlier night: "also" would be false
+    for (const l of (firstNight && o.firstNight) || o.lines)
+      lines.push({ text: t(l) })
+    if (input.shift.found > 0)
+      for (const l of o.ifFound ?? []) lines.push({ text: t(l) })
     for (const l of STAGES[stage].lines.slice(-STAGES[stage].tail))
       lines.push({ text: t(l) })
     scrib = OUTCOMES[outcome].scrib ?? scrib
@@ -157,7 +160,6 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     slots,
     lines,
     scrib: scrib.map(t).filter(s => s !== ''),
-    doodle: stage === 'start' && input.mode === 'before',
     left,
     right,
     shiftRow,
