@@ -5,7 +5,9 @@ import { parse as parseYaml } from 'yaml'
 import { parseLedger } from './anomalyLedger'
 import {
   DIALOGUE_FILES,
+  checkSubtitleEn,
   checkSubtitleText,
+  countEnglish,
   parseDialogueFile,
   parseDialogueLedger,
   parseEntry,
@@ -645,4 +647,63 @@ describe('the real ledger in the repository', () => {
       expect(count(e => e.kind === kind)).toBeGreaterThanOrEqual(1)
     }
   )
+})
+
+describe('English subtitles `en` (#326)', () => {
+  const withLines = (l: Record<string, unknown>[]) =>
+    parseEntry('opening', entry({ lines: l }), 0, ctx)
+
+  it('keeps a valid en, and a line without en has none', () => {
+    const e = withLines([
+      { who: 'A', text: 'こんばんは', en: "Evening. Wasn't expecting you." },
+      { who: 'M', text: 'どうも' },
+    ])
+    expect(e.lines[0]).toEqual({
+      who: 'A',
+      text: 'こんばんは',
+      en: "Evening. Wasn't expecting you.",
+    })
+    expect(e.lines[1]).toEqual({ who: 'M', text: 'どうも' })
+    expect('en' in e.lines[1]).toBe(false)
+  })
+
+  it.each([
+    ['a full-width space', 'Good　evening'],
+    ['a line break', 'Good\nevening'],
+    ['a tab', 'Good\tevening'],
+    ['an empty string', ''],
+    ['only spaces', '   '],
+  ])('rejects an en with %s', (_, en) => {
+    expect(() => withLines([{ who: 'A', text: 'あ', en }])).toThrow(/en/)
+  })
+
+  it.each([[1], [null], [['a']]])('rejects a non-string en %j', en => {
+    expect(() => withLines([{ who: 'A', text: 'あ', en }])).toThrow(/en/)
+  })
+
+  it('still needs who (it pairs with the Japanese text) and valid Japanese text', () => {
+    expect(() => withLines([{ text: 'あ', en: 'a' }])).toThrow()
+    expect(() => withLines([{ who: 'A', text: '、', en: 'a' }])).toThrow()
+  })
+
+  it('checkSubtitleEn allows ordinary punctuation and half-width spaces', () => {
+    expect(() => checkSubtitleEn('Wait, what? Really...!')).not.toThrow()
+  })
+
+  it('countEnglish counts translated and untranslated lines', () => {
+    const entries = [
+      { lines: [{ en: 'a' }, {}] },
+      { lines: [{}, { en: 'b' }, {}] },
+    ]
+    expect(countEnglish(entries)).toEqual({
+      total: 5,
+      translated: 2,
+      untranslated: 3,
+    })
+    expect(countEnglish([])).toEqual({
+      total: 0,
+      translated: 0,
+      untranslated: 0,
+    })
+  })
 })

@@ -367,3 +367,28 @@ describe('CameraView gives no answer away', () => {
     expect(b.container.textContent).toBe(without)
   })
 })
+
+describe('CameraView English subtitle (#326)', () => {
+  const render_ = (text: string, english?: boolean) => {
+    const { container } = render(
+      <CameraView {...props({ subtitle: { text, visible: true, english } })} />
+    )
+    return container.querySelector('.movie-sub') as HTMLElement
+  }
+
+  it('shows an English line as plain text with no phrase spans', () => {
+    const el = render_("Evening. Wasn't expecting you", true)
+    expect(el.querySelectorAll('.seg')).toHaveLength(0)
+    expect(el.querySelector('div.en')).not.toBeNull()
+    expect(el.querySelector('div')?.getAttribute('lang')).toBe('en')
+    expect(el.textContent).toBe("Evening. Wasn't expecting you")
+  })
+
+  it('keeps the Japanese path unchanged (phrase spans, no .en)', () => {
+    const el = render_('えっ　私が?')
+    expect(el.querySelector('div.en')).toBeNull()
+    expect(el.querySelector('div')?.getAttribute('lang')).toBe('ja')
+    expect(el.querySelectorAll('.seg')).toHaveLength(2)
+    expect(el.textContent).toBe('えっ　私が?')
+  })
+})

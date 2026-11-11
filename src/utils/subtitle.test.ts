@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import ledger from 'virtual:dialogue'
-import { subtitleHoldMs } from './subtitle'
+import { SUBTITLE_EN_ENABLED } from './gameConfig'
+import {
+  EN_GUIDE_CHARS,
+  longEnglishLines,
+  pickSubtitle,
+  subtitleHoldMs,
+} from './subtitle'
 
 const chars = (n: number) => 'あ'.repeat(n)
 
@@ -37,5 +43,42 @@ describe('subtitleHoldMs', () => {
         expect(ms).toBeGreaterThanOrEqual(2200)
       }
     }
+  })
+})
+
+describe('pickSubtitle (#326)', () => {
+  const both = { text: 'こんばんは', en: 'Evening' }
+  const jaOnly = { text: 'こんばんは' }
+
+  it.each([
+    // [language, enabled, line, expected]
+    ['en', true, both, { text: 'Evening', english: true }],
+    ['en', true, jaOnly, { text: 'こんばんは', english: false }],
+    ['en', false, both, { text: 'こんばんは', english: false }],
+    ['ja', true, both, { text: 'こんばんは', english: false }],
+    ['ja', false, both, { text: 'こんばんは', english: false }],
+    ['ja', true, jaOnly, { text: 'こんばんは', english: false }],
+  ] as const)('language %s, switch %s', (language, enabled, line, expected) => {
+    expect(pickSubtitle(line, language, enabled)).toEqual(expected)
+  })
+
+  it('ships with the switch off', () => {
+    expect(SUBTITLE_EN_ENABLED).toBe(false)
+  })
+})
+
+describe('longEnglishLines (#326)', () => {
+  it('lists only the en lines over the guide, with id and 1-based line', () => {
+    const ok = 'a'.repeat(EN_GUIDE_CHARS)
+    const long = 'a'.repeat(EN_GUIDE_CHARS + 1)
+    expect(
+      longEnglishLines([
+        { id: 'x-1', lines: [{ en: ok }, { en: long }, {}] },
+        { id: 'x-2', lines: [{ en: long }] },
+      ])
+    ).toEqual([
+      { id: 'x-1', line: 2, chars: EN_GUIDE_CHARS + 1 },
+      { id: 'x-2', line: 1, chars: EN_GUIDE_CHARS + 1 },
+    ])
   })
 })

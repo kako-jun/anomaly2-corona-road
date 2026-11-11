@@ -138,12 +138,12 @@ def main():
         # A private copy of .movie-sub (same CSS, inside the same .glass size container), so the game re-rendering the
         # real subtitle can never race with the measurement.
         page.evaluate("""() => { const real = document.querySelector('.movie-sub'); const h = real.cloneNode(false)
-          h.id = 'check-sub'; h.classList.add('show'); h.appendChild(document.createElement('div')); real.parentElement.appendChild(h) }""")
+          h.id = 'check-sub'; h.classList.add('show'); const dv = document.createElement('div'); dv.setAttribute('lang', 'ja'); h.appendChild(dv); real.parentElement.appendChild(h) }""")
         if not LEGACY:
             # the first real subtitle of the game must be exactly what the mirror (BUILD) makes of its text
             page.wait_for_selector(".movie-sub:not(#check-sub) div", state="attached", timeout=15000)
-            mirror = page.evaluate("""() => { const d = document.querySelector('.movie-sub:not(#check-sub) div'); const real = d.innerHTML
-              ;(%s)(d.textContent, false); const m = document.querySelector('#check-sub div').innerHTML
+            mirror = page.evaluate("""() => { const d = document.querySelector('.movie-sub:not(#check-sub) div'); const real = d.getAttribute('lang') + d.innerHTML
+              ;(%s)(d.textContent, false); const mv = document.querySelector('#check-sub div'); const m = mv.getAttribute('lang') + mv.innerHTML
               return [real, m] }""" % BUILD.strip())
             if mirror[0] != mirror[1]:
                 problems.append(f"the checker's phrase structure differs from the game's:\n  game:   {mirror[0]}\n  mirror: {mirror[1]}")

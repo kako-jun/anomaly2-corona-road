@@ -12,9 +12,14 @@ import {
   selectNext,
   storyFlagNames,
 } from '../utils/dialogueEngine'
-import { DIALOGUE_CONFIG } from '../utils/gameConfig'
+import { DIALOGUE_CONFIG, SUBTITLE_EN_ENABLED } from '../utils/gameConfig'
 import { load, update } from '../utils/saveData'
-import { SUBTITLE_GAP_MS, subtitleHoldMs } from '../utils/subtitle'
+import {
+  SUBTITLE_GAP_MS,
+  pickSubtitle,
+  subtitleHoldMs,
+} from '../utils/subtitle'
+import { currentLanguage } from '../utils/language'
 
 /** A flag-raise event from the game state (`seq` is new for every event). */
 export interface FlagEvent {
@@ -67,7 +72,7 @@ interface PlayMeta {
  * on screen, not before. The timers keep running in a hidden tab, same as the in-game clock (intended).
  */
 export const useSubtitle = (input: SubtitleInput) => {
-  const [view, setView] = useState({ text: '', visible: false })
+  const [view, setView] = useState({ text: '', english: false, visible: false })
   const inputRef = useRef(input)
   const machineRef = useRef<Machine | null>(null)
   const handledWrongRef = useRef<number | null>(null)
@@ -81,7 +86,7 @@ export const useSubtitle = (input: SubtitleInput) => {
     const cfg = DIALOGUE_CONFIG
     let timer = 0
     let phase: Phase = 'pre'
-    let lines: string[] = []
+    let lines: { text: string; en?: string }[] = []
     let tone: Tone = 'light'
     let closing = false
     let last: LastShown | null = null
@@ -137,15 +142,20 @@ export const useSubtitle = (input: SubtitleInput) => {
         pendingFlags.some(f => !heldFlags.includes(f))
       )
         lines = []
-      const text = lines.shift()
-      if (text === undefined) {
+      const line = lines.shift()
+      if (line === undefined) {
         endConversation()
         return
       }
+      const { text, english } = pickSubtitle(
+        line,
+        currentLanguage(),
+        SUBTITLE_EN_ENABLED
+      )
       hide()
       later(() => {
         commit()
-        setView({ text, visible: true })
+        setView({ text, english, visible: true })
         later(showLine, subtitleHoldMs(text))
       }, SUBTITLE_GAP_MS)
     }
@@ -178,7 +188,7 @@ export const useSubtitle = (input: SubtitleInput) => {
     }
 
     const play = (
-      entry: { tone: Tone; lines: { text: string }[] },
+      entry: { tone: Tone; lines: { text: string; en?: string }[] },
       u: UsedState,
       meta: PlayMeta = {}
     ) => {
@@ -186,7 +196,7 @@ export const useSubtitle = (input: SubtitleInput) => {
       playingStory = meta.source === 'flag'
       phase = 'talking'
       tone = entry.tone
-      lines = entry.lines.map(l => l.text)
+      lines = entry.lines.slice()
       showLine()
     }
 

@@ -107,7 +107,11 @@ describe('useSubtitle', () => {
   it('starts empty and waits for the opening delay', () => {
     const { result } = setup()
     advance(DIALOGUE_CONFIG.openingDelayMs + SUBTITLE_GAP_MS - 1)
-    expect(result.current).toEqual({ text: '', visible: false })
+    expect(result.current).toEqual({
+      text: '',
+      english: false,
+      visible: false,
+    })
   })
 
   it('shows an opening line after the delay', () => {
