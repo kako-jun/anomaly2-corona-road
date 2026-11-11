@@ -159,7 +159,11 @@ LAYOUT = """
   // Scribbles continue right under the last synopsis line (on the next rule) and stay inside the ruled sheet.
   const notes = document.querySelector('.note-notes'), syn = document.querySelector('.note-syn'), sc = document.querySelector('.note-scrib')
   const synBottom = syn.offsetTop + syn.offsetHeight
-  if (sc.offsetTop !== synBottom) res.push(`the scribble starts ${sc.offsetTop - synBottom}px from the last synopsis line (must follow it directly)`)
+  const gapAbove = sc.offsetTop - synBottom
+  if (gapAbove < 3 || gapAbove > 6) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (must follow it closely, 3-6px of air)`)
+  const lastSyn = syn.querySelector('p:last-child').getBoundingClientRect()
+  if (sc.getBoundingClientRect().top < lastSyn.bottom - 0.5) res.push('the tilted scribble runs into the last synopsis line')
+  for (const fl of document.querySelectorAll('.note-fl')) if (fl.scrollWidth > fl.clientWidth + 1) res.push(`form label "${fl.textContent}" does not fit its column`)
   const nr = notes.getBoundingClientRect(), sr = sc.getBoundingClientRect(), fr = r('.note-form')
   if (sr.bottom > nr.bottom || sr.top < nr.top) res.push('the tilted scribble leaves the ruled sheet')
   if (fr.top - sr.bottom < 6) res.push(`the scribble is only ${(fr.top - sr.bottom).toFixed(1)}px above the form`)

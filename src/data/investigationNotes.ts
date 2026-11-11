@@ -86,29 +86,29 @@ export const STAGES: Record<Stage, StageText> = {
     ],
   },
   elder1: {
-    tail: 4,
+    tail: 2,
     lines: [
       { ja: '1人目の老人を見つけた。', en: 'Found the 1st old person.' },
       { ja: '帰りたくないという。', en: 'Doesn’t want to go home.' },
       {
-        ja: '異変でも、現実よりマシだと。',
-        en: 'Even an oddity beats reality, they say.',
-      },
-      {
         ja: '老人1人目は実務的で、少し頑固。',
         en: 'First elder: practical, a bit stubborn.',
+      },
+      {
+        ja: '異変でも、現実よりマシだと。',
+        en: 'Even an oddity beats reality, they say.',
       },
     ],
     scrib: [{ ja: 'どこへいったのか?', en: 'Where did they go?' }],
   },
   elder2: {
-    tail: 4,
+    tail: 2,
     lines: [
       { ja: '老人2人目を見つけたが、', en: 'Found the 2nd old person.' },
       { ja: '帰りたくないという。', en: 'Doesn’t want to go home.' },
       {
-        ja: '老人1人目と同じことを言う。',
-        en: 'Says the same thing as the first elder.',
+        ja: '老人2人目も、1人目と同じことを言う。',
+        en: 'Elder 2 says the same as elder 1.',
       },
       {
         ja: '人当たりがよく、こちらを気遣う。',
@@ -118,7 +118,7 @@ export const STAGES: Record<Stage, StageText> = {
     scrib: [{ ja: 'どこへいったのか?', en: 'Where did they go?' }],
   },
   elder3: {
-    tail: 3,
+    tail: 2,
     lines: [
       { ja: '老人3人目を見つけた。', en: 'Found the 3rd.' },
       {
@@ -126,10 +126,9 @@ export const STAGES: Record<Stage, StageText> = {
         en: 'Doesn’t want to go home either.',
       },
       { ja: '乾いた冗談を言う。', en: 'Dry jokes.' },
-      { ja: '3人とも同じ。', en: 'All three agree:' },
       {
-        ja: '現実よりマシな優しい異変だと。',
-        en: 'a kinder oddity than reality.',
+        ja: '3人とも現実よりマシな優しい異変だと。',
+        en: 'All three: a kinder oddity than reality.',
       },
       { ja: '残るは4人目。子供。', en: 'One left. The child.' },
     ],
@@ -175,10 +174,7 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
     ],
   },
   noNewKinds: {
-    lines: [
-      { ja: '新しい手がかりはなかった。', en: 'No new leads tonight.' },
-      { ja: '新しい異変は見つからず。', en: 'No new oddities found.' },
-    ],
+    lines: [{ ja: '新しい手がかりはなかった。', en: 'No new leads tonight.' }],
     scrib: [{ ja: '見落としはないか?', en: 'Did we miss something?' }],
   },
   withdraw: {
@@ -235,8 +231,17 @@ export const LABELS = {
   headTotal: { ja: '累計', en: 'All nights' },
   rowFound: { ja: '見つけた', en: 'Reported' },
   rowFresh: { ja: 'うち新しい', en: 'new kinds' },
-  rowFalse: { ja: 'お手つき', en: 'False' },
+  rowFalse: { ja: 'お手つき', en: 'False reports' },
   rowShift: { ja: '勤務', en: 'Shift' },
+  /** The Shift row shows in-game clock time: the shift ran until dawn, or the detective withdrew at that time. */
+  shiftUntil: (clock: string): Pair => ({
+    ja: `${clock}まで`,
+    en: `Until ${clock}`,
+  }),
+  shiftWithdrew: (clock: string): Pair => ({
+    ja: `${clock}で撤収`,
+    en: `Withdrew at ${clock}`,
+  }),
   rowTotal: { ja: '延べ', en: 'Total' },
   rowKinds: { ja: '見つけた種類', en: 'Kinds' },
   unitCount: { ja: '件', en: '' },

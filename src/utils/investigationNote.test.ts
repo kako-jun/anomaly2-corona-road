@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { STAGES } from '../data/investigationNotes'
-import { buildNote, fmtShift, outcomeOf, stageOf } from './investigationNote'
+import { buildNote, fmtShiftEnd, outcomeOf, stageOf } from './investigationNote'
+import { msToGameTime } from './gameConfig'
 import { emptySave } from './saveData'
 import type { LastShift, SaveData } from './saveData'
 
@@ -44,13 +45,35 @@ describe('outcomeOf', () => {
   })
 })
 
-describe('fmtShift', () => {
+describe('fmtShiftEnd (in-game clock, not real time)', () => {
   it.each([
-    [480000, '8:00'],
-    [221000, '3:41'],
-    [65999, '1:05'],
-    [-5, '0:00'],
-  ])('%i ms -> %s', (ms, s) => expect(fmtShift(ms)).toBe(s))
+    ['dawn', 480000, 'ja', '06:00まで'],
+    ['dawn', 479990, 'ja', '06:00まで'],
+    ['ending', 480000, 'ja', '06:00まで'],
+    ['dawn', 480000, 'en', 'Until 06:00'],
+    ['ending', 480000, 'en', 'Until 06:00'],
+  ] as const)('%s %i ms (%s) -> %s', (closing, ms, lang, out) =>
+    expect(fmtShiftEnd(ms, closing, lang)).toBe(out)
+  )
+  it.each([
+    [19000, '22:19'],
+    [60000, '23:00'],
+    [120000, '00:00'],
+    [200000, '01:20'],
+    [479000, '05:59'],
+  ])('a withdraw after %i real ms is at %s (msToGameTime)', (ms, clock) => {
+    expect(fmtShiftEnd(ms, 'withdraw', 'ja')).toBe(`${clock}で撤収`)
+    expect(fmtShiftEnd(ms, 'withdraw', 'en')).toBe(`Withdrew at ${clock}`)
+    expect(msToGameTime(ms)).toBe(clock)
+  })
+  it('does not touch the saved real milliseconds', () => {
+    const s = shift({ closing: 'withdraw', durationMs: 200000 })
+    buildNote(
+      { mode: 'after', save: save({ loops: 1, lastShift: s }), shift: s },
+      'ja'
+    )
+    expect(s.durationMs).toBe(200000)
+  })
 })
 
 describe('buildNote before a shift', () => {
@@ -84,7 +107,8 @@ describe('buildNote before a shift', () => {
     expect(texts(v)).toEqual(STAGES.elder2.lines.map(l => l.ja))
     expect(v.slots.map(s => s.found)).toEqual([true, true, false, false])
     expect(v.doodle).toBe(false)
-    expect(v.left.rows.map(r => r.value)).toEqual(['9', '4', '1', '8:00'])
+    expect(v.left.rows.map(r => r.value)).toEqual(['9', '4', '1'])
+    expect(v.shiftRow).toMatchObject({ label: '勤務', value: '06:00まで' })
     expect(v.right.rows.map(r => r.value)).toEqual(['143', '63'])
   })
   it('adds the last-night line after a night without new kinds or a withdraw', () => {
@@ -149,7 +173,7 @@ describe('buildNote after a shift', () => {
       },
       'ja'
     )
-  it('new kinds: stock lines, then the kept tail of the stage (all one colour); night = loops', () => {
+  it('new kinds: stock lines, then the kept tail of the stage, two lines at most (all one colour); night = loops', () => {
     const v = after(shift())
     expect(v.night).toBe('8夜目')
     expect(v.stamps).toEqual([
@@ -159,9 +183,7 @@ describe('buildNote after a shift', () => {
     expect(v.lines).toEqual([
       { text: '今夜も異変を報告。' },
       { text: '捜査は一歩前へ。' },
-      { text: '老人2人目を見つけたが、' },
-      { text: '帰りたくないという。' },
-      { text: '老人1人目と同じことを言う。' },
+      { text: '老人2人目も、1人目と同じことを言う。' },
       { text: '人当たりがよく、こちらを気遣う。' },
     ])
     expect(v.scrib).toEqual(STAGES.elder2.scrib.map(s => s.ja))
@@ -169,15 +191,13 @@ describe('buildNote after a shift', () => {
   })
   it('no progress and withdraw swap the stock lines and the scribble', () => {
     const np = after(shift({ fresh: 0 }))
-    expect(texts(np).slice(0, 2)).toEqual([
-      '新しい手がかりはなかった。',
-      '新しい異変は見つからず。',
-    ])
+    expect(texts(np)[0]).toBe('新しい手がかりはなかった。')
+    expect(texts(np)).not.toContain('新しい異変は見つからず。')
     expect(np.scrib).toEqual(['見落としはないか?'])
     const wd = after(shift({ closing: 'withdraw', durationMs: 221000 }))
     expect(wd.stamps[1].text).toBe('撤収')
     expect(wd.scrib).toEqual(['今夜はここまで。'])
-    expect(wd.left.rows.at(-1)?.value).toBe('3:41')
+    expect(wd.shiftRow.value).toBe('01:41で撤収')
   })
   it('the true ending has its own stock lines', () => {
     const v = after(shift({ closing: 'ending' }), {

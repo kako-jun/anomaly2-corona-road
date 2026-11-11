@@ -53,7 +53,7 @@ describe('investigation note data', () => {
         expect(l.en.length, `${stage} en ${l.en}`).toBeLessThanOrEqual(EN_MAX)
       }
       expect(t.tail).toBeGreaterThanOrEqual(1)
-      expect(t.tail).toBeLessThanOrEqual(t.lines.length)
+      expect(t.tail).toBeLessThanOrEqual(Math.min(2, t.lines.length)) // the kept tail is two lines at most
     }
     for (const o of Object.values(OUTCOMES))
       for (const l of o.lines) {

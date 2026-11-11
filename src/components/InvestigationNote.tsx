@@ -156,13 +156,18 @@ export const InvestigationNote = ({
             )}
           </div>
           <div className="note-form note-hw">
-            <div className="note-fcol">
-              <div className="note-fh">{view.left.head}</div>
-              <Rows rows={view.left.rows} />
+            <div className="note-fcols">
+              <div className="note-fcol">
+                <div className="note-fh">{view.left.head}</div>
+                <Rows rows={view.left.rows} />
+              </div>
+              <div className="note-fcol">
+                <div className="note-fh">{view.right.head}</div>
+                <Rows rows={view.right.rows} />
+              </div>
             </div>
-            <div className="note-fcol">
-              <div className="note-fh">{view.right.head}</div>
-              <Rows rows={view.right.rows} />
+            <div className="note-fshift">
+              <Rows rows={[view.shiftRow]} />
             </div>
           </div>
           <button

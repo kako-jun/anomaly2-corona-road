@@ -6,6 +6,7 @@ import {
   STAGE_FLAGS,
 } from '../data/investigationNotes'
 import type { NoteLang, Outcome, Pair, Stage } from '../data/investigationNotes'
+import { DEFAULT_CONFIG, msToGameTime } from './gameConfig'
 import type { LastShift, SaveData } from './saveData'
 
 /** The story stage the saved flags have reached (the furthest one). */
@@ -29,11 +30,19 @@ export const outcomeOf = (shift: LastShift): Outcome =>
         ? 'newKinds'
         : 'noNewKinds'
 
-/** Real time of a shift as m:ss (the shift is 8 real minutes). */
-export const fmtShift = (ms: number): string => {
-  const total = Math.floor(Math.max(0, ms) / 1000)
-  return `${Math.floor(total / 60)}:${(total % 60).toString().padStart(2, '0')}`
-}
+/**
+ * The Shift row: the in-game clock, not the real time (kako-jun, #297). A night that ran out (dawn, true ending)
+ * "ran until 06:00"; a withdraw "withdrew at" the in-game time it happened (22:00 start, 1 real second = 1 game
+ * minute, `msToGameTime`). The save keeps the real ms; this only converts for display.
+ */
+export const fmtShiftEnd = (
+  durationMs: number,
+  closing: LastShift['closing'],
+  lang: NoteLang
+): string =>
+  (closing === 'withdraw'
+    ? LABELS.shiftWithdrew(msToGameTime(durationMs))
+    : LABELS.shiftUntil(msToGameTime(DEFAULT_CONFIG.totalDurationMs)))[lang]
 
 export interface NoteRow {
   label: string
@@ -54,6 +63,8 @@ export interface NoteView {
   doodle: boolean
   left: { head: string; rows: NoteRow[] }
   right: { head: string; rows: NoteRow[] }
+  /** The Shift row sits under both columns (its text is longer than a number). */
+  shiftRow: NoteRow
   /** One-sentence summary for assistive technology. */
   summary: string
 }
@@ -120,9 +131,12 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
       row(LABELS.rowFound, num(shift?.found), LABELS.unitCount),
       row(LABELS.rowFresh, num(shift?.fresh), LABELS.unitKinds),
       row(LABELS.rowFalse, num(shift?.misreports), LABELS.unitTimes),
-      row(LABELS.rowShift, shift ? fmtShift(shift.durationMs) : null),
     ],
   }
+  const shiftRow = row(
+    LABELS.rowShift,
+    shift ? fmtShiftEnd(shift.durationMs, shift.closing, lang) : null
+  )
   const right = {
     head: t(LABELS.headTotal),
     rows: [
@@ -146,6 +160,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     doodle: stage === 'start' && input.mode === 'before',
     left,
     right,
+    shiftRow,
     summary: [t(LABELS.title), night, ...stamps.map(s => s.text)].join(' '),
   }
 }

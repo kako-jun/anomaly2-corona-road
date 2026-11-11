@@ -223,7 +223,7 @@
 .note-scrib {
   /* Continues right under the last synopsis line, tilted like a note jotted in the margin. */
   width: fit-content;
-  margin: 0 0 0 4px;
+  margin: 4px 0 0 4px; /* clear air above, so the lifted right end never touches the last synopsis line */
   color: var(--blue);
   transform: rotate(var(--tilt-scrib));
   transform-origin: 50% 50%; /* about its own middle: the left end dips and the right end lifts by the same few px, so no line runs into its neighbour */
@@ -241,13 +241,22 @@
 }
 
 .note-form {
-  display: flex;
-  gap: 14px;
   margin-top: 8px;
   padding: 6px 10px;
   border: 1.5px solid #6b5f45;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.18);
+}
+.note-fcols {
+  display: flex;
+  gap: 14px;
+}
+.note-fshift {
+  margin-top: 3px;
+  border-top: 1.5px dashed #8a7d5e;
+}
+.note-fshift .note-fr b {
+  font-size: 19px;
 }
 .note-fcol {
   flex: 1.1;

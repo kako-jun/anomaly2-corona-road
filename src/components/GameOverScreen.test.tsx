@@ -56,7 +56,7 @@ describe('result = investigation note (#297)', () => {
     )
     expect(screen.getByText('今夜も異変を報告。')).toBeInTheDocument()
     expect(screen.getByText('今夜')).toBeInTheDocument()
-    expect(screen.getByText('2:05')).toBeInTheDocument()
+    expect(screen.getByText('06:00まで')).toBeInTheDocument()
     expect(screen.getByText('17')).toBeInTheDocument()
   })
 
