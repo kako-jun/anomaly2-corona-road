@@ -58,10 +58,11 @@
 
 /* noise + scanlines at the monitor's own size (NOT magnified), centred in the circle and cropped by it */
 .loupe__fx {
+  /* centred with inset + margin:auto (width/height are inline), NOT transform: a transform would make this a stacking
+     context and the noise (overlay) and scanlines (multiply) inside would stop blending with the picture below */
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   pointer-events: none;
 }
 
@@ -77,7 +78,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   letter-spacing: 0.1em;
   color: #4a4130;
   text-shadow: 0 1px 0 #fff6;
@@ -89,7 +90,7 @@
 /* pointer events for touch, mouse and pen: a vertical drag still scrolls the page until the loupe shows (then the
    hook cancels touchmove); no text selection / long-press menu while holding */
 .glass {
-  touch-action: pan-y;
+  touch-action: pan-y pinch-zoom;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;

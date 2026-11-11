@@ -27,26 +27,26 @@ const rect = (r: {
 let host: HTMLDivElement
 let onSwipe: ReturnType<typeof vi.fn>
 
-const setup = (withHost = true) => {
+const viewProps = (camera: (typeof cams)[number], withHost: boolean) => ({
+  camera,
+  result: null,
+  resultVisible: false,
+  subtitle: { text: '', visible: false },
+  brightness: 1,
+  contrast: 1,
+  onSwipe,
+  loupeHost: withHost ? host : undefined,
+})
+
+const setup = (withHost = true, frameRect = GLASS) => {
   onSwipe = vi.fn()
-  const view = render(
-    <CameraView
-      camera={cams[0]}
-      result={null}
-      resultVisible={false}
-      subtitle={{ text: '', visible: false }}
-      brightness={1}
-      contrast={1}
-      onSwipe={onSwipe}
-      loupeHost={withHost ? host : undefined}
-    />
-  )
+  const view = render(<CameraView {...viewProps(cams[0], withHost)} />)
   const glass = view.container.querySelector('.glass') as HTMLElement
   const frame = view.container.querySelector('.pic__frame') as HTMLElement
   glass.getBoundingClientRect = () => rect(GLASS)
-  // the frame covers the glass exactly here
-  frame.getBoundingClientRect = () => rect(GLASS)
-  return { glass }
+  // by default the frame covers the glass exactly
+  frame.getBoundingClientRect = () => rect(frameRect)
+  return { glass, view, withHost }
 }
 const pe = (
   type: 'pointerDown' | 'pointerMove' | 'pointerUp' | 'pointerCancel',
@@ -223,6 +223,108 @@ describe('loupe gesture (#341)', () => {
     expect(parseFloat(f.style.width)).toBeCloseTo(400 * LOUPE.ZOOM)
     expect(f.querySelector('canvas, .noise')).toBeNull()
     expect(loupe()!.querySelector('.loupe__fx')).not.toBeNull()
+  })
+})
+
+const frameLeft = () =>
+  parseFloat(
+    (loupe()!.querySelector('.loupe__frame') as HTMLElement).style.left
+  )
+
+describe('loupe gesture, review cases (#341)', () => {
+  it('places the spot in frame coordinates when the frame is wider than the glass (cover)', () => {
+    const { glass } = setup(true, {
+      left: 60,
+      top: 50,
+      width: 480,
+      height: 600,
+    })
+    pe('pointerDown', glass, 300) // 200 px into the glass, centre column
+    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
+    // u = (200 + 100 - 60) / 480 = 0.5
+    expect(frameLeft()).toBeCloseTo(
+      LOUPE.DIAMETER_PX / 2 - 0.5 * 480 * LOUPE.ZOOM
+    )
+  })
+
+  it('HOLD_SLOP_PX: 12 px of drift still holds, 13 px is not a hold', () => {
+    const a = setup()
+    pe('pointerDown', a.glass, 300)
+    pe('pointerMove', a.glass, 300 + LOUPE.HOLD_SLOP_PX)
+    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
+    expect(loupe()).not.toBeNull()
+    pe('pointerUp', a.glass, 300)
+    cleanup()
+    const b = setup()
+    pe('pointerDown', b.glass, 300)
+    pe('pointerMove', b.glass, 300 + LOUPE.HOLD_SLOP_PX + 1)
+    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
+    expect(loupe()).toBeNull()
+  })
+
+  it('a move away and back does not bring the loupe back (the hold is already lost)', () => {
+    const { glass } = setup()
+    pe('pointerDown', glass, 300)
+    pe('pointerMove', glass, 330)
+    pe('pointerMove', glass, 300)
+    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS * 2))
+    expect(loupe()).toBeNull()
+  })
+
+  it('SWIPE_PX: 50 px is not a swipe, 51 px is', () => {
+    const { glass } = setup()
+    pe('pointerDown', glass, 300)
+    pe('pointerUp', glass, 300 - LOUPE.SWIPE_PX)
+    expect(onSwipe).not.toHaveBeenCalled()
+    pe('pointerDown', glass, 300)
+    pe('pointerUp', glass, 300 - LOUPE.SWIPE_PX - 1)
+    expect(onSwipe).toHaveBeenCalledWith('next')
+  })
+
+  it('leaves no hold timer behind when it unmounts mid-press', () => {
+    const { glass, view } = setup()
+    pe('pointerDown', glass, 300)
+    expect(vi.getTimerCount()).toBeGreaterThan(0)
+    view.unmount()
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it('with reduced motion the spot is at the target at once, no frames needed', () => {
+    const mm = vi
+      .spyOn(window, 'matchMedia')
+      .mockImplementation(
+        q => ({ matches: q.includes('reduce'), media: q }) as MediaQueryList
+      )
+    const { glass } = setup()
+    pe('pointerDown', glass, 300)
+    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
+    pe('pointerMove', glass, 200)
+    // glass x 100 -> u = 100 / 400 = 0.25, with no timer advanced
+    expect(frameLeft()).toBeCloseTo(
+      LOUPE.DIAMETER_PX / 2 - 0.25 * 400 * LOUPE.ZOOM
+    )
+    mm.mockRestore()
+  })
+
+  it('closes when the pointer capture is lost, the window blurs, or the camera changes under a press', () => {
+    const { glass, view } = setup()
+    const hold = () => {
+      pe('pointerDown', glass, 300)
+      act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
+      expect(loupe()).not.toBeNull()
+    }
+    hold()
+    fireEvent.lostPointerCapture(glass, { pointerId: 1 })
+    expect(loupe()).toBeNull()
+    hold()
+    act(() => void window.dispatchEvent(new Event('blur')))
+    expect(loupe()).toBeNull()
+    hold()
+    view.rerender(<CameraView {...viewProps(cams[1], true)} />)
+    expect(loupe()).toBeNull()
+    // and the press that was cut off does not switch anything when it ends
+    pe('pointerUp', glass, 100)
+    expect(onSwipe).not.toHaveBeenCalled()
   })
 })
 

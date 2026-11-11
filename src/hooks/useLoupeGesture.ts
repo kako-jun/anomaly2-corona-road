@@ -24,6 +24,8 @@ interface Options {
   glassRef: RefObject<HTMLElement>
   frameRef: RefObject<HTMLElement>
   onSwipe: (direction: 'next' | 'prev') => void
+  /** Changes when the camera changes: a loupe held through a camera switch is closed. */
+  resetKey?: unknown
 }
 
 interface Geometry {
@@ -49,6 +51,7 @@ export const useLoupeGesture = ({
   glassRef,
   frameRef,
   onSwipe,
+  resetKey,
 }: Options) => {
   const [view, setView] = useState<LoupeView | null>(null)
   const s = useRef({
@@ -224,6 +227,25 @@ export const useLoupeGesture = ({
 
   useEffect(() => stopLoop, [stopLoop])
 
+  // The press is over (or the picture under it changed) without a pointerup we can use: close the loupe. The geometry
+  // is measured once when the loupe shows, so a resize / rotation closes it too.
+  useEffect(() => {
+    if (s.current.id !== null) reset()
+  }, [resetKey, reset])
+  useEffect(() => {
+    const end = () => {
+      if (s.current.id !== null) reset()
+    }
+    window.addEventListener('blur', end)
+    window.addEventListener('resize', end)
+    document.addEventListener('visibilitychange', end)
+    return () => {
+      window.removeEventListener('blur', end)
+      window.removeEventListener('resize', end)
+      document.removeEventListener('visibilitychange', end)
+    }
+  }, [reset])
+
   return {
     view,
     handlers: {
@@ -231,6 +253,7 @@ export const useLoupeGesture = ({
       onPointerMove,
       onPointerUp,
       onPointerCancel,
+      onLostPointerCapture: onPointerCancel,
       onContextMenu: (e: { preventDefault: () => void }) => {
         if (s.current.id !== null) e.preventDefault()
       },

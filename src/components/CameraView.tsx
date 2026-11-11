@@ -83,6 +83,7 @@ export const CameraView = ({
     glassRef,
     frameRef,
     onSwipe,
+    resetKey: camera.image,
   })
 
   // The overlay is placed in base-photo pixels, so it waits for the base photo's natural size.
