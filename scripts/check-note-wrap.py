@@ -244,7 +244,8 @@ async () => {
   // A scribble is a separate jotting: exactly one rule pitch below the synopsis (--note-rule, 22px; +-1 for rounding), so its
   // lines stay in phase with the rules (RULEFIT).
   const pitch = parseFloat(getComputedStyle(notes).getPropertyValue('--note-rule'))
-  if (sc && Math.abs(gapAbove - pitch) > 1) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want the rule pitch, ${pitch}px)`)
+  if (!(pitch > 0)) res.push('--note-rule is not set on .note-notes (the rule pitch is read from it)')
+  else if (sc && Math.abs(gapAbove - pitch) > 1) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want the rule pitch, ${pitch}px)`)
   const lastSyn = syn.querySelector('p:last-child').getBoundingClientRect()
   const clear = scribBox() ? scribBox().top - lastSyn.bottom : 99
   if (clear < 8) res.push(`the tilted scribble is only ${clear.toFixed(1)}px below the last synopsis line (need 8)`)
@@ -297,6 +298,7 @@ RULEFIT = """
   const notes = document.querySelector('.note-notes')
   const pitch = parseFloat(getComputedStyle(notes).getPropertyValue('--note-rule'))
   const top = notes.getBoundingClientRect().top
+  if (!(pitch > 0)) return ['--note-rule is not set on .note-notes (the rule pitch is read from it)']
   for (const p of document.querySelectorAll('.note-syn p, .note-scrib p')) {
     const mk = () => { const e = document.createElement('span'); e.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline'; return e }
     const a = mk(), b = mk()
@@ -315,11 +317,13 @@ RULEFIT = """
 """
 
 # How far the letters' base may stray from the line's own rule, in px above it (negative = below it). Ground: a rule may
-# run through the letters only within about a quarter of their height. The English hand (Caveat) has an x-height of 14px
-# and the Japanese glyphs stand 13.2px above the base. Below: the rule may cut 3px up into the letters (under a quarter).
-# Above: the rule over the line is then 22 - 13 = 9px above the base, i.e. 4-5px (about a quarter) under the letters'
-# tops. Past either the memo reads as struck through. (A scribble is turned, so its two ends differ; its middle sits
-# about 5px up.)
+# run through the letters only by about a quarter to a third of their height. Measured heights above the base: Caveat at
+# 20px has an x-height of 8px (OS/2 sxHeight 400 of 1000) and a cap height of about 12.2px (sCapHeight 610); the Japanese
+# glyphs stand 13.2px. Below: the rule may cut 3px up into the letters = 37% of the English x-height, 25% of its caps,
+# 23% of the Japanese glyphs. Above: the rule over the line is then 22 - 13 = 9px above the base, i.e. over the top of the
+# English lowercase (8px: no cut at all), 3.2px (26%) under the English caps and 4.2px (32%) under the Japanese tops.
+# Past either the memo reads as struck through. (A scribble is turned, so its two ends differ; its middle sits about 5px
+# up.)
 RULE_BELOW_MAX = 3
 RULE_ABOVE_MAX = 13
 
@@ -398,6 +402,9 @@ def main():
         # The Japanese lines, on a real ja-JP page (the loop above only reaches the language the browser is in).
         for stage, shift in (("elder3", last), ("child", None), ("child", last)):
             page = open_note(browser, stage_save(stage, shift), locale="ja-JP")
+            # The page must really be Japanese, or RULEFIT would skip every line and pass for nothing.
+            if not page.evaluate("(() => { const s = document.querySelector('.note-screen'); return s.lang === 'ja' && s.classList.contains('note-ja') })()"):
+                problems.append(f"[ja-JP] {stage}: the page did not open as Japanese (note-ja), so its lines were not measured")
             for w, h in VIEWPORTS:
                 page.set_viewport_size({"width": w, "height": h})
                 page.wait_for_timeout(60)
