@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80"><style>.ln{fill:none;stroke:#3b3a38;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.ln.dash{stroke-dasharray:3 4;stroke:#6b665c}.bl{fill:none;stroke:#27427a;stroke-width:1.8;stroke-linecap:round}.fl{fill:#3b3a38}.rd{fill:none;stroke:#c9694f;stroke-width:1.4}.q{fill:none;stroke:#a93326;stroke-width:3;stroke-linecap:round}.q2{fill:none;stroke:#8a7f68;stroke-width:3;stroke-linecap:round}</style><filter id="w" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter><g filter="url(#w)"><path d="M4 6 L44 26 M116 6 L76 26 M4 76 L44 54 M116 76 L76 54" class="ln"/>
-<path d="M44 26 L76 26 L76 54 L44 54 Z" class="ln"/>
-<path d="M46 30 H74 M46 35 H74 M46 40 H74 M46 45 H74 M46 50 H74" class="ln" style="stroke-width:1"/>
-<circle cx="60" cy="4" r="3" class="ln"/><circle cx="60" cy="14" r="2" class="ln"/>
-<path d="M104 62 L82 42" class="bl"/><path d="M82 42 L87 43 M82 42 L84 47" class="bl"/></g></svg>

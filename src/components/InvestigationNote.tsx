@@ -85,7 +85,6 @@ export const InvestigationNote = ({
         'note-screen',
         `note-${lang}`,
         `note-${view.mode}`,
-        view.doodle ? 'note-first' : '',
         view.slots.some(s => s.isNew) ? 'note-tagged' : '',
       ]
         .filter(Boolean)
@@ -144,24 +143,17 @@ export const InvestigationNote = ({
                 <p key={l.text}>{l.text}</p>
               ))}
             </div>
-            <div className="note-scrib note-hw">
-              {view.scrib.map((s, i) => (
-                <p
-                  key={s}
-                  style={{ transform: `rotate(var(--tilt-scrib-${i}))` }}
-                >
-                  {s}
-                </p>
-              ))}
-            </div>
-            {view.doodle && (
-              <img
-                className="note-doodle"
-                src="/note/corridor.svg"
-                width={100}
-                height={67}
-                alt=""
-              />
+            {view.scrib.length > 0 && (
+              <div className="note-scrib note-hw">
+                {view.scrib.map((s, i) => (
+                  <p
+                    key={s}
+                    style={{ transform: `rotate(var(--tilt-scrib-${i}))` }}
+                  >
+                    {s}
+                  </p>
+                ))}
+              </div>
             )}
           </div>
           <div className="note-form note-hw">

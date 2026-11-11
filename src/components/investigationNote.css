@@ -205,11 +205,6 @@
   /* room above the frames for the red "found" tag: 3px or more from the frame below and the stamp above */
   margin-top: 16px;
 }
-.note-first .note-notes {
-  padding-bottom: 4px; /* the lowest scribble line stays 10px or more clear of the number box */
-  /* seven synopsis lines + three scribble lines, and the corridor sketch in the bottom corner clear of them */
-  min-height: 230px;
-}
 .note-after .note-notes {
   /* The after-night stamp row is taller (the big stamp); the synopsis there is 6 lines at most. */
   min-height: 194px;
@@ -227,7 +222,7 @@
 .note-scrib {
   /* Continues right under the last synopsis line, tilted like a note jotted in the margin. */
   width: fit-content;
-  margin: 16px 0 0 4px; /* a gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun) */
+  margin: 17px 0 0 4px; /* a gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun) */
   color: var(--blue);
 }
 .note-scrib p {
@@ -235,20 +230,8 @@
      (noteTilt.ts), about its own middle: the left end dips and the right end lifts by the same few px. */
   transform-origin: 50% 50%;
 }
-.note-first .note-scrib {
-  /* the very first night is the fullest page (seven lines + three scribble lines + the sketch): 12px, never under 10 */
-  margin-top: 12px;
-}
 .note-en .note-scrib p {
   font-size: 20px;
-}
-.note-doodle {
-  position: absolute;
-  right: 0;
-  bottom: 2px;
-  display: block;
-  width: 100px;
-  height: 67px;
 }
 
 .note-form {
@@ -367,6 +350,9 @@
   position: relative;
   display: inline-block;
   padding: 9px 22px 11px; /* room between the words and the loop: it must not look cramped */
+}
+.note-en .note-act-text {
+  padding: 5px 22px 7px;
 }
 .note-act-ring,
 .note-act-focus {

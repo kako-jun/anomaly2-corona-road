@@ -12,148 +12,178 @@ export type StageFlag = (typeof STAGE_FLAGS)[number]
 /** How far the case has come. `start` is the very first night (the background of the case). */
 export type Stage = 'start' | 'none' | StageFlag
 
+/**
+ * The stages in the order knowledge grows. A stage only ever shows what the detective (and so the player) can
+ * know by then; `knownFrom` on every sentence names the earliest stage that may show it (see below).
+ */
+export const STAGE_ORDER: readonly Stage[] = [
+  'start',
+  'none',
+  'elder1',
+  'elder2',
+  'elder3',
+  'child',
+]
+
 export type NoteLang = 'ja' | 'en'
 export interface Pair {
   ja: string
   en: string
 }
 
+/**
+ * A sentence with the earliest stage that may show it. Pinned by vitest: no stage shows a sentence whose
+ * `knownFrom` is later than itself, and a sentence naming a fact that is only learned by meeting a person (the
+ * elders' traits, "kinder than reality") cannot be annotated earlier than that meeting. Every `knownFrom` must
+ * rest on docs/story.md: what it states as known at the start of the case is `start`; what is learned by finding
+ * a missing person is that person's stage. Where story.md says nothing, the sentence is not written.
+ */
+export interface KnownPair extends Pair {
+  knownFrom: Stage
+}
+
+const k = (knownFrom: Stage, ja: string, en: string): KnownPair => ({
+  ja,
+  en,
+  knownFrom,
+})
+
 export interface StageText {
   /**
    * Synopsis, one entry per handwritten line: every entry fits the paper in one line and is never wrapped by the
    * browser (a long sentence is split here, at a phrase boundary, in both languages alike; Issue #297 wrap rules).
    */
-  lines: Pair[]
+  lines: KnownPair[]
   /** How many of the last lines are kept (muted) under the stock lines of an end-of-night memo. */
   tail: number
-  /** The detective's scribbles (blue). */
-  scrib: Pair[]
+  /** The detective's scribbles (blue). Empty where docs/story.md gives the detective nothing to jot yet. */
+  scrib: KnownPair[]
 }
 
 export const STAGES: Record<Stage, StageText> = {
+  // The very first night: only what docs/story.md says is known when the stakeout begins (the case, why she is
+  // here, who watches). Nothing that is learned by seeing an oddity or meeting a missing person.
   start: {
     tail: 2,
     lines: [
-      {
-        ja: 'コロナロードで行方不明が4人。',
-        en: '4 people missing in Corona Road.',
-      },
-      {
-        ja: '殺人とは、まだ断定できない。',
-        en: 'Murder? Can’t say that yet.',
-      },
-      {
-        ja: '1人目は、警察も本気ではなかった。',
-        en: 'Police didn’t take #1 seriously.',
-      },
-      {
-        ja: '4人目は子供。警察は急に本気になった。',
-        en: '#4 is a child. Now they do.',
-      },
-      {
-        ja: '昭和の地下街。監視設備も昭和のまま。',
-        en: 'Showa mall, Showa cameras.',
-      },
-      {
-        ja: '通路の異変が、手がかりではないか。',
-        en: 'The corridor oddities may be a lead.',
-      },
-      {
-        ja: '夜は警備員室で張り込む。監視は樫原くん。',
-        en: 'Guard room stakeout. Kashihara watches.',
-      },
+      k(
+        'start',
+        'コロナロードで行方不明が4人。',
+        '4 people missing in Corona Road.'
+      ),
+      k('start', '殺人とは、まだ断定できない。', 'Murder? Can’t say that yet.'),
+      k(
+        'start',
+        '1人目は、警察も本気ではなかった。',
+        'Police didn’t take #1 seriously.'
+      ),
+      k(
+        'start',
+        '4人目は子供。警察は急に本気になった。',
+        '#4 is a child. Now they do.'
+      ),
+      k(
+        'start',
+        'コロナロードの異変が、手がかりでは。',
+        'Corona Road’s oddities may be a lead.'
+      ),
+      k(
+        'start',
+        '夜は警備員室で張り込む。監視は樫原くん。',
+        'Guard room stakeout. Kashihara watches.'
+      ),
     ],
-    scrib: [
-      { ja: '昭和の異変のとき、', en: 'Went past the shutter' },
-      { ja: 'シャッターの向こうへ', en: 'and never came back?' },
-      { ja: '行ったまま?', en: '' },
-    ],
+    scrib: [],
   },
   none: {
     tail: 2,
     lines: [
-      { ja: '行方不明は4人。', en: '4 people missing.' },
-      { ja: 'まだ、誰も見つかっていない。', en: 'No one found yet.' },
-      {
-        ja: '通路の異変が、手がかりではないか。',
-        en: 'The corridor oddities may be a lead.',
-      },
+      k('start', '行方不明は4人。', '4 people missing.'),
+      k(
+        'start',
+        'まだ、行方不明の誰も見つかっていない。',
+        'No missing person found yet.'
+      ),
+      k(
+        'start',
+        'コロナロードの異変が、手がかりでは。',
+        'Corona Road’s oddities may be a lead.'
+      ),
     ],
-    scrib: [
-      { ja: '昭和の異変のとき、', en: 'Went past the shutter' },
-      { ja: 'シャッターの向こうへ', en: 'and never came back?' },
-      { ja: '行ったまま?', en: '' },
-    ],
+    scrib: [],
   },
   elder1: {
     tail: 2,
     lines: [
-      { ja: '1人目の老人を見つけた。', en: 'Found the 1st old person.' },
-      { ja: '帰りたくないという。', en: 'Doesn’t want to go home.' },
-      {
-        ja: '老人1人目は実務的で、少し頑固。',
-        en: 'First elder: practical, a bit stubborn.',
-      },
-      {
-        ja: '異変でも、現実よりマシだと。',
-        en: 'Even an oddity beats reality, they say.',
-      },
+      k('elder1', '老人1人目を見つけた。', 'Found the 1st old person.'),
+      k('elder1', '帰りたくないという。', 'Doesn’t want to go home.'),
+      k(
+        'elder1',
+        '老人1人目は実務的で、少し頑固。',
+        'First elder: practical, a bit stubborn.'
+      ),
+      k(
+        'elder1',
+        '異変でも、現実よりマシだと。',
+        'Even an oddity beats reality, they say.'
+      ),
     ],
-    scrib: [{ ja: 'どこへいったのか?', en: 'Where did they go?' }],
+    scrib: [],
   },
   elder2: {
     tail: 2,
     lines: [
-      { ja: '老人2人目を見つけたが、', en: 'Found the 2nd old person.' },
-      { ja: '帰りたくないという。', en: 'Doesn’t want to go home.' },
-      {
-        ja: '老人2人目も、1人目と同じことを言う。',
-        en: 'Elder 2 says the same as elder 1.',
-      },
-      {
-        ja: '人当たりがよく、こちらを気遣う。',
-        en: 'Warm, and worries about us.',
-      },
+      k('elder2', '老人2人目を見つけたが、', 'Found the 2nd old person, but'),
+      k('elder2', '帰りたくないという。', 'they don’t want to go home.'),
+      k(
+        'elder2',
+        '2人目も、老人1人目と同じことを言う。',
+        'Elder 2 says the same as elder 1.'
+      ),
+      k(
+        'elder2',
+        '人当たりがよく、こちらを気遣う。',
+        'Warm, and worries about us.'
+      ),
     ],
-    scrib: [{ ja: 'どこへいったのか?', en: 'Where did they go?' }],
+    scrib: [],
   },
   elder3: {
     tail: 2,
     lines: [
-      { ja: '老人3人目を見つけた。', en: 'Found the 3rd.' },
-      {
-        ja: 'やはり帰りたくないという。',
-        en: 'Doesn’t want to go home either.',
-      },
-      { ja: '乾いた冗談を言う。', en: 'Dry jokes.' },
-      {
-        ja: '3人とも現実よりマシな優しい異変だと。',
-        en: 'All three: a kinder oddity than reality.',
-      },
-      { ja: '残るは4人目。子供。', en: 'One left. The child.' },
+      k('elder3', '老人3人目を見つけた。', 'Found the 3rd old person.'),
+      k(
+        'elder3',
+        'やはり帰りたくないという。',
+        'Doesn’t want to go home either.'
+      ),
+      k('elder3', '乾いた冗談を言う。', 'Dry jokes.'),
+      k(
+        'elder3',
+        '3人とも現実よりマシな優しい異変だと。',
+        'All three: a kinder oddity than reality.'
+      ),
+      k('elder3', '残るは4人目。子供。', 'One left. The child.'),
     ],
     scrib: [
-      {
-        ja: '子供も見つかったら同じことを…?',
-        en: 'The child will say the same, too…?',
-      },
+      k(
+        'elder3',
+        '子供も見つかったら同じことを…?',
+        'The child will say the same, too…?'
+      ),
     ],
   },
   child: {
     tail: 2,
     lines: [
-      { ja: '4人目、子供を見つけた。', en: 'Found the 4th. A child.' },
-      {
-        ja: '子供の家は、今どうなっているのか。',
-        en: 'What is the child’s home like now?',
-      },
+      k('child', '4人目、子供を見つけた。', 'Found the 4th. A child.'),
+      k(
+        'child',
+        '子供の家は、今どうなっているのか。',
+        'What is the child’s home like now?'
+      ),
     ],
-    scrib: [
-      {
-        ja: '帰りたくないのは、なぜ?',
-        en: 'Why not want to go home?',
-      },
-    ],
+    scrib: [k('child', '帰りたくないのは、なぜ?', 'Why not want to go home?')],
   },
 }
 
@@ -161,57 +191,72 @@ export const STAGES: Record<Stage, StageText> = {
 export type Outcome = 'newKinds' | 'noNewKinds' | 'withdraw' | 'ending'
 
 export interface OutcomeText {
-  lines: Pair[]
+  lines: KnownPair[]
+  /** Replaces `lines` on the very first night (no earlier night to say "also" about). */
+  firstNight?: KnownPair[]
+  /** Added after `lines` only when the night found at least one anomaly (nothing found: the line would be false). */
+  ifFound?: KnownPair[]
   /** Scribbles that replace the stage's own (absent: the stage's are used). */
-  scrib?: Pair[]
+  scrib?: KnownPair[]
 }
 
 export const OUTCOMES: Record<Outcome, OutcomeText> = {
   newKinds: {
     lines: [
-      { ja: '今夜も異変を報告。', en: 'More oddities reported tonight.' },
-      { ja: '捜査は一歩前へ。', en: 'One step forward.' },
+      k('start', '今夜も異変を報告。', 'More oddities reported tonight.'),
+      k('start', '捜査は一歩前へ。', 'One step forward.'),
+    ],
+    firstNight: [
+      k('start', '今夜は異変を報告。', 'Oddities reported tonight.'),
+      k('start', '捜査は一歩前へ。', 'One step forward.'),
     ],
   },
   noNewKinds: {
-    lines: [{ ja: '新しい手がかりはなかった。', en: 'No new leads tonight.' }],
-    scrib: [{ ja: '見落としはないか?', en: 'Did we miss something?' }],
+    lines: [k('start', '新しい手がかりはなかった。', 'No new leads tonight.')],
   },
   withdraw: {
     lines: [
-      {
-        ja: 'お手つきが重なり、席を立つ。',
-        en: 'Too many false reports. Left the post.',
-      },
-      {
-        ja: '見つけた分は、捜査に加わった。',
-        en: 'What was found still counts.',
-      },
+      k(
+        'start',
+        'お手つきが重なり、席を立つ。',
+        'Too many false reports. Left the post.'
+      ),
+    ],
+    ifFound: [
+      k(
+        'start',
+        '見つけた分は、捜査に加わった。',
+        'What was found still counts.'
+      ),
     ],
     // 仮置き（Issue #297）: the withdraw one-liner.
-    scrib: [{ ja: '今夜はここまで。', en: 'That’s it for tonight.' }],
+    scrib: [k('start', '今夜はここまで。', 'That’s it for tonight.')],
   },
+  // Only reachable after the child is found (the true ending, docs/story.md).
   ending: {
     lines: [
-      { ja: '異変を、すべて見送った。', en: 'Let every oddity pass.' },
-      {
-        ja: '指摘ではなく、家族を調べる。',
-        en: 'Look into the family instead.',
-      },
+      k('child', '異変を、すべて見送った。', 'Let every oddity pass.'),
+      k(
+        'child',
+        '指摘ではなく、家族を調べる。',
+        'Look into the family instead.'
+      ),
     ],
   },
 }
 
 /** Added to the synopsis of a start-of-night memo when the last night gave nothing, or ended in a withdraw. */
-export const LAST_NIGHT: Record<'noNewKinds' | 'withdraw', Pair> = {
-  noNewKinds: {
-    ja: '前回は、新しい手がかりがなかった。',
-    en: 'Last time: no new leads.',
-  },
-  withdraw: {
-    ja: '前回は、お手つきが重なり席を立った。',
-    en: 'Last time: left after false reports.',
-  },
+export const LAST_NIGHT: Record<'noNewKinds' | 'withdraw', KnownPair> = {
+  noNewKinds: k(
+    'start',
+    '前回は、新しい手がかりがなかった。',
+    'Last time: no new leads.'
+  ),
+  withdraw: k(
+    'start',
+    '前回は、お手つきが重なり席を立った。',
+    'Last time: left after false reports.'
+  ),
 }
 
 export const LABELS = {
