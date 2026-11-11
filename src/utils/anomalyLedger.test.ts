@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { parse as parseYaml } from 'yaml'
 import {
   ANOMALY_TYPES,
   isGameRecord,
@@ -882,5 +883,144 @@ describe('mixed ledger (#77)', () => {
     expect(() =>
       parseLedger({ anomalies: [raw(), nonImage({ id: 'bad', detail: '' })] })
     ).toThrow(/entry "bad".*"detail"/)
+  })
+})
+
+describe('memo_flag and memo (#325)', () => {
+  it('reads a name or a list of names, and a Japanese and English one-liner', () => {
+    const one = parseLedgerRecord(raw({ memo_flag: 'shutter' }), 0)
+    expect(one.memoFlags).toEqual(['shutter'])
+    const two = parseLedgerRecord(raw({ memo_flag: ['food', 'reiwa'] }), 0)
+    expect(two.memoFlags).toEqual(['food', 'reiwa'])
+    const withMemo = parseLedgerRecord(
+      raw({ memo: { ja: ' 古い紙。 ', en: 'An old paper.' } }),
+      0
+    )
+    expect(withMemo.memo).toEqual({ ja: '古い紙。', en: 'An old paper.' })
+    expect(parseLedgerRecord(raw(), 0).memoFlags).toBeUndefined()
+    expect(parseLedgerRecord(raw(), 0).memo).toBeUndefined()
+  })
+  it('hands both to the game entry', () => {
+    const e = toLedgerEntry(
+      parseLedgerRecord(
+        raw({ memo_flag: 'food', memo: { ja: 'あ', en: 'a' } }),
+        0
+      )
+    )
+    expect(e.memoFlags).toEqual(['food'])
+    expect(e.memo).toEqual({ ja: 'あ', en: 'a' })
+    expect(toLedgerEntry(parseLedgerRecord(raw(), 0))).not.toHaveProperty(
+      'memo'
+    )
+  })
+  it.each([
+    [{ memo_flag: 'nope' }, 'unknown flag'],
+    [{ memo_flag: ['food', 'food'] }, 'a flag twice'],
+    [{ memo: 'text' }, 'a memo that is not a mapping'],
+    [{ memo: { ja: 'あ' } }, 'a memo without English'],
+    [{ memo: { ja: 'あ', en: ' ' } }, 'a blank English memo'],
+    [{ memo: { ja: 'あ\nい', en: 'a' } }, 'a two-line memo'],
+    [{ memo: { ja: 'あ', en: 'a', fr: 'b' } }, 'an unknown memo key'],
+  ] as [Record<string, unknown>, string][])(
+    'rejects %j (%s) and names the entry',
+    over => {
+      expect(() => parseLedgerRecord(raw(over), 0)).toThrow(/AR-01-notice/)
+    }
+  )
+})
+
+describe('the real ledger carries the memo marks (#325)', () => {
+  const records = parseLedgerRecords(
+    parseYaml(
+      readFileSync(resolve(__dirname, '../../prompts/anomalies.yaml'), 'utf8')
+    )
+  )
+  const withFlag = (f: string) =>
+    records.filter(r => r.memoFlags?.includes(f as 'food')).map(r => r.id)
+  it('marks the shutter anomalies named in the issue', () => {
+    expect(withFlag('shutter')).toEqual(
+      expect.arrayContaining([
+        'AR-01-shutter-light',
+        'AR-02-shutter-crayon-drawings',
+        'AR-03-shutter-wave',
+        'AR-01-shutter-stripe-break',
+      ])
+    )
+  })
+  it('marks food anomalies, and every flagged entry is a produced image one the game can draw', () => {
+    expect(withFlag('food')).toContain('AR-02-coffee')
+    for (const r of records.filter(r => r.memoFlags))
+      expect(isGameRecord(r), r.id).toBe(true)
+  })
+  it('gives every entry a one-liner (#325 2nd stage); a new entry must bring its memo', () => {
+    const without = records.filter(r => !r.memo).map(r => r.id)
+    expect(without).toEqual([])
+  })
+  it('matches the draft table while the draft is still the input (apply-memos.py --check)', () => {
+    const draft = resolve(__dirname, '../../drafts/anomaly-memos-review.md')
+    if (!existsSync(draft)) return // approved: the draft is deleted and the ledger is the only master
+    const rows = new Map<string, [string, string]>()
+    for (const line of readFileSync(draft, 'utf8').split('\n')) {
+      const m = /^\| (\S+) \| (.*?) \| (.*?) \|$/.exec(line)
+      if (m && m[1] !== '異変' && m[1] !== '---')
+        rows.set(m[1], [m[2].trim(), m[3].trim()])
+    }
+    for (const r of records)
+      expect(
+        [r.memo?.ja, r.memo?.en],
+        `${r.id} differs from the draft`
+      ).toEqual(rows.get(r.id))
+    expect(rows.size).toBe(records.length)
+  })
+  it('never uses the same one-liner twice, in either language', () => {
+    for (const lang of ['ja', 'en'] as const) {
+      const seen = new Map<string, string>()
+      for (const r of records) {
+        const text = r.memo?.[lang] ?? ''
+        expect(
+          seen.get(text),
+          `${lang}: ${r.id} repeats ${text}`
+        ).toBeUndefined()
+        seen.set(text, r.id)
+      }
+    }
+  })
+})
+
+describe('the real ledger keeps also_categories well-formed and applied (#347)', () => {
+  const records = parseLedgerRecords(
+    parseYaml(
+      readFileSync(resolve(__dirname, '../../prompts/anomalies.yaml'), 'utf8')
+    )
+  )
+  const byId = new Map(records.map(r => [r.id, r]))
+  it('no entry lists its primary category, camera, or a repeat in also_categories', () => {
+    for (const r of records) {
+      const also = r.alsoCategories ?? []
+      expect(also, r.id).not.toContain(r.category)
+      expect(also, r.id).not.toContain('Camera')
+      expect(new Set(also).size, r.id).toBe(also.length)
+      if (also.length) expect(r.category, r.id).toBeDefined()
+    }
+  })
+  it('every active row of scripts/also-categories-input.tsv is in the ledger (apply-also-categories.py)', () => {
+    const input = resolve(__dirname, '../../scripts/also-categories-input.tsv')
+    expect(existsSync(input)).toBe(true)
+    const rows = readFileSync(input, 'utf8')
+      .split('\n')
+      .filter(l => l.trim() && !l.startsWith('#'))
+    expect(rows.length).toBeGreaterThan(0)
+    for (const line of rows) {
+      const [id, , prim, also] = line.split('\t')
+      const r = byId.get(id)
+      expect(r, `${id} is not in the ledger`).toBeDefined()
+      expect(r?.category, `${id} primary differs from the input`).toBe(
+        parseCategory(prim)
+      )
+      for (const a of also.split(',')) {
+        const cat = parseCategory(a)
+        expect(r?.alsoCategories, `${id} lacks ${a}`).toContain(cat)
+      }
+    }
   })
 })

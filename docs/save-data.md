@@ -25,6 +25,10 @@ localStorage を選ぶ理由:
   "usedLines": {},
   "usedChatter": [],
   "pendingStories": [],
+  "pendingMemoFlags": [],
+  "shownMemoFlags": [],
+  "pendingMemos": [],
+  "shownMemos": [],
   "endingReached": false,
   "epoch": 0,
   "lastShift": { "found": 9, "fresh": 4, "misreports": 1, "durationMs": 480000, "closing": "dawn", "raised": [] },
@@ -39,10 +43,11 @@ localStorage を選ぶ理由:
 - `usedLines`: 異変の id（`prompts/anomalies.yaml` の `id`）→ 使用済みの会話 ID の配列。異変ごとに複数通りの会話を重複させないため。
 - `usedChatter`: 異変ごとの会話以外（オープニング・終了・中間コメント・雑談・フラグ会話・共通の誤報会話）の使用済みの ID。袋が空になったら、その袋の分だけ取り除いて補充する（全員分を取り除かない）。
 - `pendingStories`: 立ったが、まだ再生していないフラグ会話のフラグ名。フラグが立った事実は `flags` に、会話が未再生であることはここに分けて持つ。そのフラグ会話の最初の1行を表示した時に取り除く。再生前にプレイが終わっても残り、次回の開始時に再生される。ない古いセーブは空として読む（`v` は上げない）。
+- `pendingMemoFlags` / `shownMemoFlags` / `pendingMemos` / `shownMemos`（#325、リザルトの捜査メモの出し分け）: 仮説フラグ（台帳 `memo_flag`、`reiwa: true` の異変は `reiwa`）は、その異変を報告した時に `pendingMemoFlags` へ立った順に積む（未表示。表示済みの名前は積まない）。一言メモ（台帳 `memo` のある異変）は、報告した時にその異変 ID を `pendingMemos` へ積む。勤務が終わる時（`recordShiftEnd`）に、種類ごとに1つずつ選んで未表示から表示済みへ移す: 仮説は段階（`knownFrom`）に届いたものの中で最も古い1つ、一言メモは持ち越し分から無作為に1つ（乱数の種はその時点のセーブ（`epoch`・`loops`・`foundTotal`・`foundIds`・`pendingMemos`）から決める。`memoSeed`）。選んだ結果は `lastShift.memoFlag` / `lastShift.memo` に書くので、リザルトを開き直しても同じメモが出る。選ばれなかった分は未表示のまま次の勤務のリザルトへ持ち越す（見つけた夜でなくても出る）。一度表示済みにしたものは二度と出さない。台帳から消えた ID・未知のフラグ名は選ばれず、読み込みも落ちない。ない古いセーブは4つとも空として読む（`v` は上げない）。マージは和集合で、表示済みは未表示に勝つ（片方のタブで出したものをもう片方で出さない）。ERASE ALL（`resetProgress`）は4つとも空に戻す。
 - `endingReached`: 特殊エンディング（#86）に到達した印（#294）。true のセーブでは勤務を始められず、タイトルは「START OVER」だけになる。欠落した古いセーブは false として読む（`v` は上げない）。複数タブのマージは、同じ `epoch` のあいだは OR。
 - `epoch`: リセットの世代番号（安全な整数 `Number.isSafeInteger`、欠落した古いセーブは 0 として読む。`v` は上げない）。START OVER のたびに +1 する。マージでは `epoch` の大きい側を丸ごと採用し、小さい側の中身（進行・使用済み・`endingReached`）は捨てる（`settings` は採用側に無ければ小さい側のを残す）。
 - 捜査メモの段階（`stageOf`、#297）: セーブから `start`（`loops` と `foundTotal` が0＝一度も遊んでいない）、`none`（遊んだがフレームが埋まっていない）、`elder1`〜`elder3`・`child`（立っている最も進んだ段階フラグ）を導く。文言はその段階で刑事が知っていることだけ（各文の `knownFrom`、`src/data/investigationNotes.ts`）。
-- `lastShift`: 直近に終わった勤務の記録（任意。捜査メモ #297 の「前回の夜」と結果画面に使う）。`found`＝正しい報告の数（重複あり）、`fresh`＝その勤務で初めて見つけた異変の数（重複なし。0 なら「新しい手がかりなし」）、`misreports`、`durationMs`（現実の経過ミリ秒のまま保存。夜明け・真エンディングは 480000 に丸める。捜査メモの「勤務」欄は表示時にゲーム内時刻へ変換する: 夜明け・真エンディング=「06:00まで」、撤収=`msToGameTime(durationMs)` を使った「01:20で撤収」。`fmtShiftEnd`）、`closing`（`dawn`/`withdraw`/`ending`）、`raised`（その勤務で立った段階フラグ `elder1..3`・`child`）。勤務終了時（`recordShiftEnd`）に書く。欠落した古いセーブは「なし」、壊れていれば捨てるだけでセーブ全体は弾かない。マージでは周回数の大きい側（同じなら `b`）。`v` は上げない。
+- `lastShift`: 直近に終わった勤務の記録（任意。捜査メモ #297 の「前回の夜」と結果画面に使う）。`found`＝正しい報告の数（重複あり）、`fresh`＝その勤務で初めて見つけた異変の数（重複なし。0 なら「新しい手がかりなし」）、`misreports`、`durationMs`（現実の経過ミリ秒のまま保存。夜明け・真エンディングは 480000 に丸める。捜査メモの「勤務」欄は表示時にゲーム内時刻へ変換する: 夜明け・真エンディング=「06:00まで」、撤収=`msToGameTime(durationMs)` を使った「01:20で撤収」。`fmtShiftEnd`）、`closing`（`dawn`/`withdraw`/`ending`）、`raised`（その勤務で立った段階フラグ `elder1..3`・`child`）、`memoFlag` / `memo`（その勤務のリザルトに出すメモ。任意、#325）。勤務終了時（`recordShiftEnd`）に書く。欠落した古いセーブは「なし」、壊れていれば捨てるだけでセーブ全体は弾かない。マージでは周回数の大きい側（同じなら `b`）。`v` は上げない。
 - `settings`: 設定（任意）。`language`（`ja`/`en`。#292。**将来の設定画面用に予約。現在は書き込まず、読み取っても使わない**（言語は起動のたびにブラウザの言語から決める）。旧セーブにあっても落ちず、無視する）、`brightness`・`contrast`（つまみの位置。未実装）。各項目は単独で欠落してよい。マージは項目ごとに `b` が勝つ。START OVER でも残る。
 
 異変の id は台帳が正本なので、ここでは複製せず、参照するだけにする。

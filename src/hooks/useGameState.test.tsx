@@ -1,7 +1,14 @@
 // @vitest-environment jsdom
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { LedgerEntry } from '../utils/anomalyLedger'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { parse as parseYaml } from 'yaml'
+import {
+  LedgerEntry,
+  parseLedgerRecords,
+  toLedgerEntry,
+} from '../utils/anomalyLedger'
 import * as saveData from '../utils/saveData'
 import { CHILD_FOUND_PACING, DEFAULT_CONFIG } from '../utils/gameConfig'
 import { useGameState } from './useGameState'
@@ -109,7 +116,7 @@ describe('rule constants are unchanged by the ledger connection', () => {
       totalDurationMs: 480_000,
       firstAnomalyDelayMs: 12_000,
       anomalyIntervalMs: 30_000,
-      maxConcurrentAnomalies: 2,
+      maxConcurrentAnomalies: 4,
       maxMisreports: 3,
       minCorrectReports: 4,
     })
@@ -173,12 +180,24 @@ describe('spawning from the ledger', () => {
   })
 
   it('respects the concurrent cap (and counts only real spawns)', () => {
-    ledger.push(entry('a', 1), entry('b', 2), entry('c', 3))
+    // cameras 1-4 each have one entry; camera 5 gets one later (held back so camera 1 is surely taken first)
+    for (let i = 1; i <= 4; i++) ledger.push(entry(`c${i}`, i))
     const { result } = start()
-    advance(FIRST + 100 + INTERVAL * 2)
+    advance(FIRST + 100 + INTERVAL * 6)
     expect(result.current.stats.totalAnomalies).toBe(
       DEFAULT_CONFIG.maxConcurrentAnomalies
     )
+    expect(DEFAULT_CONFIG.maxConcurrentAnomalies).toBe(4)
+    // one per camera at most
+    const cams = result.current.activeAnomalies.map(a => a.cameraId)
+    expect(new Set(cams).size).toBe(cams.length)
+    // at the cap a further entry waits; reporting one (camera 1 is on screen) frees a slot
+    ledger.push(entry('c5', 5), entry('c6', 6))
+    advance(INTERVAL)
+    expect(result.current.stats.totalAnomalies).toBe(4)
+    act(() => result.current.reportAnomaly('Object'))
+    advance(INTERVAL + 500)
+    expect(result.current.stats.totalAnomalies).toBe(5)
   })
 
   it('an empty ledger stops spawning for the shift (no retries)', () => {
@@ -353,6 +372,28 @@ describe('reporting', () => {
         expect(result.current.stats.correctReports).toBe(1)
         expect(result.current.stats.misreports).toBe(0)
         expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
+        unmount()
+      }
+    })
+
+    it('the real ledger: AR-03-face-ornament is correct as Person, Object or Surreal (#347)', () => {
+      const rec = parseLedgerRecords(
+        parseYaml(
+          readFileSync(
+            resolve(__dirname, '../../prompts/anomalies.yaml'),
+            'utf8'
+          )
+        )
+      ).find(r => r.id === 'AR-03-face-ornament')
+      expect(rec).toBeDefined()
+      for (const c of ['Person', 'Object', 'Surreal'] as const) {
+        ledger.length = 0
+        ledger.push({ ...toLedgerEntry(rec!), cameraId: 1 })
+        const { result, unmount } = start()
+        advance(FIRST + 100)
+        act(() => result.current.reportAnomaly(c))
+        expect(result.current.stats.correctReports, c).toBe(1)
+        expect(result.current.stats.misreports, c).toBe(0)
         unmount()
       }
     })
@@ -847,10 +888,15 @@ describe('after the child is found', () => {
     expect(result.current.activeAnomalies).toHaveLength(1)
     advance(CHILD_FOUND_PACING.anomalyIntervalMs)
     expect(result.current.activeAnomalies).toHaveLength(2)
-    advance(CHILD_FOUND_PACING.anomalyIntervalMs * 3)
+    advance(CHILD_FOUND_PACING.anomalyIntervalMs * 10)
+    expect(CHILD_FOUND_PACING.maxConcurrentAnomalies).toBe(8)
     expect(result.current.activeAnomalies).toHaveLength(
       CHILD_FOUND_PACING.maxConcurrentAnomalies
     )
+    // 8 cameras, 8 anomalies: exactly one per camera
+    expect(
+      new Set(result.current.activeAnomalies.map(a => a.cameraId)).size
+    ).toBe(8)
   })
 
   it('child found and nothing reported afterwards: the ending, a win, one loop', () => {

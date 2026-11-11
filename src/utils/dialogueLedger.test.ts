@@ -58,9 +58,16 @@ describe('checkSubtitleText', () => {
     expect(() => checkSubtitleText('あ　い')).not.toThrow()
   })
 
-  it.each(['?', '!', '…', '？', '！'])('allows %s', c => {
+  it.each(['…', '？', '！', '０', '１２'])('allows %s', c => {
     expect(() => checkSubtitleText(`あ${c}`)).not.toThrow()
   })
+
+  it.each(['?', '!', '0', '3', '9'])(
+    'rejects the half-width %s (full-width ！？０-９ only, #334 #352)',
+    c => {
+      expect(() => checkSubtitleText(`あ${c}い`)).toThrow(/half-width/)
+    }
+  )
 
   it.each(['', ' ', '   ', '　', '\t'])(
     'rejects the empty/blank text %j',

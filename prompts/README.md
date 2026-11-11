@@ -85,11 +85,13 @@ prompts/
 
 planned の画像案は制作済みの後ろ、画像以外の異変はその後ろに置く。
 
-| フィールド | 値                                                      | 省略時          |
-| ---------- | ------------------------------------------------------- | --------------- |
-| `status`   | `produced`（制作済み）/ `planned`（未制作）             | `produced`      |
-| `kind`     | `image`（overlay を描く）/ `non_image`（画像なし）      | `image`         |
-| `reiwa`    | `true` のみ（令和の異変の印。`false` や他の値はエラー） | 省略=令和でない |
+| フィールド  | 値                                                                                                                                        | 省略時          |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `status`    | `produced`（制作済み）/ `planned`（未制作）                                                                                               | `produced`      |
+| `kind`      | `image`（overlay を描く）/ `non_image`（画像なし）                                                                                        | `image`         |
+| `reiwa`     | `true` のみ（令和の異変の印。`false` や他の値はエラー）                                                                                   | 省略=令和でない |
+| `memo_flag` | `shutter` / `food` / `reiwa` のどれか、またはその配列（重複・未知の名前はエラー）。リザルトの捜査メモに「仮説の一行」を出すフラグ（#325） | 省略=立てない   |
+| `memo`      | `ja` と `en` の一言（どちらも空でない1行。他のキーはエラー）。`ja` の数は全角数字（「１枚」「２つ」。草案の日本語欄を `scripts/fullwidth-ja.mjs` で直してから `apply-memos.py`、#352）。その異変を見つけたあと、リザルトの捜査メモに出る一行（#325）                | 省略=一言なし   |
 
 | kind / status                        | 必須                                                                                        | 省略可・禁止                                                                                                                 |
 | ------------------------------------ | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -97,6 +99,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | image + planned                      | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                           |
 | non_image（planned / produced とも） | `anomaly_type`（画像以外の種類）`detail`                                                    | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_categories` は image と同じ検証（camera 不可）で任意 |
 
+- `memo_flag` / `memo`（#325）: リザルトの捜査メモの出し分け。**台帳が正本**（承認前の `memo` だけは、草案 `drafts/anomaly-memos-review.md` が入力で台帳はそこから機械的に作る暫定。承認後は台帳が唯一の正本）で、コードに異変 ID は書かない。`memo_flag` のある異変を報告するとそのフラグが「未表示」に積まれ、リザルトで仮説の一行（文言は `src/data/investigationNotes.ts` の `MEMO_FLAG_TEXT`、段階ゲート `knownFrom` つき）として1回だけ出る。`reiwa: true` の異変は `memo_flag` を書かなくても `reiwa` を立てる。`memo` のある異変を報告するとその ID が「未表示」に積まれ、持ち越し分から無作為に1つがリザルトに出る（一度出したものは二度と出ない）。1回のリザルトに出るのは仮説の一行1つ＋一言メモ1つまで。一言メモは story.md に無い事実を足さず、その異変自体の内容（`detail`）から起こす。1行は日本語20字・英語40字以内で、使う文字は `public/fonts/note-chars.txt`（日本語）に含まれること（足りなければ `npm run check:note-fonts` の手順でサブセットを更新）。**全エントリが `memo` を持つ**（#325 の2段目、374件。planned・non_image も。新しい異変を足すときは `memo` も書く＝vitest が要求する）。同じ言い回し・同じ題材の繰り返しを避け、ja・en とも同一文言を2回使わない（テストで縛る）。承認前の文言の入力は `drafts/anomaly-memos-review.md` で、直したらそこを直して `uv run --script scripts/apply-memos.py` を再実行して台帳へ移す（`--check` で草案と台帳の一致を検査。承認後は草案とスクリプトを削除し、台帳だけが正本になる）。実在の会社名・商品名・人物名は書かない。「シャッター」は一言メモ内では物の名前としてのみ許す（kako-jun 決定、Issue #325「#338 の2点」）。仮説の一行（`MEMO_FLAG_TEXT`）は従来どおり `knownFrom: 'child'` で、段階ゲートの禁止語検査も維持する。草案と台帳の一致は `npm run check:memos` と vitest が検査する。文字を足したら `public/fonts/note-chars.txt` へ足してフォントを作り直す（`scripts/build-note-fonts.py`）。検証は `parseMemoFlags` / `parseMemo`（`src/utils/anomalyLedger.ts`）。
 - `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### AR-01-outlets-multiply`）。
 - non_image の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に画像以外の種類、non_image に画像の種類）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
@@ -147,12 +150,13 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 - 光や、床・壁・天井の面 → `environment`
 - あり得ない現象 → `surreal`
 
-`also_categories`（任意の列）: 本当に割れる異変だけに付ける任意の配列（YAML のシーケンス。例: `also_categories: ['surreal']`）。プレイヤーが `category` と `also_categories` のどれを選んでも正解になる。3つ以上でもよい。camera 不可。主カテゴリと重複不可（要素どうしの重複も不可）。`category` が空の entry には書けない。フィードバックの `CONFIRMED — …` は主カテゴリ `category` を出す。各要素は有効なカテゴリ（小文字: `camera` / `object` / `environment` / `person` / `surreal`）でなければビルドが失敗し、エントリ id が表示される。`camera` は画像以外の異変であって画像差分ではないので指定できない（拒否される）。無い異変が通常で、既存の entry には付けなくてよい。
+`also_categories`（任意の列）: 割れる異変・かすっても正解にしたい異変に付ける任意の配列（kako-jun の指示 2026-11-11「かすってる程度でも正解にすべき」で、本当に割れるものだけから方針を緩めた。基準は下の「かすっても正解」の類型）（YAML のシーケンス。例: `also_categories: ['surreal']`）。プレイヤーが `category` と `also_categories` のどれを選んでも正解になる。3つ以上でもよい。camera 不可。主カテゴリと重複不可（要素どうしの重複も不可）。`category` が空の entry には書けない。フィードバックの `CONFIRMED — …` は主カテゴリ `category` を出す。各要素は有効なカテゴリ（小文字: `camera` / `object` / `environment` / `person` / `surreal`）でなければビルドが失敗し、エントリ id が表示される。`camera` は画像以外の異変であって画像差分ではないので指定できない（拒否される）。類型に当たらない異変には付けなくてよい。
 
 線引き（#47, #236）: 物の出現（提灯・傘・旗・シーツ・蝿取りリボン・電球・テレビなど。天井から吊るものを含む）は `object`。床・壁・天井そのものの色・向き・霜などの面の状態の変化は `environment`（床タイル1枚が鏡になる、も `environment`）。反射そのものがおかしい（映るはずのものが映らない・反射の形が変わる・水鏡など）は `surreal`。映ったものが物・人なら、その物・人が主カテゴリで `also_categories: ['surreal']`。
 
 `also_categories` の使い方の例: 映り込み = 主カテゴリ（物・人）+ `surreal`、扉の開閉 = `environment` と `object`、面の全面置換 = `environment` + `surreal`。
-割れない・付けないもの: 影だけの `person`（ボタンの説明に影が明記されている）、数が多いだけの物の並置（ポスター・提灯・シーツ・靴・テレビ）は `object` のみ。物理的にあり得ない並び（全部違う時刻の時計など）は `object` + `also_categories: ['surreal']`。光が漏れる扉・シャッターも付けない。床・壁・天井の面に変化が出る異変は、あり得ない景色なら `surreal` 主 + `also_categories: ['environment']`、反射・光の形がおかしいなら `environment` 主 + `also_categories: ['surreal']`。
+「かすっても正解」（#347）: プレイヤーが自然に選びそうな割れは、主カテゴリを変えずに `also_categories` で受ける。類型と足す先: 水たまり・足跡・床の石蹴り（床に「現れた物」）= `environment` / `person` 主 + `object`、顔・人面の装飾（シール）= `surreal` 主 + `person` と `object`、床の反射・光の乱れ = `surreal` 主 + `environment`、扉・シャッターの開閉 = `environment` + `object`、天井板・腰壁・格子などのずれ = `object` 主 + `environment`、灯具・器具そのものの形・色の変化 = `environment` 主 + `object`、ありえない生き物・テレビの映像・ガラス内の複製 = `object` 主 + `surreal`、人の持ち物（半纏）= `object` 主 + `person`、貼り紙・ポスター = `object` 主 + `environment`、壁・天井の模様・汚れ・剥がれ・ガラス1枚の変化 = `environment` 主 + `object`、消灯・光のにじみ = `environment` 主 + `object`、看板・標識が消える・窓の内側の物 = `object` 主 + `environment`、煙・影の向きが揃う・霜・床一面のタイルが回る = `environment` 主 + `surreal`（煙は `object` も）。動物の出現と映画ポスターは `object` 主 + `person`: 動物を `object` に仮分類する旧方針（猫などの小動物は object）からの転換で、kako-jun の「かすってる程度でも正解」により、生き物を figure と取る人の押し間違いを救う。床の物と床の状態の境界（物が現れたのか、面の状態か）は割れとみて両方を許す。反対に、影だけの `person`・光が漏れる扉・数が多いだけの物の並置・床タイル1枚の色は上の通り付けない。どの異変にどれを足したかは台帳が真実で、足す指示の入力は `scripts/also-categories-input.tsv`（行頭 `#` でその行だけ無効にできる）、反映は `uv run python3 scripts/apply-also-categories.py`（再実行できる）。件数・当たり率は `npm run ledger:summary`。
+割れない・付けないもの: 影だけの `person`（ボタンの説明に影が明記されている）、数が多いだけの物の並置（ポスター・提灯・シーツ・靴・テレビ）は `object` のみ（ただし映像がありえないテレビ、全画面が同じ無人通路を映す AR-08-stacked-crt-tvs などは `surreal` も可）。物理的にあり得ない並び（全部違う時刻の時計など）は `object` + `also_categories: ['surreal']`。光が漏れる扉・シャッターも付けない。床・壁・天井の面に変化が出る異変は、あり得ない景色なら `surreal` 主 + `also_categories: ['environment']`、反射・光の形がおかしいなら `environment` 主 + `also_categories: ['surreal']`。
 
 ## フェーズ
 
@@ -177,6 +181,6 @@ Claude は enum から適切な `anomaly_type` を選び、`location` と `detai
 
 異変の多様性を確保するため、写真要素ごとの案は台帳に `planned` で載せる（猫、物の増減、反射、床壁天井の模様、文字反転、色形、段数、ノブ左右、吊り物、紙、水たまりを含む）。件数は完成素材数ではない。
 
-`anomalies.yaml` は全異変の台帳（以下は画像異変の運用）。`queue/index.html` は `kind: image` の全件（`produced` と `planned`）を表示し、status 列で区別する（`planned` は「未作成」として強調）。`kind: non_image` は画像を作らないので載せない。`produced` の行は制作済みなので、表示された項目が生成待ちとは限らない。`review_status: composited` は静止差分の試作で、完成・採用・ゲームへの実装を意味しない。`category` はゲームの報告用5分類に合わせた値で、猫などの小動物も現在は `object` に仮分類している（ゲーム側の報告分類確定時に見直す）。`camera` は画面全体の乱れ専用で、画像以外の異変の `feed_glitch` が使う（積まれた物なども `object`）。
+`anomalies.yaml` は全異変の台帳（以下は画像異変の運用）。`queue/index.html` は `kind: image` の全件（`produced` と `planned`）を表示し、status 列で区別する（`planned` は「未作成」として強調）。`kind: non_image` は画像を作らないので載せない。`produced` の行は制作済みなので、表示された項目が生成待ちとは限らない。`review_status: composited` は静止差分の試作で、完成・採用・ゲームへの実装を意味しない。`category` はゲームの報告用5分類に合わせた値で、猫などの小動物も現在は `object` 主に仮分類している（`also_categories` で `person` もかすり正解。ゲーム側の報告分類確定時に見直す）。`camera` は画面全体の乱れ専用で、画像以外の異変の `feed_glitch` が使う（積まれた物なども `object`）。
 
 異変を追加する前に、台帳（制作済みと planned の両方）で、対象・変化・見え方・報告カテゴリの類似を照合する。画像異変の目標は約300件なので、重複する案は足さない。詳細な判断基準は制作スキルの「追加前の類似チェック」を参照。

@@ -87,3 +87,24 @@ printCross(
   r => r.category ?? NONE,
   r => `${r.kind}/${r.status}`
 )
+
+// also_categories (#347): entries with extra correct categories, and the chance that pressing one of the
+// four non-camera category keys at random on a produced image entry is correct ((1 + also) / 4 on average).
+const images = records.filter(
+  r => r.kind === 'image' && r.status === 'produced'
+)
+const withAlso = images.filter(r => r.alsoCategories?.length)
+const hit =
+  images.reduce((s, r) => s + (1 + (r.alsoCategories?.length ?? 0)) / 4, 0) /
+  images.length
+console.log(
+  `\nalso_categories (produced image entries: ${images.length})\n  with also_categories  ${withAlso.length}`
+)
+printCounts('  also_categories length', r =>
+  r.kind === 'image' && r.status === 'produced'
+    ? String(r.alsoCategories?.length ?? 0)
+    : '(not produced image)'
+)
+console.log(
+  `  random-key hit rate   ${(hit * 100).toFixed(1)}% (one of 4 non-camera keys at random)`
+)

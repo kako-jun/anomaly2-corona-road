@@ -1,4 +1,9 @@
 import { CSSProperties, useCallback, useRef, useState } from 'react'
+import '../styles/loupe.css'
+import { useLoupeGesture } from '../hooks/useLoupeGesture'
+import { currentLanguage } from '../utils/language'
+import { LOUPE_HINT } from '../utils/loupe'
+import { Loupe } from './Loupe'
 import { Anomaly, Camera } from '../types/game'
 import { Feedback } from '../hooks/useGameState'
 import { overlayPlacement } from '../utils/anomalyOverlay'
@@ -56,9 +61,9 @@ interface CameraViewProps {
   brightness: number
   contrast: number
   onSwipe: (direction: 'next' | 'prev') => void
+  /** Where the magnifier loupe is drawn (the control panel, #341). Without it the loupe is off: only the swipe works. */
+  loupeHost?: HTMLElement | null
 }
-
-const SWIPE_THRESHOLD = 50
 
 export const CameraView = ({
   camera,
@@ -69,20 +74,17 @@ export const CameraView = ({
   brightness,
   contrast,
   onSwipe,
+  loupeHost,
 }: CameraViewProps) => {
-  const dragStartXRef = useRef<number | null>(null)
-
-  const startDrag = (x: number) => {
-    dragStartXRef.current = x
-  }
-  const endDrag = (x: number) => {
-    if (dragStartXRef.current == null) return
-    const diff = dragStartXRef.current - x
-    dragStartXRef.current = null
-    if (Math.abs(diff) > SWIPE_THRESHOLD) {
-      onSwipe(diff > 0 ? 'next' : 'prev')
-    }
-  }
+  const glassRef = useRef<HTMLDivElement>(null)
+  const frameRef = useRef<HTMLDivElement>(null)
+  const { view: loupeView, handlers } = useLoupeGesture({
+    enabled: !!loupeHost,
+    glassRef,
+    frameRef,
+    onSwipe,
+    resetKey: camera.image,
+  })
 
   // The overlay is placed in base-photo pixels, so it waits for the base photo's natural size.
   const [natural, setNatural] = useState<{
@@ -133,20 +135,11 @@ export const CameraView = ({
   return (
     <section className="tube" aria-label="Monitor">
       <div className="bezel">
-        <div
-          className="glass"
-          style={style}
-          onTouchStart={e => startDrag(e.touches[0].clientX)}
-          onTouchEnd={e => endDrag(e.changedTouches[0].clientX)}
-          onMouseDown={e => startDrag(e.clientX)}
-          onMouseUp={e => endDrag(e.clientX)}
-          onMouseLeave={() => {
-            dragStartXRef.current = null
-          }}
-        >
+        <div className="glass" style={style} ref={glassRef} {...handlers}>
           <div className="pic">
             <div
               className="pic__frame"
+              ref={frameRef}
               style={
                 baseSize
                   ? ({
@@ -223,7 +216,24 @@ export const CameraView = ({
             {result && wordSpans(result.message)}
           </div>
         </div>
+        <div className="loupe-hint" aria-hidden="true">
+          {LOUPE_HINT[currentLanguage()]}
+        </div>
       </div>
+      {loupeHost && loupeView && (
+        <Loupe
+          host={loupeHost}
+          view={loupeView}
+          image={camera.image}
+          overlay={
+            anomalyHere && placement
+              ? { url: anomalyHere.overlay.url, ...placement }
+              : undefined
+          }
+          brightness={brightness}
+          contrast={contrast}
+        />
+      )}
     </section>
   )
 }

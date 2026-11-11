@@ -4,7 +4,7 @@ export const DEFAULT_CONFIG: GameConfig = {
   totalDurationMs: 480_000, // 8 real minutes = 22:00 -> 06:00 in game
   firstAnomalyDelayMs: 12_000, // first anomaly within 12 s — no dead opening
   anomalyIntervalMs: 30_000, // 30 s between spawns
-  maxConcurrentAnomalies: 2,
+  maxConcurrentAnomalies: 4, // 4 decided by kako-jun 2026-11-11 (#344)
   maxMisreports: 3,
   minCorrectReports: 4,
 }
@@ -114,12 +114,13 @@ export const SUBTITLE_EN_ENABLED = false
 
 /**
  * Pacing once the child has been found (the `child` flag is raised), Issue #86. kako-jun only said
- * "more anomalies appear after the child is found"; these two values are PLACEHOLDERS, not decided.
+ * "more anomalies appear after the child is found". The interval (15 s) is a PLACEHOLDER; the caps (4 normally, 8 here) are decided
+ * by kako-jun (2026-11-11, #344); reading "the end" as "after the child is found" is a provisional interpretation.
  * They replace `anomalyIntervalMs` / `maxConcurrentAnomalies` of `DEFAULT_CONFIG` for the rest of the shift.
  */
 export const CHILD_FOUND_PACING = {
   anomalyIntervalMs: 15_000,
-  maxConcurrentAnomalies: 4,
+  maxConcurrentAnomalies: 8,
 }
 
 /** The still image the screen switches to for the true ending (the bar one month later, 675x900). */

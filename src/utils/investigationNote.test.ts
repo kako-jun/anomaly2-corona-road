@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { STAGES } from '../data/investigationNotes'
 import { buildNote, fmtShiftEnd, outcomeOf, stageOf } from './investigationNote'
 import { msToGameTime } from './gameConfig'
+import { toFullWidthDigits } from './fullWidth'
 import { emptySave } from './saveData'
 import type { LastShift, SaveData } from './saveData'
 
@@ -45,11 +46,13 @@ describe('outcomeOf', () => {
   })
 })
 
+const fw = toFullWidthDigits
+
 describe('fmtShiftEnd (in-game clock, not real time)', () => {
   it.each([
-    ['dawn', 480000, 'ja', '06:00まで'],
-    ['dawn', 479990, 'ja', '06:00まで'],
-    ['ending', 480000, 'ja', '06:00まで'],
+    ['dawn', 480000, 'ja', '０６:００まで'],
+    ['dawn', 479990, 'ja', '０６:００まで'],
+    ['ending', 480000, 'ja', '０６:００まで'],
     ['dawn', 480000, 'en', 'Until 06:00'],
     ['ending', 480000, 'en', 'Until 06:00'],
   ] as const)('%s %i ms (%s) -> %s', (closing, ms, lang, out) =>
@@ -62,7 +65,7 @@ describe('fmtShiftEnd (in-game clock, not real time)', () => {
     [200000, '01:20'],
     [479000, '05:59'],
   ])('a withdraw after %i real ms is at %s (msToGameTime)', (ms, clock) => {
-    expect(fmtShiftEnd(ms, 'withdraw', 'ja')).toBe(`${clock}で撤収`)
+    expect(fmtShiftEnd(ms, 'withdraw', 'ja')).toBe(`${fw(clock)}で撤収`)
     expect(fmtShiftEnd(ms, 'withdraw', 'en')).toBe(`Withdrew at ${clock}`)
     expect(msToGameTime(ms)).toBe(clock)
   })
@@ -86,7 +89,7 @@ describe('buildNote before a shift', () => {
   })
   it('first play: the background, empty frames, blank last-night column, night 1', () => {
     const v = buildNote({ mode: 'before', save: save() }, 'ja')
-    expect(v.night).toBe('1夜目')
+    expect(v.night).toBe('１夜目')
     expect(v.stamps).toEqual([{ text: '捜査の経緯', big: false }])
     expect(texts(v)).toEqual(STAGES.start.lines.map(l => l.ja))
     expect(v.slots.every(s => !s.found)).toBe(true)
@@ -94,7 +97,7 @@ describe('buildNote before a shift', () => {
     expect(v.slots.every(s => !s.found && s.alt === '未発見')).toBe(true) // no sketch on the first night
     expect(v.left.head).toBe('前回の夜')
     expect(v.left.rows.every(r => r.value === null)).toBe(true)
-    expect(v.right.rows.map(r => r.value)).toEqual(['0', '0'])
+    expect(v.right.rows.map(r => r.value)).toEqual(['０', '０'])
   })
   it('later: the synopsis of the stage the save has reached, last-night numbers, night = loops + 1', () => {
     const v = buildNote(
@@ -110,13 +113,13 @@ describe('buildNote before a shift', () => {
       },
       'ja'
     )
-    expect(v.night).toBe('8夜目')
+    expect(v.night).toBe('８夜目')
     expect(v.stamps[0].text).toBe('前回まで')
     expect(texts(v)).toEqual(STAGES.elder2.lines.map(l => l.ja))
     expect(v.slots.map(s => s.found)).toEqual([true, true, false, false])
-    expect(v.left.rows.map(r => r.value)).toEqual(['9', '4', '1'])
-    expect(v.shiftRow).toMatchObject({ label: '勤務', value: '06:00まで' })
-    expect(v.right.rows.map(r => r.value)).toEqual(['143', '63'])
+    expect(v.left.rows.map(r => r.value)).toEqual(['９', '４', '１'])
+    expect(v.shiftRow).toMatchObject({ label: '勤務', value: '０６:００まで' })
+    expect(v.right.rows.map(r => r.value)).toEqual(['１４３', '６３'])
   })
   it('adds the last-night line after a night without new kinds or a withdraw', () => {
     const base = { loops: 5, flags: { elder1: true } }
@@ -161,7 +164,7 @@ describe('buildNote before a shift', () => {
       { mode: 'before', save: save({ loops: 9, flags: { elder3: true } }) },
       'ja'
     )
-    expect(texts(v).join('')).not.toContain('4人目、子供を見つけた')
+    expect(texts(v).join('')).not.toContain('４人目、子供を見つけた')
   })
 })
 
@@ -182,7 +185,7 @@ describe('buildNote after a shift', () => {
     )
   it('new kinds: stock lines, then the kept tail of the stage, two lines at most (all one colour); night = loops', () => {
     const v = after(shift())
-    expect(v.night).toBe('8夜目')
+    expect(v.night).toBe('８夜目')
     expect(v.stamps).toEqual([
       { text: '今夜の捜査', big: false },
       { text: '夜明け', big: true },
@@ -190,7 +193,7 @@ describe('buildNote after a shift', () => {
     expect(v.lines).toEqual([
       { text: '今夜も異変を報告。' },
       { text: '捜査は一歩前へ。' },
-      { text: '2人目も、老人1人目と同じことを言う。' },
+      { text: '２人目も、老人１人目と同じことを言う。' },
       { text: '人当たりがよく、こちらを気遣う。' },
     ])
     expect(v.scrib).toEqual(STAGES.elder2.scrib.map(s => s.ja))
@@ -204,7 +207,7 @@ describe('buildNote after a shift', () => {
     const wd = after(shift({ closing: 'withdraw', durationMs: 221000 }))
     expect(wd.stamps[1].text).toBe('撤収')
     expect(wd.scrib).toEqual(['今夜はここまで。'])
-    expect(wd.shiftRow.value).toBe('01:41で撤収')
+    expect(wd.shiftRow.value).toBe('０１:４１で撤収')
   })
   it('the first night says "tonight", not "also"; a withdraw that found nothing does not say the finds count', () => {
     const first = after(shift(), { loops: 1, flags: {} })

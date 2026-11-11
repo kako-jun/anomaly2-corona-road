@@ -55,6 +55,8 @@ export const Cabinet = ({
   const cabinetRef = useRef<HTMLElement>(null)
   const reportBtnRef = useRef<HTMLButtonElement>(null)
   const wasOpenRef = useRef(false)
+  // where the magnifier loupe is drawn (#341); null until mounted
+  const [loupeHost, setLoupeHost] = useState<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (feedback) setShownResult(feedback)
@@ -104,8 +106,10 @@ export const Cabinet = ({
           brightness={brightnessFilter(brightness)}
           contrast={contrastFilter(contrast)}
           onSwipe={onSwitch}
+          loupeHost={loupeHost}
         />
         <section className="panel" aria-label="Control panel">
+          <div className="loupe-host" ref={setLoupeHost} />
           <GameHUD gameTime={gameTime} stats={stats} />
           <div className="row knobs">
             <Knob

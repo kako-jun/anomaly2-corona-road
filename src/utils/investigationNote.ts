@@ -1,5 +1,6 @@
 import {
   LABELS,
+  MEMO_FLAG_TEXT,
   LAST_NIGHT,
   OUTCOMES,
   STAGES,
@@ -7,6 +8,10 @@ import {
 } from '../data/investigationNotes'
 import type { NoteLang, Outcome, Pair, Stage } from '../data/investigationNotes'
 import { DEFAULT_CONFIG, msToGameTime } from './gameConfig'
+import { toFullWidthDigits } from './fullWidth'
+import { MEMO_INDEX } from './memoIndex'
+import { MEMO_FLAGS } from './anomalyLedger'
+import type { MemoFlag } from './anomalyLedger'
 import type { LastShift, SaveData } from './saveData'
 
 /** The story stage the saved flags have reached (the furthest one). */
@@ -108,6 +113,12 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
       for (const l of o.ifFound ?? []) lines.push({ text: t(l) })
     for (const l of STAGES[stage].lines.slice(-STAGES[stage].tail))
       lines.push({ text: t(l) })
+    // The memos this result earned (#325), chosen when the shift ended: the hypothesis first, then the one-liner.
+    const { memoFlag, memo } = input.shift
+    const flagText = MEMO_FLAGS.find((f: MemoFlag) => f === memoFlag)
+    if (flagText) lines.push({ text: t(MEMO_FLAG_TEXT[flagText]) })
+    const lineText = memo ? MEMO_INDEX.get(memo)?.memo : undefined
+    if (lineText) lines.push({ text: lineText[lang] })
     scrib = OUTCOMES[outcome].scrib ?? scrib
   }
 
@@ -121,8 +132,11 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     }
   })
 
+  // Japanese counts are written in full-width digits (#352); English keeps ASCII.
+  const digits = (v: number): string =>
+    lang === 'ja' ? toFullWidthDigits(v) : String(v)
   const num = (v: number | undefined): string | null =>
-    v === undefined ? null : String(v)
+    v === undefined ? null : digits(v)
   const row = (label: Pair, value: string | null, unit?: Pair): NoteRow => ({
     label: t(label),
     value,
@@ -143,8 +157,8 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
   const right = {
     head: t(LABELS.headTotal),
     rows: [
-      row(LABELS.rowTotal, String(save.foundTotal), LABELS.unitCount),
-      row(LABELS.rowKinds, String(save.foundIds.length), LABELS.unitKinds),
+      row(LABELS.rowTotal, digits(save.foundTotal), LABELS.unitCount),
+      row(LABELS.rowKinds, digits(save.foundIds.length), LABELS.unitKinds),
     ],
   }
 

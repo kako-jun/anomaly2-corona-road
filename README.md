@@ -93,6 +93,7 @@ npm run preview
 npm test            # Vitest（1回実行）
 npm run test:watch  # Vitest（監視）
 npm run check:bezel # モニター枠画像の透明開口と retro.css の数値群・clip-path の一致検査（要 uv）
+npm run check:scroll # 画面下端より先へスクロールできないことの検査（vh を使うと失敗。要 uv と Chromium、CI 未接続）
 ```
 
 詳細は CLAUDE.md の「Testing」を参照。
@@ -119,6 +120,8 @@ npm run format    # Prettierフォーマット
 ## 📄 ドキュメント
 
 - **[CLAUDE.md](./CLAUDE.md)** - 詳細な仕様書と開発ロードマップ
+- **[異変ごとの一言メモ案](./drafts/anomaly-memos-review.md)** - 日英のレビュー用下書き（#325）
+- **[異変メモの落書き案](./drafts/memo-sketches/README.md)** - 異変IDごとの画像・生成条件・軽量化の記録（#325）
 
 ## 📝 ライセンス
 

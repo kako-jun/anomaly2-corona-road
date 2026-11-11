@@ -3,116 +3,116 @@ dialogues:
   - id: opening-01
     tone: light
     lines:
-      - { who: A, text: '樫原くん　今夜も監視をお願いできる?' }
-      - { who: M, text: 'はい　出河さん　そのために来てますから' }
-      - { who: A, text: '金沢へ来る前は　夜も賑やかだと思ってたのに' }
-      - { who: M, text: 'この辺は　店が閉まるとこんな感じですよ' }
+      - { who: A, text: '樫原くん　今夜も監視をお願いできる？', en: "Kashihara, can you watch the cameras tonight?" }
+      - { who: M, text: 'はい　出河さん　そのために来てますから', en: "Of course, Ms. Dekawa. That's why I'm here." }
+      - { who: A, text: '金沢へ来る前は　夜も賑やかだと思ってたのに', en: "Before I came to Kanazawa, I thought the nights would be livelier." }
+      - { who: M, text: 'この辺は　店が閉まるとこんな感じですよ', en: "It's like this around here once the shops close." }
   - id: opening-02
     tone: light
     lines:
-      - { who: M, text: 'お疲れさまです　机の上を片づけましたよ' }
-      - { who: A, text: '助かった　これじゃ資料を　広げられないって　困ってたの' }
+      - { who: M, text: 'お疲れさまです　机の上を片づけましたよ', en: "Evening. I cleared the desk for you." }
+      - { who: A, text: '助かった　これじゃ資料を　広げられないって　困ってたの', en: "Thanks. I couldn't spread my papers out." }
   - id: opening-03
     tone: light
     lines:
-      - { who: A, text: 'あっ　この椅子　少し借りてもいい?' }
-      - { who: M, text: 'はい　出河さんの席として　空けてありますよ' }
+      - { who: A, text: 'あっ　この椅子　少し借りてもいい？', en: "Oh, mind if I borrow this chair?" }
+      - { who: M, text: 'はい　出河さんの席として　空けてありますよ', en: "It's yours, Ms. Dekawa. I kept it free for you." }
   - id: opening-04
     tone: light
     lines:
-      - { who: M, text: '巡回表　更新しておきましたよ' }
-      - { who: A, text: 'ありがとう!　これで確認できる' }
+      - { who: M, text: '巡回表　更新しておきましたよ', en: "I've updated the patrol log." }
+      - { who: A, text: 'ありがとう！　これで確認できる', en: "Thanks! Now I can check it." }
   - id: opening-05
     tone: light
     lines:
-      - { who: A, text: '無線の音　聞こえにくくない?' }
-      - { who: M, text: 'はい　音量は問題ないですよ' }
+      - { who: A, text: '無線の音　聞こえにくくない？', en: "Can you hear the radio all right?" }
+      - { who: M, text: 'はい　音量は問題ないですよ', en: "Yes, the volume's fine." }
   - id: opening-06
     tone: light
     lines:
-      - { who: M, text: 'お湯　沸かしておきましたよ' }
-      - { who: A, text: '助かる!　今夜は温かいものにする' }
+      - { who: M, text: 'お湯　沸かしておきましたよ', en: "I've boiled some water." }
+      - { who: A, text: '助かる！　今夜は温かいものにする', en: "Great! I'll have something warm tonight." }
   - id: opening-07
     tone: light
     lines:
-      - { who: A, text: 'さむっ　ここ　思ったより冷えるね' }
-      - { who: M, text: '空調を弱めますか' }
-      - { who: A, text: 'お願い　助かる' }
-      - { who: M, text: 'はい　すぐやりますよ' }
+      - { who: A, text: 'さむっ　ここ　思ったより冷えるね', en: "Brr! It's colder in here than I thought." }
+      - { who: M, text: '空調を弱めますか', en: "Shall I turn the air down?" }
+      - { who: A, text: 'お願い　助かる', en: "Please. Thanks." }
+      - { who: M, text: 'はい　すぐやりますよ', en: "Sure, right away." }
   - id: opening-08
     tone: light
     lines:
-      - { who: A, text: 'このメモ　机の端に置いていい?' }
-      - { who: M, text: 'そこだと落ちますよ　こちらへ寄せますか' }
+      - { who: A, text: 'このメモ　机の端に置いていい？', en: "Can I leave this note on the edge of the desk?" }
+      - { who: M, text: 'そこだと落ちますよ　こちらへ寄せますか', en: "It might fall there. Shall I move it in?" }
   - id: opening-09
     tone: light
     lines:
-      - { who: M, text: '書くもの　足りてますか' }
-      - { who: A, text: 'あっ　ペンがない　一本借りていい?' }
-      - { who: M, text: 'はい　予備ありますよ' }
+      - { who: M, text: '書くもの　足りてますか', en: "Do you have enough to write with?" }
+      - { who: A, text: 'あっ　ペンがない　１本借りていい？', en: "Oh, I don't have a pen. Can I borrow one?" }
+      - { who: M, text: 'はい　予備ありますよ', en: "Sure, I've got spares." }
   - id: opening-10
     tone: light
     lines:
-      - { who: A, text: '飲み物　ここに置いて大丈夫?' }
-      - { who: M, text: 'はい　機械の近くを　避ければ大丈夫ですよ' }
+      - { who: A, text: '飲み物　ここに置いて大丈夫？', en: "Is it okay to put my drink here?" }
+      - { who: M, text: 'はい　機械の近くを　避ければ大丈夫ですよ', en: "Yes, as long as it's away from the equipment." }
   - id: opening-11
     tone: light
     lines:
-      - { who: M, text: '今夜は巡回を少し遅めにします' }
-      - { who: A, text: 'わかった　戻ったら必ず声をかけてね' }
+      - { who: M, text: '今夜は巡回を少し遅めにします', en: "I'll do my rounds a little later tonight." }
+      - { who: A, text: 'わかった　戻ったら必ず声をかけてね', en: "Okay. Make sure you let me know when you're back." }
   - id: opening-12
     tone: light
     lines:
-      - { who: A, text: '画面の明るさ　これで見える?　まぶしい!' }
-      - { who: M, text: '一段落としますか' }
-      - { who: A, text: 'お願い　さっきより見やすい' }
-      - { who: M, text: 'はい　この程度でいいですよ' }
+      - { who: A, text: '画面の明るさ　これで見える？　まぶしい！', en: "Can you see the screen at this brightness? It's glaring!" }
+      - { who: M, text: '一段落としますか', en: "Shall I turn it down a notch?" }
+      - { who: A, text: 'お願い　さっきより見やすい', en: "Please. That's easier on the eyes." }
+      - { who: M, text: 'はい　この程度でいいですよ', en: "Sure, that should do it." }
   - id: opening-13
     tone: light
     lines:
-      - { who: M, text: '荷物は棚の下に　置いておきましたよ' }
-      - { who: A, text: 'ありがとう　あっ　これなら邪魔にならないね' }
+      - { who: M, text: '荷物は棚の下に　置いておきましたよ', en: "I put your things under the shelf." }
+      - { who: A, text: 'ありがとう　あっ　これなら邪魔にならないね', en: "Thanks. Oh, they're out of the way there." }
   - id: opening-14
     tone: light
     lines:
-      - { who: A, text: '引き継ぎの紙　あとで見せて?' }
-      - { who: M, text: 'もう机に置いてありますよ　上から二枚目です' }
-      - { who: A, text: '助かる　見落とすと困るからね' }
+      - { who: A, text: '引き継ぎの紙　あとで見せて？', en: "Can I see the handover sheet later?" }
+      - { who: M, text: 'もう机に置いてありますよ　上から２枚目です', en: "It's already on the desk. Second sheet from the top." }
+      - { who: A, text: '助かる　見落とすと困るからね', en: "Thanks. I don't want to miss anything." }
   - id: opening-15
     tone: light
     lines:
-      - { who: M, text: '窓は閉めてあります　外の音は入らないですよ' }
-      - { who: A, text: '静かすぎると落ち着かないね' }
+      - { who: M, text: '窓は閉めてあります　外の音は入らないですよ', en: "The window's closed. You won't hear the noise outside." }
+      - { who: A, text: '静かすぎると落ち着かないね', en: "It's unsettling when it's too quiet." }
   - id: opening-16
     tone: light
     lines:
-      - { who: A, text: '東京より金沢の夜は　静かに感じる' }
-      - { who: M, text: '店が閉まると　この辺はこんな感じですよ' }
-      - { who: A, text: 'へえ　少し寂しいけど　嫌いじゃない' }
+      - { who: A, text: '東京より金沢の夜は　静かに感じる', en: "Kanazawa feels quieter at night than Tokyo." }
+      - { who: M, text: '店が閉まると　この辺はこんな感じですよ', en: "It's like this around here once the shops close." }
+      - { who: A, text: 'へえ　少し寂しいけど　嫌いじゃない', en: "Huh. A little lonely, but I don't mind it." }
   - id: opening-17
     tone: light
     lines:
-      - { who: A, text: '勤務中に食べてもいいもの　何かある?' }
-      - { who: M, text: '飴なら　引き出しにありますよ' }
-      - { who: A, text: 'あっ　ちょうど甘いもの欲しかった　一つもらっていい?' }
-      - { who: M, text: 'はい　どうぞ' }
+      - { who: A, text: '勤務中に食べてもいいもの　何かある？', en: "Is there anything I can eat on shift?" }
+      - { who: M, text: '飴なら　引き出しにありますよ', en: "There are some candies in the drawer." }
+      - { who: A, text: 'あっ　ちょうど甘いもの欲しかった　１つもらっていい？', en: "Oh, I was craving something sweet. Can I have one?" }
+      - { who: M, text: 'はい　どうぞ', en: "Sure, go ahead." }
   - id: opening-18
     tone: light
     lines:
-      - { who: M, text: '電話の音量　下げますか' }
-      - { who: A, text: 'あっ　お願い　鳴るとびっくりするから' }
-      - { who: M, text: 'はい　小さくしましたよ' }
+      - { who: M, text: '電話の音量　下げますか', en: "Shall I turn the phone down?" }
+      - { who: A, text: 'あっ　お願い　鳴るとびっくりするから', en: "Oh, please. It makes me jump when it rings." }
+      - { who: M, text: 'はい　小さくしましたよ', en: "Sure, I've turned it down." }
   - id: opening-19
     tone: light
     lines:
-      - { who: A, text: '今夜も長くなりそうだね' }
-      - { who: M, text: '朝には終わりますよ　急がなくて大丈夫です' }
-      - { who: A, text: '私　そんなに焦ってる顔してる?' }
-      - { who: M, text: 'はい　少し出てますよ' }
+      - { who: A, text: '今夜も長くなりそうだね', en: "Looks like another long night." }
+      - { who: M, text: '朝には終わりますよ　急がなくて大丈夫です', en: "It'll be over by morning. No need to rush." }
+      - { who: A, text: '私　そんなに焦ってる顔してる？', en: "Do I really look that anxious?" }
+      - { who: M, text: 'はい　少し出てますよ', en: "A little, yes." }
   - id: opening-20
     tone: light
     lines:
-      - { who: A, text: '樫原くん　無理はしないで' }
-      - { who: M, text: 'はい　出河さんも休憩を取ってください' }
-      - { who: A, text: '私?　そんなに　無理してるように見える?' }
-      - { who: M, text: '少し' }
+      - { who: A, text: '樫原くん　無理はしないで', en: "Don't overdo it, Kashihara." }
+      - { who: M, text: 'はい　出河さんも休憩を取ってください', en: "I won't. You should take breaks too, Ms. Dekawa." }
+      - { who: A, text: '私？　そんなに　無理してるように見える？', en: "Me? Do I look like I'm overdoing it?" }
+      - { who: M, text: '少し', en: "A little." }

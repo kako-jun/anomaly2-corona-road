@@ -1,10 +1,14 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import ledger from 'virtual:dialogue'
+import { parse as parseYaml } from 'yaml'
+import { parseLedgerRecords } from '../utils/anomalyLedger'
 import {
   STAGE_ORDER,
   LABELS,
   LAST_NIGHT,
+  MEMO_FLAG_TEXT,
+  MEMO_LINE_KNOWN_FROM,
   OUTCOMES,
   STAGES,
   STAGE_FLAGS,
@@ -25,7 +29,21 @@ const pairs = (v: unknown): Pair[] => {
   }
   return []
 }
-const ALL = [STAGES, OUTCOMES, LAST_NIGHT, LABELS].flatMap(pairs)
+/**
+ * The one-liners of EVERY ledger entry (#325), planned and non-image ones too (not only the entries the game draws
+ * today): they are handwritten lines on the same paper, and an entry that is promoted later must already fit.
+ */
+const LEDGER_MEMOS: Pair[] = parseLedgerRecords(
+  parseYaml(readFileSync('prompts/anomalies.yaml', 'utf8'))
+).flatMap(r => (r.memo ? [r.memo] : []))
+const ALL = [
+  STAGES,
+  OUTCOMES,
+  LAST_NIGHT,
+  LABELS,
+  MEMO_FLAG_TEXT,
+  LEDGER_MEMOS,
+].flatMap(pairs)
 
 /**
  * One data entry = one handwritten line, never wrapped by the browser (white-space: nowrap). The real width is
@@ -68,11 +86,30 @@ describe('investigation note data', () => {
       expect(l.en.length).toBeLessThanOrEqual(EN_MAX)
     }
   })
+  it('every memo line (the hypotheses and the ledger one-liners) fits one handwritten line, in both languages', () => {
+    for (const [flag, l] of Object.entries(MEMO_FLAG_TEXT)) {
+      expect(l.ja.length, `${flag} ja`).toBeLessThanOrEqual(JA_MAX)
+      expect(l.en.length, `${flag} en`).toBeLessThanOrEqual(EN_MAX)
+      expect(l.en, flag).not.toBe('')
+    }
+    for (const l of LEDGER_MEMOS) {
+      expect(l.ja.length, l.ja).toBeLessThanOrEqual(JA_MAX)
+      expect(l.en.length, l.en).toBeLessThanOrEqual(EN_MAX)
+    }
+  })
+  it('a memo line never uses the word 進捗 (kako-jun)', () => {
+    for (const p of [...Object.values(MEMO_FLAG_TEXT), ...LEDGER_MEMOS])
+      expect(p.ja).not.toContain('進捗')
+  })
   it('a line is never cut inside a counted phrase (3人目, 2件, 8:00) and never begins with a closing mark', () => {
     for (const p of ALL)
       for (const s of [p.ja, p.en]) {
-        expect(s, s).not.toMatch(/^[、。，．,.!?？」』）)ー…っゃゅょ]/)
+        expect(s, s).not.toMatch(/^[、。，．,.!?？！」』）)ー…っゃゅょ]/)
       }
+  })
+  it('Japanese wording uses full-width digits and ！？ only (#334 #352)', () => {
+    for (const p of [...ALL, ...LEDGER_MEMOS])
+      expect(p.ja, p.ja).not.toMatch(/[0-9!?]/)
   })
   it('a start-of-night synopsis fits the ruled area (7 lines, plus the last-night line)', () => {
     for (const [stage, t] of Object.entries(STAGES)) {
@@ -124,7 +161,8 @@ describe('investigation note data', () => {
     )
     const missing = new Set<string>()
     for (const p of ALL) for (const c of p.ja) if (!chars.has(c)) missing.add(c)
-    for (const c of '0123456789:') if (!chars.has(c)) missing.add(c)
+    for (const c of '0123456789０１２３４５６７８９！？:')
+      if (!chars.has(c)) missing.add(c)
     expect([...missing]).toEqual([])
   })
   it('every English character is in the English font character list (public/fonts/note-chars-en.txt), apostrophe and ellipsis included', () => {
@@ -151,8 +189,9 @@ describe('no spoilers: every sentence is shown only from the stage where it is k
   const idx = (s: Stage) => STAGE_ORDER.indexOf(s)
   const NOT_STORY = '段階の根拠が story.md に無いので、どの段階にも出さない'
   /** [pattern, first stage that may say it, reason (docs/story.md)] */
+  const SHUTTER_WORD = /シャッター|shutter/i
   const LEARNED: [RegExp, Stage, string][] = [
-    [/シャッター|shutter/i, 'child', `作業仮説。${NOT_STORY}`],
+    [SHUTTER_WORD, 'child', `作業仮説。${NOT_STORY}`],
     [/昭和|Showa/i, 'child', `昭和の異変・昭和の記憶。${NOT_STORY}`],
     [
       /帰りたくない|帰らない|戻らない|帰ろうとしない|go home|come back/i,
@@ -209,6 +248,17 @@ describe('no spoilers: every sentence is shown only from the stage where it is k
       stage: p.knownFrom,
       p,
     })),
+    // memo lines (#325): the hypotheses are shown from their own stage, the ledger one-liners from MEMO_LINE_KNOWN_FROM
+    ...Object.entries(MEMO_FLAG_TEXT).map(([f, p]) => ({
+      where: `memo flag ${f}`,
+      stage: p.knownFrom,
+      p,
+    })),
+    ...LEDGER_MEMOS.map(m => ({
+      where: 'ledger memo',
+      stage: MEMO_LINE_KNOWN_FROM,
+      p: { ...m, knownFrom: MEMO_LINE_KNOWN_FROM },
+    })),
   ]
   it('every sentence has a knownFrom that is a real stage', () => {
     for (const { where, p } of entries())
@@ -221,9 +271,12 @@ describe('no spoilers: every sentence is shown only from the stage where it is k
       )
   })
   it('words for facts learned later are never in a sentence allowed earlier', () => {
+    // A shutter in a ledger one-liner is the object seen in the feed (the ledger names it so), not the working
+    // hypothesis; the hypothesis is the separate memo flag line, gated by its own stage.
     for (const { where, p } of entries())
       for (const [re, from, why] of LEARNED)
-        if (re.test(p.ja) || re.test(p.en))
+        if (where === 'ledger memo' && re === SHUTTER_WORD) continue
+        else if (re.test(p.ja) || re.test(p.en))
           expect(
             idx(p.knownFrom),
             `${where} "${p.ja}" says a fact known only from ${from} (${why})`
