@@ -4,6 +4,7 @@ import { LABELS } from '../data/investigationNotes'
 import type { NoteLang } from '../data/investigationNotes'
 import type { NoteRow, NoteView } from '../utils/investigationNote'
 import { HandFrame } from './HandFrame'
+import { NoteAction } from './NoteAction'
 import { TILT, tiltVars } from '../data/noteTilt'
 import './investigationNote.css'
 
@@ -55,9 +56,9 @@ const Rows = ({ rows }: { rows: NoteRow[] }) => (
 interface InvestigationNoteProps {
   view: NoteView
   onAction: () => void
-  /** The key's label (default: START SHIFT before a night, ONE MORE SHIFT after it). */
+  /** The handwritten action's words (default: "Start the shift" before a night, "Once more" after it). */
   actionLabel?: string
-  /** The key is waiting (assets loading): it shows the loading label and cannot be pressed. */
+  /** The action is waiting (assets loading): it shows the loading label and cannot be pressed. */
   busy?: boolean
 }
 
@@ -174,14 +175,7 @@ export const InvestigationNote = ({
               <Rows rows={[view.shiftRow]} />
             </div>
           </div>
-          <button
-            type="button"
-            className="note-btn"
-            onClick={onAction}
-            disabled={busy}
-          >
-            {label}
-          </button>
+          <NoteAction label={label} onClick={onAction} busy={busy} />
         </article>
       </div>
     </main>

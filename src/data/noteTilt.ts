@@ -11,6 +11,7 @@ export const TILT = {
   stampBig: 2.7, // the big red stamp (DAWN / WITHDRAWN)
   tag: -4.6, // the red "found" tag
   scrib: -2.3, // the blue scribbles
+  action: -1.35, // the handwritten action at the bottom right ("Start the shift →")
   label: [-1.8, 0.7, -0.9, 1.9], // the "1st".."4th" frame labels, left to right
 } as const
 
@@ -39,6 +40,7 @@ export const TILT_BY_NAME: Readonly<Record<string, number>> = {
   stampBig: TILT.stampBig,
   tag: TILT.tag,
   scrib: TILT.scrib,
+  action: TILT.action,
   label0: TILT.label[0],
   label1: TILT.label[1],
   label2: TILT.label[2],
@@ -53,6 +55,7 @@ export const tiltVars = (): Record<string, string> => ({
   '--tilt-stamp-big': `${TILT.stampBig}deg`,
   '--tilt-tag': `${TILT.tag}deg`,
   '--tilt-scrib': `${TILT.scrib}deg`,
+  '--tilt-action': `${TILT.action}deg`,
   '--tilt-label-0': `${TILT.label[0]}deg`,
   '--tilt-label-1': `${TILT.label[1]}deg`,
   '--tilt-label-2': `${TILT.label[2]}deg`,

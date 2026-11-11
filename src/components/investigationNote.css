@@ -324,32 +324,94 @@
   border-bottom: 1.5px solid #8a7d5e;
 }
 
+/* The action at the bottom right (#297): the detective's handwriting on the paper, not a key. It is still a
+   <button>, 44px or more tall (the transparent box is the tap area); the look is words + a hand-drawn underline
+   + an arrow. No fill, no border, no shadow. */
 .note-btn {
+  position: relative;
+  align-self: flex-end;
   margin-top: auto;
+  min-width: 96px;
   height: 44px;
   flex: none;
   display: flex;
   align-items: center;
-  justify-content: center;
-  border: 2px solid #0b0b0a;
-  border-radius: 5px;
-  background: #e3d8b8;
-  color: var(--ink);
-  font: inherit;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  font-size: 16px;
-  box-shadow: 0 2px 0 #7a6f52;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 8px 0 12px;
+  border: 0;
+  background: none;
+  --pen: #b3261b; /* red ballpoint, stronger than the blue scribbles */
+  --pen-hover: #8f1a12;
+  color: var(--pen);
+  font-size: 21px;
+  letter-spacing: 0.06em;
+  line-height: 1;
   cursor: pointer;
+  transform: rotate(var(--tilt-action));
+  transform-origin: 100% 50%;
+  -webkit-tap-highlight-color: transparent;
 }
 .note-en .note-btn {
-  font-size: 22px;
+  font-size: 29px;
+  letter-spacing: 0.02em;
+}
+.note-btn:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.note-act-text {
+  position: relative;
+  display: inline-block;
+  padding: 0 0 3px;
+  -webkit-text-stroke: 0.35px currentColor; /* a pen pressed a little harder: a touch bolder than the body */
+}
+.note-act-under {
+  position: absolute;
+  left: -4px;
+  width: calc(100% + 9px);
+  bottom: -5px;
+  display: block;
+  transform-origin: 50% 50%;
+  transition: transform 0.12s;
+  pointer-events: none;
+}
+.note-act-arrow {
+  flex: none;
+  display: block;
+  margin-top: 3px;
+  pointer-events: none;
+}
+.note-act-focus {
+  position: absolute;
+  pointer-events: none;
+  overflow: visible;
+}
+.note-act-focus {
+  left: -2px;
+  top: 3px;
+  width: calc(100% + 4px);
+  height: 38px;
+  opacity: 0;
+  color: var(--ink);
 }
 .note-btn:focus-visible {
-  outline: 2px solid #ffd27a;
-  outline-offset: 3px;
+  outline: none;
 }
-
+.note-btn:focus-visible .note-act-focus {
+  opacity: 1;
+}
+.note-btn:active:not(:disabled) {
+  transform: translateY(2px) rotate(var(--tilt-action));
+}
+@media (hover: hover) {
+  .note-btn:hover:not(:disabled) {
+    color: var(--pen-hover);
+  }
+  .note-btn:hover:not(:disabled) .note-act-under {
+    transform: scaleY(1.7);
+  }
+}
 /* A hand-ruled outline (HandFrame): drawn over the box it sits in, never closed into a tidy rectangle. */
 .note-hand-frame {
   position: absolute;

@@ -128,7 +128,7 @@ async () => {
   const tapeM = new DOMMatrix(getComputedStyle(document.querySelector('.note-paper'), '::before').transform)
   const labels = [...document.querySelectorAll('.note-slot-l')]
   const el = { tape: null, night: document.querySelector('.note-night'), stamp: box.querySelector('.note-stamp:not(.note-big)'), stampBig: box.querySelector('.note-big'),
-    tag: document.querySelector('.note-slot-new'), scrib: document.querySelector('.note-scrib'), label0: labels[0], label1: labels[1], label2: labels[2], label3: labels[3] }
+    tag: document.querySelector('.note-slot-new'), scrib: document.querySelector('.note-scrib'), action: document.querySelector('.note-btn'), label0: labels[0], label1: labels[1], label2: labels[2], label3: labels[3] }
   const got = {}
   for (const [k, e] of Object.entries(el)) got[k] = k === 'tape' ? Math.atan2(tapeM.b, tapeM.a) * 180 / Math.PI : (e ? ang(e) : null)
   const res = []
@@ -178,6 +178,25 @@ LAYOUT = """
   const res = []
   const gap = r('.note-btn').top - r('.note-form').bottom
   if (gap < 8) res.push(`the form is only ${gap.toFixed(1)}px above the key (need 8)`)
+  // The handwritten action at the bottom: its underline and arrow stay on the paper and 3px or more from the form and
+  // from each other's neighbours (the tap area is the whole button, 44px or more in both directions).
+  const paper = document.querySelector('.note-paper').getBoundingClientRect()
+  const act = document.querySelector('.note-btn')
+  const ar = act.getBoundingClientRect(), form = r('.note-form')
+  const scale = paper.width / 340
+  if (ar.height / scale < 43.5 || ar.width / scale < 43.5) res.push(`the action's tap area is only ${(ar.width / scale).toFixed(1)}x${(ar.height / scale).toFixed(1)} (need 44x44)`)
+  if (act.tagName !== 'BUTTON' || act.getAttribute('aria-label') !== act.textContent) res.push('the action is not a <button> named by its words')
+  const parts = [...act.querySelectorAll('.note-act-under, .note-act-arrow, .note-act-text')]
+  if (parts.length !== 3) res.push('the action lacks words, underline or arrow')
+  for (const el of act.querySelectorAll('svg')) if (el.getAttribute('aria-hidden') !== 'true') res.push('an action stroke is not aria-hidden')
+  for (const el of parts) {
+    const b = el.getBoundingClientRect()
+    if (b.left < paper.left + 2 || b.right > paper.right - 2 || b.bottom > paper.bottom - 2) res.push(`the action's ${el.getAttribute('class')} leaves the paper`)
+    const gap = (b.top - form.bottom) / scale
+    if (gap < 3) res.push(`the action's ${el.getAttribute('class')} is only ${gap.toFixed(1)}px below the number box (need 3)`)
+    const sc = document.querySelector('.note-scrib').getBoundingClientRect()
+    if ((b.top - sc.bottom) / scale < 3) res.push(`the action's ${el.getAttribute('class')} is closer than 3px to the scribble`)
+  }
   const rows = [...document.querySelectorAll('.note-form .note-fr')].map(e => e.offsetHeight)
   if (new Set(rows).size > 1) res.push(`form rows differ in height: ${rows}`)
   const tag = document.querySelector('.note-slot-new')
