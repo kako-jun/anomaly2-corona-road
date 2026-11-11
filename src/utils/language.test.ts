@@ -1,5 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
-import { languageFromBrowser } from './language'
+// @vitest-environment jsdom
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { currentLanguage, languageFromBrowser } from './language'
 
 describe('languageFromBrowser', () => {
   it.each([
@@ -19,42 +20,43 @@ describe('languageFromBrowser', () => {
   })
 })
 
-describe('saved language', () => {
-  const fresh = async (browser: string) => {
-    vi.resetModules()
-    const store = new Map<string, string>()
-    vi.stubGlobal('localStorage', {
-      getItem: (k: string) => store.get(k) ?? null,
-      setItem: (k: string, v: string) => void store.set(k, v),
-      removeItem: (k: string) => void store.delete(k),
-    })
-    vi.stubGlobal('navigator', { language: browser })
-    return import('./language')
-  }
-  it('follows the browser until a choice is saved, then the choice', async () => {
-    const m = await fresh('ja-JP')
-    expect(m.currentLanguage()).toBe('ja')
-    m.saveLanguage('en')
-    expect(m.currentLanguage()).toBe('en')
+describe('currentLanguage (decided from the browser at every start, never saved)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    localStorage.clear()
   })
-  it('a saved choice beats the browser, and survives a reload (a new module over the same storage)', async () => {
-    const m = await fresh('en-US')
-    m.saveLanguage('ja')
-    const raw = localStorage.getItem('corona-road:save')
-    vi.resetModules()
-    vi.stubGlobal('localStorage', {
-      getItem: () => raw,
-      setItem: () => {},
-      removeItem: () => {},
+  it('uses the first of navigator.languages, ahead of navigator.language', () => {
+    vi.stubGlobal('navigator', {
+      languages: ['ja-JP', 'en'],
+      language: 'en-US',
     })
-    const again = await import('./language')
-    expect(again.currentLanguage()).toBe('ja')
+    expect(currentLanguage()).toBe('ja')
+    vi.stubGlobal('navigator', { languages: ['en-GB', 'ja'], language: 'ja' })
+    expect(currentLanguage()).toBe('en')
   })
-  it('keeps the other settings when the language is saved', async () => {
-    const m = await fresh('en')
-    const { update, load } = await import('./saveData')
-    update(c => ({ ...c, settings: { brightness: 7 } }))
-    m.saveLanguage('ja')
-    expect(load().settings).toEqual({ brightness: 7, language: 'ja' })
+  it('falls back to navigator.language when there is no list', () => {
+    vi.stubGlobal('navigator', { language: 'ja' })
+    expect(currentLanguage()).toBe('ja')
+    vi.stubGlobal('navigator', { languages: [], language: 'fr' })
+    expect(currentLanguage()).toBe('en')
+  })
+  it('ignores an old save that has settings.language, and writes nothing', () => {
+    vi.stubGlobal('navigator', { languages: ['en-US'], language: 'en-US' })
+    const save = JSON.stringify({
+      v: 1,
+      foundTotal: 0,
+      foundIds: [],
+      loops: 0,
+      flags: {},
+      usedLines: {},
+      usedChatter: [],
+      pendingStories: [],
+      endingReached: false,
+      epoch: 0,
+      settings: { language: 'ja' },
+    })
+    localStorage.setItem('corona-road:save', save)
+    expect(currentLanguage()).toBe('en')
+    expect(localStorage.getItem('corona-road:save')).toBe(save)
   })
 })

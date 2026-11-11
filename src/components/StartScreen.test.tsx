@@ -24,11 +24,7 @@ describe('StartScreen start button', () => {
     expect(
       screen
         .getAllByRole('button')
-        .filter(
-          b =>
-            !b.classList.contains('start-lang-key') &&
-            !b.classList.contains('start-page')
-        )
+        .filter(b => !b.classList.contains('start-page'))
     ).toHaveLength(1)
   })
   it('calls onStart once per click', async () => {
@@ -218,11 +214,7 @@ describe('StartScreen after the true ending (#294)', () => {
     expect(
       screen
         .getAllByRole('button')
-        .filter(
-          b =>
-            !b.classList.contains('start-lang-key') &&
-            !b.classList.contains('start-page')
-        )
+        .filter(b => !b.classList.contains('start-page'))
     ).toHaveLength(1)
     expect(
       screen.getByRole('button', { name: 'START OVER' })
@@ -318,32 +310,44 @@ describe('StartScreen after the true ending (#294)', () => {
   })
 })
 
-describe('StartScreen language switch (#292)', () => {
-  it('is always shown, with machine (English) labels, and marks the current language', () => {
-    render(<StartScreen onStart={vi.fn()} language="en" />)
-    expect(screen.getByRole('button', { name: 'JA' })).toHaveAttribute(
-      'aria-pressed',
-      'false'
+describe('StartScreen confirmation keys (#322)', () => {
+  it('puts ERASE ALL above CANCEL, like the report dialog, as the same key part (red vs cream), and Tab goes ERASE ALL -> CANCEL', async () => {
+    render(
+      <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
     )
-    expect(screen.getByRole('button', { name: 'EN' })).toHaveAttribute(
-      'aria-pressed',
-      'true'
-    )
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    const keys = [
+      ...document.querySelectorAll<HTMLElement>('.start-confirm-keys button'),
+    ]
+    expect(keys.map(k => k.textContent)).toEqual(['ERASE ALL', 'CANCEL'])
+    for (const k of keys) {
+      expect(k).toHaveClass('key', 'start-key')
+      expect(k.className).not.toContain('small')
+    }
+    expect(keys[0]).toHaveClass('key-report')
+    expect(keys[1]).not.toHaveClass('key-report')
+    // the safe side holds the focus; shift+Tab reaches ERASE ALL, which comes first in the Tab order
+    expect(document.activeElement).toBe(keys[1])
+    await userEvent.tab({ shift: true })
+    expect(document.activeElement).toBe(keys[0])
+    await userEvent.tab()
+    expect(document.activeElement).toBe(keys[1])
   })
-  it('is still there when only START OVER is offered', () => {
+})
+
+describe('StartScreen language (#292)', () => {
+  it('has no language keys: the language comes from the browser', () => {
+    render(<StartScreen onStart={vi.fn()} language="en" />)
+    expect(screen.queryByRole('button', { name: 'JA' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'EN' })).toBeNull()
+    expect(screen.queryByRole('group', { name: 'Language' })).toBeNull()
+  })
+  it('has none after the true ending either', () => {
     render(<StartScreen onStart={vi.fn()} endingReached language="ja" />)
-    expect(screen.getByRole('button', { name: 'JA' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'JA' })).toBeNull()
     expect(
       screen.getByRole('button', { name: 'START OVER' })
     ).toBeInTheDocument()
-  })
-  it('reports the chosen language', async () => {
-    const onLanguage = vi.fn()
-    render(
-      <StartScreen onStart={vi.fn()} language="ja" onLanguage={onLanguage} />
-    )
-    await userEvent.click(screen.getByRole('button', { name: 'EN' }))
-    expect(onLanguage).toHaveBeenCalledWith('en')
   })
   it('keeps the machine key English in both languages', () => {
     const { rerender } = render(<StartScreen onStart={vi.fn()} language="ja" />)

@@ -90,17 +90,19 @@ describe('start.css: the notes', () => {
   })
   it('puts no dark surface behind anything: no vignette, scrim or plate', () => {
     expect(code).not.toMatch(/vignette|scrim|radial-gradient|surface\.webp/)
-    // the only backgrounds are the keys' (retro.css) and the lang keys' own face
+    // the only backgrounds are the tear bands and the pager's filled dot
     root.walkRules(r => {
-      if (/lang-key|start-band|start-pager-dots i\.on/.test(r.selector)) return
+      if (/start-band|start-pager-dots i\.on/.test(r.selector)) return
       r.walkDecls(/^background/, d => {
         expect(d.value, r.selector).toMatch(/^(transparent|none|#0a0a0a)/)
       })
     })
   })
-  it('keeps the touch area of the language keys at 44px (34x26 look + ::before)', () => {
-    expect(decl('.start-lang-key::before', 'inset')).toBe('-9px -5px')
-    expect(parseFloat(decl('.start-lang-key', 'min-width')!) + 10).toBe(44)
-    expect(parseFloat(decl('.start-lang-key', 'height')!) + 18).toBe(44)
+  it('gives the two confirmation keys the same width and no size of their own', () => {
+    expect(decl('.start-confirm-keys .start-key', 'width')).toBe('100%')
+    expect(code).not.toMatch(/start-key--small/)
+  })
+  it('has no language switch (the language comes from the browser only)', () => {
+    expect(code).not.toMatch(/start-lang/)
   })
 })

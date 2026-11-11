@@ -20,9 +20,8 @@ interface StartScreenProps {
   endingReached?: boolean
   /** Wipe the progress (called after the confirmation). */
   onStartOver?: () => void
-  /** The language of the card's sentences, and the switch that changes it (#292). */
+  /** The language of the notes' pictures (#292), decided from the browser by the app. */
   language?: Language
-  onLanguage?: (l: Language) => void
 }
 
 const startKeyClass = 'key start-key'
@@ -41,7 +40,6 @@ export const StartScreen = ({
   endingReached = false,
   onStartOver,
   language = 'ja',
-  onLanguage,
 }: StartScreenProps) => {
   const [confirming, setConfirming] = useState(false)
   // Keyboard focus follows the confirmation: CANCEL (the safe side) when it opens, START OVER when
@@ -99,20 +97,6 @@ export const StartScreen = ({
           <img src="/images/logo.webp" alt="" draggable={false} />
         </div>
         <TitleNoise />
-      </div>
-      <div className="start-lang" role="group" aria-label="Language">
-        {(['ja', 'en'] as const).map(l => (
-          <button
-            key={l}
-            type="button"
-            lang={l}
-            className="start-lang-key"
-            aria-pressed={language === l}
-            onClick={() => onLanguage?.(l)}
-          >
-            {l.toUpperCase()}
-          </button>
-        ))}
       </div>
       <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
 
@@ -195,8 +179,19 @@ export const StartScreen = ({
                   <p className="start-over-warn" role="alert">
                     All progress will be erased. This cannot be undone.
                   </p>
-                  <div className="start-keyrow">
-                    <KeyLamp />
+                  {/* like the report dialog: the choice on top, CANCEL below it; the same part, same width and height, only colour and word differ */}
+                  <div className="start-confirm-keys">
+                    <button
+                      type="button"
+                      className="key key-report start-key"
+                      onClick={() => {
+                        focusAfter.current = 'erase'
+                        setConfirming(false)
+                        onStartOver?.()
+                      }}
+                    >
+                      ERASE ALL
+                    </button>
                     <button
                       ref={cancelRef}
                       type="button"
@@ -209,17 +204,6 @@ export const StartScreen = ({
                       CANCEL
                     </button>
                   </div>
-                  <button
-                    type="button"
-                    className="key key-report start-key start-key--small"
-                    onClick={() => {
-                      focusAfter.current = 'erase'
-                      setConfirming(false)
-                      onStartOver?.()
-                    }}
-                  >
-                    ERASE ALL
-                  </button>
                 </div>
               ) : (
                 <div className="start-keyrow">

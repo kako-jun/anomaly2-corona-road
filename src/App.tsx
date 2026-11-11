@@ -18,7 +18,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   // The title's start key opens the investigation note; its key starts the shift (#297).
   const [memo, setMemo] = useState(false)
-  const [language, setLanguage] = useLanguage()
+  const language = useLanguage()
   // The ending reached in another tab closes the note (storage events re-render this): without this the note
   // would open by itself after START OVER, without START SHIFT being pressed.
   const endingReached = load().endingReached
@@ -97,7 +97,6 @@ function App() {
         <StartScreen
           onStart={() => setMemo(true)}
           language={language}
-          onLanguage={setLanguage}
           endingReached={load().endingReached}
           onStartOver={() => {
             resetProgress()

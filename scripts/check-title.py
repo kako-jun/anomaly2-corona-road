@@ -11,15 +11,16 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
   2. the signboard stays in view: the share of its area that is on screen at the worst point of the drift (phones:
      nearly all; wide screens cut the top and bottom by the cover crop, which is accepted, so only a floor), and of
      the part that is on screen the note and the START key cover at most 15% (>= 85% clear)
-  3. the visible note is wholly inside the viewport and overlaps neither the START key nor the JA / EN keys,
-     on every page (1/3 ... 3/3), and the START key and JA / EN keys do not overlap each other; the JA / EN touch
-     areas are 44x44px and all their own
+  3. the visible note is wholly inside the viewport and overlaps the START key,
+     on every page (1/3 ... 3/3)
   4. the page turns by click, by keyboard (Enter, arrows), by touch-style drag and by mouse drag, wraps from the last to the first,
      the pager text follows, and the note area (>= 44px) is the tap target
-  5. the picture files really have the size the table says, and the language switch swaps the notes at once and is kept after a reload
+  5. the picture files really have the size the table says, and the language follows the browser's locale (ja-JP / en-US) with no switch on screen
   6. with prefers-reduced-motion the photo does not move
   7. (once) a noise burst appears within 14 s and is short
-  8. nothing dark covers the photo: no element other than the notes, the keys and the pager has a solid background
+  8. the START OVER confirmation (after the true ending): ERASE ALL on top and CANCEL below, the same width and height
+     (within 1px), >= 44px high, >= 10px apart, inside the viewport, the note hidden, the signboard clear
+  9. nothing dark covers the photo: no element other than the notes, the keys and the pager has a solid background
 Not wired to CI (it needs a Chromium: --chrome or $CHROME, default ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome).
 Starts `npx vite` on a free port (and stops only that process) unless --url is given.
 
@@ -63,7 +64,7 @@ SWEEP = """([sign]) => {
   const ox = (vw - w) * cs[0], oy = (vh - h) * cs[1]
   const noteImg = [...document.querySelectorAll('.start-stack > img')].find(i => !i.classList.contains('start-off'))
   const rr = e => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }
-  const cover = [noteImg && rr(noteImg), rr(document.querySelector('.start-deck .key'))].filter(Boolean)
+  const cover = [noteImg && rr(noteImg), rr(document.querySelector('.start-deck'))].filter(Boolean)
   const inter = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]))
   let minSlack = 1e9, minSign = 1, minClear = 1
   const at = (tx, ty) => {
@@ -89,7 +90,7 @@ RECTS = """() => {
   const q = s => document.querySelector(s)
   const r = e => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }
   const note = [...document.querySelectorAll('.start-stack > img')].find(i => !i.classList.contains('start-off'))
-  return {note: r(note), key: r(q('.start-deck .key')), lang: r(q('.start-lang')), page: r(q('.start-page')),
+  return {note: r(note), key: r(q('.start-deck .key')), page: r(q('.start-page')),
     pager: r(q('.start-pager')), status: q('.start-pager-num').textContent, alt: note.alt,
     vw: innerWidth, vh: innerHeight, scrollX: document.documentElement.scrollWidth > innerWidth,
     scrollY: document.documentElement.scrollHeight > innerHeight}
@@ -98,7 +99,7 @@ RECTS = """() => {
 DARK = """() => {
   const bad = []
   for (const e of document.querySelectorAll('.start-screen *')) {
-    if (e.closest('.start-page, .start-pager, .start-lang, .start-deck, .start-photo')) continue
+    if (e.closest('.start-page, .start-pager, .start-deck, .start-photo')) continue
     const c = getComputedStyle(e).backgroundColor, m = c.match(/[\\d.]+/g) || []
     if (m.length >= 3 && (m[3] === undefined || +m[3] > 0.2)) bad.push(e.className || e.tagName)
   }
@@ -107,6 +108,18 @@ DARK = """() => {
   const bg = getComputedStyle(document.querySelector('.start-deck')).backgroundColor
   if (!/rgba\\(0, 0, 0, 0\\)|transparent/.test(bg)) bad.push('.start-deck has a background colour')
   return bad
+}"""
+
+
+SEED = """localStorage.setItem('corona-road:save', JSON.stringify({v: 1, foundTotal: 5, foundIds: [], loops: 3, flags: {},
+  usedLines: {}, usedChatter: [], pendingStories: [], endingReached: true, epoch: 1}))"""
+
+CONFIRM = """() => {
+  const r = e => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }
+  const btn = n => [...document.querySelectorAll('.start-confirm-keys button')].find(b => b.textContent.trim() === n)
+  const note = document.querySelector('.start-notes')
+  return {erase: r(btn('ERASE ALL')), cancel: r(btn('CANCEL')), noteShown: getComputedStyle(note).display !== 'none',
+    focus: document.activeElement.textContent.trim()}
 }"""
 
 
@@ -173,13 +186,10 @@ def main():
                         n = r["note"]
                         if n[0] < -1 or n[1] < 0 or n[2] > w + 1 or n[3] > h + 1:
                             errs.append(f"page {page + 1}: note outside viewport {[round(v) for v in n]}")
-                        for name in ("key", "lang"):
-                            if overlap(n, r[name]):
-                                errs.append(f"page {page + 1}: note overlaps {name}")
+                        if overlap(n, r["key"]):
+                            errs.append(f"page {page + 1}: note overlaps the key")
                         if overlap(r["pager"], r["key"]):
                             errs.append(f"page {page + 1}: pager overlaps the key")
-                        if overlap(r["key"], r["lang"]):
-                            errs.append("START key overlaps JA/EN")
                         if r["scrollX"] or r["scrollY"]:
                             errs.append("page scrolls")
                         if r["page"][2] - r["page"][0] < 44 or r["page"][3] - r["page"][1] < 44:
@@ -222,30 +232,50 @@ def main():
                             errs.append("a note picture did not load")
                         elif (nw, nh) != (600, 450):
                             errs.append(f"note picture is {nw}x{nh}")
-                    for key in ("JA", "EN"):
-                        kb = p.locator(f"button.start-lang-key:text-is('{key}')").bounding_box()
-                        cx0, cy0 = kb["x"] + kb["width"] / 2, kb["y"] + kb["height"] / 2
-                        for ddx, ddy in ((-21, -21), (21, -21), (-21, 21), (21, 21)):
-                            hit = p.evaluate("([x, y]) => document.elementFromPoint(x, y)?.textContent", [cx0 + ddx, cy0 + ddy])
-                            if hit != key:
-                                errs.append(f"{key} key: the 44x44 touch area is not all its own (hit {hit!r})")
-                                break
                     if p.evaluate(DARK):
                         errs.append(f"dark / solid surface: {p.evaluate(DARK)}")
-                    # language switch: at once, and kept
-                    other = "EN" if lang == "ja" else "JA"
-                    before = p.evaluate(RECTS)["alt"]
-                    p.click(f"button.start-lang-key:text-is('{other}')")
-                    after = p.evaluate(RECTS)["alt"]
-                    if before == after or not after:
-                        errs.append("language switch did not change the note")
-                    p.reload()
-                    p.wait_for_selector(".start-screen")
-                    if p.evaluate("() => document.querySelector('.start-notes').lang") != other.lower():
-                        errs.append("language choice not kept after reload")
+                    # the language comes from the browser's locale; there is no switch
+                    if p.evaluate("() => document.querySelector('.start-notes').lang") != lang:
+                        errs.append("notes are not in the browser's language")
+                    if p.locator(".start-lang, .start-lang-key").count():
+                        errs.append("a language switch is on screen")
                     p.close()
                     ctx.close()
                     print(f"{lang} {w}x{h}: photo margin {sw.get('minSlack', 0):.1f}px, sign on screen {sw.get('minSign', 0):.0%}, clear of note/key {sw.get('minClear', 0):.0%} -> {'; '.join(errs) or 'ok'}")
+                    # the START OVER confirmation (a save that reached the true ending)
+                    ctx = b.new_context(viewport={"width": w, "height": h}, locale="ja-JP" if lang == "ja" else "en-US")
+                    ctx.add_init_script(SEED)
+                    p = ctx.new_page()
+                    p.goto(url)
+                    p.wait_for_selector(".start-screen")
+                    p.get_by_role("button", name="START OVER").click()
+                    p.wait_for_selector(".start-confirm-keys")
+                    p.wait_for_timeout(200)
+                    cerrs = []
+                    ck = p.evaluate(CONFIRM)
+                    er, ca = ck["erase"], ck["cancel"]
+                    if abs((er[2] - er[0]) - (ca[2] - ca[0])) > 1 or abs((er[3] - er[1]) - (ca[3] - ca[1])) > 1:
+                        cerrs.append("ERASE ALL and CANCEL differ in size")
+                    if er[1] >= ca[1]:
+                        cerrs.append("CANCEL is not below ERASE ALL")
+                    if ca[1] - er[3] < 10:
+                        cerrs.append(f"keys only {ca[1] - er[3]:.0f}px apart")
+                    for nm, r in (("ERASE ALL", er), ("CANCEL", ca)):
+                        if r[3] - r[1] < 44 or r[2] - r[0] < 44:
+                            cerrs.append(f"{nm} under 44px")
+                        if r[0] < 0 or r[2] > w or r[1] < 0 or r[3] > h:
+                            cerrs.append(f"{nm} outside the viewport")
+                    if ck["noteShown"]:
+                        cerrs.append("the note is still shown during the confirmation")
+                    if ck["focus"] != "CANCEL":
+                        cerrs.append(f"focus starts on {ck['focus']}, not CANCEL")
+                    sw2 = p.evaluate(SWEEP, [list(SIGN)])
+                    if sw2["minClear"] < CLEAR_MIN:
+                        cerrs.append(f"the confirmation covers the signboard: {sw2['minClear']:.0%} clear")
+                    p.close()
+                    ctx.close()
+                    print(f"{lang} {w}x{h} confirm: keys {er[2] - er[0]:.0f}x{er[3] - er[1]:.0f} / {ca[2] - ca[0]:.0f}x{ca[3] - ca[1]:.0f}, clear {sw2['minClear']:.0%} -> {'; '.join(cerrs) or 'ok'}")
+                    bad += bool(cerrs)
                     bad += bool(errs)
             # reduced motion: no pan
             ctx = b.new_context(viewport={"width": 390, "height": 844}, reduced_motion="reduce")
@@ -261,14 +291,19 @@ def main():
             p = ctx.new_page()
             p.goto(url)
             p.wait_for_selector(".start-screen")
-            t0 = time.time()
             try:
-                p.wait_for_selector(".start-burst", state="attached", timeout=14000)
-                t1 = time.time()
-                p.wait_for_selector(".start-burst", state="detached", timeout=3000)
-                dur = time.time() - t1
-                ok = dur < 0.7
-                print(f"noise burst: after {t1 - t0:.1f}s, lasted ~{dur:.2f}s -> {'ok' if ok else 'TOO LONG'}")
+                # timed inside the page (the clock of the test driver is too coarse under load)
+                r = p.evaluate("""() => new Promise((res, rej) => {
+                  const t0 = performance.now(); let t1 = null
+                  const to = setTimeout(() => rej(new Error('no burst')), 15000)
+                  new MutationObserver(() => {
+                    const on = !!document.querySelector('.start-burst')
+                    if (on && t1 === null) t1 = performance.now()
+                    if (!on && t1 !== null) { clearTimeout(to); res([(t1 - t0) / 1000, (performance.now() - t1) / 1000]) }
+                  }).observe(document.body, {childList: true, subtree: true})
+                })""")
+                ok = r[1] < 0.6
+                print(f"noise burst: after {r[0]:.1f}s, lasted {r[1]:.2f}s -> {'ok' if ok else 'TOO LONG'}")
                 bad += not ok
             except Exception as e:  # noqa: BLE001
                 print(f"noise burst: not seen ({type(e).__name__})")
