@@ -1,6 +1,6 @@
 # 異変ごとの一言メモ案（レビュー用）
 
-#325 の一言メモ案。台帳の `detail` をもとにした未承認の下書き。各行の ID は `prompts/anomalies.yaml` を参照する。採用時に同台帳の `memo` へ移し、この下書きは削除する。全異変の草案を掲載。
+#325 の一言メモ案。台帳の `detail` をもとにした未承認の下書き。出河が張り込み中に書く走り書きを想定し、標準語の短い観察メモに揃える。飾った言い回しや台詞調は避け、場所と見えた変化を簡潔に記す。英語も自然な短い現場メモとし、訳文に情報を足さない。人物設定と既存の捜査メモ（`docs/story.md`、`src/data/investigationNotes.ts`）を参照。各行の ID は `prompts/anomalies.yaml` を参照する。採用時に同台帳の `memo` へ移し、この下書きは削除する。全異変の草案を掲載。
 
 | 異変 ID | 日本語 | English |
 | --- | --- | --- |
@@ -194,7 +194,7 @@
 | AR-08-floor-ramune-marbles | 床にラムネ瓶のガラス玉。 | Ramune bottle marbles on the floor. |
 | AR-01-bamboo-broom | 床に古い竹ぼうき。 | An old bamboo broom on the floor. |
 | AR-01-yellow-boots | 黄色い長靴が揃っている。 | A pair of yellow boots standing together. |
-| AR-02-floor-footprints | 足跡は奥へ。帰りはない。 | Footprints lead inward. None lead back. |
+| AR-02-floor-footprints | 足跡は奥へ。戻る跡なし。 | Footprints lead inward. No return trail. |
 | AR-03-shutter-blank-papers | シャッター一面に白紙。 | Blank paper covers the shutter. |
 | AR-03-floor-tatami | 床が畳に。光の反射は残る。 | The floor became tatami; the reflection remains. |
 | AR-01-wall-faces | 壁一面に四人の顔写真。 | Four faces repeated across the wall. |
@@ -353,7 +353,7 @@
 | RT-SND-01 | 周囲の音が急に消えた。 | The ambient sound suddenly stopped. |
 | RT-SND-02 | 低い唸りが大きくなる。 | A low hum grows louder. |
 | RT-SND-03 | 蛍光灯のジリジリという音。 | The buzz of a fluorescent light. |
-| RT-SND-04 | 奥から聞こえる足音、または近づく速い足音。 | Footsteps from down the corridor, or quick footsteps approaching. |
+| RT-SND-04 | 奥からの足音／近づく速い足音。 | Footsteps down the corridor / quick steps approaching. |
 | RT-SND-05 | 何かを叩く音がする。 | A knocking sound. |
 | RT-SND-06 | 聞き取れない囁き声。 | An indistinct whisper. |
 | RT-SND-07 | 館内放送が逆向きに聞こえる。 | An announcement plays backward. |
