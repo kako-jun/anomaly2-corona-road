@@ -1619,13 +1619,17 @@
 /* #314: centre the digits in the window. A font's line box is taller below the digits than above them (ascender /
    descender space), so with the plain line box the digits sat 2px above the middle of the window (TIME and REPORTS
    alike). Trimming each digit box to cap height ... baseline makes the flex centring land on the glyphs themselves,
-   whatever the monospace font on the device is; browsers without text-box fall back to a measured padding. */
+   whatever the monospace font on the device is. text-box is in Chrome 133+, Safari 18.2+, Firefox 154+; only older
+   browsers take the fallback below: a 1em line box keeps the window at 36px (a normal line box would make TIME and
+   REPORTS taller than STRIKES), and the nudge moves the digits to about the middle. */
 .vfd > * {
   text-box: trim-both cap alphabetic;
 }
 @supports not (text-box: trim-both cap alphabetic) {
-  .vfd {
-    padding-top: 4px;
+  .vfd > * {
+    line-height: 1;
+    position: relative;
+    top: 1px;
   }
 }
 

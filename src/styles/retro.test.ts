@@ -172,16 +172,21 @@ describe('retro.css', () => {
     })
     expect(gaps).toEqual([PINNED_GAP])
     expect(new Set(hudWindowHeights)).toEqual(new Set([HUD_WINDOW.now]))
-    const hudTerm = HUD_WINDOW.was - HUD_WINDOW.now // the HUD is 8px shorter, so the constant is 8px smaller
-    const TERMS = gaps[0] - hudTerm // knob gap +9, HUD window shrink -8 (later PRs add: knob shrink, plate-h)
+    // One named term per thing that changes the non-picture height (px; + = taller, - = shorter).
+    // Later PRs add their own line here (knob shrink #318, plate-h #311) and the same row in DESIGN.md §7.
+    const TERMS = {
+      knobGap: gaps[0], // knob circle to its label
+      hudWindows: HUD_WINDOW.now - HUD_WINDOW.was, // TIME / REPORTS / STRIKES 44 -> 36px
+    }
+    const TERMS_SUM = Object.values(TERMS).reduce((a, b) => a + b, 0)
     expect(Math.min(...gaps)).toBeGreaterThanOrEqual(
       Math.min(...px('.knob', 'height')) * 0.15
     )
     expect(tubeConsts.filter(c => !c.min).map(c => c.n)).toEqual([
-      BASE.narrow + TERMS,
+      BASE.narrow + TERMS_SUM,
     ])
     expect(tubeConsts.filter(c => c.min).map(c => c.n)).toEqual([
-      BASE.wide + TERMS,
+      BASE.wide + TERMS_SUM,
     ])
   })
 
@@ -194,17 +199,22 @@ describe('retro.css', () => {
       'trim-both cap alphabetic',
     ])
     expect(decls('.vfd', 'align-items')).toContain('center')
-    let fallback = false
+    // Fallback (browsers older than Chrome 133 / Safari 18.2 / Firefox 154): a normal line box (31.2px)
+    // would make TIME and REPORTS 47px tall next to the 36px STRIKES, so the fallback must set a 1em line
+    // box on the digit boxes (window stays at the 36px min-height) and may only nudge them with top.
+    const fb: Record<string, string> = {}
     root_.walkAtRules('supports', at => {
       if (!/not\s*\(\s*text-box/.test(at.params)) return
       at.walkRules(rule => {
-        if (rule.selectors.includes('.vfd'))
-          rule.walkDecls('padding-top', d => {
-            fallback = d.value.trim() === '4px'
-          })
+        if (rule.selectors.includes('.vfd > *'))
+          rule.walkDecls(d => void (fb[d.prop] = d.value.trim()))
+        expect(rule.selectors, 'fallback must not pad the window').not.toContain('.vfd')
       })
     })
-    expect(fallback).toBe(true)
+    expect(fb['line-height']).toBe('1')
+    expect(fb.position).toBe('relative')
+    expect(fb.top).toBe('1px')
+    expect(fb).not.toHaveProperty('padding-top')
   })
 
   it('keeps the --wear A/B hook on the cabinet dirt layer', () => {
