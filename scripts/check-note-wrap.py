@@ -95,6 +95,8 @@ async (lang) => {
     for (const [txt, isBig] of [[L.stampAfter[lang], false], [big[lang], true]]) {
       const s = document.createElement('span'); s.className = 'note-stamp' + (isBig ? ' note-big' : ''); s.textContent = txt; box.appendChild(s)
     }
+    document.querySelector('.note-screen').classList.add('note-after')
+    document.querySelector('.note-screen').classList.remove('note-before')
     const stamps = [...box.children].map(e => e.getBoundingClientRect())
     const others = { night: '.note-night', title: '.note-hdr h1', frame1: '.note-slot img' }
     for (const [n, sel] of Object.entries(others)) {
@@ -105,10 +107,10 @@ async (lang) => {
         if (w > -3 && h > -3) res.push(`${big[lang]} stamp#${i} is closer than 3px to ${n} (${w.toFixed(1)}x${h.toFixed(1)} px)`)
       }
     }
-    document.querySelector('.note-screen').classList.add('note-after')
     const gap = document.querySelector('.note-btn').getBoundingClientRect().top - document.querySelector('.note-form').getBoundingClientRect().bottom
     if (gap < 8) res.push(`after a night: the form is only ${gap.toFixed(1)}px above the key (need 8)`)
     document.querySelector('.note-screen').classList.remove('note-after')
+    document.querySelector('.note-screen').classList.add('note-before')
     const paper = document.querySelector('.note-paper').getBoundingClientRect()
     for (const s of stamps) if (s.right > paper.right - 4) res.push(`${big[lang]} stamp leaves the paper`)
   }
@@ -155,6 +157,17 @@ async () => {
       if (a > 8) res.push(`${n}: the frame has a ${a > 250 ? 'solid' : 'partial'} fill at (${x},${y}) rgb(${r},${gr},${b}) a=${a}; it must be transparent paper`)
     }
   }
+  // The red "found" tag keeps 3px or more from every frame (the sketches) and every stamp, as on an after-night page.
+  const screen = document.querySelector('.note-screen')
+  screen.classList.add('note-after'); screen.classList.remove('note-before')
+  const tag = document.querySelector('.note-slot-new')
+  if (tag) {
+    const tr = tag.getBoundingClientRect()
+    const gapTo = r => Math.max(r.left - tr.right, tr.left - r.right, r.top - tr.bottom, tr.top - r.bottom)
+    for (const img of document.querySelectorAll('.note-slot img')) if (gapTo(img.getBoundingClientRect()) < 3) res.push('the "found" tag is closer than 3px to a sketch frame')
+    for (const st of document.querySelectorAll('.note-stamp')) if (gapTo(st.getBoundingClientRect()) < 3) res.push('the "found" tag is closer than 3px to a stamp')
+  }
+  screen.classList.remove('note-after'); screen.classList.add('note-before')
   return res
 }
 """
@@ -194,7 +207,7 @@ LAYOUT = """
   for (const fl of document.querySelectorAll('.note-fl')) if (fl.scrollWidth > fl.clientWidth + 1) res.push(`form label "${fl.textContent}" does not fit its column`)
   const nr = notes.getBoundingClientRect(), sr = sc.getBoundingClientRect(), fr = r('.note-form')
   if (sr.bottom > nr.bottom || sr.top < nr.top) res.push('the tilted scribble leaves the ruled sheet')
-  if (fr.top - sr.bottom < 6) res.push(`the scribble is only ${(fr.top - sr.bottom).toFixed(1)}px above the form`)
+  if (fr.top - sr.bottom < 10) res.push(`the scribble is only ${(fr.top - sr.bottom).toFixed(1)}px above the number box (need 10)`)
   const dd = document.querySelector('.note-doodle')
   if (dd) {
     const dr = dd.getBoundingClientRect(), lines = [...syn.querySelectorAll('p')].map(p => { const s = document.createRange(); s.selectNodeContents(p); return s.getBoundingClientRect() })

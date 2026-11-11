@@ -109,7 +109,7 @@
 
 .note-stamps {
   margin: 6px 0 4px;
-  padding-top: 4px; /* the tilted stamp rises into the title otherwise */
+  padding-top: 4px; /* the tilted big stamp rises into the title otherwise */
   min-height: 28px;
   display: flex;
   gap: 14px;
@@ -172,7 +172,7 @@
 .note-slot-new {
   position: absolute;
   right: 0;
-  top: -8px;
+  top: -15px;
   font-size: 12px;
   line-height: 12px;
   color: var(--red);
@@ -188,7 +188,7 @@
   /* The synopsis and the scribbles share one ruled sheet: every line, printed or scribbled, sits on the rules. */
   position: relative;
   margin-top: 6px;
-  min-height: 214px;
+  min-height: 196px;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0,
@@ -198,7 +198,15 @@
   );
   background-position: 0 1px;
 }
+.note-before .note-stamps {
+  padding-top: 0; /* only the small stamp: it does not need the room the big one does */
+}
+.note-tagged .note-board {
+  /* room above the frames for the red "found" tag: 3px or more from the frame below and the stamp above */
+  margin-top: 16px;
+}
 .note-first .note-notes {
+  padding-bottom: 4px; /* the lowest scribble line stays 10px or more clear of the number box */
   /* seven synopsis lines + three scribble lines, and the corridor sketch in the bottom corner clear of them */
   min-height: 230px;
 }

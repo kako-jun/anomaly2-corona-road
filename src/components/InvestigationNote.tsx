@@ -85,6 +85,7 @@ export const InvestigationNote = ({
         `note-${lang}`,
         `note-${view.mode}`,
         view.doodle ? 'note-first' : '',
+        view.slots.some(s => s.isNew) ? 'note-tagged' : '',
       ]
         .filter(Boolean)
         .join(' ')}
