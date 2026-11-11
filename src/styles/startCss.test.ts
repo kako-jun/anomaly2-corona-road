@@ -102,6 +102,14 @@ describe('start.css: the notes', () => {
     expect(decl('.start-confirm-keys .start-key', 'width')).toBe('100%')
     expect(code).not.toMatch(/start-key--small/)
   })
+  it('keeps the confirmation where the START key is: the pager only hidden (column width kept), text right-aligned', () => {
+    expect(decl('.start-foot--confirm .start-pager', 'visibility')).toBe(
+      'hidden'
+    )
+    expect(decl('.start-over-note,\n.start-over-warn', 'text-align')).toBe(
+      'right'
+    )
+  })
   it('has no language switch (the language comes from the browser only)', () => {
     expect(code).not.toMatch(/start-lang/)
   })

@@ -19,7 +19,8 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
   6. with prefers-reduced-motion the photo does not move
   7. (once) a noise burst appears within 14 s and is short
   8. the START OVER confirmation (after the true ending): ERASE ALL on top and CANCEL below, the same width and height
-     (within 1px), >= 44px high, >= 10px apart, inside the viewport, the note hidden, the signboard clear
+     (within 1px), >= 44px high, >= 10px apart, inside the viewport, the note hidden, the signboard clear, and the
+     right edge and bottom where the START OVER key was (within 2px: the eye does not have to move)
   9. nothing dark covers the photo: no element other than the notes, the keys and the pager has a solid background
 Not wired to CI (it needs a Chromium: --chrome or $CHROME, default ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome).
 Starts `npx vite` on a free port (and stops only that process) unless --url is given.
@@ -248,6 +249,7 @@ def main():
                     p = ctx.new_page()
                     p.goto(url)
                     p.wait_for_selector(".start-screen")
+                    so = p.evaluate("() => { const b = document.querySelector('.start-deck .key').getBoundingClientRect(); return [b.right, b.bottom] }")
                     p.get_by_role("button", name="START OVER").click()
                     p.wait_for_selector(".start-confirm-keys")
                     p.wait_for_timeout(200)
@@ -265,6 +267,10 @@ def main():
                             cerrs.append(f"{nm} under 44px")
                         if r[0] < 0 or r[2] > w or r[1] < 0 or r[3] > h:
                             cerrs.append(f"{nm} outside the viewport")
+                    if abs(er[2] - so[0]) > 2 or abs(ca[2] - so[0]) > 2:
+                        cerrs.append(f"the confirmation's right edge ({ca[2]:.0f}) is not the START OVER key's ({so[0]:.0f})")
+                    if abs(ca[3] - so[1]) > 2:
+                        cerrs.append(f"the confirmation's bottom ({ca[3]:.0f}) is not the START OVER key's ({so[1]:.0f})")
                     if ck["noteShown"]:
                         cerrs.append("the note is still shown during the confirmation")
                     if ck["focus"] != "CANCEL":
