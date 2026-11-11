@@ -14,6 +14,8 @@
  *      idiom). C  kept as kanji too: 「を一度見て」「一歩前へ」「最後の一口」 (a kanji numeral not followed by a counter).
  *   D  half-width digits 0-9 in Japanese wording become ０-９ (the run-time numbers are converted in
  *      src/utils/fullWidth.ts, the one place for them).
+ * Idioms stay kanji even where a count would fit: 一度・一歩・一口・一瞬 (回数でも慣用の語は漢数字のまま);
+ * a counter such as 一回・一杯・一本・一つ・一枚 becomes full-width.
  * Sources: dialogue/*.yaml `text:`, drafts/anomaly-memos-review.md (the memo table's Japanese column; the ledger's
  * `memo.ja` follows by `scripts/apply-memos.py`), src/data/investigationNotes.ts (Japanese string literals).
  * titleNotes.json is NOT converted: its lines/alt mirror the text baked into the sticky-note images
@@ -55,6 +57,7 @@ const COUNTERS = [
 const KEEP_AFTER = new Map([
   ['人', /^(?:で(?!す)|ぼっち|称|きり|っ子)/],
   ['輪', /^車/], // 三輪車 is a word (tricycle), not a count of wheels
+  ['段', /^落と/], // 一段落とす (turn it down a notch) would read as 段落 (paragraph) after １
 ])
 /** Before the numeral+counter: もう一回 is the idiom "once more" (B), like もう一度. */
 const KEEP_BEFORE_COUNTER = new Map([['回', /もう$/]])

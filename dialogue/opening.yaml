@@ -64,7 +64,7 @@ dialogues:
     tone: light
     lines:
       - { who: A, text: '画面の明るさ　これで見える？　まぶしい！', en: "Can you see the screen at this brightness? It's glaring!" }
-      - { who: M, text: '１段落としますか', en: "Shall I turn it down a notch?" }
+      - { who: M, text: '一段落としますか', en: "Shall I turn it down a notch?" }
       - { who: A, text: 'お願い　さっきより見やすい', en: "Please. That's easier on the eyes." }
       - { who: M, text: 'はい　この程度でいいですよ', en: "Sure, that should do it." }
   - id: opening-13
