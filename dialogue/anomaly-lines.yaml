@@ -5,86 +5,86 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-notice }
     lines:
-      - { who: A, text: '焦るとだめだね　左の壁をゆっくり確認しよう' }
-      - { who: M, text: 'そうですね　左の壁を少し引いて見ます' }
+      - { who: A, text: '焦るとだめだね　左の壁をゆっくり確認しよう', en: "No good rushing. Let's take a slow look at the left wall." }
+      - { who: M, text: 'そうですね　左の壁を少し引いて見ます', en: "Right. I'll take a closer look at the left wall." }
   - id: an-AR-01-notice-02
     tone: serious
     when: { anomaly: AR-01-notice }
     lines:
-      - { who: M, text: 'いったん全体を見て　左の壁に戻ってください' }
-      - { who: A, text: '分かった　左の壁は後でもう一度見るね' }
+      - { who: M, text: 'いったん全体を見て　左の壁に戻ってください', en: "Take in the whole scene first, then go back to the left wall." }
+      - { who: A, text: '分かった　左の壁は後でもう一度見るね', en: "Got it. I'll look at the left wall again in a moment." }
   - id: an-AR-02-ashtray-01
     tone: serious
     when: { anomaly: AR-02-ashtray }
     lines:
-      - { who: A, text: '念のため　右手前も確かめておこう' }
-      - { who: M, text: 'はい　右手前の端も　見落とさないようにします' }
+      - { who: A, text: '念のため　右手前も確かめておこう', en: "Let's check the near right side too, just in case." }
+      - { who: M, text: 'はい　右手前の端も　見落とさないようにします', en: "Yes. I'll make sure not to miss the far edge on the right." }
   - id: an-AR-02-ashtray-02
     tone: serious
     when: { anomaly: AR-02-ashtray }
     lines:
-      - { who: M, text: '視点を少しずらして　右手前を見てみましょう' }
-      - { who: A, text: 'そうか　右手前の前後も見てみるね' }
+      - { who: M, text: '視点を少しずらして　右手前を見てみましょう', en: "Shift your view a little and take a look at the near right side." }
+      - { who: A, text: 'そうか　右手前の前後も見てみるね', en: "I see. I'll check around the near right side too." }
   - id: an-AR-02-bag-01
     tone: serious
     when: { anomaly: AR-02-bag }
     lines:
-      - { who: A, text: '右手前の床の辺り　見方を変えたら分かるかな' }
-      - { who: M, text: 'はい　右手前の床から順に　確認していきます' }
+      - { who: A, text: '右手前の床の辺り　見方を変えたら分かるかな', en: "Maybe I'll spot it if I look differently near the floor on the right." }
+      - { who: M, text: 'はい　右手前の床から順に　確認していきます', en: "Yes. I'll start at the floor on the near right and check from there." }
   - id: an-AR-02-bag-02
     tone: serious
     when: { anomaly: AR-02-bag }
     lines:
-      - { who: M, text: '焦らずに　右手前の床のあたりを　見てください' }
-      - { who: A, text: 'えっ　右手前の床まで見るの?　ちゃんと見る!' }
+      - { who: M, text: '焦らずに　右手前の床のあたりを　見てください', en: "Take your time. Look around the floor on the near right." }
+      - { who: A, text: 'えっ　右手前の床まで見るの?　ちゃんと見る!', en: "Huh? Even the floor on the near right? I'll look properly!" }
   - id: an-AR-02-blue-pot-01
     tone: serious
     when: { anomaly: AR-02-blue-pot }
     lines:
-      - { who: A, text: 'うーん　視線が止まってたね　右手前も見よう' }
-      - { who: M, text: '了解です　右手前をもう一度確認します' }
+      - { who: A, text: 'うーん　視線が止まってたね　右手前も見よう', en: "Hmm, my eyes were stuck in one place. Let's look near the right side too." }
+      - { who: M, text: '了解です　右手前をもう一度確認します', en: "Got it. I'll check the near right side again." }
   - id: an-AR-02-blue-pot-02
     tone: serious
     when: { anomaly: AR-02-blue-pot }
     lines:
-      - { who: M, text: '今度は右手前のほうへ　目を向けてみましょう' }
-      - { who: A, text: 'えっ　右手前?　もう一度見る!' }
+      - { who: M, text: '今度は右手前のほうへ　目を向けてみましょう', en: "This time, try looking toward the near right side." }
+      - { who: A, text: 'えっ　右手前?　もう一度見る!', en: "Huh? The near right? I'll look again!" }
   - id: an-AR-02-cat-01
     tone: serious
     when: { anomaly: AR-02-cat }
     lines:
-      - { who: A, text: 'もう少し視線を動かして　左のシャッターも見てみよう' }
-      - { who: M, text: '分かりました　左のシャッターの周りを　見直します' }
+      - { who: A, text: 'もう少し視線を動かして　左のシャッターも見てみよう', en: "Move your eyes a little more and check the shutter on the left too." }
+      - { who: M, text: '分かりました　左のシャッターの周りを　見直します', en: "Understood. I'll take another look around the shutter on the left." }
   - id: an-AR-02-cat-02
     tone: serious
     when: { anomaly: AR-02-cat }
     lines:
-      - { who: M, text: 'はい　今度は左のシャッターに　注目してみてください' }
-      - { who: A, text: '左のシャッターを　見てるつもりだったのに　だめだね' }
+      - { who: M, text: 'はい　今度は左のシャッターに　注目してみてください', en: "Yes. This time, focus on the shutter on the left." }
+      - { who: A, text: '左のシャッターを　見てるつもりだったのに　だめだね', en: "I thought I was looking at the shutter on the left. Guess not." }
   - id: an-AR-02-cigarette-01
     tone: serious
     when: { anomaly: AR-02-cigarette }
     lines:
-      - { who: A, text: 'うーん　視線が止まってたね　左の床も見よう' }
-      - { who: M, text: '了解です　左の床をもう一度確認します' }
+      - { who: A, text: 'うーん　視線が止まってたね　左の床も見よう', en: "Hmm, my eyes were stuck in one place. Let's look at the floor on the left too." }
+      - { who: M, text: '了解です　左の床をもう一度確認します', en: "Got it. I'll check the floor on the left again." }
   - id: an-AR-02-cigarette-02
     tone: serious
     when: { anomaly: AR-02-cigarette }
     lines:
-      - { who: M, text: '今度は左の床のほうへ　目を向けてみましょう' }
-      - { who: A, text: 'えっ　左の床?　もう一度見る!' }
+      - { who: M, text: '今度は左の床のほうへ　目を向けてみましょう', en: "This time, try looking toward the floor on the left." }
+      - { who: A, text: 'えっ　左の床?　もう一度見る!', en: "Huh? The floor on the left? I'll look again!" }
   - id: an-AR-02-coffee-01
     tone: serious
     when: { anomaly: AR-02-coffee }
     lines:
-      - { who: A, text: '焦るとだめだね　右手前をゆっくり確認しよう' }
-      - { who: M, text: 'はい　右手前の周囲から見直します' }
+      - { who: A, text: '焦るとだめだね　右手前をゆっくり確認しよう', en: "Let's move our eyes a little more and check the shutter on the left too." }
+      - { who: M, text: 'はい　右手前の周囲から見直します', en: "Understood. I'll look around the shutter on the left again." }
   - id: an-AR-02-coffee-02
     tone: serious
     when: { anomaly: AR-02-coffee }
     lines:
-      - { who: M, text: '右手前の辺り　何か違って見えませんか' }
-      - { who: A, text: 'ああ　右手前は見ていたつもりなのに' }
+      - { who: M, text: '右手前の辺り　何か違って見えませんか', en: "Yes. This time, focus on the shutter on the left." }
+      - { who: A, text: 'ああ　右手前は見ていたつもりなのに', en: "I thought I was looking at the shutter on the left. Guess not." }
   - id: an-AR-02-newspaper-01
     tone: serious
     when: { anomaly: AR-02-newspaper }
