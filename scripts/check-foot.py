@@ -87,7 +87,9 @@ def main():
                 p = b.new_page(viewport={"width": w, "height": h})
                 p.goto(url)
                 p.wait_for_selector(".start-screen")
-                p.get_by_text("勤務開始").click()
+                p.click("button.start-go")  # the title key opens the investigation note (#297)
+                p.wait_for_selector(".note-paper")
+                p.click(".note-btn")  # its key starts the shift
                 p.wait_for_selector(".knob")
                 p.wait_for_timeout(500)
                 r = p.evaluate(JS)
