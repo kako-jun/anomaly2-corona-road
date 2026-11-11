@@ -10,9 +10,24 @@ import { NoiseCanvas } from './NoiseCanvas'
  */
 export const TitleNoise = () => {
   const [bands, setBands] = useState<Band[] | null>(null)
+  // Follows the setting while the page is open: turning "reduce motion" on stops the bursts at once.
+  const [reduced, setReduced] = useState(
+    () =>
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+  )
   useEffect(() => {
     const motion = window.matchMedia?.('(prefers-reduced-motion: reduce)')
-    if (motion?.matches) return
+    if (!motion) return
+    const on = () => setReduced(motion.matches)
+    motion.addEventListener('change', on)
+    on()
+    return () => motion.removeEventListener('change', on)
+  }, [])
+  useEffect(() => {
+    if (reduced) {
+      setBands(null)
+      return
+    }
     let timer = 0
     let tick = 0
     const wait = () => {
@@ -38,8 +53,8 @@ export const TitleNoise = () => {
       window.clearTimeout(timer)
       window.clearInterval(tick)
     }
-  }, [])
-  if (!bands) return null
+  }, [reduced])
+  if (!bands || reduced) return null
   return (
     <div className="start-burst" aria-hidden="true" data-testid="title-noise">
       <NoiseCanvas />

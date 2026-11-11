@@ -14,8 +14,15 @@ describe('title pager', () => {
   })
   it('a swipe left is next, right is previous, a short move is a tap', () => {
     expect(swipeDirection(-SWIPE_MIN_PX)).toBe('next')
+    expect(swipeDirection(-SWIPE_MIN_PX - 1)).toBe('next')
+    expect(swipeDirection(-SWIPE_MIN_PX + 1)).toBeNull()
     expect(swipeDirection(SWIPE_MIN_PX)).toBe('prev')
+    expect(swipeDirection(SWIPE_MIN_PX + 1)).toBe('prev')
     expect(swipeDirection(SWIPE_MIN_PX - 1)).toBeNull()
     expect(swipeDirection(0)).toBeNull()
+  })
+  it('keeps the threshold in the range that tells a tap from a swipe', () => {
+    expect(SWIPE_MIN_PX).toBeGreaterThanOrEqual(20)
+    expect(SWIPE_MIN_PX).toBeLessThanOrEqual(40)
   })
 })

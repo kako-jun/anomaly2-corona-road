@@ -89,7 +89,7 @@ describe('StartScreen content', () => {
       screen.getByRole('button', { name: 'START SHIFT' }).className
     ).toContain('key')
     expect(q('.start-deck .lamp')).toHaveLength(1)
-    expect(q('.start-foot')).toHaveLength(0)
+    expect(q('.start-speaker, .start-plate')).toHaveLength(0)
   })
   it('turns the lamp amber and disables the key while loading', () => {
     const { container } = render(<StartScreen onStart={vi.fn()} loading />)

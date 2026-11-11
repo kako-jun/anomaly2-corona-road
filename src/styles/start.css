@@ -10,12 +10,11 @@
   --start-ink: #3a2f22;
   /* The pan: the picture is drawn at --start-zoom and may travel 90% of the margin that zoom leaves. */
   --start-zoom: 1.12;
-  --start-margin: 5.4%; /* (zoom - 1) / 2 * 90% of the picture's own size */
+  --start-margin: 5.4%; /* (zoom - 1) / 2 * 0.9 of the picture's own size, in % */
   position: relative;
   width: 100%;
   height: 100vh;
   height: 100dvh;
-  padding: 0 0 max(0px, env(safe-area-inset-bottom));
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -56,7 +55,14 @@ body.start-open #root {
   overflow: hidden;
   background: #0a0a0a;
 }
-.start-photo > img {
+.start-pan-x {
+  position: absolute;
+  inset: 0;
+  /* x: 35 s each way = a 70 s loop; the ends ease like a sine, so the motion never has a corner */
+  animation: start-pan-x 35s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  animation-delay: var(--start-pan-x-delay, 0s);
+}
+.start-photo img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -66,74 +72,35 @@ body.start-open #root {
   object-position: 85% 20%;
   transform: scale(var(--start-zoom));
   will-change: transform;
-  animation: start-pan 70s ease-in-out infinite;
-  animation-delay: var(--start-pan-delay, 0s);
+  /* y: a different period (53 s loop), so the path wanders instead of repeating a figure */
+  animation: start-pan-y 26.5s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  animation-delay: var(--start-pan-y-delay, 0s);
   user-select: none;
   pointer-events: none;
 }
-/* Slow drift in several directions: every waypoint is a fraction (-1..1) of the allowed margin, so the edge never shows. */
-@keyframes start-pan {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(var(--start-zoom));
+/* Slow drift in every direction: each axis only travels +-margin (90% of what the zoom leaves), so the edge never shows. */
+@keyframes start-pan-x {
+  from {
+    transform: translateX(calc(var(--start-margin) * -1));
   }
-  14% {
-    transform: translate(
-        calc(var(--start-margin) * -0.9),
-        calc(var(--start-margin) * -0.5)
-      )
+  to {
+    transform: translateX(var(--start-margin));
+  }
+}
+@keyframes start-pan-y {
+  from {
+    transform: translateY(calc(var(--start-margin) * -1))
       scale(var(--start-zoom));
   }
-  29% {
-    transform: translate(
-        calc(var(--start-margin) * 0.7),
-        calc(var(--start-margin) * -1)
-      )
-      scale(var(--start-zoom));
-  }
-  43% {
-    transform: translate(
-        calc(var(--start-margin) * 1),
-        calc(var(--start-margin) * 0.4)
-      )
-      scale(var(--start-zoom));
-  }
-  57% {
-    transform: translate(
-        calc(var(--start-margin) * -0.2),
-        calc(var(--start-margin) * 1)
-      )
-      scale(var(--start-zoom));
-  }
-  71% {
-    transform: translate(
-        calc(var(--start-margin) * -1),
-        calc(var(--start-margin) * 0.6)
-      )
-      scale(var(--start-zoom));
-  }
-  86% {
-    transform: translate(
-        calc(var(--start-margin) * -0.4),
-        calc(var(--start-margin) * -0.8)
-      )
-      scale(var(--start-zoom));
+  to {
+    transform: translateY(var(--start-margin)) scale(var(--start-zoom));
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .start-photo > img {
+  .start-pan-x,
+  .start-photo img {
     animation: none;
   }
-}
-.start-vignette {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 50%,
-    rgba(0, 0, 0, 0.5) 100%
-  );
 }
 /* a burst of the monitor's noise (canvas + scanlines from retro.css) and white tear bands */
 .start-burst {
@@ -152,21 +119,29 @@ body.start-open #root {
   mix-blend-mode: overlay;
 }
 
-/* ----- the sticky notes: one at a time, stuck on the photo at the bottom left edge ----- */
-.start-notes {
+/* ----- the foot: the sticky note (one at a time, stuck at the bottom left edge), and under it the pager and the START key ----- */
+.start-foot {
   position: relative;
   z-index: 2;
-  flex: 0 0 auto;
   margin-top: auto;
-  padding: 0 0 6px 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
+  width: 100%;
+  padding: 0 12px max(14px, 2.5dvh) 4px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'note note'
+    'pager key';
+  align-items: center;
+  row-gap: 4px;
+  column-gap: 10px;
   pointer-events: none;
 }
-.start-notes > * {
+.start-foot > * {
   pointer-events: auto;
+}
+.start-notes {
+  grid-area: note;
+  justify-self: start;
 }
 .start-notes img {
   display: block;
@@ -196,16 +171,22 @@ body.start-open #root {
 }
 .start-stack > img {
   grid-area: 1 / 1;
-  /* ~82% of a phone, the picture's real size (300) a little larger on a big screen; never taller than a third of it */
-  width: min(82vw, 340px, calc(36dvh * var(--ar, 1.333)));
+  /* about 70% of a phone's width (the body stays at 13px or more), at most 340px, and low enough to leave the signboard alone */
+  width: min(70vw, 340px, calc(60dvh * var(--ar, 1.333)));
   height: auto;
   /* paper and tape cast a light shadow along their own outline (light from the upper left); the same on every page */
   filter: drop-shadow(3px 4px 3px rgba(0, 0, 0, 0.4));
+}
+@media (orientation: portrait) {
+  .start-stack > img {
+    width: min(70vw, 340px, calc(34dvh * var(--ar, 1.333)));
+  }
 }
 .start-stack > .start-off {
   visibility: hidden;
 }
 .start-pager {
+  grid-area: pager;
   margin: 0 0 0 14px;
   min-height: 24px;
   display: flex;
@@ -217,7 +198,10 @@ body.start-open #root {
     monospace;
   letter-spacing: 0.1em;
   color: var(--start-hi);
-  text-shadow: 0 1px 2px #000;
+  text-shadow:
+    0 1px 2px #000,
+    0 0 4px #000,
+    0 0 8px #000;
   pointer-events: none;
 }
 .start-pager-dots {
@@ -229,7 +213,9 @@ body.start-open #root {
   height: 8px;
   border-radius: 50%;
   border: 1.5px solid var(--start-hi);
-  box-shadow: 0 1px 2px #000;
+  box-shadow:
+    0 0 3px #000,
+    0 1px 3px #000;
 }
 .start-pager-dots i.on {
   background: var(--start-hi);
@@ -237,16 +223,24 @@ body.start-open #root {
 
 /* ----- the START key lies directly on the photo: no plate, band or dark surface under it ----- */
 .start-deck {
-  position: relative;
-  z-index: 3;
-  flex: 0 0 auto;
-  align-self: center;
-  width: min(calc(100% - 48px), 280px);
-  margin-bottom: max(14px, 2.5dvh);
+  grid-area: key;
+  justify-self: end;
+  width: min(100%, 240px);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+}
+/* the confirmation replaces the note and pager (so the signboard stays clear) and takes the whole foot */
+.start-foot--confirm {
+  grid-template-areas: 'key key';
+}
+.start-foot--confirm .start-notes,
+.start-foot--confirm .start-pager {
+  display: none;
+}
+.start-foot--confirm .start-deck {
+  justify-self: center;
 }
 .start-keyrow {
   display: flex;
@@ -313,6 +307,7 @@ body.start-open #root {
     0 1px 3px #000,
     0 0 6px #000;
   font-weight: 700;
+  text-wrap: balance;
 }
 .start-over-warn {
   color: #ffd27a;
@@ -328,9 +323,10 @@ body.start-open #root {
   right: 12px;
   z-index: 4;
   display: flex;
-  gap: 4px;
+  gap: 10px; /* the touch areas (44px wide each, see ::before) meet in the middle */
 }
 .start-lang-key {
+  position: relative;
   min-width: 34px;
   height: 26px;
   padding: 0 6px;
@@ -347,6 +343,12 @@ body.start-open #root {
     0 0 0 1px #4a4a42;
   cursor: pointer;
 }
+.start-lang-key::before {
+  /* the look stays 34x26; the touch area is 44x44 */
+  content: '';
+  position: absolute;
+  inset: -9px -5px;
+}
 .start-lang-key[aria-pressed='true'] {
   color: #1d1d1b;
   background: linear-gradient(var(--start-hi), var(--start-lo));
@@ -360,20 +362,22 @@ body.start-open #root {
   outline-offset: 2px;
 }
 
-/* ----- wide: the same, the photo fills the screen; the note at the bottom left, the key plate at the bottom right ----- */
+/* ----- wide or landscape: the foot shrinks to the note's width at the bottom left, so the key never stands on the signboard (right of centre) ----- */
+@media (min-aspect-ratio: 1/1) {
+  .start-foot {
+    width: fit-content;
+    max-width: 100%;
+  }
+  .start-foot--confirm .start-deck {
+    justify-self: start;
+  }
+}
 @media (min-width: 900px) {
-  .start-photo > img {
+  .start-photo img {
     /* the signboard sits right of centre: keep it in view when the wide crop cuts the top and bottom */
     object-position: 85% 25%;
   }
-  .start-notes {
-    padding: 0 0 20px 8px;
-  }
-  .start-deck {
-    position: absolute;
-    right: 4vw;
-    bottom: 20px;
-    margin: 0;
-    align-self: auto;
+  .start-foot {
+    padding: 0 12px 20px 8px;
   }
 }

@@ -6,8 +6,12 @@ import type { Language } from '../utils/saveData'
 import { nextPage, prevPage, swipeDirection } from '../utils/titlePager'
 import { TitleNoise } from './TitleNoise'
 
-// The photo's pan starts at a different point of its 70 s loop on each load (CSS only after that).
-const panOffset = () => `${-Math.floor(Math.random() * 70)}s`
+// The photo's drift starts at a different point of its loops (70 s and 53 s) on each load; CSS only after that.
+const panOffsets = () =>
+  ({
+    '--start-pan-x-delay': `${-Math.floor(Math.random() * 70)}s`,
+    '--start-pan-y-delay': `${-Math.floor(Math.random() * 53)}s`,
+  }) as CSSProperties
 
 interface StartScreenProps {
   onStart: () => void
@@ -80,7 +84,7 @@ export const StartScreen = ({
   const [page, setPage] = useState(0)
   const swipeStart = useRef<number | null>(null)
   const swiped = useRef(false)
-  const [pan] = useState(panOffset)
+  const [pan] = useState(panOffsets)
   const go = (dir: 'next' | 'prev') =>
     setPage(p =>
       dir === 'next' ? nextPage(p, notes.length) : prevPage(p, notes.length)
@@ -88,14 +92,13 @@ export const StartScreen = ({
   const current = Math.min(page, notes.length - 1)
 
   return (
-    <main
-      className="start-screen"
-      style={{ '--start-pan-delay': pan } as CSSProperties}
-    >
+    <main className="start-screen" style={pan}>
       <div className="start-photo" aria-hidden="true">
-        <img src="/images/logo.webp" alt="" draggable={false} />
+        {/* two nested slow drifts (x outside, y inside) with different periods: no corner where the speed jumps */}
+        <div className="start-pan-x">
+          <img src="/images/logo.webp" alt="" draggable={false} />
+        </div>
         <TitleNoise />
-        <div className="start-vignette" />
       </div>
       <div className="start-lang" role="group" aria-label="Language">
         {(['ja', 'en'] as const).map(l => (
@@ -113,136 +116,140 @@ export const StartScreen = ({
       </div>
       <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
 
-      <section
-        className="start-notes"
-        aria-label={NOTES_LABEL[language]}
-        lang={language}
+      <div
+        className={confirming ? 'start-foot start-foot--confirm' : 'start-foot'}
       >
-        <button
-          type="button"
-          className="start-page"
-          onPointerDown={e => {
-            swipeStart.current = e.clientX
-            swiped.current = false
-          }}
-          onPointerUp={e => {
-            if (swipeStart.current == null) return
-            const dir = swipeDirection(e.clientX - swipeStart.current)
-            swipeStart.current = null
-            if (dir) {
-              swiped.current = true
-              go(dir)
-            }
-          }}
-          onPointerCancel={() => {
-            swipeStart.current = null
-          }}
-          onClick={() => {
-            if (swiped.current) swiped.current = false
-            else go('next')
-          }}
-          onKeyDown={e => {
-            if (e.key === 'ArrowRight') go('next')
-            else if (e.key === 'ArrowLeft') go('prev')
-            else return
-            e.preventDefault()
-          }}
+        <section
+          className="start-notes"
+          aria-label={NOTES_LABEL[language]}
+          lang={language}
         >
-          {/* every page sits in the same cell, so the block keeps the height of the tallest one and the photo above never jumps */}
-          <span className="start-stack">
-            {notes.map((n, i) => (
-              <img
-                key={n.src}
-                className={i === current ? undefined : 'start-off'}
-                src={n.src}
-                width={n.width}
-                height={n.height}
-                style={{ '--ar': n.width / n.height } as CSSProperties}
-                alt={i === current ? n.alt : ''}
-                aria-hidden={i === current ? undefined : true}
-                draggable={false}
-              />
-            ))}
-          </span>
-          <span className="start-sr-only">{NEXT_HINT[language]}</span>
-        </button>
+          <button
+            type="button"
+            className="start-page"
+            onPointerDown={e => {
+              swipeStart.current = e.clientX
+              swiped.current = false
+            }}
+            onPointerUp={e => {
+              if (swipeStart.current == null) return
+              const dir = swipeDirection(e.clientX - swipeStart.current)
+              swipeStart.current = null
+              if (dir) {
+                swiped.current = true
+                go(dir)
+              }
+            }}
+            onPointerCancel={() => {
+              swipeStart.current = null
+            }}
+            onClick={() => {
+              if (swiped.current) swiped.current = false
+              else go('next')
+            }}
+            onKeyDown={e => {
+              if (e.key === 'ArrowRight') go('next')
+              else if (e.key === 'ArrowLeft') go('prev')
+              else return
+              e.preventDefault()
+            }}
+          >
+            {/* every page sits in the same cell, so the block keeps the height of the tallest one and the photo above never jumps */}
+            <span className="start-stack">
+              {notes.map((n, i) => (
+                <img
+                  key={n.src}
+                  className={i === current ? undefined : 'start-off'}
+                  src={n.src}
+                  width={n.width}
+                  height={n.height}
+                  style={{ '--ar': n.width / n.height } as CSSProperties}
+                  alt={i === current ? n.alt : ''}
+                  aria-hidden={i === current ? undefined : true}
+                  draggable={false}
+                />
+              ))}
+            </span>
+            <span className="start-sr-only">{NEXT_HINT[language]}</span>
+          </button>
+        </section>
         <p className="start-pager" role="status">
           <span className="start-pager-num">
             {current + 1}/{notes.length}
           </span>
+          {/* the new note's words are read out when the page turns */}
+          <span className="start-sr-only">{notes[current].alt}</span>
           <span className="start-pager-dots" aria-hidden="true">
             {notes.map((n, i) => (
               <i key={n.id} className={i === current ? 'on' : undefined} />
             ))}
           </span>
         </p>
-      </section>
 
-      <div className="start-deck">
-        {endingReached ? (
-          <div className="start-over">
-            <p className="start-over-note">
-              The investigation is closed. Start over to play again.
-            </p>
-            {confirming ? (
-              <div className="start-over-confirm">
-                <p className="start-over-warn" role="alert">
-                  All progress will be erased. This cannot be undone.
-                </p>
+        <div className="start-deck">
+          {endingReached ? (
+            <div className="start-over">
+              <p className="start-over-note">The investigation is closed.</p>
+              {confirming ? (
+                <div className="start-over-confirm">
+                  <p className="start-over-warn" role="alert">
+                    All progress will be erased. This cannot be undone.
+                  </p>
+                  <div className="start-keyrow">
+                    <KeyLamp />
+                    <button
+                      ref={cancelRef}
+                      type="button"
+                      className="key start-key"
+                      onClick={() => {
+                        focusAfter.current = 'cancel'
+                        setConfirming(false)
+                      }}
+                    >
+                      CANCEL
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    className="key key-report start-key start-key--small"
+                    onClick={() => {
+                      focusAfter.current = 'erase'
+                      setConfirming(false)
+                      onStartOver?.()
+                    }}
+                  >
+                    ERASE ALL
+                  </button>
+                </div>
+              ) : (
                 <div className="start-keyrow">
                   <KeyLamp />
                   <button
-                    ref={cancelRef}
+                    ref={startOverRef}
                     type="button"
-                    className="key start-key"
-                    onClick={() => {
-                      focusAfter.current = 'cancel'
-                      setConfirming(false)
-                    }}
+                    className={startKeyClass}
+                    onClick={() => setConfirming(true)}
                   >
-                    CANCEL
+                    START OVER
                   </button>
                 </div>
-                <button
-                  type="button"
-                  className="key key-report start-key start-key--small"
-                  onClick={() => {
-                    focusAfter.current = 'erase'
-                    setConfirming(false)
-                    onStartOver?.()
-                  }}
-                >
-                  ERASE ALL
-                </button>
-              </div>
-            ) : (
-              <div className="start-keyrow">
-                <KeyLamp />
-                <button
-                  ref={startOverRef}
-                  type="button"
-                  className={startKeyClass}
-                  onClick={() => setConfirming(true)}
-                >
-                  START OVER
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="start-keyrow">
-            <KeyLamp amber={loading} />
-            <button
-              ref={goRef}
-              type="button"
-              className={startKeyClass}
-              onClick={onStart}
-              disabled={loading}
-            >
-              {loading ? 'LOADING…' : 'START SHIFT'}
-            </button>
-          </div>
-        )}
+              )}
+            </div>
+          ) : (
+            <div className="start-keyrow">
+              <KeyLamp amber={loading} />
+              <button
+                ref={goRef}
+                type="button"
+                className={startKeyClass}
+                onClick={onStart}
+                disabled={loading}
+              >
+                {loading ? 'LOADING…' : 'START SHIFT'}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </main>
   )
