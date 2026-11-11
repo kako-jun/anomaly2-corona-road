@@ -778,7 +778,7 @@ anomalies:
     location: 'CAM03-E06、差分左上 (103,532) px'
     detail: '左シャッター下端に白い紙袋が一つ現れる'
     memo:
-      ja: '下端に白い紙袋が一つ。'
+      ja: 'シャッター下端に白い紙袋が一つ。'
       en: 'A white paper bag under the shutter.'
     generation_prompt: 'CAM03 の左シャッターの下端に白い紙袋を一つ置き、周囲を保つ。'
     overlay: 'assets/anomaly-overlays/cam03/paper-bag.webp'

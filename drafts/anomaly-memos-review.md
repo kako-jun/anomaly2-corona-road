@@ -50,7 +50,7 @@
 | AR-06-tilted-notice | 壁の額が傾いた。 | The framed notice tilted. |
 | AR-01-shutter-light | 閉じたまま、下から暖色の光。 | Still shut, a glow underneath. |
 | AR-03-ceiling-dots | 天井に水玉模様。 | Polka dots on the ceiling. |
-| AR-03-paper-bag | 下端に白い紙袋が一つ。 | A white paper bag under the shutter. |
+| AR-03-paper-bag | シャッター下端に白い紙袋が一つ。 | A white paper bag under the shutter. |
 | AR-07-wall-grid | 白い壁に格子模様。 | A grid on the white wall. |
 | AR-05-green-lamp-rim | 丸灯の縁が緑に。 | The round lamp's rim turned green. |
 | AR-05-curtain-mend | カーテンの裾に繕い跡。 | A mend at the curtain's hem. |
