@@ -43,8 +43,8 @@ def base(**over):
     return s
 
 
-def open_note(browser, save):
-    page = browser.new_page(viewport={"width": 390, "height": 844})
+def open_note(browser, save, locale=None):
+    page = browser.new_page(viewport={"width": 390, "height": 844}, locale=locale)
     page.add_init_script(seed(save))
     page.goto(URL, wait_until="domcontentloaded")
     page.click(".start-deck button.start-key")
@@ -241,9 +241,10 @@ async () => {
   const notes = document.querySelector('.note-notes'), syn = document.querySelector('.note-syn'), sc = document.querySelector('.note-scrib')
   const synBottom = syn.offsetTop + syn.offsetHeight
   const gapAbove = sc ? sc.offsetTop - synBottom : 0
-  // A scribble is a separate jotting: a little below the synopsis (14-24px; the exact gap is tuned to the rules, see RULEFIT).
-  const minGap = 14
-  if (sc && (gapAbove < minGap || gapAbove > 24)) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want ${minGap}-24px)`)
+  // A scribble is a separate jotting: exactly one rule pitch below the synopsis (--note-rule, 22px; +-1 for rounding), so its
+  // lines stay in phase with the rules (RULEFIT).
+  const pitch = parseFloat(getComputedStyle(notes).getPropertyValue('--note-rule'))
+  if (sc && Math.abs(gapAbove - pitch) > 1) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want the rule pitch, ${pitch}px)`)
   const lastSyn = syn.querySelector('p:last-child').getBoundingClientRect()
   const clear = scribBox() ? scribBox().top - lastSyn.bottom : 99
   if (clear < 8) res.push(`the tilted scribble is only ${clear.toFixed(1)}px below the last synopsis line (need 8)`)
@@ -282,23 +283,30 @@ FOCUS = """
 """
 
 RULEFIT = """
-([lo, hi, pitch, first]) => {
-  // Every synopsis / scribble line sits on the ruled sheet (the rules are CSS, the lines are text). For both ends of each
-  // line (a scribble line is turned, so its ends differ) the baseline must be within [lo, hi] px above its rule
-  // (negative = below it), measured on the 340px paper (the fit scale divided out). Past that the rule cuts through the
-  // letters ("the ruled lines overlap the memo", kako-jun), or the letters climb into the line above.
+([lo, hi]) => {
+  // Every synopsis / scribble line sits on its own ruled line (the rules are CSS, the lines are text). For both ends of each
+  // line (a scribble line is turned, so its ends differ) the letters' base must be within [lo, hi] px above the rule OF THAT
+  // LINE (line i of the sheet = rule i; a window that also fits another rule would let a line sit on the wrong one),
+  // measured on the 340px paper (the fit scale divided out). The pitch comes from the CSS (--note-rule).
   const res = []
+  // The loop below flips the language class on a page whose text stays in one language: English words in the Japanese
+  // hand do not exist in the game, so that pairing is skipped (main() opens a real ja-JP page for the Japanese lines).
+  const screen = document.querySelector('.note-screen')
+  if (!screen.classList.contains('note-' + screen.lang)) return res
   const scale = document.querySelector('.note-paper').getBoundingClientRect().width / 340
-  const top = document.querySelector('.note-notes').getBoundingClientRect().top
+  const notes = document.querySelector('.note-notes')
+  const pitch = parseFloat(getComputedStyle(notes).getPropertyValue('--note-rule'))
+  const top = notes.getBoundingClientRect().top
   for (const p of document.querySelectorAll('.note-syn p, .note-scrib p')) {
     const mk = () => { const e = document.createElement('span'); e.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline'; return e }
     const a = mk(), b = mk()
     p.insertBefore(a, p.firstChild); p.appendChild(b)
     const ends = [a, b].map(e => (e.getBoundingClientRect().bottom - top) / scale)
     a.remove(); b.remove()
+    // the line's box starts at k * pitch (offsetTop ignores the turn), so its rule is the one that ends the box: (k + 1) * pitch
+    const rule = (Math.round(p.offsetTop / pitch) + 1) * pitch
     ends.forEach((y, i) => {
-      const k = Math.ceil((y + lo - first) / pitch)
-      const above = first + k * pitch - y
+      const above = rule - y
       if (above < lo || above > hi) res.push(`"${p.textContent.slice(0, 14)}" ${i ? 'right' : 'left'} end sits ${above.toFixed(1)}px above its rule (allowed ${lo}..${hi})`)
     })
   }
@@ -306,11 +314,14 @@ RULEFIT = """
 }
 """
 
-# The one place for how far a line may drift from its rule (px above the rule; negative = below it).
-RULE_BELOW_MAX = 4
-RULE_ABOVE_MAX = 14
-RULE_PITCH = 22  # the ruled sheet's line spacing (investigationNote.css .note-notes)
-RULE_FIRST = 22  # y of the first rule from the top of .note-notes
+# How far the letters' base may stray from the line's own rule, in px above it (negative = below it). Ground: a rule may
+# run through the letters only within about a quarter of their height. The English hand (Caveat) has an x-height of 14px
+# and the Japanese glyphs stand 13.2px above the base. Below: the rule may cut 3px up into the letters (under a quarter).
+# Above: the rule over the line is then 22 - 13 = 9px above the base, i.e. 4-5px (about a quarter) under the letters'
+# tops. Past either the memo reads as struck through. (A scribble is turned, so its two ends differ; its middle sits
+# about 5px up.)
+RULE_BELOW_MAX = 3
+RULE_ABOVE_MAX = 13
 
 VIEWPORTS = ((360, 640), (390, 844), (768, 1024), (1280, 720))
 FLAGS = {
@@ -352,7 +363,7 @@ def main():
                         page.wait_for_timeout(60)
                         for msg in page.evaluate(LAYOUT):
                             problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
-                        for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX, RULE_PITCH, RULE_FIRST]):
+                        for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
                             problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
                     if (stage, variant) in (("start", "plain"), ("child", "fresh")):
                         for w, h in VIEWPORTS:
@@ -384,6 +395,15 @@ def main():
                         for msg in page.evaluate(STAMPS, lang):
                             problems.append(f"[{lang}] {msg}")
                 page.close()
+        # The Japanese lines, on a real ja-JP page (the loop above only reaches the language the browser is in).
+        for stage, shift in (("elder3", last), ("child", None), ("child", last)):
+            page = open_note(browser, stage_save(stage, shift), locale="ja-JP")
+            for w, h in VIEWPORTS:
+                page.set_viewport_size({"width": w, "height": h})
+                page.wait_for_timeout(60)
+                for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
+                    problems.append(f"[ja-JP {w}x{h}] {stage}/{'fresh' if shift else 'plain'}: {msg}")
+            page.close()
         browser.close()
     if problems:
         print("\nPROBLEMS:", *problems, sep="\n  ")
