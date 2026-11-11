@@ -1,0 +1,363 @@
+/* Investigation note (#297). The paper is drawn at a fixed 340x620 and scaled by InvestigationNote.tsx.
+   Body text: Zen Kurenaido (Japanese) / Caveat (English); scribbles and numbers: Yomogi / Caveat. Both
+   Japanese fonts are subsets (SIL OFL 1.1, texts in public/fonts/OFL-*.txt, see README). */
+@font-face {
+  font-family: 'NoteZen';
+  src: url('/fonts/note-zen-kurenaido.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NoteYomogi';
+  src: url('/fonts/note-yomogi.woff2') format('woff2');
+  font-display: swap;
+}
+
+.note-screen {
+  --ink: #3a2f22;
+  --paper: #f0e7cd;
+  --paper-edge: #d9cba4;
+  --tape: rgba(217, 206, 176, 0.78);
+  --blue: #27427a;
+  --red: #a93326;
+  --stamp: #8c2b20;
+  --rule: rgba(110, 92, 60, 0.28);
+  box-sizing: border-box;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #0a0a0a;
+  color: var(--ink);
+}
+.note-screen *,
+.note-screen *::before,
+.note-screen *::after {
+  box-sizing: border-box;
+}
+.note-fit {
+  position: relative;
+  flex: none;
+}
+.note-paper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 340px;
+  height: 620px;
+  transform-origin: 0 0;
+  background: var(--paper);
+  box-shadow:
+    0 1px 3px #000a,
+    inset 0 0 0 1px var(--paper-edge);
+  padding: 18px 16px 14px;
+  display: flex;
+  flex-direction: column;
+}
+.note-paper::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -7px;
+  width: 74px;
+  height: 15px;
+  margin-left: -37px;
+  background: var(--tape);
+  box-shadow: 0 1px 1px #0003;
+  transform: rotate(var(--tilt-tape));
+}
+.note-ja {
+  font-family:
+    'NoteZen', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
+}
+.note-en {
+  font-family: 'Caveat', cursive;
+}
+.note-ja .note-hw {
+  font-family: 'NoteYomogi', 'NoteZen', sans-serif;
+}
+.note-en .note-hw {
+  font-family: 'Caveat', cursive;
+}
+
+.note-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.note-hdr h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 30px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+.note-en .note-hdr h1 {
+  font-size: 32px;
+  letter-spacing: 0.04em;
+}
+.note-night {
+  transform: rotate(var(--tilt-night));
+  transform-origin: 100% 100%;
+  font-size: 15px;
+  line-height: 20px;
+}
+.note-en .note-night {
+  font-size: 21px;
+}
+
+.note-stamps {
+  margin: 6px 0 4px;
+  padding-top: 4px; /* the tilted big stamp rises into the title otherwise */
+  min-height: 28px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.note-stamp {
+  position: relative;
+  display: inline-block;
+  color: var(--stamp);
+  padding: 3px 10px; /* the red frame is four hand-ruled strokes (HandFrame), 2px thick: it replaces the old border */
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.14em;
+  /* a stamp pressed by hand: slightly off the line, not a perfect rectangle (uneven border and corners) */
+  transform: translate(0.6px, -0.5px) rotate(var(--tilt-stamp));
+  opacity: 0.88;
+  mix-blend-mode: multiply;
+  white-space: nowrap;
+}
+.note-en .note-stamp {
+  font-size: 19px;
+  letter-spacing: 0.06em;
+}
+.note-stamp.note-big {
+  font-size: 26px;
+  line-height: 30px;
+  padding: 5px 15px;
+  transform: translate(-0.9px, 1.1px) rotate(var(--tilt-stamp-big));
+}
+.note-en .note-stamp.note-big {
+  font-size: 22px;
+  letter-spacing: 0.02em;
+}
+
+.note-board {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+.note-slot {
+  position: relative;
+  width: 68px;
+  text-align: center;
+}
+.note-slot img {
+  display: block;
+  width: 68px;
+  height: 68px;
+}
+.note-slot-l {
+  display: block;
+  transform-origin: 50% 50%;
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 14px;
+}
+.note-en .note-slot-l {
+  font-size: 16px;
+}
+.note-slot-new {
+  position: absolute;
+  right: 0;
+  top: -15px;
+  font-size: 12px;
+  line-height: 12px;
+  color: var(--red);
+  background: var(--paper);
+  padding: 0 2px;
+  transform: rotate(var(--tilt-tag));
+}
+.note-en .note-slot-new {
+  font-size: 16px;
+}
+
+.note-notes {
+  /* The synopsis and the scribbles share one ruled sheet: every line, printed or scribbled, sits on the rules. */
+  position: relative;
+  margin-top: 6px;
+  min-height: 196px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 21px,
+    var(--rule) 21px,
+    var(--rule) 22px
+  );
+  background-position: 0 1px;
+}
+.note-before .note-stamps {
+  padding-top: 0; /* only the small stamp: it does not need the room the big one does */
+}
+.note-tagged .note-board {
+  /* room above the frames for the red "found" tag: 3px or more from the frame below and the stamp above */
+  margin-top: 16px;
+}
+.note-first .note-notes {
+  padding-bottom: 4px; /* the lowest scribble line stays 10px or more clear of the number box */
+  /* seven synopsis lines + three scribble lines, and the corridor sketch in the bottom corner clear of them */
+  min-height: 230px;
+}
+.note-after .note-notes {
+  /* The after-night stamp row is taller (the big stamp); the synopsis there is 6 lines at most. */
+  min-height: 194px;
+}
+.note-syn p,
+.note-scrib p {
+  margin: 0;
+  white-space: nowrap; /* every data line is one handwritten line: the browser never wraps it */
+  line-height: 22px;
+  font-size: 15px;
+}
+.note-en .note-syn p {
+  font-size: 20px;
+}
+.note-scrib {
+  /* Continues right under the last synopsis line, tilted like a note jotted in the margin. */
+  width: fit-content;
+  margin: 16px 0 0 4px; /* a gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun) */
+  color: var(--blue);
+  transform: rotate(var(--tilt-scrib));
+  transform-origin: 50% 50%; /* about its own middle: the left end dips and the right end lifts by the same few px, so no line runs into its neighbour */
+}
+.note-first .note-scrib {
+  /* the very first night is the fullest page (seven lines + three scribble lines + the sketch): 12px, never under 10 */
+  margin-top: 12px;
+}
+.note-en .note-scrib p {
+  font-size: 20px;
+}
+.note-doodle {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
+  display: block;
+  width: 100px;
+  height: 67px;
+}
+
+.note-form {
+  position: relative;
+  margin-top: 6px;
+  padding: 7.5px 11.5px; /* 6/10 + the 1.5px hand-ruled frame (HandFrame) that replaces the old border */
+  background: rgba(255, 255, 255, 0.18);
+}
+.note-fcols {
+  display: flex;
+  gap: 14px;
+}
+.note-fshift {
+  margin-top: 3px;
+  border-top: 1.5px dashed #8a7d5e;
+}
+.note-fshift .note-fr b {
+  font-size: 19px;
+}
+.note-fcol {
+  flex: 1.1;
+}
+.note-fcol + .note-fcol {
+  flex: 1;
+  border-left: 1.5px dashed #8a7d5e;
+  padding-left: 12px;
+}
+.note-fh {
+  font-size: 13px;
+  line-height: 16px;
+  border-bottom: 1.5px solid #6b5f45;
+  margin-bottom: 3px;
+  letter-spacing: 0.1em;
+}
+.note-en .note-fh {
+  font-size: 18px;
+  line-height: 18px;
+}
+.note-fr {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  height: 24px; /* a big number never pushes the next row down */
+  line-height: 24px;
+  font-size: 13px;
+}
+.note-en .note-fr {
+  font-size: 18px;
+}
+.note-fl {
+  flex: 1;
+  white-space: nowrap;
+}
+.note-fr b {
+  font-weight: 400;
+  font-size: 21px;
+  color: var(--blue);
+  min-width: 30px;
+  text-align: right;
+  line-height: 1;
+}
+.note-en .note-fr b {
+  font-size: 26px;
+}
+.note-fcol + .note-fcol .note-fr b {
+  font-size: 19px;
+}
+.note-fr small {
+  font-size: 12px;
+  width: 14px;
+}
+.note-blank {
+  display: inline-block;
+  width: 26px;
+  height: 16px;
+  border-bottom: 1.5px solid #8a7d5e;
+}
+
+.note-btn {
+  margin-top: auto;
+  height: 44px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0b0b0a;
+  border-radius: 5px;
+  background: #e3d8b8;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 16px;
+  box-shadow: 0 2px 0 #7a6f52;
+  cursor: pointer;
+}
+.note-en .note-btn {
+  font-size: 22px;
+}
+.note-btn:focus-visible {
+  outline: 2px solid #ffd27a;
+  outline-offset: 3px;
+}
+
+/* A hand-ruled outline (HandFrame): drawn over the box it sits in, never closed into a tidy rectangle. */
+.note-hand-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.note-form > .note-hand-frame {
+  color: #6b5f45;
+}

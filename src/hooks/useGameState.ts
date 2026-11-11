@@ -14,6 +14,7 @@ import {
   pacingFor,
 } from '../utils/endingJudge'
 import { load } from '../utils/saveData'
+import { STAGE_FLAGS } from '../data/investigationNotes'
 import {
   REIWA_UNLOCK_FLAG,
   createAnomaly,
@@ -24,6 +25,7 @@ import {
   raiseFlagsAtStart,
   recordFound,
   recordShiftEnd,
+  shiftDurationMs,
   recordEndingReached,
 } from '../utils/shiftProgress'
 import {
@@ -50,6 +52,14 @@ const SPAWN_RETRY_MS = 1000
 export interface Ending {
   closing: 'dawn' | 'withdraw' | 'ending'
   outcome: 'win' | 'lose'
+}
+
+/** Remember the story-stage flags among `names` (investigation note, #297). */
+const noteStageFlags = (into: string[], names: string[]) => {
+  for (const n of names) {
+    if ((STAGE_FLAGS as readonly string[]).includes(n) && !into.includes(n))
+      into.push(n)
+  }
 }
 
 export const useGameState = () => {
@@ -91,6 +101,9 @@ export const useGameState = () => {
   // Ids that appeared after the child was found in this shift, and how many of them were reported.
   const afterChildIdsRef = useRef<Set<string>>(new Set())
   const afterChildReportedRef = useRef(0)
+  // For the investigation note (#297): distinct finds before this shift, and the story-stage flags raised in it.
+  const startUniqueRef = useRef(0)
+  const raisedRef = useRef<string[]>([])
 
   useEffect(() => {
     statsRef.current = stats
@@ -124,6 +137,9 @@ export const useGameState = () => {
     endingRef.current = null
     // Flags that became true between shifts (loop-based ones) cut in once the shift is running.
     const raised = raiseFlagsAtStart()
+    raisedRef.current = []
+    noteStageFlags(raisedRef.current, raised)
+    startUniqueRef.current = load().foundIds.length
     // The flag is saved, so a shift that starts after the child was found is a "child found" shift from the start.
     childFoundRef.current = isChildFound(load().flags)
     flagSeqRef.current += 1
@@ -174,7 +190,14 @@ export const useGameState = () => {
     (closing: Ending['closing'], outcome: Ending['outcome']) => {
       if (endedRef.current) return
       endedRef.current = true
-      recordShiftEnd()
+      recordShiftEnd({
+        found: statsRef.current.correctReports,
+        fresh: Math.max(0, load().foundIds.length - startUniqueRef.current),
+        misreports: statsRef.current.misreports,
+        durationMs: shiftDurationMs(closing, statsRef.current.currentTime),
+        closing,
+        raised: [...raisedRef.current],
+      })
       if (closing === 'ending') recordEndingReached()
       const e = { closing, outcome }
       endingRef.current = e
@@ -223,6 +246,7 @@ export const useGameState = () => {
           afterChildReportedRef.current += 1
         }
         const raised = recordFound(anomalyOnCamera.id)
+        noteStageFlags(raisedRef.current, raised)
         if (raised.includes(CHILD_FLAG)) childFoundRef.current = true
         if (raised.length > 0) {
           flagSeqRef.current += 1

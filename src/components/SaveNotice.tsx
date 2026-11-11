@@ -16,7 +16,7 @@ export const SaveNotice = () => {
   if (canPersist()) return null
   return (
     <div className="save-notice" role="status">
-      進行を保存できません
+      Progress cannot be saved
     </div>
   )
 }

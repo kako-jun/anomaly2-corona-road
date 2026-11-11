@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import '../styles/start.css'
+import { CARD } from '../data/titleCard'
+import type { Language } from '../utils/saveData'
 import { misreportLampCount, misreportLimitText } from '../utils/startScreen'
 
 interface StartScreenProps {
@@ -9,6 +11,9 @@ interface StartScreenProps {
   endingReached?: boolean
   /** Wipe the progress (called after the confirmation). */
   onStartOver?: () => void
+  /** The language of the card's sentences, and the switch that changes it (#292). */
+  language?: Language
+  onLanguage?: (l: Language) => void
 }
 
 export const StartScreen = ({
@@ -16,10 +21,12 @@ export const StartScreen = ({
   loading = false,
   endingReached = false,
   onStartOver,
+  language = 'ja',
+  onLanguage,
 }: StartScreenProps) => {
   const [confirming, setConfirming] = useState(false)
   // Keyboard focus follows the confirmation: CANCEL (the safe side) when it opens, START OVER when
-  // it is cancelled, and 勤務開始 once the erase has taken effect.
+  // it is cancelled, and START SHIFT once the erase has taken effect.
   const cancelRef = useRef<HTMLButtonElement>(null)
   const startOverRef = useRef<HTMLButtonElement>(null)
   const goRef = useRef<HTMLButtonElement>(null)
@@ -54,29 +61,42 @@ export const StartScreen = ({
     return () => document.body.classList.remove('start-open')
   }, [])
 
+  const card = CARD[language]
   const lamps = Array.from({ length: misreportLampCount() }, (_, i) => i)
 
   return (
     <main className="start-screen">
+      <div className="start-lang" role="group" aria-label="Language">
+        {(['ja', 'en'] as const).map(l => (
+          <button
+            key={l}
+            type="button"
+            lang={l}
+            className="start-lang-key"
+            aria-pressed={language === l}
+            onClick={() => onLanguage?.(l)}
+          >
+            {l.toUpperCase()}
+          </button>
+        ))}
+      </div>
       <div className="start-logo">
         <img src="/images/logo.webp" alt="" />
       </div>
       <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
 
       <section className="start-panel">
-        <div className="start-plate">取扱い・監視カメラ 8台</div>
+        <div className="start-plate">{card.plate}</div>
 
         <div className="start-row">
-          <div className="start-lab">目的</div>
-          <div className="start-desc">
-            地下街の監視カメラ8台を見て、おかしなところを見つけたら報告する。
-          </div>
+          <div className="start-lab">{card.purposeLabel}</div>
+          <div className="start-desc">{card.purpose}</div>
         </div>
 
         <div className="start-row">
-          <div className="start-lab">切替</div>
+          <div className="start-lab">{card.switchLabel}</div>
           <div className="start-desc">
-            番号ボタン / 画面を左右にスワイプ
+            {card.switchText}
             <div className="start-keys" aria-hidden="true">
               <span className="start-key start-key--tri" />
               <span className="start-key start-key--tri start-key--right" />
@@ -86,36 +106,35 @@ export const StartScreen = ({
               <span className="start-key">…</span>
               <span className="start-key">8</span>
             </div>
-            <span className="start-sr-only">
-              キーボードは左右の矢印キー、A と D、数字の1から8
-            </span>
+            <span className="start-sr-only">{card.switchKeys}</span>
           </div>
         </div>
 
         <div className="start-row">
-          <div className="start-lab">調整</div>
+          <div className="start-lab">{card.adjustLabel}</div>
           <div className="start-desc">
-            <span className="start-knob" aria-hidden="true" />{' '}
-            明るさ・コントラストは左右にドラッグ(矢印キーでも)
+            <span className="start-knob" aria-hidden="true" /> {card.adjust}
           </div>
         </div>
 
         <div className="start-row">
-          <div className="start-lab">報告</div>
+          <div className="start-lab">{card.reportLabel}</div>
           <div className="start-desc">
-            <span className="start-rep">REPORT</span> を押してカテゴリを選ぶ
+            {card.reportBefore}
+            <span className="start-rep">REPORT</span>
+            {card.reportAfter}
           </div>
         </div>
 
         <div className="start-row">
-          <div className="start-lab">お手つき</div>
+          <div className="start-lab">{card.mistakeLabel}</div>
           <div className="start-desc">
             <span className="start-lamps" aria-hidden="true">
               {lamps.map(i => (
                 <i key={i} className="start-lamp" />
               ))}
             </span>
-            <b>{misreportLimitText()}</b>
+            <b>{misreportLimitText(undefined, language)}</b>
           </div>
         </div>
       </section>
@@ -175,7 +194,7 @@ export const StartScreen = ({
           disabled={loading}
         >
           <i aria-hidden="true" />
-          {loading ? '準備中…' : '勤務開始'}
+          {loading ? 'LOADING…' : 'START SHIFT'}
         </button>
       )}
     </main>

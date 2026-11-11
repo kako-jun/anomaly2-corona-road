@@ -14,36 +14,42 @@ const setup = () => {
 }
 
 describe('StartScreen start button', () => {
-  it('is a type="button" with the accessible name 勤務開始', () => {
+  it('is a type="button" with the accessible name START SHIFT', () => {
     setup()
-    const btn = screen.getByRole('button', { name: '勤務開始' })
+    const btn = screen.getByRole('button', { name: 'START SHIFT' })
     expect(btn).toHaveAttribute('type', 'button')
   })
-  it('is the only button', () => {
+  it('has the start key as its only button besides the language keys', () => {
     setup()
-    expect(screen.getAllByRole('button')).toHaveLength(1)
+    expect(
+      screen
+        .getAllByRole('button')
+        .filter(b => !b.classList.contains('start-lang-key'))
+    ).toHaveLength(1)
   })
   it('calls onStart once per click', async () => {
     const { onStart } = setup()
-    await userEvent.click(screen.getByRole('button', { name: '勤務開始' }))
+    await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
     expect(onStart).toHaveBeenCalledTimes(1)
   })
   it('calls onStart for every click (no debounce here; the parent owns the state change)', async () => {
     const { onStart } = setup()
-    const btn = screen.getByRole('button', { name: '勤務開始' })
+    const btn = screen.getByRole('button', { name: 'START SHIFT' })
     await userEvent.dblClick(btn)
     expect(onStart).toHaveBeenCalledTimes(2)
   })
   it('can be started from the keyboard (Enter and Space)', async () => {
     const { onStart } = setup()
-    screen.getByRole('button', { name: '勤務開始' }).focus()
+    screen.getByRole('button', { name: 'START SHIFT' }).focus()
     await userEvent.keyboard('{Enter}')
     await userEvent.keyboard(' ')
     expect(onStart).toHaveBeenCalledTimes(2)
   })
   it('marks its lamp glyph as decorative', () => {
     setup()
-    const icon = screen.getByRole('button').querySelector('i')!
+    const icon = screen
+      .getByRole('button', { name: 'START SHIFT' })
+      .querySelector('i')!
     expect(icon).toHaveAttribute('aria-hidden', 'true')
   })
 })
@@ -195,12 +201,16 @@ describe('StartScreen follows a changed config', () => {
 })
 
 describe('StartScreen after the true ending (#294)', () => {
-  it('offers only START OVER: no 勤務開始, and the closed notice is always shown', () => {
+  it('offers only START OVER: no START SHIFT, and the closed notice is always shown', () => {
     render(
       <StartScreen onStart={vi.fn()} endingReached onStartOver={vi.fn()} />
     )
-    expect(screen.queryByRole('button', { name: '勤務開始' })).toBeNull()
-    expect(screen.getAllByRole('button')).toHaveLength(1)
+    expect(screen.queryByRole('button', { name: 'START SHIFT' })).toBeNull()
+    expect(
+      screen
+        .getAllByRole('button')
+        .filter(b => !b.classList.contains('start-lang-key'))
+    ).toHaveLength(1)
     expect(
       screen.getByRole('button', { name: 'START OVER' })
     ).toBeInTheDocument()
@@ -225,9 +235,11 @@ describe('StartScreen after the true ending (#294)', () => {
     expect(onStartOver).toHaveBeenCalledOnce()
     expect(onStart).not.toHaveBeenCalled()
   })
-  it('keeps the ordinary 勤務開始 key when the ending was not reached', () => {
+  it('keeps the ordinary START SHIFT key when the ending was not reached', () => {
     render(<StartScreen onStart={vi.fn()} />)
-    expect(screen.getByRole('button', { name: '勤務開始' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'START SHIFT' })
+    ).toBeInTheDocument()
     expect(screen.queryByText(/START OVER/)).toBeNull()
   })
   it('moves keyboard focus: CANCEL on confirm, START OVER after cancel or Escape', async () => {
@@ -273,7 +285,7 @@ describe('StartScreen after the true ending (#294)', () => {
     expect(spy.mock.calls.some(c => c[0] === 'keydown')).toBe(true)
     spy.mockRestore()
   })
-  it('moves focus to 勤務開始 after the erase has taken effect', async () => {
+  it('moves focus to START SHIFT after the erase has taken effect', async () => {
     const Host = () => {
       const [ended, setEnded] = useState(true)
       return (
@@ -288,7 +300,48 @@ describe('StartScreen after the true ending (#294)', () => {
     await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
     await userEvent.click(screen.getByRole('button', { name: 'ERASE ALL' }))
     expect(document.activeElement).toBe(
-      screen.getByRole('button', { name: '勤務開始' })
+      screen.getByRole('button', { name: 'START SHIFT' })
     )
+  })
+})
+
+describe('StartScreen language switch (#292)', () => {
+  it('is always shown, with machine (English) labels, and marks the current language', () => {
+    render(<StartScreen onStart={vi.fn()} language="en" />)
+    expect(screen.getByRole('button', { name: 'JA' })).toHaveAttribute(
+      'aria-pressed',
+      'false'
+    )
+    expect(screen.getByRole('button', { name: 'EN' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    )
+  })
+  it('is still there when only START OVER is offered', () => {
+    render(<StartScreen onStart={vi.fn()} endingReached language="ja" />)
+    expect(screen.getByRole('button', { name: 'JA' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'START OVER' })
+    ).toBeInTheDocument()
+  })
+  it('reports the chosen language', async () => {
+    const onLanguage = vi.fn()
+    render(
+      <StartScreen onStart={vi.fn()} language="ja" onLanguage={onLanguage} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'EN' }))
+    expect(onLanguage).toHaveBeenCalledWith('en')
+  })
+  it('shows the card in the chosen language while the key stays English', () => {
+    const { rerender } = render(<StartScreen onStart={vi.fn()} language="ja" />)
+    expect(screen.getByText('目的')).toBeInTheDocument()
+    expect(screen.getByText('3回まで')).toBeInTheDocument()
+    rerender(<StartScreen onStart={vi.fn()} language="en" />)
+    expect(screen.getByText('GOAL')).toBeInTheDocument()
+    expect(screen.getByText('Up to 3')).toBeInTheDocument()
+    expect(screen.queryByText('目的')).toBeNull()
+    expect(
+      screen.getByRole('button', { name: 'START SHIFT' })
+    ).toBeInTheDocument()
   })
 })

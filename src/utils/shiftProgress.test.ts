@@ -108,16 +108,48 @@ describe('recordFound', () => {
   })
 })
 
+const SHIFT = {
+  found: 3,
+  fresh: 1,
+  misreports: 0,
+  durationMs: 480000,
+  closing: 'dawn' as const,
+  raised: [],
+}
+
+describe('shiftDurationMs', () => {
+  it('is the whole shift when time ran out, even if the last tick read a little less', async () => {
+    const { shiftDurationMs } = await fresh()
+    expect(shiftDurationMs('dawn', 479990)).toBe(480000)
+    expect(shiftDurationMs('ending', 479000)).toBe(480000)
+    expect(shiftDurationMs('dawn', 480013)).toBe(480000)
+  })
+  it('keeps the real time of a withdraw, within the shift', async () => {
+    const { shiftDurationMs } = await fresh()
+    expect(shiftDurationMs('withdraw', 221000)).toBe(221000)
+    expect(shiftDurationMs('withdraw', 480500)).toBe(480000)
+    expect(shiftDurationMs('withdraw', -1)).toBe(0)
+  })
+})
+
 describe('recordShiftEnd', () => {
+  it('keeps how the shift went for the investigation note, the later one replacing the earlier', async () => {
+    const { recordShiftEnd, load } = await fresh()
+    recordShiftEnd(SHIFT)
+    expect(load().lastShift).toEqual(SHIFT)
+    const next = { ...SHIFT, found: 5, closing: 'withdraw' as const }
+    recordShiftEnd(next)
+    expect(load().lastShift).toEqual(next)
+  })
   it('adds 1 to loops each time', async () => {
     const { recordShiftEnd, load } = await fresh()
-    recordShiftEnd()
-    recordShiftEnd()
+    recordShiftEnd(SHIFT)
+    recordShiftEnd(SHIFT)
     expect(load().loops).toBe(2)
   })
   it('does not raise flags by itself (they rise at the next start)', async () => {
     const { recordShiftEnd, load } = await fresh()
-    recordShiftEnd()
+    recordShiftEnd(SHIFT)
     expect(load().flags.again).toBeUndefined()
   })
 })
@@ -129,24 +161,24 @@ describe('raiseFlagsAtStart', () => {
   })
   it('raises only the loops-based flag after a completed play', async () => {
     const { recordShiftEnd, raiseFlagsAtStart, load } = await fresh()
-    recordShiftEnd()
+    recordShiftEnd(SHIFT)
     expect(raiseFlagsAtStart()).toEqual(['again'])
     expect(load().flags).toEqual({ again: true })
     expect(load().pendingStories).toEqual(['again'])
   })
   it('raises loops flags at their own boundary on the next start', async () => {
     const { recordShiftEnd, raiseFlagsAtStart, load } = await fresh()
-    recordShiftEnd()
+    recordShiftEnd(SHIFT)
     expect(raiseFlagsAtStart()).toEqual(['again'])
     expect(load().flags.twice).toBeUndefined()
-    recordShiftEnd()
+    recordShiftEnd(SHIFT)
     expect(load().flags.twice).toBeUndefined()
     expect(raiseFlagsAtStart()).toEqual(['twice'])
     expect(load().flags).toEqual({ again: true, twice: true })
   })
   it('does not return the same flag twice', async () => {
     const { recordShiftEnd, raiseFlagsAtStart } = await fresh()
-    recordShiftEnd()
+    recordShiftEnd(SHIFT)
     raiseFlagsAtStart()
     expect(raiseFlagsAtStart()).toEqual([])
   })

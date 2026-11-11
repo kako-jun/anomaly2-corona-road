@@ -8,9 +8,27 @@ export const SAVE_KEY = 'corona-road:save'
 export const BROKEN_KEY = 'corona-road:save:broken'
 export const PROBE_KEY = 'corona-road:save:probe'
 
+export type Language = 'ja' | 'en'
+
 export interface SaveSettings {
-  brightness: number
-  contrast: number
+  brightness?: number
+  contrast?: number
+  /** The language of the investigation note and the title card (#292). Absent: follow the browser. */
+  language?: Language
+}
+
+/** How the last finished shift went (investigation note, #297). Kept in the save so the next start can show it. */
+export interface LastShift {
+  /** Correct reports in that shift (duplicates counted). */
+  found: number
+  /** Distinct anomalies found for the first time in that shift. */
+  fresh: number
+  misreports: number
+  /** Real time the shift lasted, in ms. */
+  durationMs: number
+  closing: 'dawn' | 'withdraw' | 'ending'
+  /** Story flags (elder1..3, child) that rose during that shift. */
+  raised: string[]
 }
 
 export interface SaveData {
@@ -29,6 +47,8 @@ export interface SaveData {
   usedChatter: string[]
   /** Story flags that are raised but whose story conversation has not been played yet (carried to the next start). */
   pendingStories: string[]
+  /** The shift that ended last. Absent until one has ended (and in older saves). */
+  lastShift?: LastShift
   /** The true ending has been reached: this save can no longer start a shift, only start over (#294). */
   endingReached: boolean
   /**
@@ -64,6 +84,31 @@ const isEpoch = (v: unknown): v is number =>
 
 const isStringArray = (v: unknown): v is string[] =>
   Array.isArray(v) && v.every(s => typeof s === 'string')
+
+const CLOSINGS: readonly string[] = ['dawn', 'withdraw', 'ending']
+
+const validLastShift = (v: unknown): LastShift | null => {
+  if (!isRecord(v)) return null
+  const { found, fresh, misreports, durationMs, closing, raised } = v
+  if (
+    !isCount(found) ||
+    !isCount(fresh) ||
+    !isCount(misreports) ||
+    !isCount(durationMs) ||
+    typeof closing !== 'string' ||
+    !CLOSINGS.includes(closing) ||
+    !isStringArray(raised)
+  )
+    return null
+  return {
+    found,
+    fresh,
+    misreports,
+    durationMs,
+    closing: closing as LastShift['closing'],
+    raised: [...new Set(raised)],
+  }
+}
 
 const uniq = (a: readonly string[]): string[] => [...new Set(a)]
 
@@ -133,16 +178,21 @@ export const validateSave = (raw: unknown): SaveData | null => {
     endingReached,
     epoch,
   }
+  // Absent in saves written before the field existed (same version): treated as none. A damaged one is dropped,
+  // not a reason to throw the whole save away (it is only a memo of the last shift).
+  const lastShift = validLastShift(rec.lastShift)
+  if (lastShift) out.lastShift = lastShift
   if (settings !== undefined) {
-    if (
-      !isRecord(settings) ||
-      typeof settings.brightness !== 'number' ||
-      typeof settings.contrast !== 'number'
-    )
+    if (!isRecord(settings)) return null
+    const { brightness, contrast, language } = settings
+    if (brightness !== undefined && typeof brightness !== 'number') return null
+    if (contrast !== undefined && typeof contrast !== 'number') return null
+    if (language !== undefined && language !== 'ja' && language !== 'en')
       return null
     out.settings = {
-      brightness: settings.brightness,
-      contrast: settings.contrast,
+      ...(brightness !== undefined ? { brightness } : {}),
+      ...(contrast !== undefined ? { contrast } : {}),
+      ...(language !== undefined ? { language } : {}),
     }
   }
   return out
@@ -150,13 +200,17 @@ export const validateSave = (raw: unknown): SaveData | null => {
 
 /**
  * Merge two saves of the same player (two tabs). Within one epoch data only grows: counts take the larger value,
- * ids and flags are unions. `b` wins for settings.
+ * ids and flags are unions. Settings merge field by field, `b` winning where both have a field.
  */
 export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
   // A higher epoch (a reset happened) wins whole: the older generation's progress is dropped.
   if (a.epoch !== b.epoch) {
     const [win, lose] = a.epoch > b.epoch ? [a, b] : [b, a]
-    const settings = win.settings ?? lose.settings
+    // Settings are not progress: they merge field by field like within one epoch (the winner's fields win).
+    const settings =
+      win.settings || lose.settings
+        ? { ...lose.settings, ...win.settings }
+        : undefined
     return settings ? { ...win, settings } : win
   }
   const usedLines: Record<string, string[]> = {}
@@ -178,7 +232,15 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
     endingReached: a.endingReached || b.endingReached,
     epoch: a.epoch,
   }
-  const settings = b.settings ?? a.settings
+  // The shift that ended later (more loops) is the last one; on a tie `b` (the fresher read) wins.
+  const lastShift =
+    a.loops > b.loops
+      ? (a.lastShift ?? b.lastShift)
+      : (b.lastShift ?? a.lastShift)
+  if (lastShift) out.lastShift = lastShift
+  // Field by field: `b` wins where both have it, so a setting only one tab has is not lost.
+  const settings =
+    a.settings || b.settings ? { ...a.settings, ...b.settings } : undefined
   if (settings) out.settings = settings
   return out
 }

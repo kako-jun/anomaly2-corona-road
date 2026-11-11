@@ -23,7 +23,7 @@ vi.mock('../utils/saveData', async importOriginal => {
 })
 
 const PROBE_KEY = saveData.PROBE_KEY
-const NOTICE = '進行を保存できません'
+const NOTICE = 'Progress cannot be saved'
 
 beforeEach(() => {
   localStorage.clear()

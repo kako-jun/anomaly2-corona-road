@@ -348,3 +348,45 @@ body.start-open #root {
 .start-over-confirm {
   display: contents;
 }
+
+/* Language switch (#292): two small machine keys, always visible at the top right, English labels. */
+.start-screen {
+  position: relative;
+}
+.start-lang {
+  position: absolute;
+  top: max(8px, 1.2dvh);
+  right: 12px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+}
+.start-lang-key {
+  min-width: 34px;
+  height: 26px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: ui-monospace, Menlo, monospace;
+  letter-spacing: 0.08em;
+  color: #9d977f;
+  background: linear-gradient(#34342f, #151513);
+  border: 0;
+  border-radius: 3px;
+  box-shadow:
+    0 2px 0 #0b0b0a,
+    0 0 0 1px #4a4a42;
+  cursor: pointer;
+}
+.start-lang-key[aria-pressed='true'] {
+  color: #1d1d1b;
+  background: linear-gradient(var(--start-hi), var(--start-lo));
+  box-shadow:
+    0 1px 0 #0b0b0a,
+    0 0 0 1px #0b0b0a;
+  transform: translateY(1px);
+}
+.start-lang-key:focus-visible {
+  outline: 2px solid #ffd27a;
+  outline-offset: 2px;
+}

@@ -27,7 +27,8 @@ localStorage を選ぶ理由:
   "pendingStories": [],
   "endingReached": false,
   "epoch": 0,
-  "settings": { "brightness": 50, "contrast": 50 }
+  "lastShift": { "found": 9, "fresh": 4, "misreports": 1, "durationMs": 480000, "closing": "dawn", "raised": [] },
+  "settings": { "language": "ja" }
 }
 ```
 
@@ -40,7 +41,8 @@ localStorage を選ぶ理由:
 - `pendingStories`: 立ったが、まだ再生していないフラグ会話のフラグ名。フラグが立った事実は `flags` に、会話が未再生であることはここに分けて持つ。そのフラグ会話の最初の1行を表示した時に取り除く。再生前にプレイが終わっても残り、次回の開始時に再生される。ない古いセーブは空として読む（`v` は上げない）。
 - `endingReached`: 特殊エンディング（#86）に到達した印（#294）。true のセーブでは勤務を始められず、タイトルは「START OVER」だけになる。欠落した古いセーブは false として読む（`v` は上げない）。複数タブのマージは、同じ `epoch` のあいだは OR。
 - `epoch`: リセットの世代番号（安全な整数 `Number.isSafeInteger`、欠落した古いセーブは 0 として読む。`v` は上げない）。START OVER のたびに +1 する。マージでは `epoch` の大きい側を丸ごと採用し、小さい側の中身（進行・使用済み・`endingReached`）は捨てる（`settings` は採用側に無ければ小さい側のを残す）。
-- `settings`: つまみの位置など（任意）。
+- `lastShift`: 直近に終わった勤務の記録（任意。捜査メモ #297 の「前回の夜」と結果画面に使う）。`found`＝正しい報告の数（重複あり）、`fresh`＝その勤務で初めて見つけた異変の数（重複なし。0 なら「新しい手がかりなし」）、`misreports`、`durationMs`（現実の経過ミリ秒のまま保存。夜明け・真エンディングは 480000 に丸める。捜査メモの「勤務」欄は表示時にゲーム内時刻へ変換する: 夜明け・真エンディング=「06:00まで」、撤収=`msToGameTime(durationMs)` を使った「01:20で撤収」。`fmtShiftEnd`）、`closing`（`dawn`/`withdraw`/`ending`）、`raised`（その勤務で立った段階フラグ `elder1..3`・`child`）。勤務終了時（`recordShiftEnd`）に書く。欠落した古いセーブは「なし」、壊れていれば捨てるだけでセーブ全体は弾かない。マージでは周回数の大きい側（同じなら `b`）。`v` は上げない。
+- `settings`: 設定（任意）。`language`（`ja`/`en`。#292。欠落ならブラウザの言語から決める）、`brightness`・`contrast`（つまみの位置。未実装）。各項目は単独で欠落してよい。マージは項目ごとに `b` が勝つ。START OVER でも残る。
 
 異変の id は台帳が正本なので、ここでは複製せず、参照するだけにする。
 
@@ -64,7 +66,7 @@ localStorage を選ぶ理由:
 ## 実装状況（#74）
 
 - 保存モジュール `src/utils/saveData.ts`、記録 `src/utils/shiftProgress.ts`（正しい報告で累計・重複なしの数・フラグ、プレイ終了で周回、開始時に周回由来のフラグ）、会話の使用済みは `useSubtitle` が、会話の最初の1行を表示した時に保存（未再生のフラグ会話は `pendingStories`）。
-- 周回: 夜明け・撤収・エンディング（子供発見後の異変を一件も報告せず時間切れ、#86）のどれでも1進める。エンディング（`closing==='ending'`）に到達すると `endingReached` を保存する（#294）。到達の保存は時間切れ判定（`closing==='ending'` で終了）の時点で行うので、closing の会話の途中でタブを閉じても到達は残る。以後このセーブでは `startGame` が何もせず、結果画面の鍵は「BACK TO TITLE」、タイトルは「START OVER」だけを出す（`StartScreen` の `endingReached`）。START OVER は確認（"All progress will be erased"・ERASE ALL / CANCEL。確認に入ると CANCEL に、CANCEL か Escape で START OVER に、ERASE 後は 勤務開始 にキーボードのフォーカスが移る）を1回挟み、`resetProgress()`（`shiftProgress.ts`）が `settings` 以外の全項目（累計・重複なしの id・周回・`child` を含むフラグ・使用済みの会話・未再生のフラグ会話・`endingReached`）を初期値に戻し、`epoch` を +1 する。印のない既存セーブは従来どおり。
+- 周回: 夜明け・撤収・エンディング（子供発見後の異変を一件も報告せず時間切れ、#86）のどれでも1進める。エンディング（`closing==='ending'`）に到達すると `endingReached` を保存する（#294）。到達の保存は時間切れ判定（`closing==='ending'` で終了）の時点で行うので、closing の会話の途中でタブを閉じても到達は残る。以後このセーブでは `startGame` が何もせず、結果画面の鍵は「BACK TO TITLE」、タイトルは「START OVER」だけを出す（`StartScreen` の `endingReached`）。START OVER は確認（"All progress will be erased"・ERASE ALL / CANCEL。確認に入ると CANCEL に、CANCEL か Escape で START OVER に、ERASE 後は START SHIFT にキーボードのフォーカスが移る）を1回挟み、`resetProgress()`（`shiftProgress.ts`）が `settings` 以外の全項目（累計・重複なしの id・周回・`child` を含むフラグ・使用済みの会話・未再生のフラグ会話・`endingReached`）を初期値に戻し、`epoch` を +1 する。印のない既存セーブは従来どおり。
 - 保存できない環境の案内（規則6）は `SaveNotice`（開始・プレイ・結果の各画面に常時）。書き込みだけ失敗する環境（容量超過など）も開始画面で分かるよう、起動時に専用キー `corona-road:save:probe` へ書いて消す `probe()` を1回試す（セーブ本体のキーには触れない）。案内は画面に重ねず、筐体・開始画面の下に通常フローで積む。
 - 未実装: 引き継ぎコード（規則9）、設定（つまみ）の保存。令和の異変の印は台帳の `reiwa: true` から導く（`reiwaFound` の数え方は `dialogue/README.md`）。令和の異変は `elder3` フラグが保存されてからしか出現しない（抽選時に保存から読む）。
 

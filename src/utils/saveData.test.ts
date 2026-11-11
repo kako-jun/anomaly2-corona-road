@@ -121,12 +121,37 @@ describe('validateSave', () => {
     expect(validateSave(s)?.settings).toEqual({ brightness: 40, contrast: 60 })
   })
   it.each([
-    ['missing contrast', { brightness: 40 }],
-    ['missing brightness', { contrast: 40 }],
     ['non-number', { brightness: '40', contrast: 40 }],
+    ['non-number contrast', { contrast: null }],
+    ['an unknown language', { language: 'fr' }],
+    ['a language that is not a string', { language: 1 }],
     ['not an object', 5],
   ])('rejects settings with %s', (_n, settings) => {
     expect(validateSave({ ...save(), settings })).toBeNull()
+  })
+  it('accepts each setting alone (older saves had brightness and contrast together)', () => {
+    expect(
+      validateSave(save({ settings: { language: 'en' } }))?.settings
+    ).toEqual({
+      language: 'en',
+    })
+    expect(
+      validateSave(save({ settings: { brightness: 3 } }))?.settings
+    ).toEqual({
+      brightness: 3,
+    })
+    expect(
+      validateSave(
+        save({ settings: { brightness: 1, contrast: 2, language: 'ja' } })
+      )?.settings
+    ).toEqual({ brightness: 1, contrast: 2, language: 'ja' })
+  })
+  it('merges settings field by field, b winning where both have it', () => {
+    const m = mergeSave(
+      save({ settings: { brightness: 5, language: 'ja' } }),
+      save({ settings: { language: 'en' } })
+    )
+    expect(m.settings).toEqual({ brightness: 5, language: 'en' })
   })
   it('rejects pendingStories that is not an array', () => {
     expect(validateSave({ ...save(), pendingStories: 'x' })).toBeNull()
@@ -160,6 +185,63 @@ describe('validateSave', () => {
     expect(
       validateSave(save({ pendingStories: ['a', 'a'] }))?.pendingStories
     ).toEqual(['a'])
+  })
+})
+
+describe('lastShift (investigation note, #297)', () => {
+  const shift = {
+    found: 4,
+    fresh: 2,
+    misreports: 1,
+    durationMs: 480000,
+    closing: 'dawn' as const,
+    raised: ['elder1'],
+  }
+  it('is absent in an old save and in an empty one', () => {
+    expect(validateSave(save())?.lastShift).toBeUndefined()
+    expect(emptySave().lastShift).toBeUndefined()
+  })
+  it('is read back as saved', () => {
+    expect(validateSave(save({ lastShift: shift }))?.lastShift).toEqual(shift)
+  })
+  it.each([
+    ['a negative count', { ...shift, found: -1 }],
+    ['an unknown closing', { ...shift, closing: 'quit' }],
+    ['raised that is not strings', { ...shift, raised: [1] }],
+    ['not an object', 5],
+  ])('drops a damaged one (%s) without rejecting the save', (_n, bad) => {
+    const out = validateSave({ ...save({ foundTotal: 7 }), lastShift: bad })
+    expect(out?.foundTotal).toBe(7)
+    expect(out?.lastShift).toBeUndefined()
+  })
+  it('merges to the shift that ended later', () => {
+    const early = save({ loops: 1, lastShift: { ...shift, found: 1 } })
+    const late = save({ loops: 2, lastShift: shift })
+    expect(mergeSave(early, late).lastShift).toEqual(shift)
+    expect(mergeSave(late, early).lastShift).toEqual(shift)
+    expect(mergeSave(save(), late).lastShift).toEqual(shift)
+  })
+})
+
+describe('mergeSave across epochs', () => {
+  it('progress follows the higher epoch but settings still merge field by field', () => {
+    const old = save({
+      epoch: 0,
+      foundTotal: 50,
+      settings: { language: 'en', brightness: 4 },
+    })
+    const reset = save({ epoch: 1, foundTotal: 0, settings: { contrast: 9 } })
+    const m = mergeSave(old, reset)
+    expect(m.foundTotal).toBe(0)
+    expect(m.settings).toEqual({ language: 'en', brightness: 4, contrast: 9 })
+    expect(mergeSave(reset, old).settings).toEqual(m.settings)
+  })
+  it('the winner wins a field both have', () => {
+    const m = mergeSave(
+      save({ epoch: 0, settings: { language: 'en' } }),
+      save({ epoch: 2, settings: { language: 'ja' } })
+    )
+    expect(m.settings).toEqual({ language: 'ja' })
   })
 })
 
