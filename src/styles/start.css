@@ -127,9 +127,8 @@ body.start-open #root {
   width: 100%;
   padding: 0 12px max(14px, 2.5dvh) 4px;
   display: grid;
-  /* the key column is 240px (or what is left), at the right end: the START key and the confirmation share it exactly */
-  grid-template-columns: auto minmax(0, 240px);
-  justify-content: space-between;
+  /* the pager, then the key column (the rest, at most 240px wide, at the right end): the START key and the confirmation share it exactly */
+  grid-template-columns: auto 1fr;
   grid-template-areas:
     'note note'
     'pager key';
@@ -144,9 +143,6 @@ body.start-open #root {
 .start-notes {
   grid-area: note;
   justify-self: start;
-  /* the note must not size the columns (they are the pager and the 240px key column); it just fills their width */
-  width: 0;
-  min-width: 100%;
 }
 .start-notes img {
   display: block;
@@ -230,7 +226,7 @@ body.start-open #root {
 .start-deck {
   grid-area: key;
   justify-self: end;
-  width: 100%;
+  width: min(100%, 240px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -239,7 +235,10 @@ body.start-open #root {
 /* the confirmation takes the START key's place (same right edge, same bottom): the note is gone so the signboard stays clear,
    the pager is only hidden so the key column keeps its width and position */
 .start-foot--confirm .start-notes {
-  display: none;
+  /* no height, but it keeps its width, so the key column does not move or change width */
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
 }
 .start-foot--confirm .start-pager {
   visibility: hidden;
@@ -313,6 +312,9 @@ body.start-open #root {
 }
 .start-over-note,
 .start-over-warn {
+  /* the words never widen the foot (it is as wide as the note): they fill the key column and wrap */
+  width: 0;
+  min-width: 100%;
   margin: 0;
   text-align: right;
   font-size: 13px;

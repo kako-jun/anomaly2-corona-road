@@ -12,7 +12,7 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
      nearly all; wide screens cut the top and bottom by the cover crop, which is accepted, so only a floor), and of
      the part that is on screen the note and the START key cover at most 15% (>= 85% clear)
   3. the visible note is wholly inside the viewport and overlaps the START key,
-     on every page (1/3 ... 3/3)
+     on every page (1/3 ... 3/3); on a wide / landscape screen the note's right edge is the START key's (within 2px)
   4. the page turns by click, by keyboard (Enter, arrows), by touch-style drag and by mouse drag, wraps from the last to the first,
      the pager text follows, and the note area (>= 44px) is the tap target
   5. the picture files really have the size the table says, and the language follows the browser's locale (ja-JP / en-US) with no switch on screen
@@ -65,7 +65,8 @@ SWEEP = """([sign]) => {
   const ox = (vw - w) * cs[0], oy = (vh - h) * cs[1]
   const noteImg = [...document.querySelectorAll('.start-stack > img')].find(i => !i.classList.contains('start-off'))
   const rr = e => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }
-  const cover = [noteImg && rr(noteImg), rr(document.querySelector('.start-deck'))].filter(Boolean)
+  const noteVisible = noteImg && getComputedStyle(noteImg).visibility !== 'hidden'
+  const cover = [noteVisible && rr(noteImg), rr(document.querySelector('.start-deck'))].filter(Boolean)
   const inter = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]))
   let minSlack = 1e9, minSign = 1, minClear = 1
   const at = (tx, ty) => {
@@ -119,7 +120,7 @@ CONFIRM = """() => {
   const r = e => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }
   const btn = n => [...document.querySelectorAll('.start-confirm-keys button')].find(b => b.textContent.trim() === n)
   const note = document.querySelector('.start-notes')
-  return {erase: r(btn('ERASE ALL')), cancel: r(btn('CANCEL')), noteShown: getComputedStyle(note).display !== 'none',
+  return {erase: r(btn('ERASE ALL')), cancel: r(btn('CANCEL')), noteShown: getComputedStyle(note).visibility !== 'hidden' || note.getBoundingClientRect().height > 0,
     focus: document.activeElement.textContent.trim()}
 }"""
 
@@ -189,6 +190,8 @@ def main():
                             errs.append(f"page {page + 1}: note outside viewport {[round(v) for v in n]}")
                         if overlap(n, r["key"]):
                             errs.append(f"page {page + 1}: note overlaps the key")
+                        if w >= h and abs(n[2] - r["key"][2]) > 2:
+                            errs.append(f"page {page + 1}: the note's right edge ({n[2]:.0f}) is not the START key's ({r['key'][2]:.0f})")
                         if overlap(r["pager"], r["key"]):
                             errs.append(f"page {page + 1}: pager overlaps the key")
                         if r["scrollX"] or r["scrollY"]:

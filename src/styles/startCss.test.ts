@@ -110,6 +110,23 @@ describe('start.css: the notes', () => {
       'right'
     )
   })
+  it('builds the foot as pager + key column and lets nothing but the note size it, so the note and the START key share a right edge', () => {
+    expect(decl('.start-foot', 'grid-template-columns')).toBe('auto 1fr')
+    // the key column is at most 240px, and the deck (START key / confirmation) fills it from the right
+    expect(decl('.start-deck', 'width')).toBe('min(100%, 240px)')
+    expect(decl('.start-deck', 'justify-self')).toBe('end')
+    // the words of the closing note and the warning must not widen the foot
+    expect(decl('.start-over-note,\n.start-over-warn', 'width')).toBe('0')
+    expect(decl('.start-over-note,\n.start-over-warn', 'min-width')).toBe(
+      '100%'
+    )
+    // in the confirmation the note keeps its width (so nothing moves) but has no height
+    expect(decl('.start-foot--confirm .start-notes', 'height')).toBe('0')
+    expect(decl('.start-foot--confirm .start-notes', 'visibility')).toBe(
+      'hidden'
+    )
+    expect(decl('.start-notes', 'width')).toBeUndefined()
+  })
   it('has no language switch (the language comes from the browser only)', () => {
     expect(code).not.toMatch(/start-lang/)
   })
