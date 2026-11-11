@@ -196,9 +196,6 @@ export const CameraView = ({
           </div>
         </div>
       </div>
-      <div className="maker" aria-hidden="true">
-        <span className="model">VIDEO MONITOR CR-42</span>
-      </div>
     </section>
   )
 }

@@ -20,6 +20,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
     "prepare": "husky",
     "check:bezel": "uv run --script scripts/bezel-frame.py check",
+    "check:foot": "uv run --script scripts/check-foot.py",
     "check:note-fonts": "uv run --script scripts/build-note-fonts.py check",
     "check:note-wrap": "uv run --script scripts/check-note-wrap.py",
     "build:prompts": "node scripts/build-prompt-queue.mjs",
