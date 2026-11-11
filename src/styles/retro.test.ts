@@ -185,9 +185,9 @@ describe('retro.css', () => {
     }
   })
 
-  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (380/307) + each listed term (#300, #309, #314)', () => {
+  it('pins the knob-to-label gap at 9px and keeps the portrait .tube constants = base (380/307) + each listed term (#300, #309, #313, #314)', () => {
     // 9px is the value kako-jun chose in #309 (18px in #300 was too wide, 3px too tight);
-    // it is also >= 0.15 of the 60px knob circle. Changing it is a design decision, so pin it.
+    // it is also >= 0.15 of the 48px portrait knob circle. Changing it is a design decision, so pin it.
     // The .tube width constants (100dvh - Npx) are the measured height of everything except
     // the picture and include this gap, so they must move by exactly the same amount.
     const PINNED_GAP = 9
@@ -199,6 +199,7 @@ describe('retro.css', () => {
       ...px('.vfd', 'min-height'),
       ...px('.lamps', 'min-height'),
     ]
+    const KNOB = { was: 60, now: 48 } // #313: portrait knob circle; the height goes to the picture
     const gaps: number[] = []
     const tubeConsts: { min: boolean; n: number }[] = []
     root_.walkAtRules('media', at => {
@@ -218,12 +219,14 @@ describe('retro.css', () => {
       })
     })
     expect(gaps).toEqual([PINNED_GAP])
+    expect(Math.min(...px('.knob', 'height'))).toBe(KNOB.now)
     expect(new Set(hudWindowHeights)).toEqual(new Set([HUD_WINDOW.now]))
     // One named term per thing that changes the non-picture height (px; + = taller, - = shorter).
-    // Later PRs add their own line here (knob shrink #318, plate-h #311) and the same row in DESIGN.md §7.
+    // Later PRs add their own line here (plate-h #311) and the same row in DESIGN.md §7.
     const TERMS = {
       knobGap: gaps[0], // knob circle to its label
       hudWindows: HUD_WINDOW.now - HUD_WINDOW.was, // TIME / REPORTS / STRIKES 44 -> 36px
+      knobShrink: KNOB.now - KNOB.was, // portrait knob circle 60 -> 48px (#313)
     }
     const TERMS_SUM = Object.values(TERMS).reduce((a, b) => a + b, 0)
     expect(Math.min(...gaps)).toBeGreaterThanOrEqual(

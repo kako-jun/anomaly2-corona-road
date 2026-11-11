@@ -1863,15 +1863,21 @@
     margin-top: auto;
   }
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 381px) * 1246 / 1679)));
+    width: min(100%, max(160px, calc((100dvh - 369px) * 1246 / 1679)));
     align-self: center;
   }
   .panel {
     gap: 4px;
   }
-  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300, set to 9px by kako-jun in #309); the tube-width constants (389 / 316, times the frame picture ratio 1246/1679) = base 380 / 307 + this gap, so when the gap changes move both constants by the same amount */
+  /* knob circle (portrait 48px, #313; the .mark is scaled with it) and its gap to the label (9px, #300/#309): both are terms of the tube-width constants above, see DESIGN.md §7 and retro.test.ts */
   .knob {
+    width: 48px;
+    height: 48px;
     margin-bottom: 9px;
+  }
+  .knob .mark {
+    top: 4px;
+    height: 17.5px;
   }
   .knob-wrap {
     flex: 1;
@@ -1887,7 +1893,7 @@
 
 @media (min-width: 360px) and (max-width: 899px) {
   .tube {
-    width: min(100%, max(160px, calc((100dvh - 308px) * 1246 / 1679)));
+    width: min(100%, max(160px, calc((100dvh - 296px) * 1246 / 1679)));
   }
   .cam-grid {
     grid-template-columns: repeat(8, minmax(44px, 1fr));

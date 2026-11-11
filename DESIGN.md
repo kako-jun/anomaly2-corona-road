@@ -158,6 +158,7 @@ The in-game screen is a single cabinet (`.cabinet` in `src/styles/retro.css`): t
 
 - Knob circle to its BRIGHTNESS / CONTRAST label gap: +9px (kako-jun's choice in #309; 18px in #300 was too wide, 3px too tight; pinned at 9px).
 - HUD windows (TIME / REPORTS / STRIKES) 44 → 36px: -8px (kako-jun's choice in #314).
+- Knob circle on phones 60 → 48px: -12px (kako-jun's choice in #313; the knob stays above the 44px touch minimum and the index mark is scaled with it).
 
 On a 390 x 844 phone the picture (`.bezel`) is 2.9px shorter than before the #308 frame: it is width-limited, so it now follows the frame image's 1246/1679 aspect ratio exactly (it used to stretch about 0.6% taller). That comes from #308, not from the HUD change in #314.
 
