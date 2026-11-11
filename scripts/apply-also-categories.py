@@ -1,6 +1,7 @@
 """#347: scripts/also-categories-input.tsv の行を台帳 prompts/anomalies.yaml の also_categories に反映する。
 
 再実行できる（既にある要素は足さない）。入力の行頭 # の行は無効（適用しない）。
+入力 TSV を消す運用にするなら、先に src/utils/anomalyLedger.test.ts の「also-categories-input.tsv」検査を外す（TSV の存在を必須にしている）。
 台帳は行単位で編集し、other fields は触らない。前提の主カテゴリが台帳と違う行は適用せず報告する。
 
   uv run python3 scripts/apply-also-categories.py [--check]   (--check: 書き込まず差分件数だけ表示)

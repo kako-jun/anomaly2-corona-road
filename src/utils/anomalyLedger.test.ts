@@ -1005,15 +1005,18 @@ describe('the real ledger keeps also_categories well-formed and applied (#347)',
   })
   it('every active row of scripts/also-categories-input.tsv is in the ledger (apply-also-categories.py)', () => {
     const input = resolve(__dirname, '../../scripts/also-categories-input.tsv')
-    if (!existsSync(input)) return
+    expect(existsSync(input)).toBe(true)
     const rows = readFileSync(input, 'utf8')
       .split('\n')
       .filter(l => l.trim() && !l.startsWith('#'))
     expect(rows.length).toBeGreaterThan(0)
     for (const line of rows) {
-      const [id, , , also] = line.split('\t')
+      const [id, , prim, also] = line.split('\t')
       const r = byId.get(id)
       expect(r, `${id} is not in the ledger`).toBeDefined()
+      expect(r?.category, `${id} primary differs from the input`).toBe(
+        parseCategory(prim)
+      )
       for (const a of also.split(',')) {
         const cat = parseCategory(a)
         expect(r?.alsoCategories, `${id} lacks ${a}`).toContain(cat)
