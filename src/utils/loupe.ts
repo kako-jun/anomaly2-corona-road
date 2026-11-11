@@ -55,3 +55,27 @@ export const followStep = (
   const next = current + (target - current) * (1 - Math.exp(-dtMs / tauMs))
   return Math.abs(target - next) < 0.05 ? target : next
 }
+
+/**
+ * Camera change by a short tap on the monitor's left / right (#354). The zone is the whole frame beside the picture (the
+ * bezel) plus the inner edge of the picture, EDGE_TAP_RATIO of its width on each side. Tune the width here.
+ */
+export const EDGE_TAP = {
+  /** Width of the zone inside the picture, as a fraction of the picture's width, on each of the left and right. */
+  EDGE_TAP_RATIO: 0.18,
+} as const
+
+/**
+ * Which way a short tap at `x` goes: 'prev' in the left zone, 'next' in the right zone, null in the middle. `glassLeft`
+ * / `glassWidth` are the picture's box; a tap outside it (on the bezel) counts by its side, wherever above or below.
+ */
+export const edgeTapDirection = (
+  x: number,
+  glassLeft: number,
+  glassWidth: number,
+  ratio: number = EDGE_TAP.EDGE_TAP_RATIO
+): 'prev' | 'next' | null => {
+  if (x < glassLeft + glassWidth * ratio) return 'prev'
+  if (x > glassLeft + glassWidth * (1 - ratio)) return 'next'
+  return null
+}
