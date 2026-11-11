@@ -131,25 +131,39 @@
   z-index: 3;
 }
 
+/* OSD sizes and positions are ratios of the picture width (.glass is a size container, cqw), like the subtitles (#295, #316).
+   Each cqw line is preceded by a fallback for browsers without container query units. The cqw values are the 1280x720
+   desktop look (picture 441px wide: 16px = 3.6cqw). max() is a floor so the text stays readable on a tiny picture
+   (360x640 phone: picture 203px wide). Corner distances keep the text clear of the rounded corners of the frame opening. */
 .osd-cam {
-  left: 14px;
-  bottom: 14px;
+  left: 8%;
+  bottom: 7%;
+  left: 8cqw;
+  bottom: 9cqw;
   font-size: 1rem;
+  font-size: max(10px, 3.6cqw);
 }
 
 .osd-rec {
-  right: 14px;
-  top: 12px;
+  right: 7%;
+  top: 6%;
+  right: 7cqw;
+  top: 7.7cqw;
   color: #ff8d84;
   text-shadow: 0 0 6px #f44;
   display: flex;
   align-items: center;
   gap: 6px;
+  gap: 1.4cqw;
+  font-size: 0.8rem;
+  font-size: max(9px, 2.9cqw);
 }
 
 .rec-dot {
   width: 8px;
   height: 8px;
+  width: max(5px, 1.8cqw);
+  height: max(5px, 1.8cqw);
   border-radius: 50%;
   background: #ff3b30;
   box-shadow: 0 0 6px #f33;
@@ -191,7 +205,7 @@
   box-shadow:
     inset 0 2px 5px #000,
     0 1px 0 #fff8;
-  min-height: 44px;
+  min-height: 36px;
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -206,7 +220,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  min-height: 44px;
+  min-height: 36px;
   padding: 0 6px;
   background: #14110c;
   border-radius: 8px;
@@ -665,7 +679,7 @@
 .vfd,
 .lamps {
   position: relative;
-  min-height: 44px;
+  min-height: 36px;
 }
 
 .knobs {
@@ -1231,9 +1245,16 @@
   left: 0;
   right: 0;
   top: 12%;
+  top: 15.4cqw;
+  padding: 0 5cqw;
   text-align: center;
   font-size: 0.85rem;
+  font-size: max(10px, 4.5cqw);
   letter-spacing: 0.18em;
+  /* a long message wraps only between words, two balanced lines (#316) */
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: keep-all;
   color: #7dff9e;
   text-shadow:
     0 0 6px #2f6,
@@ -1241,6 +1262,11 @@
   opacity: 0;
   transition: opacity 0.7s ease;
   pointer-events: none;
+}
+
+.osd-result .w {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .osd-result.show {
@@ -1253,12 +1279,6 @@
   text-shadow:
     0 0 6px #f33,
     0 0 2px #fcc;
-}
-
-@media (min-width: 900px) {
-  .osd-result {
-    font-size: 1.25rem;
-  }
 }
 
 /* all status labels centred over their windows; letter-spaced key text optically centred */
@@ -1448,8 +1468,8 @@
 .vfd,
 .lamps {
   box-sizing: border-box;
-  /* 6px top/bottom keeps the window height identical to before the frame image (page height must not grow) */
-  min-height: 44px;
+  /* 6px top/bottom frame; the window is 36px tall (was 44px, -8px by kako-jun in #314). The .tube width constants include the 8px (see the HUD window term in retro.test.ts and DESIGN.md §7) */
+  min-height: 36px;
   border-style: solid;
   border-color: transparent;
   border-width: 6px 8px;
@@ -1632,6 +1652,23 @@
 @media (prefers-reduced-motion: reduce) {
   .clock-colon {
     animation: none;
+  }
+}
+
+/* #314: centre the digits in the window. A font's line box is taller below the digits than above them (ascender /
+   descender space), so with the plain line box the digits sat 2px above the middle of the window (TIME and REPORTS
+   alike). Trimming each digit box to cap height ... baseline makes the flex centring land on the glyphs themselves,
+   whatever the monospace font on the device is. text-box is in Chrome 133+, Safari 18.2+, Firefox 154+; only older
+   browsers take the fallback below: a 1em line box keeps the window at 36px (a normal line box would make TIME and
+   REPORTS taller than STRIKES), and the nudge moves the digits to about the middle. */
+.vfd > * {
+  text-box: trim-both cap alphabetic;
+}
+@supports not (text-box: trim-both cap alphabetic) {
+  .vfd > * {
+    line-height: 1;
+    position: relative;
+    top: 1px;
   }
 }
 
@@ -1826,15 +1863,6 @@
       rgba(0, 0, 0, 0.6) 100%
     );
 }
-/* keep the OSD texts clear of the rounded corners */
-.osd-cam {
-  left: 8%;
-  bottom: 7%;
-}
-.osd-rec {
-  right: 7%;
-  top: 6%;
-}
 /* the glass is out of the flow now: the tube is exactly as wide as the frame picture is at the tube's height (1246x1679) */
 @media (min-width: 900px) {
   .tube {
@@ -1858,16 +1886,22 @@
   .tube {
     width: min(
       100%,
-      max(160px, calc((100dvh - 389px - var(--plate-h)) * 1246 / 1679))
+      max(160px, calc((100dvh - 369px - var(--plate-h)) * 1246 / 1679))
     );
     align-self: center;
   }
   .panel {
     gap: 4px;
   }
-  /* gap between the knob circle and its BRIGHTNESS / CONTRAST label (#300, set to 9px by kako-jun in #309); the tube-width constants (389 / 316, times the frame picture ratio 1246/1679) = base 380 / 307 + this gap, so when the gap changes move both constants by the same amount */
+  /* knob circle (portrait 48px, #313; the .mark is scaled with it) and its gap to the label (9px, #300/#309): both are terms of the tube-width constants above, see DESIGN.md §7 and retro.test.ts */
   .knob {
+    width: 48px;
+    height: 48px;
     margin-bottom: 9px;
+  }
+  .knob .mark {
+    top: 4px;
+    height: 17.5px;
   }
   .knob-wrap {
     flex: 1;
@@ -1882,7 +1916,7 @@
   .tube {
     width: min(
       100%,
-      max(160px, calc((100dvh - 316px - var(--plate-h)) * 1246 / 1679))
+      max(160px, calc((100dvh - 296px - var(--plate-h)) * 1246 / 1679))
     );
   }
   .cam-grid {
