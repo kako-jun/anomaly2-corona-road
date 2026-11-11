@@ -934,70 +934,9 @@
 }
 
 .cabinet::before {
-  background-image:
-    linear-gradient(
-      103deg,
-      transparent 44%,
-      rgba(255, 255, 255, 0.6) 47%,
-      rgba(50, 30, 10, 0.5) 53%,
-      transparent 56%
-    ),
-    linear-gradient(
-      80deg,
-      transparent 44%,
-      rgba(255, 255, 255, 0.5) 47%,
-      rgba(50, 30, 10, 0.45) 53%,
-      transparent 56%
-    ),
-    linear-gradient(
-      118deg,
-      transparent 44%,
-      rgba(255, 255, 255, 0.5) 47%,
-      rgba(50, 30, 10, 0.45) 53%,
-      transparent 56%
-    ),
-    var(--mottle), var(--grain);
-  background-size:
-    58px 12px,
-    40px 10px,
-    30px 14px,
-    420px 420px,
-    240px 240px;
-  background-position:
-    3% 1.2%,
-    96% 98%,
-    1% 70%,
-    0 0,
-    0 0;
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
-  background: /* a few short, thick, straight scratches (light edge + dark edge) */
-    linear-gradient(
-        104deg,
-        transparent 38%,
-        rgba(255, 255, 255, 0.7) 42%,
-        rgba(60, 38, 14, 0.55) 52%,
-        transparent 58%
-      )
-      4% 1.6% / 34px 9px no-repeat,
-    linear-gradient(
-        78deg,
-        transparent 38%,
-        rgba(255, 255, 255, 0.65) 42%,
-        rgba(60, 38, 14, 0.5) 52%,
-        transparent 58%
-      )
-      95% 97% / 30px 9px no-repeat,
-    linear-gradient(
-        112deg,
-        transparent 38%,
-        rgba(255, 255, 255, 0.6) 42%,
-        rgba(60, 38, 14, 0.5) 52%,
-        transparent 58%
-      )
-      1.5% 62% / 26px 9px no-repeat,
-    /* paint rubbed off at corners: darker substrate showing */
-      radial-gradient(ellipse 22px 12px at 0 0, #8a7650 0 60%, transparent 78%)
-      0 0 / 100% 100% no-repeat,
+  background: /* paint rubbed off at corners: darker substrate showing */
+    radial-gradient(ellipse 22px 12px at 0 0, #8a7650 0 60%, transparent 78%) 0
+      0 / 100% 100% no-repeat,
     radial-gradient(
         ellipse 18px 14px at 100% 100%,
         #86724c 0 60%,
