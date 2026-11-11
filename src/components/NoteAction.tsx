@@ -51,7 +51,7 @@ export const NoteAction = ({ label, onClick, busy }: NoteActionProps) => (
         aria-hidden="true"
       >
         <path
-          d="M10 3 C34 -3 84 -3 100 8 C108 18 103 34 92 40 C60 47 18 46 4 37 C-6 26 -2 10 16 1"
+          d="M10 2 C34 -1 82 -1 97 7 C103 17 99 31 90 36 C62 41 20 40 6 34 C-1 25 0 11 14 3"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"

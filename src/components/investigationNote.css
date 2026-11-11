@@ -349,10 +349,10 @@
 .note-act-text {
   position: relative;
   display: inline-block;
-  padding: 9px 22px 11px; /* room between the words and the loop: it must not look cramped */
+  padding: 9px 26px 11px 22px; /* room between the words and the loop: it must not look cramped */
 }
 .note-en .note-act-text {
-  padding: 5px 22px 7px;
+  padding: 5px 26px 7px 22px;
 }
 .note-act-ring,
 .note-act-focus {
@@ -381,9 +381,9 @@
   pointer-events: none;
 }
 .note-act-focus {
-  inset: -5px -7px -5px -7px;
-  width: calc(100% + 14px);
-  height: calc(100% + 10px);
+  inset: -2px -2px -2px -4px; /* the second loop stays inside the paper and clear of the arrow (check:note-wrap) */
+  width: calc(100% + 6px);
+  height: calc(100% + 4px);
   opacity: 0;
   color: var(--ink);
 }

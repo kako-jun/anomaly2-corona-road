@@ -263,6 +263,22 @@ async () => {
 """
 
 
+FOCUS = """
+() => {
+  // Keyboard focus draws a second hand-drawn loop around the circled words: it must exist and be visible, stay inside
+  // the paper (not touching its bottom edge) and clear of the arrow.
+  const res = []
+  const ring = document.querySelector('.note-btn .note-act-focus')
+  if (!ring) return ['the action has no focus loop']
+  if (getComputedStyle(ring).opacity !== '1') res.push('the focus loop is not shown while the action has keyboard focus')
+  const path = ring.querySelector('path').getBoundingClientRect(), paper = document.querySelector('.note-paper').getBoundingClientRect()
+  const arrow = document.querySelector('.note-act-arrow').getBoundingClientRect()
+  if (path.left < paper.left + 2 || path.right > paper.right - 2 || path.bottom > paper.bottom - 2) res.push(`the focus loop touches or leaves the paper (bottom gap ${(paper.bottom - path.bottom).toFixed(1)}px)`)
+  if (path.right > arrow.left - 1) res.push('the focus loop runs into the arrow')
+  return res
+}
+"""
+
 VIEWPORTS = ((360, 640), (390, 844), (768, 1024), (1280, 720))
 FLAGS = {
     "start": {}, "none": {}, "elder1": {"elder1": True},
@@ -303,6 +319,15 @@ def main():
                         page.wait_for_timeout(60)
                         for msg in page.evaluate(LAYOUT):
                             problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                    if (stage, variant) in (("start", "plain"), ("child", "fresh")):
+                        for w, h in VIEWPORTS:
+                            page.set_viewport_size({"width": w, "height": h})
+                            page.keyboard.press("Shift")  # keyboard modality, so :focus-visible applies
+                            page.focus(".note-btn")
+                            page.wait_for_timeout(60)
+                            for msg in page.evaluate(FOCUS):
+                                problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                            page.evaluate("document.activeElement && document.activeElement.blur()")
                     page.set_viewport_size({"width": 390, "height": 844})
                     if stage == "elder2" and variant == "plain" and lang == "ja":
                         for msg in page.evaluate(FRAMEPX):

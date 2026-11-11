@@ -18,6 +18,15 @@ describe('NoteAction (the handwritten action on the note)', () => {
     expect(onClick).toHaveBeenCalledTimes(1)
   })
 
+  it('carries its hand-drawn focus loop (shown by CSS on keyboard focus) and the circle around the words', () => {
+    const { container } = render(
+      <NoteAction label="Once more" onClick={vi.fn()} busy={false} />
+    )
+    expect(container.querySelector('.note-act-focus path')).not.toBeNull()
+    expect(container.querySelector('.note-act-ring path')).not.toBeNull()
+    expect(container.querySelector('.note-act-arrow')).not.toBeNull()
+  })
+
   it('cannot be pressed while it is waiting', async () => {
     const onClick = vi.fn()
     render(<NoteAction label="One moment…" onClick={onClick} busy />)
