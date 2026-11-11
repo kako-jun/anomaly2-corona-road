@@ -147,6 +147,7 @@ Two easings (in/standard + emphasized-out) and four durations.
 | Button press          | 120 ms   | `--ease`                  |
 | Camera switch (fade)  | 240 ms   | `--ease`                  |
 | Report panel slide-up | 240 ms   | `--ease`                  |
+| Screen change (fade)  | 400 ms   | linear (200 out + 200 in) |
 | Feedback flash        | 600 ms   | `cubic-bezier(0,0,0.2,1)` |
 | Anomaly alert pulse   | 1200 ms  | linear, infinite          |
 
@@ -200,11 +201,17 @@ The general-purpose button and card classes (`.btn`, `.card`) were removed with 
 
 ---
 
+### Screen transitions (#336)
+
+The four screens (title, note before a shift, monitor, note after a shift) change with a dip to black: the old screen goes dark for 200 ms, the new one comes up from black for 200 ms (`SCREEN_FADE_MS = 400` in `src/utils/screenTransition.ts`, the only place the length is set). The game state is committed at once; `ScreenTransition` only holds the old picture (frozen, `inert`) and a black veil, and mounts the new screen when the veil is black. Neither picture can be pressed during the change, so a double tap cannot run an action twice. In-screen changes (START OVER confirmation, report dialog, camera switch, language) are not screen transitions and keep their own motion. `prefers-reduced-motion` and `?transition=none` switch the fade off.
+
+Comparing looks (dev server only; a production build ignores the parameter): `?transition=fade` (default), `?transition=cross` (the old screen fades away over the new one), `?transition=none` (cut).
+
 ## 9. Accessibility Tokens
 
 - **Focus ring:** 2 px solid `--outline-strong`, offset 2 px. Always visible on keyboard focus.
 - **Tap target:** minimum 44 × 44 px.
-- **Reduced motion:** `@media (prefers-reduced-motion: reduce)` disables anomaly pulse, flash, and camera fade.
+- **Reduced motion:** `@media (prefers-reduced-motion: reduce)` disables anomaly pulse, flash, camera fade, and the screen-change fade.
 - **Color-blind safety:** every semantic color paired with a text label (lamps are always next to or inside a labelled control).
 
 ---

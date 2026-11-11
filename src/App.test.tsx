@@ -84,6 +84,8 @@ describe('App: title -> investigation note (#297) and the language from the brow
     localStorage.clear()
     resetStore()
     game.initial = 'idle'
+    // The screen fade (#336) is tested in ScreenTransition.test.tsx; here the screens change at once.
+    window.history.pushState({}, '', '/?transition=none')
     vi.stubGlobal('navigator', { language: 'en-US', languages: ['en-US'] })
   })
 
