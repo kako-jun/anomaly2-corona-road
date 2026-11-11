@@ -1,4 +1,6 @@
 // @vitest-environment jsdom
+import { cleanup, render } from '@testing-library/react'
+import { createElement } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import type { DialogueLedger } from './dialogueLedger'
 import type { LastShift } from './saveData'
@@ -171,6 +173,46 @@ describe('memos across shifts', () => {
         lang === 'ja' ? /シャッター/ : /shutter/
       )
     }
+  })
+
+  it('draws exactly the two memo lines on the paper, and the same two when the result is opened again', async () => {
+    const p = await fresh()
+    const { InvestigationNote } = await import(
+      '../components/InvestigationNote'
+    )
+    p.update(cur => ({ ...cur, flags: { child: true } }))
+    p.recordFound('shut')
+    p.recordFound('a')
+    p.recordShiftEnd(SHIFT)
+    const paper = () => {
+      const view = p.buildNote(
+        {
+          mode: 'after',
+          save: p.load(),
+          shift: p.load().lastShift as LastShift,
+        },
+        'ja'
+      )
+      const { container } = render(
+        createElement(InvestigationNote, { view, onAction: () => {} })
+      )
+      const out = [...container.querySelectorAll('.note-syn p')].map(
+        e => e.textContent
+      )
+      cleanup()
+      return out
+    }
+    const first = paper()
+    expect(first.slice(-2)).toEqual([
+      'シャッターの向こうへ行ったまま、か。',
+      'メモa',
+    ])
+    expect(paper()).toEqual(first)
+    // the next result has nothing left to show: neither line appears again
+    p.recordShiftEnd(SHIFT)
+    const next = paper()
+    expect(next).not.toContain('メモa')
+    expect(next.some(t => t?.includes('シャッター'))).toBe(false)
   })
 
   it('ERASE ALL clears waiting and shown memos, so they can come again', async () => {
