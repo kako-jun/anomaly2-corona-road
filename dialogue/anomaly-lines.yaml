@@ -53,19 +53,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-cat }
     lines:
-      - { who: A, text: 'もう少し視線を動かして　左のシャッターも見てみよう', en: "Move your eyes a little more and check the shutter on the left too." }
-      - { who: M, text: '分かりました　左のシャッターの周りを　見直します', en: "Understood. I'll take another look around the shutter on the left." }
+      - { who: A, text: 'もう少し視線を動かして　左のシャッターも見てみよう', en: "Move your eyes a little farther and check the shutter on the left too." }
+      - { who: M, text: '分かりました　左のシャッターの周りを　見直します', en: "Understood. I'll check around the shutter on the left again." }
   - id: an-AR-02-cat-02
     tone: serious
     when: { anomaly: AR-02-cat }
     lines:
       - { who: M, text: 'はい　今度は左のシャッターに　注目してみてください', en: "Yes. This time, focus on the shutter on the left." }
-      - { who: A, text: '左のシャッターを　見てるつもりだったのに　だめだね', en: "I thought I was looking at the shutter on the left. Guess not." }
+      - { who: A, text: '左のシャッターを　見てるつもりだったのに　だめだね', en: "I thought I was watching the shutter on the left. Guess not." }
   - id: an-AR-02-cigarette-01
     tone: serious
     when: { anomaly: AR-02-cigarette }
     lines:
-      - { who: A, text: 'うーん　視線が止まってたね　左の床も見よう', en: "Hmm, my eyes were stuck in one place. Let's look at the floor on the left too." }
+      - { who: A, text: 'うーん　視線が止まってたね　左の床も見よう', en: "Hmm, my eyes got stuck in one place. Let's check the floor on the left too." }
       - { who: M, text: '了解です　左の床をもう一度確認します', en: "Got it. I'll check the floor on the left again." }
   - id: an-AR-02-cigarette-02
     tone: serious
@@ -89,86 +89,86 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-newspaper }
     lines:
-      - { who: A, text: '今度は左のシャッターを見てから　判断しよう' }
-      - { who: M, text: 'そうですね　左のシャッターと周辺を比べます' }
+      - { who: A, text: '今度は左のシャッターを見てから　判断しよう', en: "Let's check the shutter on the left before we decide this time." }
+      - { who: M, text: 'そうですね　左のシャッターと周辺を比べます', en: "Right. I'll compare the shutter on the left with the area around it." }
   - id: an-AR-02-newspaper-02
     tone: serious
     when: { anomaly: AR-02-newspaper }
     lines:
-      - { who: M, text: '左のシャッターの辺り　何か違って見えませんか' }
-      - { who: A, text: 'ああ　左のシャッターを急いで見てた　見直そう' }
+      - { who: M, text: '左のシャッターの辺り　何か違って見えませんか', en: "Does anything look different around the shutter on the left?" }
+      - { who: A, text: 'ああ　左のシャッターを急いで見てた　見直そう', en: "Ah, I rushed past the shutter on the left. Let's check it again." }
   - id: an-AR-02-open-sign-01
     tone: serious
     when: { anomaly: AR-02-open-sign }
     lines:
-      - { who: A, text: 'その左のシャッター　周りと見比べてみない?' }
-      - { who: M, text: 'はい　左のシャッターを　急がず確かめます' }
+      - { who: A, text: 'その左のシャッター　周りと見比べてみない?', en: "Why not compare that shutter on the left with what's around it?" }
+      - { who: M, text: 'はい　左のシャッターを　急がず確かめます', en: "Yes. I'll take my time checking the shutter on the left." }
   - id: an-AR-02-open-sign-02
     tone: serious
     when: { anomaly: AR-02-open-sign }
     lines:
-      - { who: M, text: '左のシャッターの前後を　順に見ていきましょう' }
-      - { who: A, text: 'よし　左のシャッターを落ち着いて探す' }
+      - { who: M, text: '左のシャッターの前後を　順に見ていきましょう', en: "Let's check the area around the shutter on the left, bit by bit." }
+      - { who: A, text: 'よし　左のシャッターを落ち着いて探す', en: "All right. I'll look carefully around the shutter on the left." }
   - id: an-AR-02-pot-duplicate-01
     tone: serious
     when: { anomaly: AR-02-pot-duplicate }
     lines:
-      - { who: A, text: 'あっ　右手前をちゃんと　見てなかったかも' }
-      - { who: M, text: '分かりました　右手前まで目を通します' }
+      - { who: A, text: 'あっ　右手前をちゃんと　見てなかったかも', en: "Oh, maybe I didn't really check the near right side." }
+      - { who: M, text: '分かりました　右手前まで目を通します', en: "Understood. I'll make sure to check the near right side." }
   - id: an-AR-02-pot-duplicate-02
     tone: serious
     when: { anomaly: AR-02-pot-duplicate }
     lines:
-      - { who: M, text: '右手前を一度見て　隣の範囲とも比べてください' }
-      - { who: A, text: 'うそ　右手前を見たつもりだったのに!' }
+      - { who: M, text: '右手前を一度見て　隣の範囲とも比べてください', en: "Check the near right side, then compare it with the area beside it." }
+      - { who: A, text: 'うそ　右手前を見たつもりだったのに!', en: "No way! I thought I'd checked the near right side!" }
   - id: an-AR-02-puddle-01
     tone: serious
     when: { anomaly: AR-02-puddle }
     lines:
-      - { who: A, text: '左の床だけで決めないで　全体を見てみようか' }
-      - { who: M, text: '了解です　左の床の様子をもう一度見ます' }
+      - { who: A, text: '左の床だけで決めないで　全体を見てみようか', en: "Let's look at the whole scene instead of deciding from the floor on the left." }
+      - { who: M, text: '了解です　左の床の様子をもう一度見ます', en: "Got it. I'll take another look at the floor on the left." }
   - id: an-AR-02-puddle-02
     tone: serious
     when: { anomaly: AR-02-puddle }
     lines:
-      - { who: M, text: '周りとのつながりも見て　左の床を確かめてください' }
-      - { who: A, text: 'うん　今度は左の床を　決めつけずに見るね' }
+      - { who: M, text: '周りとのつながりも見て　左の床を確かめてください', en: "Check the floor on the left and how it fits with the area around it." }
+      - { who: A, text: 'うん　今度は左の床を　決めつけずに見るね', en: "Right. I'll look at the floor on the left with an open mind." }
   - id: an-AR-02-receipt-01
     tone: serious
     when: { anomaly: AR-02-receipt }
     lines:
-      - { who: A, text: 'えっ　左の床って　さっきも見たかな?' }
-      - { who: M, text: 'はい　左の床を含めて確認を続けます' }
+      - { who: A, text: 'えっ　左の床って　さっきも見たかな?', en: "Huh? Did I already check the floor on the left?" }
+      - { who: M, text: 'はい　左の床を含めて確認を続けます', en: "Yes. I'll keep checking, including the floor on the left." }
   - id: an-AR-02-receipt-02
     tone: serious
     when: { anomaly: AR-02-receipt }
     lines:
-      - { who: M, text: '左の床のあたり　何度か見比べてみましょう' }
-      - { who: A, text: '左の床を見落としたの悔しい!　次は見つける' }
+      - { who: M, text: '左の床のあたり　何度か見比べてみましょう', en: "Let's compare the area around the floor on the left a few times." }
+      - { who: A, text: '左の床を見落としたの悔しい!　次は見つける', en: "I hate that I missed the floor on the left! I'll catch it next time." }
   - id: an-AR-02-shop-reopens-01
     tone: serious
     when: { anomaly: AR-02-shop-reopens }
     lines:
-      - { who: A, text: '今度は左のシャッターを　少し違う角度から見たい' }
-      - { who: M, text: '了解です　左のシャッターの辺りを　比べてみます' }
+      - { who: A, text: '今度は左のシャッターを　少し違う角度から見たい', en: "This time, I want to look at the shutter on the left from a different angle." }
+      - { who: M, text: '了解です　左のシャッターの辺りを　比べてみます', en: "Got it. I'll compare the area around the shutter on the left." }
   - id: an-AR-02-shop-reopens-02
     tone: serious
     when: { anomaly: AR-02-shop-reopens }
     lines:
-      - { who: M, text: '左のシャッターの見え方を　周りと比べてください' }
-      - { who: A, text: 'ああ　左のシャッターは　見ていたつもりなのに' }
+      - { who: M, text: '左のシャッターの見え方を　周りと比べてください', en: "Compare how the shutter on the left looks with what's around it." }
+      - { who: A, text: 'ああ　左のシャッターは　見ていたつもりなのに', en: "Ah, I thought I was keeping an eye on the shutter on the left." }
   - id: an-AR-02-smoke-01
     tone: serious
     when: { anomaly: AR-02-smoke }
     lines:
-      - { who: A, text: '自信あったのに　右の店先を見落としてた?' }
-      - { who: M, text: 'はい　右の店先にも視線を　向け直してみます' }
+      - { who: A, text: '自信あったのに　右の店先を見落としてた?', en: "I was so sure. Did I miss the storefront on the right?" }
+      - { who: M, text: 'はい　右の店先にも視線を　向け直してみます', en: "Yes. I'll look over the storefront on the right again." }
   - id: an-AR-02-smoke-02
     tone: serious
     when: { anomaly: AR-02-smoke }
     lines:
-      - { who: M, text: 'その右の店先　周りと見比べてください' }
-      - { who: A, text: 'そうだね　右の店先から全体を確認する' }
+      - { who: M, text: 'その右の店先　周りと見比べてください', en: "Please compare that storefront on the right with its surroundings." }
+      - { who: A, text: 'そうだね　右の店先から全体を確認する', en: "Right. I'll scan the whole scene, starting at the right storefront." }
   - id: an-AR-02-square-pot-01
     tone: serious
     when: { anomaly: AR-02-square-pot }
@@ -245,50 +245,50 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-glass-light }
     lines:
-      - { who: A, text: '中央上部の店舗のあたり　もう一度見てもらえる?' }
-      - { who: M, text: 'はい　中央上部の店舗の周りも　含めて見ます' }
+      - { who: A, text: '中央上部の店舗のあたり　もう一度見てもらえる?', en: "Could you take another look around the store in the upper center?" }
+      - { who: M, text: 'はい　中央上部の店舗の周りも　含めて見ます', en: "Yes. I'll check the area around the store in the upper center too." }
   - id: an-AR-05-glass-light-02
     tone: serious
     when: { anomaly: AR-05-glass-light }
     lines:
-      - { who: M, text: '視線の位置を変えて　中央上部の店舗を見直しましょう' }
-      - { who: A, text: 'ああ　悔しい!　中央上部の店舗を　もう一度確認する' }
+      - { who: M, text: '視線の位置を変えて　中央上部の店舗を見直しましょう', en: "Let's shift our gaze and take another look at the store in the upper center." }
+      - { who: A, text: 'ああ　悔しい!　中央上部の店舗を　もう一度確認する', en: "Ah, darn! I'll check the store in the upper center again." }
   - id: an-AR-06-reflected-umbrella-01
     tone: serious
     when: { anomaly: AR-06-reflected-umbrella }
     lines:
-      - { who: A, text: 'あっ　中央の店先をちゃんと　見てなかったかも' }
-      - { who: M, text: '分かりました　中央の店先まで目を通します' }
+      - { who: A, text: 'あっ　中央の店先をちゃんと　見てなかったかも', en: "Oh, maybe I didn't really check the storefront in the center." }
+      - { who: M, text: '分かりました　中央の店先まで目を通します', en: "Understood. I'll make sure to look over the storefront in the center." }
   - id: an-AR-06-reflected-umbrella-02
     tone: serious
     when: { anomaly: AR-06-reflected-umbrella }
     lines:
-      - { who: M, text: '中央の店先を一度見て　隣の範囲とも比べてください' }
-      - { who: A, text: 'うそ　中央の店先を　見たつもりだったのに!' }
+      - { who: M, text: '中央の店先を一度見て　隣の範囲とも比べてください', en: "Check the storefront in the center, then compare it with the area beside it." }
+      - { who: A, text: 'うそ　中央の店先を　見たつもりだったのに!', en: "No way! I thought I'd checked the storefront in the center!" }
   - id: an-AR-06-reflection-01
     tone: serious
     when: { anomaly: AR-06-reflection }
     lines:
-      - { who: A, text: '自信あったのに　中央上部のガラスを　見落としてた?' }
-      - { who: M, text: 'はい　中央上部のガラスにも　視線を向け直してみます' }
+      - { who: A, text: '自信あったのに　中央上部のガラスを　見落としてた?', en: "I was so sure. Did I miss the glass in the upper center?" }
+      - { who: M, text: 'はい　中央上部のガラスにも　視線を向け直してみます', en: "Yes. I'll look over the glass in the upper center again." }
   - id: an-AR-06-reflection-02
     tone: serious
     when: { anomaly: AR-06-reflection }
     lines:
-      - { who: M, text: 'その中央上部のガラス　周りと見比べてください' }
-      - { who: A, text: 'そうだね　中央上部のガラスから　全体を確認する' }
+      - { who: M, text: 'その中央上部のガラス　周りと見比べてください', en: "Please compare that glass in the upper center with its surroundings." }
+      - { who: A, text: 'そうだね　中央上部のガラスから　全体を確認する', en: "Right. I'll check the whole scene, starting with the glass in the upper center." }
   - id: an-AR-06-reopened-01
     tone: serious
     when: { anomaly: AR-06-reopened }
     lines:
-      - { who: A, text: '左の店先だけで決めないで　全体を見てみようか' }
-      - { who: M, text: '了解です　左の店先の様子をもう一度見ます' }
+      - { who: A, text: '左の店先だけで決めないで　全体を見てみようか', en: "Let's check the whole scene, not just the storefront on the left." }
+      - { who: M, text: '了解です　左の店先の様子をもう一度見ます', en: "Got it. I'll take another look at the storefront on the left." }
   - id: an-AR-06-reopened-02
     tone: serious
     when: { anomaly: AR-06-reopened }
     lines:
-      - { who: M, text: '周りとのつながりも見て　左の店先を確かめてください' }
-      - { who: A, text: 'うん　今度は左の店先を　決めつけずに見るね' }
+      - { who: M, text: '周りとのつながりも見て　左の店先を確かめてください', en: "Check the storefront on the left and how it fits with the area around it." }
+      - { who: A, text: 'うん　今度は左の店先を　決めつけずに見るね', en: "Right. I'll look at the storefront on the left with an open mind." }
   - id: an-AR-06-soda-01
     tone: serious
     when: { anomaly: AR-06-soda }
@@ -317,26 +317,26 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-worker }
     lines:
-      - { who: A, text: '奥の通路の見え方　前と同じだったかな' }
-      - { who: M, text: '了解です　奥の通路の前後も見てみます' }
+      - { who: A, text: '奥の通路の見え方　前と同じだったかな', en: "Did the corridor in the back look the same as before?" }
+      - { who: M, text: '了解です　奥の通路の前後も見てみます', en: "Got it. I'll check the area around the corridor in the back too." }
   - id: an-AR-06-worker-02
     tone: serious
     when: { anomaly: AR-06-worker }
     lines:
-      - { who: M, text: 'はい　奥の通路を　もう一度見てみてください' }
-      - { who: A, text: '分かった　奥の通路と隣を比べてみよう' }
+      - { who: M, text: 'はい　奥の通路を　もう一度見てみてください', en: "Yes. Please take another look at the corridor in the back." }
+      - { who: A, text: '分かった　奥の通路と隣を比べてみよう', en: "Got it. I'll compare the corridor in the back with the area beside it." }
   - id: an-AR-07-crane-01
     tone: serious
     when: { anomaly: AR-07-crane }
     lines:
-      - { who: A, text: '中央上部の天井の見え方　前と同じだったかな' }
-      - { who: M, text: '了解です　中央上部の天井の前後も　見てみます' }
+      - { who: A, text: '中央上部の天井の見え方　前と同じだったかな', en: "Did the ceiling in the upper center look the same as before?" }
+      - { who: M, text: '了解です　中央上部の天井の前後も　見てみます', en: "Got it. I'll check the area around the ceiling in the upper center too." }
   - id: an-AR-07-crane-02
     tone: serious
     when: { anomaly: AR-07-crane }
     lines:
-      - { who: M, text: 'はい　中央上部の天井を　もう一度見てみてください' }
-      - { who: A, text: '分かった　中央上部の天井と　隣を比べてみよう' }
+      - { who: M, text: 'はい　中央上部の天井を　もう一度見てみてください', en: "Yes. Please take another look at the ceiling in the upper center." }
+      - { who: A, text: '分かった　中央上部の天井と　隣を比べてみよう', en: "Got it. I'll compare the ceiling in the upper center with the area beside it." }
   - id: an-AR-07-notice-01
     tone: serious
     when: { anomaly: AR-07-notice }
