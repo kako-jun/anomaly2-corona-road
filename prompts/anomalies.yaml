@@ -158,8 +158,8 @@ anomalies:
     location: 'CAM02-E19 の周辺、差分左上 (510,511) px'
     detail: '右手前の鉢が二つに増える'
     memo:
-      ja: '鉢が二つに。'
-      en: 'The pot became two.'
+      ja: '手前の鉢が二つに増えた。'
+      en: 'The front pot, now two.'
     overlay: 'assets/anomaly-overlays/cam02/pot-duplicate.webp'
     overlay_origin: '(510,511)'
     dimensions: '91x77'
@@ -240,7 +240,7 @@ anomalies:
     detail: '右手前の鉢が丸形から四角形になる'
     memo:
       ja: '丸鉢が四角に。鉢の形まで変わった。'
-      en: 'Round pot, now square.'
+      en: 'Round pot gone square: shape changed.'
     overlay: 'assets/anomaly-overlays/cam02/square-pot.webp'
     overlay_origin: '(523,516)'
     dimensions: '63x69'
@@ -778,7 +778,7 @@ anomalies:
     location: 'CAM03-E06、差分左上 (103,532) px'
     detail: '左シャッター下端に白い紙袋が一つ現れる'
     memo:
-      ja: 'シャッターの下に白い紙袋。'
+      ja: '下端に白い紙袋が一つ。'
       en: 'A white paper bag under the shutter.'
     generation_prompt: 'CAM03 の左シャッターの下端に白い紙袋を一つ置き、周囲を保つ。'
     overlay: 'assets/anomaly-overlays/cam03/paper-bag.webp'
@@ -1665,7 +1665,7 @@ anomalies:
     detail: "丸灯の照らす部分だけ淡い橙色になる。"
     memo:
       ja: '丸灯の光がオレンジに。'
-      en: 'The round lamp''s glow turned orange.'
+      en: 'Orange cast under the round lamp.'
     generation_prompt: "Use case: precise-object-edit. Edit the attached exact CAM03 surveillance photograph. Make exactly one change: the small round white ceiling lamp near the upper center-right edge retains its white lamp surface, but the immediately adjacent ceiling it illuminates takes on a faint muted amber-orange glow. Keep the glow local and subtle. Preserve every other light, sign, shutter, walls, floor, camera framing, perspective, color outside that illumination, film grain, texture and compression. Output the complete original composition."
     overlay: "assets/anomaly-overlays/cam03/amber-lamp-glow.webp"
     overlay_origin: "(405,0)"
@@ -1854,7 +1854,7 @@ anomalies:
     detail: "暗い壁面の一角に古い貼り紙の剥がし跡が現れる。"
     memo:
       ja: '暗い壁に貼り紙の剥がし跡。'
-      en: 'An old notice''s mark on the dark wall.'
+      en: 'Peeled-notice mark on the dark wall.'
     generation_prompt: "Edit this surveillance photograph. On a small area of the dark left storefront wall near the glass door, add one faint rectangular pale adhesive residue where an old notice was removed. The residue is small, weathered and contains no readable writing. Keep the storefront, glass, floor, central pillar, signs, lighting, framing, perspective, grain and every other element unchanged. Make only this small local mark. Return the full original frame."
     overlay: "assets/anomaly-overlays/cam08/notice-residue.webp"
     overlay_origin: "(102,197)"
@@ -2553,8 +2553,8 @@ anomalies:
     location: 'CAM04-E11、差分左上 (367,258) px'
     detail: '奥右の鉢植えが、同じ形・同じ大きさでもう一鉢横に増える'
     memo:
-      ja: '奥の鉢植えが同じ形で一鉢増えた。'
-      en: 'Another plant, same shape, in back.'
+      ja: '奥右の鉢植えの隣に同じ鉢がもう一つ。'
+      en: 'Same plant again beside it, back right.'
     generation_prompt: 'Edit the attached surveillance camera photo (an empty shopping-arcade corridor, 676x900 px reference). Make ONLY this single change: the large dark-green-leaved potted plant at back right (approx x=385-457, y=252-432 of 676x900) is duplicated: one more pot of exactly the same shape and size stands directly to its right, at the same floor level, with the same perspective and lighting. CRITICAL: keep everything else PIXEL-IDENTICAL to the source: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, highlights, film grain, JPEG compression, low-fi surveillance look, and all existing objects. Do not regenerate or redraw the scene; only inject the specified change. Photo-realistic, matching the surveillance aesthetic exactly. Any text must be illegible or fictional; do not add real brand or store names.'
     overlay: 'assets/anomaly-overlays/cam04/pot-duplicate.webp'
     overlay_origin: '(367,258)'
@@ -2615,8 +2615,8 @@ anomalies:
     location: 'CAM04-E07、差分左上 (15,174) px'
     detail: '左のガラス店先の内側の棚に、赤いダイヤル式の公衆電話(赤電話)が一台置かれている'
     memo:
-      ja: 'ガラスの中に赤電話。'
-      en: 'A red rotary phone behind the glass.'
+      ja: 'ガラス棚に赤いダイヤル式電話。'
+      en: 'A red dial payphone behind the glass.'
     generation_prompt: 'Edit the attached surveillance camera photo (an empty shopping-arcade corridor, 676x900 px reference). Make ONLY this single change: inside the left glass storefront, on a shelf behind the window in its lower half (approx x=20-260, y=330-540 of 676x900), place one red vintage rotary-dial public telephone (Showa-era "red phone", compact boxy body, round dial), seen through the blue-black reflective glass, consistent with the glass reflections and dimness. CRITICAL: keep everything else PIXEL-IDENTICAL to the source: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, highlights, film grain, JPEG compression, low-fi surveillance look, and all existing objects. Do not regenerate or redraw the scene; only inject the specified change. Photo-realistic, matching the surveillance aesthetic exactly. Any text must be illegible or fictional; do not add real brand or store names.'
     overlay: 'assets/anomaly-overlays/cam04/red-telephone.webp'
     overlay_origin: '(15,174)'
@@ -3482,8 +3482,8 @@ anomalies:
     location: 'CAM06-E03、差分左上 (440,0) px'
     detail: '蛍光灯の端に、無地の紙札が紐で下がる。'
     memo:
-      ja: '蛍光灯の端から紐で下がる無地の紙札。'
-      en: 'Blank tag hangs from tube end by string.'
+      ja: '蛍光灯の端から紐で下がる札。'
+      en: 'Tag hangs by a string from the tube end.'
     generation_prompt: 'Method: the target area was enlarged about 6x into a 1536x1024 crop of the baseline, edited with $imagegen (three takes, the best take picked by eye), shrunk back and pasted into the baseline PNG, then cut out with scripts/composite-anomaly.py. Change: A plain blank paper tag hangs from the end of the fluorescent light on a string.'
     overlay: 'assets/anomaly-overlays/cam06/fluorescent-tag.webp'
     overlay_origin: '(440,0)'
@@ -3524,8 +3524,8 @@ anomalies:
     location: 'CAM07-E02、差分左上 (132,42) px'
     detail: '長方形の蛍光灯の端に、無地の紙札が貼られる。'
     memo:
-      ja: '長方形の蛍光灯の端に貼られた無地の紙札。'
-      en: 'Blank tag stuck to rectangular tube end.'
+      ja: '長方形の灯具の端に貼られた札。'
+      en: 'Tag stuck on a rectangular light''s end.'
     generation_prompt: 'Method: the target area was enlarged about 6x into a 1536x1024 crop of the baseline, edited with $imagegen (three takes, the best take picked by eye), shrunk back and pasted into the baseline PNG, then cut out with scripts/composite-anomaly.py. Change: A plain blank paper tag is stuck to the end of the rectangular fluorescent light.'
     overlay: 'assets/anomaly-overlays/cam07/paper-tag-lamp.webp'
     overlay_origin: '(132,42)'
@@ -7007,8 +7007,8 @@ anomalies:
     anomaly_type: 'rule_break'
     detail: 'anomaly refuses report: 正しく報告しても一度だけ直らない。'
     memo:
-      ja: '正報でも直らず。一度だけ？'
-      en: 'Report was right, no fix. Once only?'
+      ja: '正しく報告したのに直らない。一度だけ？'
+      en: 'Right report, yet not fixed. Just once?'
   - id: 'RT-RULE-03'
     status: 'planned'
     kind: 'non_image'

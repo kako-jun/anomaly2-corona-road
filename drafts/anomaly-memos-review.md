@@ -1,5 +1,7 @@
 # 異変ごとの一言メモ案（レビュー用）
 
+**現在は `scripts/apply-memos.py` の入力（承認前の暫定）。承認後にこの下書きとスクリプトを削除し、台帳が唯一の正本になる。**
+
 #325 の一言メモ案。台帳の `detail` をもとにした未承認の下書き。出河が張り込み中に書く走り書きを想定し、標準語の短い観察メモに揃える。飾った言い回しや台詞調は避け、場所と見えた変化を簡潔に記す。単なる列挙が続かないよう、観察に沿う短い驚き・推測・疑問も適度に交える。疑問符は未確認のまま残すために使い、物語の先取りや事実の断定には使わない。英語も自然な短い現場メモとし、訳文に情報を足さない。人物設定と既存の捜査メモ（`docs/story.md`、`src/data/investigationNotes.ts`）を参照。各行の ID は `prompts/anomalies.yaml` を参照する。採用時に同台帳の `memo` へ移し、この下書きは削除する。全異変の草案を掲載。
 
 | 異変 ID | 日本語 | English |
@@ -13,12 +15,12 @@
 | AR-02-coffee | 台にコーヒーのカップ。 | A coffee cup on the stand. |
 | AR-02-newspaper | 左シャッターの根元に新聞。 | Newspaper at the left shutter's foot. |
 | AR-02-open-sign | 閉まった店に「営業中」。なぜ？ | OPEN sign on a closed shop. Why? |
-| AR-02-pot-duplicate | 鉢が二つに。 | The pot became two. |
+| AR-02-pot-duplicate | 手前の鉢が二つに増えた。 | The front pot, now two. |
 | AR-02-puddle | 左の床に水たまり。 | A puddle on the left floor. |
 | AR-02-receipt | 床に小さな紙片が落ちている。 | A small scrap of paper has dropped. |
 | AR-02-shop-reopens | 左シャッターが少し開き、暖かい光。 | Left shutter ajar; a glow leaks out. |
 | AR-02-smoke | 店先に煙。 | Smoke by the shop. |
-| AR-02-square-pot | 丸鉢が四角に。鉢の形まで変わった。 | Round pot, now square. |
+| AR-02-square-pot | 丸鉢が四角に。鉢の形まで変わった。 | Round pot gone square: shape changed. |
 | AR-02-stool | 鉢の台が通路へ動いた。 | The plant stand moved into the aisle. |
 | AR-02-tile-color | 点検口の左、茶色のタイル。 | Tile left of the hatch is brown. |
 | AR-02-tile | タイルに幾何学模様。意図的か？ | Geometric pattern on a tile. Deliberate? |
@@ -48,7 +50,7 @@
 | AR-06-tilted-notice | 壁の額が傾いた。 | The framed notice tilted. |
 | AR-01-shutter-light | 閉じたまま、下から暖色の光。 | Still shut, a glow underneath. |
 | AR-03-ceiling-dots | 天井に水玉模様。 | Polka dots on the ceiling. |
-| AR-03-paper-bag | シャッターの下に白い紙袋。 | A white paper bag under the shutter. |
+| AR-03-paper-bag | 下端に白い紙袋が一つ。 | A white paper bag under the shutter. |
 | AR-07-wall-grid | 白い壁に格子模様。 | A grid on the white wall. |
 | AR-05-green-lamp-rim | 丸灯の縁が緑に。 | The round lamp's rim turned green. |
 | AR-05-curtain-mend | カーテンの裾に繕い跡。 | A mend at the curtain's hem. |
@@ -90,7 +92,7 @@
 | AR-02-flower-ornament | 星の飾りが一つ花形に。 | One star ornament became a flower. |
 | AR-02-red-star | 壁の飾りが一つ、淡い赤に。 | One wall ornament took on pale red. |
 | AR-02-pillar-notice | 柱に小さな案内が増えた。 | Another small notice on the pillar. |
-| AR-03-amber-lamp-glow | 丸灯の光がオレンジに。 | The round lamp's glow turned orange. |
+| AR-03-amber-lamp-glow | 丸灯の光がオレンジに。 | Orange cast under the round lamp. |
 | AR-03-coffee-text-missing | COFFEEだけ消えた。なぜ？ | COFFEE gone from sign. Why that word? |
 | AR-03-walking-cat | 白猫が開口の前を通る。 | A white cat passes the dark opening. |
 | AR-03-round-puddle | 丸い水たまりに照明が映る。 | Lights reflected in a round puddle. |
@@ -99,7 +101,7 @@
 | AR-07-stair-figures | 階段の人影が上下に重なる。どちらが本体？ | Stair figure doubled. Which is real? |
 | AR-04-leaf-hole | 葉に小さな丸い穴。 | A small round hole in a leaf. |
 | AR-06-pot-tag | 黒い鉢に白い名札。 | A white label on a black pot. |
-| AR-08-notice-residue | 暗い壁に貼り紙の剥がし跡。 | An old notice's mark on the dark wall. |
+| AR-08-notice-residue | 暗い壁に貼り紙の剥がし跡。 | Peeled-notice mark on the dark wall. |
 | AR-01-noren | 閉店した店に藍色の暖簾。 | An indigo curtain on the closed shop. |
 | AR-01-door-ajar | 格子戸が少し開いた。 | The lattice door opened a crack. |
 | AR-01-tube-end | 蛍光灯の端は消灯。床はまだ明るい。 | Tube end dark; floor still glows. |
@@ -132,10 +134,10 @@
 | AR-04-sign-hollow | 看板の円が抜け、天井が見える。向こう側？ | Sign hole; ceiling visible. Beyond what? |
 | AR-04-hatch-reflection-extra | 床の反射に点検口がもう一つ。 | Another hatch in the floor's reflection. |
 | AR-04-hatch-frame-round | 四角い点検口の枠が丸に。 | Square hatch frame, now round. |
-| AR-04-pot-duplicate | 奥の鉢植えが同じ形で一鉢増えた。 | Another plant, same shape, in back. |
+| AR-04-pot-duplicate | 奥右の鉢植えの隣に同じ鉢がもう一つ。 | Same plant again beside it, back right. |
 | AR-04-sign-colour-blue | 看板の文字の一部が青くなった。 | Part of sign text turns blue. |
 | AR-04-fluorescent-frame-grey | 蛍光灯の枠の一部が灰色。 | Gray patch on fluorescent frame. |
-| AR-04-red-telephone | ガラスの中に赤電話。 | A red rotary phone behind the glass. |
+| AR-04-red-telephone | ガラス棚に赤いダイヤル式電話。 | A red dial payphone behind the glass. |
 | AR-04-ceiling-corner-fold | 天井板の角が折れ下がる。 | A ceiling panel's corner folds down. |
 | AR-04-red-lantern | 黒いガラスの奥に赤い提灯。 | A red lantern behind the dark glass. |
 | AR-05-curtain-open | カーテンが少し開いた。 | The curtain opened a little. |
@@ -176,9 +178,9 @@
 | AR-02-leather-footprints | 誰もいない床に革靴の足跡。歩いたのは誰？ | Shoeprints on empty floor. Who walked? |
 | AR-03-sunken-opening-floor | 奥の開口の床だけ一段低い。 | The floor at the far opening sits lower. |
 | AR-05-floor-glare-backside | 床の反射にだけガラスの裏側。 | Glass back in floor reflection only. |
-| AR-06-fluorescent-tag | 蛍光灯の端から紐で下がる無地の紙札。 | Blank tag hangs from tube end by string. |
+| AR-06-fluorescent-tag | 蛍光灯の端から紐で下がる札。 | Tag hangs by a string from the tube end. |
 | AR-07-pictogram-flip | 扉のピクトグラムが逆さに。 | The door pictogram turned upside down. |
-| AR-07-paper-tag-lamp | 長方形の蛍光灯の端に貼られた無地の紙札。 | Blank tag stuck to rectangular tube end. |
+| AR-07-paper-tag-lamp | 長方形の灯具の端に貼られた札。 | Tag stuck on a rectangular light's end. |
 | AR-08-vent-paper-plug | 天井の黒い丸が紙で塞がれた。 | Paper plugs the black ceiling dome. |
 | AR-01-ceiling-fan-showa | 天井に古い木の羽根の扇風機。 | An old wooden ceiling fan. |
 | AR-01-red-rubber-ball | 最前景の床に白い帯のある赤いゴムまり。 | Red ball with white band, foreground. |
@@ -373,7 +375,7 @@
 | RT-UI-09 | 異変と警告が不一致。どちらが誤り？ | Badge and anomaly clash. Which is wrong? |
 | RT-UI-10 | カーソルや反応表示が乱れる。 | Cursor and hover feedback glitch. |
 | RT-RULE-01 | 異変が上限超え。上限は誰が？ | Anomaly cap exceeded. Who set it? |
-| RT-RULE-02 | 正報でも直らず。一度だけ？ | Report was right, no fix. Once only? |
+| RT-RULE-02 | 正しく報告したのに直らない。一度だけ？ | Right report, yet not fixed. Just once? |
 | RT-RULE-03 | 別カメラの報告が通った。判定側の誤りか？ | Wrong cam accepted. System error? |
 | RT-RULE-04 | カテゴリ判定が逆。基準が変わった？ | Category reversed. Rule changed? |
 | RT-RULE-05 | 何もないはずのカメラで誤報？ | False report on a clear camera? |

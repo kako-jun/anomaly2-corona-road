@@ -18,7 +18,8 @@ not hand-edit the ledger's `memo`. For every ledger entry the script (re)writes
 right after the entry's `detail:` line (an existing `memo:` block and its `# sample` comment are replaced), so a rerun is
 idempotent. It fails if an id is missing on either side, a wording is empty or multi-line, Japanese is over 20
 characters or English over 40, or a wording is used twice. Everything else in the ledger text is left as it is.
-Once the wording is approved the draft file and this script are deleted: the ledger is then the only master.
+Before approval the draft is the input and the ledger is generated from it; once the wording is approved the draft file
+and this script are deleted and the ledger is the only master.
 """
 import re
 import sys
