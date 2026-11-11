@@ -44,7 +44,7 @@
 | AR-03-red-string | 天井から赤い紐。 | A red string hanging from the ceiling. |
 | AR-05-wind-chime | 照明の下に風鈴。 | A wind chime beneath the light. |
 | AR-07-warm-light | 暗い開口の奥に暖かい灯り。人がいる？ | Warm light in the dark opening. Anyone there? |
-| AR-05-blue-brick | レンガに青い一枚。差し替えか？ | One blue brick. Was it replaced? |
+| AR-05-blue-brick | レンガ帯の青いタイル一枚。差し替えか？ | One blue tile in the brick strip. Was it replaced? |
 | AR-06-tilted-notice | 壁の額が傾いた。 | The framed notice tilted. |
 | AR-01-shutter-light | 閉じたシャッターの下に光。 | Light beneath the closed shutter. |
 | AR-03-ceiling-dots | 天井に水玉模様。 | Polka dots on the ceiling. |
@@ -246,7 +246,7 @@
 | AR-06-yellow-raincoat | 壁に子供用の黄色い雨合羽。 | A child's yellow raincoat on the wall. |
 | AR-01-floor-crosswalk | 床一面に横断歩道。渡る先は？ | A crosswalk across the floor. Where does it lead? |
 | AR-01-right-wall-lattice-doors | 店先の壁が格子戸の連なりに。 | The storefront wall became a row of lattice doors. |
-| AR-01-ceiling-lamp-off | 天井灯が消え、黒い穴のよう。奥は？ | Like a black hole where the ceiling light was. What's beyond? |
+| AR-01-ceiling-lamp-off | 灯りが消え、黒い円だけ残る。奥は？ | The light is out; a dark circle remains. What's behind it? |
 | AR-01-ceiling-tile-drop | 天井板が片側だけ垂れ下がる。 | A ceiling panel hangs down at one end. |
 | AR-01-ceiling-wet-stain | 天井の濡れ染みから一滴。 | A drop hangs beneath a wet ceiling stain. |
 | AR-01-floor-light-orphan | 床に光だまり。光源は見当たらない。どこから？ | A pool of light, no source in sight. Where from? |
@@ -261,7 +261,7 @@
 | AR-02-floor-ripple | 乾いた床に波紋。水はどこ？ | Ripples on a dry floor. Where is the water? |
 | AR-02-ceiling-starry-sky | 地下街の天井が星空に。外が見える？ | A starry sky on the underground ceiling. Is that outside? |
 | AR-05-morning-glory-wall | 壁から天井へ朝顔の蔓。 | Morning glory vines climb from wall to ceiling. |
-| AR-05-aisle-silhouette | 奥に虫取り網の少年の影。誰の記憶？ | A boy with an insect net, a silhouette in the distance. Whose memory? |
+| AR-05-aisle-silhouette | 奥に虫取り網の少年の影。誰だ？ | A boy's silhouette with an insect net. Who is he? |
 | AR-05-aisle-light-streak | 光だまりから光源のない方へ筋が伸びる。 | A streak extends from the pool of light toward no visible source. |
 | AR-05-aisle-goldfish | 通路に金魚の入った水袋。 | A bag of water with a goldfish in the aisle. |
 | AR-05-door-fingers | カーテンの隙間に指の形の影。 | Finger-shaped shadows at the curtain's edge. |
