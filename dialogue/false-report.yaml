@@ -66,54 +66,54 @@ dialogues:
   - id: false-report-12
     tone: light
     lines:
-      - { who: M, text: '誤報でした　次を見ましょう', en: "It was wrong. Yes, I know." }
-      - { who: A, text: '分かったから　そんなに正確に言わなくていいよ', en: "Yes, it's confirmed." }
+      - { who: M, text: '誤報でした　次を見ましょう', en: "That was a false report. Let's check the next one." }
+      - { who: A, text: '分かったから　そんなに正確に言わなくていいよ', en: "I know, you don't have to be so precise about it." }
   - id: false-report-13
     tone: light
     lines:
-      - { who: A, text: 'ああもう　間違えた', en: "Even your confirmation is so calm." }
-      - { who: M, text: 'はい　次がありますよ', en: "Sorry, I jumped ahead again." }
-      - { who: A, text: 'その言い方　ちょっと軽いよ', en: "You don't need to apologize." }
-      - { who: M, text: 'すみません　口が滑りました', en: "That makes me feel even worse." }
+      - { who: A, text: 'ああもう　間違えた', en: "Oh, I did it again. I was wrong." }
+      - { who: M, text: 'はい　次がありますよ', en: "Yes, there's always the next one." }
+      - { who: A, text: 'その言い方　ちょっと軽いよ', en: "That sounded a little too casual." }
+      - { who: M, text: 'すみません　口が滑りました', en: "Sorry, that slipped out." }
   - id: false-report-14
     tone: light
     lines:
-      - { who: A, text: '今のなし!　ってできないよね', en: "I'll take another look calmly." }
-      - { who: M, text: 'はい　記録は消せないですよ', en: "Yes, that's better." }
-      - { who: A, text: 'ええっ　やっぱり残るんだ', en: "You don't have to say it with such a straight face!" }
+      - { who: A, text: '今のなし!　ってできないよね', en: "I can't just take that one back, can I?" }
+      - { who: M, text: 'はい　記録は消せないですよ', en: "No, the record can't be erased." }
+      - { who: A, text: 'ええっ　やっぱり残るんだ', en: "Wait, it stays in the log?" }
   - id: false-report-15
     tone: light
     lines:
-      - { who: A, text: '誤報って　こんなに悔しいんだね', en: "I can't take that one back, can I?" }
-      - { who: M, text: 'はい　初めて知りました?', en: "No, the record can't be erased." }
-      - { who: A, text: 'うん　できれば知らずにいたかった', en: "Wait, it stays in the log?" }
+      - { who: A, text: '誤報って　こんなに悔しいんだね', en: "False reports are this frustrating, huh?" }
+      - { who: M, text: 'はい　初めて知りました?', en: "Yes. Is this your first time finding out?" }
+      - { who: A, text: 'うん　できれば知らずにいたかった', en: "Yeah. I wish I'd never learned." }
   - id: false-report-16
     tone: light
     lines:
-      - { who: A, text: '今度は落ち着いて見る　絶対', en: "False reports sting this much, huh?" }
-      - { who: M, text: 'はい　そのほうがいいですよ', en: "Yes. Is this your first time finding out?" }
-      - { who: A, text: 'そんなに真顔で言わなくても!', en: "Yeah. I wish I'd never learned." }
+      - { who: A, text: '今度は落ち着いて見る　絶対', en: "Next time I'll take a calm look. I mean it." }
+      - { who: M, text: 'はい　そのほうがいいですよ', en: "Yes, that would be better." }
+      - { who: A, text: 'そんなに真顔で言わなくても!', en: "You don't have to say it with such a straight face!" }
   - id: false-report-17
     tone: light
     lines:
-      - { who: A, text: '今のは間違い　はい　分かってる', en: "Next time I'll stay calm. I mean it." }
-      - { who: M, text: 'はい　確認できましたよ', en: "Yes, that would be best." }
-      - { who: A, text: '確認の声まで落ち着いてるね', en: "You don't have to look so serious!" }
+      - { who: A, text: '今のは間違い　はい　分かってる', en: "That was wrong. Yes, I know." }
+      - { who: M, text: 'はい　確認できましたよ', en: "Yes, it's confirmed." }
+      - { who: A, text: '確認の声まで落ち着いてるね', en: "Even your confirmation sounds calm." }
   - id: false-report-18
     tone: light
     lines:
-      - { who: A, text: 'ごめん　また先走った', en: "That was wrong. Yeah, I know." }
-      - { who: M, text: '謝らなくて大丈夫ですよ', en: "Yes, it's confirmed." }
-      - { who: A, text: 'そう言われると　余計申し訳ないよ', en: "Even your confirmation is so calm." }
+      - { who: A, text: 'ごめん　また先走った', en: "Sorry, I jumped ahead again." }
+      - { who: M, text: '謝らなくて大丈夫ですよ', en: "You don't need to apologize." }
+      - { who: A, text: 'そう言われると　余計申し訳ないよ', en: "When you say that, I feel even worse." }
   - id: false-report-19
     tone: light
     lines:
-      - { who: A, text: 'もう一回　落ち着いてやる', en: "Sorry, I rushed again." }
-      - { who: M, text: 'はい　次も見ていますよ', en: "You don't need to apologize." }
-      - { who: A, text: 'ありがとう　頼りにしてる', en: "Now I feel even worse." }
+      - { who: A, text: 'もう一回　落ち着いてやる', en: "I'll try again, calmly." }
+      - { who: M, text: 'はい　次も見ていますよ', en: "Yes, I'll keep watching too." }
+      - { who: A, text: 'ありがとう　頼りにしてる', en: "Thanks. I'm counting on you." }
   - id: false-report-20
     tone: light
     lines:
-      - { who: A, text: 'えっ　また違う?　今日はだめだなあ', en: "I'll try again, calmly." }
-      - { who: M, text: '今日はまだ終わってないですよ', en: "Yes, I'll keep watching too." }
-      - { who: A, text: 'そうだね　ここから取り返す!', en: "Thanks. I'm counting on you." }
+      - { who: A, text: 'えっ　また違う?　今日はだめだなあ', en: "Huh, wrong again? I'm having a bad night." }
+      - { who: M, text: '今日はまだ終わってないですよ', en: "The night isn't over yet." }
+      - { who: A, text: 'そうだね　ここから取り返す!', en: "Right. I'll make up for it from here!" }
