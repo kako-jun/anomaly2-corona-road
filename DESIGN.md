@@ -161,7 +161,7 @@ The in-game screen is a single cabinet (`.cabinet` in `src/styles/retro.css`): t
 
 On a 390 x 844 phone the picture (`.bezel`) is 2.9px shorter than before the #308 frame: it is width-limited, so it now follows the frame image's 1246/1679 aspect ratio exactly (it used to stretch about 0.6% taller). That comes from #308, not from the HUD change in #314.
 
-`text-box: trim-both cap alphabetic` (digit centring in the HUD windows, #314) is supported from Chrome 133, Safari 18.2 and Firefox 154 ([MDN browser-compat-data](https://github.com/mdn/browser-compat-data/blob/main/css/properties/text-box.json)). Only older browsers use the fallback (1em line box, nudged down 1px): the windows stay 36px and the digits sit within about 1.5px of the centre instead of exactly on it.
+`text-box: trim-both cap alphabetic` (digit centring in the HUD windows, #314) is supported from Chrome 133, Safari 18.2 and Firefox 154 ([MDN browser-compat-data](https://github.com/mdn/browser-compat-data/blob/main/css/properties/text-box.json)). Only older browsers use the fallback (1em line box, nudged down 1px): the windows stay 36px and the digits sit within about 2px of the centre (1280 is zoomed) instead of exactly on it.
 
 
 ---
