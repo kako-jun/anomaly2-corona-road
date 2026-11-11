@@ -14,6 +14,8 @@ fixed 340x620, so the result does not depend on the screen), in Japanese and Eng
     makes the page scroll at 360x640, 390x844, 768x1024 or 1280x720,
   - a line starts with a closing mark / small kana (kinsoku),
   - a stamp collides with the night number, the title or the first sketch frame (WITHDRAWN at its longest).
+  - a synopsis / scribble line sits off its ruled line: at either end of the line (a scribble is turned) the letters' base
+    must be within RULE_BELOW_MAX below .. RULE_ABOVE_MAX above its rule, so the rules never run through the memo.
 
 Usage: start the dev server (`npm run dev`), then `npm run check:note-wrap` (URL: NOTE_URL, default
 http://127.0.0.1:5173; Chromium: CHROME or the Playwright default). Exit code 1 on any problem.
@@ -41,8 +43,8 @@ def base(**over):
     return s
 
 
-def open_note(browser, save):
-    page = browser.new_page(viewport={"width": 390, "height": 844})
+def open_note(browser, save, locale=None):
+    page = browser.new_page(viewport={"width": 390, "height": 844}, locale=locale)
     page.add_init_script(seed(save))
     page.goto(URL, wait_until="domcontentloaded")
     page.click(".start-deck button.start-key")
@@ -239,9 +241,11 @@ async () => {
   const notes = document.querySelector('.note-notes'), syn = document.querySelector('.note-syn'), sc = document.querySelector('.note-scrib')
   const synBottom = syn.offsetTop + syn.offsetHeight
   const gapAbove = sc ? sc.offsetTop - synBottom : 0
-  // A scribble is a separate jotting: about one ruled line below the synopsis (normally 14-18px; never under 10px).
-  const minGap = 14
-  if (sc && (gapAbove < minGap || gapAbove > 20)) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want ${minGap}-20px)`)
+  // A scribble is a separate jotting: exactly one rule pitch below the synopsis (--note-rule, 22px; +-1 for rounding), so its
+  // lines stay in phase with the rules (RULEFIT).
+  const pitch = parseFloat(getComputedStyle(notes).getPropertyValue('--note-rule'))
+  if (!(pitch > 0)) res.push('--note-rule is not set on .note-notes (the rule pitch is read from it)')
+  else if (sc && Math.abs(gapAbove - pitch) > 1) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want the rule pitch, ${pitch}px)`)
   const lastSyn = syn.querySelector('p:last-child').getBoundingClientRect()
   const clear = scribBox() ? scribBox().top - lastSyn.bottom : 99
   if (clear < 8) res.push(`the tilted scribble is only ${clear.toFixed(1)}px below the last synopsis line (need 8)`)
@@ -278,6 +282,50 @@ FOCUS = """
   return res
 }
 """
+
+RULEFIT = """
+([lo, hi]) => {
+  // Every synopsis / scribble line sits on its own ruled line (the rules are CSS, the lines are text). For both ends of each
+  // line (a scribble line is turned, so its ends differ) the letters' base must be within [lo, hi] px above the rule OF THAT
+  // LINE (line i of the sheet = rule i; a window that also fits another rule would let a line sit on the wrong one),
+  // measured on the 340px paper (the fit scale divided out). The pitch comes from the CSS (--note-rule).
+  const res = []
+  // The loop below flips the language class on a page whose text stays in one language: English words in the Japanese
+  // hand do not exist in the game, so that pairing is skipped (main() opens a real ja-JP page for the Japanese lines).
+  const screen = document.querySelector('.note-screen')
+  if (!screen.classList.contains('note-' + screen.lang)) return res
+  const scale = document.querySelector('.note-paper').getBoundingClientRect().width / 340
+  const notes = document.querySelector('.note-notes')
+  const pitch = parseFloat(getComputedStyle(notes).getPropertyValue('--note-rule'))
+  const top = notes.getBoundingClientRect().top
+  if (!(pitch > 0)) return ['--note-rule is not set on .note-notes (the rule pitch is read from it)']
+  for (const p of document.querySelectorAll('.note-syn p, .note-scrib p')) {
+    const mk = () => { const e = document.createElement('span'); e.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline'; return e }
+    const a = mk(), b = mk()
+    p.insertBefore(a, p.firstChild); p.appendChild(b)
+    const ends = [a, b].map(e => (e.getBoundingClientRect().bottom - top) / scale)
+    a.remove(); b.remove()
+    // the line's box starts at k * pitch (offsetTop ignores the turn), so its rule is the one that ends the box: (k + 1) * pitch
+    const rule = (Math.round(p.offsetTop / pitch) + 1) * pitch
+    ends.forEach((y, i) => {
+      const above = rule - y
+      if (above < lo || above > hi) res.push(`"${p.textContent.slice(0, 14)}" ${i ? 'right' : 'left'} end sits ${above.toFixed(1)}px above its rule (allowed ${lo}..${hi})`)
+    })
+  }
+  return res
+}
+"""
+
+# How far the letters' base may stray from the line's own rule, in px above it (negative = below it). Ground: a rule may
+# run through the letters only by about a quarter to a third of their height. Measured heights above the base: Caveat at
+# 20px has an x-height of 8px (OS/2 sxHeight 400 of 1000) and a cap height of about 12.2px (sCapHeight 610); the Japanese
+# glyphs stand 13.2px. Below: the rule may cut 3px up into the letters = 37% of the English x-height, 25% of its caps,
+# 23% of the Japanese glyphs. Above: the rule over the line is then 22 - 13 = 9px above the base, i.e. over the top of the
+# English lowercase (8px: no cut at all), 3.2px (26%) under the English caps and 4.2px (32%) under the Japanese tops.
+# Past either the memo reads as struck through. (A scribble is turned, so its two ends differ; its middle sits about 5px
+# up.)
+RULE_BELOW_MAX = 3
+RULE_ABOVE_MAX = 13
 
 VIEWPORTS = ((360, 640), (390, 844), (768, 1024), (1280, 720))
 FLAGS = {
@@ -319,6 +367,8 @@ def main():
                         page.wait_for_timeout(60)
                         for msg in page.evaluate(LAYOUT):
                             problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                        for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
+                            problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
                     if (stage, variant) in (("start", "plain"), ("child", "fresh")):
                         for w, h in VIEWPORTS:
                             page.set_viewport_size({"width": w, "height": h})
@@ -349,6 +399,18 @@ def main():
                         for msg in page.evaluate(STAMPS, lang):
                             problems.append(f"[{lang}] {msg}")
                 page.close()
+        # The Japanese lines, on a real ja-JP page (the loop above only reaches the language the browser is in).
+        for stage, shift in (("elder3", last), ("child", None), ("child", last)):
+            page = open_note(browser, stage_save(stage, shift), locale="ja-JP")
+            # The page must really be Japanese, or RULEFIT would skip every line and pass for nothing.
+            if not page.evaluate("(() => { const s = document.querySelector('.note-screen'); return s.lang === 'ja' && s.classList.contains('note-ja') })()"):
+                problems.append(f"[ja-JP] {stage}: the page did not open as Japanese (note-ja), so its lines were not measured")
+            for w, h in VIEWPORTS:
+                page.set_viewport_size({"width": w, "height": h})
+                page.wait_for_timeout(60)
+                for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
+                    problems.append(f"[ja-JP {w}x{h}] {stage}/{'fresh' if shift else 'plain'}: {msg}")
+            page.close()
         browser.close()
     if problems:
         print("\nPROBLEMS:", *problems, sep="\n  ")
