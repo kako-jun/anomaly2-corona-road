@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import ledger from 'virtual:dialogue'
 import { SUBTITLE_EN_ENABLED } from './gameConfig'
-import { pickSubtitle, subtitleHoldMs } from './subtitle'
+import {
+  EN_GUIDE_CHARS,
+  longEnglishLines,
+  pickSubtitle,
+  subtitleHoldMs,
+} from './subtitle'
 
 const chars = (n: number) => 'あ'.repeat(n)
 
@@ -59,5 +64,21 @@ describe('pickSubtitle (#326)', () => {
 
   it('ships with the switch off', () => {
     expect(SUBTITLE_EN_ENABLED).toBe(false)
+  })
+})
+
+describe('longEnglishLines (#326)', () => {
+  it('lists only the en lines over the guide, with id and 1-based line', () => {
+    const ok = 'a'.repeat(EN_GUIDE_CHARS)
+    const long = 'a'.repeat(EN_GUIDE_CHARS + 1)
+    expect(
+      longEnglishLines([
+        { id: 'x-1', lines: [{ en: ok }, { en: long }, {}] },
+        { id: 'x-2', lines: [{ en: long }] },
+      ])
+    ).toEqual([
+      { id: 'x-1', line: 2, chars: EN_GUIDE_CHARS + 1 },
+      { id: 'x-2', line: 1, chars: EN_GUIDE_CHARS + 1 },
+    ])
   })
 })

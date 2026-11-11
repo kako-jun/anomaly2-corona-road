@@ -208,7 +208,7 @@ export const CameraView = ({
                   {subtitle.text}
                 </div>
               ) : (
-                <div>{phraseSpans(subtitle.text)}</div>
+                <div lang="ja">{phraseSpans(subtitle.text)}</div>
               ))}
           </div>
           <div

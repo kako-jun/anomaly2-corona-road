@@ -35,3 +35,23 @@ export const pickSubtitle = (
   enabled && language === 'en' && line.en !== undefined
     ? { text: line.en, english: true }
     : { text: line.text, english: false }
+
+/**
+ * The guide length of an English subtitle in characters (#326). A longer `en` can need 3 lines or more on a small
+ * screen and reach the camera label (150 characters make 6 lines at 360x640), so `npm run check:subtitle-en` warns about
+ * lines over it; it is a guide, not a build error (check a long one by eye, or shorten it). The single source of the number:
+ * `dialogue/README.md` refers to it by name and `scripts/check-subtitle-en.mjs` reads this line.
+ */
+export const EN_GUIDE_CHARS = 80
+
+/** The English lines over `EN_GUIDE_CHARS` (entry id, 1-based line number, length), for the warning of `check:subtitle-en`. */
+export const longEnglishLines = (
+  entries: readonly { id: string; lines: readonly { en?: string }[] }[]
+): { id: string; line: number; chars: number }[] =>
+  entries.flatMap(e =>
+    e.lines.flatMap((l, i) =>
+      l.en !== undefined && l.en.length > EN_GUIDE_CHARS
+        ? [{ id: e.id, line: i + 1, chars: l.en.length }]
+        : []
+    )
+  )
