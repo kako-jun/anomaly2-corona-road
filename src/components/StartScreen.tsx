@@ -1,8 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import '../styles/start.css'
-import { CARD } from '../data/titleCard'
+import { NEXT_HINT, NOTES_LABEL, titleNotes } from '../data/titleNotes'
 import type { Language } from '../utils/saveData'
-import { misreportLampCount, misreportLimitText } from '../utils/startScreen'
+import { nextPage, prevPage, swipeDirection } from '../utils/titlePager'
+import { TitleNoise } from './TitleNoise'
+
+// The photo's drift starts at a different point of its loops (70 s and 53 s) on each load; CSS only after that.
+const panOffsets = () =>
+  ({
+    '--start-pan-x-delay': `${-Math.floor(Math.random() * 70)}s`,
+    '--start-pan-y-delay': `${-Math.floor(Math.random() * 53)}s`,
+  }) as CSSProperties
 
 interface StartScreenProps {
   onStart: () => void
@@ -11,10 +20,19 @@ interface StartScreenProps {
   endingReached?: boolean
   /** Wipe the progress (called after the confirmation). */
   onStartOver?: () => void
-  /** The language of the card's sentences, and the switch that changes it (#292). */
+  /** The language of the notes' pictures (#292), decided from the browser by the app. */
   language?: Language
-  onLanguage?: (l: Language) => void
 }
+
+const startKeyClass = 'key start-key'
+
+/** The lamp beside the key: green when the key can be pressed, amber while the shift is loading. */
+const KeyLamp = ({ amber = false }: { amber?: boolean }) => (
+  <i
+    className={`lamp on ${amber ? 'amber' : 'green'} start-lamp`}
+    aria-hidden="true"
+  />
+)
 
 export const StartScreen = ({
   onStart,
@@ -22,7 +40,6 @@ export const StartScreen = ({
   endingReached = false,
   onStartOver,
   language = 'ja',
-  onLanguage,
 }: StartScreenProps) => {
   const [confirming, setConfirming] = useState(false)
   // Keyboard focus follows the confirmation: CANCEL (the safe side) when it opens, START OVER when
@@ -61,142 +78,163 @@ export const StartScreen = ({
     return () => document.body.classList.remove('start-open')
   }, [])
 
-  const card = CARD[language]
-  const lamps = Array.from({ length: misreportLampCount() }, (_, i) => i)
+  const notes = useMemo(() => titleNotes(language), [language])
+  const [page, setPage] = useState(0)
+  const swipeStart = useRef<number | null>(null)
+  const swiped = useRef(false)
+  const [pan] = useState(panOffsets)
+  const go = (dir: 'next' | 'prev') =>
+    setPage(p =>
+      dir === 'next' ? nextPage(p, notes.length) : prevPage(p, notes.length)
+    )
+  const current = Math.min(page, notes.length - 1)
 
   return (
-    <main className="start-screen">
-      <div className="start-lang" role="group" aria-label="Language">
-        {(['ja', 'en'] as const).map(l => (
-          <button
-            key={l}
-            type="button"
-            lang={l}
-            className="start-lang-key"
-            aria-pressed={language === l}
-            onClick={() => onLanguage?.(l)}
-          >
-            {l.toUpperCase()}
-          </button>
-        ))}
-      </div>
-      <div className="start-logo">
-        <img src="/images/logo.webp" alt="" />
+    <main className="start-screen" style={pan}>
+      <div className="start-photo" aria-hidden="true">
+        {/* two nested slow drifts (x outside, y inside) with different periods: no corner where the speed jumps */}
+        <div className="start-pan-x">
+          <img src="/images/logo.webp" alt="" draggable={false} />
+        </div>
+        <TitleNoise />
       </div>
       <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
 
-      <section className="start-panel">
-        <div className="start-plate">{card.plate}</div>
-
-        <div className="start-row">
-          <div className="start-lab">{card.purposeLabel}</div>
-          <div className="start-desc">{card.purpose}</div>
-        </div>
-
-        <div className="start-row">
-          <div className="start-lab">{card.switchLabel}</div>
-          <div className="start-desc">
-            {card.switchText}
-            <div className="start-keys" aria-hidden="true">
-              <span className="start-key start-key--tri" />
-              <span className="start-key start-key--tri start-key--right" />
-              <span className="start-key">A</span>
-              <span className="start-key">D</span>
-              <span className="start-key">1</span>
-              <span className="start-key">…</span>
-              <span className="start-key">8</span>
-            </div>
-            <span className="start-sr-only">{card.switchKeys}</span>
-          </div>
-        </div>
-
-        <div className="start-row">
-          <div className="start-lab">{card.adjustLabel}</div>
-          <div className="start-desc">
-            <span className="start-knob" aria-hidden="true" /> {card.adjust}
-          </div>
-        </div>
-
-        <div className="start-row">
-          <div className="start-lab">{card.reportLabel}</div>
-          <div className="start-desc">
-            {card.reportBefore}
-            <span className="start-rep">REPORT</span>
-            {card.reportAfter}
-          </div>
-        </div>
-
-        <div className="start-row">
-          <div className="start-lab">{card.mistakeLabel}</div>
-          <div className="start-desc">
-            <span className="start-lamps" aria-hidden="true">
-              {lamps.map(i => (
-                <i key={i} className="start-lamp" />
+      <div
+        className={confirming ? 'start-foot start-foot--confirm' : 'start-foot'}
+      >
+        <section
+          className="start-notes"
+          aria-label={NOTES_LABEL[language]}
+          lang={language}
+        >
+          <button
+            type="button"
+            className="start-page"
+            onPointerDown={e => {
+              swipeStart.current = e.clientX
+              swiped.current = false
+            }}
+            onPointerUp={e => {
+              if (swipeStart.current == null) return
+              const dir = swipeDirection(e.clientX - swipeStart.current)
+              swipeStart.current = null
+              if (dir) {
+                swiped.current = true
+                go(dir)
+              }
+            }}
+            onPointerCancel={() => {
+              swipeStart.current = null
+            }}
+            onClick={() => {
+              if (swiped.current) swiped.current = false
+              else go('next')
+            }}
+            onKeyDown={e => {
+              if (e.key === 'ArrowRight') go('next')
+              else if (e.key === 'ArrowLeft') go('prev')
+              else return
+              e.preventDefault()
+            }}
+          >
+            {/* every page sits in the same cell, so the block keeps the height of the tallest one and the photo above never jumps */}
+            <span className="start-stack">
+              {notes.map((n, i) => (
+                <img
+                  key={n.src}
+                  className={i === current ? undefined : 'start-off'}
+                  src={n.src}
+                  width={n.width}
+                  height={n.height}
+                  style={{ '--ar': n.width / n.height } as CSSProperties}
+                  alt={i === current ? n.alt : ''}
+                  aria-hidden={i === current ? undefined : true}
+                  draggable={false}
+                />
               ))}
             </span>
-            <b>{misreportLimitText(undefined, language)}</b>
-          </div>
-        </div>
-      </section>
+            <span className="start-sr-only">{NEXT_HINT[language]}</span>
+          </button>
+        </section>
+        <p className="start-pager" role="status">
+          <span className="start-pager-num">
+            {current + 1}/{notes.length}
+          </span>
+          {/* the new note's words are read out when the page turns */}
+          <span className="start-sr-only">{notes[current].alt}</span>
+          <span className="start-pager-dots" aria-hidden="true">
+            {notes.map((n, i) => (
+              <i key={n.id} className={i === current ? 'on' : undefined} />
+            ))}
+          </span>
+        </p>
 
-      {endingReached ? (
-        <div className="start-over">
-          <p className="start-over-note">
-            The investigation is closed. Start over to play again.
-          </p>
-          {confirming ? (
-            <div className="start-over-confirm">
-              <p className="start-over-warn" role="alert">
-                All progress will be erased. This cannot be undone.
-              </p>
-              <button
-                type="button"
-                className="start-go"
-                onClick={() => {
-                  focusAfter.current = 'erase'
-                  setConfirming(false)
-                  onStartOver?.()
-                }}
-              >
-                <i aria-hidden="true" />
-                ERASE ALL
-              </button>
-              <button
-                ref={cancelRef}
-                type="button"
-                className="start-over-cancel"
-                onClick={() => {
-                  focusAfter.current = 'cancel'
-                  setConfirming(false)
-                }}
-              >
-                CANCEL
-              </button>
+        <div className="start-deck">
+          {endingReached ? (
+            <div className="start-over">
+              <p className="start-over-note">The investigation is closed.</p>
+              {confirming ? (
+                <div className="start-over-confirm">
+                  <p className="start-over-warn" role="alert">
+                    All progress will be erased. This cannot be undone.
+                  </p>
+                  {/* like the report dialog: the choice on top, CANCEL below it; the same part, same width and height, only colour and word differ */}
+                  <div className="start-confirm-keys">
+                    <button
+                      type="button"
+                      className="key key-report start-key"
+                      onClick={() => {
+                        focusAfter.current = 'erase'
+                        setConfirming(false)
+                        onStartOver?.()
+                      }}
+                    >
+                      ERASE ALL
+                    </button>
+                    <button
+                      ref={cancelRef}
+                      type="button"
+                      className="key start-key"
+                      onClick={() => {
+                        focusAfter.current = 'cancel'
+                        setConfirming(false)
+                      }}
+                    >
+                      CANCEL
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="start-keyrow">
+                  <KeyLamp />
+                  <button
+                    ref={startOverRef}
+                    type="button"
+                    className={startKeyClass}
+                    onClick={() => setConfirming(true)}
+                  >
+                    START OVER
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
-            <button
-              ref={startOverRef}
-              type="button"
-              className="start-go"
-              onClick={() => setConfirming(true)}
-            >
-              <i aria-hidden="true" />
-              START OVER
-            </button>
+            <div className="start-keyrow">
+              <KeyLamp amber={loading} />
+              <button
+                ref={goRef}
+                type="button"
+                className={startKeyClass}
+                onClick={onStart}
+                disabled={loading}
+              >
+                {loading ? 'LOADING…' : 'START SHIFT'}
+              </button>
+            </div>
           )}
         </div>
-      ) : (
-        <button
-          ref={goRef}
-          type="button"
-          className="start-go"
-          onClick={onStart}
-          disabled={loading}
-        >
-          <i aria-hidden="true" />
-          {loading ? 'LOADING…' : 'START SHIFT'}
-        </button>
-      )}
+      </div>
     </main>
   )
 }

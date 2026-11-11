@@ -129,7 +129,7 @@ def main():
         browser = pw.chromium.launch(executable_path=CHROME, args=["--no-sandbox"]) if CHROME else pw.chromium.launch(args=["--no-sandbox"])
         page = browser.new_page(viewport={"width": 390, "height": 844})
         page.goto(URL, wait_until="domcontentloaded")
-        page.click("button.start-go")
+        page.click(".start-deck button.start-key")
         page.wait_for_selector(".note-btn")
         page.click(".note-btn")
         page.wait_for_selector(".movie-sub", state="attached")

@@ -79,12 +79,12 @@ const seed = (over: Record<string, unknown> = {}) =>
     })
   )
 
-describe('App: title -> investigation note (#297) and the language switch (#292)', () => {
+describe('App: title -> investigation note (#297) and the language from the browser (#292)', () => {
   beforeEach(() => {
     localStorage.clear()
     resetStore()
     game.initial = 'idle'
-    vi.stubGlobal('navigator', { ...navigator, language: 'en-US' })
+    vi.stubGlobal('navigator', { language: 'en-US', languages: ['en-US'] })
   })
 
   it('START SHIFT opens the note for the first night; its handwritten action is what starts the shift', async () => {
@@ -97,33 +97,55 @@ describe('App: title -> investigation note (#297) and the language switch (#292)
     ).toBeInTheDocument()
   })
 
-  it('follows the browser language at first, and the choice made on the title is kept and applied at once', async () => {
+  it('follows the browser language: English here, and the note is English', async () => {
     render(<App />)
-    expect(screen.getByText('GOAL')).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'JA' }))
-    expect(screen.getByText('目的')).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: 'How to play' })
+    ).toBeInTheDocument()
+    expect(document.documentElement.lang).toBe('en')
+    await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
+    expect(screen.getByText('CASE MEMO')).toBeInTheDocument()
+  })
+
+  it('a Japanese browser gets the Japanese title and note (navigator.languages first)', async () => {
+    vi.stubGlobal('navigator', {
+      ...navigator,
+      languages: ['ja-JP', 'en-US'],
+      language: 'en-US',
+    })
+    render(<App />)
+    expect(screen.getByRole('region', { name: '遊び方' })).toBeInTheDocument()
     expect(document.documentElement.lang).toBe('ja')
-    expect(JSON.parse(localStorage.getItem(SAVE_KEY)!).settings.language).toBe(
-      'ja'
-    )
     await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
     expect(screen.getByText('捜査メモ')).toBeInTheDocument()
   })
 
-  it('a saved language is used after a reload', () => {
-    seed({ settings: { language: 'ja' } })
+  it('there is no language key, and nothing is saved about the language', async () => {
     render(<App />)
-    expect(screen.getByText('目的')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'JA' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'EN' })).toBeNull()
+    await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
+    expect(
+      localStorage.getItem(SAVE_KEY)?.includes('"language"') ?? false
+    ).toBe(false)
   })
 
-  it('after the true ending the title offers only START OVER (no note), and still has the language switch', () => {
+  it('a language left in an old save is ignored (the browser decides every time)', () => {
+    seed({ settings: { language: 'ja' } })
+    render(<App />)
+    expect(
+      screen.getByRole('region', { name: 'How to play' })
+    ).toBeInTheDocument()
+  })
+
+  it('after the true ending the title offers only START OVER (no note), and no language key', () => {
     seed({ loops: 9, endingReached: true, flags: { elder1: true } })
     render(<App />)
     expect(screen.queryByRole('button', { name: 'START SHIFT' })).toBeNull()
     expect(
       screen.getByRole('button', { name: 'START OVER' })
     ).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'EN' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'EN' })).toBeNull()
   })
 
   it('true ending: BACK TO TITLE -> START OVER -> ERASE ALL wipes the progress and offers START SHIFT again', async () => {

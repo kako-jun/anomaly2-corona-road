@@ -87,7 +87,7 @@ def main():
                 p = b.new_page(viewport={"width": w, "height": h})
                 p.goto(url)
                 p.wait_for_selector(".start-screen")
-                p.click("button.start-go")  # the title key opens the investigation note (#297)
+                p.click(".start-deck button.start-key")  # the title key opens the investigation note (#297)
                 p.wait_for_selector(".note-paper")
                 p.click(".note-btn")  # its key starts the shift
                 p.wait_for_selector(".knob")
