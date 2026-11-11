@@ -13,7 +13,8 @@ fixed 340x620, so the result does not depend on the screen), in Japanese and Eng
   - any stage of the table (start / none / elder1..child, with and without last-night lines) overflows the one sheet or
     makes the page scroll at 360x640, 390x844, 768x1024 or 1280x720,
   - a line starts with a closing mark / small kana (kinsoku),
-  - the end-of-night memo, rendered for real with the two memo lines of #325 (a hypothesis and an anomaly's one-liner),
+  - the end-of-night memo, rendered for real with the two memo lines of #325 (a hypothesis and the widest one-liner of the
+    whole ledger, found by measuring every `memo` in prompts/anomalies.yaml in both languages),
     overflows the sheet or the ruled area at any stage, in either language, or a memo line is missing from it,
   - a stamp collides with the night number, the title or the first sketch frame (WITHDRAWN at its longest).
 
@@ -55,8 +56,28 @@ def open_note(browser, save):
     return page
 
 
+def ledger_memos():
+    """[{id, ja, en}] for every ledger entry that has a `memo` (the file is machine-written by scripts/apply-memos.py)."""
+    text = open(os.path.join(os.path.dirname(__file__), "..", "prompts", "anomalies.yaml"), encoding="utf-8").read()
+    out = []
+    pat = re.compile(r"^  - id: ['\"]?([^'\"\s]+)['\"]?\s*$|^      (ja|en): '((?:[^']|'')*)'\s*$", re.M)
+    cur = None
+    for m in pat.finditer(text):
+        if m.group(1):
+            cur = {"id": m.group(1)}
+            out.append(cur)
+        else:
+            cur[m.group(2)] = m.group(3).replace("''", "'")
+    memos = [e for e in out if "ja" in e and "en" in e]
+    if not memos:
+        sys.exit("no memo found in prompts/anomalies.yaml")
+    return memos
+
+
+MEMOS = ledger_memos()
+
 MEASURE = """
-async ([lang, kind]) => {
+async ([lang, kind, memos]) => {
   const d = await import('/src/data/investigationNotes.ts')
   const screen = document.querySelector('.note-screen')
   screen.classList.remove('note-ja', 'note-en'); screen.classList.add('note-' + lang)
@@ -73,8 +94,9 @@ async ([lang, kind]) => {
     take('last night', Object.values(d.LAST_NIGHT))
     // the memo lines (#325): the hypotheses and every one-liner of the anomaly ledger
     take('memo flag', Object.values(d.MEMO_FLAG_TEXT))
-    const a = (await import('/@id/__x00__virtual:anomalies')).default
-    take('ledger memo', a.filter(e => e.memo).map(e => e.memo))
+    // every `memo` of prompts/anomalies.yaml (read by the script, planned and non-image entries too: the game's
+    // virtual module only holds the produced image ones), labelled by id so the widest one can be rendered
+    for (const m of memos) if (m[lang]) lines.push(['ledger memo ' + m.id, m[lang]])
   } else {
     for (const [k, s] of Object.entries(d.STAGES)) take('scrib stage ' + k, s.scrib)
     for (const [k, o] of Object.entries(d.OUTCOMES)) take('scrib outcome ' + k, o.scrib || [])
@@ -328,11 +350,31 @@ def stage_save(stage, last=None):
     return base(**over)
 
 
+def widest_memos(browser):
+    """For each language, the ledger memo that is widest on the real paper (measured with the real fonts)."""
+    page = open_note(browser, stage_save("none"))
+    out = {}
+    for lang in ("ja", "en"):
+        page.evaluate("l => { const s = document.querySelector('.note-screen'); s.classList.remove('note-ja','note-en'); s.classList.add('note-' + l) }", lang)
+        # Only the entries the game draws can be rendered into a result (the others have the same line width, which
+        # the full measurement of main() already covers).
+        game = set(page.evaluate("async () => (await import('/@id/__x00__virtual:anomalies')).default.map(e => e.id)"))
+        rows = [r for r in page.evaluate(MEASURE, [lang, "syn", MEMOS])
+                if r["where"].startswith("ledger memo ") and r["where"].removeprefix("ledger memo ") in game]
+        if not rows:
+            sys.exit(f"[{lang}] no ledger memo found to render")
+        top = max(rows, key=lambda r: r["width"])
+        out[lang] = (top["where"].removeprefix("ledger memo "), top["text"])
+        print(f"widest {lang} memo: {out[lang][0]} ({top['width']}px of {top['avail']}px): {top['text']}")
+    page.close()
+    return out
+
+
 def check_after(browser, problems):
-    """The end-of-night note with both memo lines, rendered for real, at every stage and viewport."""
+    """The end-of-night note with both memo lines (the widest ledger memo of each language), rendered for real, at every stage and viewport."""
     with urllib.request.urlopen(URL + "/src/main.tsx") as resp:  # the dev server's own pre-bundled React URLs
         main_src = resp.read().decode()
-    from_memo = {"memoFlag": "shutter", "memo": "AR-02-coffee"}
+    widest = widest_memos(browser)  # lang -> (anomaly id, text): the ledger memo that is widest on the paper
     for stage in FLAGS:
         if stage == "start":
             continue
@@ -346,6 +388,8 @@ def check_after(browser, problems):
             del shifts["ending"]  # only reachable after the child
         for name, shift in shifts.items():
             for lang in ("ja", "en"):
+                memo_id, memo_text = widest[lang]
+                shift_l = {**shift, "memoFlag": "shutter", "memo": memo_id}
                 page = browser.new_page(viewport={"width": 390, "height": 844})
                 # The app itself is not needed (and its title animation is heavy): a bare page of the same origin,
                 # on which this check renders the note component by itself.
@@ -357,13 +401,13 @@ def check_after(browser, problems):
                 page.goto(URL + "/__note-blank", wait_until="domcontentloaded")
                 page.wait_for_timeout(300)
                 save = stage_save(stage)
-                lines = page.evaluate(AFTER, [save, shift, lang, main_src])
+                lines = page.evaluate(AFTER, [save, shift_l, lang, main_src])
                 label = f"after {stage}/{name}"
                 want_ja = {"ja": "シャッターの向こうへ", "en": "shutter"}[lang]
                 if not any(want_ja in t for t in lines):
                     problems.append(f"[{lang}] {label}: the hypothesis memo line is missing from {lines}")
-                if not any(t in ("右の台に、コーヒーが一杯。", "A cup of coffee on the right stand.") for t in lines):
-                    problems.append(f"[{lang}] {label}: the one-line memo is missing from {lines}")
+                if memo_text not in lines:
+                    problems.append(f"[{lang}] {label}: the widest one-line memo ({memo_id}) is missing from {lines}")
                 for w, h in VIEWPORTS:
                     page.set_viewport_size({"width": w, "height": h})
                     page.wait_for_timeout(60)
@@ -419,7 +463,7 @@ def main():
                             problems.append(f"[{lang}] {msg}")
                     if stage == "elder2" and variant == "plain":
                         for kind in ("syn", "scrib"):
-                            for r in page.evaluate(MEASURE, [lang, kind]):
+                            for r in page.evaluate(MEASURE, [lang, kind, MEMOS]):
                                 tag = f'[{lang}] {r["where"]}: "{r["text"]}" {r["width"]}/{r["avail"]}px'
                                 if r["width"] > r["avail"]:
                                     problems.append("too wide " + tag)

@@ -952,9 +952,21 @@ describe('the real ledger carries the memo marks (#325)', () => {
     for (const r of records.filter(r => r.memoFlags))
       expect(isGameRecord(r), r.id).toBe(true)
   })
-  it('keeps the sample one-liners to a few entries', () => {
-    const n = records.filter(r => r.memo).length
-    expect(n).toBeGreaterThanOrEqual(2)
-    expect(n).toBeLessThanOrEqual(3)
+  it('gives every entry a one-liner (#325 2nd stage); a new entry must bring its memo', () => {
+    const without = records.filter(r => !r.memo).map(r => r.id)
+    expect(without).toEqual([])
+  })
+  it('never uses the same one-liner twice, in either language', () => {
+    for (const lang of ['ja', 'en'] as const) {
+      const seen = new Map<string, string>()
+      for (const r of records) {
+        const text = r.memo?.[lang] ?? ''
+        expect(
+          seen.get(text),
+          `${lang}: ${r.id} repeats ${text}`
+        ).toBeUndefined()
+        seen.set(text, r.id)
+      }
+    }
   })
 })
