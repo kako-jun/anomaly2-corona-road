@@ -178,7 +178,7 @@ LAYOUT = """
   const res = []
   const gap = r('.note-btn').top - r('.note-form').bottom
   if (gap < 8) res.push(`the form is only ${gap.toFixed(1)}px above the key (need 8)`)
-  // The handwritten action at the bottom: its underline and arrow stay on the paper and 3px or more from the form and
+  // The handwritten action at the bottom: its circle and arrow stay on the paper and 3px or more from the form and
   // from each other's neighbours (the tap area is the whole button, 44px or more in both directions).
   const paper = document.querySelector('.note-paper').getBoundingClientRect()
   const act = document.querySelector('.note-btn')
@@ -187,8 +187,8 @@ LAYOUT = """
   // logical size (before the small tilt and the paper's fit scale): the rotated bounding box would read about 5px too big
   if (act.offsetHeight < 43.5 || act.offsetWidth < 43.5) res.push(`the action's tap area is only ${act.offsetWidth}x${act.offsetHeight} (need 44x44)`)
   if (act.tagName !== 'BUTTON' || act.getAttribute('aria-label') !== act.textContent) res.push('the action is not a <button> named by its words')
-  const parts = [...act.querySelectorAll('.note-act-under, .note-act-arrow, .note-act-text')]
-  if (parts.length !== 3) res.push('the action lacks words, underline or arrow')
+  const parts = [...act.querySelectorAll('.note-act-ring, .note-act-arrow, .note-act-text')]
+  if (parts.length !== 3) res.push('the action lacks words, circle or arrow')
   for (const el of act.querySelectorAll('svg')) if (el.getAttribute('aria-hidden') !== 'true') res.push('an action stroke is not aria-hidden')
   for (const el of parts) {
     const b = el.getBoundingClientRect()

@@ -1,15 +1,19 @@
 /**
  * The action at the bottom of the investigation note (#297): not a key but the detective's own handwriting in
- * red ballpoint: the words, a hand-drawn underline and an arrow to the right. A real <button> (so keyboard and
- * screen readers work, with the words as its name); only what it looks like is paper. The strokes are static SVGs
- * with fixed numbers (no randomness) and aria-hidden. The underline is a thin quad that thickens to the right with
- * its ends sticking out, like the hand-ruled frames (noteFrames.ts); the focus ring is a hand-drawn loop.
+ * blue ballpoint: the words circled by hand, and a hand-drawn arrow to the right of the circle. A real <button>
+ * (so keyboard and screen readers work, with the words as its name); only what it looks like is paper. The
+ * strokes are static SVGs with fixed numbers (no randomness) and aria-hidden. The circle is one tilted loop that
+ * runs past its start (it never closes), drawn with an uneven pressure (a second, heavier pass over one stretch);
+ * keyboard focus adds a second loop outside it.
  */
 interface NoteActionProps {
   label: string
   onClick: () => void
   busy: boolean
 }
+
+const LOOP =
+  'M17 8 C40 1 78 2 94 12 C101 20 92 33 62 37 C36 40 8 35 4 22 C1 12 14 7 30 5'
 
 export const NoteAction = ({ label, onClick, busy }: NoteActionProps) => (
   <button
@@ -22,15 +26,37 @@ export const NoteAction = ({ label, onClick, busy }: NoteActionProps) => (
     <span className="note-act-text">
       {label}
       <svg
-        className="note-act-under"
-        viewBox="0 0 100 7"
+        className="note-act-ring"
+        viewBox="0 0 100 40"
         preserveAspectRatio="none"
-        height="7"
         aria-hidden="true"
       >
-        <polygon
-          points="0,3.4 35,2.9 100,1.6 101,4.6 62,4.3 0,4.5"
-          fill="currentColor"
+        <g
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        >
+          <path d={LOOP} className="note-act-loop" />
+          <path
+            d="M94 12 C101 20 92 33 62 37 C44 39 30 39 18 36"
+            className="note-act-loop note-act-heavy"
+          />
+        </g>
+      </svg>
+      <svg
+        className="note-act-focus"
+        viewBox="0 0 100 40"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M10 3 C34 -3 84 -3 100 8 C108 18 103 34 92 40 C60 47 18 46 4 37 C-6 26 -2 10 16 1"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
         />
       </svg>
     </span>
@@ -52,21 +78,6 @@ export const NoteAction = ({ label, onClick, busy }: NoteActionProps) => (
         <path d="M27 3.2 C31 6 34 8 36 9.6 C33 12 30 15 26 17.6" />
         <path d="M5 12.6 C14 11 24 12 31 11" strokeWidth="1" opacity="0.45" />
       </g>
-    </svg>
-    <svg
-      className="note-act-focus"
-      viewBox="0 0 100 40"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M8 6 C30 1 80 0 96 8 C102 18 99 30 90 35 C60 41 20 40 6 33 C-1 24 2 12 14 4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
-      />
     </svg>
   </button>
 )
