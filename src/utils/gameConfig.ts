@@ -4,7 +4,7 @@ export const DEFAULT_CONFIG: GameConfig = {
   totalDurationMs: 480_000, // 8 real minutes = 22:00 -> 06:00 in game
   firstAnomalyDelayMs: 12_000, // first anomaly within 12 s — no dead opening
   anomalyIntervalMs: 30_000, // 30 s between spawns
-  maxConcurrentAnomalies: 4, // decided by kako-jun 2026-11-11 (#344)
+  maxConcurrentAnomalies: 4, // 4 decided by kako-jun 2026-11-11 (#344)
   maxMisreports: 3,
   minCorrectReports: 4,
 }
@@ -67,8 +67,7 @@ export const msToGameTime = (ms: number): string => {
   // Clamp to the shift: before 0 -> 22:00, after the end -> stop at 06:00.
   const clamped = Math.min(Math.max(0, ms), DEFAULT_CONFIG.totalDurationMs)
   const elapsedGameMinutes = Math.floor(clamped / 1000)
-  const minuteOfDay =
-    (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
+  const minuteOfDay = (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
   const hours = Math.floor(minuteOfDay / 60)
   const minutes = minuteOfDay % 60
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
@@ -114,8 +113,8 @@ export const SUBTITLE_EN_ENABLED = false
 
 /**
  * Pacing once the child has been found (the `child` flag is raised), Issue #86. kako-jun only said
- * "more anomalies appear after the child is found". The interval (15 s) is a PLACEHOLDER; the cap (8) is decided
- * (kako-jun 2026-11-11, #344: 4 at once normally, 8 at the end).
+ * "more anomalies appear after the child is found". The interval (15 s) is a PLACEHOLDER; the caps (4 normally, 8 here) are decided
+ * by kako-jun (2026-11-11, #344); reading "the end" as "after the child is found" is a provisional interpretation.
  * They replace `anomalyIntervalMs` / `maxConcurrentAnomalies` of `DEFAULT_CONFIG` for the rest of the shift.
  */
 export const CHILD_FOUND_PACING = {
