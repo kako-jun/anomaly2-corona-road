@@ -119,6 +119,7 @@ npm run format    # Prettierフォーマット
 ## 📄 ドキュメント
 
 - **[CLAUDE.md](./CLAUDE.md)** - 詳細な仕様書と開発ロードマップ
+- **[異変ごとの一言メモ案](./drafts/anomaly-memos-review.md)** - 日英のレビュー用下書き（#325）
 
 ## 📝 ライセンス
 
