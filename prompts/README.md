@@ -85,11 +85,13 @@ prompts/
 
 planned の画像案は制作済みの後ろ、画像以外の異変はその後ろに置く。
 
-| フィールド | 値                                                      | 省略時          |
-| ---------- | ------------------------------------------------------- | --------------- |
-| `status`   | `produced`（制作済み）/ `planned`（未制作）             | `produced`      |
-| `kind`     | `image`（overlay を描く）/ `non_image`（画像なし）      | `image`         |
-| `reiwa`    | `true` のみ（令和の異変の印。`false` や他の値はエラー） | 省略=令和でない |
+| フィールド  | 値                                                                                                                                        | 省略時          |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `status`    | `produced`（制作済み）/ `planned`（未制作）                                                                                               | `produced`      |
+| `kind`      | `image`（overlay を描く）/ `non_image`（画像なし）                                                                                        | `image`         |
+| `reiwa`     | `true` のみ（令和の異変の印。`false` や他の値はエラー）                                                                                   | 省略=令和でない |
+| `memo_flag` | `shutter` / `food` / `reiwa` のどれか、またはその配列（重複・未知の名前はエラー）。リザルトの捜査メモに「仮説の一行」を出すフラグ（#325） | 省略=立てない   |
+| `memo`      | `ja` と `en` の一言（どちらも空でない1行。他のキーはエラー）。その異変を見つけたあと、リザルトの捜査メモに出る一行（#325）                | 省略=一言なし   |
 
 | kind / status                        | 必須                                                                                        | 省略可・禁止                                                                                                                 |
 | ------------------------------------ | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -97,6 +99,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | image + planned                      | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                           |
 | non_image（planned / produced とも） | `anomaly_type`（画像以外の種類）`detail`                                                    | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`also_categories` は image と同じ検証（camera 不可）で任意 |
 
+- `memo_flag` / `memo`（#325）: リザルトの捜査メモの出し分け。**台帳が唯一の正本**で、コードに異変 ID は書かない。`memo_flag` のある異変を報告するとそのフラグが「未表示」に積まれ、リザルトで仮説の一行（文言は `src/data/investigationNotes.ts` の `MEMO_FLAG_TEXT`、段階ゲート `knownFrom` つき）として1回だけ出る。`reiwa: true` の異変は `memo_flag` を書かなくても `reiwa` を立てる。`memo` のある異変を報告するとその ID が「未表示」に積まれ、持ち越し分から無作為に1つがリザルトに出る（一度出したものは二度と出ない）。1回のリザルトに出るのは仮説の一行1つ＋一言メモ1つまで。一言メモは story.md に無い事実を足さず、その異変自体の内容（`detail`）から起こす。1行は日本語20字・英語40字以内で、使う文字は `public/fonts/note-chars.txt`（日本語）に含まれること（足りなければ `npm run check:note-fonts` の手順でサブセットを更新）。現在の `memo` は動作確認用の sample 3件のみで、量産は #325 の2段目。検証は `parseMemoFlags` / `parseMemo`（`src/utils/anomalyLedger.ts`）。
 - `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### AR-01-outlets-multiply`）。
 - non_image の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に画像以外の種類、non_image に画像の種類）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。

@@ -14,6 +14,7 @@ the monitor, and the SELECT CATEGORY dialog), at phone / tablet / desktop sizes 
   2. the same measurement again after every `100vh` in the page's own CSS has been rewritten to `100vh + LARGE_EXTRA`
      (a stand-in for the large viewport being taller than the visible one). Whatever still sizes the document by `vh`
      grows by LARGE_EXTRA and fails; whatever uses `dvh` does not.
+Only the exact spelling `100vh` is rewritten; another spelling such as `60vh` is not caught.
 The final check on a real phone (address bar sliding) is by hand.
 Not wired to CI (it needs a Chromium: --chrome or $CHROME, default ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome).
 Starts `npx vite` on a free port (and stops only that process) unless --url is given.
@@ -24,6 +25,7 @@ import argparse
 import glob
 import json
 import os
+import signal
 import socket
 import subprocess
 import sys
@@ -92,7 +94,7 @@ def main():
         port = free_port()
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         proc = subprocess.Popen(["npx", "vite", "--port", str(port), "--strictPort"], cwd=root,
-                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
         url = f"http://localhost:{port}/"
         for _ in range(60):
             try:
@@ -147,7 +149,7 @@ def main():
             b.close()
     finally:
         if proc:
-            proc.terminate()
+            os.killpg(proc.pid, signal.SIGTERM)  # npx and the vite it started, nothing else
     sys.exit(1 if bad else 0)
 
 

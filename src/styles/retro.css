@@ -414,8 +414,6 @@
   .tube {
     align-self: center;
     flex: 0 0 auto;
-    width: min(60vh * 0.9, 560px);
-    width: calc((100vh - 120px) * 0.75 + 56px);
     max-width: 600px;
     min-width: 420px;
   }
