@@ -51,7 +51,7 @@
   box-shadow:
     0 1px 3px #000a,
     inset 0 0 0 1px var(--paper-edge);
-  padding: 18px 16px 14px;
+  padding: 18px 16px 8px; /* the circled action at the bottom is taller than the old key: the room comes from here, not from a smaller loop */
   display: flex;
   flex-direction: column;
 }
@@ -222,10 +222,13 @@
 .note-scrib {
   /* Continues right under the last synopsis line, tilted like a note jotted in the margin. */
   width: fit-content;
-  margin: 16px 0 0 4px; /* a gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun) */
+  margin: 17px 0 0 4px; /* a gap after the synopsis: the scribble reads as a separate jotting, not a continuation (kako-jun) */
   color: var(--blue);
-  transform: rotate(var(--tilt-scrib));
-  transform-origin: 50% 50%; /* about its own middle: the left end dips and the right end lifts by the same few px, so no line runs into its neighbour */
+}
+.note-scrib p {
+  /* Every line is turned as one piece (the glyphs lean with it, no per-letter offsets), each by its own angle
+     (noteTilt.ts), about its own middle: the left end dips and the right end lifts by the same few px. */
+  transform-origin: 50% 50%;
 }
 .note-en .note-scrib p {
   font-size: 20px;
@@ -307,30 +310,102 @@
   border-bottom: 1.5px solid #8a7d5e;
 }
 
+/* The action at the bottom right (#297): the detective's handwriting on the paper, not a key. It is still a
+   <button>, 44px or more tall (the transparent box is the tap area); the look is blue ballpoint words circled by
+   hand + an arrow. No fill, border or shadow. */
 .note-btn {
+  position: relative;
+  align-self: flex-end;
   margin-top: auto;
-  height: 44px;
+  min-width: 96px;
+  min-height: 44px;
   flex: none;
   display: flex;
   align-items: center;
-  justify-content: center;
-  border: 2px solid #0b0b0a;
-  border-radius: 5px;
-  background: #e3d8b8;
-  color: var(--ink);
-  font: inherit;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  font-size: 16px;
-  box-shadow: 0 2px 0 #7a6f52;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 8px 0 12px;
+  border: 0;
+  background: none;
+  --pen: #1f3f8a; /* blue ballpoint, a little darker than the scribbles (contrast on the paper is over 7) */
+  --pen-hover: #12296b;
+  color: var(--pen);
+  font-size: 21px;
+  letter-spacing: 0.06em;
+  line-height: 1;
   cursor: pointer;
+  transform: rotate(var(--tilt-action));
+  transform-origin: 100% 50%;
+  -webkit-tap-highlight-color: transparent;
 }
 .note-en .note-btn {
-  font-size: 22px;
+  font-size: 29px;
+  letter-spacing: 0.02em;
+}
+.note-btn:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+.note-act-text {
+  position: relative;
+  display: inline-block;
+  padding: 9px 26px 11px 22px; /* room between the words and the loop: it must not look cramped */
+}
+.note-en .note-act-text {
+  padding: 5px 26px 7px 22px;
+}
+.note-act-ring,
+.note-act-focus {
+  position: absolute;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+}
+.note-act-ring {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.note-act-loop {
+  stroke-width: 1.7px;
+  transition: stroke-width 0.12s;
+}
+.note-act-heavy {
+  stroke-width: 2.6px;
+  opacity: 0.8;
+}
+.note-act-arrow {
+  flex: none;
+  display: block;
+  margin-top: 3px;
+  pointer-events: none;
+}
+.note-act-focus {
+  inset: -2px -2px -2px -4px; /* the second loop stays inside the paper and clear of the arrow (check:note-wrap) */
+  width: calc(100% + 6px);
+  height: calc(100% + 4px);
+  opacity: 0;
+  color: var(--ink);
 }
 .note-btn:focus-visible {
-  outline: 2px solid #ffd27a;
-  outline-offset: 3px;
+  outline: none;
+}
+.note-btn:focus-visible .note-act-focus {
+  opacity: 1;
+}
+.note-btn:active:not(:disabled) {
+  transform: translateY(2px) rotate(var(--tilt-action));
+}
+@media (hover: hover) {
+  .note-btn:hover:not(:disabled) {
+    color: var(--pen-hover);
+  }
+  .note-btn:hover:not(:disabled) .note-act-loop {
+    stroke-width: 2.4px;
+  }
+  .note-btn:hover:not(:disabled) .note-act-heavy {
+    stroke-width: 3.2px;
+  }
 }
 
 /* A hand-ruled outline (HandFrame): drawn over the box it sits in, never closed into a tidy rectangle. */

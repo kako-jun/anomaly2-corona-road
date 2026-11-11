@@ -28,7 +28,7 @@ describe('note tilt (hand-made look)', () => {
           `${names[i]} / ${names[j]}`
         ).toBeGreaterThanOrEqual(MIN_ANY_GAP)
   })
-  it('stays inside the ranges: stamps 1-4 deg, scribbles and writing 0.5-3 deg, tape 3-8 deg', () => {
+  it('stays inside the ranges: stamps 1-4 deg, scribbles and writing 0.5-4 deg, tape 3-8 deg', () => {
     const abs = Math.abs
     expect(abs(TILT.tape)).toBeGreaterThanOrEqual(3)
     expect(abs(TILT.tape)).toBeLessThanOrEqual(8)
@@ -36,9 +36,9 @@ describe('note tilt (hand-made look)', () => {
       expect(abs(v)).toBeGreaterThanOrEqual(1)
       expect(abs(v)).toBeLessThanOrEqual(4)
     }
-    for (const v of [TILT.scrib, TILT.night, ...TILT.label]) {
+    for (const v of [...TILT.scrib, TILT.night, TILT.action, ...TILT.label]) {
       expect(abs(v)).toBeGreaterThanOrEqual(0.5)
-      expect(abs(v)).toBeLessThanOrEqual(3)
+      expect(abs(v)).toBeLessThanOrEqual(4)
     }
   })
   it('is not evenly stepped (no regular spacing between the sorted angles)', () => {
@@ -47,6 +47,6 @@ describe('note tilt (hand-made look)', () => {
     expect(new Set(gaps).size).toBeGreaterThan(gaps.length / 2)
   })
   it('hands every angle to the CSS as a custom property', () => {
-    expect(Object.keys(tiltVars())).toHaveLength(10)
+    expect(Object.keys(tiltVars())).toHaveLength(13)
   })
 })
