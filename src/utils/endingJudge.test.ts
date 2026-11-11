@@ -20,6 +20,8 @@ describe('pacingFor', () => {
   })
   it('makes anomalies come more often and allows more at once after it', () => {
     const p = pacingFor(true)
+    expect(pacingFor(false).maxConcurrentAnomalies).toBe(4)
+    expect(p.maxConcurrentAnomalies).toBe(8)
     expect(p).toEqual(CHILD_FOUND_PACING)
     expect(p.anomalyIntervalMs).toBeLessThan(DEFAULT_CONFIG.anomalyIntervalMs)
     expect(p.maxConcurrentAnomalies).toBeGreaterThan(

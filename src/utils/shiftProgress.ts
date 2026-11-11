@@ -3,6 +3,9 @@ import anomalies from 'virtual:anomalies'
 import { reiwaIdsOf } from './anomalyLedger'
 import { newlyRaisedFlags, storyFlagNames } from './dialogueEngine'
 import { DEFAULT_CONFIG } from './gameConfig'
+import { stageOf } from './investigationNote'
+import { MEMO_INDEX } from './memoIndex'
+import { markShown, pickMemos, queueMemos } from './memoSelect'
 import { emptySave, update } from './saveData'
 import type { LastShift, SaveData } from './saveData'
 
@@ -42,13 +45,17 @@ export const recordFound = (anomalyId: string): string[] => {
   const out: string[] = []
   update(cur =>
     withRaisedFlags(
-      {
-        ...cur,
-        foundTotal: cur.foundTotal + 1,
-        foundIds: cur.foundIds.includes(anomalyId)
-          ? cur.foundIds
-          : [...cur.foundIds, anomalyId],
-      },
+      queueMemos(
+        {
+          ...cur,
+          foundTotal: cur.foundTotal + 1,
+          foundIds: cur.foundIds.includes(anomalyId)
+            ? cur.foundIds
+            : [...cur.foundIds, anomalyId],
+        },
+        anomalyId,
+        MEMO_INDEX.get(anomalyId)
+      ),
       out
     )
   )
@@ -58,9 +65,23 @@ export const recordFound = (anomalyId: string): string[] => {
 /**
  * A shift ended (dawn, withdraw or the true ending): one more loop, and how it went is kept for the
  * investigation note (#297). Flags that depend on loops rise at the next shift start.
+ *
+ * The result's memos are chosen here, once (#325): what is picked moves from waiting to shown and is written into
+ * `lastShift`, so opening the result again shows the same memos. What is not picked stays waiting for a later shift.
  */
 export const recordShiftEnd = (shift: LastShift): void => {
-  update(cur => ({ ...cur, loops: cur.loops + 1, lastShift: shift }))
+  update(cur => {
+    const pick = pickMemos(cur, stageOf(cur), MEMO_INDEX)
+    return {
+      ...markShown(cur, pick),
+      loops: cur.loops + 1,
+      lastShift: {
+        ...shift,
+        ...(pick.memoFlag ? { memoFlag: pick.memoFlag } : {}),
+        ...(pick.memo ? { memo: pick.memo } : {}),
+      },
+    }
+  })
 }
 
 /** Shift start: raise flags that became true between shifts (loop-based ones) and return them. */

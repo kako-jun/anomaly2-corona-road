@@ -29,6 +29,10 @@ export interface LastShift {
   closing: 'dawn' | 'withdraw' | 'ending'
   /** Story flags (elder1..3, child) that rose during that shift. */
   raised: string[]
+  /** The hypothesis memo flag shown on this shift's result (#325); absent = none. Chosen once, when the shift ended. */
+  memoFlag?: string
+  /** The anomaly id whose one-line memo is shown on this shift's result (#325); absent = none. */
+  memo?: string
 }
 
 export interface SaveData {
@@ -47,6 +51,14 @@ export interface SaveData {
   usedChatter: string[]
   /** Story flags that are raised but whose story conversation has not been played yet (carried to the next start). */
   pendingStories: string[]
+  /** Hypothesis memo flags raised but not yet shown on a result, oldest first (#325). */
+  pendingMemoFlags: string[]
+  /** Hypothesis memo flags already shown on a result: never shown again (#325). */
+  shownMemoFlags: string[]
+  /** Ids of reported anomalies whose one-line memo has not been shown yet, in the order they were reported (#325). */
+  pendingMemos: string[]
+  /** Ids of anomalies whose one-line memo has been shown: never shown again (#325). */
+  shownMemos: string[]
   /** The shift that ended last. Absent until one has ended (and in older saves). */
   lastShift?: LastShift
   /** The true ending has been reached: this save can no longer start a shift, only start over (#294). */
@@ -68,6 +80,10 @@ export const emptySave = (): SaveData => ({
   usedLines: {},
   usedChatter: [],
   pendingStories: [],
+  pendingMemoFlags: [],
+  shownMemoFlags: [],
+  pendingMemos: [],
+  shownMemos: [],
   endingReached: false,
   epoch: 0,
 })
@@ -107,10 +123,33 @@ const validLastShift = (v: unknown): LastShift | null => {
     durationMs,
     closing: closing as LastShift['closing'],
     raised: [...new Set(raised)],
+    // Absent in saves written before the memos existed; a damaged one is dropped, not a reason to drop the shift.
+    ...(typeof v.memoFlag === 'string' ? { memoFlag: v.memoFlag } : {}),
+    ...(typeof v.memo === 'string' ? { memo: v.memo } : {}),
   }
 }
 
 const uniq = (a: readonly string[]): string[] => [...new Set(a)]
+
+/** The four memo queues (#325), normalised: no duplicates, and nothing shown is still waiting. */
+const memoQueues = (
+  pendingFlags: readonly string[],
+  shownFlags: readonly string[],
+  pendingMemos: readonly string[],
+  shownMemos: readonly string[]
+): Pick<
+  SaveData,
+  'pendingMemoFlags' | 'shownMemoFlags' | 'pendingMemos' | 'shownMemos'
+> => {
+  const sf = uniq(shownFlags)
+  const sm = uniq(shownMemos)
+  return {
+    pendingMemoFlags: uniq(pendingFlags).filter(f => !sf.includes(f)),
+    shownMemoFlags: sf,
+    pendingMemos: uniq(pendingMemos).filter(m => !sm.includes(m)),
+    shownMemos: sm,
+  }
+}
 
 /**
  * Migrations from an older version to the next one, keyed by the version they upgrade from.
@@ -148,6 +187,15 @@ export const validateSave = (raw: unknown): SaveData | null => {
   // Absent in saves written before the field existed (same version): treated as none.
   const pendingStories = rec.pendingStories ?? []
   if (!isStringArray(pendingStories)) return null
+  // Absent in saves written before the memo queues existed (same version): empty.
+  const memoLists = {
+    pendingMemoFlags: rec.pendingMemoFlags ?? [],
+    shownMemoFlags: rec.shownMemoFlags ?? [],
+    pendingMemos: rec.pendingMemos ?? [],
+    shownMemos: rec.shownMemos ?? [],
+  }
+  for (const list of Object.values(memoLists))
+    if (!isStringArray(list)) return null
   // Absent in saves written before the ending mark existed (same version): not reached.
   const endingReached = rec.endingReached ?? false
   if (typeof endingReached !== 'boolean') return null
@@ -175,6 +223,12 @@ export const validateSave = (raw: unknown): SaveData | null => {
     ),
     usedChatter: uniq(usedChatter),
     pendingStories: uniq(pendingStories),
+    ...memoQueues(
+      memoLists.pendingMemoFlags as string[],
+      memoLists.shownMemoFlags as string[],
+      memoLists.pendingMemos as string[],
+      memoLists.shownMemos as string[]
+    ),
     endingReached,
     epoch,
   }
@@ -229,6 +283,13 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
     usedLines,
     usedChatter: uniq([...a.usedChatter, ...b.usedChatter]),
     pendingStories: uniq([...a.pendingStories, ...b.pendingStories]),
+    // Shown wins over waiting: a memo one tab has shown must not be shown again by the other.
+    ...memoQueues(
+      [...a.pendingMemoFlags, ...b.pendingMemoFlags],
+      [...a.shownMemoFlags, ...b.shownMemoFlags],
+      [...a.pendingMemos, ...b.pendingMemos],
+      [...a.shownMemos, ...b.shownMemos]
+    ),
     endingReached: a.endingReached || b.endingReached,
     epoch: a.epoch,
   }
