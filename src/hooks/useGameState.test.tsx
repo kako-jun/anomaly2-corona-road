@@ -1,7 +1,14 @@
 // @vitest-environment jsdom
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { LedgerEntry } from '../utils/anomalyLedger'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { parse as parseYaml } from 'yaml'
+import {
+  LedgerEntry,
+  parseLedgerRecords,
+  toLedgerEntry,
+} from '../utils/anomalyLedger'
 import * as saveData from '../utils/saveData'
 import { CHILD_FOUND_PACING, DEFAULT_CONFIG } from '../utils/gameConfig'
 import { useGameState } from './useGameState'
@@ -365,6 +372,28 @@ describe('reporting', () => {
         expect(result.current.stats.correctReports).toBe(1)
         expect(result.current.stats.misreports).toBe(0)
         expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
+        unmount()
+      }
+    })
+
+    it('the real ledger: AR-03-face-ornament is correct as Person, Object or Surreal (#347)', () => {
+      const rec = parseLedgerRecords(
+        parseYaml(
+          readFileSync(
+            resolve(__dirname, '../../prompts/anomalies.yaml'),
+            'utf8'
+          )
+        )
+      ).find(r => r.id === 'AR-03-face-ornament')
+      expect(rec).toBeDefined()
+      for (const c of ['Person', 'Object', 'Surreal'] as const) {
+        ledger.length = 0
+        ledger.push({ ...toLedgerEntry(rec!), cameraId: 1 })
+        const { result, unmount } = start()
+        advance(FIRST + 100)
+        act(() => result.current.reportAnomaly(c))
+        expect(result.current.stats.correctReports, c).toBe(1)
+        expect(result.current.stats.misreports, c).toBe(0)
         unmount()
       }
     })
