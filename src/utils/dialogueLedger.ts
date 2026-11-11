@@ -106,6 +106,11 @@ const STAGES: readonly string[] = ['few', 'mid', 'many']
 
 /** Japanese and full-width punctuation that film subtitles must not contain. */
 const FORBIDDEN_PUNCTUATION = /[、。，．､｡,.]/
+/**
+ * Japanese subtitles write ！？ and numbers in full-width (#334, #352): a half-width ! ? or digit is a violation.
+ * (English `en` keeps its ASCII marks and digits.)
+ */
+const FORBIDDEN_HALF_WIDTH = /[!?0-9]/
 /** Separators must be the full-width space; an ASCII space, tab or line break is a violation. */
 const FORBIDDEN_WHITESPACE = /[ \t\r\n]/
 
@@ -115,6 +120,12 @@ export const checkSubtitleText = (text: string): void => {
   if (p) {
     throw new Error(
       `line "${text}" contains punctuation "${p[0]}" (subtitles use no 、 or 。)`
+    )
+  }
+  const h = FORBIDDEN_HALF_WIDTH.exec(text)
+  if (h) {
+    throw new Error(
+      `line "${text}" contains a half-width "${h[0]}" (Japanese subtitles use full-width ！？ and ０-９)`
     )
   }
   if (FORBIDDEN_WHITESPACE.test(text)) {

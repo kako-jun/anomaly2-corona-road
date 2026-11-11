@@ -15,7 +15,7 @@
 | AR-02-coffee | 台にコーヒーのカップ。 | A coffee cup on the stand. |
 | AR-02-newspaper | 左シャッターの根元に新聞。 | Newspaper at the left shutter's foot. |
 | AR-02-open-sign | 閉まった店に「営業中」。なぜ？ | OPEN sign on a closed shop. Why? |
-| AR-02-pot-duplicate | 手前の鉢が二つに増えた。 | The front pot, now two. |
+| AR-02-pot-duplicate | 手前の鉢が２つに増えた。 | The front pot, now two. |
 | AR-02-puddle | 左の床に水たまり。 | A puddle on the left floor. |
 | AR-02-receipt | 床に小さな紙片が落ちている。 | A small scrap of paper has dropped. |
 | AR-02-shop-reopens | 左シャッターが少し開き、暖かい光。 | Left shutter ajar; a glow leaks out. |
@@ -43,14 +43,14 @@
 | AR-08-cat | 暗い店先の床近くに猫。 | A small cat low in the dark shopfront. |
 | AR-01-wiped-window | くもりガラスに丸い拭き跡。 | Round wipe on frosted glass. |
 | AR-04-purple-leaves | 鉢植えの葉が赤紫に。 | Leaves turned reddish-purple. |
-| AR-03-red-string | 点検板から赤い紐が一本。 | A red string from the access panel. |
+| AR-03-red-string | 点検板から赤い紐が１本。 | A red string from the access panel. |
 | AR-05-wind-chime | 照明の下に風鈴。 | A wind chime beneath the light. |
 | AR-07-warm-light | 暗い開口の奥に暖かい灯り。人がいる？ | Lamplight in the opening. Anyone there? |
-| AR-05-blue-brick | レンガ帯の青いタイル一枚。差し替えか？ | One blue tile in brick band. Replaced? |
+| AR-05-blue-brick | レンガ帯の青いタイル１枚。差し替えか？ | One blue tile in brick band. Replaced? |
 | AR-06-tilted-notice | 壁の額が傾いた。 | The framed notice tilted. |
 | AR-01-shutter-light | 閉じたまま、下から暖色の光。 | Still shut, a glow underneath. |
 | AR-03-ceiling-dots | 天井に水玉模様。 | Polka dots on the ceiling. |
-| AR-03-paper-bag | シャッター下端に白い紙袋が一つ。 | A white paper bag under the shutter. |
+| AR-03-paper-bag | シャッター下端に白い紙袋が１つ。 | A white paper bag under the shutter. |
 | AR-07-wall-grid | 白い壁に格子模様。 | A grid on the white wall. |
 | AR-05-green-lamp-rim | 丸灯の縁が緑に。 | The round lamp's rim turned green. |
 | AR-05-curtain-mend | カーテンの裾に繕い跡。 | A mend at the curtain's hem. |
@@ -62,41 +62,41 @@
 | AR-05-brown-column | 角の柱が薄茶色に。 | The corner pillar turned light brown. |
 | AR-03-tile-diagonal | タイルが斜めの目地で三角に割れた。 | One tile split into two triangles. |
 | AR-08-panel-off | 上だけ消灯。故障か？ | Only the upper panel is dark. A fault? |
-| AR-03-crate-duplicate | 緑看板横の木箱。その前にもう一つ。 | A second crate in front of the first. |
+| AR-03-crate-duplicate | 緑看板横の木箱。その前にもう１つ。 | A second crate in front of the first. |
 | AR-05-white-ribbon | 蛍光灯から白いリボン。 | White ribbon from fluorescent tube. |
 | AR-05-stand-tag | 奥のスタンドに白い札。 | A white tag on the stand in back. |
 | AR-07-blue-push-plate | 扉の押し板が青くなった。 | The door's push plate turned blue. |
-| AR-06-missing-flower | オレンジの花が一輪ない。どこへ？ | One orange flower gone. Where? |
-| AR-03-pink-ornament | 壁の白い飾りの一つが桃色に。 | A white ornament, now pink. |
-| AR-03-shutter-wave | 横板が一枚だけ波打つ。 | One slat ripples. |
+| AR-06-missing-flower | オレンジの花が１輪ない。どこへ？ | One orange flower gone. Where? |
+| AR-03-pink-ornament | 壁の白い飾りの１つが桃色に。 | A white ornament, now pink. |
+| AR-03-shutter-wave | 横板が１枚だけ波打つ。 | One slat ripples. |
 | AR-03-white-cap | 奥の床に白い帽子。 | A white hat on the floor in back. |
-| AR-07-white-step | 階段の縁が一段だけ白い。 | One stair edge turned white. |
+| AR-07-white-step | 階段の縁が１段だけ白い。 | One stair edge turned white. |
 | AR-07-stairs-cat | 階段で猫が寝そべる。 | A cat stretched out on the stairs. |
 | AR-07-opening-paper | 暗い開口の縁に紙切れ。 | A scrap caught at the dark opening. |
 | AR-07-duplicate-green-sign | 緑の表示が階段の上下に。 | Green sign above and below stairs. |
 | AR-07-ceiling-string | 奥の器具から短い紐。 | A short string from a fixture in back. |
-| AR-05-duplicate-light | 蛍光灯がもう一本。 | A second fluorescent light. |
+| AR-05-duplicate-light | 蛍光灯がもう１本。 | A second fluorescent light. |
 | AR-05-chair-reflection | 通路にない椅子がガラスに。 | A chair in the glass, none in the aisle. |
-| AR-05-amber-pane | ガラス一枚が琥珀色に。 | One pane turned amber. |
+| AR-05-amber-pane | ガラス１枚が琥珀色に。 | One pane turned amber. |
 | AR-04-paper-cup | 什器の脚元に紙コップ。 | A paper cup by the display stand. |
 | AR-06-wall-stripes | 壁の一部に横縞。 | Horizontal stripes on part of the wall. |
-| AR-08-fixture-duplicate | 柱の器具が二つ並ぶ。 | Two matching fixtures on the pillar. |
-| AR-01-lattice-tile | 一枚だけ斜め格子のタイル。 | One tile with a diagonal lattice. |
-| AR-04-orange-tile | タイルが一枚、淡い橙色に。 | One tile has gone pale orange. |
-| AR-08-blue-panel | 光るパネルが一枚だけ青い。 | One lit panel turned blue. |
+| AR-08-fixture-duplicate | 柱の器具が２つ並ぶ。 | Two matching fixtures on the pillar. |
+| AR-01-lattice-tile | １枚だけ斜め格子のタイル。 | One tile with a diagonal lattice. |
+| AR-04-orange-tile | タイルが１枚、淡い橙色に。 | One tile has gone pale orange. |
+| AR-08-blue-panel | 光るパネルが１枚だけ青い。 | One lit panel turned blue. |
 | AR-02-rusty-vent | 丸い設備の縁が錆色に。 | Round fixture, rust-colored rim. |
 | AR-02-wrapping-paper | 包装紙が下に挟まっている。 | Wrapping paper wedged beneath shutter. |
-| AR-03-blue-floor-tile | 一枚だけ濃い青に沈んだ床。 | Deep blue on a single tile. |
+| AR-03-blue-floor-tile | １枚だけ濃い青に沈んだ床。 | Deep blue on a single tile. |
 | AR-07-purple-floor-tile | 紫のタイル。染みではなさそう。 | A purple tile. Not a stain? |
-| AR-02-duplicate-coffee-sign | 同じ文字の緑看板が二枚。 | Two green signs with the same words. |
-| AR-02-flower-ornament | 星の飾りが一つ花形に。 | One star ornament became a flower. |
-| AR-02-red-star | 壁の飾りが一つ、淡い赤に。 | One wall ornament took on pale red. |
+| AR-02-duplicate-coffee-sign | 同じ文字の緑看板が２枚。 | Two green signs with the same words. |
+| AR-02-flower-ornament | 星の飾りが１つ花形に。 | One star ornament became a flower. |
+| AR-02-red-star | 壁の飾りが１つ、淡い赤に。 | One wall ornament took on pale red. |
 | AR-02-pillar-notice | 柱に小さな案内が増えた。 | Another small notice on the pillar. |
 | AR-03-amber-lamp-glow | 丸灯の光がオレンジに。 | Orange cast under the round lamp. |
 | AR-03-coffee-text-missing | COFFEEだけ消えた。なぜ？ | COFFEE gone from sign. Why that word? |
 | AR-03-walking-cat | 白猫が開口の前を通る。 | A white cat passes the dark opening. |
 | AR-03-round-puddle | 丸い水たまりに照明が映る。 | Lights reflected in a round puddle. |
-| AR-07-diamond-tile | タイル一枚がひし形の柄に。 | One tile now has diamonds. |
+| AR-07-diamond-tile | タイル１枚がひし形の柄に。 | One tile now has diamonds. |
 | AR-07-floor-puddle | 照明の反射の間に水たまり。 | A puddle between the reflected lights. |
 | AR-07-stair-figures | 階段の人影が上下に重なる。どちらが本体？ | Stair figure doubled. Which is real? |
 | AR-04-leaf-hole | 葉に小さな丸い穴。 | A small round hole in a leaf. |
@@ -107,12 +107,12 @@
 | AR-01-tube-end | 蛍光灯の端は消灯。床はまだ明るい。 | Tube end dark; floor still glows. |
 | AR-04-newspaper | 点検口に古新聞の端。 | An old newspaper caught in the hatch. |
 | AR-04-basket | 赤い買い物かごが映る。通路には無い。 | A red basket in glass. None here. |
-| AR-04-poster | ポスターがもう一枚。 | A second copy of the poster. |
+| AR-04-poster | ポスターがもう１枚。 | A second copy of the poster. |
 | AR-08-bag | 暗い戸に古い紙袋が淡く映る。 | Old bag faint in the dark door. |
 | AR-08-sign | 丸看板の白が黒に。 | Round sign's white face turns black. |
 | AR-08-suit | 壁にだけ背広姿の後ろ姿。 | Suit's back, wall only. |
 | AR-01-sign-rim | 看板の縁が濃い青に。 | The sign's rim turned dark blue. |
-| AR-04-handle | ガラス扉の取手が二つに。 | The glass door handle became two. |
+| AR-04-handle | ガラス扉の取手が２つに。 | The glass door handle became two. |
 | AR-08-pillar-notice | 柱に黒枠の大きな案内。 | Large black-bordered pillar sign. |
 | AR-01-sign-old-shop | 丸看板に昔の店の絵。 | An old shop drawing on the round sign. |
 | AR-01-back-view-paper-bag | 奥に紙袋を提げた小柄な人。 | Small figure with bag, far off. |
@@ -132,9 +132,9 @@
 | AR-03-sign-frame-square | 丸い看板の枠が四角に。 | The round sign's frame turned square. |
 | AR-04-poster-colour-restore | 色褪せたポスターに赤と黄が戻った。 | Red and yellow return to faded poster. |
 | AR-04-sign-hollow | 看板の円が抜け、天井が見える。向こう側？ | Sign hole; ceiling visible. Beyond what? |
-| AR-04-hatch-reflection-extra | 床の反射に点検口がもう一つ。 | Another hatch in the floor's reflection. |
+| AR-04-hatch-reflection-extra | 床の反射に点検口がもう１つ。 | Another hatch in the floor's reflection. |
 | AR-04-hatch-frame-round | 四角い点検口の枠が丸に。 | Square hatch frame, now round. |
-| AR-04-pot-duplicate | 奥右の鉢植えの隣に同じ鉢がもう一つ。 | Same plant again beside it, back right. |
+| AR-04-pot-duplicate | 奥右の鉢植えの隣に同じ鉢がもう１つ。 | Same plant again beside it, back right. |
 | AR-04-sign-colour-blue | 看板の文字の一部が青くなった。 | Part of sign text turns blue. |
 | AR-04-fluorescent-frame-grey | 蛍光灯の枠の一部が灰色。 | Gray patch on fluorescent frame. |
 | AR-04-red-telephone | ガラス棚に赤いダイヤル式電話。 | A red dial payphone behind the glass. |
@@ -145,9 +145,9 @@
 | AR-05-film-poster | 壁に色褪せた映画ポスター。 | A faded film poster on the wall. |
 | AR-05-sign-in-glass | 丸看板がガラスの中にも。 | The round sign is inside the glass too. |
 | AR-05-joint-into-glass | 床の目地がガラスの中へ続く。 | Floor seam continues through glass. |
-| AR-05-brick-round | レンガの一枚が丸い板に。 | One brick became a round panel. |
-| AR-05-sign-digit-missing | 看板の300が3に。残りの二桁は？ | 300 is now 3. Where did two digits go? |
-| AR-06-menu-price-old | メニューの値段が二桁に。 | The menu prices dropped to two digits. |
+| AR-05-brick-round | レンガの１枚が丸い板に。 | One brick became a round panel. |
+| AR-05-sign-digit-missing | 看板の３００が３に。残りの２桁は？ | 300 is now 3. Where did two digits go? |
+| AR-06-menu-price-old | メニューの値段が２桁に。 | The menu prices dropped to two digits. |
 | AR-06-tin-planter | 植木鉢が古いブリキ缶に。 | The planter became an old tin can. |
 | AR-06-sign-orange-blue | 看板のオレンジ枠が青に。 | The sign's orange frame turned blue. |
 | AR-06-far-sign-same | 手前と同じ看板が奥にも。 | Same sign farther down the aisle. |
@@ -160,13 +160,13 @@
 | AR-07-floor-uphill | 床の目地が左右の階段へ向かって上る。 | Floor seams rise toward both stairways. |
 | AR-08-old-man-back | 奥の看板の下に帽子の後ろ姿。 | A hatted figure below the far sign. |
 | AR-08-barber-pole | 通路に床屋のサインポール。 | A barber pole in the aisle. |
-| AR-08-pillar-second | 柱の裏に同じ柱がもう一本。 | Second pillar directly behind the first. |
-| AR-08-floor-reflection-two-tier | 床の反射が二段パネル形に。 | Floor glare mimics a two-tier panel. |
+| AR-08-pillar-second | 柱の裏に同じ柱がもう１本。 | Second pillar directly behind the first. |
+| AR-08-floor-reflection-two-tier | 床の反射が２段パネル形に。 | Floor glare mimics a two-tier panel. |
 | AR-08-tile-concentric | タイルに同心円の輪。 | Concentric rings on a tile. |
 | AR-08-vent-square | 天井に四角い換気口。 | A square vent in the ceiling. |
 | AR-08-wall-band-wave | 壁の帯が波打っている。 | The wall strip is wavy. |
 | AR-08-light-blue-bleed | 天井の灯りに青いにじみ。 | A blue glow around a ceiling light. |
-| AR-08-fixture-dark-red | 天井器具が一つだけ暗い赤。 | One ceiling fixture turned dark red. |
+| AR-08-fixture-dark-red | 天井器具が１つだけ暗い赤。 | One ceiling fixture turned dark red. |
 | AR-08-floor-reflection-no-pillar | 床の白い反射に柱がない。映らない理由は？ | White floor glare; no pillar. Why? |
 | AR-05-hatch-stain | 天井の点検口に錆色の染み。 | Rust stain on ceiling hatch. |
 | AR-02-smartphone-facedown | スマホが画面を伏せて斜めに。 | A phone, face down, at an angle. |
@@ -176,7 +176,7 @@
 | AR-05-pet-bottle | 琥珀色の飲み物のペットボトル。 | A plastic bottle of amber-colored drink. |
 | AR-07-mask-on-floor | 暗いタイルに白いマスク。 | A white mask on a dark tile. |
 | AR-02-leather-footprints | 誰もいない床に革靴の足跡。歩いたのは誰？ | Shoeprints on empty floor. Who walked? |
-| AR-03-sunken-opening-floor | 奥の開口の床だけ一段低い。 | The floor at the far opening sits lower. |
+| AR-03-sunken-opening-floor | 奥の開口の床だけ１段低い。 | The floor at the far opening sits lower. |
 | AR-05-floor-glare-backside | 床の反射にだけガラスの裏側。 | Glass back in floor reflection only. |
 | AR-06-fluorescent-tag | 蛍光灯の端から紐で下がる札。 | Tag hangs by a string from the tube end. |
 | AR-07-pictogram-flip | 扉のピクトグラムが逆さに。 | The door pictogram turned upside down. |
@@ -190,7 +190,7 @@
 | AR-03-kerosene-heater | 古い石油ストーブが灯る。 | An old kerosene heater glows. |
 | AR-04-ceiling-balloon | 赤い風船が天井に貼り付く。 | A red balloon stuck to the ceiling. |
 | AR-04-randoseru-red | 赤いランドセルが置かれている。 | A red school bag sits there. |
-| AR-05-marbles-scattered | ビー玉が七つ散らばる。 | Seven marbles scattered about. |
+| AR-05-marbles-scattered | ビー玉が７つ散らばる。 | Seven marbles scattered about. |
 | AR-06-ceiling-balloons | 風船の束が天井に引っかかる。 | A bunch of balloons caught overhead. |
 | AR-07-paper-airplane-ceiling | 天井の隅に紙飛行機。 | A paper airplane in the ceiling corner. |
 | AR-08-floor-ramune-marbles | ラムネ瓶のガラス玉が青緑に光る。 | Ramune marbles glint blue-green. |
@@ -199,7 +199,7 @@
 | AR-02-floor-footprints | 足跡は奥へ。戻り跡なし。戻った者は？ | Footprints in; none back. Anyone return? |
 | AR-03-shutter-blank-papers | シャッター一面に白紙。 | Blank paper covers the shutter. |
 | AR-03-floor-tatami | 床は畳。反射が残る。畳にも？ | Tatami floor, reflection still there? |
-| AR-01-wall-faces | 壁一面に四人の顔写真。 | Four faces repeated across the wall. |
+| AR-01-wall-faces | 壁一面に４人の顔写真。 | Four faces repeated across the wall. |
 | AR-07-wall-clocks | 壁一面の時計が、皆違う時刻。 | Wall clocks all show different times. |
 | AR-06-ceiling-umbrellas | 天井に逆さの傘が幾つも。 | Upside-down umbrellas on ceiling. |
 | AR-04-window-alley | 地下街の窓に夕焼け路地。外へ？ | Sunset alley beyond windows. Reachable? |
@@ -216,7 +216,7 @@
 | AR-08-stacked-crt-tvs | 無人通路を映すテレビ。出どころは？ | TV stack, same empty corridor. Source? |
 | AR-01-bamboo-basket | 壁際に竹編みのかご。 | A woven bamboo basket by the wall. |
 | AR-01-bubble-tea-cup | 太いストローのカップ。 | A cup with a wide straw. |
-| AR-02-maroon-cushion | えんじ色の座布団が一枚。 | One maroon floor cushion. |
+| AR-02-maroon-cushion | えんじ色の座布団が１枚。 | One maroon floor cushion. |
 | AR-02-navy-handy-fan | 濃い青の携帯扇風機。 | A dark blue handheld fan. |
 | AR-02-jump-rope | 赤い持ち手の縄跳びが輪に。 | A jump rope coiled, red handles. |
 | AR-02-tanabata-paper-chain | 天井に色紙の輪つなぎ。 | Colored paper chain across the ceiling. |
@@ -230,18 +230,18 @@
 | AR-04-flypaper | 天井かららせんのはえ取り紙。 | Spiral flypaper hangs from ceiling. |
 | AR-04-tote-bag | 壁のフックに生成りのトートバッグ。 | Unbleached tote on a wall hook. |
 | AR-04-tin-robot | ブリキのロボットが立っている。 | A tin robot stands there. |
-| AR-07-n1 | 木の下駄が一足揃っている。 | A pair of wooden geta stands together. |
+| AR-07-n1 | 木の下駄が１足揃っている。 | A pair of wooden geta stands together. |
 | AR-07-n4 | 点いたままのスマホが床に。 | A phone, screen on, on the floor. |
 | AR-08-n1 | 木の洗濯板が寝かせてある。 | A wooden washboard laid flat. |
 | AR-08-n2 | 透明な傘が閉じて斜めに。 | A closed clear umbrella, slanted. |
 | AR-08-n3 | 暗がりに無地の赤いまり。 | A plain red ball in the dark. |
-| AR-08-n5 | 小さな段ボール箱が一つ。 | One small cardboard box. |
+| AR-08-n5 | 小さな段ボール箱が１つ。 | One small cardboard box. |
 | AR-08-n6 | 天井に赤い凧が引っかかる。 | A red kite caught on the ceiling. |
 | AR-05-beach-ball | ビーチボールが転がっている。 | A beach ball, loose on the floor. |
 | AR-05-watering-can | 緑のじょうろが横倒し。 | A green watering can lies on its side. |
 | AR-05-paper-streamers | 天井に白い七夕の吹き流し。 | White Tanabata streamers on the ceiling. |
 | AR-05-baseball-glove | 使い込んだ野球グローブ。 | A well-worn baseball glove. |
-| AR-06-red-bucket | 赤いバケツが一つ。 | A single red bucket. |
+| AR-06-red-bucket | 赤いバケツが１つ。 | A single red bucket. |
 | AR-06-styrofoam-box | 発泡スチロールの白い箱。 | A plain white foam box. |
 | AR-06-blue-pinwheel | 壁に青いかざぐるま。 | A blue pinwheel on the wall. |
 | AR-06-teru-teru-bozu | 天井から顔のないてるてる坊主。 | Faceless rain charm from the ceiling. |
@@ -250,7 +250,7 @@
 | AR-01-right-wall-lattice-doors | 店先の壁が格子戸の連なりに。 | Storefront wall became lattice doors. |
 | AR-01-ceiling-lamp-off | 灯りが消え、黒い円だけ残る。奥は？ | Light out, dark circle. What's behind? |
 | AR-01-ceiling-tile-drop | 天井板が片側だけ垂れ下がる。 | A ceiling panel hangs down at one end. |
-| AR-01-ceiling-wet-stain | 天井の濡れ染みから一滴。 | Drop beneath a wet ceiling stain. |
+| AR-01-ceiling-wet-stain | 天井の濡れ染みから１滴。 | Drop beneath a wet ceiling stain. |
 | AR-01-floor-light-orphan | 光だまり。光源はどこ？ | Pool of light, no source. From where? |
 | AR-01-crouching-silhouette | 通路の奥にうずくまる小さな影。人か？ | Crouched shape at aisle end. A person? |
 | AR-01-threshold-pigeon | 店の敷居に白い鳩。 | A white pigeon on the shop threshold. |
@@ -258,8 +258,8 @@
 | AR-02-shutter-shadow | シャッターに人影だけ。本人はどこに？ | Shadow on shutter. Where is the person? |
 | AR-02-fluorescent-half-off | 蛍光灯の大半が消えた。 | Most of the fluorescent tube went dark. |
 | AR-02-pillar-sign-gone | 矢印の看板が消え、跡だけ残る。 | Arrow sign gone; outline left. |
-| AR-02-floor-seam-glow | 床の目地が一本光っている。 | One floor seam glows. |
-| AR-02-wall-bird-triplet | ガラスの白い鳥が三羽に。いつ増えた？ | Three white birds on glass. When? |
+| AR-02-floor-seam-glow | 床の目地が１本光っている。 | One floor seam glows. |
+| AR-02-wall-bird-triplet | ガラスの白い鳥が３羽に。いつ増えた？ | Three white birds on glass. When? |
 | AR-02-floor-ripple | 濡れていない床に波紋。水はどこ？ | Ripples on dry floor. Water where? |
 | AR-02-ceiling-starry-sky | 地下街の天井が星空に。外が見える？ | Stars on underground ceiling. Outside? |
 | AR-05-morning-glory-wall | 壁から天井へ朝顔の蔓。 | Morning glories climb wall to ceiling. |
@@ -269,7 +269,7 @@
 | AR-05-door-fingers | カーテンの隙間に指の形の影。 | Finger-shaped shadows at curtain edge. |
 | AR-05-ceiling-shirt | 天井から小さな白いシャツ。 | Small white shirt hangs from ceiling. |
 | AR-05-floor-child-shadow | 床に子供の影だけ。 | Child's shadow on floor, no child. |
-| AR-03-floor-shadows | 床に人影が十三本。人数は？ | 13 floor shadows. How many people? |
+| AR-03-floor-shadows | 床に人影が１３本。人数は？ | 13 floor shadows. How many people? |
 | AR-03-shutter-fingers | 隙間から白い指が数本。 | A few white fingers at the gap. |
 | AR-03-tube-light-bent | 蛍光灯が折れ、反射と向きが違う。 | Bent fluorescent; reflection disagrees. |
 | AR-03-ceiling-eye | 天井の隙間に白い目。誰を見ている？ | White eye in ceiling gap. Watching whom? |
@@ -286,10 +286,10 @@
 | AR-04-wall-plaster-peel | しっくいの下から古いレンガ。 | Old brick beneath the peeling plaster. |
 | AR-06-tile-sky | 床の穴の底に青空。どこへ抜ける？ | Blue sky in floor hole. Where to? |
 | AR-06-leaf-shadows-aligned | 葉の影が皆、通路の奥へ。 | Leaf shadows all point down the aisle. |
-| AR-04-floor-reflection-gap | 床の反射が一枚分だけ途切れる。 | The floor reflection stops for one tile. |
+| AR-04-floor-reflection-gap | 床の反射が１枚分だけ途切れる。 | The floor reflection stops for one tile. |
 | AR-06-wall-height-marks | 壁に背比べのような色鉛筆の線。 | Colored-pencil height marks on the wall. |
 | AR-04-wall-panel-fallen | 窓下の板が床へ倒れかかる。 | Panel beneath window leans toward floor. |
-| AR-04-left-edge-eyes | 暗がりの床際に二つの目。 | Two eyes near the floor in the dark. |
+| AR-04-left-edge-eyes | 暗がりの床際に２つの目。 | Two eyes near the floor in the dark. |
 | AR-04-floor-shoes-rows | 靴が揃って奥の扉を向く。持ち主は？ | Shoes face far door. Their owners? |
 | AR-07-floor-frost | 床の中ほど一面に霜。 | Frost across the middle of the floor. |
 | AR-07-reflection-cut | 床の反射が四角く切り取られた。 | Square gap in floor reflection. |
@@ -297,7 +297,7 @@
 | AR-07-mini-door | 床に小さな金属扉。何の入口？ | Metal door on floor. Entry to what? |
 | AR-07-glass-crack | 暗いガラスに細いひび。 | A fine crack in the dark glass. |
 | AR-07-exit-sign-gone | 非常灯が消え、取付跡だけ。避難経路は？ | Exit light gone; mount remains. Route? |
-| AR-07-ceiling-tile-yellow | 天井板が一枚だけ黄色い。 | One ceiling panel turned yellow. |
+| AR-07-ceiling-tile-yellow | 天井板が１枚だけ黄色い。 | One ceiling panel turned yellow. |
 | AR-08-floor-tile-groove | 柱の脇のタイルが沈み、縁に溝。 | Tile sunk by pillar; groove at edge. |
 | AR-08-pillar-sparrow | 柱の根元に雀。 | A sparrow at the base of the pillar. |
 | AR-08-ceiling-light-inverse | 天井灯の周りに黒い暈。 | A dark halo around the ceiling light. |
@@ -305,8 +305,8 @@
 | AR-08-hanten-floor | 藍色の半纏が脱ぎ捨てられている。 | An indigo coat dropped in a heap. |
 | AR-08-ceiling-light-grid | 同じ丸灯が天井一面に。 | Identical round lights fill the ceiling. |
 | AR-08-wall-drawers | 壁が小さな引き出しだらけに。 | The wall is covered in small drawers. |
-| AR-01-lattice-slat-protrudes | 格子が一本、枠から飛び出す。 | One lattice slat sticks out. |
-| AR-02-wall-bird-gone | ガラスの白い鳥が一羽消えた。 | One white bird vanished from the glass. |
+| AR-01-lattice-slat-protrudes | 格子が１本、枠から飛び出す。 | One lattice slat sticks out. |
+| AR-02-wall-bird-gone | ガラスの白い鳥が１羽消えた。 | One white bird vanished from the glass. |
 | AR-05-shelf-items-gone | ガラス棚の小物が全部消えた。 | Glass-shelf items gone. |
 | AR-01-window-peeping-face | 窓の上から白い顔。近い。 | White face over window. Too close. |
 | AR-01-outlets-multiply | 壁のコンセントが縦に増えた。 | Wall outlets multiply upward. |

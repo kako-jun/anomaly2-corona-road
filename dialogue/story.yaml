@@ -4,28 +4,28 @@ dialogues:
     tone: serious
     when: { flag: elder1 }
     lines:
-      - { who: A, text: 'やっと見つかったのに　帰りたくないって?　なんで…', en: "We finally found him, and he doesn't want to come home? Why...?" }
+      - { who: A, text: 'やっと見つかったのに　帰りたくないって？　なんで…', en: "We finally found him, and he doesn't want to come home? Why...?" }
       - { who: M, text: '食べるものもあるし困ってない　帰るかは自分で決めると　きっぱり言ってました', en: "He has food and says he's fine. He insists it's his choice to make." }
       - { who: A, text: '家族が待ってるのに　そんなのつらいよ…', en: "But his family is waiting for him. That's so hard..." }
   - id: story-elder2
     tone: serious
     when: { flag: elder2 }
     lines:
-      - { who: A, text: 'また?　二人目も　帰りたくないって言ったの?', en: "Again? The second one doesn't want to come home either?" }
+      - { who: A, text: 'また？　２人目も　帰りたくないって言ったの？', en: "Again? The second one doesn't want to come home either?" }
       - { who: M, text: 'はい　帰らないと言ったあと　こちらの体調まで　気づかってました', en: "Yes. After she told us she was staying, she even asked if I was well." }
-      - { who: A, text: '自分のことより?　やさしい人なんだね…', en: "She was worried about you? What a kind person..." }
+      - { who: A, text: '自分のことより？　やさしい人なんだね…', en: "She was worried about you? What a kind person..." }
   - id: story-elder3
     tone: serious
     when: { flag: elder3 }
     lines:
-      - { who: A, text: '三人とも帰らないなんて　そんなことある?', en: "All three of them want to stay? How can that be?" }
-      - { who: M, text: '三人目は「帰りたい場所なら　とっくに　帰ってますよ」と笑ってました', en: "The third man laughed and said, 'If I wanted to go back, I'd be there.'" }
+      - { who: A, text: '３人とも帰らないなんて　そんなことある？', en: "All three of them want to stay? How can that be?" }
+      - { who: M, text: '３人目は「帰りたい場所なら　とっくに　帰ってますよ」と笑ってました', en: "The third man laughed and said, 'If I wanted to go back, I'd be there.'" }
       - { who: A, text: 'そんなふうに言われたら　怒れないよ…', en: "When he puts it like that, how can I be angry...?" }
   - id: story-child
     tone: serious
     when: { flag: child }
     lines:
-      - { who: A, text: '見つけた…よかった　でも家へ戻せば解決なの?', en: "We found the child... Thank goodness. But would sending them home fix it?" }
+      - { who: A, text: '見つけた…よかった　でも家へ戻せば解決なの？', en: "We found the child... Thank goodness. But would sending them home fix it?" }
       - { who: M, text: '老人たちの様子では　異変の食べ物でも効くようです', en: "The others seem to get by on food from the anomalies." }
       - { who: A, text: '餓死を心配して急ぐ必要はないね　帰りたくない理由を調べよう', en: "If starvation isn't urgent, let's find out why the child won't go home." }
       - { who: M, text: 'はい　家族のことを調べましょう', en: "Yes. Let's look into the family." }
@@ -35,5 +35,5 @@ dialogues:
     lines:
       - { who: A, text: '樫原くん　あの子が話すまで待ってたね', en: "Kashihara, you waited for the child to speak." }
       - { who: M, text: 'はい　怖がらせたくなかったので', en: "Yes. I didn't want to scare them." }
-      - { who: A, text: '子供には優しいんだね　父性本能かな?', en: "You're good with kids. Paternal instincts, maybe?" }
+      - { who: A, text: '子供には優しいんだね　父性本能かな？', en: "You're good with kids. Paternal instincts, maybe?" }
       - { who: M, text: 'そこまでじゃないですよ　心配だっただけです', en: "I wouldn't go that far. I was just worried." }

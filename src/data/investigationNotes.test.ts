@@ -104,8 +104,12 @@ describe('investigation note data', () => {
   it('a line is never cut inside a counted phrase (3人目, 2件, 8:00) and never begins with a closing mark', () => {
     for (const p of ALL)
       for (const s of [p.ja, p.en]) {
-        expect(s, s).not.toMatch(/^[、。，．,.!?？」』）)ー…っゃゅょ]/)
+        expect(s, s).not.toMatch(/^[、。，．,.!?？！」』）)ー…っゃゅょ]/)
       }
+  })
+  it('Japanese wording uses full-width digits and ！？ only (#334 #352)', () => {
+    for (const p of [...ALL, ...LEDGER_MEMOS])
+      expect(p.ja, p.ja).not.toMatch(/[0-9!?]/)
   })
   it('a start-of-night synopsis fits the ruled area (7 lines, plus the last-night line)', () => {
     for (const [stage, t] of Object.entries(STAGES)) {
@@ -157,7 +161,8 @@ describe('investigation note data', () => {
     )
     const missing = new Set<string>()
     for (const p of ALL) for (const c of p.ja) if (!chars.has(c)) missing.add(c)
-    for (const c of '0123456789:') if (!chars.has(c)) missing.add(c)
+    for (const c of '0123456789０１２３４５６７８９！？:')
+      if (!chars.has(c)) missing.add(c)
     expect([...missing]).toEqual([])
   })
   it('every English character is in the English font character list (public/fonts/note-chars-en.txt), apostrophe and ellipsis included', () => {
