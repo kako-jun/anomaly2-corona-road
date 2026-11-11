@@ -77,14 +77,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-coffee }
     lines:
-      - { who: A, text: '焦るとだめだね　右手前をゆっくり確認しよう', en: "Let's move our eyes a little more and check the shutter on the left too." }
-      - { who: M, text: 'はい　右手前の周囲から見直します', en: "Understood. I'll look around the shutter on the left again." }
+      - { who: A, text: '焦るとだめだね　右手前をゆっくり確認しよう', en: "Rushing won't help. Let's take a slow look at the near right side." }
+      - { who: M, text: 'はい　右手前の周囲から見直します', en: "Yes. I'll take another look around the near right side." }
   - id: an-AR-02-coffee-02
     tone: serious
     when: { anomaly: AR-02-coffee }
     lines:
-      - { who: M, text: '右手前の辺り　何か違って見えませんか', en: "Yes. This time, focus on the shutter on the left." }
-      - { who: A, text: 'ああ　右手前は見ていたつもりなのに', en: "I thought I was looking at the shutter on the left. Guess not." }
+      - { who: M, text: '右手前の辺り　何か違って見えませんか', en: "Does anything look different around the near right side?" }
+      - { who: A, text: 'ああ　右手前は見ていたつもりなのに', en: "Ah, I thought I was looking at the near right side." }
   - id: an-AR-02-newspaper-01
     tone: serious
     when: { anomaly: AR-02-newspaper }
