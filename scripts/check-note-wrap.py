@@ -13,6 +13,8 @@ fixed 340x620, so the result does not depend on the screen), in Japanese and Eng
   - any stage of the table (start / none / elder1..child, with and without last-night lines) overflows the one sheet or
     makes the page scroll at 360x640, 390x844, 768x1024 or 1280x720,
   - a line starts with a closing mark / small kana (kinsoku),
+  - the end-of-night memo, rendered for real with the two memo lines of #325 (a hypothesis and an anomaly's one-liner),
+    overflows the sheet or the ruled area at any stage, in either language, or a memo line is missing from it,
   - a stamp collides with the night number, the title or the first sketch frame (WITHDRAWN at its longest).
   - a synopsis / scribble line sits off its ruled line: at either end of the line (a scribble is turned) the letters' base
     must be within RULE_BELOW_MAX below .. RULE_ABOVE_MAX above its rule, so the rules never run through the memo.
@@ -24,6 +26,7 @@ import json
 import os
 import re
 import sys
+import urllib.request
 
 from playwright.sync_api import sync_playwright
 
@@ -70,6 +73,10 @@ async ([lang, kind]) => {
     for (const [k, s] of Object.entries(d.STAGES)) take('stage ' + k, s.lines)
     for (const [k, o] of Object.entries(d.OUTCOMES)) take('outcome ' + k, o.lines)
     take('last night', Object.values(d.LAST_NIGHT))
+    // the memo lines (#325): the hypotheses and every one-liner of the anomaly ledger
+    take('memo flag', Object.values(d.MEMO_FLAG_TEXT))
+    const a = (await import('/@id/__x00__virtual:anomalies')).default
+    take('ledger memo', a.filter(e => e.memo).map(e => e.memo))
   } else {
     for (const [k, s] of Object.entries(d.STAGES)) take('scrib stage ' + k, s.scrib)
     for (const [k, o] of Object.entries(d.OUTCOMES)) take('scrib outcome ' + k, o.scrib || [])
@@ -283,6 +290,31 @@ FOCUS = """
 }
 """
 
+AFTER = """
+async ([over, shift, lang, main]) => {
+  // Render the end-of-night note for real (the same React component and view builder the game uses) in place of the
+  // title, so the memo lines sit on the paper exactly as they will in play. React comes from the dev server's own
+  // pre-bundled copies (the URLs the app's entry module imports).
+  const url = re => main.match(re)[1]
+  const rd = (await import(url(/"(\\/node_modules\\/\\.vite\\/deps\\/react-dom_client\\.js[^"]*)"/))).default
+  const R = (await import(url(/"(\\/node_modules\\/\\.vite\\/deps\\/react\\.js[^"]*)"/))).default
+  await import('/src/index.css')
+  await import('/src/styles/retro.css') // the Caveat @font-face of the English hand lives here: without it the baselines measured are a fallback font's
+  const { emptySave } = await import('/src/utils/saveData.ts')
+  const { buildNote } = await import('/src/utils/investigationNote.ts')
+  const { InvestigationNote } = await import('/src/components/InvestigationNote.tsx')
+  const save = { ...emptySave(), ...over }
+  const view = buildNote({ mode: 'after', save, shift }, lang)
+  document.querySelectorAll('.note-screen').forEach(e => e.remove())
+  const host = document.createElement('div'); document.body.appendChild(host)
+  rd.createRoot(host).render(R.createElement(InvestigationNote, { view, onAction() {} }))
+  await new Promise(r => setTimeout(r, 200))
+  await Promise.all([...document.fonts].map(f => f.load().catch(() => null)))
+  await document.fonts.ready
+  return view.lines.map(l => l.text)
+}
+"""
+
 RULEFIT = """
 ([lo, hi]) => {
   // Every synopsis / scribble line sits on its own ruled line (the rules are CSS, the lines are text). For both ends of each
@@ -346,13 +378,100 @@ def stage_save(stage, last=None):
     return base(**over)
 
 
+PROBE = """
+async () => {
+  const d = await import('/src/data/investigationNotes.ts')
+  const { MEMO_INDEX } = await import('/src/utils/memoIndex.ts')
+  const flags = Object.fromEntries(Object.entries(d.MEMO_FLAG_TEXT).map(([f, t]) => [f, { ja: t.ja, en: t.en }]))
+  const memos = [...MEMO_INDEX].filter(([, m]) => m.memo).map(([id, m]) => ({ id, ja: m.memo.ja, en: m.memo.en }))
+  return { flags, memos }
+}
+"""
+
+
+def check_after(browser, problems):
+    """The end-of-night note with both memo lines, rendered for real, at every stage and viewport.
+
+    Every hypothesis (shutter / food / reiwa) is drawn with the longest one-liner of the ledger in that language, so the
+    longest combination is the one measured; the expected lines are read from the data itself (no copy of the wording
+    here). Besides the layout, each line must sit on its own rule (RULEFIT). Returns how many sheets were measured."""
+    with urllib.request.urlopen(URL + "/src/main.tsx") as resp:  # the dev server's own pre-bundled React URLs
+        main_src = resp.read().decode()
+    if not all(re.search(p, main_src) for p in (r'"(/node_modules/\.vite/deps/react-dom_client\.js[^"]*)"', r'"(/node_modules/\.vite/deps/react\.js[^"]*)"')):
+        problems.append("after: could not find the dev server's pre-bundled react / react-dom URLs in /src/main.tsx (is NOTE_URL a running Vite dev server with its dependency pre-bundling done?)")
+        return 0
+    blank = lambda route: route.fulfill(
+        body="<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
+             "<script type='module'>import R from '/@react-refresh'; R.injectIntoGlobalHook(window); window.$RefreshReg$ = () => {}; window.$RefreshSig$ = () => t => t; window.__vite_plugin_react_preamble_installed__ = true</script>"
+             "</head><body></body></html>",
+        content_type="text/html")
+    probe_page = browser.new_page()
+    probe_page.route("**/__note-blank", blank)
+    probe_page.goto(URL + "/__note-blank", wait_until="domcontentloaded")
+    probe = probe_page.evaluate(PROBE)
+    probe_page.close()
+    if not probe["memos"] or not probe["flags"]:
+        problems.append("after: the ledger has no one-line memo (or no hypothesis) to measure")
+        return 0
+    measured = 0
+    for stage in FLAGS:
+        if stage == "start":
+            continue
+        raised = [stage] if stage not in ("none",) else []
+        shifts = {
+            "dawn": {"found": 12, "fresh": 3, "misreports": 0, "durationMs": 480000, "closing": "dawn", "raised": raised},
+            "withdraw": {"found": 2, "fresh": 1, "misreports": 4, "durationMs": 200000, "closing": "withdraw", "raised": []},
+            "ending": {"found": 5, "fresh": 1, "misreports": 0, "durationMs": 480000, "closing": "ending", "raised": []},
+        }
+        if stage != "child":
+            del shifts["ending"]  # only reachable after the child
+        for name, base_shift in shifts.items():
+            for lang in ("ja", "en"):
+                weight = 2 if lang == "ja" else 1  # a Japanese glyph is about two Latin letters wide
+                longest = max(probe["memos"], key=lambda m: len(m[lang]) * weight)
+                for flag, texts in probe["flags"].items():
+                    shift = {**base_shift, "memoFlag": flag, "memo": longest["id"]}
+                    page = browser.new_page(viewport={"width": 390, "height": 844})
+                    # The app itself is not needed (and its title animation is heavy): a bare page of the same origin,
+                    # on which this check renders the note component by itself.
+                    page.route("**/__note-blank", blank)
+                    page.goto(URL + "/__note-blank", wait_until="domcontentloaded")
+                    page.wait_for_timeout(300)
+                    lines = page.evaluate(AFTER, [stage_save(stage), shift, lang, main_src])
+                    label = f"after {stage}/{name}/{flag}"
+                    if texts[lang] not in lines:
+                        problems.append(f"[{lang}] {label}: the hypothesis memo line {texts[lang]!r} is missing from {lines}")
+                    if longest[lang] not in lines:
+                        problems.append(f"[{lang}] {label}: the one-line memo {longest[lang]!r} is missing from {lines}")
+                    if not page.evaluate("(() => { const s = document.querySelector('.note-screen'); return s.lang === arguments[0] && s.classList.contains('note-' + arguments[0]) })()".replace("arguments[0]", json.dumps(lang))):
+                        problems.append(f"[{lang}] {label}: the sheet is not in {lang}, so RULEFIT would skip its lines")
+                    for w, h in VIEWPORTS:
+                        page.set_viewport_size({"width": w, "height": h})
+                        page.wait_for_timeout(60)
+                        for msg in page.evaluate(LAYOUT):
+                            problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                        for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
+                            problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                    page.close()
+                    measured += 1
+    return measured
+
+
 def main():
     problems = []
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(executable_path=CHROME, args=["--no-sandbox"]) if CHROME else pw.chromium.launch(args=["--no-sandbox"])
+        browser = pw.chromium.launch(executable_path=CHROME, args=["--no-sandbox", "--disable-dev-shm-usage"]) if CHROME else pw.chromium.launch(args=["--no-sandbox", "--disable-dev-shm-usage"])
         last = {"found": 12, "fresh": 3, "misreports": 0, "durationMs": 480000, "closing": "dawn", "raised": ["elder3"]}
         withdrew = {"found": 2, "fresh": 0, "misreports": 4, "durationMs": 200000, "closing": "withdraw", "raised": []}
         measured = False
+        if "--after-only" in sys.argv:
+            measured_after = check_after(browser, problems)
+            browser.close()
+            if problems:
+                print("\nPROBLEMS:", *problems, sep="\n  ")
+                sys.exit(1)
+            print("\nnote wrap check (after-night only): the memo lines fit the sheet at every stage and viewport (" + str(measured_after) + " sheets measured)")
+            return
         for stage in FLAGS:
             for variant, lastshift in (("plain", None), ("fresh", last), ("withdraw", withdrew)):
                 if stage == "start" and variant != "plain":
@@ -399,6 +518,8 @@ def main():
                         for msg in page.evaluate(STAMPS, lang):
                             problems.append(f"[{lang}] {msg}")
                 page.close()
+        measured_after = check_after(browser, problems)
+        print(f"after-night sheets measured: {measured_after}")
         # The Japanese lines, on a real ja-JP page (the loop above only reaches the language the browser is in).
         for stage, shift in (("elder3", last), ("child", None), ("child", last)):
             page = open_note(browser, stage_save(stage, shift), locale="ja-JP")

@@ -47,6 +47,19 @@ export type LedgerStatus = (typeof LEDGER_STATUSES)[number]
 export const LEDGER_KINDS = ['image', 'non_image'] as const
 export type LedgerKind = (typeof LEDGER_KINDS)[number]
 
+/**
+ * The memo flags (hypotheses) a ledger entry may raise when it is reported (#325): `memo_flag` in the ledger. Each
+ * has its wording in `src/data/investigationNotes.ts` (MEMO_FLAG_TEXT). `reiwa` is also raised by `reiwa: true`.
+ */
+export const MEMO_FLAGS = ['shutter', 'food', 'reiwa'] as const
+export type MemoFlag = (typeof MEMO_FLAGS)[number]
+
+/** A one-line memo (`memo` in the ledger): the detective's note on that anomaly, Japanese and English. */
+export interface MemoText {
+  ja: string
+  en: string
+}
+
 /** The only fields the game needs from one ledger entry (kind=image, status=produced). */
 export interface LedgerEntry {
   id: string
@@ -63,6 +76,10 @@ export interface LedgerEntry {
   size: { w: number; h: number }
   /** True for a Reiwa anomaly (the ledger's explicit `reiwa: true`, #83); absent otherwise. */
   reiwa?: true
+  /** Hypothesis memo flags this anomaly raises when reported (the ledger's `memo_flag`, #325). */
+  memoFlags?: MemoFlag[]
+  /** The one-line memo of this anomaly (the ledger's `memo`, #325). */
+  memo?: MemoText
 }
 
 const CATEGORY_BY_LEDGER_VALUE: Record<string, AnomalyCategory> = {
@@ -185,6 +202,10 @@ export interface LedgerRecord {
   alsoCategories?: AnomalyCategory[]
   /** The ledger's `reiwa: true` (a thing the Showa era did not have); absent = not Reiwa. Any kind may carry it. */
   reiwa?: true
+  /** The ledger's `memo_flag` (a name or a list of names from MEMO_FLAGS, no duplicates). Any kind may carry it. */
+  memoFlags?: MemoFlag[]
+  /** The ledger's `memo`: a Japanese and an English one-liner. Any kind may carry it. */
+  memo?: MemoText
   /** Pointer to the production spec (e.g. a `### id` section of candidate-pool.md). */
   spec?: string
   detail?: string
@@ -196,6 +217,46 @@ export interface LedgerRecord {
 
 const has = (rec: Record<string, unknown>, key: string): boolean =>
   rec[key] !== undefined && rec[key] !== null
+
+/** Optional `memo_flag`: a name or a list of names from MEMO_FLAGS (no duplicates, none unknown). */
+export const parseMemoFlags = (value: unknown): MemoFlag[] | undefined => {
+  if (value === undefined || value === null) return undefined
+  const list = Array.isArray(value) ? value : [value]
+  const out: MemoFlag[] = []
+  for (const item of list) {
+    const found = MEMO_FLAGS.find(f => f === item)
+    if (!found) {
+      throw new Error(
+        `memo_flag "${String(item)}" is unknown (one of ${MEMO_FLAGS.join(', ')})`
+      )
+    }
+    if (out.includes(found)) {
+      throw new Error(`memo_flag "${found}" is listed twice`)
+    }
+    out.push(found)
+  }
+  return out.length > 0 ? out : undefined
+}
+
+/** Optional `memo`: `{ ja, en }`, both non-empty single-line strings. */
+export const parseMemo = (value: unknown): MemoText | undefined => {
+  if (value === undefined || value === null) return undefined
+  if (typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('"memo" must be a mapping with ja and en')
+  }
+  const rec = value as Record<string, unknown>
+  const text = (key: 'ja' | 'en'): string => {
+    const v = rec[key]
+    if (typeof v !== 'string' || v.trim() === '') {
+      throw new Error(`memo.${key} is missing or not a string`)
+    }
+    if (/[\r\n]/.test(v)) throw new Error(`memo.${key} must be one line`)
+    return v.trim()
+  }
+  const extra = Object.keys(rec).filter(k => k !== 'ja' && k !== 'en')
+  if (extra.length > 0) throw new Error(`memo has an unknown key "${extra[0]}"`)
+  return { ja: text('ja'), en: text('en') }
+}
 
 const oneOf = <T extends string>(
   list: readonly T[],
@@ -285,6 +346,8 @@ export const parseLedgerRecord = (
       )
     }
     const reiwa = rec.reiwa === true ? (true as const) : undefined
+    const memoFlags = parseMemoFlags(rec.memo_flag)
+    const memo = parseMemo(rec.memo)
     const spec = has(rec, 'spec') ? field(rec, 'spec') : undefined
 
     // overlay / overlay_origin / dimensions: all required for image+produced, all-or-none for
@@ -312,6 +375,8 @@ export const parseLedgerRecord = (
       ...(category ? { category } : {}),
       ...(alsoCategories ? { alsoCategories } : {}),
       ...(reiwa ? { reiwa } : {}),
+      ...(memoFlags ? { memoFlags } : {}),
+      ...(memo ? { memo } : {}),
       ...(spec ? { spec } : {}),
       ...(detail ? { detail } : {}),
       ...(overlay && origin && size ? { overlay, origin, size } : {}),
@@ -349,6 +414,8 @@ export const toLedgerEntry = (r: LedgerRecord): LedgerEntry => {
     origin: r.origin,
     size: r.size,
     ...(r.reiwa ? { reiwa: r.reiwa } : {}),
+    ...(r.memoFlags ? { memoFlags: r.memoFlags } : {}),
+    ...(r.memo ? { memo: r.memo } : {}),
   }
 }
 

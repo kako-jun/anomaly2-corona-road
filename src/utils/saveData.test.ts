@@ -681,3 +681,89 @@ describe('epoch (reset generation)', () => {
     expect(s.load()).toMatchObject({ epoch: 1, foundTotal: 0 })
   })
 })
+
+describe('memo queues (#325)', () => {
+  it('reads a save without the memo fields as empty queues, and an empty save has them', () => {
+    const old = { ...save() } as Record<string, unknown>
+    for (const k of [
+      'pendingMemoFlags',
+      'shownMemoFlags',
+      'pendingMemos',
+      'shownMemos',
+    ])
+      delete old[k]
+    const got = validateSave(old)
+    expect(got?.pendingMemoFlags).toEqual([])
+    expect(got?.shownMemoFlags).toEqual([])
+    expect(got?.pendingMemos).toEqual([])
+    expect(got?.shownMemos).toEqual([])
+    expect(emptySave().pendingMemoFlags).toEqual([])
+  })
+  it('rejects a damaged queue and drops duplicates and anything both waiting and shown', () => {
+    expect(
+      validateSave({ ...save(), pendingMemoFlags: [1] as unknown as string[] })
+    ).toBeNull()
+    expect(
+      validateSave({ ...save(), shownMemos: 'x' as unknown as string[] })
+    ).toBeNull()
+    const got = validateSave(
+      save({
+        pendingMemoFlags: ['food', 'food', 'shutter'],
+        shownMemoFlags: ['shutter'],
+        pendingMemos: ['a', 'b'],
+        shownMemos: ['b', 'b'],
+      })
+    )
+    expect(got?.pendingMemoFlags).toEqual(['food'])
+    expect(got?.shownMemoFlags).toEqual(['shutter'])
+    expect(got?.pendingMemos).toEqual(['a'])
+    expect(got?.shownMemos).toEqual(['b'])
+  })
+  it('merges two tabs: waiting ones are joined in order, and what either tab has shown is not waiting', () => {
+    const a = save({
+      pendingMemoFlags: ['food', 'shutter'],
+      pendingMemos: ['x', 'y'],
+    })
+    const b = save({
+      pendingMemoFlags: ['reiwa'],
+      shownMemoFlags: ['food'],
+      pendingMemos: ['z'],
+      shownMemos: ['y'],
+    })
+    const m = mergeSave(a, b)
+    expect(m.pendingMemoFlags).toEqual(['shutter', 'reiwa'])
+    expect(m.shownMemoFlags).toEqual(['food'])
+    expect(m.pendingMemos).toEqual(['x', 'z'])
+    expect(m.shownMemos).toEqual(['y'])
+  })
+  it('a higher epoch (ERASE ALL) drops the older generation memo queues whole', () => {
+    const old = save({
+      epoch: 0,
+      pendingMemoFlags: ['food'],
+      shownMemos: ['a'],
+    })
+    const reset = save({ epoch: 1 })
+    expect(mergeSave(old, reset).pendingMemoFlags).toEqual([])
+    expect(mergeSave(reset, old).shownMemos).toEqual([])
+  })
+  it('keeps the memo choice of the last shift, and drops a damaged one without dropping the shift', () => {
+    const shift = {
+      found: 1,
+      fresh: 1,
+      misreports: 0,
+      durationMs: 480000,
+      closing: 'dawn' as const,
+      raised: [],
+    }
+    expect(
+      validateSave(
+        save({ lastShift: { ...shift, memoFlag: 'food', memo: 'a' } })
+      )?.lastShift
+    ).toEqual({ ...shift, memoFlag: 'food', memo: 'a' })
+    const dmg = validateSave({
+      ...save(),
+      lastShift: { ...shift, memoFlag: 3, memo: [] },
+    })
+    expect(dmg?.lastShift).toEqual(shift)
+  })
+})
