@@ -3,214 +3,214 @@ dialogues:
   - id: chatter-01
     tone: light
     lines:
-      - { who: A, text: '樫原くん　その眼鏡　ずっと同じの?' }
-      - { who: M, text: 'はい　壊れた部分だけ直してますよ　買い替えは考えてないです' }
-      - { who: A, text: 'えっ　そう見える?　私も店を変えるのが苦手でね' }
-      - { who: M, text: '同じ店に通う人　多いですよ' }
+      - { who: A, text: '樫原くん　その眼鏡　ずっと同じの?', en: "Kashihara, have you always had those glasses?" }
+      - { who: M, text: 'はい　壊れた部分だけ直してますよ　買い替えは考えてないです', en: "Yes. I just fix the broken parts. I haven't thought about replacing them." }
+      - { who: A, text: 'えっ　そう見える?　私も店を変えるのが苦手でね', en: "Huh, does it look that way? I'm bad at switching shops too." }
+      - { who: M, text: '同じ店に通う人　多いですよ', en: "A lot of people keep going to the same shop." }
   - id: chatter-02
     tone: light
     lines:
-      - { who: A, text: 'えっ　その髪留め新しくした?　つやつやしてる' }
-      - { who: M, text: 'はい　金沢の店で見つけました　黒なら仕事でも大丈夫ですよ' }
-      - { who: A, text: 'うん　似合ってる　すごくいい' }
-      - { who: M, text: 'そうですか　よかったです' }
+      - { who: A, text: 'えっ　その髪留め新しくした?　つやつやしてる', en: "Hey, did you get a new hair clip? It's so shiny." }
+      - { who: M, text: 'はい　金沢の店で見つけました　黒なら仕事でも大丈夫ですよ', en: "Yes, I found it at a shop in Kanazawa. Black is fine for work too." }
+      - { who: A, text: 'うん　似合ってる　すごくいい', en: "Yeah, it suits you. It looks really nice." }
+      - { who: M, text: 'そうですか　よかったです', en: "Really? I'm glad." }
   - id: chatter-03
     tone: light
     lines:
-      - { who: M, text: '夜食はサラダですか' }
-      - { who: A, text: 'そう　夜中に揚げ物は重いから' }
-      - { who: M, text: '俺は揚げたパンです　野菜はないです' }
-      - { who: A, text: 'ええっ　それだけ?　野菜も食べてよ' }
+      - { who: M, text: '夜食はサラダですか', en: "Is your late-night snack a salad?" }
+      - { who: A, text: 'そう　夜中に揚げ物は重いから', en: "Yeah. Fried food feels too heavy in the middle of the night." }
+      - { who: M, text: '俺は揚げたパンです　野菜はないです', en: "I'm having fried bread. No vegetables." }
+      - { who: A, text: 'ええっ　それだけ?　野菜も食べてよ', en: "What? That's all? Have some vegetables too!" }
   - id: chatter-04
     tone: light
     lines:
-      - { who: A, text: 'ブラック　何杯目だろ' }
-      - { who: M, text: 'はい　さっきから五杯目ですよ' }
-      - { who: A, text: 'えっ　数えてたの?　もう数えなくていいよ' }
-      - { who: M, text: 'カップが増えてましたから' }
+      - { who: A, text: 'ブラック　何杯目だろ', en: "How many cups of black coffee is this?" }
+      - { who: M, text: 'はい　さっきから五杯目ですよ', en: "Yes, that's your fifth since earlier." }
+      - { who: A, text: 'えっ　数えてたの?　もう数えなくていいよ', en: "Huh, you've been counting? You can stop now." }
+      - { who: M, text: 'カップが増えてましたから', en: "There were more cups piling up." }
   - id: chatter-05
     tone: light
     lines:
-      - { who: A, text: '夜勤明けにすぐ寝られる?' }
-      - { who: M, text: 'はい　帰ったら何か食べて寝ますよ' }
-      - { who: A, text: 'えっ　食べたら眠くなるの?' }
-      - { who: M, text: 'なります　そのまま寝ます' }
+      - { who: A, text: '夜勤明けにすぐ寝られる?', en: "Can you fall asleep right after a night shift?" }
+      - { who: M, text: 'はい　帰ったら何か食べて寝ますよ', en: "Yes. I'll eat something when I get home, then go to bed." }
+      - { who: A, text: 'えっ　食べたら眠くなるの?', en: "Huh, eating makes you sleepy?" }
+      - { who: M, text: 'なります　そのまま寝ます', en: "It does. Then I just go to sleep." }
   - id: chatter-06
     tone: light
     lines:
-      - { who: M, text: '出河さん　金沢のバス　もう慣れました?' }
-      - { who: A, text: 'まだ迷うよ　東京なら歩いてた距離でも　乗るんだね' }
-      - { who: M, text: 'はい　この辺は電車の本数も　少ないですよ' }
+      - { who: M, text: '出河さん　金沢のバス　もう慣れました?', en: "Ms. Idokawa, are you used to the buses in Kanazawa yet?" }
+      - { who: A, text: 'まだ迷うよ　東京なら歩いてた距離でも　乗るんだね', en: "I still get lost. In Tokyo I'd walk this far, but here you take the bus." }
+      - { who: M, text: 'はい　この辺は電車の本数も　少ないですよ', en: "Yes, and there aren't many trains around here either." }
   - id: chatter-07
     tone: light
     lines:
-      - { who: A, text: 'わあ　明け方の空ってこんな色なんだ' }
-      - { who: M, text: 'はい　出勤前だと見ない時間ですよ' }
-      - { who: A, text: 'そうか　私が見てなかっただけか' }
+      - { who: A, text: 'わあ　明け方の空ってこんな色なんだ', en: "Wow, the sky looks like this at dawn?" }
+      - { who: M, text: 'はい　出勤前だと見ない時間ですよ', en: "Yes. It's an hour you wouldn't see before work." }
+      - { who: A, text: 'そうか　私が見てなかっただけか', en: "I guess I just never looked before." }
   - id: chatter-08
     tone: light
     lines:
-      - { who: A, text: 'あれ　今日は席が違うね' }
-      - { who: M, text: 'はい　資料を広げやすいように　空けましたよ' }
-      - { who: A, text: 'ありがとう!　助かった' }
-      - { who: M, text: '邪魔にならない位置に　したつもりです' }
+      - { who: A, text: 'あれ　今日は席が違うね', en: "Huh, your seat's different today." }
+      - { who: M, text: 'はい　資料を広げやすいように　空けましたよ', en: "Yes, I cleared some space so you can spread out your papers." }
+      - { who: A, text: 'ありがとう!　助かった', en: "Thanks! That helps." }
+      - { who: M, text: '邪魔にならない位置に　したつもりです', en: "I tried to put it somewhere it wouldn't get in your way." }
   - id: chatter-09
     tone: light
     lines:
-      - { who: A, text: 'ああ　また録画が増えてる　全然見てないのに' }
-      - { who: M, text: '消さないんですか' }
-      - { who: A, text: '見たい気持ちはあるの!　時間がないだけ' }
-      - { who: M, text: 'はい　残しておきましょう' }
+      - { who: A, text: 'ああ　また録画が増えてる　全然見てないのに', en: "Oh, more recordings. I haven't watched any of them." }
+      - { who: M, text: '消さないんですか', en: "Why don't you delete them?" }
+      - { who: A, text: '見たい気持ちはあるの!　時間がないだけ', en: "I do want to watch! I just don't have time." }
+      - { who: M, text: 'はい　残しておきましょう', en: "Yes, let's keep them for now." }
   - id: chatter-10
     tone: light
     lines:
-      - { who: A, text: '通販の健康器具　箱を開けたら満足した' }
-      - { who: M, text: 'まだ使ってないですね' }
-      - { who: A, text: 'えっ　見てた?' }
-      - { who: M, text: '箱がそのままでしたから' }
+      - { who: A, text: '通販の健康器具　箱を開けたら満足した', en: "I was happy just opening the box for that mail-order exercise gadget." }
+      - { who: M, text: 'まだ使ってないですね', en: "You still haven't used it." }
+      - { who: A, text: 'えっ　見てた?', en: "Huh, were you watching me?" }
+      - { who: M, text: '箱がそのままでしたから', en: "The box was still there." }
   - id: chatter-11
     tone: light
     lines:
-      - { who: M, text: '雨　強くなってきました' }
-      - { who: A, text: '傘　持ってきた?' }
-      - { who: M, text: 'いいえ　帰る時に走りますよ' }
-      - { who: A, text: 'また?　それだと濡れるよ' }
+      - { who: M, text: '雨　強くなってきました', en: "The rain's getting heavier." }
+      - { who: A, text: '傘　持ってきた?', en: "Did you bring an umbrella?" }
+      - { who: M, text: 'いいえ　帰る時に走りますよ', en: "No. I'll run when I head home." }
+      - { who: A, text: 'また?　それだと濡れるよ', en: "Again? You'll get soaked." }
   - id: chatter-12
     tone: light
     lines:
-      - { who: A, text: 'その曲　今の若い子はよく聴くの?' }
-      - { who: M, text: 'はい　俺の周りではよく流れてますよ' }
-      - { who: A, text: '名前を聞いても分からなそう' }
-      - { who: M, text: '周りに聞けば分かりますよ' }
+      - { who: A, text: 'その曲　今の若い子はよく聴くの?', en: "Do young people listen to that song a lot?" }
+      - { who: M, text: 'はい　俺の周りではよく流れてますよ', en: "Yes, it plays a lot around me." }
+      - { who: A, text: '名前を聞いても分からなそう', en: "Even if you tell me the name, I probably won't know it." }
+      - { who: M, text: '周りに聞けば分かりますよ', en: "You can ask someone around you." }
   - id: chatter-13
     tone: light
     lines:
-      - { who: M, text: 'その鼻歌　学生の頃の曲ですか' }
-      - { who: A, text: 'そう　懐かしいな　覚えてるものだね' }
-      - { who: M, text: '親の世代の曲ですよ' }
-      - { who: A, text: 'ちょっと待って!　まだ親ってほどじゃないよ' }
+      - { who: M, text: 'その鼻歌　学生の頃の曲ですか', en: "Is that tune you're humming from when you were a student?" }
+      - { who: A, text: 'そう　懐かしいな　覚えてるものだね', en: "Yeah, it brings back memories. Funny what you remember." }
+      - { who: M, text: '親の世代の曲ですよ', en: "It's from my parents' generation." }
+      - { who: A, text: 'ちょっと待って!　まだ親ってほどじゃないよ', en: "Wait! I'm not that old yet!" }
   - id: chatter-14
     tone: light
     lines:
-      - { who: M, text: '出河さん　血液型って何ですか' }
-      - { who: A, text: 'えっ　何に使うの?　占い?' }
-      - { who: M, text: 'いえ　聞いただけですよ' }
-      - { who: A, text: '信じてないよ　順位だけ見るけど' }
+      - { who: M, text: '出河さん　血液型って何ですか', en: "Ms. Idokawa, what's your blood type?" }
+      - { who: A, text: 'えっ　何に使うの?　占い?', en: "Huh? What for? Is this about fortune-telling?" }
+      - { who: M, text: 'いえ　聞いただけですよ', en: "No, I was just asking." }
+      - { who: A, text: '信じてないよ　順位だけ見るけど', en: "I don't believe in it. I only check the rankings." }
   - id: chatter-15
     tone: light
     lines:
-      - { who: M, text: '仮眠　とれました?' }
-      - { who: A, text: '目を閉じただけ　寝ると余計つらい' }
-      - { who: M, text: 'それは眠れてないですよ' }
-      - { who: A, text: '分かってる　分かってるけどね' }
+      - { who: M, text: '仮眠　とれました?', en: "Did you get a nap?" }
+      - { who: A, text: '目を閉じただけ　寝ると余計つらい', en: "I just closed my eyes. Sleeping makes me feel worse." }
+      - { who: M, text: 'それは眠れてないですよ', en: "Then you didn't really sleep." }
+      - { who: A, text: '分かってる　分かってるけどね', en: "I know, I know. Still." }
   - id: chatter-16
     tone: light
     lines:
-      - { who: A, text: '煙草の匂い　苦手なんだ' }
-      - { who: M, text: 'はい　服にも残りますよ' }
-      - { who: A, text: 'そう!　それに体にもよくないよ' }
-      - { who: M, text: 'そうですね　周りにもよくないです' }
+      - { who: A, text: '煙草の匂い　苦手なんだ', en: "I don't like the smell of cigarettes." }
+      - { who: M, text: 'はい　服にも残りますよ', en: "Yes, it clings to your clothes too." }
+      - { who: A, text: 'そう!　それに体にもよくないよ', en: "Right! And it's bad for your health." }
+      - { who: M, text: 'そうですね　周りにもよくないです', en: "That's right. It's not good for people nearby either." }
   - id: chatter-17
     tone: light
     lines:
-      - { who: M, text: '出河さん　メモの字　読みやすいですね' }
-      - { who: A, text: '現場で読めないと困るからね' }
-      - { who: M, text: '俺の字は読めないって言われます' }
-      - { who: A, text: 'えっ　自分では読めるの?' }
+      - { who: M, text: '出河さん　メモの字　読みやすいですね', en: "Ms. Idokawa, your notes are easy to read." }
+      - { who: A, text: '現場で読めないと困るからね', en: "They'd be no use on a case if you couldn't read them." }
+      - { who: M, text: '俺の字は読めないって言われます', en: "People say they can't read my handwriting." }
+      - { who: A, text: 'えっ　自分では読めるの?', en: "Huh, can you read it yourself?" }
   - id: chatter-18
     tone: light
     lines:
-      - { who: A, text: '眠気覚まし　何してる?' }
-      - { who: M, text: 'ガムを噛みます　出河さんは?' }
-      - { who: A, text: '立って水を飲む　それだけで少し変わるよ' }
-      - { who: M, text: 'はい　試してみますよ' }
+      - { who: A, text: '眠気覚まし　何してる?', en: "What do you do to stay awake?" }
+      - { who: M, text: 'ガムを噛みます　出河さんは?', en: "I chew gum. What about you, Ms. Idokawa?" }
+      - { who: A, text: '立って水を飲む　それだけで少し変わるよ', en: "I stand up and drink some water. That helps a little." }
+      - { who: M, text: 'はい　試してみますよ', en: "Yes, I'll give that a try." }
   - id: chatter-19
     tone: light
     lines:
-      - { who: A, text: '夜勤明けって　温かいもの食べたくならない?' }
-      - { who: M, text: 'はい　味噌汁とかいいですよ' }
-      - { who: A, text: 'そうなの!　それだけのために　店を探す日もある' }
-      - { who: M, text: '出河さんは　食べる店を決めるのが早いですね' }
+      - { who: A, text: '夜勤明けって　温かいもの食べたくならない?', en: "After a night shift, don't you want something warm to eat?" }
+      - { who: M, text: 'はい　味噌汁とかいいですよ', en: "Yes, miso soup is nice." }
+      - { who: A, text: 'そうなの!　それだけのために　店を探す日もある', en: "Exactly! Some days I go looking for a place just for that." }
+      - { who: M, text: '出河さんは　食べる店を決めるのが早いですね', en: "Ms. Idokawa is quick to pick a place to eat." }
   - id: chatter-20
     tone: light
     lines:
-      - { who: M, text: '休みの日も　夜に眠くならないんですよね' }
-      - { who: A, text: 'ああ　分かる!　私も朝寝て昼に起きる' }
-      - { who: M, text: '体が勤務時間を　覚えてるんですかね' }
-      - { who: A, text: '休みの日までこの生活　困るよね' }
+      - { who: M, text: '休みの日も　夜に眠くならないんですよね', en: "I don't get sleepy at night, even on my days off." }
+      - { who: A, text: 'ああ　分かる!　私も朝寝て昼に起きる', en: "Oh, I know! I sleep in the morning and wake up at noon too." }
+      - { who: M, text: '体が勤務時間を　覚えてるんですかね', en: "Maybe our bodies remember our work hours." }
+      - { who: A, text: '休みの日までこの生活　困るよね', en: "It's a pain to live like this even on days off." }
   - id: chatter-21
     tone: light
     lines:
-      - { who: A, text: '最近　寝る前に本を読むんだけど' }
-      - { who: M, text: 'いいですね　何を読んでるんですか' }
-      - { who: A, text: '最初の数ページで寝ちゃう本' }
-      - { who: M, text: 'それは睡眠に役立ってますね' }
+      - { who: A, text: '最近　寝る前に本を読むんだけど', en: "Lately, I read a book before bed." }
+      - { who: M, text: 'いいですね　何を読んでるんですか', en: "That's nice. What are you reading?" }
+      - { who: A, text: '最初の数ページで寝ちゃう本', en: "A book that puts me to sleep in the first few pages." }
+      - { who: M, text: 'それは睡眠に役立ってますね', en: "Then it's helping you sleep." }
   - id: chatter-22
     tone: light
     lines:
-      - { who: M, text: '出河さん　傘は折りたたみ派ですか' }
-      - { who: A, text: '普通の傘　折りたたむのが苦手でね' }
-      - { who: M, text: '俺はたたむのが面倒で　長いのを持ち歩きます' }
-      - { who: A, text: 'それはそれで大変そう!' }
+      - { who: M, text: '出河さん　傘は折りたたみ派ですか', en: "Ms. Idokawa, do you use a folding umbrella?" }
+      - { who: A, text: '普通の傘　折りたたむのが苦手でね', en: "A regular one. I'm bad at folding them up." }
+      - { who: M, text: '俺はたたむのが面倒で　長いのを持ち歩きます', en: "I hate folding them, so I carry a long umbrella around." }
+      - { who: A, text: 'それはそれで大変そう!', en: "That sounds like a hassle too!" }
   - id: chatter-23
     tone: light
     lines:
-      - { who: A, text: '樫原くん　休みの日の朝って何時に起きる?' }
-      - { who: M, text: '昼です　朝と言っていいかは微妙ですけど' }
-      - { who: A, text: '私も似たようなもの　安心した' }
+      - { who: A, text: '樫原くん　休みの日の朝って何時に起きる?', en: "Kashihara, what time do you get up on a day off?" }
+      - { who: M, text: '昼です　朝と言っていいかは微妙ですけど', en: "Noon. Not sure you can call that morning, though." }
+      - { who: A, text: '私も似たようなもの　安心した', en: "I'm about the same. What a relief." }
   - id: chatter-24
     tone: light
     lines:
-      - { who: M, text: '出河さん　カップの飲み物は混ぜる派ですか' }
-      - { who: A, text: '混ぜるよ　底に残ると悔しいから' }
-      - { who: M, text: '俺は最後まで気づかずに飲みます' }
-      - { who: A, text: 'えっ　最後の一口で分かるでしょ!' }
+      - { who: M, text: '出河さん　カップの飲み物は混ぜる派ですか', en: "Ms. Idokawa, do you stir your drink in the cup?" }
+      - { who: A, text: '混ぜるよ　底に残ると悔しいから', en: "I do. It bugs me when some stays at the bottom." }
+      - { who: M, text: '俺は最後まで気づかずに飲みます', en: "I drink mine without noticing until the very end." }
+      - { who: A, text: 'えっ　最後の一口で分かるでしょ!', en: "Huh? You can tell by the last sip!" }
   - id: chatter-25
     tone: light
     lines:
-      - { who: A, text: '今日　靴下の左右が違う気がする' }
-      - { who: M, text: '見たところ　同じ組み合わせですよ' }
-      - { who: A, text: 'よかった　朝からずっと気になってた' }
+      - { who: A, text: '今日　靴下の左右が違う気がする', en: "I feel like my socks are on the wrong feet today." }
+      - { who: M, text: '見たところ　同じ組み合わせですよ', en: "They look like a matching pair to me." }
+      - { who: A, text: 'よかった　朝からずっと気になってた', en: "Good. I've been worrying about it all morning." }
   - id: chatter-26
     tone: light
     lines:
-      - { who: M, text: '出河さん　買い物のメモは紙ですか' }
-      - { who: A, text: '紙に書いて　その紙を忘れていく' }
-      - { who: M, text: 'メモの意味が薄いですね' }
-      - { who: A, text: 'そうなの　帰ってから思い出す' }
+      - { who: M, text: '出河さん　買い物のメモは紙ですか', en: "Ms. Idokawa, do you write your shopping list on paper?" }
+      - { who: A, text: '紙に書いて　その紙を忘れていく', en: "I write it on paper, then forget the paper." }
+      - { who: M, text: 'メモの意味が薄いですね', en: "That makes the list less useful." }
+      - { who: A, text: 'そうなの　帰ってから思い出す', en: "I know. Then I remember everything when I get home." }
   - id: chatter-27
     tone: light
     lines:
-      - { who: A, text: '今日は甘いものが食べたいな' }
-      - { who: M, text: '夜勤中に食べると　眠くなりませんか' }
-      - { who: A, text: 'なるね　でも食べたい気持ちが勝つ!' }
+      - { who: A, text: '今日は甘いものが食べたいな', en: "I feel like eating something sweet today." }
+      - { who: M, text: '夜勤中に食べると　眠くなりませんか', en: "Doesn't eating during a night shift make you sleepy?" }
+      - { who: A, text: 'なるね　でも食べたい気持ちが勝つ!', en: "It does, but wanting it wins!" }
   - id: chatter-28
     tone: light
     lines:
-      - { who: M, text: '出河さん　家で時計を見ますか' }
-      - { who: A, text: '見るよ　腕時計も壁の時計も' }
-      - { who: M, text: '俺は時間を見すぎて　まだ一分かと思います' }
-      - { who: A, text: '分かる　待ってる時ほど進まないよね' }
+      - { who: M, text: '出河さん　家で時計を見ますか', en: "Ms. Idokawa, do you look at clocks at home?" }
+      - { who: A, text: '見るよ　腕時計も壁の時計も', en: "I do. My wristwatch and the wall clock." }
+      - { who: M, text: '俺は時間を見すぎて　まだ一分かと思います', en: "I check the time too much and think, only one minute?" }
+      - { who: A, text: '分かる　待ってる時ほど進まないよね', en: "I know. Time crawls when you're waiting." }
   - id: chatter-29
     tone: light
     lines:
-      - { who: A, text: '樫原くんって　寝る時に明かり消す?' }
-      - { who: M, text: '消しますよ　点けたままだと朝に後悔します' }
-      - { who: A, text: '私はたまに点けたまま寝ちゃう' }
-      - { who: M, text: '疲れてる時は　仕方ないですよ' }
+      - { who: A, text: '樫原くんって　寝る時に明かり消す?', en: "Kashihara, do you turn off the light when you go to bed?" }
+      - { who: M, text: '消しますよ　点けたままだと朝に後悔します', en: "Yes. If I leave it on, I regret it in the morning." }
+      - { who: A, text: '私はたまに点けたまま寝ちゃう', en: "Sometimes I fall asleep with it on." }
+      - { who: M, text: '疲れてる時は　仕方ないですよ', en: "When you're tired, it happens." }
   - id: chatter-30
     tone: light
     lines:
-      - { who: M, text: '出河さん　冬は手袋を使いますか' }
-      - { who: A, text: '使うよ　片方だけ見つからなくなるけど' }
-      - { who: M, text: '片方だけで出るんですか' }
-      - { who: A, text: '出ないよ!　探すの' }
+      - { who: M, text: '出河さん　冬は手袋を使いますか', en: "Ms. Idokawa, do you wear gloves in winter?" }
+      - { who: A, text: '使うよ　片方だけ見つからなくなるけど', en: "I do, but one of them always goes missing." }
+      - { who: M, text: '片方だけで出るんですか', en: "Do you go out wearing just one?" }
+      - { who: A, text: '出ないよ!　探すの', en: "Of course not! I look for it." }
   - id: chatter-31
     tone: light
     lines:
-      - { who: A, text: '最近　湯船につかると出られなくなる' }
-      - { who: M, text: '気持ちよくて　時間を忘れるんですか' }
-      - { who: A, text: 'そう　あと五分が何回も続く' }
+      - { who: A, text: '最近　湯船につかると出られなくなる', en: "Lately, once I get in the bath, I can't get out." }
+      - { who: M, text: '気持ちよくて　時間を忘れるんですか', en: "Is it so relaxing you lose track of time?" }
+      - { who: A, text: 'そう　あと五分が何回も続く', en: "Yeah. I keep saying, just five more minutes." }
   - id: chatter-32
     tone: light
     lines:
