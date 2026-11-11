@@ -65,7 +65,10 @@ SWEEP = """([sign]) => {
   const ox = (vw - w) * cs[0], oy = (vh - h) * cs[1]
   const noteImg = [...document.querySelectorAll('.start-stack > img')].find(i => !i.classList.contains('start-off'))
   const rr = e => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }
-  const noteVisible = noteImg && getComputedStyle(noteImg).visibility !== 'hidden'
+  // the note counts as covering the board unless the confirmation has hidden it (no height AND not visible)
+  const sec = document.querySelector('.start-notes')
+  const noteHidden = sec.getBoundingClientRect().height === 0 && getComputedStyle(sec).visibility === 'hidden'
+  const noteVisible = noteImg && !noteHidden
   const cover = [noteVisible && rr(noteImg), rr(document.querySelector('.start-deck'))].filter(Boolean)
   const inter = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]))
   let minSlack = 1e9, minSign = 1, minClear = 1
@@ -120,7 +123,7 @@ CONFIRM = """() => {
   const r = e => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }
   const btn = n => [...document.querySelectorAll('.start-confirm-keys button')].find(b => b.textContent.trim() === n)
   const note = document.querySelector('.start-notes')
-  return {erase: r(btn('ERASE ALL')), cancel: r(btn('CANCEL')), noteShown: getComputedStyle(note).visibility !== 'hidden' || note.getBoundingClientRect().height > 0,
+  return {erase: r(btn('ERASE ALL')), cancel: r(btn('CANCEL')), noteShown: !(note.getBoundingClientRect().height === 0 && getComputedStyle(note).visibility === 'hidden'),
     focus: document.activeElement.textContent.trim()}
 }"""
 
@@ -190,6 +193,9 @@ def main():
                             errs.append(f"page {page + 1}: note outside viewport {[round(v) for v in n]}")
                         if overlap(n, r["key"]):
                             errs.append(f"page {page + 1}: note overlaps the key")
+                        # wide / landscape only (the same test as the CSS `min-aspect-ratio: 1/1`, so a square counts as
+                        # landscape); a portrait screen is left out on purpose: there the key is at the right end of the
+                        # screen and the note is 70vw wide, so their right edges are not meant to meet
                         if w >= h and abs(n[2] - r["key"][2]) > 2:
                             errs.append(f"page {page + 1}: the note's right edge ({n[2]:.0f}) is not the START key's ({r['key'][2]:.0f})")
                         if overlap(r["pager"], r["key"]):
