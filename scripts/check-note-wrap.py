@@ -184,7 +184,8 @@ LAYOUT = """
   const act = document.querySelector('.note-btn')
   const ar = act.getBoundingClientRect(), form = r('.note-form')
   const scale = paper.width / 340
-  if (ar.height / scale < 43.5 || ar.width / scale < 43.5) res.push(`the action's tap area is only ${(ar.width / scale).toFixed(1)}x${(ar.height / scale).toFixed(1)} (need 44x44)`)
+  // logical size (before the small tilt and the paper's fit scale): the rotated bounding box would read about 5px too big
+  if (act.offsetHeight < 43.5 || act.offsetWidth < 43.5) res.push(`the action's tap area is only ${act.offsetWidth}x${act.offsetHeight} (need 44x44)`)
   if (act.tagName !== 'BUTTON' || act.getAttribute('aria-label') !== act.textContent) res.push('the action is not a <button> named by its words')
   const parts = [...act.querySelectorAll('.note-act-under, .note-act-arrow, .note-act-text')]
   if (parts.length !== 3) res.push('the action lacks words, underline or arrow')
@@ -194,8 +195,8 @@ LAYOUT = """
     if (b.left < paper.left + 2 || b.right > paper.right - 2 || b.bottom > paper.bottom - 2) res.push(`the action's ${el.getAttribute('class')} leaves the paper`)
     const gap = (b.top - form.bottom) / scale
     if (gap < 3) res.push(`the action's ${el.getAttribute('class')} is only ${gap.toFixed(1)}px below the number box (need 3)`)
-    const sc = document.querySelector('.note-scrib').getBoundingClientRect()
-    if ((b.top - sc.bottom) / scale < 3) res.push(`the action's ${el.getAttribute('class')} is closer than 3px to the scribble`)
+    const scEl = document.querySelector('.note-scrib') // absent on stages without a scribble
+    if (scEl && (b.top - scEl.getBoundingClientRect().bottom) / scale < 3) res.push(`the action's ${el.getAttribute('class')} is closer than 3px to the scribble`)
   }
   const rows = [...document.querySelectorAll('.note-form .note-fr')].map(e => e.offsetHeight)
   if (new Set(rows).size > 1) res.push(`form rows differ in height: ${rows}`)
