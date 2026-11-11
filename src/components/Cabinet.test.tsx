@@ -375,7 +375,7 @@ describe('Cabinet model plate (#304)', () => {
     )
     // desktop: the picture height is capped so the control column stays wider than the plate (tall screens)
     expect(css).toMatch(
-      /--tube-h:\s*min\(100vh - 16px, \(100vw - 30px - var\(--col-min\)\) \* 1679 \/ 1246\)/
+      /--tube-h:\s*min\(var\(--vh\) - 16px, \(100vw - 30px - var\(--col-min\)\) \* 1679 \/ 1246\)/
     )
     expect(css).toMatch(/--col-min:\s*340px/)
     // the column minimum scales with the panel zoom (1.3 from 1200px, 1.45 from 1400px): 340 x 1.3 = 442, 340 x 1.45 = 493

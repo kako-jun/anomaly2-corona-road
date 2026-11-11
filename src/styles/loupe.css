@@ -1,0 +1,97 @@
+/* Magnifier loupe (#341). Numbers the player feels (hold time, zoom, diameter) are in src/utils/loupe.ts, not here. */
+
+/* the loupe is drawn here, on the control panel; out of the flow so the layout never moves */
+.panel > .loupe-host {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  /* the panel is zoomed on wide screens (--pz, retro.css); undo it so the loupe's px are real px and the noise grain
+     in it is exactly the monitor's grain */
+  zoom: calc(1 / var(--pz, 1));
+}
+
+.loupe {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+  isolation: isolate;
+  background: #050505;
+  border: 4px solid #c9bd9b;
+  box-sizing: content-box;
+  margin: -4px 0 0 -4px; /* keeps the centre where translate put it despite the border */
+  box-shadow:
+    0 0 0 2px #0007,
+    0 8px 18px 2px #000a,
+    inset 0 0 12px 2px #000a;
+}
+
+/* the magnified picture: the frame is ZOOM times the monitor's, placed by left/top inline */
+.loupe__frame {
+  position: absolute;
+}
+.loupe__frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  filter: brightness(var(--bri, 1)) contrast(var(--con, 1)) saturate(0.9);
+}
+.loupe__frame img.overlay {
+  inset: auto;
+  width: auto;
+  height: auto;
+  object-fit: fill;
+}
+.loupe__frame img.glow {
+  filter: brightness(var(--bri, 1)) contrast(var(--con, 1))
+    blur(calc(7px * var(--zoom, 1))) saturate(1.3);
+  opacity: 0.35;
+  mix-blend-mode: screen;
+}
+
+/* noise + scanlines at the monitor's own size (NOT magnified), centred in the circle and cropped by it */
+.loupe__fx {
+  /* centred with inset + margin:auto (width/height are inline), NOT transform: a transform would make this a stacking
+     context and the noise (overlay) and scanlines (multiply) inside would stop blending with the picture below */
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+}
+
+/* the always-visible hint, on the lower band of the monitor's frame picture (out of the flow) */
+.bezel > .loupe-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* the band below the glass opening: (1679 - 1580) / 1679 of the frame picture */
+  height: 5.9%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: #4a4130;
+  text-shadow: 0 1px 0 #fff6;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* pointer events for touch, mouse and pen: a vertical drag still scrolls the page until the loupe shows (then the
+   hook cancels touchmove); no text selection / long-press menu while holding */
+.glass {
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}

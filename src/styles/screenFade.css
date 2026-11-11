@@ -1,0 +1,37 @@
+/* Screen transitions (#336). Duration comes from SCREEN_FADE_MS through --screen-fade-ms. */
+.screen-fade-root {
+  display: contents;
+}
+.screen-fade-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity calc(var(--screen-fade-ms) / 2) linear;
+}
+.screen-fade-veil[data-dark='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* cross: the old screen lies over the new one and fades away. */
+.screen-fade-ghost {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  overflow: hidden;
+  pointer-events: none;
+  animation: screen-fade-ghost var(--screen-fade-ms) linear forwards;
+}
+@keyframes screen-fade-ghost {
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screen-fade-veil,
+  .screen-fade-ghost {
+    display: none;
+  }
+}

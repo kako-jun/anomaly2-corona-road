@@ -1,5 +1,6 @@
 import './App.css'
 import { useEffect, useReducer, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 import './styles/retro.css'
 import { useGameState } from './hooks/useGameState'
 import { StartScreen } from './components/StartScreen'
@@ -7,6 +8,7 @@ import { Cabinet } from './components/Cabinet'
 import { InvestigationNote } from './components/InvestigationNote'
 import { GameOverScreen } from './components/GameOverScreen'
 import { SaveNotice } from './components/SaveNotice'
+import { ScreenTransition } from './components/ScreenTransition'
 import { buildNote } from './utils/investigationNote'
 import { useLanguage } from './utils/language'
 import { preloadCabinet, preloadTitleNotes } from './utils/uiPreload'
@@ -14,6 +16,11 @@ import { SAVE_KEY, load } from './utils/saveData'
 import { resetProgress } from './utils/shiftProgress'
 
 function App() {
+  const [screenKey, screen] = useScreen()
+  return <ScreenTransition screenKey={screenKey}>{screen}</ScreenTransition>
+}
+
+function useScreen(): [string, ReactNode] {
   const ready = useRef<Promise<void>>(Promise.resolve())
   const [loading, setLoading] = useState(false)
   // The title's start key opens the investigation note; its key starts the shift (#297).
@@ -79,7 +86,8 @@ function App() {
   }
 
   if (gameState === 'idle' && memo && !endingReached) {
-    return (
+    return [
+      'memo-before',
       <>
         <InvestigationNote
           view={buildNote({ mode: 'before', save: load() }, language)}
@@ -87,12 +95,13 @@ function App() {
           busy={loading}
         />
         <SaveNotice />
-      </>
-    )
+      </>,
+    ]
   }
 
   if (gameState === 'idle') {
-    return (
+    return [
+      'title',
       <>
         <StartScreen
           onStart={() => setMemo(true)}
@@ -104,12 +113,13 @@ function App() {
           }}
         />
         <SaveNotice />
-      </>
-    )
+      </>,
+    ]
   }
 
   if (gameState === 'win' || gameState === 'lose') {
-    return (
+    return [
+      'result',
       <>
         <GameOverScreen
           closing={
@@ -123,11 +133,12 @@ function App() {
           onTitle={returnToTitle}
         />
         <SaveNotice />
-      </>
-    )
+      </>,
+    ]
   }
 
-  return (
+  return [
+    'shift',
     <>
       <Cabinet
         stats={stats}
@@ -144,8 +155,8 @@ function App() {
         onReport={reportAnomaly}
       />
       <SaveNotice />
-    </>
-  )
+    </>,
+  ]
 }
 
 export default App
