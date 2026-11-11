@@ -131,9 +131,9 @@ async () => {
   const tapeM = new DOMMatrix(getComputedStyle(document.querySelector('.note-paper'), '::before').transform)
   const labels = [...document.querySelectorAll('.note-slot-l')]
   const el = { tape: null, night: document.querySelector('.note-night'), stamp: box.querySelector('.note-stamp:not(.note-big)'), stampBig: box.querySelector('.note-big'),
-    tag: document.querySelector('.note-slot-new'), scrib: document.querySelector('.note-scrib'), label0: labels[0], label1: labels[1], label2: labels[2], label3: labels[3] }
+    tag: document.querySelector('.note-slot-new'), scrib0: document.querySelectorAll('.note-scrib p')[0], scrib1: document.querySelectorAll('.note-scrib p')[1], scrib2: document.querySelectorAll('.note-scrib p')[2], action: document.querySelector('.note-btn'), label0: labels[0], label1: labels[1], label2: labels[2], label3: labels[3] }
   const got = {}
-  for (const [k, e] of Object.entries(el)) got[k] = k === 'tape' ? Math.atan2(tapeM.b, tapeM.a) * 180 / Math.PI : (e ? ang(e) : null)
+  for (const [k, e] of Object.entries(el)) if (e || !k.startsWith('scrib')) got[k] = k === 'tape' ? Math.atan2(tapeM.b, tapeM.a) * 180 / Math.PI : (e ? ang(e) : null)
   const res = []
   for (const [k, v] of Object.entries(got)) {
     if (v === null) { res.push('no element for tilt ' + k); continue }
@@ -176,11 +176,49 @@ async () => {
 """
 
 LAYOUT = """
-() => {
+async () => {
+  const T = await import('/src/data/noteTilt.ts')
+  // each scribble line is turned by itself: its extent is the union of the lines' (rotated) boxes
+  const scribBox = () => { const ps = [...document.querySelectorAll('.note-scrib p')].map(p => p.getBoundingClientRect()); return ps.length ? { top: Math.min(...ps.map(b => b.top)), bottom: Math.max(...ps.map(b => b.bottom)), left: Math.min(...ps.map(b => b.left)), right: Math.max(...ps.map(b => b.right)) } : null }
   const r = s => document.querySelector(s).getBoundingClientRect()
   const res = []
   const gap = r('.note-btn').top - r('.note-form').bottom
   if (gap < 8) res.push(`the form is only ${gap.toFixed(1)}px above the key (need 8)`)
+  // The handwritten action at the bottom: its circle and arrow stay on the paper and 3px or more from the form and
+  // from each other's neighbours (the tap area is the whole button, 44px or more in both directions).
+  const actPaper = document.querySelector('.note-paper').getBoundingClientRect()
+  const act = document.querySelector('.note-btn')
+  const ar = act.getBoundingClientRect(), form = r('.note-form')
+  const scale = actPaper.width / 340
+  // logical size (before the small tilt and the paper's fit scale): the rotated bounding box would read about 5px too big
+  if (act.offsetHeight < 43.5 || act.offsetWidth < 43.5) res.push(`the action's tap area is only ${act.offsetWidth}x${act.offsetHeight} (need 44x44)`)
+  if (act.tagName !== 'BUTTON' || act.getAttribute('aria-label') !== act.textContent) res.push('the action is not a <button> named by its words')
+  const parts = [...act.querySelectorAll('.note-act-ring, .note-act-arrow, .note-act-text')]
+  if (parts.length !== 3) res.push('the action lacks words, circle or arrow')
+  for (const el of act.querySelectorAll('svg')) if (el.getAttribute('aria-hidden') !== 'true') res.push('an action stroke is not aria-hidden')
+  for (const el of parts) {
+    const b = el.getBoundingClientRect()
+    if (b.left < actPaper.left + 2 || b.right > actPaper.right - 2 || b.bottom > actPaper.bottom - 2) res.push(`the action's ${el.getAttribute('class')} leaves the paper`)
+    const gap = (b.top - form.bottom) / scale
+    if (gap < 3) res.push(`the action's ${el.getAttribute('class')} is only ${gap.toFixed(1)}px below the number box (need 3)`)
+    const scEl = scribBox() // absent on stages without a scribble
+    if (scEl && (b.top - scEl.bottom) / scale < 3) res.push(`the action's ${el.getAttribute('class')} is closer than 3px to the scribble`)
+  }
+  // The scribble is turned line by line, glyphs and all: no element inside a line carries its own offset, and the
+  // baseline through each line's letters leans by the angle of the table (a row of upright letters stepped along a
+  // slope would read as a slope here, but not as a turned glyph: the line's own transform must carry the angle).
+  document.querySelectorAll('.note-scrib p').forEach((p, i) => {
+    if (p.children.length) res.push('a scribble line has child elements (per-letter offsets)')
+    const m = new DOMMatrix(getComputedStyle(p).transform), turn = Math.atan2(m.b, m.a) * 180 / Math.PI
+    if (Math.abs(turn - T.TILT.scrib[i]) > 0.05) res.push(`scribble line ${i} is turned ${turn.toFixed(2)} deg, the table says ${T.TILT.scrib[i]}`)
+    for (let el = p.parentElement; el && !el.classList.contains('note-paper'); el = el.parentElement) if (getComputedStyle(el).transform !== 'none') res.push(`${el.className} above a scribble line carries a transform of its own`)
+    const tn = p.firstChild, pts = []
+    for (let k = 0; k < tn.length; k++) { const rg = document.createRange(); rg.setStart(tn, k); rg.setEnd(tn, k + 1); const b = rg.getBoundingClientRect(); if (b.width > 0) pts.push([(b.left + b.right) / 2, (b.top + b.bottom) / 2]) }
+    const n = pts.length, mx = pts.reduce((a, q) => a + q[0], 0) / n, my = pts.reduce((a, q) => a + q[1], 0) / n
+    let sxy = 0, sxx = 0; for (const q of pts) { sxy += (q[0] - mx) * (q[1] - my); sxx += (q[0] - mx) ** 2 }
+    const slope = Math.atan2(sxy, sxx) * 180 / Math.PI
+    if (n > 4 && Math.abs(slope - T.TILT.scrib[i]) > 0.6) res.push(`scribble line ${i}: the letters sit on a ${slope.toFixed(2)} deg slope, the line is turned ${T.TILT.scrib[i]} deg`)
+  })
   const rows = [...document.querySelectorAll('.note-form .note-fr')].map(e => e.offsetHeight)
   if (new Set(rows).size > 1) res.push(`form rows differ in height: ${rows}`)
   const tag = document.querySelector('.note-slot-new')
@@ -205,11 +243,11 @@ LAYOUT = """
   const minGap = 14
   if (sc && (gapAbove < minGap || gapAbove > 20)) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want ${minGap}-20px)`)
   const lastSyn = syn.querySelector('p:last-child').getBoundingClientRect()
-  const clear = sc ? sc.getBoundingClientRect().top - lastSyn.bottom : 99
+  const clear = scribBox() ? scribBox().top - lastSyn.bottom : 99
   if (clear < 8) res.push(`the tilted scribble is only ${clear.toFixed(1)}px below the last synopsis line (need 8)`)
   for (const fl of document.querySelectorAll('.note-fl')) if (fl.scrollWidth > fl.clientWidth + 1) res.push(`form label "${fl.textContent}" does not fit its column`)
   const nr = notes.getBoundingClientRect(), fr = r('.note-form')
-  const sr = sc ? sc.getBoundingClientRect() : syn.getBoundingClientRect() // no scribble: the synopsis itself must stay on the sheet
+  const sr = scribBox() ? scribBox() : syn.getBoundingClientRect() // no scribble: the synopsis itself must stay on the sheet
   if (sr.bottom > nr.bottom || sr.top < nr.top) res.push('the tilted scribble (or the synopsis) leaves the ruled sheet')
   if (fr.top - sr.bottom < 10) res.push(`the scribble (or the synopsis) is only ${(fr.top - sr.bottom).toFixed(1)}px above the number box (need 10)`)
   // One sheet: nothing inside the paper overflows it, and the page itself never scrolls.
@@ -224,6 +262,22 @@ LAYOUT = """
 }
 """
 
+
+FOCUS = """
+() => {
+  // Keyboard focus draws a second hand-drawn loop around the circled words: it must exist and be visible, stay inside
+  // the paper (not touching its bottom edge) and clear of the arrow.
+  const res = []
+  const ring = document.querySelector('.note-btn .note-act-focus')
+  if (!ring) return ['the action has no focus loop']
+  if (getComputedStyle(ring).opacity !== '1') res.push('the focus loop is not shown while the action has keyboard focus')
+  const path = ring.querySelector('path').getBoundingClientRect(), paper = document.querySelector('.note-paper').getBoundingClientRect()
+  const arrow = document.querySelector('.note-act-arrow').getBoundingClientRect()
+  if (path.left < paper.left + 2 || path.right > paper.right - 2 || path.bottom > paper.bottom - 2) res.push(`the focus loop touches or leaves the paper (bottom gap ${(paper.bottom - path.bottom).toFixed(1)}px)`)
+  if (path.right > arrow.left - 1) res.push('the focus loop runs into the arrow')
+  return res
+}
+"""
 
 VIEWPORTS = ((360, 640), (390, 844), (768, 1024), (1280, 720))
 FLAGS = {
@@ -265,6 +319,15 @@ def main():
                         page.wait_for_timeout(60)
                         for msg in page.evaluate(LAYOUT):
                             problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                    if (stage, variant) in (("start", "plain"), ("child", "fresh")):
+                        for w, h in VIEWPORTS:
+                            page.set_viewport_size({"width": w, "height": h})
+                            page.keyboard.press("Shift")  # keyboard modality, so :focus-visible applies
+                            page.focus(".note-btn")
+                            page.wait_for_timeout(60)
+                            for msg in page.evaluate(FOCUS):
+                                problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                            page.evaluate("document.activeElement && document.activeElement.blur()")
                     page.set_viewport_size({"width": 390, "height": 844})
                     if stage == "elder2" and variant == "plain" and lang == "ja":
                         for msg in page.evaluate(FRAMEPX):

@@ -11,15 +11,15 @@ dialogues:
     tone: serious
     when: { flag: elder2 }
     lines:
-      - { who: A, text: 'また?　二人目も帰りたくないって言ったの?' }
-      - { who: M, text: 'はい　帰らないと言ったあと　こちらの体調まで気づかってました' }
+      - { who: A, text: 'また?　二人目も　帰りたくないって言ったの?' }
+      - { who: M, text: 'はい　帰らないと言ったあと　こちらの体調まで　気づかってました' }
       - { who: A, text: '自分のことより?　やさしい人なんだね…' }
   - id: story-elder3
     tone: serious
     when: { flag: elder3 }
     lines:
       - { who: A, text: '三人とも帰らないなんて　そんなことある?' }
-      - { who: M, text: '三人目は「帰りたい場所なら　とっくに帰ってますよ」と笑ってました' }
+      - { who: M, text: '三人目は「帰りたい場所なら　とっくに　帰ってますよ」と笑ってました' }
       - { who: A, text: 'そんなふうに言われたら　怒れないよ…' }
   - id: story-child
     tone: serious

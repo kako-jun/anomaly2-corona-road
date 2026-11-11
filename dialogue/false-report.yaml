@@ -42,7 +42,7 @@ dialogues:
     tone: light
     lines:
       - { who: M, text: 'はい　今のは誤報ですよ' }
-      - { who: A, text: 'そんなに淡々と言わなくてもいいよ' }
+      - { who: A, text: 'そんなに淡々と　言わなくてもいいよ' }
       - { who: M, text: '結果なので' }
   - id: false-report-09
     tone: light

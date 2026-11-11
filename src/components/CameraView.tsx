@@ -6,9 +6,22 @@ import { cx } from '../utils/cx'
 import { NoiseCanvas } from './NoiseCanvas'
 
 /**
+ * Puts each part of a text in its own span (class `cls`) and keeps the separator as a text node before every part
+ * but the first, so the parts are the only places a line may break and the text content (and what a screen reader
+ * says) is exactly the original string. Shared by the result text (words) and the subtitles (phrases).
+ */
+function partSpans(parts: string[], separator: string, cls: string) {
+  return parts.map((g, i) => (
+    <span key={i}>
+      {i > 0 && separator}
+      {g && <span className={cls}>{g}</span>}
+    </span>
+  ))
+}
+
+/**
  * Splits a result message into per-word nowrap spans so a long message wraps only between words, never inside one (#316).
- * A dash stays with the word before it, so a line never starts with a lone dash. The spaces stay as text, so the
- * text content (and what a screen reader says) is unchanged.
+ * A dash stays with the word before it, so a line never starts with a lone dash.
  */
 function wordSpans(message: string) {
   const groups: string[] = []
@@ -16,12 +29,19 @@ function wordSpans(message: string) {
     if (word === '—' && groups.length > 0) groups[groups.length - 1] += ' —'
     else groups.push(word)
   }
-  return groups.map((g, i) => (
-    <span key={i}>
-      {i > 0 && ' '}
-      <span className="w">{g}</span>
-    </span>
-  ))
+  return partSpans(groups, ' ', 'w')
+}
+
+/** The phrase separator of the dialogue ledger (a full-width space, dialogue/README.md). */
+const PHRASE_SEPARATOR = '\u3000'
+
+/**
+ * Splits a subtitle at the full-width spaces the script puts between phrases, so a line breaks only between phrases,
+ * never inside one (#323). The separators stay as text, so the text content is the original string. A full-width space at
+ * the end of a line is hung (not counted for centring) by Chromium; other browsers are not verified.
+ */
+function phraseSpans(text: string) {
+  return partSpans(text.split(PHRASE_SEPARATOR), PHRASE_SEPARATOR, 'seg')
 }
 
 interface CameraViewProps {
@@ -181,7 +201,7 @@ export const CameraView = ({
           </div>
 
           <div className={cx('movie-sub', subtitle.visible && 'show')}>
-            {subtitle.text && <div>{subtitle.text}</div>}
+            {subtitle.text && <div>{phraseSpans(subtitle.text)}</div>}
           </div>
           <div
             className={cx(

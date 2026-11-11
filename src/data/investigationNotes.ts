@@ -292,9 +292,13 @@ export const LABELS = {
   unitCount: { ja: '件', en: '' },
   unitKinds: { ja: '種', en: '' },
   unitTimes: { ja: '回', en: '' },
-  btnStart: { ja: '勤務を始める', en: 'START SHIFT' },
-  btnAgain: { ja: 'もう一度、勤務', en: 'ONE MORE SHIFT' },
-  /** After the true ending the key returns to the title (#294). */
-  btnTitle: { ja: 'タイトルへ戻る', en: 'BACK TO TITLE' },
-  btnLoading: { ja: '準備中…', en: 'LOADING…' },
+  /**
+   * The handwritten action at the bottom of the note (the arrow after it is drawn, not typed). These are the
+   * detective's own words on paper, so they follow the note's language (not machine keys like the title's).
+   */
+  btnStart: { ja: '勤務を始める', en: 'Start the shift' },
+  btnAgain: { ja: 'もう一度', en: 'Once more' },
+  /** After the true ending the action returns to the title (#294). */
+  btnTitle: { ja: 'タイトルへ', en: 'Back to title' },
+  btnLoading: { ja: '準備中…', en: 'One moment…' },
 } as const

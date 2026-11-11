@@ -87,13 +87,13 @@ describe('App: title -> investigation note (#297) and the language from the brow
     vi.stubGlobal('navigator', { language: 'en-US', languages: ['en-US'] })
   })
 
-  it('START SHIFT opens the note for the first night; its key is what starts the shift', async () => {
+  it('START SHIFT opens the note for the first night; its handwritten action is what starts the shift', async () => {
     render(<App />)
     await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
     expect(screen.getByText('CASE MEMO')).toBeInTheDocument()
     expect(screen.getByText('BACKGROUND')).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: 'START SHIFT' })
+      screen.getByRole('button', { name: 'Start the shift' })
     ).toBeInTheDocument()
   })
 
@@ -165,10 +165,10 @@ describe('App: title -> investigation note (#297) and the language from the brow
     })
     game.initial = 'win'
     render(<App />)
-    // The result is the note, and its key goes back to the title (no restart after the ending).
+    // The result is the note, and its action goes back to the title (no restart after the ending).
     expect(screen.getByText('CASE MEMO')).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'ONE MORE SHIFT' })).toBeNull()
-    await userEvent.click(screen.getByRole('button', { name: 'BACK TO TITLE' }))
+    expect(screen.queryByRole('button', { name: 'Once more' })).toBeNull()
+    await userEvent.click(screen.getByRole('button', { name: 'Back to title' }))
     expect(screen.queryByText('CASE MEMO')).toBeNull()
     await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
     await userEvent.click(screen.getByRole('button', { name: 'ERASE ALL' }))

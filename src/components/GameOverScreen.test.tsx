@@ -109,7 +109,7 @@ describe('result = investigation note (#297)', () => {
     )
     expect(screen.getByText('CASE MEMO')).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: 'ONE MORE SHIFT' })
+      screen.getByRole('button', { name: 'Once more' })
     ).toBeInTheDocument()
   })
 
@@ -143,10 +143,8 @@ describe('result = investigation note (#297)', () => {
           onTitle={vi.fn()}
         />
       )
-      expect(
-        screen.queryByRole('button', { name: 'タイトルへ戻る' })
-      ).toBeNull()
-      fireEvent.click(screen.getByRole('button', { name: 'もう一度、勤務' }))
+      expect(screen.queryByRole('button', { name: 'タイトルへ' })).toBeNull()
+      fireEvent.click(screen.getByRole('button', { name: 'もう一度' }))
       expect(restart).toHaveBeenCalledOnce()
     }
   )
@@ -164,8 +162,8 @@ describe('result = investigation note (#297)', () => {
         onTitle={title}
       />
     )
-    expect(screen.queryByRole('button', { name: 'もう一度、勤務' })).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: 'タイトルへ戻る' }))
+    expect(screen.queryByRole('button', { name: 'もう一度' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'タイトルへ' }))
     expect(title).toHaveBeenCalledOnce()
     expect(restart).not.toHaveBeenCalled()
   })

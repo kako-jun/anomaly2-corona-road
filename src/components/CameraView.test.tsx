@@ -99,6 +99,57 @@ describe('CameraView subtitle container', () => {
   })
 })
 
+describe('CameraView subtitle phrases (#323)', () => {
+  const subOf = (text: string) => {
+    const { container } = render(
+      <CameraView {...props({ subtitle: { text, visible: true } })} />
+    )
+    const el = container.querySelector('.movie-sub') as HTMLElement
+    const phrases = [...el.querySelectorAll('.seg')].map(s => s.textContent)
+    return { el, phrases }
+  }
+
+  it('puts each phrase between the full-width spaces in its own .seg', () => {
+    const { phrases } = subOf('えっ\u3000私が?\u3000そんなに飲み歩かない')
+    expect(phrases).toEqual(['えっ', '私が?', 'そんなに飲み歩かない'])
+  })
+
+  it('keeps the text content exactly the original string, spaces included', () => {
+    const { el } = subOf('えっ\u3000私が?\u3000そんなに飲み歩かない')
+    expect(el.textContent).toBe('えっ\u3000私が?\u3000そんなに飲み歩かない')
+  })
+
+  it('keeps consecutive, leading and trailing full-width spaces as text, with no empty .seg', () => {
+    for (const text of [
+      'あ\u3000\u3000い',
+      '\u3000あい',
+      'あい\u3000',
+      '\u3000\u3000',
+    ]) {
+      cleanup()
+      const { el } = subOf(text)
+      expect(el.textContent, JSON.stringify(text)).toBe(text)
+      expect(
+        [...el.querySelectorAll('.seg')].every(s => s.textContent !== '')
+      ).toBe(true)
+    }
+    cleanup()
+    expect(subOf('あ\u3000\u3000い').phrases).toEqual(['あ', 'い'])
+  })
+
+  it('makes a text without a full-width space a single .seg', () => {
+    const { el, phrases } = subOf('そうですね')
+    expect(phrases).toEqual(['そうですね'])
+    expect(el.textContent).toBe('そうですね')
+  })
+
+  it('renders nothing for an empty subtitle', () => {
+    const { el } = subOf('')
+    expect(el.querySelector('div')).toBeNull()
+    expect(el.textContent).toBe('')
+  })
+})
+
 describe('CameraView result text (#316)', () => {
   const resultOf = (message: string) => {
     const { container } = render(

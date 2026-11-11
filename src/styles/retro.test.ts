@@ -100,6 +100,15 @@ describe('retro.css', () => {
     expect(decls('.movie-sub', 'font-size').at(-1)).toBe('4.9cqw')
   })
 
+  it('breaks subtitles only between phrases: balanced lines, strict line breaking, a phrase is one box (#323)', () => {
+    expect(decls('.movie-sub div', 'text-wrap').at(-1)).toBe('balance')
+    expect(decls('.movie-sub div', 'line-break').at(-1)).toBe('strict')
+    expect(decls('.movie-sub .seg', 'display').at(-1)).toBe('inline-block')
+    // a phrase wider than the picture is the last resort: it may break anywhere, instead of leaving the picture
+    expect(decls('.movie-sub .seg', 'max-width').at(-1)).toBe('100%')
+    expect(decls('.movie-sub .seg', 'overflow-wrap').at(-1)).toBe('anywhere')
+  })
+
   it('sizes the OSD texts in cqw against the picture, with no fixed size or width @media (#316)', () => {
     for (const sel of ['.osd-cam', '.osd-rec', '.osd-result']) {
       // earlier declarations are fallbacks for browsers without cqw; the cqw one must come last so it wins
