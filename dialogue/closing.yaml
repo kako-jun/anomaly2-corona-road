@@ -4,257 +4,257 @@ dialogues:
     tone: light
     when: { result: dawn }
     lines:
-      - { who: M, text: 'はい　朝ですね　引き継ぎに行ってきますよ' }
-      - { who: A, text: 'やっと朝だね　お疲れさま　気をつけて帰って' }
+      - { who: M, text: 'はい　朝ですね　引き継ぎに行ってきますよ', en: "It's morning. I'll go hand over to the next shift." }
+      - { who: A, text: 'やっと朝だね　お疲れさま　気をつけて帰って', en: "Morning at last. Good work. Get home safe." }
   - id: closing-dawn-02
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: 'ああ　明るくなってる　終わったんだね' }
-      - { who: M, text: 'はい　引き継ぎの人も来ていますよ' }
-      - { who: A, text: 'よかった　これで帰れる' }
+      - { who: A, text: 'ああ　明るくなってる　終わったんだね', en: "Oh, it's getting light. We're done, then." }
+      - { who: M, text: 'はい　引き継ぎの人も来ていますよ', en: "Yes, the next shift is here too." }
+      - { who: A, text: 'よかった　これで帰れる', en: "Good. Now we can go home." }
   - id: closing-dawn-03
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: 'ふう　肩が固まってる　朝まで座りっぱなしだった' }
-      - { who: M, text: 'はい　少し伸ばしてください' }
+      - { who: A, text: 'ふう　肩が固まってる　朝まで座りっぱなしだった', en: "Whew, my shoulders are stiff. I've been sitting here all night." }
+      - { who: M, text: 'はい　少し伸ばしてください', en: "You should stretch a little." }
   - id: closing-dawn-04
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '今夜も長かったね　外の空が白い' }
-      - { who: M, text: 'そうですね　朝になりましたよ' }
+      - { who: A, text: '今夜も長かったね　外の空が白い', en: "Another long night. The sky's getting light." }
+      - { who: M, text: 'そうですね　朝になりましたよ', en: "Yes, morning's here." }
   - id: closing-dawn-05
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: 'やった　朝だ!　眠いけど嬉しい' }
-      - { who: M, text: 'はい　お疲れさまでした' }
+      - { who: A, text: 'やった　朝だ!　眠いけど嬉しい', en: "Yes, it's morning! I'm tired, but I'm happy." }
+      - { who: M, text: 'はい　お疲れさまでした', en: "Good work tonight." }
   - id: closing-dawn-06
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '樫原くん　もう朝だよ　帰れるね' }
-      - { who: M, text: 'はい　その前に引き継ぎです' }
-      - { who: A, text: 'そうだった　あと少し頑張ろう' }
+      - { who: A, text: '樫原くん　もう朝だよ　帰れるね', en: "It's morning, Kashihara. We can go home." }
+      - { who: M, text: 'はい　その前に引き継ぎです', en: "Yes, after the handover." }
+      - { who: A, text: 'そうだった　あと少し頑張ろう', en: "Right. Just a little longer, then." }
   - id: closing-dawn-07
     tone: light
     when: { result: dawn }
     lines:
-      - { who: M, text: '出河さん　外が明るいですよ' }
-      - { who: A, text: 'えっ　ほんと?　気づかなかった' }
-      - { who: M, text: 'はい　窓の向こうが白んでます' }
+      - { who: M, text: '出河さん　外が明るいですよ', en: "Ms. Dekawa, it's getting light outside." }
+      - { who: A, text: 'えっ　ほんと?　気づかなかった', en: "What, really? I didn't notice." }
+      - { who: M, text: 'はい　窓の向こうが白んでます', en: "Yes, the sky's brightening through the window." }
   - id: closing-dawn-08
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: 'この時間の金沢　静かだね' }
-      - { who: M, text: 'はい　通りはまだ静かですよ' }
+      - { who: A, text: 'この時間の金沢　静かだね', en: "Kanazawa is quiet at this hour." }
+      - { who: M, text: 'はい　通りはまだ静かですよ', en: "Yes, the streets are still quiet." }
   - id: closing-dawn-09
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '朝の光　少し眩しい' }
-      - { who: M, text: '画面を見た後ですからね' }
-      - { who: A, text: 'そっか!　目が慣れてないんだ' }
+      - { who: A, text: '朝の光　少し眩しい', en: "The morning light's a little bright." }
+      - { who: M, text: '画面を見た後ですからね', en: "We've been staring at the screen." }
+      - { who: A, text: 'そっか!　目が慣れてないんだ', en: "Right! My eyes aren't used to it." }
   - id: closing-dawn-10
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: 'ああ　やっと終わった　ほっとした' }
-      - { who: M, text: 'はい　今夜の勤務は終了です' }
+      - { who: A, text: 'ああ　やっと終わった　ほっとした', en: "Ah, finally done. What a relief." }
+      - { who: M, text: 'はい　今夜の勤務は終了です', en: "Yes, tonight's shift is over." }
   - id: closing-dawn-11
     tone: light
     when: { result: dawn }
     lines:
-      - { who: M, text: '引き継ぎの人が来ましたよ' }
-      - { who: A, text: 'ありがとう　助かった' }
-      - { who: M, text: 'はい　こちらも戻ります' }
+      - { who: M, text: '引き継ぎの人が来ましたよ', en: "The next shift is here." }
+      - { who: A, text: 'ありがとう　助かった', en: "Thanks. That's a relief." }
+      - { who: M, text: 'はい　こちらも戻ります', en: "I'll head back too." }
   - id: closing-dawn-12
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '今日は眠れそう　今ならすぐ寝られる!' }
-      - { who: M, text: 'はい　帰り道だけ気をつけてください' }
+      - { who: A, text: '今日は眠れそう　今ならすぐ寝られる!', en: "I think I'll sleep today. I could fall asleep right now!" }
+      - { who: M, text: 'はい　帰り道だけ気をつけてください', en: "Just be careful on your way home." }
   - id: closing-dawn-13
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '朝の空気って　こんなに冷たかった?' }
-      - { who: M, text: 'はい　室内にいると忘れますね' }
-      - { who: A, text: 'だよね　外に出るのが楽しみ' }
+      - { who: A, text: '朝の空気って　こんなに冷たかった?', en: "Was the morning air always this cold?" }
+      - { who: M, text: 'はい　室内にいると忘れますね', en: "It's easy to forget when you're indoors." }
+      - { who: A, text: 'だよね　外に出るのが楽しみ', en: "Right? I can't wait to get outside." }
   - id: closing-dawn-14
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '夜勤明け　温かいもの食べたくなるね' }
-      - { who: M, text: 'はい　味噌汁とかいいですよ' }
-      - { who: A, text: '今朝もそれにしようかな' }
+      - { who: A, text: '夜勤明け　温かいもの食べたくなるね', en: "I always want something warm after a night shift." }
+      - { who: M, text: 'はい　味噌汁とかいいですよ', en: "Miso soup would be nice." }
+      - { who: A, text: '今朝もそれにしようかな', en: "Maybe I'll have that again this morning." }
   - id: closing-dawn-15
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '最後にコーヒー飲もうかな' }
-      - { who: M, text: 'はい　朝なので飲みすぎ注意ですよ' }
-      - { who: A, text: '分かってる　たぶん' }
+      - { who: A, text: '最後にコーヒー飲もうかな', en: "Maybe I'll have one last coffee." }
+      - { who: M, text: 'はい　朝なので飲みすぎ注意ですよ', en: "It's morning, so don't have too much." }
+      - { who: A, text: '分かってる　たぶん', en: "I know. Probably." }
   - id: closing-dawn-16
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '今日は無事に終われたね' }
-      - { who: M, text: 'はい　お疲れさまです' }
-      - { who: A, text: 'いい朝だね' }
+      - { who: A, text: '今日は無事に終われたね', en: "We got through tonight safely." }
+      - { who: M, text: 'はい　お疲れさまです', en: "Yes. Good work." }
+      - { who: A, text: 'いい朝だね', en: "It's a nice morning." }
   - id: closing-dawn-17
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '引き継ぎが終わったら　すぐ帰るよ' }
-      - { who: M, text: 'はい　俺も準備します' }
+      - { who: A, text: '引き継ぎが終わったら　すぐ帰るよ', en: "Once the handover's done, I'm heading straight home." }
+      - { who: M, text: 'はい　俺も準備します', en: "I'll get ready too." }
   - id: closing-dawn-18
     tone: light
     when: { result: dawn }
     lines:
-      - { who: M, text: '出河さん　眼鏡を拭いたほうがいいですよ' }
-      - { who: A, text: 'えっ　曇ってる?　ちょっと見せて' }
-      - { who: M, text: 'はい　朝の光で分かります' }
+      - { who: M, text: '出河さん　眼鏡を拭いたほうがいいですよ', en: "Ms. Dekawa, you might want to clean your glasses." }
+      - { who: A, text: 'えっ　曇ってる?　ちょっと見せて', en: "What, are they fogged up? Let me see." }
+      - { who: M, text: 'はい　朝の光で分かります', en: "You can see it in the morning light." }
   - id: closing-dawn-19
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: 'あっ　朝日　思ったよりきれいだね' }
-      - { who: M, text: 'はい　外が少しずつ明るくなってますよ' }
+      - { who: A, text: 'あっ　朝日　思ったよりきれいだね', en: "Oh, the sunrise is prettier than I expected." }
+      - { who: M, text: 'はい　外が少しずつ明るくなってますよ', en: "Yes, it's getting brighter out there, little by little." }
   - id: closing-dawn-20
     tone: light
     when: { result: dawn }
     lines:
-      - { who: A, text: '明日の夜も　よろしくね' }
-      - { who: M, text: 'はい　いつもどおり来ますよ' }
+      - { who: A, text: '明日の夜も　よろしくね', en: "See you again tomorrow night." }
+      - { who: M, text: 'はい　いつもどおり来ますよ', en: "Yes, I'll be here as usual." }
   - id: closing-withdraw-01
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '今日は撤収　もう少し見たかったのに' }
+      - { who: A, text: '今日は撤収　もう少し見たかったのに', en: "We're calling it a night. I wanted to watch a little longer." }
   - id: closing-withdraw-02
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'ああもう　悔しいけど　ここで引き上げよう' }
+      - { who: A, text: 'ああもう　悔しいけど　ここで引き上げよう', en: "Damn it. I hate to, but let's pack up." }
   - id: closing-withdraw-03
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '樫原くん　今日はここまで　先に立つね' }
+      - { who: A, text: '樫原くん　今日はここまで　先に立つね', en: "That's enough for today, Kashihara. I'll head out first." }
   - id: closing-withdraw-04
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'ごめん　頭を冷やしたい　撤収する' }
+      - { who: A, text: 'ごめん　頭を冷やしたい　撤収する', en: "Sorry, I need to clear my head. I'm calling it." }
   - id: closing-withdraw-05
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '今夜は帰ろう　このまま続けてもだめだ' }
+      - { who: A, text: '今夜は帰ろう　このまま続けてもだめだ', en: "Let's go home. There's no point carrying on like this." }
   - id: closing-withdraw-06
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '撤収しよう　あと少しだった気がするのに' }
+      - { who: A, text: '撤収しよう　あと少しだった気がするのに', en: "Let's pack up. I felt like we were close, too." }
   - id: closing-withdraw-07
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'もう限界　今日は引き上げる' }
+      - { who: A, text: 'もう限界　今日は引き上げる', en: "I've had enough. I'm heading out for today." }
   - id: closing-withdraw-08
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'ここで切り上げる　悔しいけど決めた' }
+      - { who: A, text: 'ここで切り上げる　悔しいけど決めた', en: "We're stopping here. I hate it, but I've decided." }
   - id: closing-withdraw-09
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '今夜は撤収　明日また来るよ' }
+      - { who: A, text: '今夜は撤収　明日また来るよ', en: "We're done for tonight. I'll be back tomorrow." }
   - id: closing-withdraw-10
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'だめだ　焦ってる　今日は止めよう' }
+      - { who: A, text: 'だめだ　焦ってる　今日は止めよう', en: "No good. I'm rushing. Let's stop for today." }
   - id: closing-withdraw-11
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '樫原くん　もう帰ろう　今は続けられない' }
+      - { who: A, text: '樫原くん　もう帰ろう　今は続けられない', en: "Let's go home, Kashihara. I can't carry on right now." }
   - id: closing-withdraw-12
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'こんなところで間違えるなんて　悔しい' }
+      - { who: A, text: 'こんなところで間違えるなんて　悔しい', en: "I can't believe I made a mistake there. Damn it." }
   - id: closing-withdraw-13
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '落ち着かない　でも今日は撤収する' }
+      - { who: A, text: '落ち着かない　でも今日は撤収する', en: "I can't settle down, but we're done for today." }
   - id: closing-withdraw-14
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '私が決めたことだ　引き上げよう' }
+      - { who: A, text: '私が決めたことだ　引き上げよう', en: "It's my decision. Let's pack up." }
   - id: closing-withdraw-15
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'もう少し見たかった　でも今日は撤収' }
+      - { who: A, text: 'もう少し見たかった　でも今日は撤収', en: "I wanted to watch longer, but we're done for today." }
   - id: closing-withdraw-16
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'ごめんね　今日は私が先に帰る' }
+      - { who: A, text: 'ごめんね　今日は私が先に帰る', en: "Sorry. I'm heading home first today." }
   - id: closing-withdraw-17
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'ここまでにする　少し頭を冷やしてくる' }
+      - { who: A, text: 'ここまでにする　少し頭を冷やしてくる', en: "That's enough. I need to clear my head." }
   - id: closing-withdraw-18
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '続きが気になるけど　今夜は引き上げる' }
+      - { who: A, text: '続きが気になるけど　今夜は引き上げる', en: "I want to know what happens next, but we're done tonight." }
   - id: closing-withdraw-19
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: 'だめだ　今は冷静に見られない　撤収' }
+      - { who: A, text: 'だめだ　今は冷静に見られない　撤収', en: "No good. I can't think straight. We're done." }
   - id: closing-withdraw-20
     tone: serious
     when: { result: withdraw }
     lines:
-      - { who: A, text: '悔しい　ほんとに悔しいけど　今日は終わり' }
+      - { who: A, text: '悔しい　ほんとに悔しいけど　今日は終わり', en: "This is frustrating. It really is, but we're done today." }
   - id: closing-ending-01
     tone: serious
     when: { result: ending }
     lines:
-      - { who: A, text: 'この店　静かでいいね' }
-      - { who: M, text: '出河さんが見つけたんですよ' }
-      - { who: A, text: 'えっ　私が?　そんなに飲み歩かないよ' }
-      - { who: M, text: '通りかかった時に　気にしてました' }
-      - { who: A, text: 'よく見てるね' }
-      - { who: M, text: '仕事柄です' }
-      - { who: A, text: '一か月たったね　あの三人は　まだ帰りたくないって?' }
-      - { who: M, text: 'はい　異変の食べ物も　効いているようです　急ぐ必要はなさそうです' }
-      - { who: A, text: '餓死の心配がないなら　帰りたくない理由を調べないと' }
-      - { who: M, text: '家族に何をされたのか　ですね' }
-      - { who: A, text: '普通の家に戻せば解決って　決めつけられない' }
-      - { who: M, text: 'はい　見つけることと　普通へ戻すことは別ですよ' }
-      - { who: A, text: '異変の数を数えるより　人の話を聞かなきゃ' }
-      - { who: M, text: 'あら探しを続けても　理由までは分かりませんから' }
-      - { who: A, text: 'そうだね　次は家族に話を聞こう' }
-      - { who: M, text: '俺も一緒に行きますよ' }
-      - { who: A, text: 'ありがとう　樫原くんが一緒だと心強い' }
-      - { who: M, text: 'それは仕事の話ですよね' }
-      - { who: A, text: '今はね' }
-      - { who: M, text: '出河さん　グラスが空ですよ' }
-      - { who: A, text: 'あっ　話に夢中だった' }
-      - { who: M, text: 'もう一杯　同じのでいいですか' }
-      - { who: A, text: 'うん　樫原くんに任せる' }
-      - { who: M, text: 'はい　甘くないほうですね' }
+      - { who: A, text: 'この店　静かでいいね', en: "This place is nice and quiet." }
+      - { who: M, text: '出河さんが見つけたんですよ', en: "You're the one who found it, Ms. Dekawa." }
+      - { who: A, text: 'えっ　私が?　そんなに飲み歩かないよ', en: "What, me? I don't go bar-hopping that much." }
+      - { who: M, text: '通りかかった時に　気にしてました', en: "You noticed it when we walked past." }
+      - { who: A, text: 'よく見てるね', en: "You pay attention, don't you?" }
+      - { who: M, text: '仕事柄です', en: "Occupational habit." }
+      - { who: A, text: '一か月たったね　あの三人は　まだ帰りたくないって?', en: "It's been a month. Those three still don't want to come home?" }
+      - { who: M, text: 'はい　異変の食べ物も　効いているようです　急ぐ必要はなさそうです', en: "Yes. The food in the anomalies seems to sustain them. There's no rush." }
+      - { who: A, text: '餓死の心配がないなら　帰りたくない理由を調べないと', en: "If they won't starve, we need to find out why they won't come home." }
+      - { who: M, text: '家族に何をされたのか　ですね', en: "What their families did to them." }
+      - { who: A, text: '普通の家に戻せば解決って　決めつけられない', en: "We can't assume sending them back to a normal home will fix things." }
+      - { who: M, text: 'はい　見つけることと　普通へ戻すことは別ですよ', en: "Yes. Finding someone and making them go back to normal aren't the same." }
+      - { who: A, text: '異変の数を数えるより　人の話を聞かなきゃ', en: "We need to listen to people, not count anomalies." }
+      - { who: M, text: 'あら探しを続けても　理由までは分かりませんから', en: "Finding fault won't tell us why they left." }
+      - { who: A, text: 'そうだね　次は家族に話を聞こう', en: "You're right. Let's talk to the families next." }
+      - { who: M, text: '俺も一緒に行きますよ', en: "I'll come with you." }
+      - { who: A, text: 'ありがとう　樫原くんが一緒だと心強い', en: "Thanks, Kashihara. I'm glad you're with me." }
+      - { who: M, text: 'それは仕事の話ですよね', en: "You mean for work, right?" }
+      - { who: A, text: '今はね', en: "For now." }
+      - { who: M, text: '出河さん　グラスが空ですよ', en: "Ms. Dekawa, your glass is empty." }
+      - { who: A, text: 'あっ　話に夢中だった', en: "Oh, I got caught up in our conversation." }
+      - { who: M, text: 'もう一杯　同じのでいいですか', en: "Another of the same?" }
+      - { who: A, text: 'うん　樫原くんに任せる', en: "Yes. I'll leave it to you, Kashihara." }
+      - { who: M, text: 'はい　甘くないほうですね', en: "Sure. The less sweet one, right?" }
