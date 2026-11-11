@@ -10,7 +10,7 @@ export const TILT = {
   stamp: -3.4, // the small red stamp (SO FAR / TONIGHT)
   stampBig: 2.7, // the big red stamp (DAWN / WITHDRAWN)
   tag: -4.6, // the red "found" tag
-  scrib: [-4.0, -2.95, -2.25], // the blue scribbles, one angle per line (each line is turned as a whole, glyphs and all)
+  scrib: [-3.85, -2.95, -2.25], // the blue scribbles, one angle per line (each line is turned as a whole, glyphs and all). The first was -4.0: the longest line then ended 0.1px past the rule tolerance (check:note-wrap RULEFIT)
   action: -1.35, // the handwritten action at the bottom right ("Start the shift →")
   label: [-1.8, 0.7, -0.9, 1.9], // the "1st".."4th" frame labels, left to right
 } as const
