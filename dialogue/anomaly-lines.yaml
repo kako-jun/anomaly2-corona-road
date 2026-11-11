@@ -29,7 +29,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-bag }
     lines:
-      - { who: A, text: '右手前の床の辺り　見方を変えたら分かるかな', en: "Maybe a different angle will reveal something around the floor on the right?" }
+      - { who: A, text: '右手前の床の辺り　見方を変えたら分かるかな', en: "Maybe a different angle will reveal something around the front-right floor?" }
       - { who: M, text: 'はい　右手前の床から順に　確認していきます', en: "Yes. I'll start at the front-right floor and check from there." }
   - id: an-AR-02-bag-02
     tone: serious
@@ -2291,7 +2291,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-floor-footprints }
     lines:
-      - { who: M, text: 'その左中段の床　全体の中で確かめてください', en: "Please check the entire floor on the left middle floor." }
+      - { who: M, text: 'その左中段の床　全体の中で確かめてください', en: "Please check the mid-left floor in the context of the whole scene." }
       - { who: A, text: 'ありがとう　左中段の床を落ち着いて確認する', en: "Thanks. I'll check the mid-left floor carefully." }
   - id: an-AR-03-shutter-blank-papers-01
     tone: serious
@@ -2310,13 +2310,13 @@ dialogues:
     when: { anomaly: AR-03-floor-tatami }
     lines:
       - { who: A, text: 'あの右手前の床　端のほうまで見てもらえる?', en: "Can you take a look at the edge of that front-right floor?" }
-      - { who: M, text: 'そうですね　右手前の床を　含めて全体を見直します', en: "Well, let's review the whole scene, including the floor on the right." }
+      - { who: M, text: 'そうですね　右手前の床を　含めて全体を見直します', en: "Right. I'll review the whole scene, including the front-right floor." }
   - id: an-AR-03-floor-tatami-02
     tone: serious
     when: { anomaly: AR-03-floor-tatami }
     lines:
       - { who: M, text: '見落としやすい場所です　右手前の床を確かめましょう', en: "This is an easy place to overlook. Check the front-right floor." }
-      - { who: A, text: '今度は焦らない　右手前の床をゆっくり見るね', en: "I'll take my time and check the near-side floor on your right this time." }
+      - { who: A, text: '今度は焦らない　右手前の床をゆっくり見るね', en: "I'll take my time with the front-right floor this time." }
   - id: an-AR-01-wall-faces-01
     tone: serious
     when: { anomaly: AR-01-wall-faces }
@@ -2708,7 +2708,7 @@ dialogues:
     lines:
       - who: A
         text: えっ　右手前の床って　さっきも見たかな?
-        en: "Huh? Did I already check that floor on the right?"
+        en: "Huh? Did I already check the floor at the front right?"
       - who: M
         text: はい　右手前の床を　含めて確認を続けます
         en: "Yes. I'll keep checking, including the front-right floor."
