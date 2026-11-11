@@ -106,6 +106,7 @@ Meta-anomalies challenge the player's trust in the game interface itself (not im
 
 - **Color-blind Safe**: Anomaly categories are always text labels, never color-only and never emoji (see DESIGN.md §2.3)
 - **Multi-input controls**: Touch swipe, mouse drag, keyboard (← → / A D / 1–8), and the numbered camera buttons — all four paths switch cameras
+- **Magnifier loupe (#341)**: press and hold the monitor (`LOUPE.HOLD_MS`, hardly moving) and a round loupe shows on the control panel; moving while holding moves the magnified spot (smoothed), letting go removes it. A faster move past `SWIPE_PX` before it shows is still the camera swipe; once it shows, sideways movement moves the loupe, never the camera. Only the picture is magnified (`ZOOM`); the noise and scanlines are drawn above it at the monitor's own size (same grain). All numbers are in `src/utils/loupe.ts`. A text hint ("Hold to magnify" / 「押し続けるとルーペ」, browser language) is always on the monitor frame. Pointer events for touch / mouse / pen; mouse / touch only (no keyboard)
 - **Clear Feedback**: A green / red on-screen display (OSD) message on the monitor for every report (correct / wrong)
 - **Mobile-first, desktop-equal**: 480 px column on desktop, full-bleed on mobile; never assumes a touchscreen
 
@@ -394,6 +395,7 @@ src/
 │   ├── Cabinet.tsx      # In-game screen: monitor + control panel, local UI state
 │   ├── CameraView.tsx   # CRT monitor (picture, noise, OSD, subtitles)
 │   ├── NoiseCanvas.tsx
+│   ├── Loupe.tsx        # The round magnifier on the control panel (#341; gesture in hooks/useLoupeGesture.ts, numbers in utils/loupe.ts)
 │   ├── CameraStrip.tsx  # Numbered camera push buttons
 │   ├── Knob.tsx         # BRIGHTNESS / CONTRAST knob
 │   ├── GameHUD.tsx      # Display windows (time, reports, strike lamps)
