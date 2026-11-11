@@ -318,7 +318,7 @@ dialogues:
     when: { anomaly: AR-06-worker }
     lines:
       - { who: A, text: '奥の通路の見え方　前と同じだったかな', en: "Did the corridor in the back look the same as before?" }
-      - { who: M, text: '了解です　奥の通路の前後も見てみます', en: "Understood. I'll check around the corridor in the back too too." }
+      - { who: M, text: '了解です　奥の通路の前後も見てみます', en: "Understood. I'll check around the corridor in the back too." }
   - id: an-AR-06-worker-02
     tone: serious
     when: { anomaly: AR-06-worker }
@@ -869,14 +869,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-paper-cup }
     lines:
-      - { who: A, text: '私　急いでたかも　床際を見直したい', en: "I may have rushed. I want to check the edge of the floor again." }
-      - { who: M, text: 'はい　床際の周囲から見直します', en: "Yes. I'll check from around the floor." }
+      - { who: A, text: '私　急いでたかも　床際を見直したい', en: "I may have rushed. I want to check along the floor again." }
+      - { who: M, text: 'はい　床際の周囲から見直します', en: "Yes. I'll check around the floor again." }
   - id: an-AR-04-paper-cup-02
     tone: serious
     when: { anomaly: AR-04-paper-cup }
     lines:
-      - { who: M, text: 'その床際　全体の中で確かめてください', en: "Please check the entire area near the bed." }
-      - { who: A, text: 'ありがとう　床際を落ち着いて確認する', en: "Thanks. I'll check the floor carefully." }
+      - { who: M, text: 'その床際　全体の中で確かめてください', en: "Please check along the floor as part of the whole scene." }
+      - { who: A, text: 'ありがとう　床際を落ち着いて確認する', en: "Thanks. I'll check along the floor carefully." }
   - id: an-AR-06-wall-stripes-01
     tone: serious
     when: { anomaly: AR-06-wall-stripes }
@@ -1278,7 +1278,7 @@ dialogues:
     when: { anomaly: AR-04-handle }
     lines:
       - { who: A, text: '奥のガラスの見え方　前と同じだったかな', en: "Did the glass in the back look the same as before?" }
-      - { who: M, text: '了解です　奥のガラスの前後も見てみます', en: "Understood. I'll check around the back glass too too." }
+      - { who: M, text: '了解です　奥のガラスの前後も見てみます', en: "Understood. I'll check around the back glass too." }
   - id: an-AR-04-handle-02
     tone: serious
     when: { anomaly: AR-04-handle }
@@ -1458,7 +1458,7 @@ dialogues:
     when: { anomaly: AR-03-slipper-single }
     lines:
       - { who: A, text: 'うーん　視線が止まってたね　奥のほうも見よう', en: "Hmm, I got fixated. Let's check the back too." }
-      - { who: M, text: '了解です　奥のほうの前後も見てみます', en: "Understood. I'll check around the back too too." }
+      - { who: M, text: '了解です　奥のほうの前後も見てみます', en: "Understood. I'll check around the back too." }
   - id: an-AR-03-slipper-single-02
     tone: serious
     when: { anomaly: AR-03-slipper-single }
@@ -2262,7 +2262,7 @@ dialogues:
     when: { anomaly: AR-01-bamboo-broom }
     lines:
       - { who: A, text: 'さっき決めつけたね　左中段の床から見直そう', en: "We jumped to conclusions. Let's check the mid-left floor again." }
-      - { who: M, text: '分かりました　左中段の床のあたりから見ます', en: "Understood. I'll start by checking around around the mid-left floor." }
+      - { who: M, text: '分かりました　左中段の床のあたりから見ます', en: "Understood. I'll start by checking around the mid-left floor." }
   - id: an-AR-01-bamboo-broom-02
     tone: serious
     when: { anomaly: AR-01-bamboo-broom }
@@ -2537,7 +2537,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-navy-handy-fan }
     lines:
-      - { who: A, text: '左下の床の辺り　見方を変えたら分かるかな', en: "Maybe a different angle will help us spot the the lower left?" }
+      - { who: A, text: '左下の床の辺り　見方を変えたら分かるかな', en: "Maybe a different angle will help us spot something around the lower-left floor?" }
       - { who: M, text: 'はい　左下の床の周囲から見直します', en: "Yes. I'll look around the floor at the bottom left" }
   - id: an-AR-02-navy-handy-fan-02
     tone: serious
