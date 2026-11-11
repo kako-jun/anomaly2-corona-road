@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react'
 import { LABELS } from '../data/investigationNotes'
 import type { NoteLang } from '../data/investigationNotes'
 import type { NoteRow, NoteView } from '../utils/investigationNote'
+import { HandFrame } from './HandFrame'
 import { TILT, tiltVars } from '../data/noteTilt'
 import './investigationNote.css'
 
@@ -110,6 +111,7 @@ export const InvestigationNote = ({
                 className={s.big ? 'note-stamp note-big' : 'note-stamp'}
               >
                 {s.text}
+                <HandFrame name={s.big ? 'stampBig' : 'stamp'} />
               </span>
             ))}
           </div>
@@ -156,6 +158,7 @@ export const InvestigationNote = ({
             )}
           </div>
           <div className="note-form note-hw">
+            <HandFrame name="form" />
             <div className="note-fcols">
               <div className="note-fcol">
                 <div className="note-fh">{view.left.head}</div>

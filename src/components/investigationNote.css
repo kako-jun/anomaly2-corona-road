@@ -116,18 +116,16 @@
   align-items: center;
 }
 .note-stamp {
+  position: relative;
   display: inline-block;
-  border: 2px solid var(--stamp);
   color: var(--stamp);
-  padding: 1px 8px;
+  padding: 3px 10px; /* the red frame is four hand-ruled strokes (HandFrame), 2px thick: it replaces the old border */
   font-size: 16px;
   line-height: 20px;
   letter-spacing: 0.14em;
   /* a stamp pressed by hand: slightly off the line, not a perfect rectangle (uneven border and corners) */
   transform: translate(0.6px, -0.5px) rotate(var(--tilt-stamp));
   opacity: 0.88;
-  border-width: 2px 2.4px 1.8px 2.2px;
-  border-radius: 3px 4.5px 2.5px 4px;
   mix-blend-mode: multiply;
   white-space: nowrap;
 }
@@ -138,9 +136,7 @@
 .note-stamp.note-big {
   font-size: 26px;
   line-height: 30px;
-  padding: 2px 12px;
-  border-width: 3px 3.6px 2.7px 3.3px;
-  border-radius: 5px 3px 6px 3.5px;
+  padding: 5px 15px;
   transform: translate(-0.9px, 1.1px) rotate(var(--tilt-stamp-big));
 }
 .note-en .note-stamp.note-big {
@@ -241,10 +237,9 @@
 }
 
 .note-form {
+  position: relative;
   margin-top: 8px;
-  padding: 6px 10px;
-  border: 1.5px solid #6b5f45;
-  border-radius: 2px;
+  padding: 7.5px 11.5px; /* 6/10 + the 1.5px hand-ruled frame (HandFrame) that replaces the old border */
   background: rgba(255, 255, 255, 0.18);
 }
 .note-fcols {
@@ -341,4 +336,16 @@
 .note-btn:focus-visible {
   outline: 2px solid #ffd27a;
   outline-offset: 3px;
+}
+
+/* A hand-ruled outline (HandFrame): drawn over the box it sits in, never closed into a tidy rectangle. */
+.note-hand-frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.note-form > .note-hand-frame {
+  color: #6b5f45;
 }

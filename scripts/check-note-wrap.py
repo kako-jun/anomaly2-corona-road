@@ -156,6 +156,13 @@ LAYOUT = """
     const own = tag.parentElement.getBoundingClientRect()
     for (const s of slots) if (s !== own && s.left !== own.left && Math.min(tr.right, s.right) - Math.max(tr.left, s.left) > 0 && Math.min(tr.bottom, s.bottom) - Math.max(tr.top, s.top) > 0) res.push('the "found" tag overlaps the neighbouring frame')
   }
+  // Every hand-ruled frame is four separate edges, sized to its box, and hidden from assistive technology.
+  for (const fr of document.querySelectorAll('.note-hand-frame')) {
+    const box = fr.parentElement
+    if (fr.querySelectorAll('polygon').length !== 4) res.push('a hand-ruled frame does not have four edges')
+    if (Math.abs(fr.getAttribute('width') - box.offsetWidth) > 1 || Math.abs(fr.getAttribute('height') - box.offsetHeight) > 1) res.push('a hand-ruled frame does not fit its box')
+    if (fr.getAttribute('aria-hidden') !== 'true') res.push('a hand-ruled frame is not aria-hidden')
+  }
   // Scribbles continue right under the last synopsis line (on the next rule) and stay inside the ruled sheet.
   const notes = document.querySelector('.note-notes'), syn = document.querySelector('.note-syn'), sc = document.querySelector('.note-scrib')
   const synBottom = syn.offsetTop + syn.offsetHeight
