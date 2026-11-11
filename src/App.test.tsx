@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { SAVE_KEY } from './utils/saveData'
 
@@ -87,6 +87,9 @@ describe('App: title -> investigation note (#297) and the language from the brow
     // The screen fade (#336) is tested in ScreenTransition.test.tsx; here the screens change at once.
     window.history.pushState({}, '', '/?transition=none')
     vi.stubGlobal('navigator', { language: 'en-US', languages: ['en-US'] })
+  })
+  afterEach(() => {
+    vi.unstubAllEnvs()
   })
 
   it('START SHIFT opens the note for the first night; its handwritten action is what starts the shift', async () => {
@@ -224,6 +227,5 @@ describe('App: title -> investigation note (#297) and the language from the brow
     render(<App />)
     await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
     expect(screen.queryByText('CASE MEMO')).toBeNull()
-    vi.unstubAllEnvs()
   })
 })

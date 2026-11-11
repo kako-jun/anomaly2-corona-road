@@ -62,7 +62,6 @@ export const ScreenTransition = ({
     if (!dipping) return
     const stop = (e: Event) => {
       e.stopImmediatePropagation()
-      e.preventDefault()
     }
     const types = ['keydown', 'keyup', 'keypress'] as const
     types.forEach(t => window.addEventListener(t, stop, true))

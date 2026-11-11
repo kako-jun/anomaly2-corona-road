@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { act, fireEvent, render } from '@testing-library/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ScreenTransition } from './ScreenTransition'
 import { SCREEN_FADE_MS, parseTransitionMode } from '../utils/screenTransition'
@@ -246,6 +246,65 @@ describe('ScreenTransition (fade)', () => {
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }))
     expect(onKey).toHaveBeenCalledTimes(2)
     window.removeEventListener('keydown', onKey)
+  })
+
+  it('stops key events aimed at the body (the real path) while dark, and lets them through again after', () => {
+    const onKey = vi.fn()
+    document.addEventListener('keydown', onKey)
+    const press = () =>
+      document.body.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'a', bubbles: true })
+      )
+    const { container, rerender } = render(
+      <ScreenTransition screenKey="a">
+        <button>A</button>
+      </ScreenTransition>
+    )
+    press()
+    expect(onKey).toHaveBeenCalledTimes(1)
+    rerender(
+      <ScreenTransition screenKey="b">
+        <button>B</button>
+      </ScreenTransition>
+    )
+    press()
+    expect(onKey).toHaveBeenCalledTimes(1)
+    fireEvent.transitionEnd(veil(container))
+    press()
+    expect(onKey).toHaveBeenCalledTimes(2)
+    document.removeEventListener('keydown', onKey)
+  })
+
+  it('does not remount an old screen shaped like the App (a fragment with the screen and a notice)', () => {
+    let mounts = 0
+    const Screen = () => {
+      const [n, setN] = useState(0)
+      useEffect(() => {
+        mounts++
+      }, [])
+      return <button onClick={() => setN(n + 1)}>S:{n}</button>
+    }
+    const Notice = () => <i>notice</i>
+    const view = (k: string) => (
+      <ScreenTransition screenKey={k}>
+        {k === 'a' ? (
+          <>
+            <Screen />
+            <Notice />
+          </>
+        ) : (
+          <>
+            <p>B</p>
+            <Notice />
+          </>
+        )}
+      </ScreenTransition>
+    )
+    const { container, rerender } = render(view('a'))
+    fireEvent.click(container.querySelector('button')!)
+    rerender(view('b'))
+    expect(container.textContent).toBe('S:1notice')
+    expect(mounts).toBe(1)
   })
 
   it('leaves no timer behind when it unmounts in the dark', () => {
