@@ -83,7 +83,8 @@ describe('buildNote before a shift', () => {
     expect(v.stamps).toEqual([{ text: '捜査の経緯', big: false }])
     expect(texts(v)).toEqual(STAGES.start.lines.map(l => l.ja))
     expect(v.slots.every(s => !s.found)).toBe(true)
-    expect(v.doodle).toBe(true)
+    expect(v.scrib).toEqual([]) // nothing to jot before an oddity has been seen
+    expect(v.slots.every(s => !s.found && s.alt === '未発見')).toBe(true) // no sketch on the first night
     expect(v.left.head).toBe('前回の夜')
     expect(v.left.rows.every(r => r.value === null)).toBe(true)
     expect(v.right.rows.map(r => r.value)).toEqual(['0', '0'])
@@ -106,7 +107,6 @@ describe('buildNote before a shift', () => {
     expect(v.stamps[0].text).toBe('前回まで')
     expect(texts(v)).toEqual(STAGES.elder2.lines.map(l => l.ja))
     expect(v.slots.map(s => s.found)).toEqual([true, true, false, false])
-    expect(v.doodle).toBe(false)
     expect(v.left.rows.map(r => r.value)).toEqual(['9', '4', '1'])
     expect(v.shiftRow).toMatchObject({ label: '勤務', value: '06:00まで' })
     expect(v.right.rows.map(r => r.value)).toEqual(['143', '63'])

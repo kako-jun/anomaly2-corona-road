@@ -9,7 +9,9 @@ Every synopsis / scribble line in src/data/investigationNotes.ts is one handwrit
 line (white-space: nowrap). This script measures each of them with the real fonts and the real paper (the paper is a
 fixed 340x620, so the result does not depend on the screen), in Japanese and English, and fails when
 
-  - a line is wider than the ruled area (or, beside the corridor sketch, the scribble column),
+  - a line is wider than the ruled area,
+  - any stage of the table (start / none / elder1..child, with and without last-night lines) overflows the one sheet or
+    makes the page scroll at 360x640, 390x844, 768x1024 or 1280x720,
   - a line starts with a closing mark / small kana (kinsoku),
   - a stamp collides with the night number, the title or the first sketch frame (WITHDRAWN at its longest).
 
@@ -56,9 +58,10 @@ async ([lang, kind]) => {
   const screen = document.querySelector('.note-screen')
   screen.classList.remove('note-ja', 'note-en'); screen.classList.add('note-' + lang)
   await document.fonts.ready
-  const host = document.querySelector(kind === 'syn' ? '.note-syn' : '.note-scrib')
-  // Beside the corridor sketch (first night) a scribble line may only use what is left of the sheet.
-  const avail = document.querySelector('.note-notes').clientWidth - (kind === 'scrib' && document.querySelector('.note-doodle') ? 100 + 8 : 0) - (kind === 'scrib' ? 4 : 0)
+  let host = document.querySelector(kind === 'syn' ? '.note-syn' : '.note-scrib')
+  // A stage without scribbles has no scribble block: measure in a temporary one.
+  if (!host) { host = document.createElement('div'); host.className = 'note-scrib note-hw'; document.querySelector('.note-notes').appendChild(host) }
+  const avail = document.querySelector('.note-notes').clientWidth - (kind === 'scrib' ? 4 : 0)
   const lines = []
   const take = (where, pairs) => pairs.forEach(p => { if (p[lang]) lines.push([where, p[lang]]) })
   if (kind === 'syn') {
@@ -197,80 +200,97 @@ LAYOUT = """
   // Scribbles continue right under the last synopsis line (on the next rule) and stay inside the ruled sheet.
   const notes = document.querySelector('.note-notes'), syn = document.querySelector('.note-syn'), sc = document.querySelector('.note-scrib')
   const synBottom = syn.offsetTop + syn.offsetHeight
-  const gapAbove = sc.offsetTop - synBottom
+  const gapAbove = sc ? sc.offsetTop - synBottom : 0
   // A scribble is a separate jotting: about one ruled line below the synopsis (normally 14-18px; never under 10px).
-  const minGap = document.querySelector('.note-first') ? 10 : 14 // the fullest page may shrink the gap to 10px, never less
-  if (gapAbove < minGap || gapAbove > 20) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want ${minGap}-20px)`)
+  const minGap = 14
+  if (sc && (gapAbove < minGap || gapAbove > 20)) res.push(`the scribble starts ${gapAbove}px below the last synopsis line (want ${minGap}-20px)`)
   const lastSyn = syn.querySelector('p:last-child').getBoundingClientRect()
-  const clear = sc.getBoundingClientRect().top - lastSyn.bottom
+  const clear = sc ? sc.getBoundingClientRect().top - lastSyn.bottom : 99
   if (clear < 8) res.push(`the tilted scribble is only ${clear.toFixed(1)}px below the last synopsis line (need 8)`)
   for (const fl of document.querySelectorAll('.note-fl')) if (fl.scrollWidth > fl.clientWidth + 1) res.push(`form label "${fl.textContent}" does not fit its column`)
-  const nr = notes.getBoundingClientRect(), sr = sc.getBoundingClientRect(), fr = r('.note-form')
-  if (sr.bottom > nr.bottom || sr.top < nr.top) res.push('the tilted scribble leaves the ruled sheet')
-  if (fr.top - sr.bottom < 10) res.push(`the scribble is only ${(fr.top - sr.bottom).toFixed(1)}px above the number box (need 10)`)
-  const dd = document.querySelector('.note-doodle')
-  if (dd) {
-    const dr = dd.getBoundingClientRect(), lines = [...syn.querySelectorAll('p')].map(p => { const s = document.createRange(); s.selectNodeContents(p); return s.getBoundingClientRect() })
-    for (const l of lines) if (Math.min(dr.right, l.right) - Math.max(dr.left, l.left) > 0 && Math.min(dr.bottom, l.bottom) - Math.max(dr.top, l.top) > 0) res.push('the corridor sketch overlaps a synopsis line')
-    const sw = [...sc.querySelectorAll('p')].map(p => { const s = document.createRange(); s.selectNodeContents(p); return s.getBoundingClientRect() })
-    for (const l of sw) if (Math.min(dr.right, l.right) - Math.max(dr.left, l.left) > 0 && Math.min(dr.bottom, l.bottom) - Math.max(dr.top, l.top) > 0) res.push('the corridor sketch overlaps a scribble')
+  const nr = notes.getBoundingClientRect(), fr = r('.note-form')
+  const sr = sc ? sc.getBoundingClientRect() : syn.getBoundingClientRect() // no scribble: the synopsis itself must stay on the sheet
+  if (sr.bottom > nr.bottom || sr.top < nr.top) res.push('the tilted scribble (or the synopsis) leaves the ruled sheet')
+  if (fr.top - sr.bottom < 10) res.push(`the scribble (or the synopsis) is only ${(fr.top - sr.bottom).toFixed(1)}px above the number box (need 10)`)
+  // One sheet: nothing inside the paper overflows it, and the page itself never scrolls.
+  const paper = r('.note-paper')
+  for (const sel of ['.note-hdr', '.note-stamps', '.note-board', '.note-notes', '.note-form', '.note-btn']) {
+    const b = r(sel)
+    if (b.left < paper.left - 1 || b.right > paper.right + 1 || b.top < paper.top - 1 || b.bottom > paper.bottom + 1) res.push(`${sel} leaves the paper`)
   }
+  const de = document.documentElement
+  if (de.scrollHeight > innerHeight + 1 || de.scrollWidth > innerWidth + 1) res.push(`the page scrolls (${de.scrollWidth}x${de.scrollHeight} in ${innerWidth}x${innerHeight})`)
   return res
 }
 """
+
+
+VIEWPORTS = ((360, 640), (390, 844), (768, 1024), (1280, 720))
+FLAGS = {
+    "start": {}, "none": {}, "elder1": {"elder1": True},
+    "elder2": {"elder1": True, "elder2": True},
+    "elder3": {"elder1": True, "elder2": True, "elder3": True},
+    "child": {"elder1": True, "elder2": True, "elder3": True, "child": True},
+}
+
+
+def stage_save(stage, last=None):
+    """A save that stageOf() puts at `stage` (every stage of the table, so no state can overflow unseen)."""
+    played = stage != "start"
+    over = {"flags": FLAGS[stage], "loops": 7 if played else 0, "foundTotal": 9 if played else 0,
+            "foundIds": ["a", "b"] if played else []}
+    if last and played:
+        over["lastShift"] = last
+    return base(**over)
 
 
 def main():
     problems = []
     with sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path=CHROME, args=["--no-sandbox"]) if CHROME else pw.chromium.launch(args=["--no-sandbox"])
-        # A fresh save shows the corridor sketch (narrow scribble column); a played save does not.
         last = {"found": 12, "fresh": 3, "misreports": 0, "durationMs": 480000, "closing": "dawn", "raised": ["elder3"]}
-        for label, save in (
-            ("first night", base()),
-            ("later night", base(loops=7, foundTotal=9, flags={"elder1": True, "elder2": True})),
-            ("new frame", base(loops=12, foundTotal=40, foundIds=["a"] * 1, flags={"elder1": True, "elder2": True, "elder3": True}, lastShift=last)),
-        ):
-            page = open_note(browser, save)
-            for lang in ("ja", "en"):
-                page.evaluate("l => { const s = document.querySelector('.note-screen'); s.classList.remove('note-ja','note-en'); s.classList.add('note-' + l) }", lang)
-                page.wait_for_timeout(100)
-                for msg in page.evaluate(LAYOUT):
-                    problems.append(f"[{lang}] {label}: {msg}")
-                if label == "later night" and lang == "ja":
-                    for msg in page.evaluate(FRAMEPX):
-                        problems.append(msg)
-                if label == "new frame":
-                    for msg in page.evaluate(ROT):
-                        problems.append(f"[{lang}] {msg}")
+        withdrew = {"found": 2, "fresh": 0, "misreports": 4, "durationMs": 200000, "closing": "withdraw", "raised": []}
+        measured = False
+        for stage in FLAGS:
+            for variant, lastshift in (("plain", None), ("fresh", last), ("withdraw", withdrew)):
+                if stage == "start" and variant != "plain":
                     continue
-                kinds = ("syn", "scrib")
-                for kind in kinds:
-                    if kind == "syn" and label == "first night":
-                        continue
-                    for r in page.evaluate(MEASURE, [lang, kind]):
-                        narrow = label == "first night"
-                        if kind == "scrib" and r["where"] != "scrib stage start" and narrow:
-                            continue  # only the first-night scribble sits beside the sketch
-                        if kind == "scrib" and r["where"] == "scrib stage start" and not narrow:
-                            continue
-                        tag = f'[{lang}] {r["where"]}: "{r["text"]}" {r["width"]}/{r["avail"]}px'
-                        if r["width"] > r["avail"]:
-                            problems.append("too wide " + tag)
-                        if r["rows"] != 1:
-                            problems.append("wrapped " + tag)
-                        if BAD_START.match(r["text"]):
-                            problems.append("kinsoku " + tag)
-                        print("ok " if r["width"] <= r["avail"] else "NG ", tag)
-                if label == "later night":
-                    for msg in page.evaluate(STAMPS, lang):
-                        problems.append(f"[{lang}] {msg}")
-            page.close()
+                label = f"{stage}/{variant}"
+                page = open_note(browser, stage_save(stage, lastshift))
+                for lang in ("ja", "en"):
+                    page.evaluate("l => { const s = document.querySelector('.note-screen'); s.classList.remove('note-ja','note-en'); s.classList.add('note-' + l) }", lang)
+                    page.wait_for_timeout(100)
+                    for w, h in VIEWPORTS:
+                        page.set_viewport_size({"width": w, "height": h})
+                        page.wait_for_timeout(60)
+                        for msg in page.evaluate(LAYOUT):
+                            problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                    page.set_viewport_size({"width": 390, "height": 844})
+                    if stage == "elder2" and variant == "plain" and lang == "ja":
+                        for msg in page.evaluate(FRAMEPX):
+                            problems.append(msg)
+                    if stage == "elder3" and variant == "fresh":
+                        for msg in page.evaluate(ROT):
+                            problems.append(f"[{lang}] {msg}")
+                    if stage == "elder2" and variant == "plain":
+                        for kind in ("syn", "scrib"):
+                            for r in page.evaluate(MEASURE, [lang, kind]):
+                                tag = f'[{lang}] {r["where"]}: "{r["text"]}" {r["width"]}/{r["avail"]}px'
+                                if r["width"] > r["avail"]:
+                                    problems.append("too wide " + tag)
+                                if r["rows"] != 1:
+                                    problems.append("wrapped " + tag)
+                                if BAD_START.match(r["text"]):
+                                    problems.append("kinsoku " + tag)
+                                print("ok " if r["width"] <= r["avail"] else "NG ", tag)
+                        for msg in page.evaluate(STAMPS, lang):
+                            problems.append(f"[{lang}] {msg}")
+                page.close()
         browser.close()
     if problems:
         print("\nPROBLEMS:", *problems, sep="\n  ")
         sys.exit(1)
-    print("\nnote wrap check: all lines stay on one line, no stamp collisions")
+    print("\nnote wrap check: every stage fits one sheet at every viewport, all lines stay on one line, no stamp collisions")
 
 
 if __name__ == "__main__":

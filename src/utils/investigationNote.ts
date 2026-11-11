@@ -59,8 +59,6 @@ export interface NoteView {
   slots: { label: string; found: boolean; isNew: boolean; alt: string }[]
   lines: { text: string }[]
   scrib: string[]
-  /** The sketch of the corridor: only on the very first night. */
-  doodle: boolean
   left: { head: string; rows: NoteRow[] }
   right: { head: string; rows: NoteRow[] }
   /** The Shift row sits under both columns (its text is longer than a number). */
@@ -157,7 +155,6 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     slots,
     lines,
     scrib: scrib.map(t).filter(s => s !== ''),
-    doodle: stage === 'start' && input.mode === 'before',
     left,
     right,
     shiftRow,
