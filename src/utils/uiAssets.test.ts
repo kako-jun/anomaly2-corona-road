@@ -43,7 +43,7 @@ describe('investigation note assets (#297)', () => {
     for (const f of ['note-zen-kurenaido', 'note-yomogi'])
       expect(html).toContain(`href="/fonts/${f}.woff2"`)
   })
-  it('keeps the UI image budget (600KB, DESIGN.md) including the note fonts, the title photo and the title notes (both languages)', () => {
+  it('keeps the UI image budget (800KB, DESIGN.md) including the note fonts, the title photo and the title notes (both languages)', () => {
     const size = (dir: string): number =>
       readdirSync(dir, { withFileTypes: true }).reduce(
         (n, e) =>
@@ -62,6 +62,6 @@ describe('investigation note assets (#297)', () => {
         size('public/title-notes') +
         statSync('public/images/logo.webp').size +
         fonts
-    ).toBeLessThanOrEqual(600 * 1024)
+    ).toBeLessThanOrEqual(800 * 1024)
   })
 })

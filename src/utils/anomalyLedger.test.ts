@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import {
@@ -952,9 +952,37 @@ describe('the real ledger carries the memo marks (#325)', () => {
     for (const r of records.filter(r => r.memoFlags))
       expect(isGameRecord(r), r.id).toBe(true)
   })
-  it('keeps the sample one-liners to a few entries', () => {
-    const n = records.filter(r => r.memo).length
-    expect(n).toBeGreaterThanOrEqual(2)
-    expect(n).toBeLessThanOrEqual(3)
+  it('gives every entry a one-liner (#325 2nd stage); a new entry must bring its memo', () => {
+    const without = records.filter(r => !r.memo).map(r => r.id)
+    expect(without).toEqual([])
+  })
+  it('matches the draft table while the draft is still the input (apply-memos.py --check)', () => {
+    const draft = resolve(__dirname, '../../drafts/anomaly-memos-review.md')
+    if (!existsSync(draft)) return // approved: the draft is deleted and the ledger is the only master
+    const rows = new Map<string, [string, string]>()
+    for (const line of readFileSync(draft, 'utf8').split('\n')) {
+      const m = /^\| (\S+) \| (.*?) \| (.*?) \|$/.exec(line)
+      if (m && m[1] !== '異変' && m[1] !== '---')
+        rows.set(m[1], [m[2].trim(), m[3].trim()])
+    }
+    for (const r of records)
+      expect(
+        [r.memo?.ja, r.memo?.en],
+        `${r.id} differs from the draft`
+      ).toEqual(rows.get(r.id))
+    expect(rows.size).toBe(records.length)
+  })
+  it('never uses the same one-liner twice, in either language', () => {
+    for (const lang of ['ja', 'en'] as const) {
+      const seen = new Map<string, string>()
+      for (const r of records) {
+        const text = r.memo?.[lang] ?? ''
+        expect(
+          seen.get(text),
+          `${lang}: ${r.id} repeats ${text}`
+        ).toBeUndefined()
+        seen.set(text, r.id)
+      }
+    }
   })
 })

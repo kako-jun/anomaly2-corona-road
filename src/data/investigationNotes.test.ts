@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import ledger from 'virtual:dialogue'
-import anomalies from 'virtual:anomalies'
+import { parse as parseYaml } from 'yaml'
+import { parseLedgerRecords } from '../utils/anomalyLedger'
 import {
   STAGE_ORDER,
   LABELS,
@@ -28,8 +29,13 @@ const pairs = (v: unknown): Pair[] => {
   }
   return []
 }
-/** The one-liners in the anomaly ledger (#325): they are handwritten lines on the same paper. */
-const LEDGER_MEMOS: Pair[] = anomalies.flatMap(e => (e.memo ? [e.memo] : []))
+/**
+ * The one-liners of EVERY ledger entry (#325), planned and non-image ones too (not only the entries the game draws
+ * today): they are handwritten lines on the same paper, and an entry that is promoted later must already fit.
+ */
+const LEDGER_MEMOS: Pair[] = parseLedgerRecords(
+  parseYaml(readFileSync('prompts/anomalies.yaml', 'utf8'))
+).flatMap(r => (r.memo ? [r.memo] : []))
 const ALL = [
   STAGES,
   OUTCOMES,
@@ -178,8 +184,9 @@ describe('no spoilers: every sentence is shown only from the stage where it is k
   const idx = (s: Stage) => STAGE_ORDER.indexOf(s)
   const NOT_STORY = '段階の根拠が story.md に無いので、どの段階にも出さない'
   /** [pattern, first stage that may say it, reason (docs/story.md)] */
+  const SHUTTER_WORD = /シャッター|shutter/i
   const LEARNED: [RegExp, Stage, string][] = [
-    [/シャッター|shutter/i, 'child', `作業仮説。${NOT_STORY}`],
+    [SHUTTER_WORD, 'child', `作業仮説。${NOT_STORY}`],
     [/昭和|Showa/i, 'child', `昭和の異変・昭和の記憶。${NOT_STORY}`],
     [
       /帰りたくない|帰らない|戻らない|帰ろうとしない|go home|come back/i,
@@ -259,9 +266,12 @@ describe('no spoilers: every sentence is shown only from the stage where it is k
       )
   })
   it('words for facts learned later are never in a sentence allowed earlier', () => {
+    // A shutter in a ledger one-liner is the object seen in the feed (the ledger names it so), not the working
+    // hypothesis; the hypothesis is the separate memo flag line, gated by its own stage.
     for (const { where, p } of entries())
       for (const [re, from, why] of LEARNED)
-        if (re.test(p.ja) || re.test(p.en))
+        if (where === 'ledger memo' && re === SHUTTER_WORD) continue
+        else if (re.test(p.ja) || re.test(p.en))
           expect(
             idx(p.knownFrom),
             `${where} "${p.ja}" says a fact known only from ${from} (${why})`

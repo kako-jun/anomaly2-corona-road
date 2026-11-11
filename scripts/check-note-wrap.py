@@ -57,8 +57,28 @@ def open_note(browser, save, locale=None):
     return page
 
 
+def ledger_memos():
+    """[{id, ja, en}] for every ledger entry that has a `memo` (the file is machine-written by scripts/apply-memos.py)."""
+    text = open(os.path.join(os.path.dirname(__file__), "..", "prompts", "anomalies.yaml"), encoding="utf-8").read()
+    out = []
+    pat = re.compile(r"^  - id: ['\"]?([^'\"\s]+)['\"]?\s*$|^      (ja|en): '((?:[^']|'')*)'\s*$", re.M)
+    cur = None
+    for m in pat.finditer(text):
+        if m.group(1):
+            cur = {"id": m.group(1)}
+            out.append(cur)
+        else:
+            cur[m.group(2)] = m.group(3).replace("''", "'")
+    memos = [e for e in out if "ja" in e and "en" in e]
+    if not memos:
+        sys.exit("no memo found in prompts/anomalies.yaml")
+    return memos
+
+
+MEMOS = ledger_memos()
+
 MEASURE = """
-async ([lang, kind]) => {
+async ([lang, kind, memos]) => {
   const d = await import('/src/data/investigationNotes.ts')
   const screen = document.querySelector('.note-screen')
   screen.classList.remove('note-ja', 'note-en'); screen.classList.add('note-' + lang)
@@ -75,8 +95,9 @@ async ([lang, kind]) => {
     take('last night', Object.values(d.LAST_NIGHT))
     // the memo lines (#325): the hypotheses and every one-liner of the anomaly ledger
     take('memo flag', Object.values(d.MEMO_FLAG_TEXT))
-    const a = (await import('/@id/__x00__virtual:anomalies')).default
-    take('ledger memo', a.filter(e => e.memo).map(e => e.memo))
+    // every `memo` of prompts/anomalies.yaml, read by the script (planned and non-image entries too: the game's
+    // virtual module only holds the produced image ones), so the whole 374 are measured against the ruled line
+    for (const m of memos) if (m[lang]) lines.push(['ledger memo ' + m.id, m[lang]])
   } else {
     for (const [k, s] of Object.entries(d.STAGES)) take('scrib stage ' + k, s.scrib)
     for (const [k, o] of Object.entries(d.OUTCOMES)) take('scrib outcome ' + k, o.scrib || [])
@@ -506,7 +527,7 @@ def main():
                             problems.append(f"[{lang}] {msg}")
                     if stage == "elder2" and variant == "plain":
                         for kind in ("syn", "scrib"):
-                            for r in page.evaluate(MEASURE, [lang, kind]):
+                            for r in page.evaluate(MEASURE, [lang, kind, MEMOS]):
                                 tag = f'[{lang}] {r["where"]}: "{r["text"]}" {r["width"]}/{r["avail"]}px'
                                 if r["width"] > r["avail"]:
                                     problems.append("too wide " + tag)
