@@ -94,3 +94,43 @@ describe('importedSave', () => {
     expect(again.flags).toEqual({ elder1: true })
   })
 })
+
+describe('transfer code: memo fields (#325)', () => {
+  const withMemos = () => ({
+    ...played(),
+    pendingMemoFlags: ['f1'],
+    shownMemoFlags: ['f0'],
+    pendingMemos: ['m1', 'm2'],
+    shownMemos: ['m0'],
+    lastShift: {
+      found: 3,
+      fresh: 1,
+      misreports: 0,
+      durationMs: 1000,
+      closing: 'dawn' as const,
+      raised: [],
+      memoFlag: 'f0',
+      memo: 'm0',
+    },
+  })
+  it('keeps the memo queues and the last shift memo through a round trip', () => {
+    const r = parseCode(encodeSave(withMemos()))
+    expect(r.ok).toBe(true)
+    if (r.ok) {
+      expect(r.save.pendingMemoFlags).toEqual(['f1'])
+      expect(r.save.shownMemoFlags).toEqual(['f0'])
+      expect(r.save.pendingMemos).toEqual(['m1', 'm2'])
+      expect(r.save.shownMemos).toEqual(['m0'])
+      expect(r.save.lastShift?.memoFlag).toBe('f0')
+      expect(r.save.lastShift?.memo).toBe('m0')
+    }
+  })
+  it('imports the memo queues whole and sets epoch = max + 1', () => {
+    const local = { ...emptySave(), epoch: 7, pendingMemos: ['zz'] }
+    const out = importedSave(local, withMemos())
+    expect(out.epoch).toBe(8)
+    expect(out.pendingMemos).toEqual(['m1', 'm2'])
+    const out2 = importedSave({ ...emptySave(), epoch: 1 }, withMemos())
+    expect(out2.epoch).toBe(4)
+  })
+})

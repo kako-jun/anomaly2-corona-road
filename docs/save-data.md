@@ -86,9 +86,9 @@ localStorage を選ぶ理由:
 
 ## 引き継ぎコードと `epoch`
 
-- 形式: セーブ全体（`SaveData`）の JSON を UTF-8 にして Base64（標準アルファベット）。コード自体にバージョン印はなく、中の `v` で見る。貼り付けでは空白・改行を無視する。
+- 形式: セーブ全体（`SaveData`）の JSON を UTF-8 にして Base64（標準アルファベット）。コード自体にバージョン印はなく、中の `v` で見る。貼り付けでは空白・改行を無視する。メモの列などが無い古いセーブのコードは、欠けた項目を空として読む（`validateSave` の互換）。
 - 読み込みの弾き方（理由は画面に出し、何も変えない）: 空、Base64 でも JSON でもない、`validateSave` を通らない（壊れた・欠けたコード）、この版より新しい `v`。`v` の古いコードは `validateSave` が移行する（現状は v1 のみ）。
-- 取り込み: 確認で「コードの中身」と「この端末の現在の進行」の要約を並べて見せ、REPLACE で初めて書く（CANCEL・Escape では何も変えない）。進行（累計・id・周回・フラグ・使用済み・`pendingStories`・`lastShift`・`endingReached`）はコード側を丸ごと採用し、端末側とはマージしない。`settings` は端末側を残し、端末側に無ければコード側を使う。
+- 取り込み: 確認で「コードの中身」と「この端末の現在の進行」の要約を並べて見せ、REPLACE で初めて書く（CANCEL・Escape では何も変えない）。進行（累計・id・周回・フラグ・使用済み・`pendingStories`・メモの4つの列 `pendingMemoFlags`/`shownMemoFlags`/`pendingMemos`/`shownMemos`・`lastShift`（`memoFlag`/`memo` を含む）・`endingReached`）はコード側を丸ごと採用し、端末側とはマージしない。`settings` は端末側を残し、端末側に無ければコード側を使う。
 - `epoch = max(local, imported) + 1` で書く。これで他タブの旧メモリ（`epoch` が小さい）は保存時のマージで負け、取り込みが復活で打ち消されない。
 - `endingReached` はコードに含まれる（セーブ丸ごとの原則）。このため、特殊エンディング後に START OVER で消した端末に、消す前のコードを読み込むと、エンディング到達の状態が戻る。ERASE ALL は取り込みを取り消さず、取り込みも ERASE ALL を取り消さない（後に実行した方が `epoch` で勝つ）。
 - 置き場所: タイトル画面の右上に TRANSFER SAVE キー。パネルには操作の説明を常に出す。ゲーム中・結果画面には置かない。
