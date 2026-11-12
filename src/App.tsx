@@ -57,6 +57,7 @@ function useScreen(): [string, ReactNode] {
     currentCameraIndex,
     currentCamera,
     activeAnomalyHere,
+    activeAnomalies,
     unreportedCount,
     feedback,
     ending,
@@ -152,6 +153,9 @@ function useScreen(): [string, ReactNode] {
         currentCameraIndex={currentCameraIndex}
         currentCamera={currentCamera}
         anomalyHere={activeAnomalyHere}
+        openAnomalyIds={activeAnomalies
+          .filter(a => !a.detectedAt)
+          .map(a => a.id)}
         unreportedCount={unreportedCount}
         feedback={feedback}
         gameTime={gameTime}

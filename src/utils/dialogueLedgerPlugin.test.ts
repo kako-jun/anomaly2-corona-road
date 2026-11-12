@@ -63,6 +63,7 @@ const good = (): Record<string, string> => ({
   story: `dialogues:\n${entry('story-1', '    when: { flag: f1 }\n')}`,
   'false-report': 'dialogues: []\n',
   'anomaly-lines': `dialogues:\n${entry('an-a1-1', '    when: { anomaly: a1 }\n')}`,
+  'spawn-hints': `dialogues:\n${entry('spawn-hint-a1-1', '    when: { anomaly: a1 }\n')}`,
 })
 
 const run = async (files: Record<string, string>) => {
@@ -101,6 +102,7 @@ describe('dialogue-ledger vite plugin', () => {
       'an-a1-1',
       'closing-1',
       'opening-1',
+      'spawn-hint-a1-1',
       'story-1',
     ])
   })
@@ -118,6 +120,7 @@ describe('dialogue-ledger vite plugin', () => {
       'story',
       'false-report',
       'anomaly-lines',
+      'spawn-hints',
     ]) {
       expect(paths.some(p => p.endsWith(`dialogue/${f}.yaml`))).toBe(true)
     }

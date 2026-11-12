@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { existsSync, readFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import {
@@ -819,6 +819,42 @@ describe('memo_flag and memo (#325)', () => {
   )
 })
 
+describe('memo_image (#325)', () => {
+  const memo = { ja: 'あ', en: 'a' }
+  it('reads a plain .webp file name that goes with a memo, and hands it to the game entry', () => {
+    const r = parseLedgerRecord(
+      raw({ memo, memo_image: 'AR-01-notice.webp' }),
+      0
+    )
+    expect(r.memoImage).toBe('AR-01-notice.webp')
+    expect(toLedgerEntry(r).memoImage).toBe('AR-01-notice.webp')
+  })
+  it('is optional: absent or null means no scribble, and the entry then has no such key', () => {
+    expect(parseLedgerRecord(raw({ memo }), 0).memoImage).toBeUndefined()
+    expect(
+      parseLedgerRecord(raw({ memo, memo_image: null }), 0).memoImage
+    ).toBeUndefined()
+    expect(
+      toLedgerEntry(parseLedgerRecord(raw({ memo }), 0))
+    ).not.toHaveProperty('memoImage')
+  })
+  it.each([
+    [{ memo, memo_image: 5 }, 'not a string'],
+    [{ memo, memo_image: '' }, 'empty'],
+    [{ memo, memo_image: 'a.png' }, 'not webp'],
+    [{ memo, memo_image: 'a.webp.png' }, 'webp only in the middle'],
+    [{ memo, memo_image: 'note-sketches/a.webp' }, 'with a folder'],
+    [{ memo, memo_image: '../a.webp' }, 'going up'],
+    [{ memo, memo_image: '/a.webp' }, 'absolute'],
+    [{ memo_image: 'a.webp' }, 'without a memo'],
+  ] as [Record<string, unknown>, string][])(
+    'rejects %j (%s) and names the entry',
+    over => {
+      expect(() => parseLedgerRecord(raw(over), 0)).toThrow(/AR-01-notice/)
+    }
+  )
+})
+
 describe('the real ledger carries the memo marks (#325)', () => {
   const records = parseLedgerRecords(
     parseYaml(
@@ -845,22 +881,6 @@ describe('the real ledger carries the memo marks (#325)', () => {
   it('gives every entry a one-liner (#325 2nd stage); a new entry must bring its memo', () => {
     const without = records.filter(r => !r.memo).map(r => r.id)
     expect(without).toEqual([])
-  })
-  it('matches the draft table while the draft is still the input (apply-memos.py --check)', () => {
-    const draft = resolve(__dirname, '../../drafts/anomaly-memos-review.md')
-    if (!existsSync(draft)) return // approved: the draft is deleted and the ledger is the only master
-    const rows = new Map<string, [string, string]>()
-    for (const line of readFileSync(draft, 'utf8').split('\n')) {
-      const m = /^\| (\S+) \| (.*?) \| (.*?) \|$/.exec(line)
-      if (m && m[1] !== '異変' && m[1] !== '---')
-        rows.set(m[1], [m[2].trim(), m[3].trim()])
-    }
-    for (const r of records)
-      expect(
-        [r.memo?.ja, r.memo?.en],
-        `${r.id} differs from the draft`
-      ).toEqual(rows.get(r.id))
-    expect(rows.size).toBe(records.length)
   })
   it('never uses the same one-liner twice, in either language', () => {
     for (const lang of ['ja', 'en'] as const) {

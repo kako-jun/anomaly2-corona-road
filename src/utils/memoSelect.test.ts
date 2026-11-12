@@ -56,6 +56,16 @@ describe('memoIndexOf', () => {
     expect(index.get('fr')?.flags).toEqual(['food', 'reiwa'])
     expect(index.get('plain')).toBeUndefined()
   })
+  it('carries the scribble of a one-liner (the ledger memo_image), and only with a one-liner', () => {
+    const i = memoIndexOf([
+      entry('p', { memo: line('p'), memoImage: 'p.webp' }),
+      entry('q', { memo: line('q') }),
+      entry('r', { memoFlags: ['food'], memoImage: 'r.webp' }),
+    ])
+    expect(i.get('p')?.image).toBe('p.webp')
+    expect(i.get('q')).not.toHaveProperty('image')
+    expect(i.get('r')).not.toHaveProperty('image')
+  })
   it('does not list reiwa twice when it is marked both ways', () => {
     const i = memoIndexOf([entry('x', { memoFlags: ['reiwa'], reiwa: true })])
     expect(i.get('x')?.flags).toEqual(['reiwa'])

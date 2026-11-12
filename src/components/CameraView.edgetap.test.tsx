@@ -221,10 +221,8 @@ describe('edge tap (#354)', () => {
     expect(onSwipe).not.toHaveBeenCalled()
   })
 
-  it('shows two aria-hidden arrowheads on the frame', () => {
+  it('draws no mark on the frame (no guidance, by kako-jun 2026-11-12)', () => {
     const { bezel } = setup()
-    const marks = bezel.querySelectorAll('.edge-mark')
-    expect(marks).toHaveLength(2)
-    marks.forEach(m => expect(m.getAttribute('aria-hidden')).toBe('true'))
+    expect(bezel.querySelectorAll('.edge-mark')).toHaveLength(0)
   })
 })

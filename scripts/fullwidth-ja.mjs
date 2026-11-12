@@ -16,8 +16,7 @@
  *      src/utils/fullWidth.ts, the one place for them).
  * Idioms stay kanji even where a count would fit: 一度・一歩・一口・一瞬 (回数でも慣用の語は漢数字のまま);
  * a counter such as 一回・一杯・一本・一つ・一枚 becomes full-width.
- * Sources: dialogue/*.yaml `text:`, drafts/anomaly-memos-review.md (the memo table's Japanese column; the ledger's
- * `memo.ja` follows by `scripts/apply-memos.py`), src/data/investigationNotes.ts (Japanese string literals).
+ * Sources: dialogue/*.yaml `text:`, src/data/investigationNotes.ts (Japanese string literals).
  * titleNotes.json is NOT converted: its lines/alt mirror the text baked into the sticky-note images
  * (「まちがいは3回まで」), which change only when the images are regenerated.
  */
@@ -129,14 +128,6 @@ for (const f of readdirSync(join(ROOT, 'dialogue')).filter(f =>
     )
   })
 }
-
-// drafts/anomaly-memos-review.md: | id | 日本語 | English |
-rewrite('drafts/anomaly-memos-review.md', (line, no, file) => {
-  const cells = line.split('|')
-  if (cells.length === 5 && /^ ?[A-Z]{2}-/.test(cells[1]))
-    cells[2] = handle(file, no, cells[2])
-  return cells.join('|')
-})
 
 // src/data/investigationNotes.ts: single-quoted literals that contain Japanese
 rewrite('src/data/investigationNotes.ts', (line, no, file) =>

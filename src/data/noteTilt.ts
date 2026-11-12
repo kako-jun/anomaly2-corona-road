@@ -12,6 +12,7 @@ export const TILT = {
   tag: -4.6, // the red "found" tag
   scrib: [-3.81, -2.95, -2.25], // the blue scribbles, one angle per line (each line is turned as a whole, glyphs and all). The first was -4.0, then -3.85: the longest line (the full-width ？ of #334 widened it) ended 0.1px past the rule tolerance (check:note-wrap RULEFIT)
   action: -1.35, // the handwritten action at the bottom right ("Start the shift →")
+  sketch: 3.3, // the memo scribble (a doodle by the one-liner, #325): leans the other way from the writing; 3.3 keeps 0.6 or more from every other angle (the nearest is the big stamp, 2.7)
   label: [-1.8, 0.7, -0.9, 1.9], // the "1st".."4th" frame labels, left to right
 } as const
 
@@ -43,6 +44,7 @@ export const TILT_BY_NAME: Readonly<Record<string, number>> = {
   scrib1: TILT.scrib[1],
   scrib2: TILT.scrib[2],
   action: TILT.action,
+  sketch: TILT.sketch,
   label0: TILT.label[0],
   label1: TILT.label[1],
   label2: TILT.label[2],
@@ -60,6 +62,7 @@ export const tiltVars = (): Record<string, string> => ({
   '--tilt-scrib-1': `${TILT.scrib[1]}deg`,
   '--tilt-scrib-2': `${TILT.scrib[2]}deg`,
   '--tilt-action': `${TILT.action}deg`,
+  '--tilt-sketch': `${TILT.sketch}deg`,
   '--tilt-label-0': `${TILT.label[0]}deg`,
   '--tilt-label-1': `${TILT.label[1]}deg`,
   '--tilt-label-2': `${TILT.label[2]}deg`,

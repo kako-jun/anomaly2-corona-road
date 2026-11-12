@@ -256,6 +256,31 @@ export const pickFalseReport = (
   )
 }
 
+/**
+ * Spawn hint (#343): one of that anomaly's `spawn-hint` conversations, drawn at random, avoiding `avoidId` (the
+ * one shown last for this anomaly) when there is a choice. They are NOT tracked in `usedLines` (the same
+ * anomaly may be hinted again and again), so `used` is returned unchanged. No candidate: null (no fallback to
+ * the false-report conversations).
+ */
+export const pickSpawnHint = (
+  ledger: DialogueLedger,
+  anomalyId: string,
+  used: UsedState,
+  rng: Rng = Math.random,
+  flags: Readonly<Record<string, boolean>> = {},
+  avoidId?: string
+): Picked | null => {
+  const own = ledger.entries.filter(
+    e =>
+      e.kind === 'spawn-hint' &&
+      e.when.anomaly === anomalyId &&
+      (e.unlock === undefined || flags[e.unlock] === true)
+  )
+  const fresh = own.length > 1 ? own.filter(e => e.id !== avoidId) : own
+  if (fresh.length === 0) return null
+  return { entry: pick(fresh, rng), used }
+}
+
 /** Midpoint stage from the number of anomalies found this play. */
 export const midpointStage = (
   foundThisPlay: number,
@@ -348,6 +373,10 @@ export interface SelectInput {
   pendingFlags?: readonly string[]
   /** A false report waits; the anomaly id the report was about (null = none known). */
   pendingFalseReport?: { anomalyId: string | null } | null
+  /** Anomalies whose hint is due (oldest first); the first with a spawn-hint conversation is hinted. */
+  pendingSpawnHints?: readonly string[]
+  /** Anomaly id -> the spawn-hint conversation shown last for it (avoided next time when there is a choice). */
+  lastSpawnHints?: Readonly<Record<string, string>>
   /** A midpoint comment is due, with its stage. */
   pendingMidpoint?: MidpointStage | null
   /** Chatter gate input. */
@@ -356,16 +385,23 @@ export interface SelectInput {
   quietMs?: number
 }
 
-export type SelectedSource = 'flag' | 'false-report' | 'midpoint' | 'chatter'
+export type SelectedSource =
+  | 'flag'
+  | 'false-report'
+  | 'spawn-hint'
+  | 'midpoint'
+  | 'chatter'
 
 export interface Selected extends Picked {
   source: SelectedSource
   /** The pending flag this conversation consumed (source 'flag'). */
   flag?: string
+  /** The anomaly this spawn hint was for (source 'spawn-hint'). */
+  hintedAnomaly?: string
 }
 
 /**
- * The next conversation by priority: flag > false report > midpoint > chatter. A pending item
+ * The next conversation by priority: flag > false report > spawn hint > midpoint > chatter. A pending item
  * with no conversation available is skipped. Chatter is returned only when the gate allows it;
  * null means "stay silent for now". The caller removes the consumed pending item.
  */
@@ -386,6 +422,17 @@ export const selectNext = (input: SelectInput): Selected | null => {
       flags
     )
     if (p) return { ...p, source: 'false-report' }
+  }
+  for (const id of input.pendingSpawnHints ?? []) {
+    const p = pickSpawnHint(
+      input.ledger,
+      id,
+      used,
+      rng,
+      flags,
+      input.lastSpawnHints?.[id]
+    )
+    if (p) return { ...p, source: 'spawn-hint', hintedAnomaly: id }
   }
   if (input.pendingMidpoint) {
     const p = pickMidpoint(
