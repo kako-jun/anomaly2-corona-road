@@ -858,6 +858,28 @@ describe('useSubtitle: spawn hint (#343)', () => {
     expect(H.loads.n - before).toBeLessThanOrEqual(1)
   })
 
+  it('a gated spawn-hint is silent until its flag is raised, then speaks at the next opportunity (the flag cache does not go stale)', () => {
+    const gated = {
+      ...H.all.find(e => e.id === 'spawn-hint-y-1')!,
+      id: 'spawn-hint-y-9',
+      unlock: 'g',
+    }
+    H.ledger.entries = [
+      ...H.all.filter(e => !e.id.startsWith('spawn-hint-y')),
+      gated,
+    ] as typeof H.all
+    DIALOGUE_CONFIG.hintChance = 1
+    const d = inSilence()
+    d.set({ elapsedMs: HINT })
+    const w = watch(d.result)
+    w.step(SILENCE)
+    expect(w.seen.filter(isHint)).toEqual([])
+    saveData.update(cur => ({ ...cur, flags: { ...cur.flags, g: true } }))
+    d.set({ elapsedMs: HINT + OPP })
+    w.step(2 * SILENCE)
+    expect(firstLines(w.seen)).toEqual(['shy1a'])
+  })
+
   it('never reads the save on a per-frame tick (dice, delay and gap are checked first)', () => {
     const d = inSilence()
     const before = H.loads.n

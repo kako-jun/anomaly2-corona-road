@@ -67,8 +67,7 @@ export const msToGameTime = (ms: number): string => {
   // Clamp to the shift: before 0 -> 22:00, after the end -> stop at 06:00.
   const clamped = Math.min(Math.max(0, ms), DEFAULT_CONFIG.totalDurationMs)
   const elapsedGameMinutes = Math.floor(clamped / 1000)
-  const minuteOfDay =
-    (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
+  const minuteOfDay = (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
   const hours = Math.floor(minuteOfDay / 60)
   const minutes = minuteOfDay % 60
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
