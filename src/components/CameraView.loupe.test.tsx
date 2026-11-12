@@ -329,21 +329,9 @@ describe('loupe gesture, review cases (#341)', () => {
 })
 
 describe('loupe hint', () => {
-  it('is always on screen, in English by default', () => {
+  it('is not drawn on screen (kako-jun, 2026-11-12)', () => {
     setup()
-    expect(document.querySelector('.loupe-hint')?.textContent).toBe(
-      'Hold to magnify'
-    )
+    expect(document.querySelector('.loupe-hint')).toBeNull()
     expect(screen.queryByTestId('loupe')).toBeNull()
-  })
-  it('is Japanese when the browser says so', () => {
-    const spy = vi
-      .spyOn(navigator, 'languages', 'get')
-      .mockReturnValue(['ja-JP'])
-    setup()
-    expect(document.querySelector('.loupe-hint')?.textContent).toBe(
-      '押し続けるとルーペ'
-    )
-    spy.mockRestore()
   })
 })
