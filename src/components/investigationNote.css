@@ -210,6 +210,9 @@
   /* The after-night stamp row is taller (the big stamp); the synopsis there is 6 lines at most. */
   min-height: 194px;
 }
+.note-syn {
+  position: relative; /* the memo scribble hangs under its last line */
+}
 .note-syn p,
 .note-scrib p {
   margin: 0;
@@ -238,6 +241,23 @@
 }
 .note-en .note-scrib p {
   font-size: 20px;
+}
+
+.note-sketch {
+  /* The scribble that goes with an anomaly's one-liner (#325): right under the last synopsis line (the one-liner is the
+     last), at the right edge, over the rules like a doodle in the margin. It is out of the flow, so it moves nothing.
+     The box (56 x 56) is the room that is free in the worst case: below the last line of a 6-line synopsis (133px of
+     the 194px sheet, hypothesis + one-liner) and right of the longest scribble (244.5px of 308px, elder3 dawn in
+     Japanese): 3px under the line, 7px left of the scribble, 8px above the number box. check:note-wrap measures it. */
+  position: absolute;
+  right: 0;
+  top: calc(100% + 3px);
+  max-width: 56px;
+  max-height: 56px;
+  transform: rotate(var(--tilt-sketch));
+  transform-origin: 50% 50%;
+  pointer-events: none;
+  user-select: none;
 }
 
 .note-form {

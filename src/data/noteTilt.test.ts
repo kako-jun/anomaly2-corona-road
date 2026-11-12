@@ -36,7 +36,7 @@ describe('note tilt (hand-made look)', () => {
       expect(abs(v)).toBeGreaterThanOrEqual(1)
       expect(abs(v)).toBeLessThanOrEqual(4)
     }
-    for (const v of [...TILT.scrib, TILT.night, TILT.action, ...TILT.label]) {
+    for (const v of [...TILT.scrib, TILT.night, TILT.action, TILT.sketch, ...TILT.label]) {
       expect(abs(v)).toBeGreaterThanOrEqual(0.5)
       expect(abs(v)).toBeLessThanOrEqual(4)
     }
@@ -47,6 +47,6 @@ describe('note tilt (hand-made look)', () => {
     expect(new Set(gaps).size).toBeGreaterThan(gaps.length / 2)
   })
   it('hands every angle to the CSS as a custom property', () => {
-    expect(Object.keys(tiltVars())).toHaveLength(13)
+    expect(Object.keys(tiltVars())).toHaveLength(14)
   })
 })

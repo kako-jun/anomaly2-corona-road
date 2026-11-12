@@ -16,6 +16,12 @@ fixed 340x620, so the result does not depend on the screen), in Japanese and Eng
   - the end-of-night memo, rendered for real with the two memo lines of #325 (a hypothesis and an anomaly's one-liner),
     overflows the sheet or the ruled area at any stage, in either language, or a memo line is missing from it,
   - a stamp collides with the night number, the title or the first sketch frame (WITHDRAWN at its longest).
+  - the memo scribble of #325 (an anomaly's one-liner with its `memo_image`) is not exactly where it should be: every
+    ledger scribble is rendered with the longest one-liner at the worst stage (6 synopsis lines + the widest scribble),
+    and the squarest (largest) one at every stage / size / language; it must load, stay inside the ruled sheet, clear the
+    number box, the last synopsis line and every scribble line, be hidden from assistive technology (empty alt,
+    aria-hidden), be lazy, and a file that cannot be loaded must leave the words alone with no broken image;
+    each file's transparent margin must be trimmed (a drawing lost in a wide margin is drawn too small).
   - a synopsis / scribble line sits off its ruled line: at either end of the line (a scribble is turned) the letters' base
     must be within RULE_BELOW_MAX below .. RULE_ABOVE_MAX above its rule, so the rules never run through the memo.
 
@@ -312,7 +318,7 @@ FOCUS = """
 """
 
 AFTER = """
-async ([over, shift, lang, main]) => {
+async ([over, shift, lang, main, sketch]) => {
   // Render the end-of-night note for real (the same React component and view builder the game uses) in place of the
   // title, so the memo lines sit on the paper exactly as they will in play. React comes from the dev server's own
   // pre-bundled copies (the URLs the app's entry module imports).
@@ -326,13 +332,58 @@ async ([over, shift, lang, main]) => {
   const { InvestigationNote } = await import('/src/components/InvestigationNote.tsx')
   const save = { ...emptySave(), ...over }
   const view = buildNote({ mode: 'after', save, shift }, lang)
+  if (sketch) view.sketch = '/note-sketches/' + sketch // the longest one-liner with this drawing (the pair is the worst case)
   document.querySelectorAll('.note-screen').forEach(e => e.remove())
   const host = document.createElement('div'); document.body.appendChild(host)
   rd.createRoot(host).render(R.createElement(InvestigationNote, { view, onAction() {} }))
   await new Promise(r => setTimeout(r, 200))
   await Promise.all([...document.fonts].map(f => f.load().catch(() => null)))
   await document.fonts.ready
+  // the scribble is lazy: wait until it has loaded (or failed) before anything is measured
+  for (let i = 0; i < 100; i++) {
+    const im = document.querySelector('.note-sketch')
+    if (!im || im.complete) break
+    await new Promise(r => setTimeout(r, 50))
+  }
   return view.lines.map(l => l.text)
+}
+"""
+
+SKETCH = """
+() => {
+  // The memo scribble (#325): on the sheet, clear of the text around it, decorative, lazy. Rotated boxes (the real ones)
+  // are measured, in px of the 340px paper (the fit scale divided out).
+  const res = []
+  const sc = document.querySelector('.note-paper').getBoundingClientRect().width / 340
+  const img = document.querySelector('.note-sketch')
+  if (!img) return ['the memo scribble is not on the sheet']
+  if (!img.complete || img.naturalWidth === 0) return ['the memo scribble did not load']
+  if (img.getAttribute('alt') !== '' || img.getAttribute('aria-hidden') !== 'true') res.push('the memo scribble is not hidden from assistive technology (alt="" and aria-hidden)')
+  if (img.getAttribute('loading') !== 'lazy') res.push('the memo scribble is not lazy (it must be fetched only when shown)')
+  if (document.querySelectorAll('.note-sketch').length !== 1) res.push('more than one memo scribble on the sheet')
+  if (img.parentElement.className !== 'note-syn') res.push('the memo scribble is not inside the synopsis')
+  const R = b => ({ l: b.left / sc, r: b.right / sc, t: b.top / sc, b: b.bottom / sc })
+  const ib = R(img.getBoundingClientRect()), notes = R(document.querySelector('.note-notes').getBoundingClientRect())
+  const form = R(document.querySelector('.note-form').getBoundingClientRect())
+  const paper = R(document.querySelector('.note-paper').getBoundingClientRect())
+  if (ib.r > notes.r + 0.5 || ib.l < notes.l) res.push(`the memo scribble leaves the ruled sheet sideways (${ib.l.toFixed(1)}..${ib.r.toFixed(1)} of ${notes.l.toFixed(1)}..${notes.r.toFixed(1)})`)
+  if (ib.b > notes.b + 0.5) res.push(`the memo scribble leaves the ruled sheet at the bottom (${ib.b.toFixed(1)} > ${notes.b.toFixed(1)})`)
+  if (form.t - ib.b < 6) res.push(`the memo scribble is only ${(form.t - ib.b).toFixed(1)}px above the number box (need 6)`)
+  if (ib.l < paper.l || ib.r > paper.r || ib.t < paper.t || ib.b > paper.b) res.push('the memo scribble leaves the paper')
+  const apart = (a, b, m) => a.r + m <= b.l || b.r + m <= a.l || a.b + m <= b.t || b.b + m <= a.t
+  const textBox = p => { const r = document.createRange(); r.selectNodeContents(p); return R(r.getBoundingClientRect()) }
+  const syn = [...document.querySelectorAll('.note-syn p')]
+  const last = textBox(syn[syn.length - 1])
+  if (ib.t - last.b < 1) res.push(`the memo scribble touches the last synopsis line (${(ib.t - last.b).toFixed(1)}px below it, need 1)`)
+  for (const p of syn) if (!apart(ib, textBox(p), 2)) res.push('the memo scribble overlaps a synopsis line: ' + p.textContent)
+  for (const p of document.querySelectorAll('.note-scrib p')) {
+    // the scribble line is a turned line: its text box (Range) is the turned glyph run, so the gap is a real one
+    if (!apart(ib, R(p.getBoundingClientRect()), 3)) res.push('the memo scribble is closer than 3px to a handwritten scribble line: ' + p.textContent)
+  }
+  for (const sel of ['.note-btn', '.note-stamps', '.note-board']) if (!apart(ib, R(document.querySelector(sel).getBoundingClientRect()), 3)) res.push(`the memo scribble is closer than 3px to ${sel}`)
+  const m = new DOMMatrix(getComputedStyle(img).transform), turn = Math.atan2(m.b, m.a) * 180 / Math.PI
+  if (Math.abs(turn) < 0.5 || Math.abs(turn) > 4) res.push(`the memo scribble is turned ${turn.toFixed(2)} deg (the hand-made range is 0.5..4)`)
+  return res
 }
 """
 
@@ -377,6 +428,8 @@ RULEFIT = """
 # English lowercase (8px: no cut at all), 3.2px (26%) under the English caps and 4.2px (32%) under the Japanese tops.
 # Past either the memo reads as struck through. (A scribble is turned, so its two ends differ; its middle sits about 5px
 # up.)
+# A memo scribble's transparent margin, per side, in its own pixels (the file is trimmed to its drawing, 2px of air kept)
+SKETCH_MARGIN_MAX = 4
 RULE_BELOW_MAX = 3
 RULE_ABOVE_MAX = 13
 
@@ -404,8 +457,21 @@ async () => {
   const d = await import('/src/data/investigationNotes.ts')
   const { MEMO_INDEX } = await import('/src/utils/memoIndex.ts')
   const flags = Object.fromEntries(Object.entries(d.MEMO_FLAG_TEXT).map(([f, t]) => [f, { ja: t.ja, en: t.en }]))
-  const memos = [...MEMO_INDEX].filter(([, m]) => m.memo).map(([id, m]) => ({ id, ja: m.memo.ja, en: m.memo.en }))
-  return { flags, memos }
+  const memos = [...MEMO_INDEX].filter(([, m]) => m.memo).map(([id, m]) => ({ id, ja: m.memo.ja, en: m.memo.en, image: m.image || null }))
+  // every memo scribble of the ledger: its natural size and the transparent margin around the drawing (alpha > 12)
+  const sketches = []
+  for (const m of memos) {
+    if (!m.image) continue
+    const img = new Image(); img.src = '/note-sketches/' + m.image
+    await img.decode()
+    const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0)
+    const d = g.getImageData(0, 0, c.width, c.height).data
+    let l = c.width, t = c.height, r = -1, b = -1
+    for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3] > 12) { if (x < l) l = x; if (x > r) r = x; if (y < t) t = y; if (y > b) b = y }
+    sketches.push({ id: m.id, file: m.image, w: c.width, h: c.height, margin: { l, t, r: c.width - 1 - r, b: c.height - 1 - b } })
+  }
+  return { flags, memos, sketches }
 }
 """
 
@@ -434,6 +500,19 @@ def check_after(browser, problems):
     if not probe["memos"] or not probe["flags"]:
         problems.append("after: the ledger has no one-line memo (or no hypothesis) to measure")
         return 0
+    sketches = probe["sketches"]
+    if not sketches:
+        problems.append("after: the ledger has no memo_image to measure")
+        return 0
+    for k in sketches:
+        mg = k["margin"]
+        if k["w"] > 384 or k["h"] > 384:
+            problems.append(f"sketch {k['file']}: {k['w']}x{k['h']}, the long side must be 384px or less")
+        if max(mg.values()) > SKETCH_MARGIN_MAX:
+            problems.append(f"sketch {k['file']}: transparent margin {mg} (trim it to {SKETCH_MARGIN_MAX}px or less per side, see prompts/README.md)")
+    # the squarest drawing is drawn the largest in the box, so it is the worst case for every stage; every other one is
+    # swept at the worst stage below
+    square = max(sketches, key=lambda k: min(k["w"] / k["h"], k["h"] / k["w"]))
     measured = 0
     for stage in FLAGS:
         if stage == "start":
@@ -458,7 +537,7 @@ def check_after(browser, problems):
                     page.route("**/__note-blank", blank)
                     page.goto(URL + "/__note-blank", wait_until="domcontentloaded")
                     page.wait_for_timeout(300)
-                    lines = page.evaluate(AFTER, [stage_save(stage), shift, lang, main_src])
+                    lines = page.evaluate(AFTER, [stage_save(stage), shift, lang, main_src, square["file"]])
                     label = f"after {stage}/{name}/{flag}"
                     if texts[lang] not in lines:
                         problems.append(f"[{lang}] {label}: the hypothesis memo line {texts[lang]!r} is missing from {lines}")
@@ -473,8 +552,45 @@ def check_after(browser, problems):
                             problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
                         for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
                             problems.append(f"[{lang} {w}x{h}] {label}: {msg}")
+                        for msg in page.evaluate(SKETCH):
+                            problems.append(f"[{lang} {w}x{h}] {label} + {square['file']}: {msg}")
                     page.close()
                     measured += 1
+    # Every scribble of the ledger at the worst sheet: the longest hypothesis + the longest one-liner (6 synopsis lines) and
+    # the widest handwritten scribble (elder3, dawn), in both languages.
+    worst = next(iter(probe["flags"]))
+    for lang in ("ja", "en"):
+        weight = 2 if lang == "ja" else 1
+        longest = max(probe["memos"], key=lambda m: len(m[lang]) * weight)
+        shift = {"found": 12, "fresh": 3, "misreports": 0, "durationMs": 480000, "closing": "dawn", "raised": ["elder3"],
+                 "memoFlag": worst, "memo": longest["id"]}
+        for k in sketches:
+            page = browser.new_page(viewport={"width": 390, "height": 844})
+            page.route("**/__note-blank", blank)
+            page.goto(URL + "/__note-blank", wait_until="domcontentloaded")
+            page.wait_for_timeout(300)
+            page.evaluate(AFTER, [stage_save("elder3"), shift, lang, main_src, k["file"]])
+            for w, h in ((360, 640), (1280, 720)):
+                page.set_viewport_size({"width": w, "height": h})
+                page.wait_for_timeout(60)
+                for msg in page.evaluate(SKETCH) + page.evaluate(LAYOUT) + page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
+                    problems.append(f"[{lang} {w}x{h}] elder3/dawn + {k['file']}: {msg}")
+            page.close()
+            measured += 1
+    # A scribble that cannot be loaded leaves the words alone and no broken image.
+    page = browser.new_page(viewport={"width": 390, "height": 844})
+    page.route("**/note-sketches/*", lambda route: route.abort())
+    page.route("**/__note-blank", blank)
+    page.goto(URL + "/__note-blank", wait_until="domcontentloaded")
+    page.wait_for_timeout(300)
+    memo_with = next(m for m in probe["memos"] if m["image"])
+    lines = page.evaluate(AFTER, [stage_save("elder3"), {"found": 12, "fresh": 3, "misreports": 0, "durationMs": 480000, "closing": "dawn", "raised": ["elder3"], "memo": memo_with["id"]}, "en", main_src, None])
+    page.wait_for_timeout(300)
+    if page.evaluate("document.querySelectorAll('.note-sketch').length") != 0:
+        problems.append("a memo scribble that cannot be loaded is still drawn (a broken image)")
+    if memo_with["en"] not in lines:
+        problems.append("a memo scribble that cannot be loaded took the one-liner with it")
+    page.close()
     return measured
 
 

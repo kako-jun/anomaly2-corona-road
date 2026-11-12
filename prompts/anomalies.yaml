@@ -79,6 +79,7 @@ anomalies:
     memo:
       ja: 'シャッターの脇に猫が座る。'
       en: 'A cat sitting by the shutter.'
+    memo_image: 'AR-02-cat.webp'
     overlay: 'assets/anomaly-overlays/cam02/cat.webp'
     overlay_origin: '(86,389)'
     dimensions: '65x97'
@@ -353,6 +354,7 @@ anomalies:
     memo:
       ja: '赤い傘はガラスだけ。実物はどこ？'
       en: 'Red umbrella, glass only. Real one?'
+    memo_image: 'AR-06-reflected-umbrella.webp'
     overlay: 'assets/anomaly-overlays/cam06/reflected-umbrella.webp'
     overlay_origin: '(277,313)'
     dimensions: '41x94'
@@ -449,6 +451,7 @@ anomalies:
     memo:
       ja: '天井に折り鶴。'
       en: 'A paper crane hanging from the ceiling.'
+    memo_image: 'AR-07-crane.webp'
     overlay: 'assets/anomaly-overlays/cam07/crane.webp'
     overlay_origin: '(325,0)'
     dimensions: '79x240'
@@ -497,6 +500,7 @@ anomalies:
     memo:
       ja: '階段に子供靴が片方。もう片方は？'
       en: 'Child''s shoe on stairs. Other shoe?'
+    memo_image: 'AR-07-shoe-v2.webp'
     overlay: 'assets/anomaly-overlays/cam07/shoe-v2.webp'
     overlay_origin: '(114,246)'
     dimensions: '36x31'
@@ -649,6 +653,7 @@ anomalies:
     memo:
       ja: '照明の下に風鈴。'
       en: 'A wind chime beneath the light.'
+    memo_image: 'AR-05-wind-chime.webp'
     generation_prompt: 'CAM05-E05 の照明の下に小さな透明な風鈴と短冊を一つ下げ、周囲を保持する。'
     overlay: 'assets/anomaly-overlays/cam05/wind-chime.webp'
     overlay_origin: '(414,83)'
@@ -2289,6 +2294,7 @@ anomalies:
     memo:
       ja: '床の塊が牛乳瓶の木箱に。'
       en: 'Floor shape became a milk-bottle crate.'
+    memo_image: 'AR-01-milk-bottle-crate.webp'
     generation_prompt: 'Edit the attached surveillance camera photo (an empty shopping arcade corridor, low-fi CCTV look, 675x900 frame). Make ONLY this single change: in the bottom-right corner on the floor edge (approx x=634-675, y=724-810), just above the blue cylindrical container, the gray lump becomes a wooden milk bottle crate holding several plain white glass milk bottles with no labels. Show it as cut off by the frame''s right edge. Keep everything else pixel-identical: camera angle, framing, aspect ratio, lighting color temperature, shadows, floor reflections, film grain, compression artifacts, and all existing objects. Do not regenerate or redraw the scene. No new readable text, no real brand names.'
     overlay: 'assets/anomaly-overlays/cam01/milk-bottle-crate.webp'
     overlay_origin: '(619,690)'
@@ -2605,6 +2611,7 @@ anomalies:
     memo:
       ja: 'ガラス棚に赤いダイヤル式電話。'
       en: 'A red dial payphone behind the glass.'
+    memo_image: 'AR-04-red-telephone.webp'
     generation_prompt: 'Edit the attached surveillance camera photo (an empty shopping-arcade corridor, 676x900 px reference). Make ONLY this single change: inside the left glass storefront, on a shelf behind the window in its lower half (approx x=20-260, y=330-540 of 676x900), place one red vintage rotary-dial public telephone (Showa-era "red phone", compact boxy body, round dial), seen through the blue-black reflective glass, consistent with the glass reflections and dimness. CRITICAL: keep everything else PIXEL-IDENTICAL to the source: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, highlights, film grain, JPEG compression, low-fi surveillance look, and all existing objects. Do not regenerate or redraw the scene; only inject the specified change. Photo-realistic, matching the surveillance aesthetic exactly. Any text must be illegible or fictional; do not add real brand or store names.'
     overlay: 'assets/anomaly-overlays/cam04/red-telephone.webp'
     overlay_origin: '(15,174)'
@@ -2646,6 +2653,7 @@ anomalies:
     memo:
       ja: '黒いガラスの奥に赤い提灯。'
       en: 'A red lantern behind the dark glass.'
+    memo_image: 'AR-04-red-lantern.webp'
     generation_prompt: 'Edit the attached surveillance camera photo (an empty shopping-arcade corridor, 676x900 px reference). Make ONLY this single change: inside the black glass shopfront on the right (approx x=483-676, y=144-549 of 676x900), slightly above its middle, behind the window glass, a single red paper lantern (chochin) with no writing glows softly, seen through the dark glass with reflections kept. CRITICAL: keep everything else PIXEL-IDENTICAL to the source: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, highlights, film grain, JPEG compression, low-fi surveillance look, and all existing objects. Do not regenerate or redraw the scene; only inject the specified change. Photo-realistic, matching the surveillance aesthetic exactly. Any text must be illegible or fictional; do not add real brand or store names.'
     overlay: 'assets/anomaly-overlays/cam04/red-lantern.webp'
     overlay_origin: '(506,242)'
@@ -3001,6 +3009,7 @@ anomalies:
     memo:
       ja: '濡れた足跡。今は誰もいない。どこから？'
       en: 'Wet prints. No one here. From where?'
+    memo_image: 'AR-06-wet-footprints.webp'
     generation_prompt: 'Edit the attached surveillance camera photo (a shopping arcade corridor, low-fi CCTV look, 675x900 frame). Make ONLY this single change: - Add marks: inside the long white reflection of the fluorescent light on the floor (center-right, approx x=401-547, y=315-855), a trail of wet bare footprints appears, about 8-10 prints in alternating left and right pairs, walking toward the camera from the dark far end to the foreground, shiny wet dark marks with small highlights, following the floor perspective (larger near the bottom). No person is visible. CRITICAL - keep everything else PIXEL-IDENTICAL to the source image: camera angle, framing, lens distortion, aspect ratio, all buildings, signs, walls, floor, ceiling, fixtures, lighting color temperature, shadows, film grain, JPEG artifacts, low-fi surveillance look, and every object and text already present. Do not regenerate or redraw the scene. Only inject this one change. No real shop names; any text must be illegible or fictional.'
     overlay: 'assets/anomaly-overlays/cam06/wet-footprints.webp'
     overlay_origin: '(396,400)'
@@ -3572,6 +3581,7 @@ anomalies:
     memo:
       ja: '最前景の床に白い帯のある赤いゴムまり。'
       en: 'Red ball with white band, foreground.'
+    memo_image: 'AR-01-red-rubber-ball.webp'
     generation_prompt: 'Method: the baseline was edited with $imagegen using the prompt below, then cut out with scripts/composite-anomaly.py. Change: Keep the same framing and zoom; do not recompose, re-crop or enlarge. Preserve the existing grain, lighting, perspective, floor tile joints and every other object exactly. Change only this: Add one bright red rubber ball (plain, glossy, with a single white band around it) resting on the floor tile in the foreground, about 60 px diameter in the 675x900 frame, clear specular highlight and a dark soft contact shadow, no text.'
     overlay: 'assets/anomaly-overlays/cam01/red-rubber-ball.webp'
     overlay_origin: '(494,800)'
@@ -3612,6 +3622,7 @@ anomalies:
     memo:
       ja: '色褪せた赤い三輪車。子供用だ。'
       en: 'A faded red child''s tricycle.'
+    memo_image: 'AR-02-tricycle.webp'
     generation_prompt: 'Method: the baseline was edited with $imagegen using the prompt below, then cut out with scripts/composite-anomaly.py. Change: Keep the same framing and zoom, the same lighting, grain, colors and every other element exactly unchanged. Only add one old child''s red tricycle with a worn chrome handlebar and small white rubber grips, parked on the dark granite floor in the lower-right foreground, seen from the same camera angle, with a soft contact shadow. No logos or readable text. Do not change the floor tiles or any other element.'
     overlay: 'assets/anomaly-overlays/cam02/tricycle.webp'
     overlay_origin: '(534,769)'
@@ -3632,6 +3643,7 @@ anomalies:
     memo:
       ja: '昔の電球が天井から下がる。'
       en: 'An old lamp hangs from the ceiling.'
+    memo_image: 'AR-03-pendant-lamp.webp'
     generation_prompt: 'Method: the baseline was edited with $imagegen using the prompt below, then cut out with scripts/composite-anomaly.py. Change: Add one old-fashioned pendant light hanging from the dark ceiling at the upper left: a short black cord and a cream enamel cone shade with a bare warm-yellow bulb glowing brightly, casting a faint warm glow on the ceiling around it. Keep the same framing and zoom; change nothing else.'
     overlay: 'assets/anomaly-overlays/cam03/pendant-lamp.webp'
     overlay_origin: '(68,26)'
@@ -3672,6 +3684,7 @@ anomalies:
     memo:
       ja: '赤い風船が天井に貼り付く。'
       en: 'A red balloon stuck to the ceiling.'
+    memo_image: 'AR-04-ceiling-balloon.webp'
     generation_prompt: 'Method: the baseline was edited with $imagegen using the prompt below, then cut out with scripts/composite-anomaly.py. Change: Keep the same framing and zoom; do not recompose, re-crop or enlarge. Preserve the camera angle, lighting, grain, compression noise, and every other object exactly. Add only this one change: a single round plain red rubber balloon pressed against the dark ceiling at the upper right, with a thin pale string hanging down from it, about 55 px across with a bright specular highlight; saturated red clearly contrasting the dark blue-grey ceiling; no printing, no text.'
     overlay: 'assets/anomaly-overlays/cam04/ceiling-balloon.webp'
     overlay_origin: '(477,8)'
@@ -3712,6 +3725,7 @@ anomalies:
     memo:
       ja: 'ビー玉が７つ散らばる。'
       en: 'Seven marbles scattered about.'
+    memo_image: 'AR-05-marbles-scattered.webp'
     generation_prompt: 'Method: the baseline was edited with $imagegen using the prompt below, then cut out with scripts/composite-anomaly.py. Change: Keep the same framing and zoom; do not recompose, re-crop or enlarge. Keep the low-fi CCTV look, grain, perspective, lighting and every other object unchanged. Make ONLY this single change: on the dark floor tiles at the lower left foreground, scatter 7 glass marbles (translucent blue, green and amber with bright white highlights), spread diagonally over about 110x55 px, each with a small dark contact shadow. Make them about 2x larger than real scale so they stay visible. No text or logos. Do not touch the light pools.'
     overlay: 'assets/anomaly-overlays/cam05/marbles-scattered.webp'
     overlay_origin: '(125,791)'
@@ -3814,6 +3828,7 @@ anomalies:
     memo:
       ja: '黄色い長靴が揃っている。'
       en: 'A pair of yellow boots.'
+    memo_image: 'AR-01-yellow-boots.webp'
     generation_prompt: "Method: the crop around the target was edited with $imagegen using the prompt below, pasted back into the baseline, then cut out with scripts/composite-anomaly.py. Keep the same framing and zoom; do not recompose, re-crop or enlarge. Keep the low-fi CCTV look, grain, perspective, lighting and every other object, wall, floor tile and light pool exactly unchanged. Make ONLY this single change: on the floor tiles in the center of the frame, place one pair of bright saturated yellow children's rain boots standing upright side by side, neatly aligned, with glossy highlights and a strong dark contact shadow. Completely plain, no text, logos or patterns. Place the object centered at about 50% from the left and 50% from the top of the image, occupying roughly 23% of the image width and 32% of its height (including shadow). Do not add any text, letters, numbers, logos or labels anywhere."
     overlay: 'assets/anomaly-overlays/cam01/yellow-boots.webp'
     overlay_origin: '(444,570)'
@@ -3835,6 +3850,7 @@ anomalies:
     memo:
       ja: '足跡は奥へ。戻り跡なし。戻った者は？'
       en: 'Footprints in; none back. Anyone return?'
+    memo_image: 'AR-02-floor-footprints.webp'
     generation_prompt: 'Method: two 3:2 windows of the baseline (y250-700 and y450-900) were edited in turn with $imagegen (window B taken from the restored window A, joined with a 100px blend), then normalised to the baseline''s low-frequency light and cut out along the floor polygon with scripts/composite-polygon.py cutout (hatch E21 left as a hole). Prompt: ''Edit the attached surveillance camera photo of a tiled underground corridor floor. Make ONLY this change: add hundreds of dusty dry footprints on the floor tiles in the centre, right and foreground area. All footprints walk toward the same place, the dark opening at the far end of the corridor beside the pillar, forming many parallel trails. Mix four kinds of soles: old leather dress shoes, flat straw sandals (zori), small children''s sneakers with a plain smooth sole, and bare-ish small feet. The soles are completely plain with no tread lettering, no logos, no marks. ... Keep the existing white lamp reflections and the green glow on the floor visible on top of the footprints. Do not touch the signboard, wooden crate, easel blackboard, chair, floor hatch, left shutter wall or the ceiling. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source ... No text, no letters, no numbers, no logos, no watermark.'' (window B: the same with ''the same trails keep running toward the upper part of the frame'').'
     overlay: 'assets/anomaly-overlays/cam02/floor-footprints.webp'
     overlay_origin: '(0,338)'
@@ -3920,6 +3936,7 @@ anomalies:
     memo:
       ja: '壁一面の時計が、皆違う時刻。'
       en: 'Wall clocks all show different times.'
+    memo_image: 'AR-07-wall-clocks.webp'
     generation_prompt: "Method: one clock dial was generated with $imagegen (prompt below), cut into a circular sprite, and 35 sprites were made with PIL, each with its own hour and minute hand angles (all times differ); the 10 right-face clocks that floated over the dark stairs were then removed and 6 clocks re-placed inside the lit wall polygon of the right face, with the dial brightness and tint taken from the local wall shading; the sprites were laid onto six wall quads with scripts/composite-polygon.py tile (--fit contain, shade 0.5-0.9) and cut out with composite-polygon.py cutout. The door (E13), the black opening, the round sign (E08), the door notice and pictogram (E07) were kept by choosing quads that avoid them. Prompt: Create a flat, straight-on photo of a single plain round wall clock face: a smooth matte white dial with a thin black round bezel and NO hands, NO numerals, NO tick marks, NO dots, NO brand, NO lettering of any kind; only a small black centre cap in the middle. Slightly aged, with a faint grey dust cast and a very soft shadow on a plain pale-grey wall around it. Even low-light surveillance-style lighting, fine film grain."
     overlay: 'assets/anomaly-overlays/cam07/wall-clocks.webp'
     overlay_origin: '(104,128)'
@@ -3941,6 +3958,7 @@ anomalies:
     memo:
       ja: '天井に逆さの傘が幾つも。'
       en: 'Upside-down umbrellas on ceiling.'
+    memo_image: 'AR-06-ceiling-umbrellas.webp'
     generation_prompt: "Method: a 675x450 window (y0-450) of the baseline was edited with $imagegen (prompt below), the ceiling-wide colour cast was matched back to the baseline with a low-frequency gain fitted on ceiling-background pixels only (umbrellas and fluorescent tubes excluded, sigma 22), the fluorescent tubes were restored from the baseline, then the ceiling polygon (extended to the wall-ceiling line (500,188)-(597,0), 5px inward feather) was cut out as the overlay (hanging sign rectangle x142-250,y132-238 and the area below it excluded). Prompt: Edit the attached surveillance camera photo of an underground shopping arcade corridor (the ceiling occupies the upper part of the frame). Make ONLY this change: hang many dozens of plain, open umbrellas upside down from the ceiling on thin cords: each umbrella is hung by its curved handle clipped to the cord, the open canopy hangs below like an inverted bowl with its tip pointing down. Umbrellas are completely plain in three kinds only: solid black, clear transparent vinyl with visible metal ribs, and solid red; no prints, no tags, no brand marks, no lettering. They recede toward the far end of the corridor with correct perspective, big near the camera and small and dense far away, hanging at slightly different heights but all above the hanging sign that stays visible. The existing ceiling fluorescent tubes, round lamps and the hanging sign stay visible between the umbrellas and the fluorescent light stays on. Do not touch the floor, walls, plants, shopfronts or anything below the ceiling line."
     overlay: 'assets/anomaly-overlays/cam06/ceiling-umbrellas.webp'
     overlay_origin: '(0,0)'
@@ -4026,6 +4044,7 @@ anomalies:
     memo:
       ja: 'くもりガラスに大小の手形と指描き。'
       en: 'Fogged glass, handprints, finger art.'
+    memo_image: 'AR-04-glass-fog-handprints.webp'
     generation_prompt: 'Method: the handprint material was generated 3 takes with $imagegen (prompt below, no source image, no baseline edit), strips of the three takes were warped onto the six glass panes (white frames, mullions, green sign and floor excluded) with composite-polygon.py tile (cols 1 rows 1, one material per pane, quads along the pane edges), laid over the baseline with composite-polygon.py blend (normal, opacity 0.78, pane polygons), and cut out with composite-polygon.py cutout (feather 1.5). Prompt: Create a flat, straight-on photo of a pane of cold glass fogged with condensation, seen from the outside, with many handprints and palm prints pressed on the inside surface: some large adult hands, some small child hands, in varied sizes, all with exactly five fingers and natural proportions, smeared where the hand slid. In three places a finger has drawn a very simple child-like doodle in the fog (a small umbrella, a sun, a cat face, a house) as clear lines. No writing, no numbers, no letters, no logos. The fog is milky white-grey and translucent over a dark blue-black interior, with fine droplets and a faint warm glow far behind. Output 1536x1024 (3:2). No watermark.'
     overlay: 'assets/anomaly-overlays/cam04/fogged-glass-handprints.webp'
     overlay_origin: '(13,43)'
@@ -4047,6 +4066,7 @@ anomalies:
     memo:
       ja: '床一面に白い折り鶴。'
       en: 'White paper cranes cover the floor.'
+    memo_image: 'AR-05-floor-white-cranes.webp'
     generation_prompt: 'Method: the crane material was generated 3 takes with $imagegen (prompt below, no source image, no baseline edit); 23 cranes were cut out of the takes by a brightness threshold into transparent sprites, then about 400 of them were scattered over the floor (y>=603) by a work script (random rotation/flip, wingspan 26px far to 60px near by y, vertical foreshortening 0.72, density tapering at the far edge, contact shadow, brightness following the baseline''s low-frequency floor light, grain), and the floor rectangle was cut out with composite-polygon.py cutout (feather 2). Prompt: Create a flat top-down photo of about twelve plain white origami paper cranes of varied orientation (some seen from above, some from the side, wings spread) lying close together on a dark grey stone tile floor, casting short soft dark shadows. The paper is completely blank, matte white with subtle fold creases, no printing, no writing, no patterns, no colours, no logos. Each crane is distinct and well formed with a clear head, tail and two wings. Even low-light surveillance-style lighting, fine film grain, slight blur. Output 1536x1024 (3:2). No watermark.'
     overlay: 'assets/anomaly-overlays/cam05/floor-white-cranes.webp'
     overlay_origin: '(0,600)'
@@ -4132,6 +4152,7 @@ anomalies:
     memo:
       ja: '麦わら帽子が伏せてある。'
       en: 'A straw hat set upside down.'
+    memo_image: "AR-01-straw-hat.webp"
     generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the chosen hat was cut out of the take, scaled to 0.72 and moved about 30 px left (the model placed it too far right, onto the neighbouring ball's 30 px margin), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 1 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the dark foreground floor tiles, place one plain woven straw hat lying crown-up with its wide brim flat on the floor, natural pale straw color, completely plain with no ribbon, no band and no print. Make it about 1.3x larger than real scale. Give it a strong dark contact shadow around the brim. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the puddle-like light patch near it or the blue container at the right edge. Place the object, including its shadow, centered at about 50% from the left and 71% from the top of the image, occupying roughly 29% of the image width and 41% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
     overlay: "assets/anomaly-overlays/cam01/straw-hat.webp"
     overlay_origin: "(383,822)"
@@ -4174,6 +4195,7 @@ anomalies:
     memo:
       ja: '天井から白いシーツが幾枚も。'
       en: 'White sheets hanging from the ceiling.'
+    memo_image: 'AR-07-ceiling-white-sheets.webp'
     generation_prompt: 'Method: the sheet material was generated 3 times with $imagegen (no source image, no baseline edit; plain white bed sheet hanging from two clips on flat chroma-key green; takes: wide, tall, near-square), keyed to transparent sprites, and 19 sprites were hung by a work script in three depth rows across the whole ceiling width (far row W66-74px, middle W90-104px, near W100-150px; every hem aligned to y<=119 so the lowest hem stays above the back wall top y125 and out of the AR-07-wall-clocks box; slight rotation/flip, depth shading, cool tint, soft drop shadow). Only the sprites and their shadows are in the overlay (alpha 0 elsewhere; no baseline-identical padding). The fluorescent tubes and most of the round vent are left uncovered. Prompt: Create a flat, straight-on photo of a single plain white bed sheet hanging straight down from two small plain metal clips at its top edge, like a loose rectangular curtain of fabric with soft vertical folds and a straight, slightly wavy hem at the bottom. The sheet is wider than tall (about 4 units wide by 3 units tall), completely plain matte white linen, no print, no stripes, no stains, no holes, not shaped like a person or a ghost, no text or logos. Cool dim surveillance-style lighting, fine film grain. The whole sheet including its top clips is fully visible, centred, with a generous margin on all sides, on a plain, flat, uniform bright chroma-key green (#00FF00) background with no shadow on the background. Output 1536x1024 (3:2). No watermark.'
     overlay: 'assets/anomaly-overlays/cam07/ceiling-white-sheets.webp'
     overlay_origin: '(20,0)'
@@ -4280,6 +4302,7 @@ anomalies:
     memo:
       ja: '濃い青の携帯扇風機。'
       en: 'A dark blue handheld fan.'
+    memo_image: "AR-02-navy-handy-fan.webp"
     generation_prompt: "Method: the 6x crop around the target (256x171 px) was edited with $imagegen using the prompt below (3 takes, one chosen); the fan with its shadow was cut out of the take, scaled to 0.5 (at full size it was about 118x72 px and came within 20-28 px of the phone and the tile anomalies), pasted into the baseline and cut out with scripts/composite-anomaly.py (--dilate 0 --feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the floor tiles, lay one small handheld portable fan on its side, with its round plain blade guard facing right and its short handle at the left, in dark navy blue plastic, completely plain with no logo, no text, no button labels and no printed marks. Make it about 1.5x larger than real scale. Give it a strong dark contact shadow and a small bright highlight along the plastic edge. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place it so that the handle end and the left part of the body overlap the white light reflection band on the floor, and the blade guard extends onto the gray floor to the right of the band; the dark navy body and its shadow must contrast clearly against the pale band. Do not touch the tile joints. Place the object, including its shadow, centered at about 50% from the left and 50% from the top of the image, occupying roughly 43% of the image width and 27% of its height. Do not add anything else. Output the same 3:2 1536x1024 image."
     overlay: "assets/anomaly-overlays/cam02/navy-handy-fan.webp"
     overlay_origin: "(209,618)"
@@ -5035,6 +5058,7 @@ anomalies:
     memo:
       ja: '店の敷居に白い鳩。'
       en: 'A white pigeon on the shop threshold.'
+    memo_image: 'AR-01-threshold-pigeon.webp'
     generation_prompt: 'Method: the 6x crop 419,540,675,711 of cam1 (256x171 px) was edited with $imagegen (3 takes, take 1 chosen), pasted back into the baseline and cut out with scripts/composite-anomaly.py (box 580,598,656,654 --dilate 0 --feather 1.5 --threshold 20). Prompt: Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the grey metal threshold strip at the lower right of the frame, below the dark shop panel, place one plain white pigeon perched, facing the corridor, with folded wings, a small rounded head slightly tilted, a short pale beak and pale grey-pink feet, no leg ring, no tag, no marking. Make it about 1.5x larger than real scale. Give it a soft dark contact shadow on the metal strip and a small bright highlight on its back. The pigeon looks toward the left, at the corridor. Do not touch the floor tiles at the left of this crop, the wall at the upper right, the dark shop panel above or anything else. Place the object, including its shadow, centered at about 81% from the left and 50% from the top of the image, occupying roughly 36% of the image width and 33% of its height. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam01/threshold-pigeon.webp'
     overlay_origin: '(580,596)'
@@ -5162,6 +5186,7 @@ anomalies:
     memo:
       ja: 'ガラスの白い鳥が３羽に。いつ増えた？'
       en: 'Three white birds on glass. When?'
+    memo_image: 'AR-02-wall-bird-triplet.webp'
     generation_prompt: 'Method: the 6x crop 420,316,676,487 of cam2 (256x171 px) was edited with $imagegen (3 takes, take 1 chosen), pasted back into the baseline and cut out with scripts/composite-anomaly.py (box 612,352,676,466 --dilate 0 --feather 1.5, then the cutout was scaled to 0.85x and moved to origin (626,388)). Prompt: Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: On the nearly black shop glass wall at the right edge, the white decorative bird-shaped decal in this area is multiplied: three identical white bird decals, same direction, same size, evenly spaced along the wall''s perspective one below the other, each as bright as the original. The other stars and decals on the glass and the wooden easel in front stay unchanged. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Place the changed area, including any shadow, centered at about 86% from the left and 50% from the top of the image, occupying roughly 28% of the image width and 53% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam02/wall-bird-triplet.webp'
     overlay_origin: '(626,388)'
@@ -5251,6 +5276,7 @@ anomalies:
     memo:
       ja: '奥に虫取り網の少年の影。誰だ？'
       en: 'Boy''s silhouette, insect net. Who is he?'
+    memo_image: 'AR-05-aisle-silhouette.webp'
     generation_prompt: 'Method: 6x crop 0,300,256,471 of cam5 edited with $imagegen (take 2 of 3), resized back and pasted into the baseline, then composite-anomaly.py --box 78,338,106,405 --threshold 12 --dilate 0 --feather 1. Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the bright, glossy floor of the far aisle, stand one small boy seen from behind as a completely black backlit silhouette (no face, no skin, no clothing pattern visible), wearing a wide-brimmed straw hat and holding a long thin insect net upright like a pole beside him, its round hoop raised high above the hat, facing away from the camera toward the end of the aisle. Make him about 1.3x larger than real scale so that the silhouette reads clearly against the bright floor. Add a long soft dark shadow stretching toward the camera on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the shop fronts, the thin-legged stand at the far left, the tile joints, the white floor reflections or the glass shop block at the right. Place the object, including its shadow, centered at about 36% from the left and 42% from the top of the image, occupying roughly 11% of the image width and 39% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam05/aisle-silhouette.webp'
     overlay_origin: '(73,336)'
@@ -5293,6 +5319,7 @@ anomalies:
     memo:
       ja: '通路に金魚の入った水袋。'
       en: 'Bagged goldfish in the aisle.'
+    memo_image: 'AR-05-aisle-goldfish.webp'
     generation_prompt: 'Method: 6x crop 0,450,256,621 of cam5 edited with $imagegen (take 1 of 3), resized back and pasted into the baseline, composite-anomaly.py with a wider box 45,495,120,580 (--threshold 12 --dilate 0 --feather 1), then the overlay was trimmed and scaled by 0.7. Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: on the glossy floor tiles, place one small transparent plastic bag filled with water, its mouth tied with a plain rubber band, sitting upright on the floor, with a single small bright orange-red goldfish swimming inside, completely plain, with no print and no label on the bag. Make it about 1.5x larger than real scale and give the goldfish a strongly saturated orange-red color so that it reads clearly. Add a soft bright highlight on the water bag and a soft dark contact shadow on the floor. Completely plain and unmarked: do not add any text, letters, numbers, logos, labels, printed text or printed logos anywhere in the image. Do not touch the tile joints, the white floor reflections, the black wall at the right or anything else. Place the object, including its shadow, centered at about 32% from the left and 53% from the top of the image, occupying roughly 17% of the image width and 25% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam05/aisle-goldfish.webp'
     overlay_origin: '(58,522)'
@@ -5820,6 +5847,7 @@ anomalies:
     memo:
       ja: '靴が揃って奥の扉を向く。持ち主は？'
       en: 'Shoes face far door. Their owners?'
+    memo_image: 'AR-04-floor-shoes-rows.webp'
     generation_prompt: 'Method: two 3:2 windows (y370-820 and y450-900) edited with $imagegen (A take 1; B take 2 with one added sentence to continue the rows downward), restored with scripts/composite-polygon.py restore (B with --blend-px 100 --blend-edges t) and cut out with cutout along the floor polygon (pairs crossing the x=202/458 lines were excluded). Prompt (take 1): $imagegen Edit the attached image (a low-fi CCTV photo of a Showa-era underground shopping arcade corridor, wide 3:2 window of the floor). Keep the corridor walls, glass storefronts, ceiling, lights, floor tile joints and the square floor hatch exactly unchanged. Add the shoes only on the floor inside the central lane between x 459 and x 1041 of this 1536-wide frame (a lane about 38 percent of the width), following the tile perspective so each row gets smaller toward the far glass door. Fill the lane with dense neat rows of empty unattended shoes, left and right of each pair aligned side by side, every toe pointing toward the far door at the end of the corridor: plain brown leather shoes, straw zori sandals, wooden geta, small children''s canvas sneakers and plain white indoor slippers mixed together. About 4 cm of floor tile is visible between pairs. All shoes completely plain with no logos, no marks, no letters, no soles patterns. Each pair casts a small dark contact shadow and picks up the cool reflection of the ceiling lamps. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original low-light surveillance look: cold blue-grey colour grading, fine film grain, mild JPEG compression, soft vignette. Change nothing outside the described area. No text, no letters, no numbers, no logos, no watermark.'
     overlay: 'assets/anomaly-overlays/cam04/floor-shoes-rows.webp'
     overlay_origin: '(202,382)'
@@ -6009,6 +6037,7 @@ anomalies:
     memo:
       ja: '柱の根元に雀。'
       en: 'A sparrow at the base of the pillar.'
+    memo_image: 'AR-08-pillar-sparrow.webp'
     generation_prompt: 'Method: 6x enlarged crop (163,326)-(419,497) edited with $imagegen (3 takes, take 2 chosen), resized back and pasted into the baseline, then cut with scripts/composite-polygon.py cutout (outline polygon of the bird and its shadow, feather 2). Prompt: $imagegen Edit the attached image, which is a 6x enlarged crop of a low-fi surveillance camera photo (3:2, 1536x1024). Keep exactly the same framing and zoom: do not recompose, re-crop, re-zoom or enlarge. Keep the low-fi CCTV look, film grain, compression artifacts, perspective, lighting, color grade and every other object, the pillar, wall, floor tile, joint line, light pool and reflection exactly unchanged. Make ONLY this single change: at the front-left corner where the pale floor meets the base of the square pillar, place one small brown house sparrow standing on the floor in side view, head turned and tilted slightly toward the camera, with a chestnut-brown back, a pale grey belly and a dark bib under the beak. Make it about 1.5x larger than real scale so it reads clearly. Give it a strong dark contact shadow on the floor. Draw it as a natural bird photographed by a dim surveillance camera: no text, no tag, no ring, nothing in its beak. Do not touch the pillar, the electrical outlet on the pillar, the wall, the bright floor reflection or the tile joints. Place the bird, including its shadow, centred at about 50% from the left and 50% from the top of the image, occupying roughly 27% of the image width and 36% of its height. Do not add anything else. Output the same 3:2 1536x1024 image.'
     overlay: 'assets/anomaly-overlays/cam08/pillar-sparrow.webp'
     overlay_origin: '(252,396)'
@@ -6433,6 +6462,7 @@ anomalies:
     memo:
       ja: '葉の陰に人形のような小さな生き物。'
       en: 'Small doll-like creature under leaves.'
+    memo_image: 'AR-06-plant-doll-creature.webp'
     generation_prompt: 'Method: 6x crop 0,300,256,471 of cam6 edited with $imagegen (take 2 of 2; take 1 sat 25px too low and came within 5px of AR-06-tin-planter), the creature (hand-drawn outline polygon) was cut out of the generation, brightness x1.35, scaled to 1.25 and re-placed 2px higher into the baseline px frame; the overlay was written directly from that mask. Prompt: $imagegen Edit the attached image. It is a 6x enlarged crop (3:2, 1536x1024) of a low-light surveillance photograph of an empty, closed underground shopping arcade: a large dark green tropical houseplant with broad leaves on the left, a dark shopfront behind it, a pale pink lantern-shaped object on a black stand at the right. Edit only this: in the dark shade underneath the large leaf in the marked area (strictly inside x=280 to 600, y=400 to 740 in the 1536x1024 frame: the black shadow behind the dark lower-left leaf, left of the pink lantern), a small grey doll-like creature crouches hidden among the leaves, its lower body hidden behind the dark leaf that lies across the foreground at y=700 to 760, so only its head, shoulders, arms and knees show above the leaf edge: a smooth matte grey humanoid figure whose visible part is about 280 px tall in this frame and which must not extend below y=740, hunched and curled up with its knees drawn to its chest, a round hairless featureless head tilted slightly up with two tiny dark eye hollows and no mouth, thin long fingers resting on the ground, the skin pale ash grey like unglazed clay, clearly lighter than the black shade around it so it can be noticed, partly shadowed by the leaf edge above, a soft dark contact shadow below. It is eerie but not gory or violent. Nothing else is added or changed. All other pixels stay exactly as they are. Keep the camera angle, framing, zoom, perspective and aspect ratio exactly as the source; do not recompose, re-crop, rotate or zoom. Output 3:2 1536x1024. Match the original surveillance look: cold blue-grey grading, fine film grain, mild JPEG compression. No text, no letters, no numbers, no logos, no watermark.'
     overlay: 'assets/anomaly-overlays/cam06/plant-doll-creature.webp'
     overlay_origin: '(57,371)'
