@@ -3,6 +3,7 @@ import { act, renderHook } from '@testing-library/react'
 import { StrictMode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as saveData from '../utils/saveData'
+import { load } from '../utils/saveData'
 import { DEFAULT_CONFIG, DIALOGUE_CONFIG } from '../utils/gameConfig'
 import { SUBTITLE_GAP_MS, subtitleHoldMs } from '../utils/subtitle'
 import { SubtitleInput, useSubtitle } from './useSubtitle'
@@ -32,6 +33,9 @@ const H = vi.hoisted(() => {
     e('chatter', 'chatter-3', {}, 'light', 'ch3a', 'ch3b'),
     e('false-report', 'false-report-1', {}, 'serious', 'fr1a', 'fr1b'),
     e('anomaly-line', 'an-x-1', { anomaly: 'x' }, 'light', 'anx1a', 'anx1b'),
+    e('anomaly-line', 'an-y-1', { anomaly: 'y' }, 'serious', 'any1a', 'any1b'),
+    e('anomaly-line', 'an-y-2', { anomaly: 'y' }, 'serious', 'any2a', 'any2b'),
+    e('anomaly-line', 'an-z-1', { anomaly: 'z' }, 'light', 'anz1a', 'anz1b'),
     e('story', 'story-f1', { flag: 'f1' }, 'serious', 'st1a', 'st1b'),
     e('story', 'story-f2', { flag: 'f2' }, 'serious', 'st2a', 'st2b'),
     e('midpoint', 'midpoint-few-1', { stage: 'few' }, 'light', 'mfa', 'mfb'),
@@ -597,6 +601,137 @@ describe('useSubtitle: used conversations (bag)', () => {
     const second = driver()
     advance(OPEN_AT)
     expect(shown(second.result)).toBe('op2a')
+  })
+})
+
+describe('useSubtitle: spawn hint (#343)', () => {
+  const HINT = DIALOGUE_CONFIG.hintDelayMs
+  const ORIGINAL = { ...DIALOGUE_CONFIG }
+  afterEach(() => Object.assign(DIALOGUE_CONFIG, ORIGINAL))
+  /** Mounted with the anomaly open from play time 0, the opening over and in the silence after it. */
+  const inSilence = (ids: string[] = ['y']) => {
+    const d = driver({ openAnomalyIds: ids, elapsedMs: 0 })
+    advance(OPENING_END + 1000)
+    return d
+  }
+
+  it('does not speak for an anomaly before the delay', () => {
+    const d = inSilence()
+    d.set({ elapsedMs: HINT - 1 })
+    advance(2 * GAP)
+    expect(shown(d.result)).toBeNull()
+  })
+
+  it('speaks its own conversation once it has been unreported for the delay', () => {
+    const d = inSilence()
+    d.set({ elapsedMs: HINT })
+    advance(2 * GAP - 1)
+    expect(shown(d.result)).toBeNull()
+    advance(1)
+    expect(shown(d.result)).toBe('any1a')
+  })
+
+  it('does not speak when the anomaly was reported meanwhile', () => {
+    const d = inSilence()
+    d.set({ elapsedMs: HINT - 1000 })
+    d.set({ openAnomalyIds: [], elapsedMs: HINT })
+    advance(SILENCE - 2000)
+    expect(shown(d.result)).toBeNull()
+  })
+
+  it('never hints the same anomaly twice', () => {
+    const d = inSilence()
+    d.set({ elapsedMs: HINT })
+    const w = watch(d.result)
+    w.step(60_000)
+    d.set({ elapsedMs: HINT + 60_000 })
+    w.step(120_000)
+    d.set({ elapsedMs: HINT + 180_000 })
+    w.step(120_000)
+    expect(w.seen.filter(t => t === 'any1a' || t === 'any2a')).toHaveLength(1)
+  })
+
+  it('shares the unused pool with the false-report hint', () => {
+    const d = driver({ openAnomalyIds: ['y'], elapsedMs: 0 })
+    advance(OPEN_AT)
+    d.set({ wrongFeedbackId: 1, wrongAnomalyId: 'y' })
+    advance(2 * GAP)
+    expect(shown(d.result)).toBe('any1a') // rng 0: first unused
+    // the other one is left for the spawn hint, then none remain
+    advance(convMs(['any1a', 'any1b']) + 1000)
+    d.set({ elapsedMs: HINT })
+    const w = watch(d.result)
+    w.step(SILENCE)
+    expect(w.seen).toContain('any2a')
+    expect(load().usedLines.y).toEqual(['an-y-1', 'an-y-2'])
+  })
+
+  it('with every own conversation used, there is no hint (no fallback to the common ones)', () => {
+    const d = inSilence(['z'])
+    d.set({ wrongFeedbackId: 1, wrongAnomalyId: 'z' })
+    advance(2 * GAP + convMs(['anz1a', 'anz1b']) + 1000)
+    d.set({ elapsedMs: HINT, wrongFeedbackId: null })
+    const w = watch(d.result)
+    w.step(SILENCE - 2000)
+    expect(w.seen).toEqual([])
+  })
+
+  it('is off with hintEnabled false', () => {
+    DIALOGUE_CONFIG.hintEnabled = false
+    const d = inSilence()
+    d.set({ elapsedMs: HINT })
+    const w = watch(d.result)
+    w.step(SILENCE - 2000)
+    expect(w.seen).toEqual([])
+  })
+
+  it('does not cut the conversation on screen: it waits for the next pick', () => {
+    const d = driver({ openAnomalyIds: ['y'], elapsedMs: 0 })
+    advance(OPEN_AT)
+    d.set({ elapsedMs: HINT })
+    expect(shown(d.result)).toBe('op1a')
+    const w = watch(d.result)
+    w.step(20_000)
+    expect(w.seen).toContain('any1a')
+    expect(w.seen.indexOf('op1b')).toBeLessThan(w.seen.indexOf('any1a'))
+  })
+
+  it('a false report goes before a due hint, the hint comes next', () => {
+    const d = inSilence(['y'])
+    d.set({ elapsedMs: HINT, wrongFeedbackId: 1, wrongAnomalyId: null })
+    const w = watch(d.result)
+    w.step(SILENCE)
+    expect(w.seen.indexOf('fr1a')).toBeGreaterThanOrEqual(0)
+    expect(w.seen.indexOf('fr1a')).toBeLessThan(w.seen.indexOf('any1a'))
+  })
+
+  it('a due hint goes before the midpoint comment', () => {
+    const d = inSilence(['y'])
+    d.set({ elapsedMs: MID_MS })
+    const w = watch(d.result)
+    w.step(2 * SILENCE)
+    expect(w.seen.indexOf('any1a')).toBeGreaterThanOrEqual(0)
+    expect(w.seen.indexOf('any1a')).toBeLessThan(w.seen.indexOf('mfa'))
+  })
+
+  it('keeps hintMinGapMs between two hints', () => {
+    DIALOGUE_CONFIG.chatterIntervalMs = 2000
+    const d = inSilence(['y', 'z'])
+    d.set({ elapsedMs: HINT })
+    const w = watch(d.result)
+    w.step(DIALOGUE_CONFIG.hintMinGapMs - 3000)
+    const hints = (t: string) => t === 'any1a' || t === 'anz1a'
+    expect(w.seen.filter(hints)).toHaveLength(1)
+    w.step(2 * DIALOGUE_CONFIG.hintMinGapMs)
+    expect(w.seen.filter(hints)).toHaveLength(2)
+  })
+
+  it('does not change the save shape (only usedLines is written)', () => {
+    const d = inSilence()
+    const before = Object.keys(load()).sort()
+    d.set({ elapsedMs: HINT })
+    advance(2 * GAP)
+    expect(Object.keys(load()).sort()).toEqual(before)
   })
 })
 

@@ -67,7 +67,8 @@ export const msToGameTime = (ms: number): string => {
   // Clamp to the shift: before 0 -> 22:00, after the end -> stop at 06:00.
   const clamped = Math.min(Math.max(0, ms), DEFAULT_CONFIG.totalDurationMs)
   const elapsedGameMinutes = Math.floor(clamped / 1000)
-  const minuteOfDay = (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
+  const minuteOfDay =
+    (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
   const hours = Math.floor(minuteOfDay / 60)
   const minutes = minuteOfDay % 60
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
@@ -102,6 +103,12 @@ export const DIALOGUE_CONFIG = {
   midpointAtSec: DEFAULT_CONFIG.totalDurationMs / 2 / 1000,
   /** Quiet time after a `serious` conversation before chatter may appear. */
   seriousQuietMs: 20_000,
+  /** Master switch of the spawn hint (#343): a hint subtitle for an anomaly left unreported too long. */
+  hintEnabled: true,
+  /** How long an anomaly may stay unreported before its hint subtitle becomes due (play-time ms; provisional, tune by playing). */
+  hintDelayMs: 45_000,
+  /** Minimum gap between two spawn hints (wall-clock ms; provisional). */
+  hintMinGapMs: 20_000,
 }
 
 /**

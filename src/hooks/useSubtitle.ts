@@ -9,6 +9,7 @@ import {
   midpointStage,
   pickClosing,
   pickOpening,
+  pickSpawnHint,
   selectNext,
   storyFlagNames,
 } from '../utils/dialogueEngine'
@@ -36,6 +37,11 @@ export interface SubtitleInput {
   elapsedMs: number
   /** Correct reports so far this play (picks the midpoint stage). */
   foundThisPlay: number
+  /**
+   * Ids of the anomalies on the cameras that are not reported yet (absent = none). One left unreported for
+   * `hintDelayMs` of play time gets a hint subtitle (#343).
+   */
+  openAnomalyIds?: readonly string[]
   /** Flags that just rose; their story conversation cuts in after the line on screen. */
   flagEvent: FlagEvent | null
   /** Set when the shift is over: the closing conversation plays, then `onClosingDone` runs. */
@@ -51,6 +57,7 @@ interface Machine {
   falseReport: (anomalyId: string | null) => void
   flags: (names: string[]) => void
   checkMidpoint: (elapsedMs: number, found: number) => void
+  anomalies: (elapsedMs: number, openIds: readonly string[]) => void
   end: (result: 'dawn' | 'withdraw' | 'ending') => void
 }
 
@@ -60,12 +67,14 @@ const storyFlags = storyFlagNames(ledger)
 interface PlayMeta {
   source?: SelectedSource
   flag?: string
+  /** The anomaly a spawn hint was for. */
+  hint?: string
 }
 
 /**
  * Movie-style subtitles driven by the dialogue ledger: one line at a time, a conversation of 2-4
- * lines, then a silence. Priority at each pick: flag story > false report > midpoint > chatter
- * (`selectNext`). A false report cuts in at once; a raised flag cuts in after the line on screen
+ * lines, then a silence. Priority at each pick: flag story > false report > spawn hint > midpoint >
+ * chatter (`selectNext`). A false report cuts in at once; a raised flag cuts in after the line on screen
  * (the rest of the interrupted conversation is dropped); the midpoint comment waits for the next
  * pick. A story conversation is not cut by a false report or a flag; what it displaces waits. A
  * conversation counts as used (and a story as played, a midpoint as done) when its first line is
@@ -108,12 +117,33 @@ export const useSubtitle = (input: SubtitleInput) => {
     let pendingFalse: { anomalyId: string | null } | null = null
     let pendingMidpoint: MidpointStage | null = null
     let midpointDone = false
+    // Spawn hints (#343): play time when each open anomaly was first seen, the ones already hinted, the last hint's wall time.
+    let openIds: readonly string[] = []
+    const firstSeen = new Map<string, number>()
+    let elapsedNow = 0
+    const hinted = new Set<string>()
+    let lastHintAt = -Infinity
 
     const later = (fn: () => void, ms: number) => {
       window.clearTimeout(timer)
       timer = window.setTimeout(fn, ms)
     }
     const hide = () => setView(v => ({ ...v, visible: false }))
+
+    /** Anomalies due for a hint now (oldest first): unreported past the delay, not hinted yet, with an unused conversation. */
+    const dueHints = (): string[] => {
+      if (!cfg.hintEnabled || closing) return []
+      if (Date.now() - lastHintAt < cfg.hintMinGapMs) return []
+      const flags = load().flags
+      return openIds
+        .filter(
+          id =>
+            !hinted.has(id) &&
+            elapsedNow - (firstSeen.get(id) ?? elapsedNow) >= cfg.hintDelayMs &&
+            pickSpawnHint(ledger, id, used, () => 0, flags) !== null
+        )
+        .sort((a, b) => (firstSeen.get(a) ?? 0) - (firstSeen.get(b) ?? 0))
+    }
 
     const endConversation = () => {
       hide()
@@ -128,7 +158,7 @@ export const useSubtitle = (input: SubtitleInput) => {
       // A raised flag or a false report that waited does not wait out the silence.
       later(
         selectAndPlay,
-        pendingFlags.length > 0 || pendingFalse
+        pendingFlags.length > 0 || pendingFalse || dueHints().length > 0
           ? SUBTITLE_GAP_MS
           : cfg.chatterIntervalMs
       )
@@ -181,6 +211,10 @@ export const useSubtitle = (input: SubtitleInput) => {
         const i = pendingFlags.indexOf(meta.flag)
         if (i >= 0) pendingFlags.splice(i, 1)
       }
+      if (meta.hint !== undefined) {
+        hinted.add(meta.hint)
+        lastHintAt = Date.now()
+      }
       if (meta.source === 'midpoint') {
         midpointDone = true
         pendingMidpoint = null
@@ -207,6 +241,7 @@ export const useSubtitle = (input: SubtitleInput) => {
         flags: load().flags,
         pendingFlags,
         pendingFalseReport: pendingFalse,
+        pendingSpawnHints: dueHints(),
         pendingMidpoint,
         last,
         nowMs: Date.now(),
@@ -219,7 +254,11 @@ export const useSubtitle = (input: SubtitleInput) => {
       }
       // A flag and the midpoint stay pending until their first line shows (`commit`).
       if (sel.source === 'false-report') pendingFalse = null
-      play(sel.entry, sel.used, { source: sel.source, flag: sel.flag })
+      play(sel.entry, sel.used, {
+        source: sel.source,
+        flag: sel.flag,
+        hint: sel.hintedAnomaly,
+      })
     }
 
     /** Something urgent arrived during the silence: speak soon instead of waiting it out. */
@@ -254,6 +293,16 @@ export const useSubtitle = (input: SubtitleInput) => {
         const fresh = pendingMidpoint === null
         pendingMidpoint = midpointStage(found)
         if (fresh) wake()
+      },
+      anomalies: (elapsedMs, ids) => {
+        if (closing) return
+        const wasDue = dueHints().length
+        elapsedNow = elapsedMs
+        openIds = ids
+        for (const id of ids)
+          if (!firstSeen.has(id)) firstSeen.set(id, elapsedMs)
+        // A hint is due now but was not before: speak soon (not inside a conversation).
+        if (dueHints().length > wasDue) wake()
       },
       end: result => {
         if (closing) return
@@ -315,6 +364,14 @@ export const useSubtitle = (input: SubtitleInput) => {
   useEffect(() => {
     machineRef.current?.checkMidpoint(input.elapsedMs, input.foundThisPlay)
   }, [input.elapsedMs, input.foundThisPlay])
+
+  const openKey = (input.openAnomalyIds ?? []).join(',')
+  useEffect(() => {
+    machineRef.current?.anomalies(
+      input.elapsedMs,
+      openKey === '' ? [] : openKey.split(',')
+    )
+  }, [input.elapsedMs, openKey])
 
   useEffect(() => {
     if (ending) machineRef.current?.end(ending)
