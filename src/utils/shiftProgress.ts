@@ -1,5 +1,6 @@
 import ledger from 'virtual:dialogue'
 import anomalies from 'virtual:anomalies'
+import nonImage from 'virtual:non-image-anomalies'
 import { reiwaIdsOf } from './anomalyLedger'
 import { newlyRaisedFlags, storyFlagNames } from './dialogueEngine'
 import { DEFAULT_CONFIG } from './gameConfig'
@@ -10,10 +11,12 @@ import { emptySave, nextEpoch, update } from './saveData'
 import type { LastShift, SaveData } from './saveData'
 
 /**
- * Ids of the Reiwa anomalies: ledger entries (image + produced) marked `reiwa: true`, passed in through
+ * Ids of the Reiwa anomalies: ledger entries (image + produced, and non_image + produced) marked `reiwa: true`, passed in through
  * `virtual:anomalies` (#83). The anomaly ledger is the only source; nothing is listed here.
  */
-const REIWA_IDS: ReadonlySet<string> = new Set(reiwaIdsOf(anomalies))
+const REIWA_IDS: ReadonlySet<string> = new Set(
+  reiwaIdsOf([...anomalies, ...nonImage])
+)
 
 const STORY_FLAGS = storyFlagNames(ledger)
 

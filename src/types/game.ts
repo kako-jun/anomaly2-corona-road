@@ -1,3 +1,5 @@
+import type { FeedGlitchKind } from '../utils/feedGlitch'
+
 export type AnomalyCategory =
   | 'Camera'
   | 'Object'
@@ -16,6 +18,13 @@ export interface AnomalyOverlay {
   size: { w: number; h: number }
 }
 
+/**
+ * Where a running anomaly can be reported from (#77, prompts/README.md "報告できる範囲"): `camera` = only while its
+ * camera is the one being watched (image anomalies, feed_glitch, sound); `monitor` = from any camera (ui_corruption,
+ * rule_break: the whole monitor is wrong).
+ */
+export type ReportScope = 'camera' | 'monitor'
+
 export interface Anomaly {
   /** Ledger id (prompts/anomalies.yaml). */
   id: string
@@ -26,7 +35,12 @@ export interface Anomaly {
   cameraId: number
   detectedAt?: number
   phase: GamePhase
-  overlay: AnomalyOverlay
+  /** The transparent image of an image anomaly; absent for a non-image one. */
+  overlay?: AnomalyOverlay
+  /** Reporting scope; absent = `camera` (every image anomaly). */
+  scope?: ReportScope
+  /** Non-image only: the camera feed glitch drawn on `cameraId` while it is watched (removed when reported). */
+  feedGlitch?: FeedGlitchKind
 }
 
 export interface Camera {

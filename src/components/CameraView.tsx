@@ -104,9 +104,11 @@ export const CameraView = ({
     h: number
   } | null>(null)
   const baseSize = natural?.src === camera.image ? natural : null
+  // A non-image anomaly has no overlay (its effect is the feed glitch), so there is nothing to place.
+  const overlay = anomalyHere?.overlay
   const placement =
-    anomalyHere && baseSize
-      ? overlayPlacement(anomalyHere.overlay, baseSize.w, baseSize.h)
+    overlay && baseSize
+      ? overlayPlacement(overlay, baseSize.w, baseSize.h)
       : null
   const readSize = useCallback(
     (img: HTMLImageElement) => {
@@ -183,11 +185,11 @@ export const CameraView = ({
                 aria-hidden="true"
                 draggable={false}
               />
-              {anomalyHere && placement && (
+              {anomalyHere && overlay && placement && (
                 <img
                   key={anomalyHere.id}
                   className="overlay"
-                  src={anomalyHere.overlay.url}
+                  src={overlay.url}
                   alt=""
                   aria-hidden="true"
                   draggable={false}
@@ -272,8 +274,8 @@ export const CameraView = ({
           view={loupeView}
           image={camera.image}
           overlay={
-            anomalyHere && placement
-              ? { url: anomalyHere.overlay.url, ...placement }
+            overlay && placement
+              ? { url: overlay.url, ...placement }
               : undefined
           }
           brightness={brightness}

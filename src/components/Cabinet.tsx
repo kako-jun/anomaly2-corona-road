@@ -5,7 +5,7 @@ import { FlagEvent, useSubtitle } from '../hooks/useSubtitle'
 import { Anomaly, AnomalyCategory, Camera, GameStats } from '../types/game'
 import { CAMERAS, ENDING_BAR_CAMERA } from '../utils/gameConfig'
 import { KNOB_DEFAULT, brightnessFilter, contrastFilter } from '../utils/knob'
-import { forcedFeedGlitch } from '../utils/feedGlitch'
+import { FeedGlitchKind, forcedFeedGlitch } from '../utils/feedGlitch'
 import { parseWear } from '../utils/wear'
 import { CameraStrip } from './CameraStrip'
 import { CameraView } from './CameraView'
@@ -17,9 +17,8 @@ import { ReportButton, ReportDialog } from './ReportPanel'
 // Fixed at module load: changing `?wear=` needs a page reload.
 const WEAR = parseWear(window.location.search)
 
-// Dev only (`?glitch=<kind>`, ignored by a production build): shows one camera feed glitch on every camera, to look at
-// the effects while nothing spawns them yet (#78). The spawner (#77) will replace this with the glitch of the
-// anomaly on the watched camera.
+// Dev only (`?glitch=<kind>`, ignored by a production build): forces one camera feed glitch on every camera, to look at
+// an effect on demand (#78). In play the glitch comes from the running feed_glitch anomaly on the watched camera (#77).
 const FORCED_GLITCH = forcedFeedGlitch(
   window.location.search,
   import.meta.env.DEV
@@ -31,6 +30,8 @@ interface CabinetProps {
   currentCameraIndex: number
   currentCamera: Camera
   anomalyHere?: Anomaly
+  /** The feed glitch of the running feed_glitch anomaly on the watched camera, if any (#77). */
+  feedGlitchHere?: FeedGlitchKind
   /** Ids of the anomalies not reported yet (the spawn hint subtitle waits on them). */
   openAnomalyIds?: string[]
   /** Anomalies out there that nobody has reported yet (drives the REPORT lamp, #344). */
@@ -53,6 +54,7 @@ export const Cabinet = ({
   currentCameraIndex,
   currentCamera,
   anomalyHere,
+  feedGlitchHere,
   openAnomalyIds,
   unreportedCount,
   feedback,
@@ -122,7 +124,9 @@ export const Cabinet = ({
           subtitle={subtitle}
           brightness={brightnessFilter(brightness)}
           contrast={contrastFilter(contrast)}
-          feedGlitch={ending === 'ending' ? undefined : FORCED_GLITCH}
+          feedGlitch={
+            ending === 'ending' ? undefined : (FORCED_GLITCH ?? feedGlitchHere)
+          }
           feedGlitchForced={FORCED_GLITCH !== undefined}
           onSwipe={onSwitch}
           loupeHost={loupeHost}

@@ -1,6 +1,16 @@
 import { Anomaly, GamePhase } from '../types/game'
-import { LedgerEntry } from './anomalyLedger'
-import { DRAW_WEIGHT_EXPONENT, REIWA_DRAW_SHARE } from './gameConfig'
+import { LedgerEntry, NonImageEntry } from './anomalyLedger'
+import {
+  DRAW_WEIGHT_EXPONENT,
+  NON_IMAGE_DRAW_SHARE,
+  REIWA_DRAW_SHARE,
+  checkedShare,
+} from './gameConfig'
+import {
+  hasNonImageEffect,
+  pickFeedGlitchKind,
+  reportScopeOf,
+} from './nonImageEffects'
 
 /** Pick one element of a non-empty list uniformly. */
 const pickOne = <T>(list: readonly T[], rng: () => number): T =>
@@ -40,10 +50,10 @@ const groupBy = <T, K>(list: readonly T[], key: (t: T) => K): Map<K, T[]> => {
 export const REIWA_UNLOCK_FLAG = 'elder3'
 
 /** The entries that may appear now: Reiwa ones only once `reiwaUnlocked` (the elder3 flag is raised). */
-export const spawnableEntries = (
-  entries: readonly LedgerEntry[],
+export const spawnableEntries = <T extends { reiwa?: true }>(
+  entries: readonly T[],
   reiwaUnlocked: boolean
-): readonly LedgerEntry[] =>
+): readonly T[] =>
   reiwaUnlocked ? entries : entries.filter(e => e.reiwa !== true)
 
 /**
@@ -107,3 +117,134 @@ export const createAnomaly = (
     size: entry.size,
   },
 })
+
+/**
+ * Pick the next non-image entry (#77): never one already used this shift, only one the game has an effect for, and
+ * Reiwa ones only when `reiwaUnlocked`. The type is chosen first (weighted like the image draw), then an entry
+ * uniformly. The camera is NOT part of the entry: it is drawn here, uniformly among the free cameras, every time
+ * (kako-jun, #70). Returns null when no entry is left or no camera is free.
+ */
+export const pickNonImageEntry = (
+  entries: readonly NonImageEntry[],
+  freeCameraIds: readonly number[],
+  usedIds: ReadonlySet<string>,
+  rng: () => number = Math.random,
+  exponent: number = DRAW_WEIGHT_EXPONENT,
+  reiwaUnlocked: boolean = false
+): { entry: NonImageEntry; cameraId: number } | null => {
+  if (freeCameraIds.length === 0) return null
+  const candidates = spawnableEntries(entries, reiwaUnlocked).filter(
+    e => !usedIds.has(e.id) && hasNonImageEffect(e)
+  )
+  if (candidates.length === 0) return null
+  const byType = groupBy(candidates, e => e.anomalyType)
+  const entry = pickOne(pickWeighted([...byType.values()], exponent, rng), rng)
+  return { entry, cameraId: pickOne(freeCameraIds, rng) }
+}
+
+/** What the next appearance is: an image entry (its camera is the ledger's) or a non-image one on a camera drawn now. */
+export type Spawn =
+  | { kind: 'image'; entry: LedgerEntry }
+  | { kind: 'non_image'; entry: NonImageEntry; cameraId: number }
+
+export interface SpawnOptions {
+  rng?: () => number
+  exponent?: number
+  reiwaUnlocked?: boolean
+  reiwaShare?: number
+  /** Share of draws that are non-image while both sides have candidates (0-1, validated). */
+  nonImageShare?: number
+}
+
+/**
+ * Pick the next appearance across both kinds, in the same slot rules (a free camera, nothing used twice in a shift).
+ * While both an image and a non-image candidate exist, one extra rng call sends `nonImageShare` of the draws to the
+ * non-image side and the rest to `pickLedgerEntry` (unchanged, Reiwa share included); when only one side has a
+ * candidate it is used with no extra call, so the old fallbacks (nothing left, camera full) are unchanged.
+ * Returns null only when nothing can appear now.
+ */
+export const pickSpawn = (
+  images: readonly LedgerEntry[],
+  nonImages: readonly NonImageEntry[],
+  freeCameraIds: readonly number[],
+  usedIds: ReadonlySet<string>,
+  opts: SpawnOptions = {}
+): Spawn | null => {
+  const {
+    rng = Math.random,
+    exponent = DRAW_WEIGHT_EXPONENT,
+    reiwaUnlocked = false,
+    reiwaShare = REIWA_DRAW_SHARE,
+    nonImageShare = NON_IMAGE_DRAW_SHARE,
+  } = opts
+  checkedShare('nonImageShare', nonImageShare)
+  const imageFirst = () =>
+    pickLedgerEntry(
+      images,
+      freeCameraIds,
+      usedIds,
+      rng,
+      exponent,
+      reiwaUnlocked,
+      reiwaShare
+    )
+  const nonImageFirst = () =>
+    pickNonImageEntry(
+      nonImages,
+      freeCameraIds,
+      usedIds,
+      rng,
+      exponent,
+      reiwaUnlocked
+    )
+  const hasImage = spawnableEntries(images, reiwaUnlocked).some(
+    e => !usedIds.has(e.id) && freeCameraIds.includes(e.cameraId)
+  )
+  const hasNon =
+    freeCameraIds.length > 0 &&
+    spawnableEntries(nonImages, reiwaUnlocked).some(
+      e => !usedIds.has(e.id) && hasNonImageEffect(e)
+    )
+  const nonImageNow = hasNon && (!hasImage || rng() < nonImageShare)
+  if (nonImageNow) {
+    const picked = nonImageFirst()
+    return picked ? { kind: 'non_image', ...picked } : null
+  }
+  const entry = imageFirst()
+  return entry ? { kind: 'image', entry } : null
+}
+
+/** True while an unused entry (of either kind) that could appear when a camera frees up still exists. */
+export const hasUnusedEntry = (
+  images: readonly LedgerEntry[],
+  nonImages: readonly NonImageEntry[],
+  usedIds: ReadonlySet<string>,
+  reiwaUnlocked: boolean
+): boolean =>
+  spawnableEntries(images, reiwaUnlocked).some(e => !usedIds.has(e.id)) ||
+  spawnableEntries(nonImages, reiwaUnlocked).some(
+    e => !usedIds.has(e.id) && hasNonImageEffect(e)
+  )
+
+/**
+ * The running anomaly for a non-image entry on the camera drawn for it. A `feed_glitch` carries the kind drawn now
+ * (it shows only while that camera is watched); `ui_corruption` / `rule_break` are `monitor` scope (reported from any
+ * camera). The camera still holds the slot, so the image rules (one at a time per camera) stay as they are.
+ */
+export const createNonImageAnomaly = (
+  entry: NonImageEntry,
+  cameraId: number,
+  phase: GamePhase,
+  rng: () => number = Math.random
+): Anomaly => {
+  const feedGlitch = pickFeedGlitchKind(entry, rng)
+  return {
+    id: entry.id,
+    category: entry.category,
+    ...(entry.categories?.length ? { categories: entry.categories } : {}),
+    cameraId,
+    phase,
+    scope: reportScopeOf(entry.anomalyType),
+    ...(feedGlitch ? { feedGlitch } : {}),
+  }
+}

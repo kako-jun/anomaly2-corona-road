@@ -3,8 +3,9 @@
  * Each kind is one rendering of a `feed_glitch` ledger entry (prompts/anomalies.yaml, RT-FEED-NN); the ledger is the
  * source of the list of anomalies and this file only says how each one is drawn. The rendering itself is CSS keyed by
  * `data-glitch` on the glass (src/styles/feedGlitch.css), the SVG filters in `FeedGlitchFilters`, and
- * `GlitchCanvas`. Nothing here picks WHEN a glitch appears: no spawning yet (#77), so only the dev-only forced path
- * below can switch one on.
+ * `GlitchCanvas`. A glitch is switched on by an appearing `feed_glitch` anomaly (#77: the camera is drawn at random, the
+ * kind is one of `feedGlitchKindsOf(id)`, see nonImageEffects.ts) and off when it is reported, or by the dev-only forced
+ * path below.
  */
 
 export const FEED_GLITCH_KINDS = [
@@ -49,6 +50,10 @@ export const FEED_GLITCH_LEDGER_ID: Record<FeedGlitchKind, string> = {
   ghost: 'RT-FEED-25',
   fade: 'RT-FEED-26',
 }
+
+/** The kinds that draw one ledger entry (exposure has two, shake has two); empty for an entry no kind draws. */
+export const feedGlitchKindsOf = (ledgerId: string): FeedGlitchKind[] =>
+  FEED_GLITCH_KINDS.filter(k => FEED_GLITCH_LEDGER_ID[k] === ledgerId)
 
 export const isFeedGlitchKind = (v: unknown): v is FeedGlitchKind =>
   typeof v === 'string' && (FEED_GLITCH_KINDS as readonly string[]).includes(v)

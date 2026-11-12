@@ -6,9 +6,11 @@ import react from '@vitejs/plugin-react'
 import { parse as parseYaml } from 'yaml'
 import {
   isGameRecord,
+  isNonImageGameRecord,
   MEMO_IMAGE_DIR,
   parseLedgerRecords,
   toLedgerEntry,
+  toNonImageEntry,
 } from './src/utils/anomalyLedger'
 import { DIALOGUE_FILES, parseDialogueLedger } from './src/utils/dialogueLedger'
 
@@ -56,6 +58,29 @@ const anomalyLedgerPlugin = (): Plugin => ({
   },
 })
 
+const NON_IMAGE_VIRTUAL_ID = 'virtual:non-image-anomalies'
+const NON_IMAGE_RESOLVED_ID = '\0' + NON_IMAGE_VIRTUAL_ID
+
+/**
+ * The non-image side of the ledger for the game (#77): kind=non_image, status=produced entries only (planned ones are
+ * validated but not handed over). Whether an effect exists for each id is checked by a test (src/utils/nonImageEffects.test.ts),
+ * so a produced entry without an effect cannot be merged.
+ */
+const nonImageLedgerPlugin = (): Plugin => ({
+  name: 'non-image-ledger',
+  resolveId(id) {
+    return id === NON_IMAGE_VIRTUAL_ID ? NON_IMAGE_RESOLVED_ID : undefined
+  },
+  load(id) {
+    if (id !== NON_IMAGE_RESOLVED_ID) return undefined
+    this.addWatchFile(LEDGER_PATH)
+    const records = parseLedgerRecords(
+      parseYaml(readFileSync(LEDGER_PATH, 'utf8'))
+    )
+    return `export default ${JSON.stringify(records.filter(isNonImageGameRecord).map(toNonImageEntry))}`
+  },
+})
+
 const DIALOGUE_DIR = resolve(__dirname, 'dialogue')
 const DIALOGUE_VIRTUAL_ID = 'virtual:dialogue'
 const DIALOGUE_RESOLVED_ID = '\0' + DIALOGUE_VIRTUAL_ID
@@ -93,7 +118,12 @@ const dialogueLedgerPlugin = (): Plugin => ({
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), anomalyLedgerPlugin(), dialogueLedgerPlugin()],
+  plugins: [
+    react(),
+    anomalyLedgerPlugin(),
+    nonImageLedgerPlugin(),
+    dialogueLedgerPlugin(),
+  ],
   base: '/',
   server: {
     port: 3000,

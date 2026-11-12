@@ -67,7 +67,8 @@ export const msToGameTime = (ms: number): string => {
   // Clamp to the shift: before 0 -> 22:00, after the end -> stop at 06:00.
   const clamped = Math.min(Math.max(0, ms), DEFAULT_CONFIG.totalDurationMs)
   const elapsedGameMinutes = Math.floor(clamped / 1000)
-  const minuteOfDay = (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
+  const minuteOfDay =
+    (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
   const hours = Math.floor(minuteOfDay / 60)
   const minutes = minuteOfDay % 60
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
@@ -101,6 +102,24 @@ export const DRAW_WEIGHT_EXPONENT = 0.75
  * Applies only while both Reiwa and ordinary candidates exist; the child condition is unchanged.
  */
 export const REIWA_DRAW_SHARE = 0.06
+
+/**
+ * Share of appearances given to non-image anomalies (#77), PROVISIONAL (20%; tune by playing; phase weights are
+ * undecided). While both non-image and image candidates exist, this fraction of draws is a non-image anomaly and the
+ * rest the ordinary image draw (which keeps its own Reiwa share, so Reiwa images become about
+ * `REIWA_DRAW_SHARE * (1 - NON_IMAGE_DRAW_SHARE)` of all draws). Must be within [0, 1]: `checkedShare` throws otherwise.
+ * When only one side has candidates it is used with no extra rng call.
+ */
+export const NON_IMAGE_DRAW_SHARE = 0.2
+
+/** A draw share must be a number in [0, 1]; anything else (NaN, <0, >1) is a bug and throws instead of acting as 0 or 1. */
+export const checkedShare = (name: string, share: number): number => {
+  if (!(share >= 0 && share <= 1)) {
+    throw new Error(`${name} must be within [0, 1], got ${share}`)
+  }
+  return share
+}
+checkedShare('NON_IMAGE_DRAW_SHARE', NON_IMAGE_DRAW_SHARE)
 
 /** Dialogue timing and thresholds (docs/save-data.md and dialogue/README.md describe the behaviour). */
 export const DIALOGUE_CONFIG = {

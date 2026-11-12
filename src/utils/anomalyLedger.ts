@@ -88,6 +88,23 @@ export interface LedgerEntry {
   memoImage?: string
 }
 
+/**
+ * The only fields the game needs from one non-image ledger entry (kind=non_image, status=produced, #77). There is no
+ * camera: the camera is drawn at random each time it appears. Reporting it needs a `category` (the ledger gives
+ * every produced non-image entry one).
+ */
+export interface NonImageEntry {
+  id: string
+  category: AnomalyCategory
+  /** Every correct report (primary first); present only when the ledger lists more than one. */
+  categories?: AnomalyCategory[]
+  anomalyType: NonImageAnomalyType
+  reiwa?: true
+  memoFlags?: MemoFlag[]
+  memo?: MemoText
+  memoImage?: string
+}
+
 const CATEGORY_BY_LEDGER_VALUE: Record<string, AnomalyCategory> = {
   camera: 'Camera',
   object: 'Object',
@@ -406,6 +423,29 @@ export const parseLedgerRecord = (
 export const isGameRecord = (r: LedgerRecord): boolean =>
   r.kind === 'image' && r.status === 'produced'
 
+/** True for the non-image entries the game can show: kind=non_image and status=produced (an effect must exist, see nonImageEffects.ts). */
+export const isNonImageGameRecord = (r: LedgerRecord): boolean =>
+  r.kind === 'non_image' && r.status === 'produced'
+
+/** Trim a validated non_image+produced record to the game's `NonImageEntry` shape. */
+export const toNonImageEntry = (r: LedgerRecord): NonImageEntry => {
+  if (!isNonImageGameRecord(r) || r.category === undefined) {
+    throw new Error(
+      `anomalies.yaml entry "${r.id}": not a produced non_image entry with a category`
+    )
+  }
+  return {
+    id: r.id,
+    category: r.category,
+    ...(r.categories ? { categories: r.categories } : {}),
+    anomalyType: r.anomalyType as NonImageAnomalyType,
+    ...(r.reiwa ? { reiwa: r.reiwa } : {}),
+    ...(r.memoFlags ? { memoFlags: r.memoFlags } : {}),
+    ...(r.memo ? { memo: r.memo } : {}),
+    ...(r.memoImage ? { memoImage: r.memoImage } : {}),
+  }
+}
+
 /** Trim a validated image+produced record to the game's `LedgerEntry` shape. */
 export const toLedgerEntry = (r: LedgerRecord): LedgerEntry => {
   if (
@@ -437,7 +477,9 @@ export const toLedgerEntry = (r: LedgerRecord): LedgerEntry => {
 }
 
 /** Ids of the Reiwa entries (`reiwa` marked), without duplicates, in ledger order. */
-export const reiwaIdsOf = (entries: readonly LedgerEntry[]): string[] => [
+export const reiwaIdsOf = (
+  entries: readonly { id: string; reiwa?: true }[]
+): string[] => [
   ...new Set(entries.filter(e => e.reiwa === true).map(e => e.id)),
 ]
 
