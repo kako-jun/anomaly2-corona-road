@@ -2,10 +2,34 @@
  * Screen transitions (#336): the one place the look and the length are set.
  *
  * The game state is committed at once; only what is shown fades. `fade` dips to black (the old screen goes
- * dark for half of the time, the new one comes up from black for the other half), so the whole change takes
- * `SCREEN_FADE_MS`.
+ * dark, then the new one comes up from black). The length of each half depends on the kind of change and is
+ * decided only in `transitionTiming`.
  */
-export const SCREEN_FADE_MS = 400
+export interface TransitionTiming {
+  /** The old screen goes dark (ms). The new screen is mounted when this is over. */
+  outMs: number
+  /** The new screen comes up from black (ms). */
+  inMs: number
+}
+
+/** Every change except the start of a shift: 200 ms dark + 200 ms up. */
+const DEFAULT_TIMING: TransitionTiming = { outMs: 200, inMs: 200 }
+
+/**
+ * The start of a shift (the note before it -> the monitor): kako-jun wants the monitor to appear slowly out of
+ * the black, about 3x the usual time (#336). The darkening stays short (the note is only left), the rest is the
+ * slow rise: 1200 ms in all.
+ */
+const START_SHIFT_TIMING: TransitionTiming = { outMs: 200, inMs: 1000 }
+
+/** The whole change, for the default timing (kept for the `cross` look and as the reference length). */
+export const SCREEN_FADE_MS = DEFAULT_TIMING.outMs + DEFAULT_TIMING.inMs
+
+/** The timing of the change from screen `from` to screen `to` (the `screenKey`s of `App`). */
+export const transitionTiming = (from: string, to: string): TransitionTiming =>
+  from === 'memo-before' && to === 'shift' ? START_SHIFT_TIMING : DEFAULT_TIMING
+
+export const totalMs = (t: TransitionTiming): number => t.outMs + t.inMs
 
 export type TransitionMode = 'fade' | 'cross' | 'none'
 

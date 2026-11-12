@@ -3,7 +3,12 @@ import { act, fireEvent, render } from '@testing-library/react'
 import { useEffect, useState } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ScreenTransition } from './ScreenTransition'
-import { SCREEN_FADE_MS, parseTransitionMode } from '../utils/screenTransition'
+import {
+  SCREEN_FADE_MS,
+  parseTransitionMode,
+  totalMs,
+  transitionTiming,
+} from '../utils/screenTransition'
 
 const veil = (c: HTMLElement) =>
   c.querySelector('.screen-fade-veil') as HTMLElement
@@ -26,6 +31,24 @@ describe('parseTransitionMode', () => {
     expect(parseTransitionMode('', true)).toBe('fade')
     expect(parseTransitionMode('?transition=FADE', true)).toBe('fade')
     expect(parseTransitionMode('?transition=None', true)).toBe('fade')
+  })
+})
+
+describe('transitionTiming', () => {
+  it('is long only for the start of a shift (note -> monitor), and rises slowly from black', () => {
+    const start = transitionTiming('memo-before', 'shift')
+    expect(totalMs(start)).toBe(SCREEN_FADE_MS * 3)
+    expect(start.inMs).toBeGreaterThan(start.outMs)
+    const others: [string, string][] = [
+      ['title', 'memo-before'],
+      ['shift', 'result'],
+      ['result', 'shift'],
+      ['result', 'title'],
+      ['memo-before', 'title'],
+    ]
+    for (const [from, to] of others) {
+      expect(totalMs(transitionTiming(from, to))).toBe(SCREEN_FADE_MS)
+    }
   })
 })
 
@@ -86,6 +109,32 @@ describe('ScreenTransition (fade)', () => {
     fireEvent.transitionEnd(veil(container))
     container.querySelector('button')?.click()
     expect(onB).toHaveBeenCalledTimes(1)
+  })
+
+  it('puts the timing of the change on the root: slow rise for note -> monitor, usual otherwise', () => {
+    const view = (k: string) => (
+      <ScreenTransition screenKey={k}>
+        <button>{k}</button>
+      </ScreenTransition>
+    )
+    const root = (c: HTMLElement) => c.firstElementChild as HTMLElement
+    const { container, rerender } = render(view('memo-before'))
+    rerender(view('shift'))
+    expect(root(container).style.getPropertyValue('--screen-fade-in-ms')).toBe(
+      '1000ms'
+    )
+    expect(root(container).style.getPropertyValue('--screen-fade-out-ms')).toBe(
+      '200ms'
+    )
+    fireEvent.transitionEnd(veil(container))
+    // still the slow rise while the veil clears
+    expect(root(container).style.getPropertyValue('--screen-fade-in-ms')).toBe(
+      '1000ms'
+    )
+    rerender(view('result'))
+    expect(root(container).style.getPropertyValue('--screen-fade-in-ms')).toBe(
+      '200ms'
+    )
   })
 
   it('goes straight to the latest screen when the key changes again while dark', () => {
