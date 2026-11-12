@@ -109,7 +109,7 @@ body.start-open #root {
   pointer-events: none;
 }
 .start-burst .noise {
-  opacity: 0.2;
+  opacity: 0.35;
 }
 .start-band {
   position: absolute;

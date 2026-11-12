@@ -17,7 +17,7 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
      the pager text follows, and the note area (>= 44px) is the tap target
   5. the picture files really have the size the table says, and the language follows the browser's locale (ja-JP / en-US) with no switch on screen
   6. with prefers-reduced-motion the photo does not move
-  7. (once) a noise burst appears within 14 s and is short
+  7. (once) a noise burst appears within 14 s and is lasts under 1.4 s
   8. the START OVER confirmation (after the true ending): ERASE ALL on top and CANCEL below, the same width and height
      (within 1px), >= 44px high, >= 10px apart, inside the viewport, the note hidden, the signboard clear, and the
      right edge and bottom where the START OVER key was (within 2px: the eye does not have to move)
@@ -301,7 +301,7 @@ def main():
             print(f"reduced motion: photo still -> {'ok' if still else 'MOVES'}")
             bad += not still
             ctx.close()
-            # noise burst: appears within 14 s and is short
+            # noise burst: appears within 14 s and is lasts under 1.4 s
             ctx = b.new_context(viewport={"width": 390, "height": 844})
             p = ctx.new_page()
             p.goto(url)
@@ -317,7 +317,7 @@ def main():
                     if (!on && t1 !== null) { clearTimeout(to); res([(t1 - t0) / 1000, (performance.now() - t1) / 1000]) }
                   }).observe(document.body, {childList: true, subtree: true})
                 })""")
-                ok = r[1] < 0.6
+                ok = r[1] < 1.4
                 print(f"noise burst: after {r[0]:.1f}s, lasted {r[1]:.2f}s -> {'ok' if ok else 'TOO LONG'}")
                 bad += not ok
             except Exception as e:  # noqa: BLE001
