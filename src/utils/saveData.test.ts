@@ -639,12 +639,12 @@ describe('epoch (reset generation)', () => {
     })
     expect(b.load().endingReached).toBe(false)
   })
-  it('rejects an epoch beyond the safe integers as broken', () => {
+  it('rejects an epoch beyond the limit as broken', () => {
     expect(validateSave({ ...save(), epoch: 1e300 })).toBeNull()
     expect(validateSave({ ...save(), epoch: 2 ** 53 })).toBeNull()
-    expect(
-      validateSave(save({ epoch: Number.MAX_SAFE_INTEGER }))
-    ).not.toBeNull()
+    // Past the practical limit (SAVE_LIMITS.epoch) is refused too, so a step by one never lands on a refused value.
+    expect(validateSave(save({ epoch: Number.MAX_SAFE_INTEGER }))).toBeNull()
+    expect(validateSave(save({ epoch: 1_000_000_000 }))).not.toBeNull()
     const bad = JSON.stringify({ ...save(), epoch: 1e300 })
     const { storage, data } = fakeStorage({ [SAVE_KEY]: bad })
     expect(createSaveStore({ getStorage: () => storage }).load()).toEqual(
@@ -765,5 +765,49 @@ describe('memo queues (#325)', () => {
       lastShift: { ...shift, memoFlag: 3, memo: [] },
     })
     expect(dmg?.lastShift).toEqual(shift)
+  })
+})
+
+describe('nextEpoch', () => {
+  it('steps by one and stops at the limit', async () => {
+    const { nextEpoch, SAVE_LIMITS } = await import('./saveData')
+    expect(nextEpoch(0)).toBe(1)
+    expect(nextEpoch(SAVE_LIMITS.epoch)).toBe(SAVE_LIMITS.epoch)
+    expect(nextEpoch(SAVE_LIMITS.epoch - 1)).toBe(SAVE_LIMITS.epoch)
+  })
+})
+
+describe('updateChecked and canPersist follow the latest write', () => {
+  const failing = () => {
+    const { storage } = fakeStorage()
+    let fail = false
+    const wrapped = {
+      ...storage,
+      getItem: (k: string) => storage.getItem(k),
+      removeItem: (k: string) => storage.removeItem(k),
+      setItem: (k: string, v: string) => {
+        if (fail) throw new Error('quota')
+        storage.setItem(k, v)
+      },
+    } as unknown as Storage
+    return { wrapped, setFail: (f: boolean) => (fail = f) }
+  }
+  it('reports each write on its own, and a success clears an earlier failure', () => {
+    const { wrapped, setFail } = failing()
+    const store = createSaveStore({ getStorage: () => wrapped })
+    setFail(true)
+    expect(store.updateChecked(c => ({ ...c, loops: 1 })).saved).toBe(false)
+    expect(store.canPersist()).toBe(false)
+    setFail(false)
+    expect(store.updateChecked(c => ({ ...c, loops: 2 })).saved).toBe(true)
+    expect(store.canPersist()).toBe(true)
+  })
+  it('never clears the flag of a newer-version save it refuses to touch', () => {
+    const { storage } = fakeStorage({
+      [SAVE_KEY]: JSON.stringify({ v: 99 }),
+    })
+    const store = createSaveStore({ getStorage: () => storage })
+    expect(store.updateChecked(c => c).saved).toBe(false)
+    expect(store.canPersist()).toBe(false)
   })
 })

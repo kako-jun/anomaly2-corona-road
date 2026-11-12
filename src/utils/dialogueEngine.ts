@@ -100,17 +100,24 @@ export const applyUsed = (
     const removed = new Set(p.filter(id => !n.includes(id)))
     return [...new Set([...c, ...n])].filter(id => !removed.has(id))
   }
-  const usedLines: Record<string, string[]> = {}
-  for (const k of new Set([
-    ...Object.keys(cur.usedLines),
-    ...Object.keys(next.usedLines),
-  ])) {
-    usedLines[k] = merge(
-      cur.usedLines[k] ?? [],
-      prev.usedLines[k] ?? [],
-      next.usedLines[k] ?? []
-    )
-  }
+  // Own keys only, built with fromEntries: a key like "__proto__" must stay plain data.
+  const own = (o: Record<string, string[]>, k: string): string[] =>
+    Object.prototype.hasOwnProperty.call(o, k) ? o[k] : []
+  const usedLines: Record<string, string[]> = Object.fromEntries(
+    [
+      ...new Set([
+        ...Object.keys(cur.usedLines),
+        ...Object.keys(next.usedLines),
+      ]),
+    ].map(k => [
+      k,
+      merge(
+        own(cur.usedLines, k),
+        own(prev.usedLines, k),
+        own(next.usedLines, k)
+      ),
+    ])
+  )
   return {
     usedLines,
     usedChatter: merge(cur.usedChatter, prev.usedChatter, next.usedChatter),

@@ -57,6 +57,7 @@ function useScreen(): [string, ReactNode] {
     currentCameraIndex,
     currentCamera,
     activeAnomalyHere,
+    unreportedCount,
     feedback,
     ending,
     flagEvent,
@@ -107,6 +108,11 @@ function useScreen(): [string, ReactNode] {
           onStart={() => setMemo(true)}
           language={language}
           endingReached={load().endingReached}
+          onTransferred={() => {
+            setMemo(false)
+            refresh()
+          }}
+          onTransferFailed={refresh}
           onStartOver={() => {
             resetProgress()
             refresh()
@@ -146,6 +152,7 @@ function useScreen(): [string, ReactNode] {
         currentCameraIndex={currentCameraIndex}
         currentCamera={currentCamera}
         anomalyHere={activeAnomalyHere}
+        unreportedCount={unreportedCount}
         feedback={feedback}
         gameTime={gameTime}
         flagEvent={flagEvent}

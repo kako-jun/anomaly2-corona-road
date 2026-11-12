@@ -1884,3 +1884,29 @@
     padding: 0;
   }
 }
+
+/* ===== REPORT lamp blinks while many anomalies are unreported (#344) ===== */
+.lamp-big.alert {
+  animation: lamp-alert 1s steps(1, end) infinite;
+}
+
+@keyframes lamp-alert {
+  0%,
+  100% {
+    background-image: url('/ui/lamp-red-on.webp');
+    box-shadow: 0 0 12px 3px #ff3a2d99;
+  }
+  50% {
+    background-image: url('/ui/lamp-red-off.webp');
+    box-shadow: none;
+  }
+}
+
+/* Reduced motion: no blinking, the lamp stays lit as a fixed emphasis. */
+@media (prefers-reduced-motion: reduce) {
+  .lamp-big.alert {
+    animation: none;
+    background-image: url('/ui/lamp-red-on.webp');
+    box-shadow: 0 0 12px 3px #ff3a2d99;
+  }
+}

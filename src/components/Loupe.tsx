@@ -17,6 +17,8 @@ interface LoupeProps {
   }
   brightness: number
   contrast: number
+  /** The noise is switched off for a while (#342): the grain in the loupe goes with the monitor's. */
+  noiseOff?: boolean
 }
 
 /**
@@ -32,6 +34,7 @@ export const Loupe = ({
   overlay,
   brightness,
   contrast,
+  noiseOff,
 }: LoupeProps) => {
   const d = LOUPE.DIAMETER_PX
   const frameStyle: CSSProperties = {
@@ -48,7 +51,12 @@ export const Loupe = ({
     '--zoom': LOUPE.ZOOM,
   } as CSSProperties
   return createPortal(
-    <div className="loupe" style={style} data-testid="loupe" aria-hidden="true">
+    <div
+      className={noiseOff ? 'loupe noise-off' : 'loupe'}
+      style={style}
+      data-testid="loupe"
+      aria-hidden="true"
+    >
       <div className="loupe__frame" style={frameStyle}>
         <img src={image} alt="" draggable={false} />
         <img className="glow" src={image} alt="" draggable={false} />
