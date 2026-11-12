@@ -4,7 +4,7 @@ dialogues:
     tone: light
     when: { result: dawn }
     lines:
-      - { who: M, text: 'はい　朝ですね　引き継ぎに行ってきますよ', en: "It's morning. I'll go hand over to the next shift." }
+      - { who: M, text: 'はい　朝です3ね　引き継ぎに行ってきますよ', en: "It's morning. I'll go hand over to the next shift." }
       - { who: A, text: 'やっと朝だね　お疲れさま　気をつけて帰って', en: "Morning at last. Good work. Get home safe." }
   - id: closing-dawn-02
     tone: light
