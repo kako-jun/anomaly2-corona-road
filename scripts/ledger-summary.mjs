@@ -100,7 +100,7 @@ const withArray = images.filter(r => r.categories?.length)
 const withCamera = images.filter(r => all(r).includes('Camera'))
 const hit = images.reduce((s, r) => s + nonCamera(r) / 4, 0) / images.length
 console.log(
-  `\ncategory as an array (produced image entries: ${images.length})\n  category is an array  ${withArray.length}\n  camera also correct   ${withCamera.length}`
+  `\ncategory as an array (produced image entries: ${images.length})\n  category is an array  ${withArray.length}\n  Camera listed         ${withCamera.length}`
 )
 printCounts('  correct categories per entry', r =>
   r.kind === 'image' && r.status === 'produced'
