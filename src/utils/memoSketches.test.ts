@@ -14,10 +14,10 @@ const records = parseLedgerRecords(
 /**
  * The memo scribbles are fetched only when a result shows one (never preloaded), so they are NOT part of the UI image
  * budget (800KB, uiAssets.test.ts: what is preloaded + the fonts). They have a budget of their own, one place:
- *  - per file: 32KB. The largest of the 30 drawings is about 22KB (the same line-art style, 384px at most, margins trimmed);
- *    32KB leaves about 1.4x for a busier drawing and still fails a stray photo or an untrimmed 384px lossless file.
- *  - in all: 700KB. 50 drawings are planned (30 now + 20, Issue #325); at the measured average of about 11KB that is about
- *    560KB, and 700KB is 14KB a drawing, 1.25x of that: room for the 20 to run a little larger, not for a different kind of image.
+ *  - per file: 32KB. The largest of the 50 drawings is about 22KB (the same line-art style, 384px at most, margins
+ *    trimmed); 32KB leaves about 1.4x for a busier drawing and still fails a stray photo or an untrimmed lossless file.
+ *  - in all: 700KB. The 50 drawings planned in Issue #325 are all connected and measure about 546KB (about 11KB each);
+ *    700KB is 1.28x of that: room for a few more or a little larger ones, not for a different kind of image.
  */
 const MAX_SKETCH_BYTES = 32 * 1024
 const MAX_SKETCHES_TOTAL_BYTES = 700 * 1024

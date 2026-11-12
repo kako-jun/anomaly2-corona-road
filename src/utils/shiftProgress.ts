@@ -6,7 +6,7 @@ import { DEFAULT_CONFIG } from './gameConfig'
 import { stageOf } from './investigationNote'
 import { MEMO_INDEX } from './memoIndex'
 import { markShown, pickMemos, queueMemos } from './memoSelect'
-import { emptySave, update } from './saveData'
+import { emptySave, nextEpoch, update } from './saveData'
 import type { LastShift, SaveData } from './saveData'
 
 /**
@@ -100,7 +100,7 @@ export const recordEndingReached = (): void => {
 export const resetProgress = (): void => {
   update(cur => ({
     ...emptySave(),
-    epoch: cur.epoch + 1,
+    epoch: nextEpoch(cur.epoch),
     ...(cur.settings ? { settings: cur.settings } : {}),
   }))
 }

@@ -107,6 +107,11 @@ function useScreen(): [string, ReactNode] {
           onStart={() => setMemo(true)}
           language={language}
           endingReached={load().endingReached}
+          onTransferred={() => {
+            setMemo(false)
+            refresh()
+          }}
+          onTransferFailed={refresh}
           onStartOver={() => {
             resetProgress()
             refresh()

@@ -192,8 +192,8 @@ export const STAGES: Record<Stage, StageText> = {
 
 /**
  * Hypothesis memos (#325): a flag that rises when a ledger anomaly marked with it (`memo_flag`, or `reiwa: true`
- * for `reiwa`) is reported, and the one line it adds to the end-of-night memo. The wording is a draft awaiting
- * kako-jun's approval. `knownFrom` gates it exactly like every other sentence: below that stage the flag stays
+ * for `reiwa`) is reported, and the one line it adds to the end-of-night memo. The wording is confirmed
+ * (decided by kako-jun 2026-11-12, #325/#344). `knownFrom` gates it exactly like every other sentence: below that stage the flag stays
  * waiting (not lost) and is shown at the first result at or after it. The stage is the earliest the existing net
  * (`LEARNED` in investigationNotes.test.ts) lets these words appear: story.md calls the shutter line a working
  * hypothesis and names Showa as the era of the oddities without saying at which point the detective knows either,
