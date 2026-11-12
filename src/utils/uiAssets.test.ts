@@ -65,3 +65,25 @@ describe('investigation note assets (#297)', () => {
     ).toBeLessThanOrEqual(800 * 1024)
   })
 })
+
+describe('PWA (#388)', () => {
+  const config = readFileSync('vite.config.ts', 'utf8')
+  it('the page declares the theme colour of the icon rim, equal to the manifest colours', () => {
+    expect(readFileSync('index.html', 'utf8')).toContain(
+      '<meta name="theme-color" content="#030a04" />'
+    )
+    expect(config.match(/(theme|background)_color: '#030a04'/g)).toHaveLength(2)
+  })
+  it('the manifest icons exist in public (any purpose only: no maskable, no SVG)', () => {
+    for (const f of ['icon-192.webp', 'icon-512.webp'])
+      expect(statSync(`public/${f}`).size).toBeGreaterThan(0)
+    expect(config).toContain("src: '/icon-192.webp'")
+    expect(config).toContain("src: '/icon-512.webp'")
+    expect(config).not.toMatch(/maskable|src: '[^']*\.svg'/)
+  })
+  it('the camera pictures are not precached (runtime cache only); the shell is', () => {
+    expect(config).toContain("handler: 'CacheFirst'")
+    expect(config).not.toMatch(/globPatterns[\s\S]*'images\/\*/)
+    expect(config).toContain("navigateFallback: '/index.html'")
+  })
+})

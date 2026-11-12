@@ -4,6 +4,12 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { SAVE_KEY } from './utils/saveData'
+import {
+  DISMISS_KEY,
+  INSTALL_DELAY_MS,
+  initInstallPrompt,
+  resetInstallPromptForTest,
+} from './utils/installPrompt'
 
 // A fresh save store per test (the real one keeps the last save in memory); the App itself is imported once.
 vi.mock('./utils/saveData', async importOriginal => {
@@ -227,5 +233,118 @@ describe('App: title -> investigation note (#297) and the language from the brow
     render(<App />)
     await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
     expect(screen.queryByText('CASE MEMO')).toBeNull()
+  })
+})
+
+const SETTLE = { timeout: INSTALL_DELAY_MS + 2000 }
+
+describe('App: the install suggestion (#388)', { timeout: 20000 }, () => {
+  const fireInstall = () =>
+    act(() => {
+      window.dispatchEvent(
+        Object.assign(new Event('beforeinstallprompt', { cancelable: true }), {
+          prompt: async () => {},
+          userChoice: Promise.resolve({ outcome: 'accepted' }),
+        })
+      )
+    })
+  let stop: () => void
+  beforeEach(async () => {
+    localStorage.clear()
+    resetStore()
+    resetInstallPromptForTest()
+    stop = initInstallPrompt()
+    // The title's noise burst (a few seconds in) draws on a canvas, which jsdom does not have.
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null)
+    game.initial = 'idle'
+    window.history.pushState({}, '', '/?transition=none')
+    vi.stubGlobal('navigator', { language: 'en-US', languages: ['en-US'] })
+  })
+  afterEach(() => {
+    stop()
+    vi.unstubAllGlobals()
+  })
+
+  it('is not shown the instant the title appears, even for a returning player with a held prompt; it comes a few seconds later', async () => {
+    seed({ loops: 5 })
+    render(<App />)
+    fireInstall()
+    expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
+    expect(
+      await screen.findByRole('button', { name: 'LATER' }, SETTLE)
+    ).toBeInTheDocument()
+  })
+
+  it('is not shown on the investigation note before a shift', async () => {
+    seed({ loops: 5 })
+    render(<App />)
+    fireInstall()
+    await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
+    await act(async () => {
+      await new Promise(r => setTimeout(r, INSTALL_DELAY_MS + 200))
+    })
+    expect(screen.getByText('CASE MEMO')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
+  })
+
+  it('appears on the title after the first night is closed, and LATER hides it for 7 days', async () => {
+    seed({ loops: 9, endingReached: true })
+    game.initial = 'win'
+    render(<App />)
+    fireInstall()
+    // On the result screen it is not offered, however long it stays.
+    await act(async () => {
+      await new Promise(r => setTimeout(r, INSTALL_DELAY_MS + 200))
+    })
+    expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
+    await userEvent.click(screen.getByRole('button', { name: 'Back to title' }))
+    expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
+    expect(
+      await screen.findByRole('button', { name: 'ADD' }, SETTLE)
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'LATER' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'LATER' }))
+    expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
+    expect(Number(localStorage.getItem(DISMISS_KEY))).toBeGreaterThan(0)
+  })
+
+  it('a first-time player (no night finished) is not offered it even after a result', async () => {
+    seed({ loops: 0, endingReached: true })
+    game.initial = 'win'
+    render(<App />)
+    fireInstall()
+    await userEvent.click(screen.getByRole('button', { name: 'Back to title' }))
+    await act(async () => {
+      await new Promise(r => setTimeout(r, INSTALL_DELAY_MS + 200))
+    })
+    expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
+  })
+
+  it('iOS gets the manual steps (Japanese in a Japanese browser)', async () => {
+    seed({ loops: 9, endingReached: true })
+    game.initial = 'win'
+    vi.stubGlobal('navigator', {
+      language: 'ja-JP',
+      languages: ['ja-JP'],
+      userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)',
+      platform: 'iPhone',
+      maxTouchPoints: 5,
+    })
+    render(<App />)
+    await userEvent.click(screen.getByRole('button', { name: 'タイトルへ' }))
+    expect(
+      await screen.findByText(/ホーム画面に追加/, {}, SETTLE)
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '追加' })).toBeNull()
+    expect(screen.getByRole('button', { name: 'あとで' })).toBeInTheDocument()
+  })
+
+  it('ERASE ALL keeps the dismissal (it is not progress)', async () => {
+    localStorage.setItem(DISMISS_KEY, String(Date.now()))
+    seed({ loops: 9, endingReached: true })
+    render(<App />)
+    await userEvent.click(screen.getByRole('button', { name: 'START OVER' }))
+    await userEvent.click(screen.getByRole('button', { name: 'ERASE ALL' }))
+    expect(localStorage.getItem(DISMISS_KEY)).not.toBeNull()
   })
 })

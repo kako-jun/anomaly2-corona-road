@@ -743,7 +743,10 @@
   .cabinet {
     /* the picture's height: the viewport height, but never so tall that the 3:4 frame leaves the control column narrower than --col-min (tall screens such as 900x1000); (100vw - 8px*2 padding - 14px gap - --col-min) is the frame width left over */
     --col-min: 340px;
-    --tube-h: min(var(--vh) - 16px, (100vw - 30px - var(--col-min)) * 1679 / 1246);
+    --tube-h: min(
+      var(--vh) - 16px,
+      (100vw - 30px - var(--col-min)) * 1679 / 1246
+    );
     max-width: none;
     width: 100%;
     min-height: var(--vh);
@@ -1922,4 +1925,57 @@
     background-image: url('/ui/lamp-red-on.webp');
     box-shadow: 0 0 12px 3px #ff3a2d99;
   }
+}
+
+/* ===== Install suggestion (#388): a bar under the title, LATER always visible =====
+   It sits in the page flow under the start screen, and the start screen gives up exactly that height
+   (:has), so the photo, the notes and the START key are never covered, only scaled to the room left. */
+:root {
+  --install-bar-h: calc(60px + env(safe-area-inset-bottom, 0px));
+}
+#root:has(.install-banner) .start-screen {
+  height: calc(var(--vh) - var(--install-bar-h));
+}
+.install-banner {
+  position: relative;
+  flex: 0 0 100%;
+  height: var(--install-bar-h);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px calc(env(safe-area-inset-bottom, 0px)) 12px;
+  box-sizing: border-box;
+  color: #e8d9a0;
+  background: #030a04;
+  border-top: 1px solid rgb(232 217 160 / 0.35);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.install-banner[hidden] {
+  display: none;
+}
+.install-banner-text {
+  flex: 1 1 auto;
+  margin: 0;
+  line-height: 1.4;
+}
+.install-banner-keys {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 6px;
+}
+.install-banner-key {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  font: inherit;
+  letter-spacing: 0.08em;
+  color: #e8d9a0;
+  background: #1a1d17;
+  border: 1px solid rgb(232 217 160 / 0.5);
+  cursor: pointer;
+}
+.install-banner-key:focus-visible {
+  outline: 2px solid #e8d9a0;
+  outline-offset: 2px;
 }
