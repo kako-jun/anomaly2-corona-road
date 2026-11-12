@@ -5,7 +5,6 @@ import { makeCameras } from '../test/factories'
 import { LOUPE } from '../utils/loupe'
 import {
   KNOCK_GAP_MS,
-  NOISE_HINT,
   NOISE_OFF_MS,
   SHAKE_COUNT,
   SHAKE_THRESHOLD,
@@ -60,8 +59,6 @@ const tap = (el: HTMLElement, x = 300, y = 300, id = 1) => {
   fireEvent.pointerDown(el, ev)
   fireEvent.pointerUp(el, ev)
 }
-const hint = (c: HTMLElement) =>
-  c.querySelector('.noise-hint')?.textContent ?? null
 const isOff = (glass: HTMLElement) => glass.classList.contains('noise-off')
 
 const setReduced = (on: boolean) =>
@@ -90,40 +87,35 @@ afterEach(() => {
 })
 
 describe('noise off by double tap (#342)', () => {
-  it('a single tap does nothing; the always-visible hint shows', () => {
+  it('a single tap does nothing, and no guidance text is drawn (kako-jun: no label)', () => {
     const { glass, view } = setup()
     tap(glass)
     act(() => void vi.advanceTimersByTime(1000))
     expect(isOff(glass)).toBe(false)
     expect(onSwipe).not.toHaveBeenCalled()
-    expect(hint(view.container)).toBe(NOISE_HINT.en)
+    expect(view.container.querySelector('.noise-hint')).toBeNull()
   })
 
   it('a double tap switches the noise off for NOISE_OFF_MS, counts down, then on again', () => {
-    const { glass, view } = setup()
+    const { glass } = setup()
     tap(glass)
     act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS / 2))
     tap(glass, 305, 302)
     expect(isOff(glass)).toBe(true)
-    expect(hint(view.container)).toBe('Noise & lines off 10')
     act(() => void vi.advanceTimersByTime(3000))
-    expect(hint(view.container)).toBe('Noise & lines off 7')
     act(() => void vi.advanceTimersByTime(NOISE_OFF_MS - 3000 - 1))
     expect(isOff(glass)).toBe(true)
     act(() => void vi.advanceTimersByTime(1000))
     expect(isOff(glass)).toBe(false)
-    expect(hint(view.container)).toBe(NOISE_HINT.en)
   })
 
   it('knocking again resets the remaining time to the full length (not an extension)', () => {
-    const { glass, view } = setup()
+    const { glass } = setup()
     tap(glass)
     tap(glass)
     act(() => void vi.advanceTimersByTime(6000))
-    expect(hint(view.container)).toBe('Noise & lines off 4')
     tap(glass)
     tap(glass)
-    expect(hint(view.container)).toBe('Noise & lines off 10')
     act(() => void vi.advanceTimersByTime(NOISE_OFF_MS - 500))
     expect(isOff(glass)).toBe(true)
     act(() => void vi.advanceTimersByTime(1000))
@@ -245,13 +237,12 @@ describe('noise off by double tap (#342)', () => {
     expect(vi.getTimerCount()).toBe(0)
   })
 
-  it('prefers-reduced-motion: nothing happens and no hint is shown', () => {
+  it('prefers-reduced-motion: nothing happens', () => {
     setReduced(true)
-    const { glass, view } = setup()
+    const { glass } = setup()
     tap(glass)
     tap(glass)
     expect(isOff(glass)).toBe(false)
-    expect(hint(view.container)).toBeNull()
   })
 })
 

@@ -1,5 +1,3 @@
-import type { Language } from './language'
-
 /**
  * Shaking or knocking the monitor switches the noise grain off for a while (#342). Every number kako-jun tunes by
  * feel lives here, in this one place.
@@ -17,19 +15,6 @@ export const SHAKE_MIN_GAP_MS = 80
 export const KNOCK_GAP_MS = 400
 /** ... and within this many px of it. */
 export const KNOCK_SLOP_PX = 40
-
-/** The always-visible hint (no hidden operations). Follows the browser's language, like LOUPE_HINT. */
-export const NOISE_HINT: Record<Language, string> = {
-  ja: '揺らす・2回タップでノイズと横線消去',
-  en: 'Shake / 2x tap: noise+lines off',
-}
-/** The hint while the noise is off: the seconds left. Half-width digits: a machine read-out, not the script's text. */
-export const noiseOffLabel = (lang: Language, seconds: number): string =>
-  lang === 'ja' ? `ノイズ・横線除去 ${seconds}` : `Noise & lines off ${seconds}`
-
-/** The seconds to show for `leftMs` ms left (rounded up, so 10 shows first and 1 shows last); 0 when it is over. */
-export const secondsLeft = (leftMs: number): number =>
-  leftMs <= 0 ? 0 : Math.ceil(leftMs / 1000)
 
 /** The strength of one devicemotion sample: gravity-free acceleration if the device gives it, else the gravity-included one minus 1 g. */
 export const motionMagnitude = (e: {

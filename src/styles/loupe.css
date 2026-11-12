@@ -144,23 +144,3 @@
 .loupe.noise-off .scan {
   opacity: 0;
 }
-
-/* the always-visible hint for it, on the upper band of the monitor's frame (out of the flow), like .loupe-hint below */
-.bezel > .noise-hint {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 3.4%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 0.6rem; /* narrower than .loupe-hint: the longer text must fit the smallest frame (320 px wide) */
-  letter-spacing: 0;
-  color: #4a4130;
-  text-shadow: 0 1px 0 #fff6;
-  white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
-}

@@ -4,7 +4,6 @@ import { useLoupeGesture } from '../hooks/useLoupeGesture'
 import { useNoiseOff } from '../hooks/useNoiseOff'
 import { currentLanguage } from '../utils/language'
 import { LOUPE_HINT } from '../utils/loupe'
-import { NOISE_HINT, noiseOffLabel } from '../utils/noiseOff'
 import { Loupe } from './Loupe'
 import { Anomaly, Camera } from '../types/game'
 import { Feedback } from '../hooks/useGameState'
@@ -142,7 +141,7 @@ export const CameraView = ({
         <div className="edge-mark edge-mark--prev" aria-hidden="true" />
         <div className="edge-mark edge-mark--next" aria-hidden="true" />
         <div
-          className={cx('glass', noise.seconds > 0 && 'noise-off')}
+          className={cx('glass', noise.off && 'noise-off')}
           style={style}
           ref={glassRef}
         >
@@ -229,13 +228,6 @@ export const CameraView = ({
         <div className="loupe-hint" aria-hidden="true">
           {LOUPE_HINT[currentLanguage()]}
         </div>
-        {!noise.reduced && (
-          <div className="noise-hint">
-            {noise.seconds > 0
-              ? noiseOffLabel(currentLanguage(), noise.seconds)
-              : NOISE_HINT[currentLanguage()]}
-          </div>
-        )}
       </div>
       {loupeHost && loupeView && (
         <Loupe
@@ -249,7 +241,7 @@ export const CameraView = ({
           }
           brightness={brightness}
           contrast={contrast}
-          noiseOff={noise.seconds > 0}
+          noiseOff={noise.off}
         />
       )}
     </section>

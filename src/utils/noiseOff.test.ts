@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 import {
   KNOCK_GAP_MS,
   KNOCK_SLOP_PX,
-  NOISE_HINT,
   SHAKE_COUNT,
   SHAKE_MIN_GAP_MS,
   SHAKE_THRESHOLD,
@@ -10,8 +9,6 @@ import {
   createShakeDetector,
   isKnock,
   motionMagnitude,
-  noiseOffLabel,
-  secondsLeft,
 } from './noiseOff'
 
 describe('shake detector', () => {
@@ -94,21 +91,5 @@ describe('knock (double tap)', () => {
     expect(isKnock(t0, { t: 1001 + KNOCK_GAP_MS, x: 100, y: 100 })).toBe(false)
     expect(isKnock(t0, { t: 1100, x: 100 + KNOCK_SLOP_PX, y: 100 })).toBe(true)
     expect(isKnock(t0, { t: 1100, x: 101 + KNOCK_SLOP_PX, y: 100 })).toBe(false)
-  })
-})
-
-describe('labels', () => {
-  it('counts the seconds up, 0 when over', () => {
-    expect(secondsLeft(10000)).toBe(10)
-    expect(secondsLeft(9001)).toBe(10)
-    expect(secondsLeft(1)).toBe(1)
-    expect(secondsLeft(0)).toBe(0)
-    expect(secondsLeft(-5)).toBe(0)
-  })
-  it('has both languages', () => {
-    expect(NOISE_HINT.ja).toBeTruthy()
-    expect(NOISE_HINT.en).toBeTruthy()
-    expect(noiseOffLabel('ja', 7)).toBe('ノイズ・横線除去 7')
-    expect(noiseOffLabel('en', 7)).toBe('Noise & lines off 7')
   })
 })

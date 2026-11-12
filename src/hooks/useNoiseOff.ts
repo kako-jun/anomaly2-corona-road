@@ -3,7 +3,6 @@ import {
   NOISE_OFF_MS,
   createShakeDetector,
   motionMagnitude,
-  secondsLeft,
 } from '../utils/noiseOff'
 
 const reducedMotion = () =>
@@ -14,34 +13,26 @@ type MotionEventCtor = {
 }
 
 /**
- * "The noise is off for NOISE_OFF_MS" (#342): `seconds` is the whole seconds left (0 = the noise is on), `trigger` starts
- * it or restarts the countdown. With prefers-reduced-motion the noise does not move to begin with, so trigger does nothing.
+ * "The noise is off for NOISE_OFF_MS" (#342): `off` is true meanwhile, `trigger` starts it or restarts the 10 s (no adding up).
+ * With prefers-reduced-motion the noise does not move to begin with, so trigger does nothing.
  * `askMotion` is for a tap handler: it (once) starts listening for a shake, asking iOS for permission inside that tap.
  * Nothing is saved.
  */
 export const useNoiseOff = () => {
-  const [seconds, setSeconds] = useState(0)
-  const endAt = useRef(0)
+  const [off, setOff] = useState(false)
   const timer = useRef(0)
-
-  const tick = useCallback(() => {
-    const s = secondsLeft(endAt.current - performance.now())
-    setSeconds(s)
-    if (s === 0) {
-      window.clearInterval(timer.current)
-      timer.current = 0
-    }
-  }, [])
 
   const trigger = useCallback(() => {
     if (reducedMotion()) return
-    endAt.current = performance.now() + NOISE_OFF_MS
-    window.clearInterval(timer.current)
-    timer.current = window.setInterval(tick, 250)
-    tick()
-  }, [tick])
+    window.clearTimeout(timer.current)
+    setOff(true)
+    timer.current = window.setTimeout(() => {
+      timer.current = 0
+      setOff(false)
+    }, NOISE_OFF_MS)
+  }, [])
 
-  useEffect(() => () => window.clearInterval(timer.current), [])
+  useEffect(() => () => window.clearTimeout(timer.current), [])
 
   // shake: listen from the start where no permission is needed; on iOS only after a tap has been granted
   const listening = useRef<(() => void) | null>(null)
@@ -103,5 +94,5 @@ export const useNoiseOff = () => {
       })
   }, [listen])
 
-  return { seconds, trigger, askMotion, reduced: reducedMotion() }
+  return { off, trigger, askMotion }
 }
