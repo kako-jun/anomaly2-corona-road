@@ -156,6 +156,28 @@ describe('retro.css', () => {
         expect(v).not.toMatch(/break-word|anywhere|break-all/)
   })
 
+  it('blinks the REPORT lamp only via .alert, and keeps it lit (no animation) under reduced motion (#344)', () => {
+    expect(
+      decls('.lamp-big.alert', 'animation').some(v => v.includes('lamp-alert'))
+    ).toBe(true)
+    let steady = false
+    root_.walkAtRules('media', media => {
+      if (!media.params.includes('prefers-reduced-motion: reduce')) return
+      media.walkRules('.lamp-big.alert', rule => {
+        let none = false
+        let lit = false
+        rule.walkDecls('animation', d => {
+          if (d.value === 'none') none = true
+        })
+        rule.walkDecls('background-image', d => {
+          if (d.value.includes('lamp-red-on')) lit = true
+        })
+        if (none && lit) steady = true
+      })
+    })
+    expect(steady).toBe(true)
+  })
+
   it('stops the clock animation when reduced motion is requested', () => {
     expect(
       decls('.clock-colon', 'animation').some(

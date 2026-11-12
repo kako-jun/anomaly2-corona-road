@@ -57,6 +57,7 @@ function useScreen(): [string, ReactNode] {
     currentCameraIndex,
     currentCamera,
     activeAnomalyHere,
+    unreportedCount,
     feedback,
     ending,
     flagEvent,
@@ -151,6 +152,7 @@ function useScreen(): [string, ReactNode] {
         currentCameraIndex={currentCameraIndex}
         currentCamera={currentCamera}
         anomalyHere={activeAnomalyHere}
+        unreportedCount={unreportedCount}
         feedback={feedback}
         gameTime={gameTime}
         flagEvent={flagEvent}
