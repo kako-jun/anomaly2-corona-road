@@ -924,6 +924,8 @@ describe('the real ledger keeps category well-formed (#347)', () => {
       'AR-06-wall-same-poster',
       'AR-02-shutter-crayon-drawings',
       'AR-07-pictogram-flip',
+      'AR-06-teru-teru-bozu',
+      'AR-06-plant-doll-creature',
     ]) {
       expect(catsOf(id), id).toContain('Person')
     }
