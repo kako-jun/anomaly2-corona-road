@@ -26,6 +26,8 @@ export interface ReportNote {
   height: number
   /** The words, read aloud (sr-only, `aria-describedby` of the key); the picture itself has `alt=""`. */
   text: string
+  /** The bullet lines (shown as plain text if the picture cannot be read). */
+  lines: string[]
 }
 
 const sentence = (lines: string[], language: Language): string =>
@@ -43,6 +45,7 @@ export const reportNote = (
     width: d.width,
     height: d.height,
     text: sentence(d.lines, language),
+    lines: d.lines,
   }
 }
 

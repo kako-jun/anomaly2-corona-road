@@ -148,7 +148,7 @@ describe('ReportDialog', () => {
       Object: '物が出る、消える。物が変わる。床や壁、天井の物も。',
       Environment: '光の変化。床、壁、天井の面。扉や建物のつくり。',
       Person:
-        '人、人影、体の一部。人の痕跡。人の形（人形、絵、影）。動物は含まない。',
+        '人、人影、体の一部。人の痕跡。人の形(人形、絵、影)。動物は含まない。',
       Surreal: 'ありえないこと。映るはずのものが映らない。',
     }
     const CASES = [
@@ -183,6 +183,28 @@ describe('ReportDialog', () => {
         }
       )
     })
+
+    it.each(['ja', 'en'] as const)(
+      'when the picture cannot be read (%s) the same words show as visible text, no broken image',
+      language => {
+        const { dialog } = setupDialog(language)
+        const img = dialog.querySelector('img') as HTMLImageElement
+        const box = img.closest('.cat-note') as HTMLElement
+        fireEvent.error(img)
+        expect(box.querySelector('img')).toBeNull()
+        const text = box.querySelector('.cat-note-text') as HTMLElement
+        expect(text).not.toBeNull()
+        expect(text.textContent).toContain(
+          language === 'ja'
+            ? '映像そのものが乱れる'
+            : 'The whole picture glitches'
+        )
+        // the sr-only words stay, and the key still points at them
+        expect(
+          document.getElementById('catHint-Camera')?.textContent
+        ).toBeTruthy()
+      }
+    )
 
     it('follows the browser language by default and keeps the keys in English', () => {
       const lang = vi.spyOn(window.navigator, 'languages', 'get')

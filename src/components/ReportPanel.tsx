@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 import { AnomalyCategory } from '../types/game'
 import { cx } from '../utils/cx'
 import { currentLanguage, type Language } from '../utils/language'
@@ -50,6 +50,44 @@ export const ReportButton = ({
     </div>
   </div>
 )
+
+/**
+ * The sticky note: a picture (#346). If the picture cannot be read (offline, 404) the same words are shown as plain
+ * visible text on a paper-coloured box, never a broken-image icon. The words for assistive technology are the sr-only
+ * span either way.
+ */
+const NoteImage = ({
+  note,
+  category,
+}: {
+  note: ReturnType<typeof reportNote>
+  category: AnomalyCategory
+}) => {
+  const [failed, setFailed] = useState(false)
+  return (
+    <span className="cat-note">
+      {failed ? (
+        <span className="cat-note-text" aria-hidden="true">
+          {note.lines.map(line => (
+            <span key={line}>{line}</span>
+          ))}
+        </span>
+      ) : (
+        <img
+          src={note.src}
+          width={note.width}
+          height={note.height}
+          alt=""
+          draggable={false}
+          onError={() => setFailed(true)}
+        />
+      )}
+      <span className="cat-sr-only" id={`catHint-${category}`}>
+        {note.text}
+      </span>
+    </span>
+  )
+}
 
 interface ReportDialogProps {
   /** The language of the notes (default: the browser's, decided once at start; the keys are always English). */
@@ -136,18 +174,7 @@ export const ReportDialog = ({
                   {category.toUpperCase()}
                 </button>
                 {/* The sticky note is a picture (#346); its words are read from the sr-only text. */}
-                <span className="cat-note">
-                  <img
-                    src={note.src}
-                    width={note.width}
-                    height={note.height}
-                    alt=""
-                    draggable={false}
-                  />
-                  <span className="cat-sr-only" id={`catHint-${category}`}>
-                    {note.text}
-                  </span>
-                </span>
+                <NoteImage note={note} category={category} />
               </div>
             )
           })}

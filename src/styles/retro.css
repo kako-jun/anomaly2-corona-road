@@ -1357,6 +1357,26 @@
   height: auto;
 }
 
+/* the picture could not be read: the same words, plain, on a paper-coloured box */
+.cat-note-text {
+  display: block;
+  padding: 8px 8px 6px;
+  font-family: 'NoteYomogi', 'Caveat', 'Segoe Print', cursive;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  color: var(--ink);
+  background: #e6d7a3;
+  border-radius: 1px 2px 2px 1px;
+}
+
+.cat-note-text > span {
+  display: block;
+}
+
+.cat-note-text > span::before {
+  content: '\2022\00a0';
+}
+
 .cat-sr-only {
   position: absolute;
   width: 1px;

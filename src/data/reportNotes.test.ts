@@ -86,6 +86,22 @@ describe('report notes table (#346)', () => {
     }
   })
 
+  it('keeps the words that the category definitions of prompts/README.md hinge on (both languages)', () => {
+    const words = (id: string, l: (typeof LANGS)[number]) => {
+      const n = REPORT_NOTE_TABLE.notes.find(x => x.id === id)
+      return n ? n[l].lines.join('\n') : ''
+    }
+    // person: animals are not people; object / environment: floor, wall, ceiling; camera: a surface across the view
+    expect(words('Person', 'ja')).toContain('動物は含まない')
+    expect(words('Person', 'en')).toContain('Not animals')
+    expect(words('Object', 'ja')).toContain('床や壁、天井')
+    expect(words('Environment', 'ja')).toContain('床、壁、天井')
+    expect(words('Object', 'en')).toMatch(/floor, wall, ceiling/i)
+    expect(words('Environment', 'en')).toMatch(/floor, wall, ceiling/i)
+    expect(words('Camera', 'ja')).toContain('横切る')
+    expect(words('Camera', 'en')).toContain('across the view')
+  })
+
   it('the notes are not preloaded: index.html names none of them (they load when the dialog opens)', () => {
     expect(readFileSync('index.html', 'utf8')).not.toContain('report-notes')
   })

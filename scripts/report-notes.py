@@ -53,7 +53,7 @@ def paper_without_ink(name):
     ink = ((lum < 125) | red) & (alpha > 200)
     mask = Image.fromarray((ink * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(9))
     ink = np.asarray(mask) > 0
-    clean = (~ink).astype(np.float32)
+    clean = (~ink).astype(np.float32) * (alpha / 255.0)  # transparent pixels carry no colour: they must not darken the estimate
     out = np.empty_like(rgb)
     for c in range(3):
         num = gaussian_filter(rgb[..., c] * clean, 9)
@@ -65,6 +65,13 @@ def paper_without_ink(name):
     grain = rng.normal(0, 2.2, size=lum.shape).astype(np.float32)
     for c in range(3):
         out[..., c] = np.where(ink, out[..., c] + grain, out[..., c])
+    # dark specks left on the torn edge at the top corners of some title notes: made transparent (corners only)
+    corner = np.zeros(lum.shape, bool)
+    corner[45:100, :50] = True
+    corner[45:100, 550:] = True
+    speck = corner & (lum < 185) & (alpha > 0)
+    speck = np.asarray(Image.fromarray((speck * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(5))) > 0
+    alpha = np.where(speck & corner, 0, alpha)
     res = np.dstack([np.clip(out, 0, 255), alpha]).astype(np.uint8)
     return Image.fromarray(res, "RGBA")
 
@@ -72,12 +79,13 @@ def paper_without_ink(name):
 def cut_to_height(paper, h):
     """Fit the paper to `h` rows: the tape (top) and the torn edge (bottom) stay whole, the middle is squeezed."""
     top = paper.crop((0, 0, W, TOP))
-    mid = paper.crop((0, TOP, W, SRC_H - BOTTOM)).resize((W, h - TOP - BOTTOM), Image.LANCZOS)
+    # premultiplied alpha while resizing, or the semi-transparent edge pixels turn into grey specks
+    mid = paper.crop((0, TOP, W, SRC_H - BOTTOM)).convert("RGBa").resize((W, h - TOP - BOTTOM), Image.LANCZOS).convert("RGBA")
     bottom = paper.crop((0, SRC_H - BOTTOM, W, SRC_H))
     out = Image.new("RGBA", (W, h))
-    out.paste(top, (0, 0))
-    out.paste(mid, (0, TOP))
-    out.paste(bottom, (0, h - BOTTOM))
+    out.alpha_composite(top, (0, 0))
+    out.alpha_composite(mid, (0, TOP))
+    out.alpha_composite(bottom, (0, h - BOTTOM))
     return out
 
 
@@ -128,8 +136,8 @@ def main():
     table = doc["notes"]
     OUT.mkdir(parents=True, exist_ok=True)
     spec = {
-        "ja": dict(head=fontdir / "ZenKurenaido-Regular.ttf", body=fontdir / "Yomogi-Regular.ttf", size=44, head_size=48),
-        "en": dict(head=tmp, body=tmp, size=50, head_size=54),
+        "ja": dict(head=fontdir / "ZenKurenaido-Regular.ttf", body=fontdir / "Yomogi-Regular.ttf", size=44, head_size=58),
+        "en": dict(head=tmp, body=tmp, size=50, head_size=62),
     }
     papers = {}
     for lang, sp in spec.items():

@@ -31,7 +31,7 @@
       "paper": "en-2",
       "ja": {
         "file": "ja-object.webp",
-        "heading": "物",
+        "heading": "もの",
         "lines": ["物が出る、消える", "物が変わる", "床や壁、天井の物も"],
         "width": 600,
         "height": 368
@@ -74,11 +74,11 @@
       "paper": "en-1",
       "ja": {
         "file": "ja-person.webp",
-        "heading": "人",
+        "heading": "ひと",
         "lines": [
           "人、人影、体の一部",
           "人の痕跡",
-          "人の形（人形、絵、影）",
+          "人の形(人形、絵、影)",
           "動物は含まない"
         ],
         "width": 600,
