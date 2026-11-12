@@ -44,3 +44,52 @@ describe('titleNoteUrls (#296)', () => {
     expect(en.every(u => u.includes('/en-'))).toBe(true)
   })
 })
+
+import { createCameraPreloader, type CameraImage } from './preload'
+import { CAMERAS } from './gameConfig'
+
+describe('camera image preload (#396)', () => {
+  const setup = (decode: (url: string) => Promise<void>) => {
+    const requested: string[] = []
+    const cache = new Map<string, CameraImage>()
+    const load = createCameraPreloader(
+      CAMERAS.map(c => c.image),
+      {
+        createImage: () => {
+          const img: CameraImage = {
+            src: '',
+            decode: () => decode(img.src),
+          }
+          Object.defineProperty(img, 'src', {
+            set: (v: string) => requested.push(v),
+            get: () => requested[requested.length - 1] ?? '',
+          })
+          return img
+        },
+        schedule: fn => fn(),
+        cache,
+      }
+    )
+    return { requested, cache, load }
+  }
+
+  it('requests all eight cameras once, low priority, and holds them', async () => {
+    const { requested, cache, load } = setup(() => Promise.resolve())
+    await load()
+    await load()
+    expect(requested).toHaveLength(8)
+    expect(new Set(requested).size).toBe(8)
+    expect(requested).toEqual(CAMERAS.map(c => c.image))
+    expect([...cache.keys()]).toEqual(requested)
+  })
+
+  it('continues when an image fails to decode', async () => {
+    const { requested, load } = setup(url =>
+      url.endsWith('cam3.webp')
+        ? Promise.reject(new Error('x'))
+        : Promise.resolve()
+    )
+    await expect(load()).resolves.toBeUndefined()
+    expect(requested).toHaveLength(8)
+  })
+})
