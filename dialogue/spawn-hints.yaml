@@ -1,0 +1,59 @@
+# 異変の出現ヒント（異変が見つからないまま時間が経った時に、確率で出る）。誤報用の anomaly-lines.yaml とは別のプール。
+# when.anomaly は prompts/anomalies.yaml の id。id は spawn-hint-<異変id>-連番。同じ異変のヒントは何度でも出る
+# （直前に出た案は避ける）。お手つきをした前提の台詞は書かない。各異変に3案以上（足りない異変は npm run check:spawn-hints で分かる）。
+# 以下はサンプル（3異変×3案）。本番の台詞は別途ここへ統合する。
+dialogues:
+  - id: spawn-hint-AR-01-notice-01
+    tone: serious
+    when: { anomaly: AR-01-notice }
+    lines:
+      - { who: M, text: '左の壁に　何か貼ってありませんか', en: "Isn't something stuck on the left wall?" }
+      - { who: A, text: '左の壁ね　もう一度見てみる', en: "The left wall? I'll look again." }
+  - id: spawn-hint-AR-01-notice-02
+    tone: serious
+    when: { anomaly: AR-01-notice }
+    lines:
+      - { who: A, text: '何か引っかかるんだよね　左の壁あたり', en: "Something's nagging me, around the left wall." }
+      - { who: M, text: 'では　左の壁を重点的に見ましょう', en: "Then let's focus on the left wall." }
+  - id: spawn-hint-AR-01-notice-03
+    tone: serious
+    when: { anomaly: AR-01-notice }
+    lines:
+      - { who: M, text: '映像の左側　壁の様子が気になります', en: "I'm curious about the wall on the left of the picture." }
+      - { who: A, text: '壁か　目を凝らしてみるよ', en: "The wall, huh. I'll look closely." }
+  - id: spawn-hint-AR-02-ashtray-01
+    tone: serious
+    when: { anomaly: AR-02-ashtray }
+    lines:
+      - { who: A, text: '右手前に　見慣れない物がある気がする', en: "I feel there's something unfamiliar at the front right." }
+      - { who: M, text: '右手前ですね　見てみます', en: "The front right? I'll take a look." }
+  - id: spawn-hint-AR-02-ashtray-02
+    tone: serious
+    when: { anomaly: AR-02-ashtray }
+    lines:
+      - { who: M, text: '右手前の端　何か置いてありませんか', en: "Isn't something placed at the front-right edge?" }
+      - { who: A, text: '端っこか　確かめてみるね', en: "At the edge? Let me check." }
+  - id: spawn-hint-AR-02-ashtray-03
+    tone: serious
+    when: { anomaly: AR-02-ashtray }
+    lines:
+      - { who: A, text: '手前の右側　さっきと違わない？', en: "The front right side, isn't it different from before?" }
+      - { who: M, text: '言われてみれば　確認します', en: "Now that you say so, I'll check." }
+  - id: spawn-hint-AR-02-bag-01
+    tone: serious
+    when: { anomaly: AR-02-bag }
+    lines:
+      - { who: M, text: '右手前の床に　何かありませんか', en: "Isn't there something on the floor at the front right?" }
+      - { who: A, text: '床か　そこは見落としてたかも', en: "The floor? I may have overlooked that." }
+  - id: spawn-hint-AR-02-bag-02
+    tone: serious
+    when: { anomaly: AR-02-bag }
+    lines:
+      - { who: A, text: '足元のあたり　右手前が怪しいな', en: "Around the feet, the front right looks suspicious." }
+      - { who: M, text: '右手前の足元ですね　見ます', en: "The front-right floor. I'll look." }
+  - id: spawn-hint-AR-02-bag-03
+    tone: serious
+    when: { anomaly: AR-02-bag }
+    lines:
+      - { who: M, text: '床の上　右手前を見直してください', en: "Please look over the floor at the front right again." }
+      - { who: A, text: '分かった　床をじっくり見る', en: "Got it. I'll study the floor carefully." }

@@ -157,6 +157,7 @@ describe('parseEntry: unlock', () => {
     ['midpoint', { id: 'midpoint-1', when: { stage: 'few' } }],
     ['story', { id: 'story-1', when: { flag: 'f1' } }],
     ['anomaly-lines', { id: 'an-an1-1', when: { anomaly: 'an1' } }],
+    ['spawn-hints', { id: 'spawn-hint-an1-1', when: { anomaly: 'an1' } }],
   ]
   it.each(cases)('%s accepts a defined unlock flag', (file, over) => {
     const e = parseEntry(file, entry({ ...over, unlock: 'f1' }), 0, ctx)
@@ -388,6 +389,31 @@ describe('parseEntry: id prefix', () => {
         { ...ctx, anomalyIds: new Set(['an1', 'an2']) }
       )
     ).toThrow(/id must start with "an-an1-"/)
+  })
+  it('parses a spawn-hint (prefix spawn-hint-<anomaly id>-)', () => {
+    const e = parseEntry(
+      'spawn-hints',
+      entry({ id: 'spawn-hint-an1-1', when: { anomaly: 'an1' } }),
+      0,
+      ctx
+    )
+    expect(e).toMatchObject({ kind: 'spawn-hint', when: { anomaly: 'an1' } })
+    expect(() =>
+      parseEntry(
+        'spawn-hints',
+        entry({ id: 'an-an1-1', when: { anomaly: 'an1' } }),
+        0,
+        ctx
+      )
+    ).toThrow(/id must start with "spawn-hint-an1-"/)
+    expect(() =>
+      parseEntry(
+        'spawn-hints',
+        entry({ id: 'spawn-hint-zzz-1', when: { anomaly: 'zzz' } }),
+        0,
+        ctx
+      )
+    ).toThrow(/anomaly "zzz"/)
   })
   it('an anomaly-line with a bare an- prefix is rejected', () => {
     expect(() =>

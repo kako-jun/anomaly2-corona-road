@@ -762,34 +762,55 @@ describe('selectNext priority', () => {
 })
 
 describe('spawn hint (#343)', () => {
-  const a1 = mk('an-x-1', 'anomaly-line', { anomaly: 'x' })
-  const a2 = mk('an-x-2', 'anomaly-line', { anomaly: 'x' })
+  const h1 = mk('spawn-hint-x-1', 'spawn-hint', { anomaly: 'x' })
+  const h2 = mk('spawn-hint-x-2', 'spawn-hint', { anomaly: 'x' })
+  const h3 = mk('spawn-hint-x-3', 'spawn-hint', { anomaly: 'x' })
   const l = ledgerOf([
-    a1,
-    a2,
+    h1,
+    h2,
+    h3,
+    mk('an-x-1', 'anomaly-line', { anomaly: 'x' }),
     mk('false-report-1', 'false-report'),
     ...bag('c1'),
   ])
 
-  it('picks an unused own conversation and marks it used', () => {
-    const p = pickSpawnHint(l, 'x', noUsed(), rng0)
-    expect(p?.entry.id).toBe('an-x-1')
-    expect(p?.used.usedLines).toEqual({ x: ['an-x-1'] })
-    const q = pickSpawnHint(l, 'x', p!.used, rng0)
-    expect(q?.entry.id).toBe('an-x-2')
+  it('draws only spawn-hint conversations of that anomaly, and never touches the used state', () => {
+    const used: UsedState = { usedLines: { x: ['an-x-1'] }, usedChatter: [] }
+    const p = pickSpawnHint(l, 'x', used, rng0)
+    expect(p?.entry.id).toBe('spawn-hint-x-1')
+    expect(p?.used).toBe(used)
   })
-  it('returns null when all are used or the anomaly has none (no fallback)', () => {
+  it('can be drawn again and again (not used up)', () => {
+    const seen = new Set<string>()
+    for (let i = 0; i < 20; i++)
+      seen.add(pickSpawnHint(l, 'x', noUsed(), rngHigh)!.entry.id)
+    expect(seen).toEqual(new Set(['spawn-hint-x-3']))
+  })
+  it('avoids the one shown last when there is a choice', () => {
+    for (const r of [0, 0.34, 0.7, 0.999]) {
+      const p = pickSpawnHint(l, 'x', noUsed(), () => r, {}, 'spawn-hint-x-2')
+      expect(p?.entry.id).not.toBe('spawn-hint-x-2')
+    }
+  })
+  it('allows the same one when it is the only one', () => {
+    const one = ledgerOf([h1])
     expect(
-      pickSpawnHint(l, 'x', {
-        usedLines: { x: ['an-x-1', 'an-x-2'] },
-        usedChatter: [],
-      })
-    ).toBeNull()
+      pickSpawnHint(one, 'x', noUsed(), rng0, {}, 'spawn-hint-x-1')?.entry.id
+    ).toBe('spawn-hint-x-1')
+  })
+  it('returns null with no spawn-hint (no fallback to the false-report ones)', () => {
     expect(pickSpawnHint(l, 'nope', noUsed())).toBeNull()
+    expect(
+      pickSpawnHint(
+        ledgerOf([mk('false-report-1', 'false-report')]),
+        'x',
+        noUsed()
+      )
+    ).toBeNull()
   })
   it('selectNext: flag > false report > spawn hint > midpoint > chatter', () => {
     const full = ledgerOf([
-      a1,
+      h1,
       mk('false-report-1', 'false-report'),
       mk('m1', 'midpoint', { stage: 'few' }),
       mk('s1', 'story', { flag: 'f' }),
@@ -812,14 +833,20 @@ describe('spawn hint (#343)', () => {
     expect(run({ pendingFlags: ['f'] })?.source).toBe('flag')
     expect(run({ pendingSpawnHints: [] })?.source).toBe('midpoint')
   })
-  it('skips a hint with nothing unused and tries the next anomaly', () => {
-    const l2 = ledgerOf([a1, mk('an-y-1', 'anomaly-line', { anomaly: 'y' })])
+  it('selectNext skips an anomaly without a hint and passes the last one to avoid', () => {
+    const l2 = ledgerOf([
+      h1,
+      h2,
+      mk('spawn-hint-y-1', 'spawn-hint', { anomaly: 'y' }),
+    ])
     const p = selectNext({
       ledger: l2,
-      used: { usedLines: { x: ['an-x-1'] }, usedChatter: [] },
+      used: noUsed(),
       rng: rng0,
-      pendingSpawnHints: ['x', 'y'],
+      pendingSpawnHints: ['nope', 'x'],
+      lastSpawnHints: { x: 'spawn-hint-x-1' },
     })
-    expect(p?.hintedAnomaly).toBe('y')
+    expect(p?.hintedAnomaly).toBe('x')
+    expect(p?.entry.id).toBe('spawn-hint-x-2')
   })
 })

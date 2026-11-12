@@ -35,7 +35,30 @@ const H = vi.hoisted(() => {
     e('anomaly-line', 'an-x-1', { anomaly: 'x' }, 'light', 'anx1a', 'anx1b'),
     e('anomaly-line', 'an-y-1', { anomaly: 'y' }, 'serious', 'any1a', 'any1b'),
     e('anomaly-line', 'an-y-2', { anomaly: 'y' }, 'serious', 'any2a', 'any2b'),
-    e('anomaly-line', 'an-z-1', { anomaly: 'z' }, 'light', 'anz1a', 'anz1b'),
+    e(
+      'spawn-hint',
+      'spawn-hint-y-1',
+      { anomaly: 'y' },
+      'serious',
+      'shy1a',
+      'shy1b'
+    ),
+    e(
+      'spawn-hint',
+      'spawn-hint-y-2',
+      { anomaly: 'y' },
+      'serious',
+      'shy2a',
+      'shy2b'
+    ),
+    e(
+      'spawn-hint',
+      'spawn-hint-z-1',
+      { anomaly: 'z' },
+      'serious',
+      'shz1a',
+      'shz1b'
+    ),
     e('story', 'story-f1', { flag: 'f1' }, 'serious', 'st1a', 'st1b'),
     e('story', 'story-f2', { flag: 'f2' }, 'serious', 'st2a', 'st2b'),
     e('midpoint', 'midpoint-few-1', { stage: 'few' }, 'light', 'mfa', 'mfb'),
@@ -51,7 +74,7 @@ const H = vi.hoisted(() => {
       'cwb'
     ),
   ]
-  return { all, ledger: { flags: [], entries: [...all] } }
+  return { all, loads: { n: 0 }, ledger: { flags: [], entries: [...all] } }
 })
 vi.mock('virtual:dialogue', () => ({ default: H.ledger }))
 
@@ -62,7 +85,10 @@ vi.mock('../utils/saveData', async importOriginal => {
   const holder = { store: make() }
   return {
     ...actual,
-    load: () => holder.store.load(),
+    load: () => {
+      H.loads.n++
+      return holder.store.load()
+    },
     update: (fn: Parameters<typeof actual.update>[0]) =>
       holder.store.update(fn),
     canPersist: () => holder.store.canPersist(),
@@ -606,13 +632,28 @@ describe('useSubtitle: used conversations (bag)', () => {
 
 describe('useSubtitle: spawn hint (#343)', () => {
   const HINT = DIALOGUE_CONFIG.hintDelayMs
+  const OPP = DIALOGUE_CONFIG.hintMinGapMs
   const ORIGINAL = { ...DIALOGUE_CONFIG }
   afterEach(() => Object.assign(DIALOGUE_CONFIG, ORIGINAL))
-  /** Mounted with the anomaly open from play time 0, the opening over and in the silence after it. */
+  const isHint = (t: string) => /^sh[yz]\d[ab]$/.test(t)
+  const firstLines = (seen: string[]) => seen.filter(t => /^sh[yz]\da$/.test(t))
+  /** Mounted with the anomalies open from play time 0, the opening over and in the silence after it. */
   const inSilence = (ids: string[] = ['y']) => {
     const d = driver({ openAnomalyIds: ids, elapsedMs: 0 })
     advance(OPENING_END + 1000)
     return d
+  }
+  /** Plays on for `ms` of both clocks (play time moves with the wall clock here), noting what shows. */
+  const run = (
+    d: ReturnType<typeof driver>,
+    from: number,
+    ms: number,
+    w: ReturnType<typeof watch>
+  ) => {
+    for (let t = 0; t < ms; t += 500) {
+      d.set({ elapsedMs: from + t })
+      w.step(500)
+    }
   }
 
   it('does not speak for an anomaly before the delay', () => {
@@ -622,16 +663,79 @@ describe('useSubtitle: spawn hint (#343)', () => {
     expect(shown(d.result)).toBeNull()
   })
 
-  it('speaks its own conversation once it has been unreported for the delay', () => {
+  it('speaks a spawn-hint conversation once it has been unreported for the delay (dice came up)', () => {
     const d = inSilence()
     d.set({ elapsedMs: HINT })
     advance(2 * GAP - 1)
     expect(shown(d.result)).toBeNull()
     advance(1)
-    expect(shown(d.result)).toBe('any1a')
+    expect(shown(d.result)).toBe('shy1a')
   })
 
-  it('does not speak when the anomaly was reported meanwhile', () => {
+  it('chance boundaries: 0 never speaks, 1 always, 0.5 speaks below 0.5 only', () => {
+    const attempt = (chance: number, dice: number) => {
+      DIALOGUE_CONFIG.hintChance = chance
+      vi.mocked(Math.random).mockReturnValue(dice)
+      const d = inSilence()
+      d.set({ elapsedMs: HINT })
+      const w = watch(d.result)
+      w.step(SILENCE - 2000)
+      d.unmount()
+      return w.seen.some(isHint)
+    }
+    expect(attempt(0, 0)).toBe(false)
+    expect(attempt(1, 0.999999)).toBe(true)
+    expect(attempt(0.5, 0.49)).toBe(true)
+    expect(attempt(0.5, 0.5)).toBe(false)
+    expect(DIALOGUE_CONFIG.hintChance).toBe(0.5)
+  })
+
+  it('is reproducible with a seeded random: the same dice give the same hints', () => {
+    const play = () => {
+      let x = 12345
+      vi.mocked(Math.random).mockImplementation(() => {
+        x = (x * 1103515245 + 12345) % 2147483648
+        return x / 2147483648
+      })
+      localStorage.clear()
+      resetStore()
+      const d = inSilence()
+      const w = watch(d.result)
+      run(d, HINT, 6 * OPP, w)
+      d.unmount()
+      return w.seen.filter(isHint)
+    }
+    const a = play()
+    expect(a.length).toBeGreaterThan(0)
+    expect(play()).toEqual(a)
+  })
+
+  it('a miss waits for the next opportunity (one per hintMinGapMs of play time)', () => {
+    const d = inSilence()
+    vi.mocked(Math.random).mockReturnValue(0.9)
+    d.set({ elapsedMs: HINT })
+    const w = watch(d.result)
+    w.step(SILENCE)
+    d.set({ elapsedMs: HINT + OPP - 1 })
+    w.step(SILENCE)
+    expect(w.seen.filter(isHint)).toEqual([])
+    vi.mocked(Math.random).mockReturnValue(0)
+    d.set({ elapsedMs: HINT + OPP })
+    w.step(2 * SILENCE)
+    expect(firstLines(w.seen)).toEqual(['shy1a'])
+  })
+
+  it('repeats for the same anomaly while it is unreported, never the same conversation twice in a row', () => {
+    DIALOGUE_CONFIG.hintChance = 1
+    const d = inSilence()
+    const w = watch(d.result)
+    run(d, HINT, 10 * OPP, w)
+    const firsts = firstLines(w.seen)
+    expect(firsts.length).toBeGreaterThanOrEqual(3)
+    firsts.slice(1).forEach((t, i) => expect(t).not.toBe(firsts[i]))
+  })
+
+  it('does not speak when the anomaly was reported before the hint', () => {
     const d = inSilence()
     d.set({ elapsedMs: HINT - 1000 })
     d.set({ openAnomalyIds: [], elapsedMs: HINT })
@@ -639,38 +743,39 @@ describe('useSubtitle: spawn hint (#343)', () => {
     expect(shown(d.result)).toBeNull()
   })
 
-  it('never hints the same anomaly twice', () => {
+  it('a hint already on screen is shown to the end when the anomaly is reported meanwhile; then no more', () => {
+    DIALOGUE_CONFIG.hintChance = 1
     const d = inSilence()
     d.set({ elapsedMs: HINT })
     const w = watch(d.result)
-    w.step(60_000)
-    d.set({ elapsedMs: HINT + 60_000 })
-    w.step(120_000)
-    d.set({ elapsedMs: HINT + 180_000 })
-    w.step(120_000)
-    expect(w.seen.filter(t => t === 'any1a' || t === 'any2a')).toHaveLength(1)
+    w.step(2 * GAP + 100)
+    expect(shown(d.result)).toBe('shy1a')
+    d.set({ openAnomalyIds: [], elapsedMs: HINT + 1000 })
+    w.step(convMs(['shy1a', 'shy1b']))
+    expect(w.seen).toContain('shy1b')
+    run(d, HINT + 2000, 6 * OPP, w)
+    expect(firstLines(w.seen)).toEqual(['shy1a'])
   })
 
-  it('shares the unused pool with the false-report hint', () => {
+  it('has its own pool: a false-report hint does not use it up, and the hint does not mark anything used', () => {
+    DIALOGUE_CONFIG.hintChance = 1
     const d = driver({ openAnomalyIds: ['y'], elapsedMs: 0 })
     advance(OPEN_AT)
     d.set({ wrongFeedbackId: 1, wrongAnomalyId: 'y' })
     advance(2 * GAP)
-    expect(shown(d.result)).toBe('any1a') // rng 0: first unused
-    // the other one is left for the spawn hint, then none remain
+    expect(shown(d.result)).toBe('any1a')
     advance(convMs(['any1a', 'any1b']) + 1000)
     d.set({ elapsedMs: HINT })
     const w = watch(d.result)
     w.step(SILENCE)
-    expect(w.seen).toContain('any2a')
-    expect(load().usedLines.y).toEqual(['an-y-1', 'an-y-2'])
+    expect(firstLines(w.seen)).toEqual(['shy1a'])
+    expect(load().usedLines.y).toEqual(['an-y-1'])
   })
 
-  it('with every own conversation used, there is no hint (no fallback to the common ones)', () => {
-    const d = inSilence(['z'])
-    d.set({ wrongFeedbackId: 1, wrongAnomalyId: 'z' })
-    advance(2 * GAP + convMs(['anz1a', 'anz1b']) + 1000)
-    d.set({ elapsedMs: HINT, wrongFeedbackId: null })
+  it('an anomaly without a spawn-hint gets none (no fallback to the false-report ones)', () => {
+    DIALOGUE_CONFIG.hintChance = 1
+    const d = inSilence(['nope'])
+    d.set({ elapsedMs: HINT })
     const w = watch(d.result)
     w.step(SILENCE - 2000)
     expect(w.seen).toEqual([])
@@ -678,6 +783,7 @@ describe('useSubtitle: spawn hint (#343)', () => {
 
   it('is off with hintEnabled false', () => {
     DIALOGUE_CONFIG.hintEnabled = false
+    DIALOGUE_CONFIG.hintChance = 1
     const d = inSilence()
     d.set({ elapsedMs: HINT })
     const w = watch(d.result)
@@ -692,8 +798,8 @@ describe('useSubtitle: spawn hint (#343)', () => {
     expect(shown(d.result)).toBe('op1a')
     const w = watch(d.result)
     w.step(20_000)
-    expect(w.seen).toContain('any1a')
-    expect(w.seen.indexOf('op1b')).toBeLessThan(w.seen.indexOf('any1a'))
+    expect(w.seen).toContain('shy1a')
+    expect(w.seen.indexOf('op1b')).toBeLessThan(w.seen.indexOf('shy1a'))
   })
 
   it('a false report goes before a due hint, the hint comes next', () => {
@@ -702,7 +808,7 @@ describe('useSubtitle: spawn hint (#343)', () => {
     const w = watch(d.result)
     w.step(SILENCE)
     expect(w.seen.indexOf('fr1a')).toBeGreaterThanOrEqual(0)
-    expect(w.seen.indexOf('fr1a')).toBeLessThan(w.seen.indexOf('any1a'))
+    expect(w.seen.indexOf('fr1a')).toBeLessThan(w.seen.indexOf('shy1a'))
   })
 
   it('a due hint goes before the midpoint comment', () => {
@@ -710,28 +816,39 @@ describe('useSubtitle: spawn hint (#343)', () => {
     d.set({ elapsedMs: MID_MS })
     const w = watch(d.result)
     w.step(2 * SILENCE)
-    expect(w.seen.indexOf('any1a')).toBeGreaterThanOrEqual(0)
-    expect(w.seen.indexOf('any1a')).toBeLessThan(w.seen.indexOf('mfa'))
+    expect(w.seen.indexOf('shy1a')).toBeGreaterThanOrEqual(0)
+    expect(w.seen.indexOf('shy1a')).toBeLessThan(w.seen.indexOf('mfa'))
   })
 
-  it('keeps hintMinGapMs between two hints', () => {
+  it('when play time jumps (tab back) and several anomalies are due at once, hintMinGapMs spaces them out', () => {
     DIALOGUE_CONFIG.chatterIntervalMs = 2000
+    DIALOGUE_CONFIG.hintChance = 1
     const d = inSilence(['y', 'z'])
-    d.set({ elapsedMs: HINT })
+    d.set({ elapsedMs: 10 * 60_000 })
     const w = watch(d.result)
     w.step(DIALOGUE_CONFIG.hintMinGapMs - 3000)
-    const hints = (t: string) => t === 'any1a' || t === 'anz1a'
-    expect(w.seen.filter(hints)).toHaveLength(1)
+    expect(firstLines(w.seen)).toHaveLength(1)
     w.step(2 * DIALOGUE_CONFIG.hintMinGapMs)
-    expect(w.seen.filter(hints)).toHaveLength(2)
+    expect(firstLines(w.seen).length).toBeGreaterThanOrEqual(2)
   })
 
-  it('does not change the save shape (only usedLines is written)', () => {
+  it('does not change the save shape (nothing is written for a hint)', () => {
+    DIALOGUE_CONFIG.hintChance = 1
     const d = inSilence()
-    const before = Object.keys(load()).sort()
+    const before = JSON.stringify(load())
     d.set({ elapsedMs: HINT })
-    advance(2 * GAP)
-    expect(Object.keys(load()).sort()).toEqual(before)
+    advance(2 * GAP + 100)
+    expect(shown(d.result)).toBe('shy1a')
+    expect(JSON.stringify(load())).toBe(before)
+  })
+
+  it('never reads the save on a per-frame tick (dice, delay and gap are checked first)', () => {
+    const d = inSilence()
+    const before = H.loads.n
+    for (let i = 0; i < 200; i++) d.set({ elapsedMs: i * 16 })
+    DIALOGUE_CONFIG.hintChance = 0
+    for (let i = 0; i < 200; i++) d.set({ elapsedMs: HINT + i * 16 })
+    expect(H.loads.n).toBe(before)
   })
 })
 

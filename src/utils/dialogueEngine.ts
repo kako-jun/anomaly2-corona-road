@@ -250,34 +250,28 @@ export const pickFalseReport = (
 }
 
 /**
- * Spawn hint (#343): one of that anomaly's own (unused) conversations, each once, shared with the false-report
- * hint. Unlike `pickFalseReport` there is no fallback to the common conversations: with none left, no hint.
+ * Spawn hint (#343): one of that anomaly's `spawn-hint` conversations, drawn at random, avoiding `avoidId` (the
+ * one shown last for this anomaly) when there is a choice. They are NOT tracked in `usedLines` (the same
+ * anomaly may be hinted again and again), so `used` is returned unchanged. No candidate: null (no fallback to
+ * the false-report conversations).
  */
 export const pickSpawnHint = (
   ledger: DialogueLedger,
   anomalyId: string,
   used: UsedState,
   rng: Rng = Math.random,
-  flags: Readonly<Record<string, boolean>> = {}
+  flags: Readonly<Record<string, boolean>> = {},
+  avoidId?: string
 ): Picked | null => {
-  const usedOwn = used.usedLines[anomalyId] ?? []
-  const usedSet = new Set(usedOwn)
-  const fresh = ledger.entries.filter(
+  const own = ledger.entries.filter(
     e =>
-      e.kind === 'anomaly-line' &&
+      e.kind === 'spawn-hint' &&
       e.when.anomaly === anomalyId &&
-      (e.unlock === undefined || flags[e.unlock] === true) &&
-      !usedSet.has(e.id)
+      (e.unlock === undefined || flags[e.unlock] === true)
   )
+  const fresh = own.length > 1 ? own.filter(e => e.id !== avoidId) : own
   if (fresh.length === 0) return null
-  const entry = pick(fresh, rng)
-  return {
-    entry,
-    used: {
-      ...used,
-      usedLines: { ...used.usedLines, [anomalyId]: [...usedOwn, entry.id] },
-    },
-  }
+  return { entry: pick(fresh, rng), used }
 }
 
 /** Midpoint stage from the number of anomalies found this play. */
@@ -372,8 +366,10 @@ export interface SelectInput {
   pendingFlags?: readonly string[]
   /** A false report waits; the anomaly id the report was about (null = none known). */
   pendingFalseReport?: { anomalyId: string | null } | null
-  /** Anomalies unreported past the hint delay (oldest first); the first with an unused conversation is hinted. */
+  /** Anomalies whose hint is due (oldest first); the first with a spawn-hint conversation is hinted. */
   pendingSpawnHints?: readonly string[]
+  /** Anomaly id -> the spawn-hint conversation shown last for it (avoided next time when there is a choice). */
+  lastSpawnHints?: Readonly<Record<string, string>>
   /** A midpoint comment is due, with its stage. */
   pendingMidpoint?: MidpointStage | null
   /** Chatter gate input. */
@@ -421,7 +417,14 @@ export const selectNext = (input: SelectInput): Selected | null => {
     if (p) return { ...p, source: 'false-report' }
   }
   for (const id of input.pendingSpawnHints ?? []) {
-    const p = pickSpawnHint(input.ledger, id, used, rng, flags)
+    const p = pickSpawnHint(
+      input.ledger,
+      id,
+      used,
+      rng,
+      flags,
+      input.lastSpawnHints?.[id]
+    )
     if (p) return { ...p, source: 'spawn-hint', hintedAnomaly: id }
   }
   if (input.pendingMidpoint) {

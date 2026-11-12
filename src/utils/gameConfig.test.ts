@@ -47,7 +47,7 @@ describe('getGamePhase (thirds of the shift)', () => {
 describe('midpoint comment time', () => {
   it('is half of the shift', () => {
     expect(DIALOGUE_CONFIG.midpointAtSec * 1000).toBe(
-      DEFAULT_CONFIG.totalDurationMs / 2,
+      DEFAULT_CONFIG.totalDurationMs / 2
     )
   })
 })

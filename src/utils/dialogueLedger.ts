@@ -35,6 +35,7 @@ export type DialogueEntry = Base &
     | { kind: 'midpoint'; when: { stage: MidpointStage } }
     | { kind: 'story'; when: { flag: string } }
     | { kind: 'anomaly-line'; when: { anomaly: string } }
+    | { kind: 'spawn-hint'; when: { anomaly: string } }
   )
 
 export type DialogueKind = DialogueEntry['kind']
@@ -75,6 +76,7 @@ export const DIALOGUE_FILES = [
   'story',
   'false-report',
   'anomaly-lines',
+  'spawn-hints',
 ] as const
 export type DialogueFile = (typeof DIALOGUE_FILES)[number]
 
@@ -86,6 +88,7 @@ const KIND_OF_FILE: Record<DialogueFile, DialogueKind> = {
   story: 'story',
   'false-report': 'false-report',
   'anomaly-lines': 'anomaly-line',
+  'spawn-hints': 'spawn-hint',
 }
 
 /** Required id prefix per kind (anomaly lines add the anomaly id, see `idPrefix`). */
@@ -97,6 +100,7 @@ const ID_PREFIX: Record<DialogueKind, string> = {
   story: 'story-',
   'false-report': 'false-report-',
   'anomaly-line': 'an-',
+  'spawn-hint': 'spawn-hint-',
 }
 
 const WHO: readonly string[] = ['A', 'M']
@@ -305,7 +309,8 @@ export const parseEntry = (
         entry = { ...base, kind, when: { flag } }
         break
       }
-      case 'anomaly-line': {
+      case 'anomaly-line':
+      case 'spawn-hint': {
         const anomaly = whenKey(raw.when, 'anomaly', kind)
         if (!ctx.anomalyIds.has(anomaly)) {
           throw new Error(
@@ -319,7 +324,7 @@ export const parseEntry = (
         entry = { ...base, kind, when: noWhen(raw.when, kind) }
     }
     const prefix =
-      entry.kind === 'anomaly-line'
+      entry.kind === 'anomaly-line' || entry.kind === 'spawn-hint'
         ? `${ID_PREFIX[kind]}${entry.when.anomaly}-`
         : ID_PREFIX[kind]
     if (!id.startsWith(prefix)) {

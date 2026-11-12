@@ -69,6 +69,8 @@ interface PlayMeta {
   flag?: string
   /** The anomaly a spawn hint was for. */
   hint?: string
+  /** The spawn-hint conversation that was drawn. */
+  hintLine?: string
 }
 
 /**
@@ -117,12 +119,20 @@ export const useSubtitle = (input: SubtitleInput) => {
     let pendingFalse: { anomalyId: string | null } | null = null
     let pendingMidpoint: MidpointStage | null = null
     let midpointDone = false
-    // Spawn hints (#343): play time when each open anomaly was first seen, the ones already hinted, the last hint's wall time.
+    // Spawn hints (#343), per open anomaly: play time it was first seen, the last opportunity that spoke ("spent"),
+    // the dice of the current opportunity (rolled once), the conversation shown last; and the last hint's wall time.
     let openIds: readonly string[] = []
     const firstSeen = new Map<string, number>()
     let elapsedNow = 0
-    const hinted = new Set<string>()
+    const spent = new Map<string, number>()
+    const rolls = new Map<string, { n: number; pass: boolean }>()
+    const lastHintLine: Record<string, string> = {}
     let lastHintAt = -Infinity
+    // Only a gated (`unlock`) spawn hint needs the saved flags; without one the per-frame check never reads the save.
+    const hintsGated = ledger.entries.some(
+      (e: { kind: string; unlock?: string }) =>
+        e.kind === 'spawn-hint' && e.unlock !== undefined
+    )
 
     const later = (fn: () => void, ms: number) => {
       window.clearTimeout(timer)
@@ -130,18 +140,48 @@ export const useSubtitle = (input: SubtitleInput) => {
     }
     const hide = () => setView(v => ({ ...v, visible: false }))
 
-    /** Anomalies due for a hint now (oldest first): unreported past the delay, not hinted yet, with an unused conversation. */
+    /** Opportunity number of an anomaly: one per `hintMinGapMs` of play time once `hintDelayMs` has passed (-1 = not yet). */
+    const opportunity = (id: string): number => {
+      const waited = elapsedNow - (firstSeen.get(id) ?? elapsedNow)
+      return waited < cfg.hintDelayMs
+        ? -1
+        : Math.floor((waited - cfg.hintDelayMs) / cfg.hintMinGapMs)
+    }
+
+    /**
+     * Anomalies due for a hint now (oldest first): unreported, in a fresh opportunity whose dice (`hintChance`)
+     * came up, with a conversation to say. Cheap checks first; the save is read only when one passes them.
+     */
     const dueHints = (): string[] => {
       if (!cfg.hintEnabled || closing) return []
       if (Date.now() - lastHintAt < cfg.hintMinGapMs) return []
-      const flags = load().flags
-      return openIds
-        .filter(
-          id =>
-            !hinted.has(id) &&
-            elapsedNow - (firstSeen.get(id) ?? elapsedNow) >= cfg.hintDelayMs &&
-            pickSpawnHint(ledger, id, used, () => 0, flags) !== null
-        )
+      const open = openIds.filter(id => {
+        const n = opportunity(id)
+        return n >= 0 && n > (spent.get(id) ?? -1)
+      })
+      if (open.length === 0) return []
+      const flags = hintsGated ? load().flags : {}
+      return open
+        .filter(id => {
+          if (
+            pickSpawnHint(
+              ledger,
+              id,
+              used,
+              () => 0,
+              flags,
+              lastHintLine[id]
+            ) === null
+          )
+            return false
+          const n = opportunity(id)
+          let r = rolls.get(id)
+          if (!r || r.n !== n) {
+            r = { n, pass: Math.random() < cfg.hintChance }
+            rolls.set(id, r)
+          }
+          return r.pass
+        })
         .sort((a, b) => (firstSeen.get(a) ?? 0) - (firstSeen.get(b) ?? 0))
     }
 
@@ -212,7 +252,8 @@ export const useSubtitle = (input: SubtitleInput) => {
         if (i >= 0) pendingFlags.splice(i, 1)
       }
       if (meta.hint !== undefined) {
-        hinted.add(meta.hint)
+        spent.set(meta.hint, opportunity(meta.hint))
+        if (meta.hintLine !== undefined) lastHintLine[meta.hint] = meta.hintLine
         lastHintAt = Date.now()
       }
       if (meta.source === 'midpoint') {
@@ -242,6 +283,7 @@ export const useSubtitle = (input: SubtitleInput) => {
         pendingFlags,
         pendingFalseReport: pendingFalse,
         pendingSpawnHints: dueHints(),
+        lastSpawnHints: lastHintLine,
         pendingMidpoint,
         last,
         nowMs: Date.now(),
@@ -258,6 +300,7 @@ export const useSubtitle = (input: SubtitleInput) => {
         source: sel.source,
         flag: sel.flag,
         hint: sel.hintedAnomaly,
+        hintLine: sel.hintedAnomaly === undefined ? undefined : sel.entry.id,
       })
     }
 
