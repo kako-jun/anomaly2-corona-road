@@ -4523,7 +4523,7 @@ anomalies:
     camera_id: 'CAM04'
     element_id: 'CAM04-E15'
     base_photo: 'public/images/cam4.webp'
-    category: 'object'
+    category: ['object', 'person']
     anomaly_type: 'add_object'
     phase: 'early'
     subtlety: 'medium'
