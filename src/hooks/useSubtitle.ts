@@ -128,6 +128,8 @@ export const useSubtitle = (input: SubtitleInput) => {
     const rolls = new Map<string, { n: number; pass: boolean }>()
     const lastHintLine: Record<string, string> = {}
     let lastHintAt = -Infinity
+    let flagsKey = -2
+    let flagsCache: Readonly<Record<string, boolean>> = {}
     // Only a gated (`unlock`) spawn hint needs the saved flags; without one the per-frame check never reads the save.
     const hintsGated = ledger.entries.some(
       (e: { kind: string; unlock?: string }) =>
@@ -160,7 +162,16 @@ export const useSubtitle = (input: SubtitleInput) => {
         return n >= 0 && n > (spent.get(id) ?? -1)
       })
       if (open.length === 0) return []
-      const flags = hintsGated ? load().flags : {}
+      // Gated: read the saved flags once per opportunity, not on every frame.
+      let flags: Readonly<Record<string, boolean>> = {}
+      if (hintsGated) {
+        const key = Math.max(...open.map(opportunity))
+        if (key !== flagsKey) {
+          flagsKey = key
+          flagsCache = load().flags
+        }
+        flags = flagsCache
+      }
       return open
         .filter(id => {
           if (

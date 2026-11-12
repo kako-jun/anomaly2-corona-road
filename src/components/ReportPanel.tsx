@@ -1,6 +1,8 @@
-import { RefObject, useEffect, useRef } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 import { AnomalyCategory } from '../types/game'
 import { cx } from '../utils/cx'
+import { currentLanguage, type Language } from '../utils/language'
+import { reportNote } from '../data/reportNotes'
 
 const CATEGORIES: AnomalyCategory[] = [
   'Camera',
@@ -10,30 +12,31 @@ const CATEGORIES: AnomalyCategory[] = [
   'Surreal',
 ]
 
-/** One-line hint written on a note stuck under each category key (always visible). */
-const CATEGORY_HINTS: Record<AnomalyCategory, string> = {
-  Camera: 'the whole picture glitches',
-  Object: 'a thing appears, vanishes or changes',
-  Environment: 'light, or the floor, wall or ceiling surface',
-  Person: 'a figure, shadow, hand or trace of someone',
-  Surreal: 'something impossible',
-}
-
 interface ReportButtonProps {
   open: boolean
+  /** Many anomalies are unreported: the lamp blinks (never while the picker is open). */
+  alert?: boolean
   buttonRef: RefObject<HTMLButtonElement>
   onToggle: () => void
 }
 
-/** The red REPORT key with its lamp (lit while the category picker is open). */
+/**
+ * The red REPORT key with its lamp: lit while the category picker is open, blinking while many
+ * anomalies are unreported (#344). The lamp is decoration (`aria-hidden`); no caption explains it
+ * (kako-jun: no guidance text).
+ */
 export const ReportButton = ({
   open,
+  alert = false,
   buttonRef,
   onToggle,
 }: ReportButtonProps) => (
   <div className="row report">
     <div className="report-main">
-      <div className={cx('lamp-big red', open && 'lit')} />
+      <div
+        className={cx('lamp-big red', open && 'lit', alert && !open && 'alert')}
+        aria-hidden="true"
+      />
       <button
         ref={buttonRef}
         type="button"
@@ -48,7 +51,47 @@ export const ReportButton = ({
   </div>
 )
 
+/**
+ * The sticky note: a picture (#346). If the picture cannot be read (offline, 404) the same words are shown as plain
+ * visible text on a paper-coloured box, never a broken-image icon. The words for assistive technology are the sr-only
+ * span either way.
+ */
+const NoteImage = ({
+  note,
+  category,
+}: {
+  note: ReturnType<typeof reportNote>
+  category: AnomalyCategory
+}) => {
+  const [failed, setFailed] = useState(false)
+  return (
+    <span className="cat-note">
+      {failed ? (
+        <span className="cat-note-text" aria-hidden="true">
+          {note.lines.map(line => (
+            <span key={line}>{line}</span>
+          ))}
+        </span>
+      ) : (
+        <img
+          src={note.src}
+          width={note.width}
+          height={note.height}
+          alt=""
+          draggable={false}
+          onError={() => setFailed(true)}
+        />
+      )}
+      <span className="cat-sr-only" id={`catHint-${category}`}>
+        {note.text}
+      </span>
+    </span>
+  )
+}
+
 interface ReportDialogProps {
+  /** The language of the notes (default: the browser's, decided once at start; the keys are always English). */
+  language?: Language
   onSelect: (category: AnomalyCategory) => void
   onClose: () => void
 }
@@ -57,7 +100,11 @@ interface ReportDialogProps {
  * Anomaly category picker. Rendered only while open, and placed outside `.cabinet`
  * (the caller makes `.cabinet` inert meanwhile). Esc / backdrop / CANCEL close it.
  */
-export const ReportDialog = ({ onSelect, onClose }: ReportDialogProps) => {
+export const ReportDialog = ({
+  language = currentLanguage(),
+  onSelect,
+  onClose,
+}: ReportDialogProps) => {
   const dialogRef = useRef<HTMLDivElement>(null)
   const downOnScrimRef = useRef(false)
 
@@ -114,21 +161,23 @@ export const ReportDialog = ({ onSelect, onClose }: ReportDialogProps) => {
           SELECT CATEGORY
         </div>
         <div className="cat-grid">
-          {CATEGORIES.map(category => (
-            <div key={category} className="cat-item">
-              <button
-                type="button"
-                className="key"
-                aria-describedby={`catHint-${category}`}
-                onClick={() => onSelect(category)}
-              >
-                {category.toUpperCase()}
-              </button>
-              <span className="cat-note" id={`catHint-${category}`}>
-                {CATEGORY_HINTS[category]}
-              </span>
-            </div>
-          ))}
+          {CATEGORIES.map(category => {
+            const note = reportNote(category, language)
+            return (
+              <div key={category} className="cat-item">
+                <button
+                  type="button"
+                  className="key"
+                  aria-describedby={`catHint-${category}`}
+                  onClick={() => onSelect(category)}
+                >
+                  {category.toUpperCase()}
+                </button>
+                {/* The sticky note is a picture (#346); its words are read from the sr-only text. */}
+                <NoteImage note={note} category={category} />
+              </div>
+            )
+          })}
           <div className="cat-item">
             <button type="button" className="key cancel" onClick={onClose}>
               CANCEL

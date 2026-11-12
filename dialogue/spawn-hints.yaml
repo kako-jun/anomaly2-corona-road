@@ -94,7 +94,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-cigarette }
     lines:
-      - { who: M, text: "左の床を目を向けてください", en: "Please look at the floor on the left." }
+      - { who: M, text: "左の床に目を向けてください", en: "Please look at the floor on the left." }
       - { who: A, text: "左の床ね　見るよ", en: "Left floor. Looking." }
   - id: spawn-hint-AR-02-cigarette-02
     tone: serious
@@ -828,7 +828,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-striped-sign }
     lines:
-      - { who: M, text: '真ん中の上寄りを　重点的に目を向けます', en: "I'll focus on the upper middle." }
+      - { who: M, text: '真ん中の上寄りに　重点的に目を向けます', en: "I'll focus on the upper middle." }
   - id: spawn-hint-AR-04-door-gap-01
     tone: serious
     when: { anomaly: AR-04-door-gap }
@@ -975,7 +975,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-white-ribbon }
     lines:
-      - { who: M, text: "画面の左端　高めの位置を目を向けてください", en: "Please check the left edge, up high." }
+      - { who: M, text: "画面の左端　高めの位置に目を向けてください", en: "Please check the left edge, up high." }
   - id: spawn-hint-AR-05-white-ribbon-03
     tone: serious
     when: { anomaly: AR-05-white-ribbon }
@@ -1679,7 +1679,7 @@ dialogues:
     when: { anomaly: AR-04-newspaper }
     lines:
       - { who: A, text: '手前の右寄りにヒントがありそう', en: "I bet the near right holds a clue." }
-      - { who: M, text: "はい　そちらを重点的に目を向けます", en: "Yes. I'll focus on that side." }
+      - { who: M, text: "はい　そちらに　重点的に目を向けます", en: "Yes. I'll focus on that side." }
   - id: spawn-hint-AR-04-newspaper-03
     tone: serious
     when: { anomaly: AR-04-newspaper }
@@ -2215,7 +2215,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-red-telephone }
     lines:
-      - { who: M, text: '落ち着いて　左のガラスの内側を目を向けてください', en: "Stay calm and look at the inside of the left glass." }
+      - { who: M, text: '落ち着いて　左のガラスの内側に　目を向けてください', en: "Stay calm and look at the inside of the left glass." }
       - { who: A, text: '了解　左のガラスの内側ね', en: "Got it. The inside of the left glass." }
   - id: spawn-hint-AR-04-red-telephone-02
     tone: serious
@@ -2473,7 +2473,7 @@ dialogues:
     when: { anomaly: AR-06-ceiling-checker }
     lines:
       - { who: A, text: "上だな　天井のほうが怪しい", en: "Up there. The ceiling feels off." }
-      - { who: M, text: "天井ですね　全体を目を向けます", en: "The ceiling. I'll scan all of it." }
+      - { who: M, text: "天井ですね　全体に目を向けます", en: "The ceiling. I'll scan all of it." }
   - id: spawn-hint-AR-06-ceiling-checker-02
     tone: serious
     when: { anomaly: AR-06-ceiling-checker }
@@ -2894,7 +2894,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-floor-glare-backside }
     lines:
-      - { who: M, text: "画面の右下を目を向けてください", en: "Detective, look at the lower right of the screen." }
+      - { who: M, text: "画面の右下に目を向けてください", en: "Detective, look at the lower right of the screen." }
       - { who: A, text: "右下ね　分かった", en: "Lower right. Got it." }
   - id: spawn-hint-AR-06-fluorescent-tag-01
     tone: serious
@@ -3680,7 +3680,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-insect-cage }
     lines:
-      - { who: A, text: "ここは　左寄りの手前の暗がりに注目してみて", en: "Focus on the dark area near the front left." }
+      - { who: A, text: "ここは　左寄りの手前の　暗がりに注目してみて", en: "Focus on the dark area near the front left." }
       - { who: M, text: "では　そこに集中してみます", en: "Then I'll focus on that spot." }
   - id: spawn-hint-AR-03-insect-cage-03
     tone: serious
@@ -4262,7 +4262,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-wall-bird-triplet }
     lines:
-      - { who: M, text: "右端の壁を目を向けてください", en: "Please look at the far-right wall." }
+      - { who: M, text: "右端の壁に目を向けてください", en: "Please look at the far-right wall." }
       - { who: A, text: "右端の壁ね　見る", en: "The far-right wall. Looking." }
   - id: spawn-hint-AR-02-wall-bird-triplet-02
     tone: serious

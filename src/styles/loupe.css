@@ -66,27 +66,6 @@
   pointer-events: none;
 }
 
-/* the always-visible hint, on the lower band of the monitor's frame picture (out of the flow) */
-.bezel > .loupe-hint {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* the band below the glass opening: (1679 - 1580) / 1679 of the frame picture */
-  height: 5.9%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  color: #4a4130;
-  text-shadow: 0 1px 0 #fff6;
-  white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
-}
-
 /* pointer events for touch, mouse and pen: a vertical drag still scrolls the page until the loupe shows (then the
    hook cancels touchmove); no text selection / long-press menu while holding */
 .glass {
@@ -97,8 +76,7 @@
 }
 
 /* edge tap (#354): the handlers are on the whole .bezel; a short tap on the left / right goes to the previous / next
-   camera, only outside the picture. These small arrowheads on the frame's sides are the always-visible sign of it
-   (the zone is edgeTapDirection in src/utils/loupe.ts). Out of the flow, never take the pointer. */
+   camera, only outside the picture. No mark is drawn (kako-jun, 2026-11-12); the zone is edgeTapDirection in src/utils/loupe.ts. */
 .bezel {
   position: relative;
   touch-action: pan-y pinch-zoom;
@@ -106,26 +84,18 @@
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
-.bezel > .edge-mark {
-  position: absolute;
-  top: 50%;
-  width: 0;
-  height: 0;
-  margin-top: -8px;
-  border-style: solid;
-  border-color: transparent;
-  pointer-events: none;
-  opacity: 0.75;
-  z-index: 2;
+
+/* #342: shaking / double-tapping the monitor switches the grain and the lines off for NOISE_OFF_MS (numbers in src/utils/noiseOff.ts).
+   The grain (with its tear bands, drawn on the same canvas) and the horizontal scanlines (.scan); glare, vignette, REC / CAM and the picture stay. The loupe carries the same class. */
+.glass .noise,
+.glass .scan,
+.loupe .noise,
+.loupe .scan {
+  transition: opacity 0.5s ease;
 }
-.bezel > .edge-mark--prev {
-  /* centred in the band: it is about 7.8% of the frame's width at any size (the frame picture keeps its ratio), minus half the arrowhead */
-  left: calc(3.9% - 4.5px);
-  border-width: 8px 9px 8px 0;
-  border-right-color: #4a4130;
-}
-.bezel > .edge-mark--next {
-  right: calc(3.9% - 4.5px);
-  border-width: 8px 0 8px 9px;
-  border-left-color: #4a4130;
+.glass.noise-off .noise,
+.glass.noise-off .scan,
+.loupe.noise-off .noise,
+.loupe.noise-off .scan {
+  opacity: 0;
 }

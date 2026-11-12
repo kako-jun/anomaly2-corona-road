@@ -23,7 +23,6 @@
     "check:foot": "uv run --script scripts/check-foot.py",
     "check:scroll": "uv run --script scripts/check-scroll.py",
     "check:title": "uv run --script scripts/check-title.py",
-    "check:memos": "uv run --script scripts/apply-memos.py --check",
     "check:note-fonts": "uv run --script scripts/build-note-fonts.py check",
     "check:note-wrap": "uv run --script scripts/check-note-wrap.py",
     "check:subtitle": "uv run --script scripts/check-subtitle-wrap.py",

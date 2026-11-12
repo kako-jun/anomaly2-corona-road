@@ -34,6 +34,7 @@ const makeProps = (
   cameras,
   currentCameraIndex: 0,
   currentCamera: cameras[0],
+  unreportedCount: 0,
   feedback: null,
   gameTime: '00:00',
   flagEvent: null,
@@ -393,5 +394,46 @@ describe('Cabinet model plate (#304)', () => {
   it('is in the cabinet preload list of index.html', () => {
     const html = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8')
     expect(html).toMatch(/data-cabinet-image\s+href="\/ui\/model-plate\.webp"/)
+  })
+})
+
+describe('Cabinet REPORT lamp (#344)', () => {
+  const lamp = (c: HTMLElement) => c.querySelector('.lamp-big') as HTMLElement
+
+  it.each([
+    [0, false],
+    [2, false],
+    [3, true],
+    [4, true],
+  ])('with %i unreported, blinking is %s', (n, blinking) => {
+    const { container } = render(
+      <Cabinet {...makeProps({ unreportedCount: n })} />
+    )
+    expect(lamp(container).classList.contains('alert')).toBe(blinking)
+    expect(lamp(container)).not.toHaveClass('lit')
+  })
+
+  it('goes back to not blinking when a report brings the count down', () => {
+    const { container, rerender } = render(
+      <Cabinet {...makeProps({ unreportedCount: 3 })} />
+    )
+    expect(lamp(container)).toHaveClass('alert')
+    rerender(<Cabinet {...makeProps({ unreportedCount: 2 })} />)
+    expect(lamp(container)).not.toHaveClass('alert')
+  })
+
+  it('stops blinking and lights steadily while the dialog is open', async () => {
+    const { container } = render(
+      <Cabinet {...makeProps({ unreportedCount: 5 })} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: 'REPORT' }))
+    expect(lamp(container)).toHaveClass('lit')
+    expect(lamp(container)).not.toHaveClass('alert')
+  })
+
+  it('keeps the lamp decorative and shows no caption (kako-jun: no guidance text)', () => {
+    const { container } = render(<Cabinet {...makeProps()} />)
+    expect(lamp(container)).toHaveAttribute('aria-hidden', 'true')
+    expect(container.querySelector('.lamp-note')).toBeNull()
   })
 })

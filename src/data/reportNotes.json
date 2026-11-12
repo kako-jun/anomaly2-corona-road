@@ -1,0 +1,119 @@
+{
+  "notes": [
+    {
+      "id": "Camera",
+      "paper": "ja-1",
+      "ja": {
+        "file": "ja-camera.webp",
+        "heading": "カメラ",
+        "lines": [
+          "映像そのものが乱れる",
+          "ノイズ、真っ暗、ずれ",
+          "画面を横切る面の変化"
+        ],
+        "width": 600,
+        "height": 368
+      },
+      "en": {
+        "file": "en-camera.webp",
+        "heading": "CAMERA",
+        "lines": [
+          "The whole picture glitches",
+          "Noise, black screen, drift",
+          "A surface across the view changes"
+        ],
+        "width": 600,
+        "height": 368
+      }
+    },
+    {
+      "id": "Object",
+      "paper": "en-2",
+      "ja": {
+        "file": "ja-object.webp",
+        "heading": "もの",
+        "lines": ["物が出る、消える", "物が変わる", "床や壁、天井の物も"],
+        "width": 600,
+        "height": 368
+      },
+      "en": {
+        "file": "en-object.webp",
+        "heading": "OBJECT",
+        "lines": [
+          "Things appear, vanish, change",
+          "Floor, wall, ceiling things too"
+        ],
+        "width": 600,
+        "height": 316
+      }
+    },
+    {
+      "id": "Environment",
+      "paper": "ja-3",
+      "ja": {
+        "file": "ja-environment.webp",
+        "heading": "環境",
+        "lines": ["光の変化", "床、壁、天井の面", "扉や建物のつくり"],
+        "width": 600,
+        "height": 368
+      },
+      "en": {
+        "file": "en-environment.webp",
+        "heading": "ENVIRONMENT",
+        "lines": [
+          "Changes in light",
+          "The floor, wall, ceiling surface",
+          "Doors, the building's structure"
+        ],
+        "width": 600,
+        "height": 368
+      }
+    },
+    {
+      "id": "Person",
+      "paper": "en-1",
+      "ja": {
+        "file": "ja-person.webp",
+        "heading": "ひと",
+        "lines": [
+          "人、人影、体の一部",
+          "人の痕跡",
+          "人の形(人形、絵、影)",
+          "動物は含まない"
+        ],
+        "width": 600,
+        "height": 420
+      },
+      "en": {
+        "file": "en-person.webp",
+        "heading": "PERSON",
+        "lines": [
+          "A person, a shadow, a body part",
+          "Traces of someone",
+          "Human shapes: dolls, art, shadows",
+          "Not animals"
+        ],
+        "width": 600,
+        "height": 420
+      }
+    },
+    {
+      "id": "Surreal",
+      "paper": "ja-2",
+      "ja": {
+        "file": "ja-surreal.webp",
+        "heading": "ありえない",
+        "lines": ["ありえないこと", "映るはずのものが映らない"],
+        "width": 600,
+        "height": 316
+      },
+      "en": {
+        "file": "en-surreal.webp",
+        "heading": "SURREAL",
+        "lines": ["Something impossible", "What should show up doesn't"],
+        "width": 600,
+        "height": 316
+      }
+    }
+  ]
+}

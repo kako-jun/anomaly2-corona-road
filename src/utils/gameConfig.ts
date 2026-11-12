@@ -120,6 +120,9 @@ export const DIALOGUE_CONFIG = {
  */
 export const SUBTITLE_EN_ENABLED = false
 
+/** The REPORT lamp blinks while this many anomalies or more are unreported (kako-jun, #344). */
+export const ALERT_UNREPORTED_MIN = 3
+
 /**
  * Pacing once the child has been found (the `child` flag is raised), Issue #86. kako-jun only said
  * "more anomalies appear after the child is found". The interval (15 s) is a PLACEHOLDER; the caps (4 normally, 8 here) are decided

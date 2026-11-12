@@ -22,7 +22,9 @@ vi.mock('node:fs', async importOriginal => {
     existsSync: ((p: unknown) =>
       String(p).includes('assets/anomaly-overlays/')
         ? fsMock.existing.has(String(p).replace(/^.*?(assets\/)/, '$1'))
-        : actual.existsSync(p as string)) as typeof actual.existsSync,
+        : String(p).includes('public/note-sketches/')
+          ? fsMock.existing.has(String(p).replace(/^.*?(public\/)/, '$1'))
+          : actual.existsSync(p as string)) as typeof actual.existsSync,
   }
 })
 
@@ -108,6 +110,39 @@ describe('anomaly-ledger vite plugin', () => {
     await expect(run(`anomalies:\n${entryYaml()}\n`)).rejects.toThrow(
       /entry "a1": overlay file not found: assets\/anomaly-overlays\/cam01\/a1\.webp/
     )
+  })
+
+  describe('memo_image (#325)', () => {
+    const memo = `\n    memo:\n      ja: 'あ'\n      en: 'a'`
+    it('hands a scribble that exists to the game, and fails the build when its file is missing', async () => {
+      fsMock.existing.add('public/note-sketches/a1.webp')
+      const { out } = await run(
+        `anomalies:\n${entryYaml()}${memo}\n    memo_image: 'a1.webp'\n`
+      )
+      const json = JSON.parse((out as string).replace('export default ', ''))
+      expect(json[0].memoImage).toBe('a1.webp')
+      fsMock.existing.delete('public/note-sketches/a1.webp')
+      await expect(
+        run(`anomalies:\n${entryYaml()}${memo}\n    memo_image: 'a1.webp'\n`)
+      ).rejects.toThrow(
+        /entry "a1": memo_image file not found: public\/note-sketches\/a1\.webp/
+      )
+    })
+    it('fails the build for a scribble file that is missing even on a planned entry', async () => {
+      await expect(
+        run(
+          `anomalies:\n${entryYaml({ status: 'planned' })}${memo}\n    memo_image: 'gone.webp'\n`
+        )
+      ).rejects.toThrow(/memo_image file not found/)
+    })
+    it('fails the build on a scribble without a memo or of the wrong shape', async () => {
+      await expect(
+        run(`anomalies:\n${entryYaml()}\n    memo_image: 'a1.webp'\n`)
+      ).rejects.toThrow(/entry "a1".*memo_image needs a memo/)
+      await expect(
+        run(`anomalies:\n${entryYaml()}${memo}\n    memo_image: 'a1.png'\n`)
+      ).rejects.toThrow(/entry "a1".*memo_image/)
+    })
   })
 
   it('fails the build on a malformed origin', async () => {

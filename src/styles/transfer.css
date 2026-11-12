@@ -1,0 +1,89 @@
+.transfer-key:focus-visible {
+  outline: 3px solid #ffd27a;
+  outline-offset: 3px;
+}
+.transfer-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.82);
+  overflow-y: auto;
+}
+.transfer-box {
+  width: min(100%, 460px);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 14px;
+  color: var(--start-hi);
+  background: #111;
+  border: 1px solid var(--start-hi);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.transfer-title {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+}
+.transfer-section h3 {
+  margin: 10px 0 4px;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+}
+.transfer-help,
+.transfer-warn {
+  margin: 0 0 8px;
+}
+.transfer-warn {
+  color: #ffd27a;
+  font-weight: 700;
+}
+.transfer-keys {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0;
+}
+.transfer-key {
+  flex: 1;
+  min-height: 44px;
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--start-hi);
+  background: #222;
+  border: 1px solid var(--start-hi);
+  cursor: pointer;
+}
+.transfer-key:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.transfer-key--danger {
+  color: #ffd27a;
+  border-color: #ffd27a;
+}
+.transfer-area {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font: 12px/1.4 monospace;
+  color: var(--start-hi);
+  background: #000;
+  border: 1px solid #666;
+  padding: 6px;
+  word-break: break-all;
+}
+.transfer-status,
+.transfer-error {
+  min-height: 1.5em;
+  margin: 4px 0 0;
+}
+.transfer-error {
+  color: #ff9a8a;
+  font-weight: 700;
+}

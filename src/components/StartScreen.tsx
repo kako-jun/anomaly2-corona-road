@@ -5,6 +5,7 @@ import { NEXT_HINT, NOTES_LABEL, titleNotes } from '../data/titleNotes'
 import type { Language } from '../utils/saveData'
 import { nextPage, prevPage, swipeDirection } from '../utils/titlePager'
 import { TitleNoise } from './TitleNoise'
+import { TransferPanel } from './TransferPanel'
 
 // The photo's drift starts at a different point of its loops (70 s and 53 s) on each load; CSS only after that.
 const panOffsets = () =>
@@ -22,6 +23,10 @@ interface StartScreenProps {
   onStartOver?: () => void
   /** The language of the notes' pictures (#292), decided from the browser by the app. */
   language?: Language
+  /** Enables the save transfer key (#84); called after an imported code replaced the save. */
+  onTransferred?: () => void
+  /** An import could not be stored: the save state changed (the notice may need to appear or clear). */
+  onTransferFailed?: () => void
 }
 
 const startKeyClass = 'key start-key'
@@ -40,10 +45,14 @@ export const StartScreen = ({
   endingReached = false,
   onStartOver,
   language = 'ja',
+  onTransferred,
+  onTransferFailed,
 }: StartScreenProps) => {
+  const [transferring, setTransferring] = useState(false)
   const [confirming, setConfirming] = useState(false)
   // Keyboard focus follows the confirmation: CANCEL (the safe side) when it opens, START OVER when
   // it is cancelled, and START SHIFT once the erase has taken effect.
+  const transferKeyRef = useRef<HTMLButtonElement>(null)
   const cancelRef = useRef<HTMLButtonElement>(null)
   const startOverRef = useRef<HTMLButtonElement>(null)
   const goRef = useRef<HTMLButtonElement>(null)
@@ -60,12 +69,14 @@ export const StartScreen = ({
     if (!confirming) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
+      // The transfer panel is on top: its Escape closes only itself.
+      if (transferring) return
       focusAfter.current = 'cancel'
       setConfirming(false)
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [confirming])
+  }, [confirming, transferring])
   useEffect(() => {
     if (!endingReached && focusAfter.current === 'erase') {
       focusAfter.current = null
@@ -99,6 +110,31 @@ export const StartScreen = ({
         <TitleNoise />
       </div>
       <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
+      {onTransferred && (
+        <button
+          type="button"
+          ref={transferKeyRef}
+          className="start-transfer-key"
+          onClick={() => setTransferring(true)}
+        >
+          TRANSFER SAVE
+        </button>
+      )}
+      {onTransferred && transferring && (
+        <TransferPanel
+          onClose={() => {
+            setTransferring(false)
+            // Back to the key that opened the panel.
+            setTimeout(() => transferKeyRef.current?.focus(), 0)
+          }}
+          onImportFailed={onTransferFailed}
+          onImported={() => {
+            // A START OVER confirmation left open would offer to erase the progress just imported.
+            setConfirming(false)
+            onTransferred()
+          }}
+        />
+      )}
 
       <div
         className={confirming ? 'start-foot start-foot--confirm' : 'start-foot'}

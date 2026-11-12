@@ -10,6 +10,7 @@ import { CameraStrip } from './CameraStrip'
 import { CameraView } from './CameraView'
 import { GameHUD } from './GameHUD'
 import { Knob } from './Knob'
+import { shouldAlert } from '../utils/reportAlert'
 import { ReportButton, ReportDialog } from './ReportPanel'
 
 // Fixed at module load: changing `?wear=` needs a page reload.
@@ -23,6 +24,8 @@ interface CabinetProps {
   anomalyHere?: Anomaly
   /** Ids of the anomalies not reported yet (the spawn hint subtitle waits on them). */
   openAnomalyIds?: string[]
+  /** Anomalies out there that nobody has reported yet (drives the REPORT lamp, #344). */
+  unreportedCount: number
   feedback: Feedback | null
   gameTime: string
   /** Flags that just rose (their story conversation cuts into the subtitles). */
@@ -42,6 +45,7 @@ export const Cabinet = ({
   currentCamera,
   anomalyHere,
   openAnomalyIds,
+  unreportedCount,
   feedback,
   gameTime,
   flagEvent,
@@ -130,6 +134,7 @@ export const Cabinet = ({
           />
           <ReportButton
             open={reportOpen}
+            alert={shouldAlert(unreportedCount)}
             buttonRef={reportBtnRef}
             onToggle={() => setReportOpen(o => !o)}
           />

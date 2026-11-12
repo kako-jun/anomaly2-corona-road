@@ -127,6 +127,15 @@ describe('applyUsed', () => {
     )
     expect(r.usedLines).toEqual({ k1: ['x', 'n1'], k2: ['y'] })
   })
+  it('keeps a "__proto__" key as plain data (the prototype stays an Object)', () => {
+    const hostile = JSON.parse('{"__proto__":["x"]}')
+    const r = applyUsed(st([], hostile), st([], {}), st([], {}))
+    expect(Object.getPrototypeOf(r.usedLines)).toBe(Object.prototype)
+    expect(Object.keys(r.usedLines)).toEqual(['__proto__'])
+    expect(
+      applyUsed(st([], {}), st([], {}), st([], hostile)).usedLines
+    ).toEqual(hostile)
+  })
   it('does not mutate its inputs', () => {
     const cur = st(['x'])
     const prev = st(['o1'])

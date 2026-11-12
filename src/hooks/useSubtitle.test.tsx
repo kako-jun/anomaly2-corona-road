@@ -842,6 +842,22 @@ describe('useSubtitle: spawn hint (#343)', () => {
     expect(JSON.stringify(load())).toBe(before)
   })
 
+  it('with a gated spawn-hint, reads the saved flags once per opportunity, not on every frame', () => {
+    H.ledger.entries = [
+      ...H.all,
+      {
+        ...H.all.find(e => e.id === 'spawn-hint-y-1')!,
+        id: 'spawn-hint-y-9',
+        unlock: 'g',
+      },
+    ] as typeof H.all
+    DIALOGUE_CONFIG.hintChance = 0
+    const d = inSilence()
+    const before = H.loads.n
+    for (let i = 0; i < 200; i++) d.set({ elapsedMs: HINT + i * 16 })
+    expect(H.loads.n - before).toBeLessThanOrEqual(1)
+  })
+
   it('never reads the save on a per-frame tick (dice, delay and gap are checked first)', () => {
     const d = inSilence()
     const before = H.loads.n
