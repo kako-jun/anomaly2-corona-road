@@ -4,16 +4,16 @@
  * (or mouse) while holding moves the magnified spot; letting go removes it.
  */
 export const LOUPE = {
-  /** How long the press must stay put before the loupe shows (ms). A faster move past SWIPE_PX is a camera swipe. */
-  HOLD_MS: 250,
+  /** How long the press must stay put before the loupe shows (ms); 250 -> 180 by kako-jun (2026-11-12, "slow to appear"). It is also the ceiling of a short tap (edge tap #354, double tap #342: released under HOLD_MS), so it is one constant on purpose. A faster move past SWIPE_PX is a camera swipe. */
+  HOLD_MS: 180,
   /** While the loupe has not shown yet, moving more than this (px) means "not a hold": no loupe, the gesture is a swipe. */
   HOLD_SLOP_PX: 12,
   /** Horizontal travel (px) from press to release that switches the camera (when no loupe was shown). */
   SWIPE_PX: 50,
   /** Magnification of the picture inside the loupe. */
   ZOOM: 2.5,
-  /** Diameter of the round loupe (px). */
-  DIAMETER_PX: 160,
+  /** Diameter of the round loupe (px). kako-jun asked for it bigger (2026-11-12): 160 -> 240. Tune it here only; CSS and layout follow. */
+  DIAMETER_PX: 240,
   /** How fast the magnified spot follows the finger: the time (ms) it takes to cover about 63% of the remaining distance. */
   FOLLOW_TAU_MS: 55,
 } as const
