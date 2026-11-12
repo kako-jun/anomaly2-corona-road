@@ -6,6 +6,11 @@ import { makeAnomaly, makeCameras } from '../test/factories'
 import { CameraView } from './CameraView'
 
 vi.mock('./NoiseCanvas', () => ({ NoiseCanvas: () => null }))
+vi.mock('./GlitchCanvas', () => ({
+  GlitchCanvas: ({ kind }: { kind: string }) => (
+    <canvas data-testid="glitch-canvas" data-kind={kind} />
+  ),
+}))
 
 const cams = makeCameras(8)
 
@@ -390,5 +395,71 @@ describe('CameraView English subtitle (#326)', () => {
     expect(el.querySelector('div')?.getAttribute('lang')).toBe('ja')
     expect(el.querySelectorAll('.seg')).toHaveLength(2)
     expect(el.textContent).toBe('えっ　私が?')
+  })
+})
+
+describe('CameraView feed glitch (#78)', () => {
+  const glassOf = (c: HTMLElement) => c.querySelector('.glass') as HTMLElement
+
+  it('has no glitch markup by default', () => {
+    const { container } = render(<CameraView {...props()} />)
+    expect(glassOf(container).hasAttribute('data-glitch')).toBe(false)
+    expect(container.querySelector('.osd-nosignal')).toBeNull()
+    expect(container.querySelector('.osd-dev')).toBeNull()
+    expect(container.querySelector('svg')).toBeNull()
+  })
+
+  it('puts the kind on the glass', () => {
+    const { container } = render(
+      <CameraView {...props({ feedGlitch: 'blur' })} />
+    )
+    expect(glassOf(container).getAttribute('data-glitch')).toBe('blur')
+  })
+
+  it('camera lost: black layer plus a NO SIGNAL text, and the CAM label stays', () => {
+    const { container } = render(
+      <CameraView {...props({ feedGlitch: 'lost' })} />
+    )
+    expect(container.querySelector('.lost')).not.toBeNull()
+    expect(screen.getByText('NO SIGNAL')).toBeInTheDocument()
+    expect(container.querySelector('.osd-cam')).not.toBeNull()
+  })
+
+  it.each([
+    ['wave', 'svg'],
+    ['chroma', 'svg'],
+    ['scanburn', '.scanburn'],
+    ['blink', '.blackframe'],
+    ['ghost', 'img.ghost'],
+  ] as const)('%s renders %s', (kind, selector) => {
+    const { container } = render(
+      <CameraView {...props({ feedGlitch: kind })} />
+    )
+    expect(container.querySelector(selector)).not.toBeNull()
+  })
+
+  it('draws the two canvas glitches', () => {
+    const a = render(<CameraView {...props({ feedGlitch: 'blocks' })} />)
+    expect(screen.getByTestId('glitch-canvas').dataset.kind).toBe('blocks')
+    a.unmount()
+    render(<CameraView {...props({ feedGlitch: 'deadpixels' })} />)
+    expect(screen.getByTestId('glitch-canvas').dataset.kind).toBe('deadpixels')
+  })
+
+  it('names a forced glitch on the screen (dev only)', () => {
+    render(
+      <CameraView {...props({ feedGlitch: 'zoom', feedGlitchForced: true })} />
+    )
+    expect(screen.getByText('DEV GLITCH: zoom')).toBeInTheDocument()
+  })
+
+  it('does not print the dev label when there is no glitch (ending)', () => {
+    render(<CameraView {...props({ feedGlitchForced: true })} />)
+    expect(screen.queryByText(/DEV GLITCH/)).toBeNull()
+  })
+
+  it('a glitch keeps the base photo', () => {
+    render(<CameraView {...props({ feedGlitch: 'static' })} />)
+    expect(baseOf(cams[0])).toBeInTheDocument()
   })
 })

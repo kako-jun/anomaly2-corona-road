@@ -89,6 +89,20 @@ describe('loupe gesture (#341)', () => {
     expect(onSwipe).not.toHaveBeenCalled()
   })
 
+  it('shows the feed glitch in the loupe too (#78)', () => {
+    onSwipe = vi.fn()
+    const view = render(
+      <CameraView {...viewProps(cams[0], true)} feedGlitch="blur" />
+    )
+    const glass = view.container.querySelector('.glass') as HTMLElement
+    const frame = view.container.querySelector('.pic__frame') as HTMLElement
+    glass.getBoundingClientRect = () => rect(GLASS)
+    frame.getBoundingClientRect = () => rect(GLASS)
+    pe('pointerDown', glass, 300)
+    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 10))
+    expect(loupe()?.getAttribute('data-glitch')).toBe('blur')
+  })
+
   it('a quick horizontal swipe switches the camera and never shows the loupe', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)

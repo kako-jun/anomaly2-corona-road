@@ -151,6 +151,8 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | `ui_corruption` | UI の崩れ（画像以外）      | 画面表示が壊れる                             |
 | `rule_break`    | ルール違反（画像以外）     | タイマーの異常                               |
 
+`feed_glitch` の見せ方（#78）: RT-FEED-01〜06・11・19〜26 は画面側の効果が実装済み（種類と台帳 ID の対応は `src/utils/feedGlitch.ts`、描画は `src/styles/feedGlitch.css`）。開発サーバーで `?glitch=<種類>`（`zoom` `tilt` `blur` `bright` `dark` `blocks` `scanburn` `lost` `shake` `hardshake` `wave` `chroma` `static` `blink` `deadpixels` `ghost` `fade`）を付けると全カメラで強制発火して見られる（本番ビルドでは無効）。RT-FEED-07〜10・12〜18 は見送りで、理由は各エントリの `note` に書いてある。出現（抽選）はまだ無く（#77）、効果が実在しても status は `planned` のまま（昇格は別途）。
+
 ## カテゴリ（ゲーム内分類）
 
 ゲームの report 選択肢に対応:
