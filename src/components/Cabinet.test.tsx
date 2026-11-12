@@ -431,9 +431,9 @@ describe('Cabinet REPORT lamp (#344)', () => {
     expect(lamp(container)).not.toHaveClass('alert')
   })
 
-  it('shows the always-visible English label and keeps the lamp decorative', () => {
+  it('keeps the lamp decorative and shows no caption (kako-jun: no guidance text)', () => {
     const { container } = render(<Cabinet {...makeProps()} />)
-    expect(screen.getByText('Blinks: many unreported')).toBeInTheDocument()
     expect(lamp(container)).toHaveAttribute('aria-hidden', 'true')
+    expect(container.querySelector('.lamp-note')).toBeNull()
   })
 })

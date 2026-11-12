@@ -1902,12 +1902,6 @@
   }
 }
 
-.lamp-note {
-  flex: 1 1 100%;
-  font-size: 0.58rem;
-  opacity: 0.85;
-}
-
 /* Reduced motion: no blinking, the lamp stays lit as a fixed emphasis. */
 @media (prefers-reduced-motion: reduce) {
   .lamp-big.alert {

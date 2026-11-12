@@ -29,8 +29,8 @@ interface ReportButtonProps {
 
 /**
  * The red REPORT key with its lamp: lit while the category picker is open, blinking while many
- * anomalies are unreported (#344). A small always-visible label says what the blinking means; the
- * lamp is decoration (the label is a machine part, so English only).
+ * anomalies are unreported (#344). The lamp is decoration (`aria-hidden`); no caption explains it
+ * (kako-jun: no guidance text).
  */
 export const ReportButton = ({
   open,
@@ -55,7 +55,6 @@ export const ReportButton = ({
         REPORT
       </button>
     </div>
-    <div className="label lamp-note">Blinks: many unreported</div>
   </div>
 )
 
