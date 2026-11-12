@@ -90,6 +90,8 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | `status`    | `produced`（制作済み）/ `planned`（未制作）                                                                                                                                                                                                          | `produced`      |
 | `kind`      | `image`（overlay を描く）/ `non_image`（画像なし）                                                                                                                                                                                                   | `image`         |
 | `reiwa`     | `true` のみ（令和の異変の印。`false` や他の値はエラー）                                                                                                                                                                                              | 省略=令和でない |
+| `unlock`    | `{ flag: <名前> }`（`dialogue/flags.yaml` に定義のあるフラグ名。未定義の名前はビルドが失敗する）。そのフラグが保存されるまで、この異変は出現の候補から外れる（令和の `elder3` と同じ流儀。#77）。条件が詳細の文章にしかない状態にしない | 省略=いつでも出る |
+| `exclusive` | 排他グループ名（小文字・数字・ハイフン）。同じ名前の異変が（報告前のまま）出ている間は、同じグループの別の異変は出現しない（同じ部品を触る異変の同時出現禁止。例: 型番プレートの `RT-UI-14` と `RT-UI-28`。#77）。報告で解除されればまた出る | 省略=制限なし |
 | `memo_flag` | `shutter` / `food` / `reiwa` のどれか、またはその配列（重複・未知の名前はエラー）。リザルトの捜査メモに「仮説の一行」を出すフラグ（#325）                                                                                                            | 省略=立てない   |
 | `memo`      | `ja` と `en` の一言（どちらも空でない1行。他のキーはエラー）。`ja` の数は全角数字（「１枚」「２つ」。#352）。その異変を見つけたあと、リザルトの捜査メモに出る一行（#325） | 省略=一言なし   |
 | `memo_image` | 画像のファイル名（`<異変ID>.webp` の1語。フォルダなし・`.webp` のみ。`memo` のある異変だけに付く）。ファイルは `public/note-sketches/` に置く。その異変の一言メモが選ばれたとき、リザルトの捜査メモにその落書きが添えて出る（#325） | 省略=落書きなし |
@@ -109,7 +111,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 - **異変の見える場所（kako-jun 2026-11-12）**: 操作せずに常に見えている部分（モニター・筐体・TIME や REPORTS の数字窓・ランプ・つまみ・キー・REPORT ボタン自体など）に限る。REPORT を押して開く一覧（カテゴリボタン・並び・文言）や、1クリックしないと見えない場所への仕掛けは反則なので作らない。ルーペのように常時使える常設部品の異変（`RT-UI-21`）は、気づく手がかりが常にあるので許す。
 - non_image の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口を新設せず、メタ的な異変として最後の既存カテゴリ `Surreal` で報告する（#80 の決定。全件 `Surreal`）。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に画像以外の種類、non_image に画像の種類）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
-- ゲームに渡るのは `produced` だけ: `kind: image` は `virtual:anomalies`、`kind: non_image` は `virtual:non-image-anomalies`（#77。camera_id・overlay は渡さず、出現のたびにカメラを無作為に選ぶ）。planned は検証されるが抽選には出ない。non_image を `produced` にしてよいのは、効果がゲームに実在し `src/utils/nonImageEffects.ts` に登録されているものだけ（効果の無い produced は `nonImageSpawn.test.ts` が落とす）。昇格は効果を実ブラウザで確認してから。
+- ゲームに渡るのは `produced` だけ: `kind: image` は `virtual:anomalies`、`kind: non_image` は `virtual:non-image-anomalies`（#77。camera_id・overlay は渡さず、出現のたびにカメラを無作為に選ぶ）。planned は検証されるが抽選には出ない。non_image を `produced` にしてよいのは、効果がゲームに実在し `src/utils/nonImageEffects.ts` に登録されているものだけ（効果の無い produced は `nonImageSpawn.test.ts` が落とす）。昇格は効果を実ブラウザで確認してから。`sound`（`anomaly_type: sound`）は、保存された音量が 0 以下かミュート中の間は抽選から外す（聞こえないと見つけようがない。kako-jun 2026-11-12、#79）。出現した後に音量を 0 にしても出たままで、報告すれば解除できる。
 - 件数の要約: `npm run ledger:summary`（kind / status / category / anomaly_type とそのクロス集計。ビルドと同じ検証を通る）。
 
 **昇格ルール（planned → produced）**: 制作の詳細（box・生成プロンプト・overlay など）は**台帳のエントリへ移し**、`candidate-pool.md` の該当 `###` 節を**削除**する。台帳とプールに同じ案を二重に残さない。

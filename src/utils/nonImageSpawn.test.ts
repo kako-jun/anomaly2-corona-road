@@ -7,6 +7,7 @@ import type { LedgerEntry, NonImageEntry } from './anomalyLedger'
 import {
   createNonImageAnomaly,
   hasUnusedEntry,
+  spawnableEntries,
   pickNonImageEntry,
   pickSpawn,
 } from './anomalyData'
@@ -326,5 +327,92 @@ describe('reportTargetsFor', () => {
   it('honours a category array', () => {
     const list = [a({ categories: ['Camera', 'Surreal'] })]
     expect(reportTargetsFor(list, 1, 'Surreal').hit).toBeDefined()
+  })
+})
+
+describe('unlock flag, exclusive group and audibility gates (#77, #79)', () => {
+  const e = (id: string, extra: Partial<NonImageEntry> = {}): NonImageEntry =>
+    glitch(id, extra)
+  const ids = (list: readonly { id: string }[]) => list.map(x => x.id)
+
+  it('an entry with an unlock flag waits until that flag is saved', () => {
+    const list = [e('a'), e('b', { unlockFlag: 'elder1' })]
+    expect(ids(spawnableEntries(list, false))).toEqual(['a'])
+    expect(ids(spawnableEntries(list, false, { flags: {} }))).toEqual(['a'])
+    expect(
+      ids(spawnableEntries(list, false, { flags: { elder1: false } }))
+    ).toEqual(['a'])
+    expect(
+      ids(spawnableEntries(list, false, { flags: { elder1: true } }))
+    ).toEqual(['a', 'b'])
+  })
+
+  it('an entry of a busy exclusive group is left out; other groups and ungrouped ones stay', () => {
+    const list = [
+      e('p14', { exclusiveGroup: 'model-plate' }),
+      e('p28', { exclusiveGroup: 'model-plate' }),
+      e('x', { exclusiveGroup: 'other' }),
+      e('y'),
+    ]
+    expect(
+      ids(
+        spawnableEntries(list, false, { busyGroups: new Set(['model-plate']) })
+      )
+    ).toEqual(['x', 'y'])
+    expect(
+      ids(spawnableEntries(list, false, { busyGroups: new Set() }))
+    ).toHaveLength(4)
+  })
+
+  it('sound entries are left out while nothing is audible, and back when it is', () => {
+    const list = [
+      e('s', { anomalyType: 'sound', category: 'Environment' }),
+      e('g'),
+    ]
+    expect(ids(spawnableEntries(list, false, { audible: false }))).toEqual([
+      'g',
+    ])
+    expect(ids(spawnableEntries(list, false, { audible: true }))).toEqual([
+      's',
+      'g',
+    ])
+    expect(ids(spawnableEntries(list, false))).toEqual(['s', 'g']) // default: audible
+  })
+
+  it('pickSpawn honours the unlock flag and the busy group (image entries too)', () => {
+    const locked = { ...img('lk', 1), unlockFlag: 'elder1' }
+    expect(pickSpawn([locked], [], [1], new Set())).toBeNull()
+    expect(
+      pickSpawn([locked], [], [1], new Set(), { flags: { elder1: true } })?.kind
+    ).toBe('image')
+    const grouped = { ...img('gp', 1), exclusiveGroup: 'plate' }
+    expect(
+      pickSpawn([grouped], [], [1], new Set(), {
+        busyGroups: new Set(['plate']),
+      })
+    ).toBeNull()
+  })
+
+  it('hasUnusedEntry keeps counting an entry that waits for a flag, a group or sound', () => {
+    const waiting = [e('w', { unlockFlag: 'elder1' })]
+    expect(hasUnusedEntry([], waiting, new Set(), false)).toBe(false) // no effect for it only because the id is unknown
+    expect(
+      hasUnusedEntry(
+        [],
+        [e('RT-FEED-22', { unlockFlag: 'elder1' })],
+        new Set(),
+        false
+      )
+    ).toBe(true)
+  })
+
+  it('createNonImageAnomaly carries the exclusive group', () => {
+    expect(
+      createNonImageAnomaly(
+        e('RT-FEED-22', { exclusiveGroup: 'g' }),
+        1,
+        'early'
+      ).exclusiveGroup
+    ).toBe('g')
   })
 })

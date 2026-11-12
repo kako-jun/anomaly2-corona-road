@@ -23,6 +23,7 @@ import {
   pickSpawn,
 } from '../utils/anomalyData'
 import { reportTargetsFor } from '../utils/reportTarget'
+import { isAudible } from '../utils/audioSettings'
 import type { FlagEvent } from './useSubtitle'
 import {
   raiseFlagsAtStart,
@@ -295,7 +296,16 @@ export const useGameState = () => {
           nonImageLedger,
           freeCameraIds,
           used,
-          { reiwaUnlocked }
+          {
+            reiwaUnlocked,
+            flags: load().flags,
+            audible: isAudible(),
+            busyGroups: new Set(
+              activeAnomaliesRef.current
+                .filter(a => !a.detectedAt && a.exclusiveGroup)
+                .map(a => a.exclusiveGroup as string)
+            ),
+          }
         )
         if (!spawn) break
         used.add(spawn.entry.id)

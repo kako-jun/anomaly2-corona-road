@@ -5,6 +5,7 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { parse as parseYaml } from 'yaml'
 import {
+  checkUnlockFlags,
   isGameRecord,
   isNonImageGameRecord,
   MEMO_IMAGE_DIR,
@@ -15,6 +16,7 @@ import {
 import { DIALOGUE_FILES, parseDialogueLedger } from './src/utils/dialogueLedger'
 
 const LEDGER_PATH = resolve(__dirname, 'prompts/anomalies.yaml')
+const FLAGS_PATH = resolve(__dirname, 'dialogue/flags.yaml')
 const VIRTUAL_ID = 'virtual:anomalies'
 const RESOLVED_ID = '\0' + VIRTUAL_ID
 
@@ -24,6 +26,22 @@ const RESOLVED_ID = '\0' + VIRTUAL_ID
  * entries (planned / non_image ones are validated but not handed to the game). A broken entry anywhere
  * in the ledger fails the build and the message names the entry.
  */
+/** Parse the ledger and check that every `unlock.flag` is a flag defined in dialogue/flags.yaml (#77). */
+const readLedgerRecords = (addWatchFile: (path: string) => void) => {
+  addWatchFile(LEDGER_PATH)
+  addWatchFile(FLAGS_PATH)
+  const records = parseLedgerRecords(
+    parseYaml(readFileSync(LEDGER_PATH, 'utf8'))
+  )
+  const flags = (
+    parseYaml(readFileSync(FLAGS_PATH, 'utf8')) as {
+      flags?: Record<string, unknown>
+    } | null
+  )?.flags
+  checkUnlockFlags(records, new Set(Object.keys(flags ?? {})))
+  return records
+}
+
 const anomalyLedgerPlugin = (): Plugin => ({
   name: 'anomaly-ledger',
   resolveId(id) {
@@ -31,10 +49,7 @@ const anomalyLedgerPlugin = (): Plugin => ({
   },
   load(id) {
     if (id !== RESOLVED_ID) return undefined
-    this.addWatchFile(LEDGER_PATH)
-    const records = parseLedgerRecords(
-      parseYaml(readFileSync(LEDGER_PATH, 'utf8'))
-    )
+    const records = readLedgerRecords(p => this.addWatchFile(p))
     // A memo scribble (#325) must exist for every entry that names one, planned or not: it is added by a file + a ledger line.
     for (const r of records) {
       if (
@@ -73,10 +88,7 @@ const nonImageLedgerPlugin = (): Plugin => ({
   },
   load(id) {
     if (id !== NON_IMAGE_RESOLVED_ID) return undefined
-    this.addWatchFile(LEDGER_PATH)
-    const records = parseLedgerRecords(
-      parseYaml(readFileSync(LEDGER_PATH, 'utf8'))
-    )
+    const records = readLedgerRecords(p => this.addWatchFile(p))
     return `export default ${JSON.stringify(records.filter(isNonImageGameRecord).map(toNonImageEntry))}`
   },
 })

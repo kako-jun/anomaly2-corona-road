@@ -80,6 +80,10 @@ export interface LedgerEntry {
   size: { w: number; h: number }
   /** True for a Reiwa anomaly (the ledger's explicit `reiwa: true`, #83); absent otherwise. */
   reiwa?: true
+  /** Appears only once this flag (dialogue/flags.yaml) is saved (the ledger's `unlock: { flag }`, #77). */
+  unlockFlag?: string
+  /** Never appears while another unreported anomaly of the same group is running (the ledger's `exclusive`, #77). */
+  exclusiveGroup?: string
   /** Hypothesis memo flags this anomaly raises when reported (the ledger's `memo_flag`, #325). */
   memoFlags?: MemoFlag[]
   /** The one-line memo of this anomaly (the ledger's `memo`, #325). */
@@ -100,6 +104,8 @@ export interface NonImageEntry {
   categories?: AnomalyCategory[]
   anomalyType: NonImageAnomalyType
   reiwa?: true
+  unlockFlag?: string
+  exclusiveGroup?: string
   memoFlags?: MemoFlag[]
   memo?: MemoText
   memoImage?: string
@@ -222,6 +228,10 @@ export interface LedgerRecord {
   categories?: AnomalyCategory[]
   /** The ledger's `reiwa: true` (a thing the Showa era did not have); absent = not Reiwa. Any kind may carry it. */
   reiwa?: true
+  /** The ledger's `unlock: { flag }`: the entry may appear only after this flag is saved. Any kind may carry it. */
+  unlockFlag?: string
+  /** The ledger's `exclusive`: a group name; two unreported anomalies of one group never run together. Any kind. */
+  exclusiveGroup?: string
   /** The ledger's `memo_flag` (a name or a list of names from MEMO_FLAGS, no duplicates). Any kind may carry it. */
   memoFlags?: MemoFlag[]
   /** The ledger's `memo`: a Japanese and an English one-liner. Any kind may carry it. */
@@ -239,6 +249,47 @@ export interface LedgerRecord {
 
 const has = (rec: Record<string, unknown>, key: string): boolean =>
   rec[key] !== undefined && rec[key] !== null
+
+/** Optional `unlock`: `{ flag: <name> }` (the name itself is checked against dialogue/flags.yaml at build time). */
+export const parseUnlock = (value: unknown): string | undefined => {
+  if (value === undefined || value === null) return undefined
+  if (typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('"unlock" must be a mapping like { flag: elder1 }')
+  }
+  const rec = value as Record<string, unknown>
+  const extra = Object.keys(rec).filter(k => k !== 'flag')
+  if (extra.length > 0)
+    throw new Error(`unlock has an unknown key "${extra[0]}"`)
+  if (typeof rec.flag !== 'string' || rec.flag.trim() === '') {
+    throw new Error('unlock.flag is missing or not a string')
+  }
+  return rec.flag.trim()
+}
+
+/** Optional `exclusive`: a group name (lowercase letters, digits, hyphens). */
+export const parseExclusive = (value: unknown): string | undefined => {
+  if (value === undefined || value === null) return undefined
+  if (typeof value !== 'string' || !/^[a-z0-9][a-z0-9-]*$/.test(value)) {
+    throw new Error(
+      `exclusive "${String(value)}" must be a group name of lowercase letters, digits and hyphens`
+    )
+  }
+  return value
+}
+
+/** Every `unlock.flag` of the records must be a flag defined in dialogue/flags.yaml (an unknown one fails the build). */
+export const checkUnlockFlags = (
+  records: readonly { id: string; unlockFlag?: string }[],
+  flagNames: ReadonlySet<string>
+): void => {
+  for (const r of records) {
+    if (r.unlockFlag !== undefined && !flagNames.has(r.unlockFlag)) {
+      throw new Error(
+        `anomalies.yaml entry "${r.id}": unlock.flag "${r.unlockFlag}" is not defined in dialogue/flags.yaml`
+      )
+    }
+  }
+}
 
 /** Optional `memo_flag`: a name or a list of names from MEMO_FLAGS (no duplicates, none unknown). */
 export const parseMemoFlags = (value: unknown): MemoFlag[] | undefined => {
@@ -372,6 +423,8 @@ export const parseLedgerRecord = (
       )
     }
     const reiwa = rec.reiwa === true ? (true as const) : undefined
+    const unlockFlag = parseUnlock(rec.unlock)
+    const exclusiveGroup = parseExclusive(rec.exclusive)
     const memoFlags = parseMemoFlags(rec.memo_flag)
     const memo = parseMemo(rec.memo)
     const memoImage = parseMemoImage(rec.memo_image)
@@ -407,6 +460,8 @@ export const parseLedgerRecord = (
       ...(category ? { category } : {}),
       ...(categories && categories.length > 1 ? { categories } : {}),
       ...(reiwa ? { reiwa } : {}),
+      ...(unlockFlag ? { unlockFlag } : {}),
+      ...(exclusiveGroup ? { exclusiveGroup } : {}),
       ...(memoFlags ? { memoFlags } : {}),
       ...(memo ? { memo } : {}),
       ...(memoImage ? { memoImage } : {}),
@@ -440,6 +495,8 @@ export const toNonImageEntry = (r: LedgerRecord): NonImageEntry => {
     ...(r.categories ? { categories: r.categories } : {}),
     anomalyType: r.anomalyType as NonImageAnomalyType,
     ...(r.reiwa ? { reiwa: r.reiwa } : {}),
+    ...(r.unlockFlag ? { unlockFlag: r.unlockFlag } : {}),
+    ...(r.exclusiveGroup ? { exclusiveGroup: r.exclusiveGroup } : {}),
     ...(r.memoFlags ? { memoFlags: r.memoFlags } : {}),
     ...(r.memo ? { memo: r.memo } : {}),
     ...(r.memoImage ? { memoImage: r.memoImage } : {}),
@@ -470,6 +527,8 @@ export const toLedgerEntry = (r: LedgerRecord): LedgerEntry => {
     origin: r.origin,
     size: r.size,
     ...(r.reiwa ? { reiwa: r.reiwa } : {}),
+    ...(r.unlockFlag ? { unlockFlag: r.unlockFlag } : {}),
+    ...(r.exclusiveGroup ? { exclusiveGroup: r.exclusiveGroup } : {}),
     ...(r.memoFlags ? { memoFlags: r.memoFlags } : {}),
     ...(r.memo ? { memo: r.memo } : {}),
     ...(r.memoImage ? { memoImage: r.memoImage } : {}),

@@ -39,6 +39,8 @@ export interface Anomaly {
   overlay?: AnomalyOverlay
   /** Reporting scope; absent = `camera` (every image anomaly). */
   scope?: ReportScope
+  /** The ledger's `exclusive` group: no other unreported anomaly of this group is drawn while this one runs (#77). */
+  exclusiveGroup?: string
   /** Non-image only: the camera feed glitch drawn on `cameraId` while it is watched (removed when reported). */
   feedGlitch?: FeedGlitchKind
 }

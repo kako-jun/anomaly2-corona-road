@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { createAudioEngine } from './audioEngine'
 import {
   initGameAudio,
+  isAudible,
   readAudioSettings,
   saveMuted,
   saveVolume,
@@ -40,5 +41,17 @@ describe('audio settings', () => {
     expect(engine.getVolume()).toBe(20)
     expect(engine.isMuted()).toBe(true)
     remove()
+  })
+})
+
+describe('isAudible (the draw leaves sound anomalies out when false, #79)', () => {
+  it('is true by default, false at volume 0 or when muted, true again after raising it', () => {
+    expect(isAudible()).toBe(true)
+    update(cur => ({ ...cur, settings: { volume: 0, muted: false } }))
+    expect(isAudible()).toBe(false)
+    update(cur => ({ ...cur, settings: { volume: 40, muted: true } }))
+    expect(isAudible()).toBe(false)
+    update(cur => ({ ...cur, settings: { volume: 40, muted: false } }))
+    expect(isAudible()).toBe(true)
   })
 })

@@ -11,6 +11,7 @@ import {
   parseDimensions,
   parseLedger,
   parseLedgerEntry,
+  checkUnlockFlags,
   parseLedgerRecord,
   parseLedgerRecords,
   parseOrigin,
@@ -1072,5 +1073,44 @@ describe('the real ledger has no gaps in the runtime ids (kako-jun 2026-11-12)',
         MIN_RUNTIME_COUNT[kind]
       )
     }
+  })
+})
+
+describe('unlock / exclusive (#77)', () => {
+  const base = {
+    id: 'RT-X-01',
+    status: 'planned',
+    kind: 'non_image',
+    category: 'surreal',
+    anomaly_type: 'ui_corruption',
+    detail: 'd',
+  }
+  it('reads unlock.flag and exclusive', () => {
+    const r = parseLedgerRecord(
+      { ...base, unlock: { flag: 'elder1' }, exclusive: 'model-plate' },
+      0
+    )
+    expect(r.unlockFlag).toBe('elder1')
+    expect(r.exclusiveGroup).toBe('model-plate')
+  })
+  it('rejects a malformed unlock or exclusive, naming the entry', () => {
+    for (const bad of [
+      { unlock: 'elder1' },
+      { unlock: {} },
+      { unlock: { flag: 'a', when: 1 } },
+      { exclusive: 'Bad Name' },
+      { exclusive: 3 },
+    ]) {
+      expect(() => parseLedgerRecord({ ...base, ...bad }, 0)).toThrow(/RT-X-01/)
+    }
+  })
+  it('checkUnlockFlags fails on a flag that flags.yaml does not define', () => {
+    const names = new Set(['elder1'])
+    expect(() =>
+      checkUnlockFlags([{ id: 'a', unlockFlag: 'elder1' }], names)
+    ).not.toThrow()
+    expect(() =>
+      checkUnlockFlags([{ id: 'a', unlockFlag: 'nope' }], names)
+    ).toThrow(/"a".*nope/)
   })
 })

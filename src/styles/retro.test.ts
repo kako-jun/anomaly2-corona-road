@@ -292,9 +292,10 @@ describe('retro.css', () => {
     expect(decls('.panel', '--pz').map(Number)).toEqual(zooms)
     expect(zooms).toEqual([1.3, 1.45])
     // Evaluate the declared calc() in each band (unset --pz = 1, zoom 1): pull px / pz * zoom = on-screen px.
-    const m = /^calc\(\s*(\d+(?:\.\d+)?)px\s*\/\s*var\(--pz,\s*(\d+(?:\.\d+)?)\)\s*\)$/.exec(
-      decls('.knob-wrap', '--knob-label-pull')[0]
-    )
+    const m =
+      /^calc\(\s*(\d+(?:\.\d+)?)px\s*\/\s*var\(--pz,\s*(\d+(?:\.\d+)?)\)\s*\)$/.exec(
+        decls('.knob-wrap', '--knob-label-pull')[0]
+      )
     expect(m).not.toBeNull()
     const [num, fallback] = [Number(m![1]), Number(m![2])]
     for (const z of [undefined, ...zooms]) {
@@ -308,9 +309,7 @@ describe('retro.css', () => {
     // digits ~2px high (measured: 12px above / 16px below in a 44px window). Trimming each digit box to
     // cap-height .. baseline lets the flex centring land on the glyphs; the padding fallback is for
     // browsers without text-box. The window stays a centring flex row so TIME and REPORTS share one centre.
-    expect(decls('.vfd > *', 'text-box')).toEqual([
-      'trim-both cap alphabetic',
-    ])
+    expect(decls('.vfd > *', 'text-box')).toEqual(['trim-both cap alphabetic'])
     expect(decls('.vfd', 'align-items')).toContain('center')
     // Fallback (browsers older than Chrome 133 / Safari 18.2 / Firefox 154): a normal line box (31.2px)
     // would make TIME and REPORTS 47px tall next to the 36px STRIKES, so the fallback must set a 1em line
@@ -321,7 +320,10 @@ describe('retro.css', () => {
       at.walkRules(rule => {
         if (rule.selectors.includes('.vfd > *'))
           rule.walkDecls(d => void (fb[d.prop] = d.value.trim()))
-        expect(rule.selectors, 'fallback must not pad the window').not.toContain('.vfd')
+        expect(
+          rule.selectors,
+          'fallback must not pad the window'
+        ).not.toContain('.vfd')
       })
     })
     expect(fb['line-height']).toBe('1')
