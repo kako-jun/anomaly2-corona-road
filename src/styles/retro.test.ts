@@ -286,7 +286,9 @@ describe('retro.css', () => {
     // digits ~2px high (measured: 12px above / 16px below in a 44px window). Trimming each digit box to
     // cap-height .. baseline lets the flex centring land on the glyphs; the padding fallback is for
     // browsers without text-box. The window stays a centring flex row so TIME and REPORTS share one centre.
-    expect(decls('.vfd > *', 'text-box')).toEqual(['trim-both cap alphabetic'])
+    expect(decls('.vfd > *', 'text-box')).toEqual([
+      'trim-both cap alphabetic',
+    ])
     expect(decls('.vfd', 'align-items')).toContain('center')
     // Fallback (browsers older than Chrome 133 / Safari 18.2 / Firefox 154): a normal line box (31.2px)
     // would make TIME and REPORTS 47px tall next to the 36px STRIKES, so the fallback must set a 1em line
@@ -297,10 +299,7 @@ describe('retro.css', () => {
       at.walkRules(rule => {
         if (rule.selectors.includes('.vfd > *'))
           rule.walkDecls(d => void (fb[d.prop] = d.value.trim()))
-        expect(
-          rule.selectors,
-          'fallback must not pad the window'
-        ).not.toContain('.vfd')
+        expect(rule.selectors, 'fallback must not pad the window').not.toContain('.vfd')
       })
     })
     expect(fb['line-height']).toBe('1')
