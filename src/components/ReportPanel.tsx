@@ -21,19 +21,29 @@ const CATEGORY_HINTS: Record<AnomalyCategory, string> = {
 
 interface ReportButtonProps {
   open: boolean
+  /** Many anomalies are unreported: the lamp blinks (never while the picker is open). */
+  alert?: boolean
   buttonRef: RefObject<HTMLButtonElement>
   onToggle: () => void
 }
 
-/** The red REPORT key with its lamp (lit while the category picker is open). */
+/**
+ * The red REPORT key with its lamp: lit while the category picker is open, blinking while many
+ * anomalies are unreported (#344). A small always-visible label says what the blinking means; the
+ * lamp is decoration (the label is a machine part, so English only).
+ */
 export const ReportButton = ({
   open,
+  alert = false,
   buttonRef,
   onToggle,
 }: ReportButtonProps) => (
   <div className="row report">
     <div className="report-main">
-      <div className={cx('lamp-big red', open && 'lit')} />
+      <div
+        className={cx('lamp-big red', open && 'lit', alert && !open && 'alert')}
+        aria-hidden="true"
+      />
       <button
         ref={buttonRef}
         type="button"
@@ -45,6 +55,7 @@ export const ReportButton = ({
         REPORT
       </button>
     </div>
+    <div className="label lamp-note">Blinks: many unreported</div>
   </div>
 )
 

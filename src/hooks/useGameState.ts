@@ -415,6 +415,8 @@ export const useGameState = () => {
     a => a.cameraId === CAMERAS[currentCameraIndex].id && !a.detectedAt
   )
 
+  const unreportedCount = activeAnomalies.filter(a => !a.detectedAt).length
+
   return {
     gameState,
     stats,
@@ -423,6 +425,7 @@ export const useGameState = () => {
     currentCamera: CAMERAS[currentCameraIndex],
     activeAnomalies,
     activeAnomalyHere,
+    unreportedCount,
     feedback,
     ending,
     flagEvent,

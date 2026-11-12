@@ -140,6 +140,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 - [x] Display windows (shift time, reports, strike lamps)
 - [x] Camera view with swipe controls
 - [x] REPORT key and type-picker dialog
+- [x] REPORT lamp blinks while 3+ anomalies are unreported (`ALERT_UNREPORTED_MIN` in `gameConfig.ts`, `shouldAlert`; steady lit under reduced motion; English label under the key; #344)
 - [x] Game over screens (win/lose)
 
 #### Camera System
