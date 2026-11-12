@@ -2,8 +2,6 @@ import { CSSProperties, useCallback, useRef, useState } from 'react'
 import '../styles/loupe.css'
 import { useLoupeGesture } from '../hooks/useLoupeGesture'
 import { useNoiseOff } from '../hooks/useNoiseOff'
-import { currentLanguage } from '../utils/language'
-import { LOUPE_HINT } from '../utils/loupe'
 import { Loupe } from './Loupe'
 import { Anomaly, Camera } from '../types/game'
 import { Feedback } from '../hooks/useGameState'
@@ -224,9 +222,6 @@ export const CameraView = ({
           >
             {result && wordSpans(result.message)}
           </div>
-        </div>
-        <div className="loupe-hint" aria-hidden="true">
-          {LOUPE_HINT[currentLanguage()]}
         </div>
       </div>
       {loupeHost && loupeView && (
