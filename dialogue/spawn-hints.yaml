@@ -15,7 +15,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-notice }
     lines:
-      - { who: M, text: "出河さん　左の壁を確認してもらえますか", en: "Detective, could you check the left wall?" }
+      - { who: M, text: "左の壁を確認してもらえますか", en: "Detective, could you check the left wall?" }
       - { who: A, text: "いいよ　左の壁ね", en: "Sure. The left wall, right?" }
   - id: spawn-hint-AR-01-notice-03
     tone: serious
@@ -26,7 +26,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-ashtray }
     lines:
-      - { who: A, text: "右手前の台の辺り　見てみて", en: "Look near the stand in the front right." }
+      - { who: A, text: "右手前の台の辺り　見てごらん", en: "Look near the stand in the front right." }
       - { who: M, text: "右手前の台ですか　目を向けます", en: "The front-right stand? I will look." }
   - id: spawn-hint-AR-02-ashtray-02
     tone: serious
@@ -43,7 +43,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-bag }
     lines:
-      - { who: M, text: "右手前の台のそばを　見てください", en: "Please look beside the stand in the front right." }
+      - { who: M, text: "右手前の台のそばを　確認してください", en: "Please look beside the stand in the front right." }
       - { who: A, text: "台のそばね　見てみる", en: "Beside the stand. Looking." }
   - id: spawn-hint-AR-02-bag-02
     tone: serious
@@ -60,8 +60,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-blue-pot }
     lines:
-      - { who: A, text: "右手前の鉢の辺りだよ　見てみて", en: "It's near the pot at the front right. Look." }
-      - { who: M, text: "右手前の鉢ですね　見ます", en: "The front-right pot. Looking." }
+      - { who: A, text: "右手前の鉢の辺りだよ　確かめてみて", en: "It's near the pot at the front right. Look." }
+      - { who: M, text: "右手前の鉢ですね　目を向けます", en: "The front-right pot. Looking." }
   - id: spawn-hint-AR-02-blue-pot-02
     tone: serious
     when: { anomaly: AR-02-blue-pot }
@@ -77,13 +77,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-cat }
     lines:
-      - { who: A, text: "左のシャッター際　見てみて", en: "Look by the shutter on the left." }
-      - { who: M, text: "左のシャッター際ですね　見ます", en: "By the left shutter. Looking." }
+      - { who: A, text: "左のシャッター際　見てごらん", en: "Look by the shutter on the left." }
+      - { who: M, text: "左のシャッター際ですね　確かめます", en: "By the left shutter. Looking." }
   - id: spawn-hint-AR-02-cat-02
     tone: serious
     when: { anomaly: AR-02-cat }
     lines:
-      - { who: M, text: "出河さん　左のシャッターの　そばが気になります", en: "Detective, near the left shutter bothers me." }
+      - { who: M, text: "左のシャッターの　そばが気になります", en: "Detective, near the left shutter bothers me." }
       - { who: A, text: "シャッターのそばね　見る", en: "Near the shutter. Looking." }
   - id: spawn-hint-AR-02-cat-03
     tone: serious
@@ -94,7 +94,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-cigarette }
     lines:
-      - { who: M, text: "左の床を見てください", en: "Please look at the floor on the left." }
+      - { who: M, text: "左の床を目を向けてください", en: "Please look at the floor on the left." }
       - { who: A, text: "左の床ね　見るよ", en: "Left floor. Looking." }
   - id: spawn-hint-AR-02-cigarette-02
     tone: serious
@@ -128,7 +128,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-newspaper }
     lines:
-      - { who: M, text: "左のシャッターの下　床際を見てください", en: "Please look at the floor edge under the left shutter." }
+      - { who: M, text: "左のシャッターの下　床際を確認してください", en: "Please look at the floor edge under the left shutter." }
       - { who: A, text: "シャッターの下の床際ね　見る", en: "The floor edge under the shutter. Looking." }
   - id: spawn-hint-AR-02-newspaper-02
     tone: serious
@@ -180,7 +180,7 @@ dialogues:
     when: { anomaly: AR-02-puddle }
     lines:
       - { who: A, text: "左側の床　見てみて", en: "Look at the floor on the left side." }
-      - { who: M, text: "左側の床ですね　見ます", en: "The left-side floor. Looking." }
+      - { who: M, text: "左側の床ですね　目を向けます", en: "The left-side floor. Looking." }
   - id: spawn-hint-AR-02-puddle-02
     tone: serious
     when: { anomaly: AR-02-puddle }
@@ -213,19 +213,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-shop-reopens }
     lines:
-      - { who: A, text: "左のシャッター　見てみて", en: "Look at the left shutter." }
-      - { who: M, text: "左のシャッターを　見ていきます", en: "I will look over the left shutter." }
+      - { who: A, text: "左のほう　あのあたり　見てみて", en: "Look over there on the left." }
+      - { who: M, text: "左のあたりを　見ていきます", en: "I will look over the left side." }
   - id: spawn-hint-AR-02-shop-reopens-02
     tone: serious
     when: { anomaly: AR-02-shop-reopens }
     lines:
-      - { who: M, text: "左のシャッターの下のほうが　気になります", en: "The lower part of the left shutter bothers me." }
+      - { who: M, text: "左の下のほうが　気になります", en: "The lower part on the left bothers me." }
       - { who: A, text: "下のほうね　確認しよう", en: "The lower part. Let's check." }
   - id: spawn-hint-AR-02-shop-reopens-03
     tone: serious
     when: { anomaly: AR-02-shop-reopens }
     lines:
-      - { who: A, text: "左のシャッター　目が引き寄せられるのよね", en: "My eyes are drawn to the left shutter." }
+      - { who: A, text: "左の下寄り　目が引き寄せられるのよね", en: "My eyes are drawn to the lower left." }
   - id: spawn-hint-AR-02-smoke-01
     tone: serious
     when: { anomaly: AR-02-smoke }
@@ -253,7 +253,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-square-pot }
     lines:
-      - { who: M, text: "出河さん　右の手前にある鉢の形が　気になって", en: "Detective, the one at the front right bothers me." }
+      - { who: M, text: "右の手前にある鉢の形が　気になって", en: "Detective, the one at the front right bothers me." }
       - { who: A, text: "そうだね　そこ見よう", en: "Right. Let's look there." }
   - id: spawn-hint-AR-02-square-pot-03
     tone: serious
@@ -304,7 +304,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-tile }
     lines:
-      - { who: A, text: "床の点検口の左　足元をよく見てみて", en: "Look closely at the floor left of the hatch." }
+      - { who: A, text: "床の点検口の左　足元をよく見てごらん", en: "Look closely at the floor left of the hatch." }
       - { who: M, text: "はい　よく見ます", en: "Yes. Closely." }
   - id: spawn-hint-AR-02-tile-03
     tone: serious
@@ -355,7 +355,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-glass-light }
     lines:
-      - { who: M, text: "出河さん　正面のガラスに　目を向けてもらえますか", en: "Detective, could you look at the front glass?" }
+      - { who: M, text: "正面のガラスに　目を向けてもらえますか", en: "Detective, could you look at the front glass?" }
   - id: spawn-hint-AR-05-glass-light-03
     tone: serious
     when: { anomaly: AR-05-glass-light }
@@ -464,13 +464,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-crane }
     lines:
-      - { who: A, text: '天井の真ん中の辺り　見てみて', en: 'Take a look around the middle of the ceiling.' }
+      - { who: A, text: '天井の真ん中の辺り　確かめてみて', en: 'Take a look around the middle of the ceiling.' }
       - { who: M, text: "承知しました　確認します", en: "Understood. I'll check." }
   - id: spawn-hint-AR-07-crane-02
     tone: serious
     when: { anomaly: AR-07-crane }
     lines:
-      - { who: M, text: '出河さん　天井の真ん中が気になります', en: 'Ms. Ikawa, the middle of the ceiling is bugging me.' }
+      - { who: M, text: '天井の真ん中が気になります', en: 'Ms. Ikawa, the middle of the ceiling is bugging me.' }
       - { who: A, text: 'こっちも　そこ見てみる', en: "I'll check there too." }
   - id: spawn-hint-AR-07-crane-03
     tone: serious
@@ -498,23 +498,23 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-reopened }
     lines:
-      - { who: A, text: '右の扉の辺り　怪しくない？', en: "Doesn't the area around the right door look off?" }
-      - { who: M, text: 'そうですね　見てみます', en: 'Right. Let me look.' }
+      - { who: A, text: "右のほうの辺り　怪しくない？", en: "Doesn't the right side look off?" }
+      - { who: M, text: "そうですね　見てみます", en: "Right. Let me look." }
   - id: spawn-hint-AR-07-reopened-02
     tone: serious
     when: { anomaly: AR-07-reopened }
     lines:
-      - { who: M, text: '右の扉のほうに　注意を向けてください', en: 'Please turn your attention to the right door.' }
+      - { who: M, text: "右のほうに　注意を向けてください", en: "Please turn your attention to the right side." }
   - id: spawn-hint-AR-07-reopened-03
     tone: serious
     when: { anomaly: AR-07-reopened }
     lines:
-      - { who: A, text: '右の扉　しっかり見ておこう', en: "Let's keep a close eye on the right door." }
+      - { who: A, text: "右のあたり　しっかり見ておこう", en: "Let's keep a close eye on the right side." }
   - id: spawn-hint-AR-07-shoe-v2-01
     tone: serious
     when: { anomaly: AR-07-shoe-v2 }
     lines:
-      - { who: A, text: '左の階段　よく見てみて', en: 'Look carefully at the left stairs.' }
+      - { who: A, text: '左の階段　よく見てごらん', en: 'Look carefully at the left stairs.' }
       - { who: M, text: 'はい　左の階段ですね', en: 'Yes, the left stairs.' }
   - id: spawn-hint-AR-07-shoe-v2-02
     tone: serious
@@ -537,13 +537,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-stairs }
     lines:
-      - { who: A, text: '左の階段　全体をじっと見て', en: 'Stare at the whole left staircase.' }
+      - { who: A, text: "左の階段　上のほうをじっと見て", en: "Stare at the upper part of the left staircase." }
   - id: spawn-hint-AR-07-stairs-03
     tone: serious
     when: { anomaly: AR-07-stairs }
     lines:
-      - { who: A, text: '左の階段全体が　どうも落ち着かないんだよね', en: 'The whole left staircase just feels unsettling.' }
-      - { who: M, text: 'ですね　確認します', en: "It does. I'll check." }
+      - { who: A, text: "左の階段の下のほうが　どうも落ち着かないんだよね", en: "The lower part of the left staircase just feels unsettling." }
+      - { who: M, text: "ですね　確認します", en: "It does. I'll check." }
   - id: spawn-hint-AR-07-ticket-01
     tone: serious
     when: { anomaly: AR-07-ticket }
@@ -596,19 +596,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-wiped-window }
     lines:
-      - { who: A, text: "左端の　窓の辺りを見てみて", en: "Take a look around the window at the far left." }
-      - { who: M, text: "左端の窓ですね　見ます", en: "The far-left window. On it." }
+      - { who: A, text: "左端の辺りを見てみて", en: "Take a look around the far left." }
+      - { who: M, text: "左端ですね　見ます", en: "The far left. On it." }
   - id: spawn-hint-AR-01-wiped-window-02
     tone: serious
     when: { anomaly: AR-01-wiped-window }
     lines:
-      - { who: M, text: "左の窓の真ん中あたり　引っかかります", en: "Something about the middle of the left window catches me." }
+      - { who: M, text: "左のほうの真ん中あたり　引っかかります", en: "Something about the middle of the left side catches me." }
       - { who: A, text: "やっぱり？　私もそこが気になってた", en: "Really? I was eyeing that spot too." }
   - id: spawn-hint-AR-01-wiped-window-03
     tone: serious
     when: { anomaly: AR-01-wiped-window }
     lines:
-      - { who: A, text: "窓の中ほど　じっと見ておこうか", en: "Let's keep an eye on the middle of the window." }
+      - { who: A, text: "左の中ほど　じっと見ておこうか", en: "Let's keep an eye on the middle of the left side." }
       - { who: M, text: "はい　そうしましょう", en: "Yes, let's." }
   - id: spawn-hint-AR-04-purple-leaves-01
     tone: serious
@@ -692,7 +692,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-blue-brick }
     lines:
-      - { who: M, text: "出河さん　店の足元のラインを　確認してください", en: "Detective, please check the line at the shop's base." }
+      - { who: M, text: "店の足元のラインを　確認してください", en: "Detective, please check the line at the shop's base." }
       - { who: A, text: "足元のラインね　分かった", en: "The base line. Got it." }
   - id: spawn-hint-AR-06-tilted-notice-01
     tone: serious
@@ -743,7 +743,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-ceiling-dots }
     lines:
-      - { who: M, text: '出河さん　天井の左寄りを　見てもらえますか', en: "Izuka-san, could you look at the left part of the ceiling?" }
+      - { who: M, text: '天井の左寄りを　見てもらえますか', en: "Izuka-san, could you look at the left part of the ceiling?" }
       - { who: A, text: 'よし　天井の左寄りね　見るよ', en: "Okay, the left part of the ceiling. I'm on it." }
   - id: spawn-hint-AR-03-paper-bag-01
     tone: serious
@@ -761,7 +761,7 @@ dialogues:
     when: { anomaly: AR-03-paper-bag }
     lines:
       - { who: M, text: 'ちょっと　左の壁際の床も見ませんか', en: "Shall we check the floor by the left wall too?" }
-      - { who: A, text: 'いいね　やってみよう', en: "Good idea. Let's do it." }
+      - { who: A, text: "いいよ　そっちも見てみよう", en: "Sure. Let's look over there too." }
   - id: spawn-hint-AR-07-wall-grid-01
     tone: serious
     when: { anomaly: AR-07-wall-grid }
@@ -817,7 +817,7 @@ dialogues:
     when: { anomaly: AR-03-striped-sign }
     lines:
       - { who: M, text: '中央やや上　ここだと思うんです', en: "I think it's the spot just above the center." }
-      - { who: A, text: 'なるほど　確かめてみる', en: "I see. I'll check it out." }
+      - { who: A, text: "ここか　確かめてみよう", en: "Here? Let me check." }
   - id: spawn-hint-AR-03-striped-sign-02
     tone: serious
     when: { anomaly: AR-03-striped-sign }
@@ -828,12 +828,12 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-striped-sign }
     lines:
-      - { who: M, text: '真ん中の上寄りを　重点的に見ます', en: "I'll focus on the upper middle." }
+      - { who: M, text: '真ん中の上寄りを　重点的に目を向けます', en: "I'll focus on the upper middle." }
   - id: spawn-hint-AR-04-door-gap-01
     tone: serious
     when: { anomaly: AR-04-door-gap }
     lines:
-      - { who: M, text: '出河さん　奥の中央を　見てもらえますか', en: "Izuka-san, could you look at the center back?" }
+      - { who: M, text: '奥の中央を　見てもらえますか', en: "Izuka-san, could you look at the center back?" }
       - { who: A, text: 'よし　奥の中央ね　見るよ', en: "Okay, the center back. I'm on it." }
   - id: spawn-hint-AR-04-door-gap-02
     tone: serious
@@ -913,18 +913,18 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-brown-column }
     lines:
-      - { who: M, text: "出河さん　縦の線の辺りを見てください", en: "Detective, please look along the vertical line." }
+      - { who: M, text: "縦の線の辺りを確認してください", en: "Detective, please look along the vertical line." }
       - { who: A, text: "縦のところね　了解", en: "The vertical part. Got it." }
   - id: spawn-hint-AR-03-tile-diagonal-01
     tone: serious
     when: { anomaly: AR-03-tile-diagonal }
     lines:
-      - { who: M, text: '左手前の床を　重点的に見ます', en: "I'll focus on the front left floor." }
+      - { who: M, text: '左手前の床を　重点的に確かめます', en: "I'll focus on the front left floor." }
   - id: spawn-hint-AR-03-tile-diagonal-02
     tone: serious
     when: { anomaly: AR-03-tile-diagonal }
     lines:
-      - { who: M, text: '出河さん　手前の床の左寄りはどうでしょう', en: "Izuka-san, how about the left side of the near floor?" }
+      - { who: M, text: '手前の床の左寄りはどうでしょう', en: "Izuka-san, how about the left side of the near floor?" }
       - { who: A, text: 'おっ　それ　ありそう！', en: "Oh, that sounds promising!" }
   - id: spawn-hint-AR-03-tile-diagonal-03
     tone: serious
@@ -975,7 +975,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-white-ribbon }
     lines:
-      - { who: M, text: "画面の左端　高めの位置を見てください", en: "Please check the left edge, up high." }
+      - { who: M, text: "画面の左端　高めの位置を目を向けてください", en: "Please check the left edge, up high." }
   - id: spawn-hint-AR-05-white-ribbon-03
     tone: serious
     when: { anomaly: AR-05-white-ribbon }
@@ -992,7 +992,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-stand-tag }
     lines:
-      - { who: M, text: "左の奥　小さい所です　よく見てください", en: "Back left. A small spot. Look carefully." }
+      - { who: M, text: "左の奥　小さい所です　よく確認してください", en: "Back left. A small spot. Look carefully." }
   - id: spawn-hint-AR-05-stand-tag-03
     tone: serious
     when: { anomaly: AR-05-stand-tag }
@@ -1003,18 +1003,18 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-blue-push-plate }
     lines:
-      - { who: A, text: '右寄りの扉の辺り　見てみて', en: 'Take a look around the door on the right.' }
-      - { who: M, text: '扉ですね　見てみます', en: "The door. I'll look." }
+      - { who: A, text: "右寄りの辺り　見てみて", en: "Take a look around the right side." }
+      - { who: M, text: "右寄りですね　見てみます", en: "The right side. I'll look." }
   - id: spawn-hint-AR-07-blue-push-plate-02
     tone: serious
     when: { anomaly: AR-07-blue-push-plate }
     lines:
-      - { who: M, text: '右寄りの扉まわりを　チェックしましょう', en: "Let's check around the door on the right." }
+      - { who: M, text: "右寄りの辺りを　チェックしましょう", en: "Let's check around the right side." }
   - id: spawn-hint-AR-07-blue-push-plate-03
     tone: serious
     when: { anomaly: AR-07-blue-push-plate }
     lines:
-      - { who: A, text: '右の扉の手元あたり　怪しいな', en: 'The spot near the right door looks suspicious.' }
+      - { who: A, text: "右のほうの真ん中より下　怪しいな", en: "The right side, a bit below the middle, looks suspicious." }
   - id: spawn-hint-AR-06-missing-flower-01
     tone: serious
     when: { anomaly: AR-06-missing-flower }
@@ -1030,14 +1030,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-missing-flower }
     lines:
-      - { who: M, text: "出河さん　左手前の足元を見てもらえますか", en: "Detective, could you check the front left, down low?" }
+      - { who: M, text: "左手前の足元を見てもらえますか", en: "Detective, could you check the front left, down low?" }
       - { who: A, text: "足元ね　確認する", en: "Down low. I'll check." }
   - id: spawn-hint-AR-03-pink-ornament-01
     tone: serious
     when: { anomaly: AR-03-pink-ornament }
     lines:
       - { who: M, text: '奥の壁の右寄りが　どうも気になります', en: "Something about the right part of the back wall keeps nagging me." }
-      - { who: A, text: 'そうなの？　じゃあ　そこから見よう', en: "Really? Then let's start there." }
+      - { who: A, text: "気になるんだ？　じゃあ　そこから見よう", en: "It bothers you? Then let's start there." }
   - id: spawn-hint-AR-03-pink-ornament-02
     tone: serious
     when: { anomaly: AR-03-pink-ornament }
@@ -1053,7 +1053,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-shutter-wave }
     lines:
-      - { who: A, text: '左のシャッター　気になるな', en: "The left shutter is bugging me." }
+      - { who: A, text: "左のあたり　気になるな", en: "The left side is bugging me." }
   - id: spawn-hint-AR-03-shutter-wave-02
     tone: serious
     when: { anomaly: AR-03-shutter-wave }
@@ -1065,7 +1065,7 @@ dialogues:
     when: { anomaly: AR-03-shutter-wave }
     lines:
       - { who: M, text: '左側の上寄りに　違和感があります', en: "Something feels odd at the upper left side." }
-      - { who: A, text: 'だよね　私もそこが引っかかってた', en: "Right? That caught my eye too." }
+      - { who: A, text: "うん　私もそこは気になってた", en: "Yeah, I was wondering about that spot too." }
   - id: spawn-hint-AR-03-white-cap-01
     tone: serious
     when: { anomaly: AR-03-white-cap }
@@ -1082,7 +1082,7 @@ dialogues:
     when: { anomaly: AR-03-white-cap }
     lines:
       - { who: M, text: '奥の開口の辺りが　どうも気になります', en: "Something about the area around the far opening keeps nagging me." }
-      - { who: A, text: 'そうなの？　じゃあ　そこから見よう', en: "Really? Then let's start there." }
+      - { who: A, text: "へえ　そこか　見てみるよ", en: "Oh, there? I'll take a look." }
   - id: spawn-hint-AR-07-white-step-01
     tone: serious
     when: { anomaly: AR-07-white-step }
@@ -1135,7 +1135,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-duplicate-green-sign }
     lines:
-      - { who: A, text: '右の階段の上のほう　見てみて', en: 'Look at the top of the right stairs.' }
+      - { who: A, text: '右の階段の上のほう　見てごらん', en: 'Look at the top of the right stairs.' }
       - { who: M, text: 'はい　右の階段の上ですね', en: 'Yes, the top of the right stairs.' }
   - id: spawn-hint-AR-07-duplicate-green-sign-02
     tone: serious
@@ -1196,23 +1196,23 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-chair-reflection }
     lines:
-      - { who: M, text: "出河さん　正面のガラスの　下寄りに注目してください", en: "Detective, focus on the lower part of the front glass." }
+      - { who: M, text: "正面のガラスの　下寄りに注目してください", en: "Detective, focus on the lower part of the front glass." }
   - id: spawn-hint-AR-05-amber-pane-01
     tone: serious
     when: { anomaly: AR-05-amber-pane }
     lines:
-      - { who: A, text: "正面のガラス　あれ全部は見たかな", en: "The front glass. Did we look at all of it?" }
-      - { who: M, text: "一枚ずつ見ていきましょう", en: "Let's go pane by pane." }
+      - { who: A, text: "正面の一帯　あれ全部は見たかな", en: "The front area. Did we look at all of it?" }
+      - { who: M, text: "ひとつずつ見ていきましょう", en: "Let's go one by one." }
   - id: spawn-hint-AR-05-amber-pane-02
     tone: serious
     when: { anomaly: AR-05-amber-pane }
     lines:
-      - { who: M, text: "ガラスの辺り　真ん中から右寄りです", en: "Around the glass. Center to right." }
+      - { who: M, text: "正面の辺り　真ん中から右寄りです", en: "Around the front. Center to right." }
   - id: spawn-hint-AR-05-amber-pane-03
     tone: serious
     when: { anomaly: AR-05-amber-pane }
     lines:
-      - { who: A, text: "ガラスの区画だよ　右側の面が気になる", en: "The glass section. The right-side panes bug me." }
+      - { who: A, text: "正面の区画だよ　右側が気になる", en: "The front section. The right side bugs me." }
   - id: spawn-hint-AR-04-paper-cup-01
     tone: serious
     when: { anomaly: AR-04-paper-cup }
@@ -1250,7 +1250,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-fixture-duplicate }
     lines:
-      - { who: A, text: '柱の左側の壁の上　見てみて', en: 'Look above the wall on the left of the pillar.' }
+      - { who: A, text: '柱の左側の壁の上　確かめてみて', en: 'Look above the wall on the left of the pillar.' }
       - { who: M, text: 'はい　柱の左側ですね', en: 'Yes, the left of the pillar.' }
   - id: spawn-hint-AR-08-fixture-duplicate-02
     tone: serious
@@ -1289,7 +1289,7 @@ dialogues:
     when: { anomaly: AR-04-orange-tile }
     lines:
       - { who: M, text: '左下の床の辺りに　違和感があります', en: "Something feels odd at the lower left floor." }
-      - { who: A, text: 'だよね　私もそこが引っかかってた', en: "Right? That caught my eye too." }
+      - { who: A, text: "やっぱり　そこだよね", en: "So it's that spot, after all." }
   - id: spawn-hint-AR-04-orange-tile-03
     tone: serious
     when: { anomaly: AR-04-orange-tile }
@@ -1299,23 +1299,23 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-blue-panel }
     lines:
-      - { who: A, text: '右端の光る面の辺り　見て', en: 'Look near the glowing surface on the far right.' }
-      - { who: M, text: '了解です　見ます', en: 'Got it. Looking.' }
+      - { who: A, text: "右端のあたり　見て", en: "Look around the far right." }
+      - { who: M, text: "了解です　目を向けます", en: "Got it. Looking." }
   - id: spawn-hint-AR-08-blue-panel-02
     tone: serious
     when: { anomaly: AR-08-blue-panel }
     lines:
-      - { who: M, text: '右の端の光っているところを　確認しましょう', en: "Let's check the glowing part at the right edge." }
+      - { who: M, text: "右の端のあたりを　確認しましょう", en: "Let's check around the right edge." }
   - id: spawn-hint-AR-08-blue-panel-03
     tone: serious
     when: { anomaly: AR-08-blue-panel }
     lines:
-      - { who: A, text: '右端のあの光ってるあたり　怪しいね', en: 'That glowing spot at the right edge looks suspicious.' }
+      - { who: A, text: "右端のあのあたり　怪しいね", en: "That spot at the right edge looks suspicious." }
   - id: spawn-hint-AR-02-rusty-vent-01
     tone: serious
     when: { anomaly: AR-02-rusty-vent }
     lines:
-      - { who: A, text: "天井の真ん中より少し左　見てみて", en: "Look at the ceiling a little left of the middle." }
+      - { who: A, text: "天井の真ん中より少し左　見てごらん", en: "Look at the ceiling a little left of the middle." }
       - { who: M, text: "天井の中央より左ですね　見ます", en: "Left of the center of the ceiling. Looking." }
   - id: spawn-hint-AR-02-rusty-vent-02
     tone: serious
@@ -1349,7 +1349,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-blue-floor-tile }
     lines:
-      - { who: M, text: '出河さん　床の左下のほうを　見てもらえますか', en: "Izuka-san, could you look at the lower left of the floor?" }
+      - { who: M, text: '床の左下のほうを　見てもらえますか', en: "Izuka-san, could you look at the lower left of the floor?" }
       - { who: A, text: 'よし　床の左下のほうね　見るよ', en: "Okay, the lower left of the floor. I'm on it." }
   - id: spawn-hint-AR-03-blue-floor-tile-02
     tone: serious
@@ -1474,12 +1474,12 @@ dialogues:
     when: { anomaly: AR-03-coffee-text-missing }
     lines:
       - { who: M, text: '真ん中やや右の上寄りに　違和感があります', en: "Something feels odd at the upper area just right of center." }
-      - { who: A, text: 'だよね　私もそこが引っかかってた', en: "Right? That caught my eye too." }
+      - { who: A, text: "確かに　そこは変かも", en: "True, that spot might be off." }
   - id: spawn-hint-AR-03-coffee-text-missing-03
     tone: serious
     when: { anomaly: AR-03-coffee-text-missing }
     lines:
-      - { who: M, text: '出河さん　あの　奥の中央…', en: "Izuka-san, um, the center back..." }
+      - { who: M, text: 'あの　奥の中央…', en: "Izuka-san, um, the center back..." }
       - { who: A, text: 'ん？　奥の中央がどうしたの？', en: "Hm? What about the center back?" }
       - { who: M, text: "どうも　そこが引っかかって", en: "Somehow that spot nags at me." }
   - id: spawn-hint-AR-03-walking-cat-01
@@ -1573,7 +1573,7 @@ dialogues:
     when: { anomaly: AR-04-leaf-hole }
     lines:
       - { who: M, text: '静かに　奥の右寄りの中ほどに注目です', en: "Quietly now, focus on the middle of the back, right of center." }
-      - { who: A, text: 'しーっ　集中するよ', en: "Shh. Focusing." }
+      - { who: A, text: "…うん　静かに集中する", en: "...Yeah. Quietly focusing." }
   - id: spawn-hint-AR-04-leaf-hole-02
     tone: serious
     when: { anomaly: AR-04-leaf-hole }
@@ -1679,13 +1679,13 @@ dialogues:
     when: { anomaly: AR-04-newspaper }
     lines:
       - { who: A, text: '手前の右寄りにヒントがありそう', en: "I bet the near right holds a clue." }
-      - { who: M, text: "はい　そちらを重点的に見ます", en: "Yes. I'll focus on that side." }
+      - { who: M, text: "はい　そちらを重点的に目を向けます", en: "Yes. I'll focus on that side." }
   - id: spawn-hint-AR-04-newspaper-03
     tone: serious
     when: { anomaly: AR-04-newspaper }
     lines:
       - { who: M, text: '床の右下の隅の辺りに　目を向けてください', en: "Please turn your eyes to the lower right corner of the floor." }
-      - { who: A, text: 'うん　そっちを見てみる', en: "Yeah. I'll look that way." }
+      - { who: A, text: "分かった　そっちに目を向ける", en: "Got it. I'll turn my eyes there." }
   - id: spawn-hint-AR-04-basket-01
     tone: serious
     when: { anomaly: AR-04-basket }
@@ -1702,7 +1702,7 @@ dialogues:
     when: { anomaly: AR-04-basket }
     lines:
       - { who: M, text: '静かに　左側のガラスの前に注目です', en: "Quietly now, focus on in front of the glass on the left." }
-      - { who: A, text: 'しーっ　集中するよ', en: "Shh. Focusing." }
+      - { who: A, text: "了解　息をひそめて見るよ", en: "Got it. I'll hold my breath and watch." }
   - id: spawn-hint-AR-04-poster-01
     tone: serious
     when: { anomaly: AR-04-poster }
@@ -1719,7 +1719,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-poster }
     lines:
-      - { who: M, text: '左端の高い位置を　重点的に見ます', en: "I'll focus on a high spot at the far left." }
+      - { who: M, text: '左端の高い位置を　重点的に確かめます', en: "I'll focus on a high spot at the far left." }
   - id: spawn-hint-AR-08-bag-01
     tone: serious
     when: { anomaly: AR-08-bag }
@@ -1756,8 +1756,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-suit }
     lines:
-      - { who: A, text: '右の壁の面　見てみて', en: 'Take a look at the surface of the right wall.' }
-      - { who: M, text: '右側ですね　見ます', en: 'The right side. Looking.' }
+      - { who: A, text: '右の壁の面　見てごらん', en: 'Take a look at the surface of the right wall.' }
+      - { who: M, text: '右側ですね　目を向けます', en: 'The right side. Looking.' }
   - id: spawn-hint-AR-08-suit-02
     tone: serious
     when: { anomaly: AR-08-suit }
@@ -1772,13 +1772,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-sign-rim }
     lines:
-      - { who: A, text: "右奥の高いところ　見てみて", en: "Look at the high spot in the back right." }
+      - { who: A, text: "右奥の高いところ　確かめてみて", en: "Look at the high spot in the back right." }
       - { who: M, text: "右奥の高い所ですね　見ます", en: "Back right, up high. Looking." }
   - id: spawn-hint-AR-01-sign-rim-02
     tone: serious
     when: { anomaly: AR-01-sign-rim }
     lines:
-      - { who: M, text: "出河さん　右奥の上のほうが引っかかります", en: "Detective, the upper back right nags at me." }
+      - { who: M, text: "右奥の上のほうが引っかかります", en: "Detective, the upper back right nags at me." }
       - { who: A, text: "あそこかぁ　見てみよう", en: "That area? Let's check." }
   - id: spawn-hint-AR-01-sign-rim-03
     tone: serious
@@ -1795,7 +1795,7 @@ dialogues:
     when: { anomaly: AR-04-handle }
     lines:
       - { who: M, text: 'ちょっと　中央の奥の扉の辺りも見ませんか', en: "Shall we check the area around the back door at center too?" }
-      - { who: A, text: 'いいね　やってみよう', en: "Good idea. Let's do it." }
+      - { who: A, text: "そうだね　そこも見ておこう", en: "Right. Let's check there too." }
   - id: spawn-hint-AR-04-handle-03
     tone: serious
     when: { anomaly: AR-04-handle }
@@ -1806,7 +1806,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-pillar-notice }
     lines:
-      - { who: A, text: '中央の柱の正面　見てみて', en: 'Look at the front of the pillar in the center.' }
+      - { who: A, text: '中央の柱の正面　見てごらん', en: 'Look at the front of the pillar in the center.' }
       - { who: M, text: '柱の正面ですね', en: 'The front of the pillar.' }
   - id: spawn-hint-AR-08-pillar-notice-02
     tone: serious
@@ -1856,8 +1856,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-cat-in-frosted-window }
     lines:
-      - { who: A, text: "左端の窓　見てくれる？", en: "Can you look at the window on the far left?" }
-      - { who: M, text: "左端の窓ですか　確認してみます", en: "The far-left window? I will check." }
+      - { who: A, text: "左端のあたり　見てくれる？", en: "Can you look around the far left?" }
+      - { who: M, text: "左端ですか　確認してみます", en: "The far left? I will check." }
   - id: spawn-hint-AR-01-cat-in-frosted-window-02
     tone: serious
     when: { anomaly: AR-01-cat-in-frosted-window }
@@ -1930,7 +1930,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-wall-repaint-patch }
     lines:
-      - { who: M, text: "出河さん　左の壁を端から見ていきませんか", en: "Detective, shall we go along the left wall from the edge?" }
+      - { who: M, text: "左の壁を端から見ていきませんか", en: "Detective, shall we go along the left wall from the edge?" }
       - { who: A, text: "それがいいね　端からいこう", en: "Good idea. From the edge." }
   - id: spawn-hint-AR-01-wall-repaint-patch-03
     tone: serious
@@ -1992,7 +1992,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-ceiling-seam-circle }
     lines:
-      - { who: M, text: "天井の左寄りです　見てください", en: "It's the left part of the ceiling. Please look." }
+      - { who: M, text: "天井の左寄りです　確認してください", en: "It's the left part of the ceiling. Please look." }
       - { who: A, text: "天井の左寄りね　見てみる", en: "Left part of the ceiling. Looking." }
   - id: spawn-hint-AR-01-ceiling-seam-circle-02
     tone: serious
@@ -2021,13 +2021,13 @@ dialogues:
     when: { anomaly: AR-03-shutter-faded-poster }
     lines:
       - { who: M, text: '静かに　右の端の上寄りに注目です', en: "Quietly now, focus on the upper right edge." }
-      - { who: A, text: 'しーっ　集中するよ', en: "Shh. Focusing." }
+      - { who: A, text: "しっ　目を凝らすよ", en: "Shh. I'll strain my eyes." }
   - id: spawn-hint-AR-03-sign-glow-blue-01
     tone: serious
     when: { anomaly: AR-03-sign-glow-blue }
     lines:
       - { who: M, text: '中央の看板に　違和感があります', en: "Something feels odd at the sign at center." }
-      - { who: A, text: 'だよね　私もそこが引っかかってた', en: "Right? That caught my eye too." }
+      - { who: A, text: "うん　私もそこは気になってた", en: "Yeah, I was wondering about that spot too." }
   - id: spawn-hint-AR-03-sign-glow-blue-02
     tone: serious
     when: { anomaly: AR-03-sign-glow-blue }
@@ -2049,7 +2049,7 @@ dialogues:
     when: { anomaly: AR-03-slipper-single }
     lines:
       - { who: M, text: 'ちょっと　真ん中より少し奥も見ませんか', en: "Shall we check the spot a little beyond the middle too?" }
-      - { who: A, text: 'いいね　やってみよう', en: "Good idea. Let's do it." }
+      - { who: A, text: "賛成　そこも見よう", en: "Agreed. Let's look there too." }
   - id: spawn-hint-AR-03-slipper-single-03
     tone: serious
     when: { anomaly: AR-03-slipper-single }
@@ -2067,7 +2067,7 @@ dialogues:
     when: { anomaly: AR-03-face-ornament }
     lines:
       - { who: M, text: '奥の壁の真ん中の辺りに　目を向けてください', en: "Please turn your eyes to the middle of the back wall." }
-      - { who: A, text: 'うん　そっちを見てみる', en: "Yeah. I'll look that way." }
+      - { who: A, text: "了解　そこへ目を向けてみる", en: "Understood. I'll look over there." }
   - id: spawn-hint-AR-03-face-ornament-03
     tone: serious
     when: { anomaly: AR-03-face-ornament }
@@ -2077,8 +2077,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-sign-frame-square }
     lines:
-      - { who: M, text: '出河さん　右寄りの上のほうはどうでしょう', en: "Izuka-san, how about the upper part, right of center?" }
-      - { who: A, text: 'おっ　それ　ありそう！', en: "Oh, that sounds promising!" }
+      - { who: M, text: '右寄りの上のほうはどうでしょう', en: "Izuka-san, how about the upper part, right of center?" }
+      - { who: A, text: "なるほど　そこはありそうだね", en: "I see. That could be it." }
   - id: spawn-hint-AR-03-sign-frame-square-02
     tone: serious
     when: { anomaly: AR-03-sign-frame-square }
@@ -2101,7 +2101,7 @@ dialogues:
     when: { anomaly: AR-04-poster-colour-restore }
     lines:
       - { who: M, text: '左端の上寄りの辺りに　目を向けてください', en: "Please turn your eyes to the upper part of the far left." }
-      - { who: A, text: 'うん　そっちを見てみる', en: "Yeah. I'll look that way." }
+      - { who: A, text: "はいはい　そっちね", en: "All right, over there." }
   - id: spawn-hint-AR-04-poster-colour-restore-03
     tone: serious
     when: { anomaly: AR-04-poster-colour-restore }
@@ -2111,8 +2111,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-sign-hollow }
     lines:
-      - { who: M, text: '出河さん　奥の右寄りの上の　ほうはどうでしょう', en: "Izuka-san, how about the upper back, right of center?" }
-      - { who: A, text: 'おっ　それ　ありそう！', en: "Oh, that sounds promising!" }
+      - { who: M, text: '奥の右寄りの上の　ほうはどうでしょう', en: "Izuka-san, how about the upper back, right of center?" }
+      - { who: A, text: "そこか　可能性はあるね", en: "There? It's possible." }
   - id: spawn-hint-AR-04-sign-hollow-02
     tone: serious
     when: { anomaly: AR-04-sign-hollow }
@@ -2157,7 +2157,7 @@ dialogues:
     when: { anomaly: AR-04-hatch-frame-round }
     lines:
       - { who: M, text: '出河さん　足元の中央はどうでしょう', en: "Izuka-san, how about the foot area at center?" }
-      - { who: A, text: 'おっ　それ　ありそう！', en: "Oh, that sounds promising!" }
+      - { who: A, text: "いい勘だね　見てみよう", en: "Good instinct. Let's look." }
   - id: spawn-hint-AR-04-pot-duplicate-01
     tone: serious
     when: { anomaly: AR-04-pot-duplicate }
@@ -2185,7 +2185,7 @@ dialogues:
     when: { anomaly: AR-04-sign-colour-blue }
     lines:
       - { who: M, text: '左上の高い位置が　どうも気になります', en: "Something about a high spot at the upper left keeps nagging me." }
-      - { who: A, text: 'そうなの？　じゃあ　そこから見よう', en: "Really? Then let's start there." }
+      - { who: A, text: "そこね　分かった　見てみる", en: "There. Got it. I'll look." }
   - id: spawn-hint-AR-04-sign-colour-blue-03
     tone: serious
     when: { anomaly: AR-04-sign-colour-blue }
@@ -2203,25 +2203,25 @@ dialogues:
     when: { anomaly: AR-04-fluorescent-frame-grey }
     lines:
       - { who: M, text: '左の上の端のほうです　どうですか', en: "The top edge on the left. What do you think?" }
-      - { who: A, text: '…あ　言われてみれば　そうかも！', en: "...Oh, now that you mention it, maybe!" }
+      - { who: A, text: "…あ　確かに　そんな気もする！", en: "...Ah, I do get that feeling!" }
   - id: spawn-hint-AR-04-fluorescent-frame-grey-03
     tone: serious
     when: { anomaly: AR-04-fluorescent-frame-grey }
     lines:
-      - { who: M, text: '出河さん　あの　天井の左寄り…', en: "Izuka-san, um, the left part of the ceiling..." }
+      - { who: M, text: 'あの　天井の左寄り…', en: "Izuka-san, um, the left part of the ceiling..." }
       - { who: A, text: 'ん？　天井の左寄りがどうしたの？', en: "Hm? What about the left part of the ceiling?" }
       - { who: M, text: "勘ですが　そこが気になって", en: "Just a hunch, but that spot bothers me." }
   - id: spawn-hint-AR-04-red-telephone-01
     tone: serious
     when: { anomaly: AR-04-red-telephone }
     lines:
-      - { who: M, text: '落ち着いて　左のガラスの内側を見てください', en: "Stay calm and look at the inside of the left glass." }
+      - { who: M, text: '落ち着いて　左のガラスの内側を目を向けてください', en: "Stay calm and look at the inside of the left glass." }
       - { who: A, text: '了解　左のガラスの内側ね', en: "Got it. The inside of the left glass." }
   - id: spawn-hint-AR-04-red-telephone-02
     tone: serious
     when: { anomaly: AR-04-red-telephone }
     lines:
-      - { who: M, text: '出河さん　あの　左端の中ほど…', en: "Izuka-san, um, the middle of the far left..." }
+      - { who: M, text: 'あの　左端の中ほど…', en: "Izuka-san, um, the middle of the far left..." }
       - { who: A, text: 'ん？　左端の中ほどがどうしたの？', en: "Hm? What about the middle of the far left?" }
       - { who: M, text: '何となく　そこが気になって', en: "Something just draws me to it." }
   - id: spawn-hint-AR-04-red-telephone-03
@@ -2248,7 +2248,7 @@ dialogues:
     when: { anomaly: AR-04-ceiling-corner-fold }
     lines:
       - { who: M, text: '天井の中央右寄り　ここだと思うんです', en: "I think it's the center-right ceiling." }
-      - { who: A, text: 'なるほど　確かめてみる', en: "I see. I'll check it out." }
+      - { who: A, text: "そこだね　確かめてみる", en: "That's the spot. I'll check." }
   - id: spawn-hint-AR-04-red-lantern-01
     tone: serious
     when: { anomaly: AR-04-red-lantern }
@@ -2264,7 +2264,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-red-lantern }
     lines:
-      - { who: M, text: '落ち着いて　右のガラスの　向こうを見てください', en: "Stay calm and look at the area beyond the glass on the right." }
+      - { who: M, text: '落ち着いて　右のガラスの　向こうを確認してください', en: "Stay calm and look at the area beyond the glass on the right." }
       - { who: A, text: '了解　右のガラスの向こうね', en: "Got it. The area beyond the glass on the right." }
   - id: spawn-hint-AR-05-curtain-open-01
     tone: serious
@@ -2315,7 +2315,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-film-poster }
     lines:
-      - { who: M, text: "出河さん　左の黒い壁を　上のほうまで見てください", en: "Detective, look up the black wall on the left." }
+      - { who: M, text: "左の黒い壁を　上のほうまで見てください", en: "Detective, look up the black wall on the left." }
       - { who: A, text: "上までね　分かった", en: "All the way up. Got it." }
   - id: spawn-hint-AR-05-sign-in-glass-01
     tone: serious
@@ -2349,7 +2349,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-joint-into-glass }
     lines:
-      - { who: M, text: "出河さん　床の線の行き先を　目で追ってください", en: "Detective, follow the lines on the floor with your eyes." }
+      - { who: M, text: "床の線の行き先を　目で追ってください", en: "Detective, follow the lines on the floor with your eyes." }
       - { who: A, text: "行き先ね　追ってみる", en: "Where they lead. I'll follow." }
   - id: spawn-hint-AR-05-brick-round-01
     tone: serious
@@ -2466,14 +2466,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-wall-puddle }
     lines:
-      - { who: M, text: "出河さん　右側の床の　奥寄りに注目してください", en: "Detective, watch the right side floor, toward the back." }
+      - { who: M, text: "右側の床の　奥寄りに注目してください", en: "Detective, watch the right side floor, toward the back." }
       - { who: A, text: "はいはい　見るよ", en: "Okay, I'm looking." }
   - id: spawn-hint-AR-06-ceiling-checker-01
     tone: serious
     when: { anomaly: AR-06-ceiling-checker }
     lines:
       - { who: A, text: "上だな　天井のほうが怪しい", en: "Up there. The ceiling feels off." }
-      - { who: M, text: "天井ですね　全体を見ます", en: "The ceiling. I'll scan all of it." }
+      - { who: M, text: "天井ですね　全体を目を向けます", en: "The ceiling. I'll scan all of it." }
   - id: spawn-hint-AR-06-ceiling-checker-02
     tone: serious
     when: { anomaly: AR-06-ceiling-checker }
@@ -2483,7 +2483,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-ceiling-checker }
     lines:
-      - { who: A, text: "天井の黒い所を　端から端まで見よう", en: "Let's go over the dark parts of the ceiling, end to end." }
+      - { who: A, text: "天井の黒い所　奥のほうから見よう", en: "Let's start from the far end of the dark part of the ceiling." }
   - id: spawn-hint-AR-06-lamp-squared-01
     tone: serious
     when: { anomaly: AR-06-lamp-squared }
@@ -2494,12 +2494,12 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-lamp-squared }
     lines:
-      - { who: A, text: "上の左のほう　灯りの形をよく見て", en: "Upper left. Look closely at the shape of the lamp." }
+      - { who: A, text: "上の左のほう　灯りの辺りをよく見て", en: "Upper left. Look closely around the lamp." }
   - id: spawn-hint-AR-06-lamp-squared-03
     tone: serious
     when: { anomaly: AR-06-lamp-squared }
     lines:
-      - { who: M, text: "出河さん　左上の灯りが気になります", en: "Detective, the upper left lamp bothers me." }
+      - { who: M, text: "左上の灯りが気になります", en: "Detective, the upper left lamp bothers me." }
       - { who: A, text: "私も気になってた　見よう", en: "Same here. Let's look." }
   - id: spawn-hint-AR-06-ceiling-panel-white-01
     tone: serious
@@ -2567,7 +2567,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-floor-uphill }
     lines:
-      - { who: A, text: '広い床の端から端まで　目を走らせてみよう', en: "Let's sweep our eyes across the floor, edge to edge." }
+      - { who: A, text: "広い床の左右の端のほう　目を走らせてみよう", en: "Let's run our eyes over the left and right edges of the wide floor." }
   - id: spawn-hint-AR-08-old-man-back-01
     tone: serious
     when: { anomaly: AR-08-old-man-back }
@@ -2626,7 +2626,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-floor-reflection-two-tier }
     lines:
-      - { who: M, text: '柱の左手前の床の光り方が　気になります', en: 'The shine on the floor front left of the pillar bothers me.' }
+      - { who: M, text: "柱の左手前の床の辺りが　気になります", en: "The floor front left of the pillar bothers me." }
   - id: spawn-hint-AR-08-floor-reflection-two-tier-03
     tone: serious
     when: { anomaly: AR-08-floor-reflection-two-tier }
@@ -2637,7 +2637,7 @@ dialogues:
     when: { anomaly: AR-08-tile-concentric }
     lines:
       - { who: A, text: '床のタイル　よく見てみて', en: 'Look closely at the floor tiles.' }
-      - { who: M, text: 'タイルですね　見ます', en: 'The tiles. Looking.' }
+      - { who: M, text: 'タイルですね　確かめます', en: 'The tiles. Looking.' }
   - id: spawn-hint-AR-08-tile-concentric-02
     tone: serious
     when: { anomaly: AR-08-tile-concentric }
@@ -2668,7 +2668,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-wall-band-wave }
     lines:
-      - { who: A, text: '右の壁　全体を見てみて', en: 'Look at the whole right wall.' }
+      - { who: A, text: '右の壁　全体を見てごらん', en: 'Look at the whole right wall.' }
       - { who: M, text: '右の壁全体ですね　はい', en: 'The whole right wall. Yes.' }
   - id: spawn-hint-AR-08-wall-band-wave-02
     tone: serious
@@ -2700,7 +2700,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-fixture-dark-red }
     lines:
-      - { who: A, text: '奥の天井の右寄り　見てみて', en: 'Check the right side of the ceiling at the back.' }
+      - { who: A, text: '奥の天井の右寄り　確かめてみて', en: 'Check the right side of the ceiling at the back.' }
       - { who: M, text: 'はい　奥の右寄りですね', en: 'Yes, back toward the right.' }
   - id: spawn-hint-AR-08-fixture-dark-red-02
     tone: serious
@@ -2716,13 +2716,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-floor-reflection-no-pillar }
     lines:
-      - { who: A, text: '柱の前の床　見てみて', en: 'Look at the floor in front of the pillar.' }
+      - { who: A, text: '柱の前の床　見てごらん', en: 'Look at the floor in front of the pillar.' }
       - { who: M, text: '柱の前ですね', en: 'In front of the pillar.' }
   - id: spawn-hint-AR-08-floor-reflection-no-pillar-02
     tone: serious
     when: { anomaly: AR-08-floor-reflection-no-pillar }
     lines:
-      - { who: M, text: '柱の前の床の光の辺りを　見てください', en: 'Please look at the light on the floor in front of the pillar.' }
+      - { who: M, text: "柱の前の床の辺りを　見てください", en: "Please look at the floor in front of the pillar." }
   - id: spawn-hint-AR-08-floor-reflection-no-pillar-03
     tone: serious
     when: { anomaly: AR-08-floor-reflection-no-pillar }
@@ -2749,12 +2749,12 @@ dialogues:
     when: { anomaly: AR-02-smartphone-facedown }
     lines:
       - { who: A, text: "中央より少し左の手前　床を見てみて", en: "Look at the floor front, a bit left of center." }
-      - { who: M, text: "中央左の手前の床ですね　見ます", en: "The floor front, left of center. Looking." }
+      - { who: M, text: "中央左の手前の床ですね　目を向けます", en: "The floor front, left of center. Looking." }
   - id: spawn-hint-AR-02-smartphone-facedown-02
     tone: serious
     when: { anomaly: AR-02-smartphone-facedown }
     lines:
-      - { who: M, text: "出河さん　手前の床の　中央あたりが気になります", en: "Detective, the middle of the front floor bothers me." }
+      - { who: M, text: "手前の床の　中央あたりが気になります", en: "Detective, the middle of the front floor bothers me." }
       - { who: A, text: "手前の中央ね　見よう", en: "Front center. Let's look." }
   - id: spawn-hint-AR-02-smartphone-facedown-03
     tone: serious
@@ -2766,7 +2766,7 @@ dialogues:
     when: { anomaly: AR-04-earbud-single }
     lines:
       - { who: M, text: '手前の床の真ん中です　どうですか', en: "The middle of the near floor. What do you think?" }
-      - { who: A, text: '…あ　言われてみれば　そうかも！', en: "...Oh, now that you mention it, maybe!" }
+      - { who: A, text: "…あ　そう言われると　怪しいかも！", en: "...Ah, now that you say it, it looks suspicious!" }
   - id: spawn-hint-AR-04-earbud-single-02
     tone: serious
     when: { anomaly: AR-04-earbud-single }
@@ -2777,7 +2777,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-earbud-single }
     lines:
-      - { who: M, text: '出河さん　下端の中央寄りです', en: "Izuka-san, it's the bottom edge, near center." }
+      - { who: M, text: '下端の中央寄りです', en: "Izuka-san, it's the bottom edge, near center." }
   - id: spawn-hint-AR-01-power-bank-01
     tone: serious
     when: { anomaly: AR-01-power-bank }
@@ -2811,7 +2811,7 @@ dialogues:
     when: { anomaly: AR-03-silver-can }
     lines:
       - { who: M, text: '右下の床の辺りです　どうですか', en: "The lower right floor. What do you think?" }
-      - { who: A, text: '…あ　言われてみれば　そうかも！', en: "...Oh, now that you mention it, maybe!" }
+      - { who: A, text: "ん…？　そこ　変かもしれない", en: "Hm...? That spot might be off." }
   - id: spawn-hint-AR-05-pet-bottle-01
     tone: serious
     when: { anomaly: AR-05-pet-bottle }
@@ -2849,7 +2849,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-leather-footprints }
     lines:
-      - { who: M, text: "右手前の床です　広めに見てください", en: "It's the front-right floor. Look at it broadly." }
+      - { who: M, text: "右手前の床です　広めに確認してください", en: "It's the front-right floor. Look at it broadly." }
       - { who: A, text: "右手前の床ね　見る", en: "Front-right floor. Looking." }
   - id: spawn-hint-AR-02-leather-footprints-02
     tone: serious
@@ -2894,7 +2894,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-floor-glare-backside }
     lines:
-      - { who: M, text: "出河さん　画面の右下を見てください", en: "Detective, look at the lower right of the screen." }
+      - { who: M, text: "画面の右下を目を向けてください", en: "Detective, look at the lower right of the screen." }
       - { who: A, text: "右下ね　分かった", en: "Lower right. Got it." }
   - id: spawn-hint-AR-06-fluorescent-tag-01
     tone: serious
@@ -2971,7 +2971,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-ceiling-fan-showa }
     lines:
-      - { who: M, text: "出河さん　左上の天井が気になります", en: "Detective, the upper-left ceiling bothers me." }
+      - { who: M, text: "左上の天井が気になります", en: "Detective, the upper-left ceiling bothers me." }
       - { who: A, text: "そこかあ　見てみよう", en: "That's the spot? Let's look." }
   - id: spawn-hint-AR-01-ceiling-fan-showa-03
     tone: serious
@@ -2982,7 +2982,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-red-rubber-ball }
     lines:
-      - { who: M, text: "右手前の床です　見てください", en: "It's the front-right floor. Please look." }
+      - { who: M, text: "右手前の床です　確認してください", en: "It's the front-right floor. Please look." }
       - { who: A, text: "右手前の床ね　見るよ", en: "Front-right floor. Looking." }
   - id: spawn-hint-AR-01-red-rubber-ball-02
     tone: serious
@@ -3034,7 +3034,7 @@ dialogues:
     when: { anomaly: AR-03-pendant-lamp }
     lines:
       - { who: M, text: '左上の暗い所の辺りに　目を向けてください', en: "Please turn your eyes to the dark upper left." }
-      - { who: A, text: 'うん　そっちを見てみる', en: "Yeah. I'll look that way." }
+      - { who: A, text: "分かった　そっちに目を向ける", en: "Got it. I'll turn my eyes there." }
   - id: spawn-hint-AR-03-pendant-lamp-02
     tone: serious
     when: { anomaly: AR-03-pendant-lamp }
@@ -3091,7 +3091,7 @@ dialogues:
     when: { anomaly: AR-04-randoseru-red }
     lines:
       - { who: M, text: '左下の隅　ここだと思うんです', en: "I think it's the lower left corner." }
-      - { who: A, text: 'なるほど　確かめてみる', en: "I see. I'll check it out." }
+      - { who: A, text: "ふむ　見て確かめてみよう", en: "Hmm. Let's look and see." }
   - id: spawn-hint-AR-04-randoseru-red-03
     tone: serious
     when: { anomaly: AR-04-randoseru-red }
@@ -3130,7 +3130,7 @@ dialogues:
     when: { anomaly: AR-06-ceiling-balloons }
     lines:
       - { who: A, text: "左上の端っこに何かありそう　天井の辺り", en: "Something may be at the upper left edge. Near the ceiling." }
-      - { who: M, text: "上の左端ですね　見ます", en: "Upper left edge. Looking." }
+      - { who: M, text: "上の左端ですね　目を向けます", en: "Upper left edge. Looking." }
   - id: spawn-hint-AR-07-paper-airplane-ceiling-01
     tone: serious
     when: { anomaly: AR-07-paper-airplane-ceiling }
@@ -3151,7 +3151,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-floor-ramune-marbles }
     lines:
-      - { who: A, text: '右の床の中ほど　見てみて', en: 'Look at the middle of the floor on the right.' }
+      - { who: A, text: '右の床の中ほど　見てごらん', en: 'Look at the middle of the floor on the right.' }
       - { who: M, text: '右の床の中ほどですね', en: 'The middle of the right floor.' }
   - id: spawn-hint-AR-08-floor-ramune-marbles-02
     tone: serious
@@ -3167,8 +3167,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-bamboo-broom }
     lines:
-      - { who: A, text: "床の中央より少し左　見てみて", en: "Look at the floor a bit left of center." }
-      - { who: M, text: "中央より少し左ですね　見ます", en: "A bit left of center. Looking." }
+      - { who: A, text: "床の中央より少し左　確かめてみて", en: "Look at the floor a bit left of center." }
+      - { who: M, text: "中央より少し左ですね　確かめます", en: "A bit left of center. Looking." }
   - id: spawn-hint-AR-01-bamboo-broom-02
     tone: serious
     when: { anomaly: AR-01-bamboo-broom }
@@ -3201,19 +3201,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-floor-footprints }
     lines:
-      - { who: A, text: "床の全体　広く見てみて", en: "Look broadly across the whole floor." }
-      - { who: M, text: "床全体ですね　見ます", en: "The whole floor. Looking." }
+      - { who: A, text: "床の全体　広く見てごらん", en: "Look broadly across the whole floor." }
+      - { who: M, text: "床全体ですね　目を向けます", en: "The whole floor. Looking." }
   - id: spawn-hint-AR-02-floor-footprints-02
     tone: serious
     when: { anomaly: AR-02-floor-footprints }
     lines:
-      - { who: M, text: "出河さん　床の手前から奥まで　見てください", en: "Detective, please look from the near floor to the far end." }
+      - { who: M, text: "床の手前から奥まで　見てください", en: "Detective, please look from the near floor to the far end." }
       - { who: A, text: "手前から奥ね　順に見る", en: "Near to far. I'll go in order." }
   - id: spawn-hint-AR-02-floor-footprints-03
     tone: serious
     when: { anomaly: AR-02-floor-footprints }
     lines:
-      - { who: A, text: "床一面　なんか気配がするんだよね…", en: "The whole floor feels like something's there..." }
+      - { who: A, text: "床の奥の暗い角のほう　なんか気配がするんだよね…", en: "Toward the dark corner at the back of the floor... I sense something." }
   - id: spawn-hint-AR-03-shutter-blank-papers-01
     tone: serious
     when: { anomaly: AR-03-shutter-blank-papers }
@@ -3224,13 +3224,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-shutter-blank-papers }
     lines:
-      - { who: M, text: '左側の壁一面です　どうですか', en: "The entire left wall. What do you think?" }
-      - { who: A, text: '…あ　言われてみれば　そうかも！', en: "...Oh, now that you mention it, maybe!" }
+      - { who: M, text: "左側の壁の　上のほうです　どうですか", en: "The upper part of the left wall. What do you think?" }
+      - { who: A, text: "…あ　言われてみれば　そうかも！", en: "...Oh, now that you mention it, maybe!" }
   - id: spawn-hint-AR-03-shutter-blank-papers-03
     tone: serious
     when: { anomaly: AR-03-shutter-blank-papers }
     lines:
-      - { who: M, text: '左のほう全体の辺り　見てみましょうか', en: "Shall we look around the whole left side?" }
+      - { who: M, text: "左のほうの　下の辺り　見てみましょうか", en: "Shall we look at the lower part on the left?" }
   - id: spawn-hint-AR-03-floor-tatami-01
     tone: serious
     when: { anomaly: AR-03-floor-tatami }
@@ -3241,12 +3241,12 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-floor-tatami }
     lines:
-      - { who: M, text: '床の広い範囲に　何かある気がします', en: "I sense something somewhere across the wide floor." }
+      - { who: M, text: "床の右手前に　何かある気がします", en: "I sense something at the front right of the floor." }
   - id: spawn-hint-AR-03-floor-tatami-03
     tone: serious
     when: { anomaly: AR-03-floor-tatami }
     lines:
-      - { who: A, text: 'ここは　下半分の床に注目してみて', en: "Focus on the lower half of the floor." }
+      - { who: A, text: "ここは　右寄りの床に注目してみて", en: "Focus on the right side of the floor." }
       - { who: M, text: "そこですね　絞り込んでみます", en: "That spot, then. I'll narrow in on it." }
   - id: spawn-hint-AR-01-wall-faces-01
     tone: serious
@@ -3258,13 +3258,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-wall-faces }
     lines:
-      - { who: M, text: "出河さん　左の壁を端から端まで見ましょう", en: "Detective, let's check the left wall end to end." }
-      - { who: A, text: "そうだね　端から端までね", en: "Right, from end to end." }
+      - { who: M, text: "左の壁を　奥のほうから見ましょう", en: "Let's look at the left wall starting from the back." }
+      - { who: A, text: "そうだね　奥のほうからね", en: "Right. From the back." }
   - id: spawn-hint-AR-01-wall-faces-03
     tone: serious
     when: { anomaly: AR-01-wall-faces }
     lines:
-      - { who: A, text: "左の壁の広い範囲　目を向けてみて", en: "Look at the broad area of the left wall." }
+      - { who: A, text: "左の壁の　手前のほう　目を向けてみて", en: "Look at the front part of the left wall." }
   - id: spawn-hint-AR-07-wall-clocks-01
     tone: serious
     when: { anomaly: AR-07-wall-clocks }
@@ -3275,12 +3275,12 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-wall-clocks }
     lines:
-      - { who: M, text: '奥の壁を　端から端まで見ましょう', en: "Let's look along the back wall from end to end." }
+      - { who: M, text: "奥の壁を　上のほうから見ましょう", en: "Let's look at the back wall from the top." }
   - id: spawn-hint-AR-07-wall-clocks-03
     tone: serious
     when: { anomaly: AR-07-wall-clocks }
     lines:
-      - { who: A, text: '後ろの壁全体　どうも落ち着かないんだよね', en: 'The whole back wall feels unsettling.' }
+      - { who: A, text: "後ろの壁の下のほう　どうも落ち着かないんだよね", en: "The lower part of the back wall just feels unsettling." }
   - id: spawn-hint-AR-06-ceiling-umbrellas-01
     tone: serious
     when: { anomaly: AR-06-ceiling-umbrellas }
@@ -3296,8 +3296,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-ceiling-umbrellas }
     lines:
-      - { who: M, text: "出河さん　上を端から端まで確認しましょう", en: "Detective, let's check the top from end to end." }
-      - { who: A, text: "端から端ね　よし", en: "End to end. Okay." }
+      - { who: M, text: "上の左右の端を　確認しましょう", en: "Let's check the left and right ends above." }
+      - { who: A, text: "左右ね　よし", en: "Left and right. Okay." }
   - id: spawn-hint-AR-04-window-alley-01
     tone: serious
     when: { anomaly: AR-04-window-alley }
@@ -3308,13 +3308,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-window-alley }
     lines:
-      - { who: M, text: '右のほう全体ですね　注目します', en: "The whole right side. I'll keep an eye on it." }
+      - { who: M, text: "右のほうの　奥側ですね　注目します", en: "The far side on the right. I'll focus on it." }
   - id: spawn-hint-AR-04-window-alley-03
     tone: serious
     when: { anomaly: AR-04-window-alley }
     lines:
-      - { who: A, text: 'ここは　右の壁の広い範囲に注目してみて', en: "Focus on the broad area of the right wall." }
-      - { who: M, text: 'はい　そこに絞ってみます', en: "Yes. I'll narrow in on it." }
+      - { who: A, text: "ここは　右の壁の手前寄りに注目してみて", en: "Focus on the near part of the right wall." }
+      - { who: M, text: "はい　そこに絞ってみます", en: "Yes. I'll narrow in on it." }
   - id: spawn-hint-AR-08-floor-water-mirror-01
     tone: serious
     when: { anomaly: AR-08-floor-water-mirror }
@@ -3325,7 +3325,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-floor-water-mirror }
     lines:
-      - { who: M, text: '床の全体の様子が　気になります', en: 'The look of the whole floor bothers me.' }
+      - { who: M, text: "床の奥のほうの様子が　気になります", en: "The far part of the floor bothers me." }
   - id: spawn-hint-AR-08-floor-water-mirror-03
     tone: serious
     when: { anomaly: AR-08-floor-water-mirror }
@@ -3341,29 +3341,29 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-curtains-open-cafe }
     lines:
-      - { who: M, text: "店の中が気になります　正面の広い範囲です", en: "The inside of the shops nags me. The big area in front." }
+      - { who: M, text: "店の中が気になります　正面の左寄りです", en: "The inside of the shop bothers me. The left of the front." }
   - id: spawn-hint-AR-05-curtains-open-cafe-03
     tone: serious
     when: { anomaly: AR-05-curtains-open-cafe }
     lines:
-      - { who: A, text: "真ん中のガラス区画　全部を見渡してみよう", en: "The glass section in the middle. Let's take in all of it." }
+      - { who: A, text: "真ん中の区画　右寄りを見渡してみよう", en: "Let's sweep over the right part of the middle section." }
   - id: spawn-hint-AR-04-glass-fog-handprints-01
     tone: serious
     when: { anomaly: AR-04-glass-fog-handprints }
     lines:
-      - { who: M, text: '…左のガラス全体が　引っかかりますね', en: "...The whole left glass snags my attention." }
+      - { who: M, text: "…左の店先全体が　引っかかりますね", en: "...The whole left storefront snags my attention." }
   - id: spawn-hint-AR-04-glass-fog-handprints-02
     tone: serious
     when: { anomaly: AR-04-glass-fog-handprints }
     lines:
-      - { who: A, text: '左側のガラス一面　怪しくない？', en: "Doesn't all of the left glass look suspicious?" }
-      - { who: M, text: '確かに　そこは気になりますね', en: "True. That spot does bother me." }
+      - { who: A, text: "左側の手前寄り　怪しくない？", en: "Doesn't the front part of the left side look suspicious?" }
+      - { who: M, text: "確かに　そこは気になりますね", en: "True. That spot does bother me." }
   - id: spawn-hint-AR-04-glass-fog-handprints-03
     tone: serious
     when: { anomaly: AR-04-glass-fog-handprints }
     lines:
-      - { who: M, text: '出河さん　左のほう一帯を　見てもらえますか', en: "Izuka-san, could you look at the whole left area?" }
-      - { who: A, text: 'よし　左のほう一帯ね　見るよ', en: "Okay, the whole left area. I'm on it." }
+      - { who: M, text: "左のほうの奥側を　見てもらえますか", en: "Could you look at the far side of the left?" }
+      - { who: A, text: "よし　左の奥側ね　見るよ", en: "Okay, the far left side. I'm on it." }
   - id: spawn-hint-AR-05-floor-white-cranes-01
     tone: serious
     when: { anomaly: AR-05-floor-white-cranes }
@@ -3374,12 +3374,12 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-floor-white-cranes }
     lines:
-      - { who: A, text: "足元がどうも気になる　下半分を見て", en: "My feet area really bugs me. Look at the bottom half." }
+      - { who: A, text: "足元がどうも気になる　手前のほうを見て", en: "Our feet bug me. Look at the front part." }
   - id: spawn-hint-AR-05-floor-white-cranes-03
     tone: serious
     when: { anomaly: AR-05-floor-white-cranes }
     lines:
-      - { who: M, text: "出河さん　画面の下のほうを　広く見てください", en: "Detective, look broadly at the lower part of the screen." }
+      - { who: M, text: "画面の下のほうを　広く見てください", en: "Detective, look broadly at the lower part of the screen." }
       - { who: A, text: "下のほうね　見るよ", en: "The lower part. I'll look." }
   - id: spawn-hint-AR-01-ceiling-lanterns-01
     tone: serious
@@ -3408,13 +3408,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-shutter-crayon-drawings }
     lines:
-      - { who: A, text: "左側一面　広い範囲を見てみて", en: "Look at the broad area along the whole left side." }
-      - { who: M, text: "はい　左一面を見ます", en: "Yes. The whole left side." }
+      - { who: A, text: "左側の　奥のほうを見てみて", en: "Look at the far part of the left side." }
+      - { who: M, text: "はい　左の奥を見ます", en: "Yes. I'll look at the back left." }
   - id: spawn-hint-AR-02-shutter-crayon-drawings-03
     tone: serious
     when: { anomaly: AR-02-shutter-crayon-drawings }
     lines:
-      - { who: A, text: "左のシャッターの広い面　ざわつくなあ", en: "The wide surface on the left unsettles me." }
+      - { who: A, text: "左の手前寄り　ざわつくなあ", en: "The front left makes me uneasy." }
   - id: spawn-hint-AR-01-bunting-flags-01
     tone: serious
     when: { anomaly: AR-01-bunting-flags }
@@ -3459,7 +3459,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-wall-same-poster }
     lines:
-      - { who: M, text: "右の壁面です　広い範囲が引っかかります", en: "The right wall. A wide area is nagging me." }
+      - { who: M, text: "右の壁の　奥のほうが引っかかります", en: "The far part of the right wall catches me." }
   - id: spawn-hint-AR-06-wall-same-poster-03
     tone: serious
     when: { anomaly: AR-06-wall-same-poster }
@@ -3476,7 +3476,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-ceiling-white-sheets }
     lines:
-      - { who: M, text: '天井の全体に　目を向けてください', en: 'Please turn your eyes to the whole ceiling.' }
+      - { who: M, text: "天井の　手前のほうに　目を向けてください", en: "Please turn your eyes to the front part of the ceiling." }
   - id: spawn-hint-AR-07-ceiling-white-sheets-03
     tone: serious
     when: { anomaly: AR-07-ceiling-white-sheets }
@@ -3519,7 +3519,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-bubble-tea-cup }
     lines:
-      - { who: M, text: "右手前の床を見てください", en: "Please look at the floor in the front right." }
+      - { who: M, text: "右手前の床を確認してください", en: "Please look at the floor in the front right." }
       - { who: A, text: "右手前の床ね　見てみる", en: "Front-right floor. Looking." }
   - id: spawn-hint-AR-01-bubble-tea-cup-02
     tone: serious
@@ -3536,7 +3536,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-maroon-cushion }
     lines:
-      - { who: M, text: "左手前の床です　見てください", en: "It's the front-left floor. Please look." }
+      - { who: M, text: "左手前の床です　目を向けてください", en: "It's the front-left floor. Please look." }
       - { who: A, text: "左手前の床ね　見る", en: "Front-left floor. Looking." }
   - id: spawn-hint-AR-02-maroon-cushion-02
     tone: serious
@@ -3553,13 +3553,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-navy-handy-fan }
     lines:
-      - { who: A, text: "床の左寄り　中ほどを見てみて", en: "Look at the mid-left part of the floor." }
-      - { who: M, text: "床の左寄りの中ほどですね　見ます", en: "The mid-left floor. Looking." }
+      - { who: A, text: "床の左寄り　中ほどを見てごらん", en: "Look at the mid-left part of the floor." }
+      - { who: M, text: "床の左寄りの中ほどですね　目を向けます", en: "The mid-left floor. Looking." }
   - id: spawn-hint-AR-02-navy-handy-fan-02
     tone: serious
     when: { anomaly: AR-02-navy-handy-fan }
     lines:
-      - { who: M, text: "出河さん　左より少し奥の床が気になります", en: "Detective, the floor a bit back on the left bothers me." }
+      - { who: M, text: "左より少し奥の床が気になります", en: "Detective, the floor a bit back on the left bothers me." }
       - { who: A, text: "左より少し奥ね　見る", en: "A bit back on the left. Looking." }
   - id: spawn-hint-AR-02-navy-handy-fan-03
     tone: serious
@@ -3570,7 +3570,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-jump-rope }
     lines:
-      - { who: M, text: "手前の床の中央です　見てください", en: "It's the center of the front floor. Please look." }
+      - { who: M, text: "手前の床の中央です　確認してください", en: "It's the center of the front floor. Please look." }
       - { who: A, text: "手前の床の真ん中ね　見る", en: "Center of the front floor. Looking." }
   - id: spawn-hint-AR-02-jump-rope-02
     tone: serious
@@ -3587,7 +3587,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-tanabata-paper-chain }
     lines:
-      - { who: A, text: "天井の右寄りの上端　見てみて", en: "Look at the upper edge on the right of the ceiling." }
+      - { who: A, text: "天井の右寄りの上端　確かめてみて", en: "Look at the upper edge on the right of the ceiling." }
       - { who: M, text: "右寄りの天井に　目を向けます", en: "I will turn my eyes to the right ceiling." }
   - id: spawn-hint-AR-02-tanabata-paper-chain-02
     tone: serious
@@ -3621,7 +3621,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-mint-suitcase }
     lines:
-      - { who: A, text: "左手前の隅っこ　床を見てみて", en: "Look at the floor in the front-left corner." }
+      - { who: A, text: "左手前の隅っこ　床を見てごらん", en: "Look at the floor in the front-left corner." }
       - { who: M, text: "左手前の隅ですか　確かめてみます", en: "The front-left corner? I will check." }
   - id: spawn-hint-AR-02-mint-suitcase-02
     tone: serious
@@ -3638,7 +3638,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-tricycle }
     lines:
-      - { who: M, text: '右寄りの足元を　重点的に見ます', en: "I'll focus on the foot area on the right." }
+      - { who: M, text: '右寄りの足元を　重点的に確かめます', en: "I'll focus on the foot area on the right." }
   - id: spawn-hint-AR-03-tricycle-02
     tone: serious
     when: { anomaly: AR-03-tricycle }
@@ -3661,7 +3661,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-wash-tub }
     lines:
-      - { who: M, text: '出河さん　あの　左下の隅…', en: "Izuka-san, um, the lower left corner..." }
+      - { who: M, text: 'あの　左下の隅…', en: "Izuka-san, um, the lower left corner..." }
       - { who: A, text: 'ん？　左下の隅がどうしたの？', en: "Hm? What about the lower left corner?" }
       - { who: M, text: "どうも　そこが引っかかって", en: "Somehow that spot nags at me." }
   - id: spawn-hint-AR-03-wash-tub-03
@@ -3674,13 +3674,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-insect-cage }
     lines:
-      - { who: M, text: '左端の床の影です　どうですか', en: "The shadowed floor at the far left. What do you think?" }
-      - { who: A, text: '…あ　言われてみれば　そうかも！', en: "...Oh, now that you mention it, maybe!" }
+      - { who: M, text: "左端の床の隅です　どうですか", en: "The floor corner at the far left. What do you think?" }
+      - { who: A, text: "…あ　確かに　そんな気もする！", en: "...Ah, I do get that feeling!" }
   - id: spawn-hint-AR-03-insect-cage-02
     tone: serious
     when: { anomaly: AR-03-insect-cage }
     lines:
-      - { who: A, text: 'ここは　左寄りの手前の暗が　りに注目してみて', en: "Focus on the dark area near the front left." }
+      - { who: A, text: "ここは　左寄りの手前の暗がりに注目してみて", en: "Focus on the dark area near the front left." }
       - { who: M, text: "では　そこに集中してみます", en: "Then I'll focus on that spot." }
   - id: spawn-hint-AR-03-insect-cage-03
     tone: serious
@@ -3697,7 +3697,7 @@ dialogues:
     when: { anomaly: AR-03-sake-bottle }
     lines:
       - { who: M, text: '静かに　右寄りの床の中ほどに注目です', en: "Quietly now, focus on the middle of the right-leaning floor." }
-      - { who: A, text: 'しーっ　集中するよ', en: "Shh. Focusing." }
+      - { who: A, text: "…うん　静かに集中する", en: "...Yeah. Quietly focusing." }
   - id: spawn-hint-AR-03-sake-bottle-03
     tone: serious
     when: { anomaly: AR-03-sake-bottle }
@@ -3720,13 +3720,13 @@ dialogues:
     when: { anomaly: AR-04-thermos }
     lines:
       - { who: M, text: 'ちょっと　右下の隅も見ませんか', en: "Shall we check the lower right corner too?" }
-      - { who: A, text: 'いいね　やってみよう', en: "Good idea. Let's do it." }
+      - { who: A, text: "いいよ　そっちも見てみよう", en: "Sure. Let's look over there too." }
   - id: spawn-hint-AR-04-flypaper-01
     tone: serious
     when: { anomaly: AR-04-flypaper }
     lines:
       - { who: M, text: '中央上の天井　ここだと思うんです', en: "I think it's the ceiling at the top center." }
-      - { who: A, text: 'なるほど　確かめてみる', en: "I see. I'll check it out." }
+      - { who: A, text: "ここか　確かめてみよう", en: "Here? Let me check." }
   - id: spawn-hint-AR-04-flypaper-02
     tone: serious
     when: { anomaly: AR-04-flypaper }
@@ -3748,7 +3748,7 @@ dialogues:
     when: { anomaly: AR-04-tote-bag }
     lines:
       - { who: M, text: '出河さん　右の端の中ほどの　高さはどうでしょう', en: "Izuka-san, how about the middle height at the far right?" }
-      - { who: A, text: 'おっ　それ　ありそう！', en: "Oh, that sounds promising!" }
+      - { who: A, text: "なるほど　そこはありそうだね", en: "I see. That could be it." }
   - id: spawn-hint-AR-04-tote-bag-03
     tone: serious
     when: { anomaly: AR-04-tote-bag }
@@ -3765,7 +3765,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-tin-robot }
     lines:
-      - { who: M, text: '出河さん　真ん中やや右の床を　見てもらえますか', en: "Izuka-san, could you look at the floor just right of the middle?" }
+      - { who: M, text: '真ん中やや右の床を　見てもらえますか', en: "Izuka-san, could you look at the floor just right of the middle?" }
       - { who: A, text: 'よし　真ん中やや右の床ね　見るよ', en: "Okay, the floor just right of the middle. I'm on it." }
   - id: spawn-hint-AR-04-tin-robot-03
     tone: serious
@@ -3777,7 +3777,7 @@ dialogues:
     when: { anomaly: AR-07-n1 }
     lines:
       - { who: A, text: '左手前の床　見てみて', en: 'Look at the floor front left.' }
-      - { who: M, text: '左の手前ですか　見ます', en: 'Front left? I will look.' }
+      - { who: M, text: '左の手前ですか　目を向けます', en: 'Front left? I will look.' }
   - id: spawn-hint-AR-07-n1-02
     tone: serious
     when: { anomaly: AR-07-n1 }
@@ -3933,7 +3933,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-paper-streamers }
     lines:
-      - { who: M, text: "出河さん　頭上の左寄りが気になります", en: "Detective, the upper left overhead nags me." }
+      - { who: M, text: "頭上の左寄りが気になります", en: "Detective, the upper left overhead nags me." }
       - { who: A, text: "左の上だね　見るよ", en: "Upper left. I'll look." }
   - id: spawn-hint-AR-05-baseball-glove-01
     tone: serious
@@ -4030,7 +4030,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-yellow-raincoat }
     lines:
-      - { who: M, text: "左の壁面　暗くなっている所です", en: "The left wall surface, the dark part." }
+      - { who: M, text: "左の壁面　上のほうの辺りです", en: "The left wall surface, the upper part." }
   - id: spawn-hint-AR-06-yellow-raincoat-03
     tone: serious
     when: { anomaly: AR-06-yellow-raincoat }
@@ -4047,13 +4047,13 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-floor-crosswalk }
     lines:
-      - { who: M, text: "出河さん　床の手前側がおかしい気がします", en: "Detective, the near side of the floor seems off." }
+      - { who: M, text: "床の手前側がおかしい気がします", en: "Detective, the near side of the floor seems off." }
       - { who: A, text: "手前側ね　たしかに見てみよう", en: "The near side? Let's take a look." }
   - id: spawn-hint-AR-01-floor-crosswalk-03
     tone: serious
     when: { anomaly: AR-01-floor-crosswalk }
     lines:
-      - { who: A, text: "手前の床の端から端まで　見渡そう", en: "Let's scan the front floor from side to side." }
+      - { who: A, text: "手前の床の　右のほうから　見渡そう", en: "Let's sweep from the right side of the front floor." }
   - id: spawn-hint-AR-01-right-wall-lattice-doors-01
     tone: serious
     when: { anomaly: AR-01-right-wall-lattice-doors }
@@ -4064,8 +4064,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-right-wall-lattice-doors }
     lines:
-      - { who: A, text: "右側の壁一面　ここ変じゃない？", en: "Isn't the whole right wall odd?" }
-      - { who: M, text: "右側ですね　見てみます", en: "The right side. Let me look." }
+      - { who: A, text: "右側の壁の　奥のほう　ここ変じゃない？", en: "The far part of the right wall. Isn't this off?" }
+      - { who: M, text: "右側ですね　見てみます", en: "The right side. I'll look." }
   - id: spawn-hint-AR-01-right-wall-lattice-doors-03
     tone: serious
     when: { anomaly: AR-01-right-wall-lattice-doors }
@@ -4086,7 +4086,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-ceiling-lamp-off }
     lines:
-      - { who: A, text: "左上の天井　ちょっと暗くない？", en: "Isn't the upper-left ceiling a bit dim?" }
+      - { who: A, text: "左上の天井　もう一度見てみようか", en: "Shall we look at the upper-left ceiling once more?" }
       - { who: M, text: "確認します", en: "I'll check." }
   - id: spawn-hint-AR-01-ceiling-tile-drop-01
     tone: serious
@@ -4103,7 +4103,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-ceiling-tile-drop }
     lines:
-      - { who: M, text: "出河さん　右寄りの天井を確認しませんか", en: "Detective, shall we check the right part of the ceiling?" }
+      - { who: M, text: "右寄りの天井を確認しませんか", en: "Detective, shall we check the right part of the ceiling?" }
       - { who: A, text: "いいね　見てみよう", en: "Good. Let's look." }
   - id: spawn-hint-AR-01-ceiling-wet-stain-01
     tone: serious
@@ -4143,7 +4143,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-crouching-silhouette }
     lines:
-      - { who: A, text: "突き当たりの右寄り　床を見てみて", en: "Look at the floor right of the far end." }
+      - { who: A, text: "突き当たりの右寄り　床を見てごらん", en: "Look at the floor right of the far end." }
       - { who: M, text: "突き当たりの右ですね　見ます", en: "Right of the far end. Looking." }
   - id: spawn-hint-AR-01-crouching-silhouette-02
     tone: serious
@@ -4160,8 +4160,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-threshold-pigeon }
     lines:
-      - { who: A, text: "右の店先の足元　見てみて", en: "Look at the foot of the storefront on the right." }
-      - { who: M, text: "右の店先の足元ですね　見ます", en: "The foot of the right storefront. Looking." }
+      - { who: A, text: "右の店先の足元　確かめてみて", en: "Look at the foot of the storefront on the right." }
+      - { who: M, text: "右の店先の足元ですね　目を向けます", en: "The foot of the right storefront. Looking." }
   - id: spawn-hint-AR-01-threshold-pigeon-02
     tone: serious
     when: { anomaly: AR-01-threshold-pigeon }
@@ -4177,19 +4177,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-hatch-ajar }
     lines:
-      - { who: A, text: "床の真ん中にある点検口　見てみて", en: "Look at the access hatch in the middle of the floor." }
-      - { who: M, text: "床の点検口ですね　見ます", en: "The floor hatch. Looking." }
+      - { who: A, text: "床の真ん中のあたり　見てごらん", en: "Look around the middle of the floor." }
+      - { who: M, text: "床の真ん中ですね　確かめます", en: "The middle of the floor. Looking." }
   - id: spawn-hint-AR-02-hatch-ajar-02
     tone: serious
     when: { anomaly: AR-02-hatch-ajar }
     lines:
-      - { who: M, text: "出河さん　中央の床の点検口が　気になります", en: "Detective, the hatch in the center floor bothers me." }
+      - { who: M, text: "中央の床のあたりが　気になります", en: "The center of the floor bothers me." }
       - { who: A, text: "私もそこ見てた", en: "I was watching that too." }
   - id: spawn-hint-AR-02-hatch-ajar-03
     tone: serious
     when: { anomaly: AR-02-hatch-ajar }
     lines:
-      - { who: A, text: "床の中央の点検口　目を離さないでおこう", en: "Let's not take our eyes off the center floor hatch." }
+      - { who: A, text: "床の中央のあたり　目を離さないでおこう", en: "Let's not take our eyes off the center of the floor." }
   - id: spawn-hint-AR-02-shutter-shadow-01
     tone: serious
     when: { anomaly: AR-02-shutter-shadow }
@@ -4212,7 +4212,7 @@ dialogues:
     when: { anomaly: AR-02-fluorescent-half-off }
     lines:
       - { who: A, text: "左上の天井　見てみて", en: "Look at the upper-left ceiling." }
-      - { who: M, text: "左上の天井ですね　見ます", en: "The upper-left ceiling. Looking." }
+      - { who: M, text: "左上の天井ですね　目を向けます", en: "The upper-left ceiling. Looking." }
   - id: spawn-hint-AR-02-fluorescent-half-off-02
     tone: serious
     when: { anomaly: AR-02-fluorescent-half-off }
@@ -4223,12 +4223,12 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-fluorescent-half-off }
     lines:
-      - { who: A, text: "左の高いところ　明るさがおかしくない？", en: "Doesn't the brightness up on the left seem off?" }
+      - { who: A, text: "左の高いところ　もう一度見ておこう", en: "Let's look at the high spot on the left once more." }
   - id: spawn-hint-AR-02-pillar-sign-gone-01
     tone: serious
     when: { anomaly: AR-02-pillar-sign-gone }
     lines:
-      - { who: M, text: "柱の上の辺りです　見てください", en: "It's around the upper part of the pillar." }
+      - { who: M, text: "柱の上の辺りです　確認してください", en: "It's around the upper part of the pillar." }
       - { who: A, text: "柱の上ね　見る", en: "Top of the pillar. Looking." }
   - id: spawn-hint-AR-02-pillar-sign-gone-02
     tone: serious
@@ -4262,7 +4262,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-wall-bird-triplet }
     lines:
-      - { who: M, text: "右端の壁を見てください", en: "Please look at the far-right wall." }
+      - { who: M, text: "右端の壁を目を向けてください", en: "Please look at the far-right wall." }
       - { who: A, text: "右端の壁ね　見る", en: "The far-right wall. Looking." }
   - id: spawn-hint-AR-02-wall-bird-triplet-02
     tone: serious
@@ -4296,19 +4296,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-ceiling-starry-sky }
     lines:
-      - { who: M, text: "出河さん　天井全体を見てください", en: "Detective, please look at the whole ceiling." }
+      - { who: M, text: "出河さん　天井全体を確認してください", en: "Detective, please look at the whole ceiling." }
       - { who: A, text: "天井全体ね　見上げる", en: "The whole ceiling. Looking up." }
   - id: spawn-hint-AR-02-ceiling-starry-sky-02
     tone: serious
     when: { anomaly: AR-02-ceiling-starry-sky }
     lines:
-      - { who: A, text: "天井の広い範囲　上を見てみて", en: "Look up at the broad span of the ceiling." }
-      - { who: M, text: "はい　上に注目します", en: "Yes. Focusing upward." }
+      - { who: A, text: "天井の奥のほう　上を見てみて", en: "Look up at the far part of the ceiling." }
+      - { who: M, text: "はい　上に注目します", en: "Yes. I'll focus above." }
   - id: spawn-hint-AR-02-ceiling-starry-sky-03
     tone: serious
     when: { anomaly: AR-02-ceiling-starry-sky }
     lines:
-      - { who: A, text: "天井一面　ちょっと見上げてみよう", en: "Let's look up across the ceiling." }
+      - { who: A, text: "天井の手前のほう　ちょっと見上げてみよう", en: "Let's look up at the front part of the ceiling." }
   - id: spawn-hint-AR-05-morning-glory-wall-01
     tone: serious
     when: { anomaly: AR-05-morning-glory-wall }
@@ -4324,8 +4324,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-morning-glory-wall }
     lines:
-      - { who: A, text: "左側を広く見て　壁も柱も天井も", en: "Look broadly at the left. Wall, pillars, ceiling." }
-      - { who: M, text: "左側ですね　全体を見ます", en: "The left side. I'll take it all in." }
+      - { who: A, text: "左側を高いところから見て　壁も柱も", en: "Look at the left from the high part, the wall and the pillars." }
+      - { who: M, text: "左側ですね　上から見ます", en: "The left side. I'll look from the top." }
   - id: spawn-hint-AR-05-aisle-silhouette-01
     tone: serious
     when: { anomaly: AR-05-aisle-silhouette }
@@ -4341,24 +4341,24 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-aisle-silhouette }
     lines:
-      - { who: M, text: "出河さん　通路の左奥を見てください　小さい範囲です", en: "Detective, look at the back left of the aisle. A small area." }
+      - { who: M, text: "通路の左奥を見てください　小さい範囲です", en: "Detective, look at the back left of the aisle. A small area." }
       - { who: A, text: "小さいのね　見るよ", en: "A small one. I'll look." }
   - id: spawn-hint-AR-05-aisle-light-streak-01
     tone: serious
     when: { anomaly: AR-05-aisle-light-streak }
     lines:
-      - { who: A, text: "左奥の通路の床　光だまりのところ", en: "The floor in the back left aisle, in the pool of light." }
-      - { who: M, text: "光のたまっている所ですね", en: "Where the light pools." }
+      - { who: A, text: "左奥の通路の床　その辺りだな", en: "The floor in the back left aisle, around there." }
+      - { who: M, text: "左奥の床ですね", en: "The back left floor." }
   - id: spawn-hint-AR-05-aisle-light-streak-02
     tone: serious
     when: { anomaly: AR-05-aisle-light-streak }
     lines:
-      - { who: M, text: "床の左奥です　光の周りに注目です", en: "Back left of the floor. Focus around the light." }
+      - { who: M, text: "床の左奥です　その周りに注目です", en: "Back left of the floor. Focus around it." }
   - id: spawn-hint-AR-05-aisle-light-streak-03
     tone: serious
     when: { anomaly: AR-05-aisle-light-streak }
     lines:
-      - { who: A, text: "左側の奥　床の光を見てみよう", en: "Back on the left. Let's look at the light on the floor." }
+      - { who: A, text: "左側の奥　床を見てみよう", en: "Back on the left. Let's look at the floor." }
       - { who: M, text: "了解です　追ってみます", en: "Understood. I will follow it." }
   - id: spawn-hint-AR-05-aisle-goldfish-01
     tone: serious
@@ -4381,19 +4381,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-door-fingers }
     lines:
-      - { who: A, text: "右の扉の辺り　戸の隙間が気になる", en: "Around the right door. The gap in it bugs me." }
-      - { who: M, text: "右の扉の隙間ですね", en: "The gap in the right door." }
+      - { who: A, text: "右のあたり　奥の暗い所が気になる", en: "Around the right. The dark spot in the back bugs me." }
+      - { who: M, text: "右の暗い所ですね", en: "The dark spot on the right." }
   - id: spawn-hint-AR-05-door-fingers-02
     tone: serious
     when: { anomaly: AR-05-door-fingers }
     lines:
-      - { who: M, text: "右のほうの扉です　左の戸の辺りを見てください", en: "The door on the right. Look at the seam of the left leaf." }
+      - { who: M, text: "右のほうです　その左寄りの辺りを見てください", en: "The right side. Look around its left part." }
   - id: spawn-hint-AR-05-door-fingers-03
     tone: serious
     when: { anomaly: AR-05-door-fingers }
     lines:
-      - { who: A, text: "右手にある出入口　暗い隙間のあたり", en: "The entrance on the right. Near the dark gap." }
-      - { who: M, text: "暗い隙間ですね　見ます", en: "The dark gap. Looking." }
+      - { who: A, text: "右手のあたり　暗い所", en: "On the right. Near the dark spot." }
+      - { who: M, text: "暗い所ですね　見ます", en: "The dark spot. Looking." }
   - id: spawn-hint-AR-05-ceiling-shirt-01
     tone: serious
     when: { anomaly: AR-05-ceiling-shirt }
@@ -4409,7 +4409,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-ceiling-shirt }
     lines:
-      - { who: M, text: "出河さん　上のほうを見てもらえますか　左寄りです", en: "Detective, could you look up? Left side." }
+      - { who: M, text: "上のほうを見てもらえますか　左寄りです", en: "Detective, could you look up? Left side." }
       - { who: A, text: "上ね　見る見る", en: "Up there. Yes, looking." }
   - id: spawn-hint-AR-05-floor-child-shadow-01
     tone: serious
@@ -4438,8 +4438,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-floor-shadows }
     lines:
-      - { who: M, text: '右側の床一面　ここだと思うんです', en: "I think it's all over the right floor." }
-      - { who: A, text: 'なるほど　確かめてみる', en: "I see. I'll check it out." }
+      - { who: M, text: "右側の床の奥のほう　ここだと思うんです", en: "I think it's the far part of the right floor." }
+      - { who: A, text: "そこだね　確かめてみる", en: "That's the spot. I'll check." }
   - id: spawn-hint-AR-03-floor-shadows-03
     tone: serious
     when: { anomaly: AR-03-floor-shadows }
@@ -4449,8 +4449,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-shutter-fingers }
     lines:
-      - { who: M, text: 'ちょっと　左のシャッターの　隙間も見ませんか', en: "Shall we check the gaps in the left shutter too?" }
-      - { who: A, text: 'いいね　やってみよう', en: "Good idea. Let's do it." }
+      - { who: M, text: "ちょっと　左のほうの　縁も見ませんか", en: "Shall we check the edges on the left too?" }
+      - { who: A, text: "そうだね　そこも見ておこう", en: "Right. Let's check there too." }
   - id: spawn-hint-AR-03-shutter-fingers-02
     tone: serious
     when: { anomaly: AR-03-shutter-fingers }
@@ -4460,8 +4460,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-shutter-fingers }
     lines:
-      - { who: A, text: 'うーん　左寄りのシャッターの　縁に何かありそう', en: "Hmm, something might be at the edge of the shutter on the left." }
-      - { who: M, text: 'ありそうですね　そこ　見ましょう', en: "Could be. Let's look there." }
+      - { who: A, text: "うーん　左寄りの　縁に何かありそう", en: "Hmm, something might be at the edge on the left." }
+      - { who: M, text: "ありそうですね　そこ　見ましょう", en: "Could be. Let's look there." }
   - id: spawn-hint-AR-03-tube-light-bent-01
     tone: serious
     when: { anomaly: AR-03-tube-light-bent }
@@ -4477,7 +4477,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-tube-light-bent }
     lines:
-      - { who: M, text: '出河さん　天井の右端を　見てもらえますか', en: "Izuka-san, could you look at the right end of the ceiling?" }
+      - { who: M, text: '天井の右端を　見てもらえますか', en: "Izuka-san, could you look at the right end of the ceiling?" }
       - { who: A, text: 'よし　天井の右端ね　見るよ', en: "Okay, the right end of the ceiling. I'm on it." }
   - id: spawn-hint-AR-03-ceiling-eye-01
     tone: serious
@@ -4495,7 +4495,7 @@ dialogues:
     when: { anomaly: AR-03-ceiling-eye }
     lines:
       - { who: M, text: 'ちょっと　天井の右のほうも見ませんか', en: "Shall we check the right side of the ceiling too?" }
-      - { who: A, text: 'いいね　やってみよう', en: "Good idea. Let's do it." }
+      - { who: A, text: "賛成　そこも見よう", en: "Agreed. Let's look there too." }
   - id: spawn-hint-AR-06-floor-tile-rotated-01
     tone: serious
     when: { anomaly: AR-06-floor-tile-rotated }
@@ -4506,19 +4506,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-floor-tile-rotated }
     lines:
-      - { who: A, text: "下半分だよ　足元の全体が気になる", en: "The bottom half. The whole area at our feet bugs me." }
+      - { who: A, text: "足元の手前のほうが気になる", en: "The part near our feet bugs me." }
   - id: spawn-hint-AR-06-floor-tile-rotated-03
     tone: serious
     when: { anomaly: AR-06-floor-tile-rotated }
     lines:
-      - { who: M, text: "出河さん　床の全体を見てください", en: "Detective, take a look at the whole floor." }
-      - { who: A, text: "全体ね　見てみよう", en: "The whole thing. Let's see." }
+      - { who: M, text: "床の奥のほうを見てください", en: "Please look at the far part of the floor." }
+      - { who: A, text: "奥ね　見てみよう", en: "The far part. Let's see." }
   - id: spawn-hint-AR-03-dark-tile-01
     tone: serious
     when: { anomaly: AR-03-dark-tile }
     lines:
       - { who: M, text: '右寄りの床　ここだと思うんです', en: "I think it's the floor on the right." }
-      - { who: A, text: 'なるほど　確かめてみる', en: "I see. I'll check it out." }
+      - { who: A, text: "ふむ　見て確かめてみよう", en: "Hmm. Let's look and see." }
   - id: spawn-hint-AR-03-dark-tile-02
     tone: serious
     when: { anomaly: AR-03-dark-tile }
@@ -4534,15 +4534,15 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-shutter-raised }
     lines:
-      - { who: M, text: '出河さん　あの　右端のシャッターの下…', en: "Izuka-san, um, the bottom of the rightmost shutter..." }
-      - { who: A, text: 'ん？　右端のシャッターの　下がどうしたの？', en: "Hm? What about the bottom of the rightmost shutter?" }
+      - { who: M, text: "あの　右端の下のあたり…", en: "Izuka-san, um, the bottom at the far right..." }
+      - { who: A, text: "ん？　右端の下がどうしたの？", en: "Hm? What about the bottom at the far right?" }
       - { who: M, text: "なぜか　そこが気になって", en: "For some reason it bothers me." }
   - id: spawn-hint-AR-03-shutter-raised-02
     tone: serious
     when: { anomaly: AR-03-shutter-raised }
     lines:
       - { who: M, text: '出河さん　右の端の足元はどうでしょう', en: "Izuka-san, how about the foot area at the far right?" }
-      - { who: A, text: 'おっ　それ　ありそう！', en: "Oh, that sounds promising!" }
+      - { who: A, text: "そこか　可能性はあるね", en: "There? It's possible." }
   - id: spawn-hint-AR-03-shutter-raised-03
     tone: serious
     when: { anomaly: AR-03-shutter-raised }
@@ -4559,7 +4559,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-roll-vanish }
     lines:
-      - { who: M, text: '出河さん　奥の右のほうの床を　見てもらえますか', en: "Izuka-san, could you look at the floor toward the back right?" }
+      - { who: M, text: '奥の右のほうの床を　見てもらえますか', en: "Izuka-san, could you look at the floor toward the back right?" }
       - { who: A, text: 'よし　奥の右のほうの床ね　見るよ', en: "Okay, the floor toward the back right. I'm on it." }
   - id: spawn-hint-AR-03-roll-vanish-03
     tone: serious
@@ -4570,25 +4570,25 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-door-gap-light }
     lines:
-      - { who: A, text: "右の扉の下　床に近い所だな", en: "Under the right door. Close to the floor." }
-      - { who: M, text: "扉の足元ですね", en: "The foot of the door." }
+      - { who: A, text: "右の下のほう　床に近い所だな", en: "The lower right. Close to the floor." }
+      - { who: M, text: "足元ですね", en: "The foot area." }
   - id: spawn-hint-AR-06-door-gap-light-02
     tone: serious
     when: { anomaly: AR-06-door-gap-light }
     lines:
-      - { who: M, text: "右側の扉の下の辺りです", en: "It's the area below the door on the right." }
+      - { who: M, text: "右側の下の辺りです", en: "It's the lower area on the right." }
   - id: spawn-hint-AR-06-door-gap-light-03
     tone: serious
     when: { anomaly: AR-06-door-gap-light }
     lines:
-      - { who: A, text: "右のドアの足元をよく見て", en: "Look carefully at the foot of the door on the right." }
-      - { who: M, text: "足元のあたりですね　確認します", en: "Around its foot. Checking." }
+      - { who: A, text: "右の足元をよく見て", en: "Look carefully at the foot area on the right." }
+      - { who: M, text: "足元のあたりですね　確認します", en: "Around the foot. Checking." }
   - id: spawn-hint-AR-06-floor-light-slant-01
     tone: serious
     when: { anomaly: AR-06-floor-light-slant }
     lines:
-      - { who: M, text: "床の中ほど　左寄りの光の筋です", en: "The floor, midway, left side. The streak of light." }
-      - { who: A, text: "床の光の筋ね", en: "The streak of light on the floor." }
+      - { who: M, text: "床の中ほど　左寄りです", en: "The floor, midway, left side." }
+      - { who: A, text: "床の左寄りね", en: "The left side of the floor." }
   - id: spawn-hint-AR-06-floor-light-slant-02
     tone: serious
     when: { anomaly: AR-06-floor-light-slant }
@@ -4598,14 +4598,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-floor-light-slant }
     lines:
-      - { who: M, text: "出河さん　床の中ほどに注目です", en: "Detective, pay attention to the middle of the floor." }
+      - { who: M, text: "床の中ほどに注目です", en: "Detective, pay attention to the middle of the floor." }
       - { who: A, text: "中ほどね　見てみる", en: "The middle. I'll look." }
   - id: spawn-hint-AR-04-glass-silhouette-01
     tone: serious
     when: { anomaly: AR-04-glass-silhouette }
     lines:
       - { who: M, text: '奥の扉の左隣が　どうも気になります', en: "Something about just left of the back door keeps nagging me." }
-      - { who: A, text: 'そうなの？　じゃあ　そこから見よう', en: "Really? Then let's start there." }
+      - { who: A, text: "気になるんだ？　じゃあ　そこから見よう", en: "It bothers you? Then let's start there." }
   - id: spawn-hint-AR-04-glass-silhouette-02
     tone: serious
     when: { anomaly: AR-04-glass-silhouette }
@@ -4650,7 +4650,7 @@ dialogues:
     when: { anomaly: AR-04-shadow-behind-camera }
     lines:
       - { who: M, text: '手前の床の一番下に　違和感があります', en: "Something feels odd at the very bottom of the near floor." }
-      - { who: A, text: 'だよね　私もそこが引っかかってた', en: "Right? That caught my eye too." }
+      - { who: A, text: "やっぱり　そこだよね", en: "So it's that spot, after all." }
   - id: spawn-hint-AR-04-glass-umbrella-reflection-01
     tone: serious
     when: { anomaly: AR-04-glass-umbrella-reflection }
@@ -4669,12 +4669,12 @@ dialogues:
     when: { anomaly: AR-04-glass-umbrella-reflection }
     lines:
       - { who: M, text: '右側の店の前が　どうも気になります', en: "Something about the area in front of the shop on the right keeps nagging me." }
-      - { who: A, text: 'そうなの？　じゃあ　そこから見よう', en: "Really? Then let's start there." }
+      - { who: A, text: "へえ　そこか　見てみるよ", en: "Oh, there? I'll take a look." }
   - id: spawn-hint-AR-04-wall-plaster-peel-01
     tone: serious
     when: { anomaly: AR-04-wall-plaster-peel }
     lines:
-      - { who: M, text: '出河さん　右端の壁の上のほうを　見てもらえますか', en: "Izuka-san, could you look at the upper part of the far right wall?" }
+      - { who: M, text: '右端の壁の上のほうを　見てもらえますか', en: "Izuka-san, could you look at the upper part of the far right wall?" }
       - { who: A, text: 'よし　右端の壁の上のほうね　見るよ', en: "Okay, the upper part of the far right wall. I'm on it." }
   - id: spawn-hint-AR-04-wall-plaster-peel-02
     tone: serious
@@ -4702,14 +4702,14 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-tile-sky }
     lines:
-      - { who: M, text: "出河さん　中央の床の一部が気になります", en: "Detective, a part of the central floor bothers me." }
+      - { who: M, text: "中央の床の一部が気になります", en: "Detective, a part of the central floor bothers me." }
       - { who: A, text: "中央の床ね　確認する", en: "The central floor. I'll check." }
   - id: spawn-hint-AR-06-leaf-shadows-aligned-01
     tone: serious
     when: { anomaly: AR-06-leaf-shadows-aligned }
     lines:
-      - { who: A, text: "左の下の隅っこ　床に落ちた影だな", en: "The lower left corner. Shadows on the floor." }
-      - { who: M, text: "左下の床の影ですね", en: "The shadows on the lower left floor." }
+      - { who: A, text: "左の下の隅っこ　床のあたりだな", en: "The lower left corner. Around the floor." }
+      - { who: M, text: "左下の床ですね", en: "The lower left floor." }
   - id: spawn-hint-AR-06-leaf-shadows-aligned-02
     tone: serious
     when: { anomaly: AR-06-leaf-shadows-aligned }
@@ -4720,7 +4720,7 @@ dialogues:
     when: { anomaly: AR-06-leaf-shadows-aligned }
     lines:
       - { who: A, text: "左下の足元あたり　どうも気になる", en: "The lower left floor by your feet. It bugs me." }
-      - { who: M, text: "影の辺りですね　見ます", en: "Around the shadows. Looking." }
+      - { who: M, text: "足元の辺りですね　目を向けます", en: "Around your feet. Looking." }
   - id: spawn-hint-AR-04-floor-reflection-gap-01
     tone: serious
     when: { anomaly: AR-04-floor-reflection-gap }
@@ -4766,7 +4766,7 @@ dialogues:
     when: { anomaly: AR-04-wall-panel-fallen }
     lines:
       - { who: M, text: '右側の壁の下寄りに　違和感があります', en: "Something feels odd at the lower side of the right wall." }
-      - { who: A, text: 'だよね　私もそこが引っかかってた', en: "Right? That caught my eye too." }
+      - { who: A, text: "確かに　そこは変かも", en: "True, that spot might be off." }
   - id: spawn-hint-AR-04-wall-panel-fallen-03
     tone: serious
     when: { anomaly: AR-04-wall-panel-fallen }
@@ -4777,7 +4777,7 @@ dialogues:
     when: { anomaly: AR-04-left-edge-eyes }
     lines:
       - { who: M, text: '静かに　左端の暗がりに注目です', en: "Quietly now, focus on the dark spot at the far left." }
-      - { who: A, text: 'しーっ　集中するよ', en: "Shh. Focusing." }
+      - { who: A, text: "了解　息をひそめて見るよ", en: "Got it. I'll hold my breath and watch." }
   - id: spawn-hint-AR-04-left-edge-eyes-02
     tone: serious
     when: { anomaly: AR-04-left-edge-eyes }
@@ -4805,7 +4805,7 @@ dialogues:
     when: { anomaly: AR-04-floor-shoes-rows }
     lines:
       - { who: M, text: '手前から奥への真ん中の辺りに　目を向けてください', en: "Please turn your eyes to the middle, front to back." }
-      - { who: A, text: 'うん　そっちを見てみる', en: "Yeah. I'll look that way." }
+      - { who: A, text: "了解　そこへ目を向けてみる", en: "Understood. I'll look over there." }
   - id: spawn-hint-AR-07-floor-frost-01
     tone: serious
     when: { anomaly: AR-07-floor-frost }
@@ -4826,18 +4826,18 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-reflection-cut }
     lines:
-      - { who: A, text: '床の左の白い反射　見てみて', en: 'Look at the white shine on the left of the floor.' }
-      - { who: M, text: '左の反射ですね', en: 'The shine on the left.' }
+      - { who: A, text: "床の左のほう　見てみて", en: "Look at the left part of the floor." }
+      - { who: M, text: "左の床ですね", en: "The left floor." }
   - id: spawn-hint-AR-07-reflection-cut-02
     tone: serious
     when: { anomaly: AR-07-reflection-cut }
     lines:
-      - { who: M, text: '左の床の光っている所が　気になります', en: 'The shiny part of the left floor bothers me.' }
+      - { who: M, text: "左の床の辺りが　気になります", en: "The left part of the floor bothers me." }
   - id: spawn-hint-AR-07-reflection-cut-03
     tone: serious
     when: { anomaly: AR-07-reflection-cut }
     lines:
-      - { who: A, text: '左のほうの床の光　よく見ておこう', en: "Let's look closely at the light on the floor to the left." }
+      - { who: A, text: "左のほうの床　よく見ておこう", en: "Let's look closely at the floor to the left." }
   - id: spawn-hint-AR-07-tile-mirror-01
     tone: serious
     when: { anomaly: AR-07-tile-mirror }
@@ -4858,7 +4858,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-mini-door }
     lines:
-      - { who: A, text: '左寄りの中段の床　見てみて', en: 'Look at the middle-left part of the floor.' }
+      - { who: A, text: '左寄りの中段の床　見てごらん', en: 'Look at the middle-left part of the floor.' }
       - { who: M, text: '中段の床ですね', en: 'The middle part of the floor.' }
   - id: spawn-hint-AR-07-mini-door-02
     tone: serious
@@ -4874,23 +4874,23 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-glass-crack }
     lines:
-      - { who: A, text: '左の暗いガラス　見てみて', en: 'Look at the dark glass on the left.' }
-      - { who: M, text: '左の暗いほうですね　はい', en: 'The dark one on the left. Yes.' }
+      - { who: A, text: "左の暗いところ　確かめてみて", en: "Look at the dark part on the left." }
+      - { who: M, text: "左の暗いほうですね　はい", en: "The dark side on the left. Yes." }
   - id: spawn-hint-AR-07-glass-crack-02
     tone: serious
     when: { anomaly: AR-07-glass-crack }
     lines:
-      - { who: M, text: '左の端のガラスの面を　チェックしましょう', en: "Let's check the glass surface on the left end." }
+      - { who: M, text: "左の端の面を　チェックしましょう", en: "Let's check the left end." }
   - id: spawn-hint-AR-07-glass-crack-03
     tone: serious
     when: { anomaly: AR-07-glass-crack }
     lines:
-      - { who: A, text: '左端のガラス　細かく見てみよう', en: "Let's look at the left-end glass in detail." }
+      - { who: A, text: "左端のあたり　細かく見てみよう", en: "Let's look at the left end in detail." }
   - id: spawn-hint-AR-07-exit-sign-gone-01
     tone: serious
     when: { anomaly: AR-07-exit-sign-gone }
     lines:
-      - { who: A, text: '右奥の階段の脇　見てみて', en: 'Look beside the right back stairs.' }
+      - { who: A, text: '右奥の階段の脇　見てごらん', en: 'Look beside the right back stairs.' }
       - { who: M, text: '階段の脇ですね', en: 'Beside the stairs.' }
   - id: spawn-hint-AR-07-exit-sign-gone-02
     tone: serious
@@ -4965,7 +4965,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-08-ceiling-light-inverse }
     lines:
-      - { who: A, text: '右上の天井　どうも暗い感じがするな', en: 'The upper-right ceiling feels kind of dark.' }
+      - { who: A, text: "右上の天井　どうも引っかかるな", en: "The upper-right ceiling snags me somehow." }
   - id: spawn-hint-AR-08-column-door-ajar-01
     tone: serious
     when: { anomaly: AR-08-column-door-ajar }
@@ -5003,12 +5003,12 @@ dialogues:
     when: { anomaly: AR-08-ceiling-light-grid }
     lines:
       - { who: A, text: '天井一面　見てみて', en: 'Look at the whole ceiling.' }
-      - { who: M, text: '天井一面ですね　見ます', en: 'The whole ceiling. Looking.' }
+      - { who: M, text: '天井一面ですね　確かめます', en: 'The whole ceiling. Looking.' }
   - id: spawn-hint-AR-08-ceiling-light-grid-02
     tone: serious
     when: { anomaly: AR-08-ceiling-light-grid }
     lines:
-      - { who: M, text: '天井の全体が　気になります', en: 'The whole ceiling bothers me.' }
+      - { who: M, text: "天井の奥のほうが　気になります", en: "The far part of the ceiling bothers me." }
   - id: spawn-hint-AR-08-ceiling-light-grid-03
     tone: serious
     when: { anomaly: AR-08-ceiling-light-grid }
@@ -5040,8 +5040,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-lattice-slat-protrudes }
     lines:
-      - { who: A, text: "右の店先　細かいところだけど見てみて", en: "Right storefront, a fine detail, but look." }
-      - { who: M, text: "細かいところですね　見ます", en: "A fine detail. Looking." }
+      - { who: A, text: "右の店先　細かいところだけど見てごらん", en: "Right storefront, a fine detail, but look." }
+      - { who: M, text: "細かいところですね　目を向けます", en: "A fine detail. Looking." }
   - id: spawn-hint-AR-01-lattice-slat-protrudes-03
     tone: serious
     when: { anomaly: AR-01-lattice-slat-protrudes }
@@ -5051,7 +5051,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-wall-bird-gone }
     lines:
-      - { who: A, text: "右端の壁の高いところ　見てみて", en: "Look at the high spot on the far-right wall." }
+      - { who: A, text: "右端の壁の高いところ　確かめてみて", en: "Look at the high spot on the far-right wall." }
       - { who: M, text: "右端の壁の高い所ですね　見ます", en: "The high part of the far-right wall. Looking." }
   - id: spawn-hint-AR-02-wall-bird-gone-02
     tone: serious
@@ -5079,30 +5079,30 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-shelf-items-gone }
     lines:
-      - { who: M, text: "出河さん　左奥の棚を　見てもらえますか", en: "Detective, could you look at the narrow shelf at the back left?" }
+      - { who: M, text: "左奥の棚を　見てもらえますか", en: "Detective, could you look at the narrow shelf at the back left?" }
       - { who: A, text: "細長いやつね", en: "The narrow one." }
   - id: spawn-hint-AR-01-window-peeping-face-01
     tone: serious
     when: { anomaly: AR-01-window-peeping-face }
     lines:
-      - { who: A, text: "左の窓の上のほう　見てみて", en: "Look at the upper part of the left window." }
-      - { who: M, text: "左の窓の上ですね　見ます", en: "Top of the left window. Looking." }
+      - { who: A, text: "左の上のほう　見てごらん", en: "Look at the upper part on the left." }
+      - { who: M, text: "左の上ですね　見ます", en: "Upper left. Looking." }
   - id: spawn-hint-AR-01-window-peeping-face-02
     tone: serious
     when: { anomaly: AR-01-window-peeping-face }
     lines:
-      - { who: M, text: "出河さん　左の窓の上の方に　目が行きます", en: "Detective, my eyes go to the top of the left window." }
+      - { who: M, text: "左の上の方に　目が行きます", en: "My eyes go to the upper left." }
       - { who: A, text: "私もそこが気になってた", en: "I was wondering about that too." }
   - id: spawn-hint-AR-01-window-peeping-face-03
     tone: serious
     when: { anomaly: AR-01-window-peeping-face }
     lines:
-      - { who: A, text: "左の窓　上のあたり　見ておこうか", en: "Shall we keep watch on the top of the left window?" }
+      - { who: A, text: "左の上のあたり　見ておこうか", en: "Shall we keep watch on the upper left?" }
   - id: spawn-hint-AR-01-outlets-multiply-01
     tone: serious
     when: { anomaly: AR-01-outlets-multiply }
     lines:
-      - { who: M, text: "右の壁の中ほどです　見てください", en: "It's the middle of the right wall. Please look." }
+      - { who: M, text: "右の壁の中ほどです　確認してください", en: "It's the middle of the right wall. Please look." }
       - { who: A, text: "右の壁の中ほどね　見る", en: "Middle of the right wall. Looking." }
   - id: spawn-hint-AR-01-outlets-multiply-02
     tone: serious
@@ -5136,7 +5136,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-02-sign-katakana-gone }
     lines:
-      - { who: M, text: "右寄りの看板の下の方です　見てください", en: "It's the lower part of the sign right of center." }
+      - { who: M, text: "右寄りの看板の下の方です　目を向けてください", en: "It's the lower part of the sign right of center." }
       - { who: A, text: "右寄りの看板の下ね　見る", en: "Lower part of the sign. Looking." }
   - id: spawn-hint-AR-02-sign-katakana-gone-02
     tone: serious
@@ -5165,7 +5165,7 @@ dialogues:
     when: { anomaly: AR-04-wall-small-door }
     lines:
       - { who: M, text: '静かに　右の壁の下のほうに注目です', en: "Quietly now, focus on the lower part of the right wall." }
-      - { who: A, text: 'しーっ　集中するよ', en: "Shh. Focusing." }
+      - { who: A, text: "しっ　目を凝らすよ", en: "Shh. I'll strain my eyes." }
   - id: spawn-hint-AR-08-ceiling-hole-upside-corridor-01
     tone: serious
     when: { anomaly: AR-08-ceiling-hole-upside-corridor }
@@ -5203,7 +5203,7 @@ dialogues:
     when: { anomaly: AR-03-tile-shifted }
     lines:
       - { who: M, text: '手前の床が　どうも気になります', en: "Something about the near floor keeps nagging me." }
-      - { who: A, text: 'そうなの？　じゃあ　そこから見よう', en: "Really? Then let's start there." }
+      - { who: A, text: "そこね　分かった　見てみる", en: "There. Got it. I'll look." }
   - id: spawn-hint-AR-03-tile-shifted-02
     tone: serious
     when: { anomaly: AR-03-tile-shifted }
@@ -5242,7 +5242,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-floor-turtle }
     lines:
-      - { who: M, text: "足元の中央付近です　床の下側を見てください", en: "Near the center at our feet. Look at the lower part of the floor." }
+      - { who: M, text: "足元の中央付近です　床の下側を確認してください", en: "Near the center at our feet. Look at the lower part of the floor." }
   - id: spawn-hint-AR-05-floor-turtle-03
     tone: serious
     when: { anomaly: AR-05-floor-turtle }
@@ -5264,7 +5264,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-feet-at-edge }
     lines:
-      - { who: M, text: "出河さん　画面の下端をよく見てください", en: "Detective, look carefully at the bottom edge of the screen." }
+      - { who: M, text: "画面の下端をよく見てください", en: "Detective, look carefully at the bottom edge of the screen." }
       - { who: A, text: "下端ね　目を凝らす", en: "The bottom edge. Squinting." }
   - id: spawn-hint-AR-06-plant-doll-creature-01
     tone: serious
