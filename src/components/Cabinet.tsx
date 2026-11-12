@@ -5,6 +5,8 @@ import { FlagEvent, useSubtitle } from '../hooks/useSubtitle'
 import { Anomaly, AnomalyCategory, Camera, GameStats } from '../types/game'
 import { CAMERAS, ENDING_BAR_CAMERA } from '../utils/gameConfig'
 import { KNOB_DEFAULT, brightnessFilter, contrastFilter } from '../utils/knob'
+import { gameAudio, DEFAULT_VOLUME } from '../utils/audioEngine'
+import { readAudioVolume, saveVolume } from '../utils/audioSettings'
 import { forcedFeedGlitch } from '../utils/feedGlitch'
 import { parseWear } from '../utils/wear'
 import { CameraStrip } from './CameraStrip'
@@ -65,6 +67,9 @@ export const Cabinet = ({
 }: CabinetProps) => {
   const [brightness, setBrightness] = useState(KNOB_DEFAULT)
   const [contrast, setContrast] = useState(KNOB_DEFAULT)
+  // VOL (#79): 0 is the mute. The engine follows the knob at once; the save is written once the knob rests.
+  const [volume, setVolume] = useState(readAudioVolume)
+  const volumeDirty = useRef(false)
   const [reportOpen, setReportOpen] = useState(false)
   // Keep the last result so the OSD can fade out after the hook clears `feedback`.
   const [shownResult, setShownResult] = useState<Feedback | null>(null)
@@ -73,6 +78,27 @@ export const Cabinet = ({
   const wasOpenRef = useRef(false)
   // where the magnifier loupe is drawn (#341); null until mounted
   const [loupeHost, setLoupeHost] = useState<HTMLDivElement | null>(null)
+
+  const changeVolume = useCallback((v: number) => {
+    gameAudio.setVolume(v)
+    volumeDirty.current = true
+    setVolume(v)
+  }, [])
+  useEffect(() => {
+    if (!volumeDirty.current) return
+    const t = window.setTimeout(() => {
+      volumeDirty.current = false
+      saveVolume(volume)
+    }, 300)
+    return () => window.clearTimeout(t)
+  }, [volume])
+  // leaving the screen inside the 300 ms still saves the last position
+  useEffect(
+    () => () => {
+      if (volumeDirty.current) saveVolume(gameAudio.getVolume())
+    },
+    []
+  )
 
   useEffect(() => {
     if (feedback) setShownResult(feedback)
@@ -145,6 +171,13 @@ export const Cabinet = ({
               onChange={setBrightness}
             />
             <Knob label="Contrast" value={contrast} onChange={setContrast} />
+            <Knob
+              label="Volume"
+              text="VOL"
+              value={volume}
+              resetTo={DEFAULT_VOLUME}
+              onChange={changeVolume}
+            />
           </div>
           <CameraStrip
             cameras={cameras}

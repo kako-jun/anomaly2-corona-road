@@ -6,24 +6,24 @@
 
 | 部品                         | 役割                                                                                                                                                                                                                                                                                                                  |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/utils/audioEngine.ts`   | 共有 `AudioContext` 1つ + マスター GainNode の薄いラッパ。`unlock()`（ユーザー操作で作成・resume）、`setVolume`（0〜100）、`setMuted`。作成・resume・ノード操作の失敗は握りつぶして無音で続行する                                                                                                                     |
+| `src/utils/audioEngine.ts`   | 共有 `AudioContext` 1つ + マスター GainNode の薄いラッパ。`unlock()`（ユーザー操作で作成・resume）、`setVolume`（0〜100。0 が無音。別のミュートは持たない）。作成・resume・ノード操作の失敗は握りつぶして無音で続行する                                                                                               |
 | `installAudioUnlock`         | 操作（`pointerdown` / `keydown` / `touchend`）とページが visible に戻った時に、running でなければ `unlock()`（resume）。`statechange` で running を離れた時も再 resume。リスナーは1回だけ付け、running の間は何もしない（iOS のバックグラウンド割り込みから復帰できる）。`src/main.tsx` から `initGameAudio()` が呼ぶ |
-| `src/utils/audioSettings.ts` | 音量・ミュートの保存。セーブの `settings.volume`（0..100、既定 70）と `settings.muted`（既定 false）。START OVER で残り、引き継ぎコードの取り込みでは端末の値が残る（他の `settings` と同じ。`docs/save-data.md`）                                                                                                    |
+| `src/utils/audioSettings.ts` | 音量の保存。セーブの `settings.volume`（0..100、既定 70）。0 がミュート。古いセーブの `settings.muted: true` は 0 として読み、次の保存で捨てる。START OVER で残り、引き継ぎコードの取り込みでは端末の値が残る（他の `settings` と同じ。`docs/save-data.md`）                                                          |
 | `src/utils/synthSounds.ts`   | WebAudio 合成（発振器・フィルタ付きノイズ・ゲイン包絡）の最小レシピ: `hum` `buzz` `knock` `footsteps` `chime` `shutter` `stinger`。`playSynth(engine, name)` は未 unlock なら null を返し何もしない                                                                                                                   |
 
 - 音は「選ばれたカメラを見ている間だけ」鳴らす。カメラ切替で `SoundHandle.stop()` を呼ぶ（単発音は no-op）。この結線は音の異変の PR で行う（今回の範囲外）。
 - レシピの音色・音量は暫定。kako-jun の実機の耳で調整する（聴覚の最終確認は人）。
-- 実ブラウザ（Chromium）で、ジェスチャー前は context なし、クリック後 `running`、`buzz` 再生中は出力に信号があり、ミュートで出力が 0、解除で復帰、`stop()` で 0 になることを AnalyserNode で確認済み。
+- 実ブラウザ（Chromium）で、ジェスチャー前は context なし、クリック後 `running`、`buzz` 再生中は出力に信号があり、音量 0 で出力が 0、戻すと復帰、`stop()` で 0 になることを AnalyserNode で確認済み。
 
-## ミュート UI（未実装・案）
+## 音量つまみ VOL（実装済み、#79）
 
-kako-jun の規約「操作・案内を画面に常に出す」に従い、ミュートは画面に常時出す。ただし筐体は寸法がテストで固定されている（`src/styles/retro.test.ts`、DESIGN.md §11）ため、置き場は kako-jun の判断を待つ。案:
+kako-jun の決定（2026-11-12）: ミュート UI は案B（つまみ）。別のミュートボタンは作らない。
 
-- **案A（推奨）**: 下端帯（`.cabinet-foot`）のスピーカーグリルをボタンにする。寸法は変えず、グリル上に `SOUND` の小さな文字とオン/オフのランプを常時表示。タップで切替。音量は将来の Volume つまみ（`Knob`）か、まずは固定 + ミュートのみ。
-- 案B: 既存の Brightness / Contrast の並びに3つ目の Volume つまみ（0 = 無音）。つまみの幅・高さの固定計算（`retro.test.ts`）に触れる。
-- 案C: タイトル画面にだけ置く。ゲーム中に消せないので不採用寄り。
-
-基盤は UI なしでも成立する（`saveMuted` / `saveVolume` を呼ぶだけ）。ゲーム中に音が鳴る PR（最初の音の異変）までにこの置き場を決める。
+- 操作部の明るさ BRIGHTNESS・コントラスト CON の隣に、3つ目のつまみ `VOL`（アクセシブルな名前は Volume）。操作は既存つまみと同じ（ドラッグ・矢印キー・Home/End・タッチ）。範囲 0〜100、既定 70（タップ・Enter・Space で 70 に戻る）。`Cabinet` が `gameAudio.setVolume` で即座にマスターへ反映し、止まって 300 ms 後（または画面を離れる時）に `settings.volume` へ保存する。
+- 音量 0 がミュート。`audioEngine` に別のミュート状態は無く、`muted` は廃止した。古いセーブに `settings.muted: true` があれば 0 として読み、次に音量を保存した時に `muted` を捨てる（実データを壊さず、黙っていたい人は黙ったまま）。スキーマ `v` は上げない。
+- 音量 0 の間は音の異変（`anomaly_type: sound`）を出現の抽選から外す（#77 の出現基盤の PR の範囲）。異変が出た後に 0 にしても出たままで、報告で解除できる。
+- つまみを回す『キリキリ』音は #389（通常の効果音）の範囲で、この PR では鳴らさない。
+- 筐体の寸法: つまみは同じ横一列の3つ目なので高さは変わらず、`.tube` の定数・`retro.test.ts` の項は不変。
 
 ## 台帳 sound 18件の調達分類
 

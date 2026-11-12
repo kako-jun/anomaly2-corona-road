@@ -813,7 +813,7 @@ describe('updateChecked and canPersist follow the latest write', () => {
 })
 
 describe('sound settings (#79)', () => {
-  it('keeps a valid volume and mute switch', () => {
+  it('keeps a valid volume and a legacy mute switch (read as volume 0, never written any more)', () => {
     const s = save({ settings: { volume: 35, muted: true } })
     expect(validateSave(s)?.settings).toEqual({ volume: 35, muted: true })
   })

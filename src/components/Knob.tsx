@@ -8,12 +8,22 @@ import {
 
 interface KnobProps {
   label: string
+  /** What is printed under the knob when it differs from the accessible name (VOL for Volume). */
+  text?: string
   value: number
+  /** Where a tap, Enter or Space puts the knob back (centre by default; VOL rests at its default volume). */
+  resetTo?: number
   onChange: (value: number) => void
 }
 
 /** Horizontal-drag knob (slider semantics). Keyboard: arrows, Shift for big steps, Home/End. */
-export const Knob = ({ label, value, onChange }: KnobProps) => {
+export const Knob = ({
+  label,
+  text,
+  value,
+  resetTo = KNOB_DEFAULT,
+  onChange,
+}: KnobProps) => {
   const hintId = useId()
   const dragRef = useRef<{
     x: number
@@ -55,9 +65,7 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
           if (d) {
             const moved =
               d.moved || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5
-            onChange(
-              moved ? dragKnobValue(d.value, d.x, e.clientX) : KNOB_DEFAULT
-            )
+            onChange(moved ? dragKnobValue(d.value, d.x, e.clientX) : resetTo)
           }
           dragRef.current = null
         }}
@@ -70,7 +78,7 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
         onKeyDown={e => {
           const next =
             e.key === 'Enter' || e.key === ' '
-              ? KNOB_DEFAULT
+              ? resetTo
               : keyKnobValue(value, e.key, e.shiftKey)
           if (next === null) return
           e.preventDefault()
@@ -80,7 +88,7 @@ export const Knob = ({ label, value, onChange }: KnobProps) => {
       >
         <i className="mark" />
       </div>
-      <div className="label">{label}</div>
+      <div className="label">{text ?? label}</div>
       <span id={hintId} className="knob-sr-only">
         Use arrow keys to adjust. Press Enter or Space to reset to centre.
       </span>

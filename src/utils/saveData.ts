@@ -13,8 +13,9 @@ export type Language = 'ja' | 'en'
 export interface SaveSettings {
   brightness?: number
   contrast?: number
-  /** Sound (#79): master volume 0..100 (absent = the default) and the mute switch (absent = sound on). */
+  /** Sound (#79): master volume 0..100 (absent = the default); 0 is the mute. */
   volume?: number
+  /** Legacy (#79): the old mute switch. Read as volume 0 when true, never written any more. */
   muted?: boolean
   /** Reserved for a future settings screen (#292). Read for compatibility with old saves, but neither written nor used: the language comes from the browser at every start. */
   language?: Language

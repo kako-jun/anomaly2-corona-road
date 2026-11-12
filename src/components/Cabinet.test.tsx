@@ -7,6 +7,8 @@ import { ComponentProps } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Feedback } from '../hooks/useGameState'
 import { makeCameras, makeStats } from '../test/factories'
+import { gameAudio } from '../utils/audioEngine'
+import { load } from '../utils/saveData'
 import { Cabinet } from './Cabinet'
 
 // canvas-based child; jsdom has no canvas.
@@ -451,5 +453,56 @@ describe('Cabinet REPORT lamp (#344)', () => {
     const { container } = render(<Cabinet {...makeProps()} />)
     expect(lamp(container)).toHaveAttribute('aria-hidden', 'true')
     expect(container.querySelector('.lamp-note')).toBeNull()
+  })
+})
+
+describe('Cabinet VOL knob (#79)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    gameAudio.setVolume(70)
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('shows VOL next to Brightness and Contrast as a slider 0..100 starting at 70', () => {
+    const { container } = render(<Cabinet {...makeProps()} />)
+    const knob = screen.getByRole('slider', { name: 'Volume' })
+    expect(knob).toHaveAttribute('aria-valuenow', '70')
+    expect(knob).toHaveAttribute('aria-valuemin', '0')
+    expect(knob).toHaveAttribute('aria-valuemax', '100')
+    expect(container.querySelector('.knobs')?.textContent).toContain('VOL')
+    expect(container.querySelectorAll('.knobs .knob')).toHaveLength(3)
+  })
+
+  it('puts VOL at the far right: DOM and tab order Brightness, Contrast, VOL (kako-jun 2026-11-12)', () => {
+    const { container } = render(<Cabinet {...makeProps()} />)
+    const names = [...container.querySelectorAll('.knobs [role=slider]')].map(
+      k => k.getAttribute('aria-label')
+    )
+    expect(names).toEqual(['Brightness', 'Contrast', 'Volume'])
+    expect(container.querySelector('.knobs')?.textContent).toMatch(
+      /Brightness.*Contrast.*VOL/i
+    )
+  })
+
+  it('follows the knob at once and saves once it rests; 0 is silence', () => {
+    render(<Cabinet {...makeProps()} />)
+    const knob = screen.getByRole('slider', { name: 'Volume' })
+    fireEvent.keyDown(knob, { key: 'Home' })
+    expect(gameAudio.getVolume()).toBe(0)
+    expect(gameAudio.effectiveGain()).toBe(0)
+    expect(load().settings?.volume).not.toBe(0)
+    vi.advanceTimersByTime(400)
+    expect(load().settings?.volume).toBe(0)
+  })
+
+  it('saves the last position when the screen goes away inside the delay', () => {
+    const { unmount } = render(<Cabinet {...makeProps()} />)
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'Volume' }), {
+      key: 'End',
+    })
+    unmount()
+    expect(load().settings?.volume).toBe(100)
   })
 })
