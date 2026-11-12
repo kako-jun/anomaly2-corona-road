@@ -114,7 +114,7 @@ export const SUBTITLE_EN_ENABLED = false
 /**
  * Pacing once the child has been found (the `child` flag is raised), Issue #86. kako-jun only said
  * "more anomalies appear after the child is found". The interval (15 s) is a PLACEHOLDER; the caps (4 normally, 8 here) are decided
- * by kako-jun (2026-11-11, #344); reading "the end" as "after the child is found" is a provisional interpretation.
+ * by kako-jun (2026-11-11, #344); reading "the end" as "after the child is found" was confirmed by kako-jun (2026-11-12, #325/#344).
  * They replace `anomalyIntervalMs` / `maxConcurrentAnomalies` of `DEFAULT_CONFIG` for the rest of the shift.
  */
 export const CHILD_FOUND_PACING = {
