@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { DEFAULT_CONFIG } from '../utils/gameConfig'
+import { toFullWidthDigits } from '../utils/fullWidth'
 import {
   MAX_NOTES_LANGUAGE_BYTES,
   MAX_NOTES_TOTAL_BYTES,
@@ -70,7 +71,9 @@ describe('title notes table (#296)', () => {
   })
   it('says the misreport limit the game really has', () => {
     const last = TITLE_NOTE_TABLE.notes[2]
-    expect(last.ja.alt).toContain(`${DEFAULT_CONFIG.maxMisreports}回まで`)
+    expect(last.ja.alt).toContain(
+      `${toFullWidthDigits(DEFAULT_CONFIG.maxMisreports)}回まで`
+    )
     expect(last.en.alt).toContain(`up to ${DEFAULT_CONFIG.maxMisreports} times`)
   })
   it('explains touch and mouse only: no keyboard, no story, no detective', () => {
@@ -85,7 +88,7 @@ describe('title notes table (#296)', () => {
       titleNotes(l)
         .map(n => n.alt)
         .join(' ')
-    for (const w of ['スワイプ', 'ドラッグ', 'REPORT', '3回まで'])
+    for (const w of ['スワイプ', 'ドラッグ', 'REPORT', '３回まで'])
       expect(all('ja')).toContain(w)
     for (const w of ['swipe', 'Drag', 'REPORT', 'up to 3 times'])
       expect(all('en')).toContain(w)

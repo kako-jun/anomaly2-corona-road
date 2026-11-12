@@ -239,7 +239,7 @@ export const CameraView = ({
           {feedGlitchForced && feedGlitch && (
             <div className="osd osd-dev">DEV GLITCH: {feedGlitch}</div>
           )}
-          <div className="osd osd-cam">CAM {camera.id}</div>
+          <div className="osd osd-cam">CAM {camera.osdNumber ?? camera.id}</div>
           <div className="osd osd-rec">
             <i className="rec-dot" />
             REC

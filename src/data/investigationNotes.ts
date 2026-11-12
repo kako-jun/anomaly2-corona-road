@@ -276,6 +276,14 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
         'Look into the family instead.'
       ),
     ],
+    // A question after the decision (#273): what the family did stays open, it is only asked.
+    scrib: [
+      k(
+        'child',
+        '家族に、何をされたのか。',
+        'What did their family do to them?'
+      ),
+    ],
   },
 }
 

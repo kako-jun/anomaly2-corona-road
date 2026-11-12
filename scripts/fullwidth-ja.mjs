@@ -18,7 +18,7 @@
  * a counter such as 一回・一杯・一本・一つ・一枚 becomes full-width.
  * Sources: dialogue/*.yaml `text:`, src/data/investigationNotes.ts (Japanese string literals).
  * titleNotes.json is NOT converted: its lines/alt mirror the text baked into the sticky-note images
- * (「まちがいは3回まで」), which change only when the images are regenerated.
+ * (「まちがいは３回まで」, full-width since #352), which change only when the images are regenerated.
  */
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs'
 import { join, dirname } from 'node:path'
