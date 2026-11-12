@@ -14,6 +14,7 @@ import {
   pickLedgerEntry,
   spawnableEntries,
 } from './anomalyData'
+import { REIWA_DRAW_SHARE } from './gameConfig'
 
 const raw = (id: string, over: Record<string, unknown> = {}) => ({
   id,
@@ -202,5 +203,92 @@ describe('child through three Reiwa reports (#83)', () => {
     recordFound('r2')
     recordFound('x')
     expect(load().flags.child).toBeUndefined()
+  })
+})
+
+/** Good-quality seeded rng for share measurement. */
+const mulberry32 = (seed: number) => () => {
+  seed = (seed + 0x6d2b79f5) | 0
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+}
+
+describe('Reiwa group share of the draw (#286)', () => {
+  const many = [
+    ...Array.from({ length: 60 }, (_, i) => mk(`o${i}`, 1 + (i % 3))),
+    ...Array.from({ length: 6 }, (_, i) => mk(`rz${i}`, 1 + (i % 3), true)),
+  ]
+  it('uses a provisional share of 6%', () => {
+    expect(REIWA_DRAW_SHARE).toBe(0.06)
+  })
+  it('gives Reiwa about 6% of 200000 draws', () => {
+    const rng = mulberry32(286)
+    let n = 0
+    const N = 200000
+    for (let i = 0; i < N; i++) {
+      const r = pickLedgerEntry(many, [1, 2, 3], new Set(), rng, 0.75, true)
+      if (r?.reiwa === true) n++
+    }
+    const share = n / N
+    console.log(`reiwa share over ${N} draws: ${(share * 100).toFixed(3)}%`)
+    expect(share).toBeGreaterThan(0.055)
+    expect(share).toBeLessThan(0.065)
+  })
+  it('never draws Reiwa while locked, however large the share', () => {
+    const rng = mulberry32(1)
+    for (let i = 0; i < 2000; i++) {
+      const r = pickLedgerEntry(many, [1, 2, 3], new Set(), rng, 0.75, false, 1)
+      expect(r?.reiwa).not.toBe(true)
+    }
+  })
+  it('honours the share argument at both ends', () => {
+    const rng = mulberry32(2)
+    for (let i = 0; i < 200; i++) {
+      expect(
+        pickLedgerEntry(many, [1, 2, 3], new Set(), rng, 0.75, true, 1)?.reiwa
+      ).toBe(true)
+      expect(
+        pickLedgerEntry(many, [1, 2, 3], new Set(), rng, 0.75, true, 0)?.reiwa
+      ).not.toBe(true)
+    }
+  })
+  it('falls back to the other side when one has no candidate', () => {
+    // only Reiwa left (all ordinary used): still returned
+    const used = new Set(many.filter(e => !e.reiwa).map(e => e.id))
+    expect(
+      pickLedgerEntry(many, [1, 2, 3], used, () => 0.99, 0.75, true)?.reiwa
+    ).toBe(true)
+    // Reiwa cameras full: ordinary returned even when the roll says Reiwa
+    const r = pickLedgerEntry(
+      [mk('o', 1), mk('rz', 2, true)],
+      [1],
+      new Set(),
+      () => 0,
+      0.75,
+      true
+    )
+    expect(r?.id).toBe('o')
+    // nothing left
+    expect(
+      pickLedgerEntry(
+        many,
+        [1, 2, 3],
+        new Set(many.map(e => e.id)),
+        Math.random,
+        0.75,
+        true
+      )
+    ).toBeNull()
+  })
+  it('never repeats a used entry', () => {
+    const rng = mulberry32(3)
+    const used = new Set<string>()
+    for (let i = 0; i < 66; i++) {
+      const r = pickLedgerEntry(many, [1, 2, 3], used, rng, 0.75, true)!
+      expect(used.has(r.id)).toBe(false)
+      used.add(r.id)
+    }
+    expect(pickLedgerEntry(many, [1, 2, 3], used, rng, 0.75, true)).toBeNull()
   })
 })

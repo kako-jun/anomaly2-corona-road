@@ -83,7 +83,7 @@ localStorage を選ぶ理由:
 - 周回: 夜明け・撤収・エンディング（子供発見後の異変を一件も報告せず時間切れ、#86）のどれでも1進める。エンディング（`closing==='ending'`）に到達すると `endingReached` を保存する（#294）。到達の保存は時間切れ判定（`closing==='ending'` で終了）の時点で行うので、closing の会話の途中でタブを閉じても到達は残る。以後このセーブでは `startGame` が何もせず、結果画面の手書きの操作は「タイトルへ」（英: Back to title）、タイトルは「START OVER」だけを出す（`StartScreen` の `endingReached`）。START OVER は確認（"All progress will be erased"・ERASE ALL / CANCEL。確認に入ると CANCEL に、CANCEL か Escape で START OVER に、ERASE 後は START SHIFT にキーボードのフォーカスが移る）を1回挟み、`resetProgress()`（`shiftProgress.ts`）が `settings` 以外の全項目（累計・重複なしの id・周回・`child` を含むフラグ・使用済みの会話・未再生のフラグ会話・`endingReached`）を初期値に戻し、`epoch` を +1 する。印のない既存セーブは従来どおり。
 - 保存できない環境の案内（規則6）は `SaveNotice`（開始・プレイ・結果の各画面に常時）。書き込みだけ失敗する環境（容量超過など）も開始画面で分かるよう、起動時に専用キー `corona-road:save:probe` へ書いて消す `probe()` を1回試す（セーブ本体のキーには触れない）。案内は画面に重ねず、筐体・開始画面の下に通常フローで積む。
 - 引き継ぎコード（規則9、#84）: `src/utils/transferCode.ts`（`encodeSave`・`parseCode`・`importedSave`・`applyImport`）と `TransferPanel`（`StartScreen` の TRANSFER SAVE キーから開く）。
-- 未実装: 設定（つまみ）の保存。令和の異変の印は台帳の `reiwa: true` から導く（`reiwaFound` の数え方は `dialogue/README.md`）。令和の異変は `elder3` フラグが保存されてからしか出現しない（抽選時に保存から読む）。
+- 未実装: 設定（つまみ）の保存。令和の異変の印は台帳の `reiwa: true` から導く（`reiwaFound` の数え方は `dialogue/README.md`）。令和の異変は `elder3` フラグが保存されてからしか出現しない（抽選時に保存から読む）。解放後は令和を抽選の1つのグループとして扱い、令和と通常の候補が両方ある間は出現のうち `REIWA_DRAW_SHARE`（暫定 6%、`gameConfig.ts`）を令和に割り当て、残りを従来の重み付き抽選にする（#286）。
 
 ## 未決
 
