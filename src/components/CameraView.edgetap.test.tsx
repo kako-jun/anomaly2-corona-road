@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { makeCameras } from '../test/factories'
-import { EDGE_TAP, LOUPE } from '../utils/loupe'
+import { LOUPE } from '../utils/loupe'
 import { CameraView } from './CameraView'
 
 vi.mock('./NoiseCanvas', () => ({ NoiseCanvas: () => null }))
@@ -73,7 +73,6 @@ const tap = (
   pe('pointerUp', el, x, y, type)
 }
 const loupe = () => host.querySelector('[data-testid="loupe"]')
-const edgeW = GLASS.width * EDGE_TAP.EDGE_TAP_RATIO
 
 beforeEach(() => {
   vi.useFakeTimers()
@@ -87,49 +86,55 @@ afterEach(() => {
 })
 
 describe('edge tap (#354)', () => {
-  it('a short tap on the left zone goes to the previous camera, the right zone to the next', () => {
-    const { glass } = setup()
-    tap(glass, GLASS.left + 10)
-    expect(onSwipe).toHaveBeenLastCalledWith('prev')
-    tap(glass, GLASS.left + GLASS.width - 10)
-    expect(onSwipe).toHaveBeenLastCalledWith('next')
-    expect(onSwipe).toHaveBeenCalledTimes(2)
-  })
-
-  it('the bezel counts: beside the picture, and above / below at the left / right', () => {
+  it('a short tap on the left band of the bezel goes to the previous camera, the right band to the next', () => {
     const { bezel } = setup()
     tap(bezel, 90)
     expect(onSwipe).toHaveBeenLastCalledWith('prev')
     tap(bezel, 510)
     expect(onSwipe).toHaveBeenLastCalledWith('next')
-    tap(bezel, 150, 40) // top band, left side
-    expect(onSwipe).toHaveBeenLastCalledWith('prev')
-    tap(bezel, 450, 680) // bottom band, right side
-    expect(onSwipe).toHaveBeenLastCalledWith('next')
-    tap(bezel, 300, 40) // top band, middle
-    expect(onSwipe).toHaveBeenCalledTimes(4)
-  })
-
-  it('the zone width is EDGE_TAP_RATIO of the picture: just inside is a tap, just past is the middle', () => {
-    const { glass } = setup()
-    tap(glass, GLASS.left + edgeW - 1)
-    expect(onSwipe).toHaveBeenCalledTimes(1)
-    tap(glass, GLASS.left + edgeW + 1)
-    tap(glass, GLASS.left + GLASS.width - edgeW - 1)
-    expect(onSwipe).toHaveBeenCalledTimes(1)
-    tap(glass, GLASS.left + GLASS.width - edgeW + 1)
     expect(onSwipe).toHaveBeenCalledTimes(2)
   })
 
-  it('a tap in the middle does nothing', () => {
+  it('the corners extend the side bands; the top / bottom band counts only in the side columns', () => {
+    const { bezel } = setup()
+    tap(bezel, 90, 40) // top left corner
+    expect(onSwipe).toHaveBeenLastCalledWith('prev')
+    tap(bezel, 90, 680) // bottom left corner
+    expect(onSwipe).toHaveBeenLastCalledWith('prev')
+    tap(bezel, 510, 40) // top right corner
+    expect(onSwipe).toHaveBeenLastCalledWith('next')
+    tap(bezel, 510, 680) // bottom right corner
+    expect(onSwipe).toHaveBeenLastCalledWith('next')
+    expect(onSwipe).toHaveBeenCalledTimes(4)
+    tap(bezel, 150, 40) // top band over the picture's columns
+    tap(bezel, 300, 40)
+    tap(bezel, 450, 680)
+    expect(onSwipe).toHaveBeenCalledTimes(4)
+  })
+
+  it('the picture does nothing, at its left / right edge or in the middle', () => {
     const { glass } = setup()
+    tap(glass, GLASS.left + 1)
+    tap(glass, GLASS.left + 10)
+    tap(glass, GLASS.left + GLASS.width - 1)
+    tap(glass, GLASS.left + GLASS.width - 10)
     tap(glass, 300)
     expect(onSwipe).not.toHaveBeenCalled()
   })
 
+  it('the bezel boundary is the picture box: 1px outside is a tap, 1px inside is not', () => {
+    const { bezel } = setup()
+    tap(bezel, GLASS.left - 1)
+    expect(onSwipe).toHaveBeenCalledTimes(1)
+    tap(bezel, GLASS.left + 1)
+    expect(onSwipe).toHaveBeenCalledTimes(1)
+  })
+
   it('a hold of HOLD_MS or more is the loupe, not a tap: no camera change on release', () => {
-    const { glass } = setup()
-    tap(glass, GLASS.left + 10, 300, LOUPE.HOLD_MS - 1)
+    const { bezel, glass } = setup()
+    tap(bezel, 90, 300, LOUPE.HOLD_MS - 1)
+    expect(onSwipe).toHaveBeenCalledTimes(1)
+    tap(bezel, 90, 300, LOUPE.HOLD_MS)
     expect(onSwipe).toHaveBeenCalledTimes(1)
     pe('pointerDown', glass, GLASS.left + 10)
     act(() => {
@@ -153,49 +158,49 @@ describe('edge tap (#354)', () => {
   })
 
   it('a swipe starting in an edge zone is the swipe, once', () => {
-    const { glass } = setup()
-    pe('pointerDown', glass, GLASS.left + 10)
-    pe('pointerMove', glass, GLASS.left + 80)
-    pe('pointerUp', glass, GLASS.left + 80)
+    const { bezel } = setup()
+    pe('pointerDown', bezel, 90)
+    pe('pointerMove', bezel, 160)
+    pe('pointerUp', bezel, 160)
     expect(onSwipe).toHaveBeenCalledTimes(1)
     expect(onSwipe).toHaveBeenCalledWith('prev') // dragged right = the existing swipe direction
   })
 
-  it('a short drift past the hold slop is not a tap', () => {
-    const { glass } = setup()
-    pe('pointerDown', glass, GLASS.left + 10)
-    pe('pointerMove', glass, GLASS.left + 10 + LOUPE.HOLD_SLOP_PX + 1)
-    pe('pointerUp', glass, GLASS.left + 10 + LOUPE.HOLD_SLOP_PX + 1)
+  it('a drift past the hold slop is not a tap', () => {
+    const { bezel } = setup()
+    pe('pointerDown', bezel, 90, 300)
+    pe('pointerMove', bezel, 90, 300 + LOUPE.HOLD_SLOP_PX + 1)
+    pe('pointerUp', bezel, 90, 300 + LOUPE.HOLD_SLOP_PX + 1)
     expect(onSwipe).not.toHaveBeenCalled()
   })
 
   it('a drift within the hold slop is still a tap', () => {
-    const { glass } = setup()
-    pe('pointerDown', glass, GLASS.left + 10)
-    pe('pointerMove', glass, GLASS.left + 10 + LOUPE.HOLD_SLOP_PX)
-    pe('pointerUp', glass, GLASS.left + 10 + LOUPE.HOLD_SLOP_PX)
+    const { bezel } = setup()
+    pe('pointerDown', bezel, 90, 300)
+    pe('pointerMove', bezel, 90, 300 + LOUPE.HOLD_SLOP_PX)
+    pe('pointerUp', bezel, 90, 300 + LOUPE.HOLD_SLOP_PX)
     expect(onSwipe).toHaveBeenCalledWith('prev')
   })
 
   it('a cancelled pointer switches nothing', () => {
-    const { glass } = setup()
-    pe('pointerDown', glass, GLASS.left + 10)
-    pe('pointerCancel', glass, GLASS.left + 10)
+    const { bezel } = setup()
+    pe('pointerDown', bezel, 90)
+    pe('pointerCancel', bezel, 90)
     expect(onSwipe).not.toHaveBeenCalled()
   })
 
   it('works the same for mouse and pen, and without a loupe host', () => {
-    const { glass } = setup(false)
-    tap(glass, GLASS.left + 10, 300, 80, 'mouse')
-    tap(glass, GLASS.left + GLASS.width - 10, 300, 80, 'pen')
+    const { bezel } = setup(false)
+    tap(bezel, 90, 300, 80, 'mouse')
+    tap(bezel, 510, 300, 80, 'pen')
     expect(onSwipe.mock.calls).toEqual([['prev'], ['next']])
   })
 
   it('a second finger does not tap', () => {
-    const { glass } = setup()
-    pe('pointerDown', glass, 300, 300, 'touch', 1)
-    pe('pointerDown', glass, GLASS.left + 10, 300, 'touch', 2)
-    pe('pointerUp', glass, GLASS.left + 10, 300, 'touch', 2)
+    const { bezel } = setup()
+    pe('pointerDown', bezel, 300, 300, 'touch', 1)
+    pe('pointerDown', bezel, 90, 300, 'touch', 2)
+    pe('pointerUp', bezel, 90, 300, 'touch', 2)
     expect(onSwipe).not.toHaveBeenCalled()
   })
 

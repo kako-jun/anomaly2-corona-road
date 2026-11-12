@@ -97,8 +97,8 @@
 }
 
 /* edge tap (#354): the handlers are on the whole .bezel; a short tap on the left / right goes to the previous / next
-   camera. These small arrowheads on the frame's sides are the always-visible sign of it (the zone itself is the
-   EDGE_TAP constant in src/utils/loupe.ts). Out of the flow, never take the pointer. */
+   camera, only outside the picture. These small arrowheads on the frame's sides are the always-visible sign of it
+   (the zone is edgeTapDirection in src/utils/loupe.ts). Out of the flow, never take the pointer. */
 .bezel {
   position: relative;
   touch-action: pan-y pinch-zoom;
