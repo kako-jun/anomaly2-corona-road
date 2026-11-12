@@ -20,7 +20,7 @@
 | `story.yaml`         | フラグ会話                             | `flag: <flags.yaml のフラグ名>`                                    |
 | `false-report.yaml`  | 共通の誤報の会話（ヒントなし）         | なし                                                               |
 | `anomaly-lines.yaml` | 異変ごとの会話（ヒント入りの誤報会話） | `anomaly: <prompts/anomalies.yaml の id>`                          |
-| `spawn-hints.yaml`   | 異変の出現ヒント（見つからない時に確率で出る。誤報とは別のプール） | `anomaly: <prompts/anomalies.yaml の id>`（各異変に3案以上。`npm run check:spawn-hints` が件数を報告） |
+| `spawn-hints.yaml`   | 異変の出現ヒント（見つからない時に確率で出る。誤報とは別のプール） | `anomaly: <prompts/anomalies.yaml の id>`（台帳の画像異変 produced 全件に3案以上、計 942 通り。`npm run check:spawn-hints` が不足・id 重複（終了コード 1）と、よく出る行・述語の偏りを報告する） |
 
 ## 1通りの形
 
