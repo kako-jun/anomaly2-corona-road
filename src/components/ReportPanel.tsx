@@ -16,6 +16,8 @@ interface ReportButtonProps {
   open: boolean
   /** Many anomalies are unreported: the lamp blinks (never while the picker is open). */
   alert?: boolean
+  /** The ending's virtual camera is on screen (#273): every lamp is off, never lit and never blinking. */
+  lampsOff?: boolean
   buttonRef: RefObject<HTMLButtonElement>
   onToggle: () => void
 }
@@ -28,13 +30,18 @@ interface ReportButtonProps {
 export const ReportButton = ({
   open,
   alert = false,
+  lampsOff = false,
   buttonRef,
   onToggle,
 }: ReportButtonProps) => (
   <div className="row report">
     <div className="report-main">
       <div
-        className={cx('lamp-big red', open && 'lit', alert && !open && 'alert')}
+        className={cx(
+          'lamp-big red',
+          !lampsOff && open && 'lit',
+          !lampsOff && alert && !open && 'alert'
+        )}
         aria-hidden="true"
       />
       <button

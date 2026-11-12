@@ -34,6 +34,8 @@ export interface Camera {
   name: string
   location: string
   image: string
+  /** The text after "CAM " on the monitor OSD; absent = the id ("CAM 1"). The ending's virtual camera uses "09" (#273). */
+  osdNumber?: string
 }
 
 export interface GameConfig {

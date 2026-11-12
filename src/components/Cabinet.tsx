@@ -144,6 +144,7 @@ export const Cabinet = ({
           <ReportButton
             open={reportOpen}
             alert={shouldAlert(unreportedCount)}
+            lampsOff={inEnding}
             buttonRef={reportBtnRef}
             onToggle={() => setReportOpen(o => !o)}
           />

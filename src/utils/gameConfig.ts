@@ -153,6 +153,7 @@ export const CHILD_FOUND_PACING = {
 export const ENDING_BAR_CAMERA: Camera = {
   id: 9, // only shown in the "CAM n" label on the monitor
   name: 'CAM 09',
+  osdNumber: '09',
   location: 'Bar',
   image: '/images/ending-bar.webp',
 }

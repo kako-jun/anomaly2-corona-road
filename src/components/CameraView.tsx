@@ -193,7 +193,7 @@ export const CameraView = ({
           <NoiseCanvas />
           <div className="fx scan" aria-hidden="true" />
           <div className="fx vignette" aria-hidden="true" />
-          <div className="osd osd-cam">CAM {camera.id}</div>
+          <div className="osd osd-cam">CAM {camera.osdNumber ?? camera.id}</div>
           <div className="osd osd-rec">
             <i className="rec-dot" />
             REC

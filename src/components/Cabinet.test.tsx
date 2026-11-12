@@ -305,6 +305,8 @@ describe('Cabinet true ending screen (Issue #86)', () => {
     rerender(<Cabinet {...makeProps({ ending: 'ending', onSwitch })} />)
     expect(container.querySelectorAll('.lamp.green.on')).toHaveLength(0)
     expect(container.querySelectorAll('.cam-cell .key.pressed')).toHaveLength(0)
+    expect(container.querySelector('.lamp-big.lit, .lamp-big.alert')).toBeNull()
+    expect(container.querySelector('.osd-cam')?.textContent).toBe('CAM 09')
     fireEvent.keyDown(window, { key: '2' })
     fireEvent.keyDown(window, { key: 'ArrowRight' })
     expect(onSwitch).not.toHaveBeenCalled()

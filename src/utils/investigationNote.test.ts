@@ -227,6 +227,15 @@ describe('buildNote after a shift', () => {
       '指摘ではなく、家族を調べる。',
     ])
     expect(v.scrib).toEqual(['家族に、何をされたのか。'])
+    const en = buildNote(
+      {
+        mode: 'after',
+        save: save({ flags: { child: true } }),
+        shift: shift({ closing: 'ending' }),
+      },
+      'en'
+    )
+    expect(en.scrib).toEqual(['What was done to them by their family?'])
   })
   it('English mirrors the structure', () => {
     const ja = after(shift())

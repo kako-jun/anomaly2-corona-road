@@ -1241,6 +1241,10 @@
   text-align: center;
 }
 
+.key:disabled {
+  cursor: default;
+}
+
 .key {
   font-family: var(--font-label);
   font-weight: 600;

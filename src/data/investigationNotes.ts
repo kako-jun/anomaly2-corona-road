@@ -278,7 +278,11 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
     ],
     // A question after the decision (#273): what the family did stays open, it is only asked.
     scrib: [
-      k('child', '家族に、何をされたのか。', 'What did their family do?'),
+      k(
+        'child',
+        '家族に、何をされたのか。',
+        'What was done to them by their family?'
+      ),
     ],
   },
 }
