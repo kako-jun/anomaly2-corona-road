@@ -12,6 +12,10 @@ const panOffsets = () =>
   ({
     '--start-pan-x-delay': `${-Math.floor(Math.random() * 70)}s`,
     '--start-pan-y-delay': `${-Math.floor(Math.random() * 53)}s`,
+    // the blur patch (#331): loops of 61 s, 47 s and 37 s
+    '--start-blur-x-delay': `${-Math.floor(Math.random() * 61)}s`,
+    '--start-blur-y-delay': `${-Math.floor(Math.random() * 47)}s`,
+    '--start-blur-power-delay': `${-Math.floor(Math.random() * 37)}s`,
   }) as CSSProperties
 
 interface StartScreenProps {
@@ -106,6 +110,11 @@ export const StartScreen = ({
         {/* two nested slow drifts (x outside, y inside) with different periods: no corner where the speed jumps */}
         <div className="start-pan-x">
           <img src="/images/logo.webp" alt="" draggable={false} />
+        </div>
+        <div className="start-blur-x">
+          <div className="start-blur-y">
+            <div className="start-blur" />
+          </div>
         </div>
         <TitleNoise />
       </div>

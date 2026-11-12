@@ -22,6 +22,10 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
      (within 1px), >= 44px high, >= 10px apart, inside the viewport, the note hidden, the signboard clear, and the
      right edge and bottom where the START OVER key was (within 2px: the eye does not have to move)
   9. nothing dark covers the photo: no element other than the notes, the keys and the pager has a solid background
+  10. (#331) the drifting blur patch: it sits over the photo, under the noise, the notes and the key, takes no pointer, has a
+     backdrop-filter, and over the whole joint cycle (x 61 s, y 47 s, strength 37 s) the signboard's centre is blurred by more
+     than BLUR_READ_PX (patch strength x its mask at that point) for at most BLUR_BAD_MAX of the time; with prefers-reduced-motion
+     the patch does not move
 Not wired to CI (it needs a Chromium: --chrome or $CHROME, default ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome).
 Starts `npx vite` on a free port (and stops only that process) unless --url is given.
 
@@ -42,6 +46,8 @@ SIZES = [(360, 640), (390, 844), (430, 932), (768, 1024), (898, 1000), (900, 100
 SIGN = (0.59, 0.09, 0.86, 0.66)
 PHONE_SIGN_MIN = 0.55  # a phone keeps most of the board in view
 WIDE_SIGN_MIN = 0.35  # a wide screen crops the tall board top and bottom by design (kako-jun agreed)
+BLUR_READ_PX = 3  # the signboard's centre blurred by more than this (px, after the mask) counts as hard to read
+BLUR_BAD_MAX = 0.2  # ... for at most this share of the time
 CLEAR_MIN = 0.85  # of the part of the board that is on screen, the note and the key may cover at most 15% (worst point of the pan)
 
 
@@ -89,6 +95,41 @@ SWEEP = """([sign]) => {
   for (const ty of [0, dy]) for (let t = 0; t <= dx; t += 250) at(t, ty)
   for (const tx of [0, dx]) for (let t = 0; t <= dy; t += 250) at(tx, t)
   return {minSlack, minSign, minClear}
+}"""
+
+# The mask in start.css: closest-side radial gradient, 1 at the centre, 0.7 at 40%, 0 at the edge (keep in step with it)
+BLUR = """([sign, BLUR_READ]) => {
+  const vw = innerWidth, vh = innerHeight
+  const box = document.querySelector('.start-blur-x'), blur = document.querySelector('.start-blur'), img = document.querySelector('.start-photo img')
+  if (!box || !blur) return {missing: true}
+  const st = getComputedStyle(blur), bs = getComputedStyle(box)
+  const own = {filter: st.backdropFilter || st.webkitBackdropFilter, events: bs.pointerEvents, mask: st.maskImage || st.webkitMaskImage}
+  const an = document.getAnimations()
+  const g = n => an.find(a => a.animationName === n)
+  const A = ['start-blur-x', 'start-blur-y', 'start-blur-power'].map(g)
+  if (A.some(a => !a)) return {...own, noAnim: true}
+  for (const a of an) { a.pause(); a.effect.updateTiming({delay: 0}) }
+  const D = A.map(a => a.effect.getComputedTiming().duration)
+  for (const n of ['start-pan-x', 'start-pan-y']) g(n).currentTime = g(n).effect.getComputedTiming().duration / 2
+  const r = img.getBoundingClientRect()
+  const cs = getComputedStyle(img).objectPosition.split(' ').map(x => parseFloat(x) / 100)
+  const s0 = Math.max(vw / 450, vh / 600), w = 450 * s0, h = 600 * s0
+  const k = r.width / vw, l = r.height / vh
+  const sx = r.left + ((vw - w) * cs[0] + (sign[0] + sign[2]) / 2 * w) * k, sy = r.top + ((vh - h) * cs[1] + (sign[1] + sign[3]) / 2 * h) * l
+  const N = 3000
+  let bad = 0
+  for (let i = 0; i < N; i++) {
+    A[0].currentTime = (i * 0.6180339 * D[0] * 7.31) % (2 * D[0])
+    A[1].currentTime = (i * 0.7548776 * D[1] * 5.17) % (2 * D[1])
+    A[2].currentTime = (i * 0.5698402 * D[2] * 3.91) % (2 * D[2])
+    const b = box.getBoundingClientRect()
+    const d = Math.hypot((sx - (b.left + b.width / 2)) / (b.width / 2), (sy - (b.top + b.height / 2)) / (b.height / 2))
+    const a = d >= 1 ? 0 : d <= 0.4 ? 1 - 0.3 * d / 0.4 : 0.7 * (1 - (d - 0.4) / 0.6)
+    const px = parseFloat((getComputedStyle(blur).backdropFilter || 'blur(0px)').match(/[\\d.]+/)[0])
+    if (a * px > BLUR_READ) bad++
+  }
+  const z = e => { const s = document.querySelector(e); return s ? [...s.parentElement.children].indexOf(s) : -1 }
+  return {...own, bad: bad / N, over: z('.start-blur-x') > z('.start-pan-x')}
 }"""
 
 RECTS = """() => {
@@ -184,6 +225,20 @@ def main():
                             errs.append(f"signboard visible only {sw['minSign']:.0%} at worst (< {floor:.0%})")
                         if sw["minClear"] < CLEAR_MIN:
                             errs.append(f"note / key cover the signboard: only {sw['minClear']:.0%} of it is clear (< {CLEAR_MIN:.0%})")
+                    bl = p.evaluate(BLUR, [list(SIGN), BLUR_READ_PX])
+                    if bl.get("missing") or bl.get("noAnim"):
+                        errs.append("the blur patch is missing or not animated")
+                    else:
+                        if "blur" not in (bl["filter"] or ""):
+                            errs.append(f"the blur patch has no backdrop-filter ({bl['filter']})")
+                        if "radial-gradient" not in (bl["mask"] or ""):
+                            errs.append("the blur patch has no soft mask")
+                        if bl["events"] != "none":
+                            errs.append("the blur patch takes pointer events")
+                        if not bl["over"]:
+                            errs.append("the blur patch is not over the photo")
+                        if bl["bad"] > BLUR_BAD_MAX:
+                            errs.append(f"the signboard is blurred over {BLUR_READ_PX}px for {bl['bad']:.0%} of the time (> {BLUR_BAD_MAX:.0%})")
                     for page in range(3):
                         r = p.evaluate(RECTS)
                         if r["status"] != f"{page + 1}/3":
@@ -251,7 +306,7 @@ def main():
                         errs.append("a language switch is on screen")
                     p.close()
                     ctx.close()
-                    print(f"{lang} {w}x{h}: photo margin {sw.get('minSlack', 0):.1f}px, sign on screen {sw.get('minSign', 0):.0%}, clear of note/key {sw.get('minClear', 0):.0%} -> {'; '.join(errs) or 'ok'}")
+                    print(f"{lang} {w}x{h}: blur over {BLUR_READ_PX}px on the sign {bl.get('bad', 0):.0%} of the time; photo margin {sw.get('minSlack', 0):.1f}px, sign on screen {sw.get('minSign', 0):.0%}, clear of note/key {sw.get('minClear', 0):.0%} -> {'; '.join(errs) or 'ok'}")
                     # the START OVER confirmation (a save that reached the true ending)
                     ctx = b.new_context(viewport={"width": w, "height": h}, locale="ja-JP" if lang == "ja" else "en-US")
                     ctx.add_init_script(SEED)

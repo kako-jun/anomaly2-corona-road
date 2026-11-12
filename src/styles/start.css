@@ -102,6 +102,86 @@ body.start-open #root {
     animation: none;
   }
 }
+/* ----- the drifting blur (#331): a big soft round patch of the photo goes out of focus, wanders slowly and breathes ----- */
+/* Over the photo, under the noise, the notes and the key. x, y and the strength each have their own period (61 s, 47 s, 37 s),
+   all coprime with each other and with the photo's drift (70 s, 53 s), so the same figure never comes round again.
+   The patch is --blur-w x --blur-h of the photo (radius = half of that), fading out to nothing at its edge by a mask, so no outline shows. */
+.start-screen {
+  --blur-w: 90%;
+  --blur-h: 90%;
+  --blur-travel: 35%; /* of the patch's own size, each way */
+  --blur-max: 4px;
+  --blur-min: 1.5px;
+}
+.start-blur-x {
+  position: absolute;
+  left: calc((100% - var(--blur-w)) / 2);
+  top: calc((100% - var(--blur-h)) / 2);
+  width: var(--blur-w);
+  height: var(--blur-h);
+  pointer-events: none;
+  animation: start-blur-x 30.5s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  animation-delay: var(--start-blur-x-delay, 0s);
+}
+.start-blur-y {
+  position: absolute;
+  inset: 0;
+  animation: start-blur-y 23.5s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  animation-delay: var(--start-blur-y-delay, 0s);
+}
+.start-blur {
+  position: absolute;
+  inset: 0;
+  -webkit-backdrop-filter: blur(var(--blur-max));
+  backdrop-filter: blur(var(--blur-max));
+  -webkit-mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.7) 40%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.7) 40%, transparent 100%);
+  animation: start-blur-power 18.5s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  animation-delay: var(--start-blur-power-delay, 0s);
+}
+@keyframes start-blur-x {
+  from {
+    transform: translateX(calc(var(--blur-travel) * -1));
+  }
+  to {
+    transform: translateX(var(--blur-travel));
+  }
+}
+@keyframes start-blur-y {
+  from {
+    transform: translateY(calc(var(--blur-travel) * -1));
+  }
+  to {
+    transform: translateY(var(--blur-travel));
+  }
+}
+@keyframes start-blur-power {
+  from {
+    -webkit-backdrop-filter: blur(var(--blur-min));
+    backdrop-filter: blur(var(--blur-min));
+  }
+  to {
+    -webkit-backdrop-filter: blur(var(--blur-max));
+    backdrop-filter: blur(var(--blur-max));
+  }
+}
+/* no backdrop-filter (old engines): no patch at all */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .start-blur-x {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .start-blur-x,
+  .start-blur-y,
+  .start-blur {
+    animation: none;
+  }
+  .start-blur {
+    -webkit-backdrop-filter: blur(var(--blur-min));
+    backdrop-filter: blur(var(--blur-min));
+  }
+}
 /* a burst of the monitor's noise (canvas + scanlines from retro.css) and white tear bands */
 .start-burst {
   position: absolute;
