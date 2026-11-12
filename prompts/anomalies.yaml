@@ -6978,14 +6978,6 @@ anomalies:
     memo:
       ja: 'カーソルや反応表示が乱れる。'
       en: 'Cursor and hover feedback glitch.'
-  - id: 'RT-RULE-02'
-    status: 'planned'
-    kind: 'non_image'
-    anomaly_type: 'rule_break'
-    detail: 'anomaly refuses report: 正しく報告しても一度だけ直らない。'
-    memo:
-      ja: '正しく報告したのに直らない。一度だけ？'
-      en: 'Right report, yet not fixed. Just once?'
   - id: 'RT-RULE-06'
     status: 'planned'
     kind: 'non_image'
@@ -7102,15 +7094,6 @@ anomalies:
     memo:
       ja: 'ノイズがずっと消えている。'
       en: 'The noise is gone and stays gone.'
-  - id: 'RT-UI-23'
-    status: 'planned'
-    kind: 'non_image'
-    category: 'Surreal'
-    anomaly_type: 'ui_corruption'
-    detail: 'noise gone on one camera: 一部のカメラ（出現ごとに無作為に選ぶ1〜3台）でだけノイズと走査線が消え、他のカメラは普通にノイズがある。カメラを切り替えて見比べると気づける。そのカメラを開いている間だけ報告できる。叩く / 振る機能（#342）とは別で、操作しなくても消えていて時間で戻らない。報告すれば元に戻る。'
-    memo:
-      ja: 'このカメラだけノイズがない。'
-      en: 'Only this camera has no noise.'
   - id: 'RT-UI-24'
     status: 'planned'
     kind: 'non_image'
@@ -7174,3 +7157,12 @@ anomalies:
     memo:
       ja: 'このカメラだけ白黒だ。'
       en: 'Only this camera is in black and white.'
+  - id: 'RT-FEED-28'
+    status: 'planned'
+    kind: 'non_image'
+    category: 'camera'
+    anomaly_type: 'feed_glitch'
+    detail: 'noise gone on one camera: 一部のカメラ（出現ごとに無作為に選ぶ1〜3台）でだけノイズと走査線が消え、他のカメラは普通にノイズがある。カメラを切り替えて見比べると気づける。叩く / 振る機能（#342）とは別で、操作しなくても消えていて時間で戻らない。そのカメラを開いている間だけ報告できる。報告すれば元に戻る。'
+    memo:
+      ja: 'このカメラだけノイズがない。'
+      en: 'Only this camera has no noise.'
