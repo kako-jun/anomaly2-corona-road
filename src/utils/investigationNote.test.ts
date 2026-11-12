@@ -235,7 +235,7 @@ describe('buildNote after a shift', () => {
       },
       'en'
     )
-    expect(en.scrib).toEqual(['What was done to them by their family?'])
+    expect(en.scrib).toEqual(['What did their family do to them?'])
   })
   it('English mirrors the structure', () => {
     const ja = after(shift())

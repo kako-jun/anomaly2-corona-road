@@ -281,7 +281,7 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
       k(
         'child',
         '家族に、何をされたのか。',
-        'What was done to them by their family?'
+        'What did their family do to them?'
       ),
     ],
   },
