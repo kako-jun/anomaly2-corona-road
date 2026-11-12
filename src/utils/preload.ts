@@ -55,3 +55,50 @@ export const idleSchedule = (fn: () => void) => {
     window.setTimeout(fn, 200)
   }
 }
+
+/** The image kept for one camera photo (decoded when the browser allows it). */
+export interface CameraImage {
+  src: string
+  decoding?: string
+  fetchPriority?: string
+  decode?: () => Promise<void>
+}
+
+/**
+ * Download and decode the base photo of every camera, including the ones not on screen, so the first
+ * switch to a camera does not show the picture late (#396). Not part of the 800KB UI budget
+ * (`uiAssets.test.ts`): about 3MB, low priority, started on idle time after the title's own preload.
+ * Each URL is requested once (a repeated call returns the same promise); a failed image is ignored
+ * (the camera loads it as usual when it is switched to). The images are held in `cameraImageCache`,
+ * since a decoded image nobody refers to can be dropped.
+ */
+export const cameraImageCache = new Map<string, CameraImage>()
+
+export const createCameraPreloader = (
+  urls: readonly string[],
+  deps: {
+    createImage: () => CameraImage
+    schedule: (fn: () => void) => void
+    cache?: Map<string, CameraImage>
+  }
+): (() => Promise<void>) => {
+  let started: Promise<void> | undefined
+  const cache = deps.cache ?? cameraImageCache
+  return () => {
+    if (started) return started
+    started = new Promise<void>(resolve => {
+      deps.schedule(() => {
+        const jobs = [...new Set(urls)].map(url => {
+          const img = deps.createImage()
+          img.decoding = 'async'
+          img.fetchPriority = 'low'
+          img.src = url
+          cache.set(url, img)
+          return Promise.resolve(img.decode?.()).catch(() => {})
+        })
+        void Promise.all(jobs).then(() => resolve())
+      })
+    })
+    return started
+  }
+}

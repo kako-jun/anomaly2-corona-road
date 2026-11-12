@@ -1,3 +1,5 @@
+import { CAMERAS } from './gameConfig'
+import { createCameraPreloader, idleSchedule } from './preload'
 import { titleNotes } from '../data/titleNotes'
 import type { Language } from './saveData'
 
@@ -34,3 +36,9 @@ export function preloadCabinet(): Promise<void> {
   )
   return Promise.all([...images, ...fonts]).then(() => {})
 }
+
+/** All eight cameras' base photos, loaded and decoded on idle time after the title's own preload (#396). Runs once. */
+export const preloadCameraImages = createCameraPreloader(
+  CAMERAS.map(c => c.image),
+  { createImage: () => new Image(), schedule: idleSchedule }
+)
