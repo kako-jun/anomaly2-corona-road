@@ -19,11 +19,13 @@ describe('shake detector', () => {
   it('fires on SHAKE_COUNT peaks inside the window, once', () => {
     const d = createShakeDetector()
     const gap = SHAKE_MIN_GAP_MS + 20
-    const out = Array.from({ length: SHAKE_COUNT }, (_, i) =>
-      d.push(hard, i * gap)
-    )
+    const out: boolean[] = []
+    for (let i = 0; i < SHAKE_COUNT; i++) {
+      out.push(d.push(hard, i * gap * 2))
+      d.push(0, i * gap * 2 + gap)
+    }
     expect(out).toEqual([...Array(SHAKE_COUNT - 1).fill(false), true])
-    expect(d.push(hard, SHAKE_COUNT * gap)).toBe(false) // forgotten after firing
+    expect(d.push(hard, SHAKE_COUNT * gap * 2)).toBe(false) // forgotten after firing
   })
   it('a value at the threshold is not a peak', () => {
     const d = createShakeDetector()
@@ -41,6 +43,21 @@ describe('shake detector', () => {
     const d = createShakeDetector()
     for (let i = 0; i < 4; i++)
       expect(d.push(hard, i * (SHAKE_MIN_GAP_MS / 4))).toBe(false)
+  })
+  it('a long hard movement that never drops below the threshold is one peak (no shake)', () => {
+    const d = createShakeDetector()
+    for (let i = 0; i < 40; i++)
+      expect(d.push(hard, i * SHAKE_MIN_GAP_MS)).toBe(false)
+  })
+  it('a real shake (up, down, up, down, up) fires', () => {
+    const d = createShakeDetector()
+    const out: boolean[] = []
+    for (let i = 0; i < SHAKE_COUNT; i++) {
+      out.push(d.push(hard, i * 200))
+      out.push(d.push(0, i * 200 + 100))
+    }
+    expect(out.filter(Boolean)).toHaveLength(1)
+    expect(out[out.length - 2]).toBe(true)
   })
   it('reset forgets the peaks', () => {
     const d = createShakeDetector()
@@ -91,7 +108,7 @@ describe('labels', () => {
   it('has both languages', () => {
     expect(NOISE_HINT.ja).toBeTruthy()
     expect(NOISE_HINT.en).toBeTruthy()
-    expect(noiseOffLabel('ja', 7)).toBe('ノイズ除去 7')
-    expect(noiseOffLabel('en', 7)).toBe('Noise off 7')
+    expect(noiseOffLabel('ja', 7)).toBe('ノイズ・横線除去 7')
+    expect(noiseOffLabel('en', 7)).toBe('Noise & lines off 7')
   })
 })

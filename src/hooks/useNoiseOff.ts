@@ -51,6 +51,7 @@ export const useNoiseOff = () => {
     if (listening.current || typeof window === 'undefined') return
     const detector = createShakeDetector()
     const onMotion = (e: DeviceMotionEvent) => {
+      if (document.hidden) return // a tab in the background is not being shaken at
       if (detector.push(motionMagnitude(e), performance.now()))
         triggerRef.current()
     }

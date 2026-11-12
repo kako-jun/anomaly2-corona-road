@@ -20,12 +20,12 @@ export const KNOCK_SLOP_PX = 40
 
 /** The always-visible hint (no hidden operations). Follows the browser's language, like LOUPE_HINT. */
 export const NOISE_HINT: Record<Language, string> = {
-  ja: '揺らす・ダブルタップでノイズ除去',
-  en: 'Shake / 2x tap: noise off',
+  ja: '揺らす・2回タップでノイズと横線消去',
+  en: 'Shake / 2x tap: noise+lines off',
 }
 /** The hint while the noise is off: the seconds left. Half-width digits: a machine read-out, not the script's text. */
 export const noiseOffLabel = (lang: Language, seconds: number): string =>
-  lang === 'ja' ? `ノイズ除去 ${seconds}` : `Noise off ${seconds}`
+  lang === 'ja' ? `ノイズ・横線除去 ${seconds}` : `Noise & lines off ${seconds}`
 
 /** The seconds to show for `leftMs` ms left (rounded up, so 10 shows first and 1 shows last); 0 when it is over. */
 export const secondsLeft = (leftMs: number): number =>
@@ -67,10 +67,18 @@ export const createShakeDetector = (
     minGapMs = SHAKE_MIN_GAP_MS,
   } = opts
   let peaks: number[] = []
+  // a peak counts only on the way up: the strength must have dropped to the threshold or below since the last one,
+  // so one long hard movement (a fall, a hard brake, a bang on the desk) is one peak, not three
+  let armed = true
   return {
     push(magnitude: number, now: number): boolean {
       peaks = peaks.filter(t => now - t <= windowMs)
-      if (magnitude <= threshold) return false
+      if (magnitude <= threshold) {
+        armed = true
+        return false
+      }
+      if (!armed) return false
+      armed = false
       const last = peaks[peaks.length - 1]
       if (last !== undefined && now - last < minGapMs) return false
       peaks.push(now)
@@ -80,6 +88,7 @@ export const createShakeDetector = (
     },
     reset() {
       peaks = []
+      armed = true
     },
   }
 }

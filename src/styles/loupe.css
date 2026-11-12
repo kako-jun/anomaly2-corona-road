@@ -130,14 +130,18 @@
   border-left-color: #4a4130;
 }
 
-/* #342: shaking / double-tapping the monitor switches the grain off for NOISE_OFF_MS (numbers in src/utils/noiseOff.ts).
-   Only the grain: scanlines, vignette and the rest stay. The loupe carries the same class. */
+/* #342: shaking / double-tapping the monitor switches the grain and the lines off for NOISE_OFF_MS (numbers in src/utils/noiseOff.ts).
+   The grain (with its tear bands, drawn on the same canvas) and the horizontal scanlines (.scan); glare, vignette, REC / CAM and the picture stay. The loupe carries the same class. */
 .glass .noise,
-.loupe .noise {
+.glass .scan,
+.loupe .noise,
+.loupe .scan {
   transition: opacity 0.5s ease;
 }
 .glass.noise-off .noise,
-.loupe.noise-off .noise {
+.glass.noise-off .scan,
+.loupe.noise-off .noise,
+.loupe.noise-off .scan {
   opacity: 0;
 }
 
@@ -152,8 +156,8 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-size: 0.62rem; /* narrower than .loupe-hint: the longer text must fit the smallest frame (320 px wide) */
-  letter-spacing: 0.03em;
+  font-size: 0.6rem; /* narrower than .loupe-hint: the longer text must fit the smallest frame (320 px wide) */
+  letter-spacing: 0;
   color: #4a4130;
   text-shadow: 0 1px 0 #fff6;
   white-space: nowrap;

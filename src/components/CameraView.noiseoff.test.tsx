@@ -105,9 +105,9 @@ describe('noise off by double tap (#342)', () => {
     act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS / 2))
     tap(glass, 305, 302)
     expect(isOff(glass)).toBe(true)
-    expect(hint(view.container)).toBe('Noise off 10')
+    expect(hint(view.container)).toBe('Noise & lines off 10')
     act(() => void vi.advanceTimersByTime(3000))
-    expect(hint(view.container)).toBe('Noise off 7')
+    expect(hint(view.container)).toBe('Noise & lines off 7')
     act(() => void vi.advanceTimersByTime(NOISE_OFF_MS - 3000 - 1))
     expect(isOff(glass)).toBe(true)
     act(() => void vi.advanceTimersByTime(1000))
@@ -120,10 +120,10 @@ describe('noise off by double tap (#342)', () => {
     tap(glass)
     tap(glass)
     act(() => void vi.advanceTimersByTime(6000))
-    expect(hint(view.container)).toBe('Noise off 4')
+    expect(hint(view.container)).toBe('Noise & lines off 4')
     tap(glass)
     tap(glass)
-    expect(hint(view.container)).toBe('Noise off 10')
+    expect(hint(view.container)).toBe('Noise & lines off 10')
     act(() => void vi.advanceTimersByTime(NOISE_OFF_MS - 500))
     expect(isOff(glass)).toBe(true)
     act(() => void vi.advanceTimersByTime(1000))
@@ -179,6 +179,38 @@ describe('noise off by double tap (#342)', () => {
     expect(isOff(glass)).toBe(false)
   })
 
+  it('a small drag, a loupe hold or a bezel tap between two taps breaks the knock', () => {
+    const { glass, bezel } = setup()
+    const ev = (x: number) => ({
+      pointerId: 1,
+      clientX: x,
+      clientY: 300,
+      pointerType: 'touch',
+      button: 0,
+    })
+    // small drag (over the hold slop, under the swipe distance)
+    tap(glass)
+    fireEvent.pointerDown(glass, ev(300))
+    fireEvent.pointerMove(glass, ev(300 + LOUPE.HOLD_SLOP_PX + 5))
+    fireEvent.pointerUp(glass, ev(300 + LOUPE.HOLD_SLOP_PX + 5))
+    tap(glass)
+    expect(isOff(glass)).toBe(false)
+    act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS + 50))
+    // loupe
+    tap(glass)
+    fireEvent.pointerDown(glass, ev(300))
+    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 5))
+    fireEvent.pointerUp(glass, ev(300))
+    tap(glass)
+    expect(isOff(glass)).toBe(false)
+    act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS + 50))
+    // bezel tap
+    tap(glass)
+    tap(bezel, 50, 300)
+    tap(glass)
+    expect(isOff(glass)).toBe(false)
+  })
+
   it('a double tap on the bezel (outside the picture) is two camera switches, not a knock', () => {
     const { bezel, glass } = setup()
     tap(bezel, 50, 300)
@@ -229,7 +261,11 @@ describe('noise off by shaking (#342)', () => {
       const e = new Event('devicemotion') as Event & Record<string, unknown>
       e.acceleration = { x: SHAKE_THRESHOLD + 5, y: 0, z: 0 }
       act(() => void window.dispatchEvent(e))
-      act(() => void vi.advanceTimersByTime(150))
+      act(() => void vi.advanceTimersByTime(75))
+      const low = new Event('devicemotion') as Event & Record<string, unknown>
+      low.acceleration = { x: 0, y: 0, z: 0 }
+      act(() => void window.dispatchEvent(low)) // the movement turns back: the next hard one is a new peak
+      act(() => void vi.advanceTimersByTime(75))
     }
   }
   afterEach(() => {
@@ -241,6 +277,15 @@ describe('noise off by shaking (#342)', () => {
     const { glass } = setup()
     shake()
     expect(isOff(glass)).toBe(true)
+  })
+
+  it('a shake while the tab is hidden is ignored', () => {
+    ;(globalThis as Record<string, unknown>).DeviceMotionEvent = class {}
+    const { glass } = setup()
+    const hidden = vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
+    shake()
+    expect(isOff(glass)).toBe(false)
+    hidden.mockRestore()
   })
 
   it('one jolt is not a shake', () => {

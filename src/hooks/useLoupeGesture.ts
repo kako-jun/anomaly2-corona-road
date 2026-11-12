@@ -233,15 +233,16 @@ export const useLoupeGesture = ({
     const startOnGlass = st.startOnGlass
     const startX = st.startX
     reset()
+    // every way out except a short tap on the picture forgets a pending first tap (a hold, a swipe, a drag, a bezel tap)
+    const prevTap = st.lastTap
+    st.lastTap = null
     if (wasLoupe) return
     if (Math.abs(diff) > LOUPE.SWIPE_PX) {
-      st.lastTap = null
       onSwipe(diff > 0 ? 'next' : 'prev')
     } else if (wasPending && startOnGlass && heldMs < LOUPE.HOLD_MS) {
       // a short tap on the picture: nothing by itself, the second one of a double tap is a knock (#342)
       const tap = { t: performance.now(), x: e.clientX, y: e.clientY }
-      if (isKnock(st.lastTap, tap)) {
-        st.lastTap = null
+      if (isKnock(prevTap, tap)) {
         onKnock?.()
       } else st.lastTap = tap
     } else if (wasPending && !startOnGlass && heldMs < LOUPE.HOLD_MS) {
