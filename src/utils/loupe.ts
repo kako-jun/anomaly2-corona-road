@@ -1,4 +1,3 @@
-
 /**
  * The magnifier loupe (#341). Every number kako-jun tunes by eye lives here, in this one place.
  * Hold the monitor (about HOLD_MS, hardly moving) and a round loupe appears on the control panel; moving the finger
