@@ -31,7 +31,14 @@ localStorage を選ぶ理由:
   "shownMemos": [],
   "endingReached": false,
   "epoch": 0,
-  "lastShift": { "found": 9, "fresh": 4, "misreports": 1, "durationMs": 480000, "closing": "dawn", "raised": [] },
+  "lastShift": {
+    "found": 9,
+    "fresh": 4,
+    "misreports": 1,
+    "durationMs": 480000,
+    "closing": "dawn",
+    "raised": []
+  },
   "settings": { "language": "ja" }
 }
 ```
@@ -48,6 +55,7 @@ localStorage を選ぶ理由:
 - `epoch`: リセットの世代番号（安全な整数 `Number.isSafeInteger`、欠落した古いセーブは 0 として読む。`v` は上げない）。START OVER のたびに +1 する。マージでは `epoch` の大きい側を丸ごと採用し、小さい側の中身（進行・使用済み・`endingReached`）は捨てる（`settings` は採用側に無ければ小さい側のを残す）。
 - 捜査メモの段階（`stageOf`、#297）: セーブから `start`（`loops` と `foundTotal` が0＝一度も遊んでいない）、`none`（遊んだがフレームが埋まっていない）、`elder1`〜`elder3`・`child`（立っている最も進んだ段階フラグ）を導く。文言はその段階で刑事が知っていることだけ（各文の `knownFrom`、`src/data/investigationNotes.ts`）。
 - `lastShift`: 直近に終わった勤務の記録（任意。捜査メモ #297 の「前回の夜」と結果画面に使う）。`found`＝正しい報告の数（重複あり）、`fresh`＝その勤務で初めて見つけた異変の数（重複なし。0 なら「新しい手がかりなし」）、`misreports`、`durationMs`（現実の経過ミリ秒のまま保存。夜明け・真エンディングは 480000 に丸める。捜査メモの「勤務」欄は表示時にゲーム内時刻へ変換する: 夜明け・真エンディング=「06:00まで」、撤収=`msToGameTime(durationMs)` を使った「01:20で撤収」。`fmtShiftEnd`）、`closing`（`dawn`/`withdraw`/`ending`）、`raised`（その勤務で立った段階フラグ `elder1..3`・`child`）、`memoFlag` / `memo`（その勤務のリザルトに出すメモ。任意、#325）。勤務終了時（`recordShiftEnd`）に書く。欠落した古いセーブは「なし」、壊れていれば捨てるだけでセーブ全体は弾かない。マージでは周回数の大きい側（同じなら `b`）。`v` は上げない。
+- 一言メモの落書き（台帳 `memo_image`、#325）: **保存データにキーはない**。落書きは一言メモの付随で、`lastShift.memo`（と `shownMemos`）が同じ異変 ID なら、リザルトを開き直しても同じ落書きが出る。一度出した一言メモは二度と出ないので、落書きも二度と出ない。台帳から消えた ID や `memo_image` を失った異変は、文字（または何も）出ない。
 - `settings`: 設定（任意）。`language`（`ja`/`en`。#292。**将来の設定画面用に予約。現在は書き込まず、読み取っても使わない**（言語は起動のたびにブラウザの言語から決める）。旧セーブにあっても落ちず、無視する）、`brightness`・`contrast`（つまみの位置。未実装）。各項目は単独で欠落してよい。マージは項目ごとに `b` が勝つ。START OVER でも残る。
 
 異変の id は台帳が正本なので、ここでは複製せず、参照するだけにする。

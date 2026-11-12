@@ -10,7 +10,7 @@ import type { NoteLang, Outcome, Pair, Stage } from '../data/investigationNotes'
 import { DEFAULT_CONFIG, msToGameTime } from './gameConfig'
 import { toFullWidthDigits } from './fullWidth'
 import { MEMO_INDEX } from './memoIndex'
-import { MEMO_FLAGS } from './anomalyLedger'
+import { MEMO_FLAGS, MEMO_IMAGE_DIR } from './anomalyLedger'
 import type { MemoFlag } from './anomalyLedger'
 import type { LastShift, SaveData } from './saveData'
 
@@ -64,6 +64,8 @@ export interface NoteView {
   slots: { label: string; found: boolean; isNew: boolean; alt: string }[]
   lines: { text: string }[]
   scrib: string[]
+  /** The scribble (a path under `/note-sketches/`) that goes with the anomaly's one-liner, if it has one (#325). */
+  sketch?: string
   left: { head: string; rows: NoteRow[] }
   right: { head: string; rows: NoteRow[] }
   /** The Shift row sits under both columns (its text is longer than a number). */
@@ -85,6 +87,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
 
   const lines: NoteView['lines'] = []
   let scrib: Pair[] = STAGES[stage].scrib
+  let sketch: string | undefined
   const stamps: NoteView['stamps'] = []
 
   if (input.mode === 'before') {
@@ -117,8 +120,12 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     const { memoFlag, memo } = input.shift
     const flagText = MEMO_FLAGS.find((f: MemoFlag) => f === memoFlag)
     if (flagText) lines.push({ text: t(MEMO_FLAG_TEXT[flagText]) })
-    const lineText = memo ? MEMO_INDEX.get(memo)?.memo : undefined
-    if (lineText) lines.push({ text: lineText[lang] })
+    const meta = memo ? MEMO_INDEX.get(memo) : undefined
+    const lineText = meta?.memo
+    if (lineText) {
+      lines.push({ text: lineText[lang] })
+      if (meta.image) sketch = `/${MEMO_IMAGE_DIR}/${meta.image}`
+    }
     scrib = OUTCOMES[outcome].scrib ?? scrib
   }
 
@@ -174,6 +181,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     slots,
     lines,
     scrib: scrib.map(t).filter(s => s !== ''),
+    ...(sketch ? { sketch } : {}),
     left,
     right,
     shiftRow,

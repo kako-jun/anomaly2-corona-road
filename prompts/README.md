@@ -91,7 +91,8 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | `kind`      | `image`（overlay を描く）/ `non_image`（画像なし）                                                                                                                                                                                                   | `image`         |
 | `reiwa`     | `true` のみ（令和の異変の印。`false` や他の値はエラー）                                                                                                                                                                                              | 省略=令和でない |
 | `memo_flag` | `shutter` / `food` / `reiwa` のどれか、またはその配列（重複・未知の名前はエラー）。リザルトの捜査メモに「仮説の一行」を出すフラグ（#325）                                                                                                            | 省略=立てない   |
-| `memo`      | `ja` と `en` の一言（どちらも空でない1行。他のキーはエラー）。`ja` の数は全角数字（「１枚」「２つ」。草案の日本語欄を `scripts/fullwidth-ja.mjs` で直してから `apply-memos.py`、#352）。その異変を見つけたあと、リザルトの捜査メモに出る一行（#325） | 省略=一言なし   |
+| `memo`      | `ja` と `en` の一言（どちらも空でない1行。他のキーはエラー）。`ja` の数は全角数字（「１枚」「２つ」。#352）。その異変を見つけたあと、リザルトの捜査メモに出る一行（#325） | 省略=一言なし   |
+| `memo_image` | 画像のファイル名（`<異変ID>.webp` の1語。フォルダなし・`.webp` のみ。`memo` のある異変だけに付く）。ファイルは `public/note-sketches/` に置く。その異変の一言メモが選ばれたとき、リザルトの捜査メモにその落書きが添えて出る（#325） | 省略=落書きなし |
 
 | kind / status                        | 必須                                                                                        | 省略可・禁止                                                                                                                                                                              |
 | ------------------------------------ | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -99,7 +100,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | image + planned                      | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                                                                                        |
 | non_image（planned / produced とも） | `anomaly_type`（画像以外の種類）`detail`                                                    | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`category` は image と同じ検証（配列も可。先頭が camera でよいのは `feed_glitch`）。ui_corruption / rule_break は省略可 |
 
-- `memo_flag` / `memo`（#325）: リザルトの捜査メモの出し分け。**台帳が正本**（承認前の `memo` だけは、草案 `drafts/anomaly-memos-review.md` が入力で台帳はそこから機械的に作る暫定。承認後は台帳が唯一の正本）で、コードに異変 ID は書かない。`memo_flag` のある異変を報告するとそのフラグが「未表示」に積まれ、リザルトで仮説の一行（文言は `src/data/investigationNotes.ts` の `MEMO_FLAG_TEXT`、段階ゲート `knownFrom` つき）として1回だけ出る。`reiwa: true` の異変は `memo_flag` を書かなくても `reiwa` を立てる。`memo` のある異変を報告するとその ID が「未表示」に積まれ、持ち越し分から無作為に1つがリザルトに出る（一度出したものは二度と出ない）。1回のリザルトに出るのは仮説の一行1つ＋一言メモ1つまで。一言メモは story.md に無い事実を足さず、その異変自体の内容（`detail`）から起こす。1行は日本語20字・英語40字以内で、使う文字は `public/fonts/note-chars.txt`（日本語）に含まれること（足りなければ `npm run check:note-fonts` の手順でサブセットを更新）。**全エントリが `memo` を持つ**（#325 の2段目、374件。planned・non_image も。新しい異変を足すときは `memo` も書く＝vitest が要求する）。同じ言い回し・同じ題材の繰り返しを避け、ja・en とも同一文言を2回使わない（テストで縛る）。承認前の文言の入力は `drafts/anomaly-memos-review.md` で、直したらそこを直して `uv run --script scripts/apply-memos.py` を再実行して台帳へ移す（`--check` で草案と台帳の一致を検査。承認後は草案とスクリプトを削除し、台帳だけが正本になる）。実在の会社名・商品名・人物名は書かない。「シャッター」は一言メモ内では物の名前としてのみ許す（kako-jun 決定、Issue #325「#338 の2点」）。仮説の一行（`MEMO_FLAG_TEXT`）は従来どおり `knownFrom: 'child'` で、段階ゲートの禁止語検査も維持する。草案と台帳の一致は `npm run check:memos` と vitest が検査する。文字を足したら `public/fonts/note-chars.txt` へ足してフォントを作り直す（`scripts/build-note-fonts.py`）。検証は `parseMemoFlags` / `parseMemo`（`src/utils/anomalyLedger.ts`）。
+- `memo_flag` / `memo`（#325）: リザルトの捜査メモの出し分け。**台帳が正本**（`memo` の文言は kako-jun が承認済み、2026-11-12。台帳が唯一の正本で、直したい行は台帳を直接直す。再生成スクリプトは無い）で、コードに異変 ID は書かない。`memo_flag` のある異変を報告するとそのフラグが「未表示」に積まれ、リザルトで仮説の一行（文言は `src/data/investigationNotes.ts` の `MEMO_FLAG_TEXT`、段階ゲート `knownFrom` つき）として1回だけ出る。`reiwa: true` の異変は `memo_flag` を書かなくても `reiwa` を立てる。`memo` のある異変を報告するとその ID が「未表示」に積まれ、持ち越し分から無作為に1つがリザルトに出る（一度出したものは二度と出ない）。1回のリザルトに出るのは仮説の一行1つ＋一言メモ1つまで。一言メモは story.md に無い事実を足さず、その異変自体の内容（`detail`）から起こす。1行は日本語20字・英語40字以内で、使う文字は `public/fonts/note-chars.txt`（日本語）に含まれること（足りなければ `npm run check:note-fonts` の手順でサブセットを更新）。**全エントリが `memo` を持つ**（#325 の2段目、374件。planned・non_image も。新しい異変を足すときは `memo` も書く＝vitest が要求する）。同じ言い回し・同じ題材の繰り返しを避け、ja・en とも同一文言を2回使わない（テストで縛る）。文言を直すときは台帳 `prompts/anomalies.yaml` の `memo` を直接直す（直したら `scripts/memo-overlap-report.py` で類似を確認）。実在の会社名・商品名・人物名は書かない。「シャッター」は一言メモ内では物の名前としてのみ許す（kako-jun 決定、Issue #325「#338 の2点」）。仮説の一行（`MEMO_FLAG_TEXT`）は従来どおり `knownFrom: 'child'` で、段階ゲートの禁止語検査も維持する。メモを直して新しい文字が増えると、vitest（`src/data/investigationNotes.test.ts`。台帳の全 `memo` を読む）が `public/fonts/note-chars.txt` の欠字で落ちる。その文字を足して `scripts/build-note-fonts.py build` でフォントを作り直し、`npm run check:note-fonts`（woff2 が一覧の全字を持つか）と `npm run check:note-wrap`（全件の実描画で1行に収まるか）で確かめる。検証は `parseMemoFlags` / `parseMemo`（`src/utils/anomalyLedger.ts`）。
 - `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### AR-01-outlets-multiply`）。
 - non_image の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に画像以外の種類、non_image に画像の種類）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
@@ -107,6 +108,23 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 - 件数の要約: `npm run ledger:summary`（kind / status / category / anomaly_type とそのクロス集計。ビルドと同じ検証を通る）。
 
 **昇格ルール（planned → produced）**: 制作の詳細（box・生成プロンプト・overlay など）は**台帳のエントリへ移し**、`candidate-pool.md` の該当 `###` 節を**削除**する。台帳とプールに同じ案を二重に残さない。
+
+### 一言メモの落書き（memo_image）の追加手順（#325）
+
+出河さんがメモの余白に描いた絵。最初に作った絵はすべて台帳に接続済みで、今後の追加は「絵のファイル＋台帳の1行」だけ。**全異変には付けず、描いたら面白い異変だけ**に付ける（件数は台帳が真実。この文書には書かない）。一言メモが選ばれたときだけ紙に出る（確率は設けない。一度出したら二度と出ない。保存データは変えない）。絵が読み込めなければ文字だけが出る。
+
+1. 絵を作る。組み込み画像生成で、シャッターの既存絵（`git show 09355c6:public/note/corridor.svg`。少し揺れた灰色の線と、控えめな青いペン）をスタイル参照にし、**透過背景の線画**を1題材ずつ生成する（文字・紙・枠なし）。
+2. 描く部分の周りの**透明な余白を切り詰めて**、長辺 384px 以下の WebP（品質 80）にして `public/note-sketches/<異変ID>.webp` に置く（紙の上の枠は高さ50px・幅は最大96px（走り書きの右の余白の幅）しかなく、余白があると絵が小さくなる。生成元の PNG はリポジトリに入れない）:
+
+   ```sh
+   g=$(magick 生成.png -alpha extract -threshold 5% -format '%@' info:)
+   magick 生成.png -crop "$g" +repage -bordercolor none -border 2 -resize '384x384>' -quality 80 public/note-sketches/<異変ID>.webp
+   ```
+
+3. 台帳 `prompts/anomalies.yaml` の該当エントリに `memo_image: '<異変ID>.webp'` を1行足す（ファイル名は異変 ID と同じ。`memo` があること）。
+4. 確認: `npm run dev` を立てて `npm run check:note-wrap`（全段階・全サイズ・日英で、最長の一言メモと絵の組み合わせを実描画し、紙からはみ出さない・他と重ならない・余白が切れている、を見る）と `npx vitest run`（絵の実在・台帳との対応・容量の予算）。ビルドも `memo_image` のファイルが無いとエラーにする。
+
+絵は先読みしない（`index.html`・`uiPreload` に入れない）ので、UI 画像の予算（800KB。`uiAssets.test.ts`）には数えない。落書きには別の予算がある（1枚 32KB・合計 700KB。値と根拠は `src/utils/memoSketches.test.ts` の1か所）。置く場所・大きさ・傾きは DESIGN.md の捜査メモの節を参照。
 
 ## 異変の種類 enum（anomaly_type）
 

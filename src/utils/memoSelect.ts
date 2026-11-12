@@ -20,6 +20,8 @@ import type { SaveData } from './saveData'
 export interface MemoMeta {
   flags: MemoFlag[]
   memo?: MemoText
+  /** The scribble that goes with the one-liner (file name in `public/note-sketches/`), if the ledger has one. */
+  image?: string
 }
 
 /** The memo facts of every ledger entry that has any (`reiwa: true` also raises the `reiwa` flag). */
@@ -31,7 +33,11 @@ export const memoIndexOf = (
     const flags: MemoFlag[] = [...(e.memoFlags ?? [])]
     if (e.reiwa === true && !flags.includes('reiwa')) flags.push('reiwa')
     if (flags.length === 0 && !e.memo) continue
-    index.set(e.id, { flags, ...(e.memo ? { memo: e.memo } : {}) })
+    index.set(e.id, {
+      flags,
+      ...(e.memo ? { memo: e.memo } : {}),
+      ...(e.memo && e.memoImage ? { image: e.memoImage } : {}),
+    })
   }
   return index
 }

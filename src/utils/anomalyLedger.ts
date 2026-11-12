@@ -84,6 +84,8 @@ export interface LedgerEntry {
   memoFlags?: MemoFlag[]
   /** The one-line memo of this anomaly (the ledger's `memo`, #325). */
   memo?: MemoText
+  /** A scribble shown with the one-liner (the ledger's `memo_image`, a file in `public/note-sketches/`, #325). */
+  memoImage?: string
 }
 
 const CATEGORY_BY_LEDGER_VALUE: Record<string, AnomalyCategory> = {
@@ -207,6 +209,8 @@ export interface LedgerRecord {
   memoFlags?: MemoFlag[]
   /** The ledger's `memo`: a Japanese and an English one-liner. Any kind may carry it. */
   memo?: MemoText
+  /** The ledger's `memo_image`: a scribble file in `public/note-sketches/` shown with the one-liner. Needs `memo`. */
+  memoImage?: string
   /** Pointer to the production spec (e.g. a `### id` section of candidate-pool.md). */
   spec?: string
   detail?: string
@@ -257,6 +261,23 @@ export const parseMemo = (value: unknown): MemoText | undefined => {
   const extra = Object.keys(rec).filter(k => k !== 'ja' && k !== 'en')
   if (extra.length > 0) throw new Error(`memo has an unknown key "${extra[0]}"`)
   return { ja: text('ja'), en: text('en') }
+}
+
+/** Folder (under `public/`) of the memo sketches: loaded only when a result note shows one, never preloaded (#325). */
+export const MEMO_IMAGE_DIR = 'note-sketches'
+
+/** Optional `memo_image`: a plain file name ending in `.webp` (the file itself is checked at build time). */
+export const parseMemoImage = (value: unknown): string | undefined => {
+  if (value === undefined || value === null) return undefined
+  if (
+    typeof value !== 'string' ||
+    !/^[A-Za-z0-9][A-Za-z0-9._-]*\.webp$/.test(value)
+  ) {
+    throw new Error(
+      `memo_image "${String(value)}" must be a plain file name ending in .webp (no folder)`
+    )
+  }
+  return value
 }
 
 const oneOf = <T extends string>(
@@ -336,6 +357,12 @@ export const parseLedgerRecord = (
     const reiwa = rec.reiwa === true ? (true as const) : undefined
     const memoFlags = parseMemoFlags(rec.memo_flag)
     const memo = parseMemo(rec.memo)
+    const memoImage = parseMemoImage(rec.memo_image)
+    if (memoImage && !memo) {
+      throw new Error(
+        'memo_image needs a memo (the scribble goes with the one-liner)'
+      )
+    }
     const spec = has(rec, 'spec') ? field(rec, 'spec') : undefined
 
     // overlay / overlay_origin / dimensions: all required for image+produced, all-or-none for
@@ -365,6 +392,7 @@ export const parseLedgerRecord = (
       ...(reiwa ? { reiwa } : {}),
       ...(memoFlags ? { memoFlags } : {}),
       ...(memo ? { memo } : {}),
+      ...(memoImage ? { memoImage } : {}),
       ...(spec ? { spec } : {}),
       ...(detail ? { detail } : {}),
       ...(overlay && origin && size ? { overlay, origin, size } : {}),
@@ -404,6 +432,7 @@ export const toLedgerEntry = (r: LedgerRecord): LedgerEntry => {
     ...(r.reiwa ? { reiwa: r.reiwa } : {}),
     ...(r.memoFlags ? { memoFlags: r.memoFlags } : {}),
     ...(r.memo ? { memo: r.memo } : {}),
+    ...(r.memoImage ? { memoImage: r.memoImage } : {}),
   }
 }
 

@@ -41,6 +41,28 @@ const FOUND_SKETCH = [
 const unknownSketch = (i: number) =>
   i === 3 ? '/note/unknown-last.svg' : '/note/unknown.svg'
 
+/**
+ * The scribble that goes with an anomaly's one-liner (#325): a decoration, so it has no alt text and is hidden from
+ * assistive technology (the one-liner is what is read). It is fetched only when a result shows it (`loading="lazy"`,
+ * never preloaded), and a file that cannot be loaded is simply not drawn (no broken-image box).
+ */
+const Sketch = ({ src }: { src: string }) => {
+  const [failed, setFailed] = useState<string | null>(null)
+  if (failed === src) return null
+  return (
+    <img
+      className="note-sketch"
+      src={src}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      decoding="async"
+      draggable={false}
+      onError={() => setFailed(src)}
+    />
+  )
+}
+
 const Rows = ({ rows }: { rows: NoteRow[] }) => (
   <>
     {rows.map(r => (
@@ -143,16 +165,25 @@ export const InvestigationNote = ({
                 <p key={l.text}>{l.text}</p>
               ))}
             </div>
-            {view.scrib.length > 0 && (
-              <div className="note-scrib note-hw">
-                {view.scrib.map((s, i) => (
-                  <p
-                    key={s}
-                    style={{ transform: `rotate(var(--tilt-scrib-${i}))` }}
-                  >
-                    {s}
-                  </p>
-                ))}
+            {(view.scrib.length > 0 || view.sketch) && (
+              <div className="note-tail">
+                {view.scrib.length > 0 && (
+                  <div className="note-scrib note-hw">
+                    {view.scrib.map((s, i) => (
+                      <p
+                        key={s}
+                        style={{ transform: `rotate(var(--tilt-scrib-${i}))` }}
+                      >
+                        {s}
+                      </p>
+                    ))}
+                  </div>
+                )}
+                {view.sketch && (
+                  <div className="note-bay">
+                    <Sketch src={view.sketch} />
+                  </div>
+                )}
               </div>
             )}
           </div>

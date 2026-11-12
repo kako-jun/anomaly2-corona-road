@@ -4,7 +4,12 @@ import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { parse as parseYaml } from 'yaml'
-import { parseLedger, parseLedgerRecords } from './src/utils/anomalyLedger'
+import {
+  isGameRecord,
+  MEMO_IMAGE_DIR,
+  parseLedgerRecords,
+  toLedgerEntry,
+} from './src/utils/anomalyLedger'
 import { DIALOGUE_FILES, parseDialogueLedger } from './src/utils/dialogueLedger'
 
 const LEDGER_PATH = resolve(__dirname, 'prompts/anomalies.yaml')
@@ -25,7 +30,21 @@ const anomalyLedgerPlugin = (): Plugin => ({
   load(id) {
     if (id !== RESOLVED_ID) return undefined
     this.addWatchFile(LEDGER_PATH)
-    const entries = parseLedger(parseYaml(readFileSync(LEDGER_PATH, 'utf8')))
+    const records = parseLedgerRecords(
+      parseYaml(readFileSync(LEDGER_PATH, 'utf8'))
+    )
+    // A memo scribble (#325) must exist for every entry that names one, planned or not: it is added by a file + a ledger line.
+    for (const r of records) {
+      if (
+        r.memoImage &&
+        !existsSync(resolve(__dirname, 'public', MEMO_IMAGE_DIR, r.memoImage))
+      ) {
+        throw new Error(
+          `anomalies.yaml entry "${r.id}": memo_image file not found: public/${MEMO_IMAGE_DIR}/${r.memoImage}`
+        )
+      }
+    }
+    const entries = records.filter(isGameRecord).map(toLedgerEntry)
     for (const e of entries) {
       if (!existsSync(resolve(__dirname, e.overlay))) {
         throw new Error(
