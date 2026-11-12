@@ -119,12 +119,13 @@
   z-index: 2;
 }
 .bezel > .edge-mark--prev {
-  left: 11px;
+  /* centred in the band: it is about 7.8% of the frame's width at any size (the frame picture keeps its ratio), minus half the arrowhead */
+  left: calc(3.9% - 4.5px);
   border-width: 8px 9px 8px 0;
   border-right-color: #4a4130;
 }
 .bezel > .edge-mark--next {
-  right: 11px;
+  right: calc(3.9% - 4.5px);
   border-width: 8px 0 8px 9px;
   border-left-color: #4a4130;
 }

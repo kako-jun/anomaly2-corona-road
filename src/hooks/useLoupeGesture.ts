@@ -50,8 +50,8 @@ interface Geometry {
  *  - pointer down starts a hold timer (HOLD_MS); moving more than HOLD_SLOP_PX first cancels the hold;
  *  - hold done: the loupe shows, the camera swipe is off, moving moves the magnified spot (smoothed);
  *  - release without a loupe: horizontal travel over SWIPE_PX switches the camera; release with a loupe: it disappears.
- *  - edge tap (#354): the handlers sit on the whole bezel. A short press (under HOLD_MS, within HOLD_SLOP_PX) on the
- *    left / right zone (edgeTapDirection) switches the camera; the loupe only starts for a press that began on the glass.
+ *  - edge tap (#354): the handlers sit on the whole bezel. A short press (under HOLD_MS, within HOLD_SLOP_PX) that began on the bezel,
+ *    by the x where it began, in the left / right zone (edgeTapDirection) switches the camera; the loupe only starts for a press that began on the glass.
  * A second pointer (another finger) is ignored while one is down.
  */
 export const useLoupeGesture = ({
@@ -69,6 +69,7 @@ export const useLoupeGesture = ({
     x: 0,
     y: 0,
     downAt: 0,
+    startOnGlass: false,
     mode: 'idle' as 'idle' | 'pending' | 'moved' | 'loupe',
     timer: 0,
     raf: 0,
@@ -186,6 +187,7 @@ export const useLoupeGesture = ({
       e.clientX <= g.right &&
       e.clientY >= g.top &&
       e.clientY <= g.bottom
+    st.startOnGlass = onGlass
     if (enabled && onGlass)
       st.timer = window.setTimeout(showLoupe, LOUPE.HOLD_MS)
   }
@@ -223,13 +225,16 @@ export const useLoupeGesture = ({
     const wasLoupe = st.mode === 'loupe'
     const wasPending = st.mode === 'pending'
     const heldMs = performance.now() - st.downAt
+    const startOnGlass = st.startOnGlass
+    const startX = st.startX
     reset()
     if (wasLoupe) return
     if (Math.abs(diff) > LOUPE.SWIPE_PX) {
       onSwipe(diff > 0 ? 'next' : 'prev')
-    } else if (wasPending && heldMs < LOUPE.HOLD_MS) {
+    } else if (wasPending && !startOnGlass && heldMs < LOUPE.HOLD_MS) {
+      // the direction is by where the press began (a press that began on the picture is never a tap)
       const g = glassRef.current?.getBoundingClientRect()
-      const dir = g ? edgeTapDirection(e.clientX, g.left, g.width) : null
+      const dir = g ? edgeTapDirection(startX, g.left, g.width) : null
       if (dir) onSwipe(dir)
     }
   }

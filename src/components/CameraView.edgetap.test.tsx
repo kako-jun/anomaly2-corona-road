@@ -130,6 +130,23 @@ describe('edge tap (#354)', () => {
     expect(onSwipe).toHaveBeenCalledTimes(1)
   })
 
+  it('a press that began on the picture never switches, even released out on the bezel within the slop', () => {
+    const { glass } = setup()
+    pe('pointerDown', glass, GLASS.left + 5)
+    pe('pointerMove', glass, GLASS.left - 3)
+    pe('pointerUp', glass, GLASS.left - 3)
+    expect(onSwipe).not.toHaveBeenCalled()
+  })
+
+  it('a press that began on the bezel counts by where it began, even released on the picture within the slop', () => {
+    const { bezel } = setup()
+    pe('pointerDown', bezel, GLASS.left - 3)
+    pe('pointerMove', bezel, GLASS.left + 5)
+    pe('pointerUp', bezel, GLASS.left + 5)
+    expect(onSwipe).toHaveBeenCalledTimes(1)
+    expect(onSwipe).toHaveBeenCalledWith('prev')
+  })
+
   it('a hold of HOLD_MS or more is the loupe, not a tap: no camera change on release', () => {
     const { bezel, glass } = setup()
     tap(bezel, 90, 300, LOUPE.HOLD_MS - 1)
