@@ -1087,7 +1087,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-white-step }
     lines:
-      - { who: M, text: "左のほうを　下から一つずつ見ませんか", en: "Shall we go through the left side from the bottom, one by one?" }
+      - { who: M, text: "左のほうを　下から１つずつ見ませんか", en: "Shall we go through the left side from the bottom, one by one?" }
       - { who: A, text: "いいね　やろう", en: "Good idea. Let's do it." }
   - id: spawn-hint-AR-07-white-step-02
     tone: serious
@@ -1890,7 +1890,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-01-floor-puddle-light }
     lines:
-      - { who: A, text: "手前の床　どこか一枚が怪しい", en: "One spot on the front floor is suspicious." }
+      - { who: A, text: "手前の床　どこか１枚が怪しい", en: "One spot on the front floor is suspicious." }
       - { who: M, text: "手前の床ですね　見ていきます", en: "The front floor. I'll go over it." }
   - id: spawn-hint-AR-01-floor-puddle-light-02
     tone: serious
