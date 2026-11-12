@@ -1,15 +1,15 @@
 # ストーリーのフラグの定義（唯一の置き場）。会話側（story.yaml）はフラグ名だけを参照する。
 # 条件はすべて AND。数値は「以上」。書式は README.md。
-# 注意: 節目の数値（20/50/100 など）は仮の例で、確定ではない（docs/story.md 未決）。確定したらここだけを直す。
+# 節目の数値（老人 10/30/60、子供 100）は決定済み（kako-jun 2026-11-12, #273）。変えるのはここだけ。
 flags:
   elder1:
-    foundUnique: 20 # 仮の例。見つけた異変の数（重複なし。foundIds の長さ）
+    foundUnique: 10 # 見つけた異変の数（重複なし。foundIds の長さ）
   elder2:
-    foundUnique: 50 # 仮の例
+    foundUnique: 30
   elder3:
-    foundUnique: 100 # 仮の例
+    foundUnique: 60
   child:
-    foundUnique: 120 # 仮の例。累計に加えて令和の異変の条件でも決まる
+    foundUnique: 100 # 累計に加えて令和の異変の条件でも決まる
     reiwaFound: 3 # 令和の異変を重複なしで3つ（docs/story.md）
     requires: [elder3]
   childResponse:
