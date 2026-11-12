@@ -92,6 +92,16 @@ export const getGamePhase = (ms: number): 'early' | 'mid' | 'late' => {
  */
 export const DRAW_WEIGHT_EXPONENT = 0.75
 
+/**
+ * Share of appearances given to Reiwa anomalies (#286), PROVISIONAL (6%; tune 5-8% by playing).
+ * Reiwa entries (ledger `reiwa: true`, only after elder3) form one group in the draw: this
+ * fraction of draws goes to it and the rest to the ordinary weighted draw. Without it the six
+ * Reiwa entries among ~370 would appear in about 1.3% of draws (#286), too rare to find three.
+ * Out-of-range values (<0, >1, NaN) are neither clamped nor validated: they act as 0 or 1.
+ * Applies only while both Reiwa and ordinary candidates exist; the child condition is unchanged.
+ */
+export const REIWA_DRAW_SHARE = 0.06
+
 /** Dialogue timing and thresholds (docs/save-data.md and dialogue/README.md describe the behaviour). */
 export const DIALOGUE_CONFIG = {
   /** Wait after the shift starts before the opening conversation. */

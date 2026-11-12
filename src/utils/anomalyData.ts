@@ -1,6 +1,6 @@
 import { Anomaly, GamePhase } from '../types/game'
 import { LedgerEntry } from './anomalyLedger'
-import { DRAW_WEIGHT_EXPONENT } from './gameConfig'
+import { DRAW_WEIGHT_EXPONENT, REIWA_DRAW_SHARE } from './gameConfig'
 
 /** Pick one element of a non-empty list uniformly. */
 const pickOne = <T>(list: readonly T[], rng: () => number): T =>
@@ -52,8 +52,12 @@ export const spawnableEntries = (
  * is damped instead of becoming the appearance rate: camera (uniform, among those with unused
  * entries), then category within it and `anomalyType` within that (each weighted by unused count
  * ^ `exponent`, see `DRAW_WEIGHT_EXPONENT`), then an entry (uniform). Empty categories / types never
- * appear as candidates. Reiwa entries are candidates only when `reiwaUnlocked`. Returns null only when nothing is left. `rng` returns [0, 1) and is
- * injectable for tests.
+ * appear as candidates. Reiwa entries are candidates only when `reiwaUnlocked`. Once unlocked they
+ * form one group in front of those steps (#286): while both Reiwa and ordinary candidates exist,
+ * one extra rng call sends `reiwaShare` of the draws to the Reiwa group and the rest to the
+ * ordinary weighted draw; when only one side has candidates it is used with no extra call (so the
+ * fallbacks - nothing left, camera full - are unchanged). Returns null only when nothing is left.
+ * `rng` returns [0, 1) and is injectable for tests.
  */
 export const pickLedgerEntry = (
   entries: readonly LedgerEntry[],
@@ -61,12 +65,23 @@ export const pickLedgerEntry = (
   usedIds: ReadonlySet<string>,
   rng: () => number = Math.random,
   exponent: number = DRAW_WEIGHT_EXPONENT,
-  reiwaUnlocked: boolean = false
+  reiwaUnlocked: boolean = false,
+  reiwaShare: number = REIWA_DRAW_SHARE
 ): LedgerEntry | null => {
-  const candidates = spawnableEntries(entries, reiwaUnlocked).filter(
+  const all = spawnableEntries(entries, reiwaUnlocked).filter(
     e => !usedIds.has(e.id) && freeCameraIds.includes(e.cameraId)
   )
-  if (candidates.length === 0) return null
+  if (all.length === 0) return null
+  const reiwa = all.filter(e => e.reiwa === true)
+  const ordinary = all.filter(e => e.reiwa !== true)
+  const candidates =
+    reiwa.length === 0
+      ? ordinary
+      : ordinary.length === 0
+        ? reiwa
+        : rng() < reiwaShare
+          ? reiwa
+          : ordinary
   const byCamera = groupBy(candidates, e => e.cameraId)
   const inCamera = pickOne([...byCamera.values()], rng)
   const byCategory = groupBy(inCamera, e => e.category)
