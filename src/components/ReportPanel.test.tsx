@@ -7,10 +7,12 @@ import { ReportButton, ReportDialog } from './ReportPanel'
 
 const CATEGORIES = ['Camera', 'Object', 'Environment', 'Person', 'Surreal']
 
-const setupDialog = () => {
+const setupDialog = (language?: 'ja' | 'en') => {
   const onSelect = vi.fn()
   const onClose = vi.fn()
-  const utils = render(<ReportDialog onSelect={onSelect} onClose={onClose} />)
+  const utils = render(
+    <ReportDialog language={language} onSelect={onSelect} onClose={onClose} />
+  )
   const dialog = screen.getByRole('dialog')
   const scrim = dialog.parentElement as HTMLElement
   const buttons = within(dialog).getAllByRole('button')
@@ -129,30 +131,72 @@ describe('ReportDialog', () => {
     expect(dialog.getAttribute('aria-labelledby')).toBe('dlgTitle')
   })
 
-  describe('type hints (#236)', () => {
-    const HINTS: Record<string, string> = {
-      Camera: 'the whole picture glitches',
-      Object: 'a thing appears, vanishes or changes',
-      Environment: 'light, or the floor, wall or ceiling surface',
-      Person: 'a figure, shadow, hand or trace of someone',
-      Surreal: 'something impossible',
+  describe('category notes (#236, pictures and Japanese in #346)', () => {
+    const EN: Record<string, string> = {
+      Camera:
+        'The whole picture glitches. Noise, black screen, drift. A surface across the view changes.',
+      Object: 'Things appear, vanish, change. Floor, wall, ceiling things too.',
+      Environment:
+        "Changes in light. The floor, wall, ceiling surface. Doors, the building's structure.",
+      Person:
+        'A person, a shadow, a body part. Traces of someone. Human shapes: dolls, art, shadows. Not animals.',
+      Surreal: "Something impossible. What should show up doesn't.",
     }
+    const JA: Record<string, string> = {
+      Camera:
+        '映像そのものが乱れる。ノイズ、真っ暗、ずれ。画面を横切る面の変化。',
+      Object: '物が出る、消える。物が変わる。床や壁、天井の物も。',
+      Environment: '光の変化。床、壁、天井の面。扉や建物のつくり。',
+      Person:
+        '人、人影、体の一部。人の痕跡。人の形（人形、絵、影）。動物は含まない。',
+      Surreal: 'ありえないこと。映るはずのものが映らない。',
+    }
+    const CASES = [
+      ['en', EN],
+      ['ja', JA],
+    ] as const
 
-    it.each(CATEGORIES)(
-      'shows the hint for %s and links it with aria-describedby',
-      category => {
-        const { dialog } = setupDialog()
-        const button = within(dialog).getByRole('button', {
-          name: category.toUpperCase(),
-        })
-        const id = button.getAttribute('aria-describedby')
-        expect(id).toBeTruthy()
-        const note = document.getElementById(id as string)
-        expect(note).not.toBeNull()
-        expect(dialog).toContainElement(note)
-        expect(note?.textContent).toBe(HINTS[category])
-      }
-    )
+    describe.each(CASES)('language %s', (language, words) => {
+      it.each(CATEGORIES)(
+        'shows the picture for %s, with its words linked by aria-describedby',
+        category => {
+          const { dialog } = setupDialog(language)
+          const button = within(dialog).getByRole('button', {
+            name: category.toUpperCase(),
+          })
+          const id = button.getAttribute('aria-describedby')
+          expect(id).toBeTruthy()
+          const text = document.getElementById(id as string)
+          expect(text).not.toBeNull()
+          expect(dialog).toContainElement(text)
+          expect(text?.textContent).toBe(words[category])
+          // the picture itself is decoration (alt=""), named files of this language only
+          const img = text?.parentElement?.querySelector('img')
+          expect(img).toHaveAttribute('alt', '')
+          expect(img?.getAttribute('src')).toMatch(
+            new RegExp(
+              `^/report-notes/${language}-${category.toLowerCase()}\\.webp$`
+            )
+          )
+          expect(Number(img?.getAttribute('width'))).toBeGreaterThan(0)
+          expect(Number(img?.getAttribute('height'))).toBeGreaterThan(0)
+        }
+      )
+    })
+
+    it('follows the browser language by default and keeps the keys in English', () => {
+      const lang = vi.spyOn(window.navigator, 'languages', 'get')
+      lang.mockReturnValue(['ja-JP'])
+      const { dialog } = setupDialog()
+      expect(
+        dialog.querySelector('img[src^="/report-notes/ja-"]')
+      ).not.toBeNull()
+      expect(dialog.querySelector('img[src^="/report-notes/en-"]')).toBeNull()
+      expect(
+        within(dialog).getByRole('button', { name: 'CAMERA' })
+      ).toBeInTheDocument()
+      lang.mockRestore()
+    })
 
     it('renders one hint element per category', () => {
       const { dialog } = setupDialog()

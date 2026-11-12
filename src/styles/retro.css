@@ -822,11 +822,6 @@
   --green: #4fd36a;
   --amber: #ffb23a;
   --lamp-off: #4a4030;
-  --note-paper: #e6d7a3;
-  --note-paper-shade: rgba(143, 132, 102, 0.55);
-  --note-tape: rgba(217, 206, 176, 0.75);
-  --note-shadow: #0006;
-  --note-tape-shadow: #0003;
   --font-label: 'Helvetica Neue', Helvetica, Arial, 'Noto Sans JP', sans-serif;
   --font-mono:
     ui-monospace, 'SFMono-Regular', 'DejaVu Sans Mono', Menlo, Consolas,
@@ -1346,36 +1341,30 @@
   --tilt: -1.2deg;
   position: relative;
   display: block;
-  margin: 7px 4px 0;
-  padding: 8px 8px 6px;
-  font-family: 'Caveat', 'Segoe Print', 'Comic Sans MS', cursive;
-  font-size: 1.05rem;
-  font-weight: 500;
-  line-height: 1.05;
-  text-align: center;
-  color: var(--ink);
-  background: var(--note-paper);
-  border-radius: 1px 2px 2px 1px;
-  box-shadow:
-    0 1px 2px var(--note-shadow),
-    inset 0 -6px 8px -6px var(--note-paper-shade);
+  /* as wide as the key on a phone; capped so the three rows still fit a short desktop screen (the dialog is zoomed there) */
+  max-width: 172px;
+  margin: 4px auto 0;
   transform: rotate(var(--tilt));
   transform-origin: 50% 0;
   pointer-events: none;
+  /* the paper and the tape are in the picture (#346); same light as the title notes */
+  filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.4));
 }
 
-/* tape strip holding the note to the cabinet */
-.cat-note::before {
-  content: '';
+.cat-note img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cat-sr-only {
   position: absolute;
-  left: 50%;
-  top: -6px;
-  width: 30px;
-  height: 11px;
-  margin-left: -15px;
-  background: var(--note-tape);
-  box-shadow: 0 1px 1px var(--note-tape-shadow);
-  transform: rotate(2deg);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
 .cat-item:nth-child(2) .cat-note {

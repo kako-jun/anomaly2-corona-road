@@ -1,6 +1,8 @@
 import { RefObject, useEffect, useRef } from 'react'
 import { AnomalyCategory } from '../types/game'
 import { cx } from '../utils/cx'
+import { currentLanguage, type Language } from '../utils/language'
+import { reportNote } from '../data/reportNotes'
 
 const CATEGORIES: AnomalyCategory[] = [
   'Camera',
@@ -9,15 +11,6 @@ const CATEGORIES: AnomalyCategory[] = [
   'Person',
   'Surreal',
 ]
-
-/** One-line hint written on a note stuck under each category key (always visible). */
-const CATEGORY_HINTS: Record<AnomalyCategory, string> = {
-  Camera: 'the whole picture glitches',
-  Object: 'a thing appears, vanishes or changes',
-  Environment: 'light, or the floor, wall or ceiling surface',
-  Person: 'a figure, shadow, hand or trace of someone',
-  Surreal: 'something impossible',
-}
 
 interface ReportButtonProps {
   open: boolean
@@ -59,6 +52,8 @@ export const ReportButton = ({
 )
 
 interface ReportDialogProps {
+  /** The language of the notes (default: the browser's, decided once at start; the keys are always English). */
+  language?: Language
   onSelect: (category: AnomalyCategory) => void
   onClose: () => void
 }
@@ -67,7 +62,11 @@ interface ReportDialogProps {
  * Anomaly category picker. Rendered only while open, and placed outside `.cabinet`
  * (the caller makes `.cabinet` inert meanwhile). Esc / backdrop / CANCEL close it.
  */
-export const ReportDialog = ({ onSelect, onClose }: ReportDialogProps) => {
+export const ReportDialog = ({
+  language = currentLanguage(),
+  onSelect,
+  onClose,
+}: ReportDialogProps) => {
   const dialogRef = useRef<HTMLDivElement>(null)
   const downOnScrimRef = useRef(false)
 
@@ -124,21 +123,34 @@ export const ReportDialog = ({ onSelect, onClose }: ReportDialogProps) => {
           SELECT CATEGORY
         </div>
         <div className="cat-grid">
-          {CATEGORIES.map(category => (
-            <div key={category} className="cat-item">
-              <button
-                type="button"
-                className="key"
-                aria-describedby={`catHint-${category}`}
-                onClick={() => onSelect(category)}
-              >
-                {category.toUpperCase()}
-              </button>
-              <span className="cat-note" id={`catHint-${category}`}>
-                {CATEGORY_HINTS[category]}
-              </span>
-            </div>
-          ))}
+          {CATEGORIES.map(category => {
+            const note = reportNote(category, language)
+            return (
+              <div key={category} className="cat-item">
+                <button
+                  type="button"
+                  className="key"
+                  aria-describedby={`catHint-${category}`}
+                  onClick={() => onSelect(category)}
+                >
+                  {category.toUpperCase()}
+                </button>
+                {/* The sticky note is a picture (#346); its words are read from the sr-only text. */}
+                <span className="cat-note">
+                  <img
+                    src={note.src}
+                    width={note.width}
+                    height={note.height}
+                    alt=""
+                    draggable={false}
+                  />
+                  <span className="cat-sr-only" id={`catHint-${category}`}>
+                    {note.text}
+                  </span>
+                </span>
+              </div>
+            )
+          })}
           <div className="cat-item">
             <button type="button" className="key cancel" onClick={onClose}>
               CANCEL
