@@ -639,12 +639,12 @@ describe('epoch (reset generation)', () => {
     })
     expect(b.load().endingReached).toBe(false)
   })
-  it('rejects an epoch beyond the safe integers as broken', () => {
+  it('rejects an epoch beyond the limit as broken', () => {
     expect(validateSave({ ...save(), epoch: 1e300 })).toBeNull()
     expect(validateSave({ ...save(), epoch: 2 ** 53 })).toBeNull()
-    expect(
-      validateSave(save({ epoch: Number.MAX_SAFE_INTEGER }))
-    ).not.toBeNull()
+    // Past the practical limit (SAVE_LIMITS.epoch) is refused too, so a step by one never lands on a refused value.
+    expect(validateSave(save({ epoch: Number.MAX_SAFE_INTEGER }))).toBeNull()
+    expect(validateSave(save({ epoch: 1_000_000_000 }))).not.toBeNull()
     const bad = JSON.stringify({ ...save(), epoch: 1e300 })
     const { storage, data } = fakeStorage({ [SAVE_KEY]: bad })
     expect(createSaveStore({ getStorage: () => storage }).load()).toEqual(
@@ -765,5 +765,14 @@ describe('memo queues (#325)', () => {
       lastShift: { ...shift, memoFlag: 3, memo: [] },
     })
     expect(dmg?.lastShift).toEqual(shift)
+  })
+})
+
+describe('nextEpoch', () => {
+  it('steps by one and stops at the limit', async () => {
+    const { nextEpoch, SAVE_LIMITS } = await import('./saveData')
+    expect(nextEpoch(0)).toBe(1)
+    expect(nextEpoch(SAVE_LIMITS.epoch)).toBe(SAVE_LIMITS.epoch)
+    expect(nextEpoch(SAVE_LIMITS.epoch - 1)).toBe(SAVE_LIMITS.epoch)
   })
 })

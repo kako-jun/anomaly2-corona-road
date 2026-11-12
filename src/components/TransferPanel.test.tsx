@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { emptySave, load, update } from '../utils/saveData'
@@ -59,5 +59,50 @@ describe('TransferPanel', () => {
     expect(load().epoch).toBe(3)
     expect(onImported).toHaveBeenCalledOnce()
     expect(onClose).toHaveBeenCalledOnce()
+  })
+  it('starts with the focus in the paste box and Tab never leaves the panel', async () => {
+    render(
+      <>
+        <button>behind</button>
+        <TransferPanel onClose={vi.fn()} onImported={vi.fn()} />
+      </>
+    )
+    expect(screen.getByLabelText('Paste a transfer code')).toHaveFocus()
+    const behind = screen.getByRole('button', { name: 'behind' })
+    for (let i = 0; i < 12; i++) {
+      await userEvent.tab()
+      expect(behind).not.toHaveFocus()
+    }
+    for (let i = 0; i < 12; i++) {
+      await userEvent.tab({ shift: true })
+      expect(behind).not.toHaveFocus()
+    }
+  })
+  it('refuses a huge paste with a reason', async () => {
+    render(<TransferPanel onClose={vi.fn()} onImported={vi.fn()} />)
+    fireEvent.change(screen.getByLabelText('Paste a transfer code'), {
+      target: { value: 'A'.repeat(500_000) },
+    })
+    await userEvent.click(screen.getByRole('button', { name: 'IMPORT' }))
+    expect(screen.getByRole('alert')).toHaveTextContent(/too long/)
+  })
+  it('does not report success when the browser cannot store the import', async () => {
+    const onImported = vi.fn()
+    const onClose = vi.fn()
+    render(<TransferPanel onClose={onClose} onImported={onImported} />)
+    await userEvent.click(screen.getByLabelText('Paste a transfer code'))
+    await userEvent.paste(encodeSave(donor()))
+    await userEvent.click(screen.getByRole('button', { name: 'IMPORT' }))
+    const spy = vi
+      .spyOn(Storage.prototype, 'setItem')
+      .mockImplementation(() => {
+        throw new Error('quota')
+      })
+    await userEvent.click(screen.getByRole('button', { name: 'REPLACE' }))
+    spy.mockRestore()
+    expect(screen.getByRole('alert')).toHaveTextContent(/cannot store/)
+    expect(onImported).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
+    expect(load().foundIds).toEqual(['mine'])
   })
 })

@@ -91,15 +91,51 @@ export const emptySave = (): SaveData => ({
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v)
 
-const isCount = (v: unknown): v is number =>
-  typeof v === 'number' && Number.isInteger(v) && v >= 0
+/**
+ * Size limits for a save read from outside (storage, a transfer code). A real save is a few tens of KB at most
+ * (a few hundred anomalies, a few thousand dialogue ids); these leave a wide margin but stop a crafted or
+ * runaway value from filling localStorage (about 5 MB) or freezing the page. One place, on purpose.
+ */
+export const SAVE_LIMITS = {
+  /** Largest counter (loops, foundTotal, durations): far beyond any play, still exactly representable. */
+  count: 1_000_000_000,
+  /** Largest generation number. Reset and import step it by one and stop here. */
+  epoch: 1_000_000_000,
+  /** Items in one id list (foundIds, usedChatter, one usedLines entry, the memo queues). */
+  listLength: 20_000,
+  /** Keys in `flags` and in `usedLines`. */
+  keys: 2_000,
+  /** Characters in one id, flag or key. */
+  stringLength: 200,
+} as const
 
-// The generation number is incremented on every reset, so it must stay exactly representable.
+const isCount = (v: unknown): v is number =>
+  typeof v === 'number' &&
+  Number.isSafeInteger(v) &&
+  v >= 0 &&
+  v <= SAVE_LIMITS.count
+
+// The generation number is incremented on every reset, so it must stay exactly representable (and bounded).
 const isEpoch = (v: unknown): v is number =>
-  typeof v === 'number' && Number.isSafeInteger(v) && v >= 0
+  typeof v === 'number' &&
+  Number.isSafeInteger(v) &&
+  v >= 0 &&
+  v <= SAVE_LIMITS.epoch
+
+/** The generation after `n`, never past the limit (so the next read still accepts it). */
+export const nextEpoch = (n: number): number =>
+  Math.min(n + 1, SAVE_LIMITS.epoch)
+
+const isShortString = (s: unknown): s is string =>
+  typeof s === 'string' && s.length <= SAVE_LIMITS.stringLength
 
 const isStringArray = (v: unknown): v is string[] =>
-  Array.isArray(v) && v.every(s => typeof s === 'string')
+  Array.isArray(v) &&
+  v.length <= SAVE_LIMITS.listLength &&
+  v.every(isShortString)
+
+const hasOwn = (o: object, k: string): boolean =>
+  Object.prototype.hasOwnProperty.call(o, k)
 
 const CLOSINGS: readonly string[] = ['dawn', 'withdraw', 'ending']
 
@@ -124,8 +160,8 @@ const validLastShift = (v: unknown): LastShift | null => {
     closing: closing as LastShift['closing'],
     raised: [...new Set(raised)],
     // Absent in saves written before the memos existed; a damaged one is dropped, not a reason to drop the shift.
-    ...(typeof v.memoFlag === 'string' ? { memoFlag: v.memoFlag } : {}),
-    ...(typeof v.memo === 'string' ? { memo: v.memo } : {}),
+    ...(isShortString(v.memoFlag) ? { memoFlag: v.memoFlag } : {}),
+    ...(isShortString(v.memo) ? { memo: v.memo } : {}),
   }
 }
 
@@ -204,10 +240,17 @@ export const validateSave = (raw: unknown): SaveData | null => {
   if (!isEpoch(epoch)) return null
   if (
     !isRecord(flags) ||
+    Object.keys(flags).length > SAVE_LIMITS.keys ||
+    !Object.keys(flags).every(isShortString) ||
     !Object.values(flags).every(f => typeof f === 'boolean')
   )
     return null
-  if (!isRecord(usedLines) || !Object.values(usedLines).every(isStringArray))
+  if (
+    !isRecord(usedLines) ||
+    Object.keys(usedLines).length > SAVE_LIMITS.keys ||
+    !Object.keys(usedLines).every(isShortString) ||
+    !Object.values(usedLines).every(isStringArray)
+  )
     return null
   const out: SaveData = {
     v: SAVE_VERSION,
@@ -267,13 +310,14 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
         : undefined
     return settings ? { ...win, settings } : win
   }
-  const usedLines: Record<string, string[]> = {}
-  for (const k of new Set([
-    ...Object.keys(a.usedLines),
-    ...Object.keys(b.usedLines),
-  ])) {
-    usedLines[k] = uniq([...(a.usedLines[k] ?? []), ...(b.usedLines[k] ?? [])])
-  }
+  // Own keys only, and built with fromEntries: a key like "__proto__" must stay plain data.
+  const own = (o: Record<string, string[]>, k: string): string[] =>
+    hasOwn(o, k) ? o[k] : []
+  const usedLines: Record<string, string[]> = Object.fromEntries(
+    [
+      ...new Set([...Object.keys(a.usedLines), ...Object.keys(b.usedLines)]),
+    ].map(k => [k, uniq([...own(a.usedLines, k), ...own(b.usedLines, k)])])
+  )
   const out: SaveData = {
     v: SAVE_VERSION,
     foundTotal: Math.max(a.foundTotal, b.foundTotal),

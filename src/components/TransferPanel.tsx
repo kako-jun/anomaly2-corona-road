@@ -26,18 +26,42 @@ export const TransferPanel = ({ onClose, onImported }: TransferPanelProps) => {
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState<'done' | 'failed' | null>(null)
   const [pending, setPending] = useState<SaveData | null>(null)
+  const boxRef = useRef<HTMLDivElement>(null)
+  const importRef = useRef<HTMLTextAreaElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const areaRef = useRef<HTMLTextAreaElement>(null)
   const confirmRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    closeRef.current?.focus()
+    importRef.current?.focus()
   }, [])
   useEffect(() => {
     if (pending) confirmRef.current?.focus()
   }, [pending])
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        // aria-modal: Tab and Shift+Tab cycle inside the panel and never reach the screen behind it.
+        const items = [
+          ...(boxRef.current?.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), textarea'
+          ) ?? []),
+        ]
+        if (items.length === 0) return
+        const first = items[0]
+        const last = items[items.length - 1]
+        const active = document.activeElement
+        const inside = boxRef.current?.contains(active)
+        if (!inside || (e.shiftKey && active === first)) {
+          e.preventDefault()
+          last.focus()
+          if (!inside && !e.shiftKey) first.focus()
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault()
+          first.focus()
+        }
+        return
+      }
       if (e.key !== 'Escape') return
       if (pending) setPending(null)
       else onClose()
@@ -75,7 +99,7 @@ export const TransferPanel = ({ onClose, onImported }: TransferPanelProps) => {
       aria-modal="true"
       aria-label="Save transfer"
     >
-      <div className="transfer-box">
+      <div className="transfer-box" ref={boxRef}>
         <h2 className="transfer-title">TRANSFER SAVE</h2>
         <p className="transfer-help">
           Move your progress to another device, or restore it after the browser
@@ -95,7 +119,11 @@ export const TransferPanel = ({ onClose, onImported }: TransferPanelProps) => {
                 type="button"
                 className="transfer-key transfer-key--danger"
                 onClick={() => {
-                  applyImport(pending)
+                  if (!applyImport(pending)) {
+                    setPending(null)
+                    setError(TRANSFER_ERROR_TEXT.notSaved)
+                    return
+                  }
                   setPending(null)
                   setText('')
                   onImported()
@@ -153,6 +181,7 @@ export const TransferPanel = ({ onClose, onImported }: TransferPanelProps) => {
             <section className="transfer-section">
               <h3>IMPORT</h3>
               <textarea
+                ref={importRef}
                 className="transfer-area"
                 rows={3}
                 value={text}

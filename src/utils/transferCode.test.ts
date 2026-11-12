@@ -1,6 +1,17 @@
 import { describe, expect, it } from 'vitest'
-import { createSaveStore, emptySave, mergeSave } from './saveData'
-import { encodeSave, importedSave, parseCode } from './transferCode'
+import {
+  SAVE_LIMITS,
+  createSaveStore,
+  emptySave,
+  mergeSave,
+  validateSave,
+} from './saveData'
+import {
+  MAX_CODE_CHARS,
+  encodeSave,
+  importedSave,
+  parseCode,
+} from './transferCode'
 
 const played = () => ({
   ...emptySave(),
@@ -132,5 +143,88 @@ describe('transfer code: memo fields (#325)', () => {
     expect(out.pendingMemos).toEqual(['m1', 'm2'])
     const out2 = importedSave({ ...emptySave(), epoch: 1 }, withMemos())
     expect(out2.epoch).toBe(4)
+  })
+})
+
+describe('transfer code: limits and hostile input', () => {
+  const b64 = (o: unknown) => btoa(JSON.stringify(o))
+  it('refuses a huge paste without decoding it', () => {
+    expect(parseCode('A'.repeat(MAX_CODE_CHARS + 10))).toEqual({
+      ok: false,
+      error: 'tooLarge',
+    })
+    expect(parseCode(' '.repeat(MAX_CODE_CHARS * 2))).toEqual({
+      ok: false,
+      error: 'tooLarge',
+    })
+  })
+  it('refuses oversized lists, key sets and strings', () => {
+    const big = (over: object) => ({ ...emptySave(), ...over })
+    const ids = Array.from(
+      { length: SAVE_LIMITS.listLength + 1 },
+      (_, i) => `i${i}`
+    )
+    expect(validateSave(big({ foundIds: ids }))).toBeNull()
+    expect(
+      validateSave(
+        big({ foundIds: ['x'.repeat(SAVE_LIMITS.stringLength + 1)] })
+      )
+    ).toBeNull()
+    const flags = Object.fromEntries(
+      Array.from({ length: SAVE_LIMITS.keys + 1 }, (_, i) => [`f${i}`, true])
+    )
+    expect(validateSave(big({ flags }))).toBeNull()
+    expect(validateSave(big({ usedLines: { a: ids } }))).toBeNull()
+    expect(validateSave(big({ foundIds: ids.slice(0, 5000) }))).not.toBeNull()
+  })
+  it('refuses counters that are not sane integers', () => {
+    expect(validateSave({ ...emptySave(), loops: 1e300 })).toBeNull()
+    expect(validateSave({ ...emptySave(), foundTotal: 2 ** 53 })).toBeNull()
+    expect(validateSave({ ...emptySave(), loops: -0 })).not.toBeNull()
+  })
+  it('epoch: at or above the limit is invalid; below it imports as max+1', () => {
+    const at = (epoch: number) => parseCode(b64({ ...emptySave(), epoch }))
+    expect(at(Number.MAX_SAFE_INTEGER)).toEqual({ ok: false, error: 'invalid' })
+    expect(at(SAVE_LIMITS.epoch)).toEqual({ ok: false, error: 'invalid' })
+    const r = at(SAVE_LIMITS.epoch - 1)
+    expect(r.ok).toBe(true)
+    if (r.ok) {
+      const out = importedSave(emptySave(), r.save)
+      expect(out.epoch).toBe(SAVE_LIMITS.epoch)
+      expect(validateSave(out)).not.toBeNull()
+    }
+    expect(at(-0).ok).toBe(true)
+    expect(at(-1)).toEqual({ ok: false, error: 'invalid' })
+  })
+  it('keeps "__proto__" keys as plain data through parse and merge', () => {
+    const json =
+      '{"v":1,"foundTotal":0,"foundIds":[],"loops":0,"flags":{"__proto__":true},"usedLines":{"__proto__":["x"]},"usedChatter":[]}'
+    const r = parseCode(btoa(json))
+    expect(r.ok).toBe(true)
+    if (!r.ok) return
+    const merged = mergeSave(r.save, emptySave())
+    expect(Object.getPrototypeOf(merged.usedLines)).toBe(Object.prototype)
+    expect(Object.keys(merged.usedLines)).toEqual(['__proto__'])
+    expect(({} as { x?: unknown }).x).toBeUndefined()
+    const plain = mergeSave(
+      { ...emptySave(), usedLines: { a: ['1'] } },
+      emptySave()
+    )
+    expect(plain.usedLines).toEqual({ a: ['1'] })
+  })
+  it('keeps unknown memo ids and round-trips an empty save', () => {
+    const s = { ...emptySave(), pendingMemos: ['no-such-anomaly'] }
+    const r = parseCode(encodeSave(s))
+    expect(r.ok && r.save.pendingMemos).toEqual(['no-such-anomaly'])
+    expect(parseCode(encodeSave(emptySave()))).toEqual({
+      ok: true,
+      save: emptySave(),
+    })
+  })
+  it('a code without "v" (another game) is refused as invalid', () => {
+    expect(parseCode(b64({ score: 5 }))).toEqual({
+      ok: false,
+      error: 'invalid',
+    })
   })
 })

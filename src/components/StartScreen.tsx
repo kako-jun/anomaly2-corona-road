@@ -49,6 +49,7 @@ export const StartScreen = ({
   const [confirming, setConfirming] = useState(false)
   // Keyboard focus follows the confirmation: CANCEL (the safe side) when it opens, START OVER when
   // it is cancelled, and START SHIFT once the erase has taken effect.
+  const transferKeyRef = useRef<HTMLButtonElement>(null)
   const cancelRef = useRef<HTMLButtonElement>(null)
   const startOverRef = useRef<HTMLButtonElement>(null)
   const goRef = useRef<HTMLButtonElement>(null)
@@ -65,12 +66,14 @@ export const StartScreen = ({
     if (!confirming) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
+      // The transfer panel is on top: its Escape closes only itself.
+      if (transferring) return
       focusAfter.current = 'cancel'
       setConfirming(false)
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [confirming])
+  }, [confirming, transferring])
   useEffect(() => {
     if (!endingReached && focusAfter.current === 'erase') {
       focusAfter.current = null
@@ -107,6 +110,7 @@ export const StartScreen = ({
       {onTransferred && (
         <button
           type="button"
+          ref={transferKeyRef}
           className="start-transfer-key"
           onClick={() => setTransferring(true)}
         >
@@ -115,8 +119,16 @@ export const StartScreen = ({
       )}
       {onTransferred && transferring && (
         <TransferPanel
-          onClose={() => setTransferring(false)}
-          onImported={onTransferred}
+          onClose={() => {
+            setTransferring(false)
+            // Back to the key that opened the panel.
+            setTimeout(() => transferKeyRef.current?.focus(), 0)
+          }}
+          onImported={() => {
+            // A START OVER confirmation left open would offer to erase the progress just imported.
+            setConfirming(false)
+            onTransferred()
+          }}
         />
       )}
 
