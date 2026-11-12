@@ -932,6 +932,53 @@ describe('the real ledger keeps category well-formed (#347)', () => {
     }
     expect(catsOf('AR-01-window-peeping-face')[0]).toBe('Person')
   })
+  it('a thing on a wall or the floor is both Object and Environment; hung / airborne / on-a-stand is not (kako-jun 2026-11-12, #347)', () => {
+    const catsOf = (id: string) => {
+      const r = records.find(x => x.id === id)
+      expect(r, id).toBeDefined()
+      return r?.categories ?? [r?.category]
+    }
+    // floor: placed, dropped, scattered, lined up
+    for (const id of [
+      'AR-03-silver-can',
+      'AR-02-cigarette',
+      'AR-04-randoseru-red',
+      'AR-05-floor-white-cranes',
+      'AR-04-floor-shoes-rows',
+      'AR-02-puddle',
+    ]) {
+      const c = catsOf(id)
+      expect(c, id).toContain('Object')
+      expect(c, id).toContain('Environment')
+    }
+    // wall: stuck, hung, mounted
+    for (const id of [
+      'AR-01-notice',
+      'AR-01-wall-faces',
+      'AR-06-wall-same-poster',
+      'AR-04-tote-bag',
+      'AR-06-blue-pinwheel',
+      'AR-02-wall-bird-gone',
+    ]) {
+      const c = catsOf(id)
+      expect(c, id).toContain('Object')
+      expect(c, id).toContain('Environment')
+    }
+    // the primary category is unchanged
+    expect(catsOf('AR-03-silver-can')[0]).toBe('Object')
+    expect(catsOf('AR-02-puddle')[0]).toBe('Environment')
+    // hung from the ceiling, stuck to the ceiling, on a stand
+    for (const id of [
+      'AR-07-crane',
+      'AR-04-ceiling-balloon',
+      'AR-01-ceiling-lanterns',
+      'AR-04-flypaper',
+      'AR-02-coffee',
+      'AR-02-ashtray',
+    ]) {
+      expect(catsOf(id), id).not.toContain('Environment')
+    }
+  })
   it('lists camera second or later on the surface-wide image entries', () => {
     const r = records.find(x => x.id === 'AR-07-floor-frost')
     expect(r?.categories).toEqual(['Environment', 'Surreal', 'Camera'])
