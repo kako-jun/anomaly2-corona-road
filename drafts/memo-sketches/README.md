@@ -6,6 +6,7 @@
 
 - 生成: 組み込み画像生成ツールで、上記シャッター絵をスタイル参照にした透過背景の線画を題材ごとに生成。黒灰色の少し不揃いな線、必要に応じて控えめな青いペン、文字・紙・枠なしを指定。各題材は下表の異変台帳 `prompts/anomalies.yaml` の `detail` に対応する。
 - 個別の修正: ビー玉は初回生成が8個で、1個を取り除いた編集にはにじみが残ったため、画像生成ツールで2・3・2個に分けた7個の線画を描き直した。
+- 追加20点: 2026-11-12に既存30点と題材を照合して生成。顔の飾り・床の青空・天井の目・蜘蛛は、参照画のシャッター構図が混ざった初稿を避け、異変が判別できる構図で描き直した。
 - 保存: 縦横比を維持し、長辺が384pxを超える生成画像だけ384px以下に縮小。透過を保持したWebP（ImageMagick `magick <生成PNG> -resize '384x384>' -quality 75 <異変ID>.webp`）。`-quality 75` は非可逆WebPの品質設定で、元画像が無劣化で残るという意味ではない。
 - 検討: 猫の384pxの無劣化WebPと品質75版を紙色の背景に並べて目視比較し、線の見え方を保ちつつ約18KBから約10KBに低減した。紙面への最終表示サイズは未確定なので、ゲーム接続時に実表示でも確認し、必要なら生成元から調整する。
 - 生成元のPNGは開発環境の画像生成ディレクトリに置かれた一時的な原本で、このリポジトリには含めていない。長期的な正本はこのディレクトリのWebP。元PNGの永続保存は保証しない。
@@ -43,3 +44,23 @@
 | AR-04-floor-shoes-rows | 奥を向いて並ぶ靴 | [並ぶ靴](AR-04-floor-shoes-rows.webp) |
 | AR-08-pillar-sparrow | 柱の根元の雀 | [雀](AR-08-pillar-sparrow.webp) |
 | AR-06-plant-doll-creature | 葉陰の小さな人形のような生物 | [葉陰の生物](AR-06-plant-doll-creature.webp) |
+| AR-06-soda | クリームソーダの写真 | [クリームソーダ](AR-06-soda.webp) |
+| AR-06-missing-flower | 一輪消えた鉢の花 | [消えた花](AR-06-missing-flower.webp) |
+| AR-03-face-ornament | 顔の形になった壁の飾り | [壁の顔](AR-03-face-ornament.webp) |
+| AR-08-barber-pole | 床屋のサインポール | [サインポール](AR-08-barber-pole.webp) |
+| AR-07-paper-airplane-ceiling | 天井に刺さる紙飛行機 | [紙飛行機](AR-07-paper-airplane-ceiling.webp) |
+| AR-01-bamboo-broom | 床の竹ぼうき | [竹ぼうき](AR-01-bamboo-broom.webp) |
+| AR-01-bunting-flags | 垂れた三角旗 | [三角旗](AR-01-bunting-flags.webp) |
+| AR-02-jump-rope | 床に置かれた縄跳び | [縄跳び](AR-02-jump-rope.webp) |
+| AR-02-tanabata-paper-chain | 吊るされた輪つなぎ飾り | [輪つなぎ](AR-02-tanabata-paper-chain.webp) |
+| AR-03-insect-cage | 竹編みの虫かご | [虫かご](AR-03-insect-cage.webp) |
+| AR-04-thermos | 花柄の魔法瓶 | [魔法瓶](AR-04-thermos.webp) |
+| AR-04-flypaper | 吊るされた蝿取りリボン | [蝿取りリボン](AR-04-flypaper.webp) |
+| AR-08-n6 | 天井に引っかかった凧 | [凧](AR-08-n6.webp) |
+| AR-06-teru-teru-bozu | 顔のないてるてる坊主 | [てるてる坊主](AR-06-teru-teru-bozu.webp) |
+| AR-02-ceiling-starry-sky | 星空になった天井 | [天井の星空](AR-02-ceiling-starry-sky.webp) |
+| AR-05-morning-glory-wall | 壁にはう朝顔 | [朝顔](AR-05-morning-glory-wall.webp) |
+| AR-06-tile-sky | 床タイルの底に見える青空 | [床の青空](AR-06-tile-sky.webp) |
+| AR-03-shutter-fingers | シャッターの隙間の指 | [隙間の指](AR-03-shutter-fingers.webp) |
+| AR-03-ceiling-eye | 天井の隙間から覗く目 | [天井の目](AR-03-ceiling-eye.webp) |
+| AR-01-ceiling-spider | 天井の蜘蛛 | [蜘蛛](AR-01-ceiling-spider.webp) |
