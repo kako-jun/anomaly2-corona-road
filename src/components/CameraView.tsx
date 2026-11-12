@@ -1,6 +1,7 @@
 import { CSSProperties, useCallback, useRef, useState } from 'react'
 import '../styles/loupe.css'
 import { useLoupeGesture } from '../hooks/useLoupeGesture'
+import { useNoiseOff } from '../hooks/useNoiseOff'
 import { Loupe } from './Loupe'
 import { Anomaly, Camera } from '../types/game'
 import { Feedback } from '../hooks/useGameState'
@@ -76,11 +77,13 @@ export const CameraView = ({
 }: CameraViewProps) => {
   const glassRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<HTMLDivElement>(null)
+  const noise = useNoiseOff()
   const { view: loupeView, handlers } = useLoupeGesture({
     enabled: !!loupeHost,
     glassRef,
     frameRef,
     onSwipe,
+    onKnock: noise.trigger,
     resetKey: camera.image,
   })
 
@@ -132,10 +135,14 @@ export const CameraView = ({
 
   return (
     <section className="tube" aria-label="Monitor">
-      <div className="bezel" {...handlers}>
+      <div className="bezel" {...handlers} onClick={noise.askMotion}>
         <div className="edge-mark edge-mark--prev" aria-hidden="true" />
         <div className="edge-mark edge-mark--next" aria-hidden="true" />
-        <div className="glass" style={style} ref={glassRef}>
+        <div
+          className={cx('glass', noise.off && 'noise-off')}
+          style={style}
+          ref={glassRef}
+        >
           <div className="pic">
             <div
               className="pic__frame"
@@ -229,6 +236,7 @@ export const CameraView = ({
           }
           brightness={brightness}
           contrast={contrast}
+          noiseOff={noise.off}
         />
       )}
     </section>

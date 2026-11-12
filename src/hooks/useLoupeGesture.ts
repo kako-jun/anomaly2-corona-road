@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { isKnock } from '../utils/noiseOff'
 import {
   LOUPE,
   clampLoupeCenter,
@@ -30,6 +31,8 @@ interface Options {
   frameRef: RefObject<HTMLElement>
   /** Camera change from a swipe or from a short tap on the left / right of the monitor (#354). */
   onSwipe: (direction: 'next' | 'prev') => void
+  /** A double tap on the picture (a short tap twice, KNOCK_GAP_MS / KNOCK_SLOP_PX, #342). A single short tap still does nothing. */
+  onKnock?: () => void
   /** Changes when the camera changes: a loupe held through a camera switch is closed. */
   resetKey?: unknown
 }
@@ -59,6 +62,7 @@ export const useLoupeGesture = ({
   glassRef,
   frameRef,
   onSwipe,
+  onKnock,
   resetKey,
 }: Options) => {
   const [view, setView] = useState<LoupeView | null>(null)
@@ -77,6 +81,7 @@ export const useLoupeGesture = ({
     cur: { x: 0, y: 0 },
     target: { x: 0, y: 0 },
     geo: null as Geometry | null,
+    lastTap: null as { t: number; x: number; y: number } | null,
   })
 
   const measure = (): Geometry | null => {
@@ -228,9 +233,18 @@ export const useLoupeGesture = ({
     const startOnGlass = st.startOnGlass
     const startX = st.startX
     reset()
+    // every way out except a short tap on the picture forgets a pending first tap (a hold, a swipe, a drag, a bezel tap)
+    const prevTap = st.lastTap
+    st.lastTap = null
     if (wasLoupe) return
     if (Math.abs(diff) > LOUPE.SWIPE_PX) {
       onSwipe(diff > 0 ? 'next' : 'prev')
+    } else if (wasPending && startOnGlass && heldMs < LOUPE.HOLD_MS) {
+      // a short tap on the picture: nothing by itself, the second one of a double tap is a knock (#342)
+      const tap = { t: performance.now(), x: e.clientX, y: e.clientY }
+      if (isKnock(prevTap, tap)) {
+        onKnock?.()
+      } else st.lastTap = tap
     } else if (wasPending && !startOnGlass && heldMs < LOUPE.HOLD_MS) {
       // the direction is by where the press began (a press that began on the picture is never a tap)
       const g = glassRef.current?.getBoundingClientRect()
@@ -260,6 +274,7 @@ export const useLoupeGesture = ({
   // The press is over (or the picture under it changed) without a pointerup we can use: close the loupe. The geometry
   // is measured once when the loupe shows, so a resize / rotation closes it too.
   useEffect(() => {
+    s.current.lastTap = null
     if (s.current.id !== null) reset()
   }, [resetKey, reset])
   useEffect(() => {

@@ -915,7 +915,8 @@ describe('the real ledger keeps category well-formed (#347)', () => {
       'AR-06-wall-gecko',
       'AR-01-ceiling-spider',
     ]) {
-      expect(catsOf(id), id).toEqual(['Object'])
+      expect(catsOf(id)[0], id).toBe('Object')
+      expect(catsOf(id), id).not.toContain('Person')
     }
     for (const id of [
       'AR-03-face-ornament',
@@ -931,6 +932,90 @@ describe('the real ledger keeps category well-formed (#347)', () => {
       expect(catsOf(id), id).toContain('Person')
     }
     expect(catsOf('AR-01-window-peeping-face')[0]).toBe('Person')
+  })
+  it('a thing on a wall or the floor is both Object and Environment; on the ceiling and on a stand too (kako-jun 2026-11-12, #347)', () => {
+    const catsOf = (id: string) => {
+      const r = records.find(x => x.id === id)
+      expect(r, id).toBeDefined()
+      return r?.categories ?? [r?.category]
+    }
+    // floor: placed, dropped, scattered, lined up
+    for (const id of [
+      'AR-03-silver-can',
+      'AR-02-cigarette',
+      'AR-04-randoseru-red',
+      'AR-05-floor-white-cranes',
+      'AR-04-floor-shoes-rows',
+      'AR-02-puddle',
+    ]) {
+      const c = catsOf(id)
+      expect(c, id).toContain('Object')
+      expect(c, id).toContain('Environment')
+    }
+    // wall: stuck, hung, mounted
+    for (const id of [
+      'AR-01-notice',
+      'AR-01-wall-faces',
+      'AR-06-wall-same-poster',
+      'AR-04-tote-bag',
+      'AR-06-blue-pinwheel',
+      'AR-02-wall-bird-gone',
+    ]) {
+      const c = catsOf(id)
+      expect(c, id).toContain('Object')
+      expect(c, id).toContain('Environment')
+    }
+    // the primary category is unchanged
+    expect(catsOf('AR-03-silver-can')[0]).toBe('Object')
+    expect(catsOf('AR-02-puddle')[0]).toBe('Environment')
+    // ceiling (hung / stuck / fixtures) and animals: both as well
+    for (const id of [
+      'AR-07-crane',
+      'AR-04-ceiling-balloon',
+      'AR-06-ceiling-umbrellas',
+      'AR-01-ceiling-lanterns',
+      'AR-04-flypaper',
+      'AR-02-cat',
+      'AR-06-wall-gecko',
+    ]) {
+      expect(catsOf(id), id).toContain('Object')
+      expect(catsOf(id), id).toContain('Environment')
+    }
+    // on a stand / shelf: the space is the floor / wall's, so both as well
+    for (const id of ['AR-02-coffee', 'AR-02-ashtray']) {
+      expect(catsOf(id), id).toContain('Object')
+      expect(catsOf(id), id).toContain('Environment')
+    }
+    // floating in the air (smoke) touches no surface: nothing was added (its Environment is its own primary)
+    expect(catsOf('AR-02-smoke')).toEqual(['Environment', 'Object', 'Surreal'])
+  })
+  it('no animal is a Person, whatever surface it is on (kako-jun 2026-11-12, #347)', () => {
+    for (const id of [
+      'AR-02-cat',
+      'AR-08-cat',
+      'AR-03-walking-cat',
+      'AR-07-stairs-cat',
+      'AR-01-cat-in-frosted-window',
+      'AR-01-threshold-pigeon',
+      'AR-08-pillar-sparrow',
+      'AR-04-rat-left-floor',
+      'AR-06-wall-gecko',
+      'AR-01-ceiling-spider',
+      'AR-05-aisle-goldfish',
+      'AR-05-floor-turtle',
+    ]) {
+      const r = records.find(x => x.id === id)
+      expect(r, id).toBeDefined()
+      expect(r?.categories ?? [r?.category], id).not.toContain('Person')
+    }
+    for (const id of [
+      'AR-03-tube-light-bent',
+      'AR-08-ceiling-light-inverse',
+      'AR-08-vent-square',
+      'AR-02-rusty-vent',
+    ]) {
+      expect(records.find(x => x.id === id)?.categories, id).toContain('Object')
+    }
   })
   it('lists camera second or later on the surface-wide image entries', () => {
     const r = records.find(x => x.id === 'AR-07-floor-frost')
