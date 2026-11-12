@@ -7166,3 +7166,12 @@ anomalies:
     memo:
       ja: 'このカメラだけノイズがない。'
       en: 'Only this camera has no noise.'
+  - id: 'RT-UI-30'
+    status: 'planned'
+    kind: 'non_image'
+    category: 'Surreal'
+    anomaly_type: 'ui_corruption'
+    detail: 'whole screen flash: ユーザーの見ている画面全体（ブラウザの表示領域。筐体・つまみ・ボタンを含む全体）が、短い間に数回チカチカする（1回の閃光ではない）。映像の中だけの黒フレーム RT-FEED-23 や REC の赤い点の点滅 RT-UI-12 とは別の見え方。どのカメラを見ていても報告できる。光過敏への安全上限: 点滅は1秒に3回以下（WCAG 2.3.1）、白一色の全面フラッシュにせず暗転か薄いトーンの重ね程度の小さな輝度差、数回で終わり、繰り返すなら間隔を空けて繰り返し時も3回/秒以内。prefers-reduced-motion では点滅させず、画面全体がわずかに明るいままの静止状態にする（#381 の feed_glitch が動きを静止状態に置き換えるのと同じ扱い）。操作は奪わず、報告すれば止まる。'
+    memo:
+      ja: '画面全体がチカチカした。'
+      en: 'The whole screen flickered for a moment.'
