@@ -17,11 +17,6 @@ dialogues:
     lines:
       - { who: M, text: "左の壁を確認してもらえますか", en: "Could you check the left wall?" }
       - { who: A, text: "いいよ　左の壁ね", en: "Sure. The left wall, right?" }
-  - id: spawn-hint-AR-01-notice-03
-    tone: serious
-    when: { anomaly: AR-01-notice }
-    lines:
-      - { who: A, text: "左の壁に　目が行くんだよね…", en: "My eyes keep going to the left wall..." }
   - id: spawn-hint-AR-02-ashtray-01
     tone: serious
     when: { anomaly: AR-02-ashtray }
