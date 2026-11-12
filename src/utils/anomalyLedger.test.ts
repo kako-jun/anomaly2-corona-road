@@ -819,6 +819,42 @@ describe('memo_flag and memo (#325)', () => {
   )
 })
 
+describe('memo_image (#325)', () => {
+  const memo = { ja: 'あ', en: 'a' }
+  it('reads a plain .webp file name that goes with a memo, and hands it to the game entry', () => {
+    const r = parseLedgerRecord(
+      raw({ memo, memo_image: 'AR-01-notice.webp' }),
+      0
+    )
+    expect(r.memoImage).toBe('AR-01-notice.webp')
+    expect(toLedgerEntry(r).memoImage).toBe('AR-01-notice.webp')
+  })
+  it('is optional: absent or null means no scribble, and the entry then has no such key', () => {
+    expect(parseLedgerRecord(raw({ memo }), 0).memoImage).toBeUndefined()
+    expect(
+      parseLedgerRecord(raw({ memo, memo_image: null }), 0).memoImage
+    ).toBeUndefined()
+    expect(
+      toLedgerEntry(parseLedgerRecord(raw({ memo }), 0))
+    ).not.toHaveProperty('memoImage')
+  })
+  it.each([
+    [{ memo, memo_image: 5 }, 'not a string'],
+    [{ memo, memo_image: '' }, 'empty'],
+    [{ memo, memo_image: 'a.png' }, 'not webp'],
+    [{ memo, memo_image: 'a.webp.png' }, 'webp only in the middle'],
+    [{ memo, memo_image: 'note-sketches/a.webp' }, 'with a folder'],
+    [{ memo, memo_image: '../a.webp' }, 'going up'],
+    [{ memo, memo_image: '/a.webp' }, 'absolute'],
+    [{ memo_image: 'a.webp' }, 'without a memo'],
+  ] as [Record<string, unknown>, string][])(
+    'rejects %j (%s) and names the entry',
+    over => {
+      expect(() => parseLedgerRecord(raw(over), 0)).toThrow(/AR-01-notice/)
+    }
+  )
+})
+
 describe('the real ledger carries the memo marks (#325)', () => {
   const records = parseLedgerRecords(
     parseYaml(

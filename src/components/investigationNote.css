@@ -240,6 +240,40 @@
   font-size: 20px;
 }
 
+.note-tail {
+  /* The scribbles and, when the one-liner has a drawing (#325), the bay beside them: the drawing takes whatever width
+     the longest scribble line leaves (a row, so the scribbles keep their place and size). */
+  display: flex;
+  align-items: stretch;
+}
+.note-tail > .note-scrib {
+  flex: none;
+}
+.note-bay {
+  /* the room right of the scribbles: 6px of air from the longest line (its turned end reaches about 0.5px past its box); the drawing hangs in it, out of the flow */
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  margin-left: 6px;
+}
+.note-sketch {
+  /* The drawing that goes with an anomaly's one-liner (#325): under the last synopsis line (the bay starts where the
+     synopsis ends), at the right edge, over the rules like a doodle in the margin; out of the flow, so it moves nothing.
+     Height: 50px at most (6px under the line, the English hand's text box is about 3px taller than its line, and about
+     9px left above the number box, with the 3.3 degree tilt's 1.5px swing included). Width: at most 96px, and never more
+     than the bay: about 55px beside the longest scribble (elder3 dawn in Japanese), more where the scribble is shorter or
+     absent. check:note-wrap measures every drawing at that worst sheet. */
+  position: absolute;
+  right: 3px;
+  top: 6px;
+  max-width: min(96px, calc(100% - 3px));
+  max-height: 50px;
+  transform: rotate(var(--tilt-sketch));
+  transform-origin: 50% 50%;
+  pointer-events: none;
+  user-select: none;
+}
+
 .note-form {
   position: relative;
   margin-top: 6px;
