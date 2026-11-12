@@ -36,7 +36,13 @@ describe('note tilt (hand-made look)', () => {
       expect(abs(v)).toBeGreaterThanOrEqual(1)
       expect(abs(v)).toBeLessThanOrEqual(4)
     }
-    for (const v of [...TILT.scrib, TILT.night, TILT.action, TILT.sketch, ...TILT.label]) {
+    for (const v of [
+      ...TILT.scrib,
+      TILT.night,
+      TILT.action,
+      TILT.sketch,
+      ...TILT.label,
+    ]) {
       expect(abs(v)).toBeGreaterThanOrEqual(0.5)
       expect(abs(v)).toBeLessThanOrEqual(4)
     }
