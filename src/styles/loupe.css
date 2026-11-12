@@ -129,3 +129,18 @@
   border-width: 8px 0 8px 9px;
   border-left-color: #4a4130;
 }
+
+/* #342: shaking / double-tapping the monitor switches the grain and the lines off for NOISE_OFF_MS (numbers in src/utils/noiseOff.ts).
+   The grain (with its tear bands, drawn on the same canvas) and the horizontal scanlines (.scan); glare, vignette, REC / CAM and the picture stay. The loupe carries the same class. */
+.glass .noise,
+.glass .scan,
+.loupe .noise,
+.loupe .scan {
+  transition: opacity 0.5s ease;
+}
+.glass.noise-off .noise,
+.glass.noise-off .scan,
+.loupe.noise-off .noise,
+.loupe.noise-off .scan {
+  opacity: 0;
+}
