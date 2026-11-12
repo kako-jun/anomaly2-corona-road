@@ -811,3 +811,19 @@ describe('updateChecked and canPersist follow the latest write', () => {
     expect(store.canPersist()).toBe(false)
   })
 })
+
+describe('sound settings (#79)', () => {
+  it('keeps a valid volume and mute switch', () => {
+    const s = save({ settings: { volume: 35, muted: true } })
+    expect(validateSave(s)?.settings).toEqual({ volume: 35, muted: true })
+  })
+  it.each([
+    ['a volume over 100', { volume: 101 }],
+    ['a negative volume', { volume: -1 }],
+    ['a NaN volume', { volume: NaN }],
+    ['a string volume', { volume: '5' }],
+    ['a non-boolean muted', { muted: 1 }],
+  ])('rejects settings with %s', (_n, settings) => {
+    expect(validateSave({ ...save(), settings })).toBeNull()
+  })
+})

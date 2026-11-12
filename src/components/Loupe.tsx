@@ -2,6 +2,8 @@ import { CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { LoupeView } from '../hooks/useLoupeGesture'
 import { LOUPE } from '../utils/loupe'
+import { FeedGlitchKind } from '../utils/feedGlitch'
+import { GlitchCanvas } from './GlitchCanvas'
 import { NoiseCanvas } from './NoiseCanvas'
 
 interface LoupeProps {
@@ -19,6 +21,10 @@ interface LoupeProps {
   contrast: number
   /** The noise is switched off for a while (#342): the grain in the loupe goes with the monitor's. */
   noiseOff?: boolean
+  /** The watched camera's feed glitch (#78): the magnified picture shows it too. */
+  feedGlitch?: FeedGlitchKind
+  /** Seeds the camera's fixed dead pixels (same as on the monitor). */
+  glitchSeed?: number
 }
 
 /**
@@ -35,6 +41,8 @@ export const Loupe = ({
   brightness,
   contrast,
   noiseOff,
+  feedGlitch,
+  glitchSeed = 0,
 }: LoupeProps) => {
   const d = LOUPE.DIAMETER_PX
   const frameStyle: CSSProperties = {
@@ -42,6 +50,8 @@ export const Loupe = ({
     height: view.frameH * LOUPE.ZOOM,
     left: d / 2 - view.u * view.frameW * LOUPE.ZOOM,
     top: d / 2 - view.v * view.frameH * LOUPE.ZOOM,
+    // zoom / tilt / shake scale about the held spot, so it stays under the circle's centre
+    transformOrigin: `${view.u * 100}% ${view.v * 100}%`,
   }
   const style = {
     width: d,
@@ -54,12 +64,16 @@ export const Loupe = ({
     <div
       className={noiseOff ? 'loupe noise-off' : 'loupe'}
       style={style}
+      data-glitch={feedGlitch}
       data-testid="loupe"
       aria-hidden="true"
     >
       <div className="loupe__frame" style={frameStyle}>
         <img src={image} alt="" draggable={false} />
         <img className="glow" src={image} alt="" draggable={false} />
+        {feedGlitch === 'ghost' && (
+          <img className="ghost" src={image} alt="" draggable={false} />
+        )}
         {overlay && (
           <img
             className="overlay"
@@ -79,6 +93,19 @@ export const Loupe = ({
         className="loupe__fx"
         style={{ width: view.glassW, height: view.glassH }}
       >
+        {feedGlitch === 'blocks' && <GlitchCanvas kind="blocks" />}
+        {feedGlitch === 'deadpixels' && (
+          <GlitchCanvas kind="deadpixels" seed={glitchSeed} />
+        )}
+        {feedGlitch === 'scanburn' && (
+          <div className="fx scanburn" aria-hidden="true" />
+        )}
+        {feedGlitch === 'blink' && (
+          <div className="fx blackframe" aria-hidden="true" />
+        )}
+        {feedGlitch === 'lost' && (
+          <div className="fx lost" aria-hidden="true" />
+        )}
         <NoiseCanvas />
         <div className="fx scan" />
       </div>

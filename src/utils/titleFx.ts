@@ -1,6 +1,6 @@
-/** The title photo's random bursts of monitor noise (#296): short, rare and faint. */
-export const BURST_MS = [150, 400] as const
-export const GAP_MS = [1500, 7000] as const
+/** The title photo's random bursts of monitor noise (#296, #332): about a second long and frequent, noise on roughly 30% of the time. */
+export const BURST_MS = [400, 1100] as const
+export const GAP_MS = [800, 3500] as const
 
 /** A random value in [lo, hi] from a 0..1 source. */
 export const between = (

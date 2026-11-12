@@ -1042,3 +1042,25 @@ describe('the real ledger keeps category well-formed (#347)', () => {
     expect(r?.categories).toEqual(['Environment', 'Surreal', 'Camera'])
   })
 })
+
+const MIN_RUNTIME_COUNT: Record<string, number> = { FEED: 28, UI: 30, RULE: 6, SND: 12 }
+
+describe('the real ledger has no gaps in the runtime ids (kako-jun 2026-11-12)', () => {
+  it('RT-FEED / RT-UI / RT-RULE / RT-SND ids are consecutive from 01 (fill a freed id at once)', () => {
+    const ids = (
+      readFileSync(resolve(process.cwd(), 'prompts/anomalies.yaml'), 'utf8').match(/id: 'RT-[A-Z]+-\d+'/g) ?? []
+    ).map(x => x.slice(5, -1))
+    const byKind = new Map<string, number[]>()
+    for (const id of ids) {
+      const [, kind, n] = id.split('-')
+      byKind.set(kind, [...(byKind.get(kind) ?? []), Number(n)])
+    }
+    expect([...byKind.keys()].sort()).toEqual(['FEED', 'RULE', 'SND', 'UI'])
+    for (const [kind, ns] of byKind) {
+      const sorted = [...ns].sort((a, b) => a - b)
+      expect(sorted, kind).toEqual(sorted.map((_, i) => i + 1))
+      // Runtime anomalies are never removed without replacement: a series may not shrink (raise the floor when adding).
+      expect(sorted.length, kind).toBeGreaterThanOrEqual(MIN_RUNTIME_COUNT[kind])
+    }
+  })
+})

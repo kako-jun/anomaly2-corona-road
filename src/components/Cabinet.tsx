@@ -5,6 +5,7 @@ import { FlagEvent, useSubtitle } from '../hooks/useSubtitle'
 import { Anomaly, AnomalyCategory, Camera, GameStats } from '../types/game'
 import { CAMERAS, ENDING_BAR_CAMERA } from '../utils/gameConfig'
 import { KNOB_DEFAULT, brightnessFilter, contrastFilter } from '../utils/knob'
+import { forcedFeedGlitch } from '../utils/feedGlitch'
 import { parseWear } from '../utils/wear'
 import { CameraStrip } from './CameraStrip'
 import { CameraView } from './CameraView'
@@ -15,6 +16,14 @@ import { ReportButton, ReportDialog } from './ReportPanel'
 
 // Fixed at module load: changing `?wear=` needs a page reload.
 const WEAR = parseWear(window.location.search)
+
+// Dev only (`?glitch=<kind>`, ignored by a production build): shows one camera feed glitch on every camera, to look at
+// the effects while nothing spawns them yet (#78). The spawner (#77) will replace this with the glitch of the
+// anomaly on the watched camera.
+const FORCED_GLITCH = forcedFeedGlitch(
+  window.location.search,
+  import.meta.env.DEV
+)
 
 interface CabinetProps {
   stats: GameStats
@@ -121,6 +130,8 @@ export const Cabinet = ({
           subtitle={subtitle}
           brightness={brightnessFilter(brightness)}
           contrast={contrastFilter(contrast)}
+          feedGlitch={ending === 'ending' ? undefined : FORCED_GLITCH}
+          feedGlitchForced={FORCED_GLITCH !== undefined}
           onSwipe={handleSwipe}
           loupeHost={loupeHost}
         />

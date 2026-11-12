@@ -22,7 +22,7 @@ prompts/
 - `.agents/skills/corona-road-anomaly/SKILL.md` — 候補選定から差分合成・レビュー・登録までの反復手順（prompts/ の外にある制作スキル）。
 - 異変の全件は `anomalies.yaml`（制作済み=`produced`、未制作=`planned`、画像=`image`、画面の乱れ・音・UI・ルール=`non_image`。用語は下の「用語集」）。`candidate-pool.md` には、台帳の planned 画像案の制作仕様の詳細と方針の説明だけがある（採用/不採用の状態は無い。不要な案は台帳から削除する。昇格ルールは下の「台帳の書式」）。
 - `queue/index.html` と `atlas/*.svg` は**生成物**。手で編集せず、元の正本を直して再生成する。
-- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、昭和の音の案は台帳の `kind: non_image`（`CR-SH-04`〜`06`）にある。
+- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、昭和の音の案は台帳の `kind: non_image`（`CR-SH-04`〜`06`）にある。音（`anomaly_type: sound` 18件）の合成か素材かの分類と音声基盤は `docs/audio.md`。
 - 4人目（令和のZ世代の子供）の「令和の異変（どれでも3つ見つければ条件成立）」の異変は台帳にある（画像は `anomalies.yaml` の `reiwa: true` が印で、ゲームはビルド時にこれを読んで令和の異変を決める（#83）。音は `CR-RZ-07`〜`09`（画像以外の異変、未実装 #79）。昭和でない令和の物。方針は `docs/story.md` の「進行」節）。
 
 ## 用語集（正本）
@@ -100,9 +100,14 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | image + planned                      | `camera_id` `category` `anomaly_type`                                                       | `overlay` `overlay_origin` `dimensions` は省略可（書くなら3つ全部）。`spec` は任意                                                                                                        |
 | non_image（planned / produced とも） | `anomaly_type`（画像以外の種類）`detail`                                                    | `camera_id` は省略可（出現のたびに無作為）。overlay 系は書けない。`category` は image と同じ検証（配列も可。先頭が camera でよいのは `feed_glitch`）。ui_corruption / rule_break は省略可 |
 
-- `memo_flag` / `memo`（#325）: リザルトの捜査メモの出し分け。**台帳が正本**（`memo` の文言は kako-jun が承認済み、2026-11-12。台帳が唯一の正本で、直したい行は台帳を直接直す。再生成スクリプトは無い）で、コードに異変 ID は書かない。`memo_flag` のある異変を報告するとそのフラグが「未表示」に積まれ、リザルトで仮説の一行（文言は `src/data/investigationNotes.ts` の `MEMO_FLAG_TEXT`、段階ゲート `knownFrom` つき）として1回だけ出る。`reiwa: true` の異変は `memo_flag` を書かなくても `reiwa` を立てる。`memo` のある異変を報告するとその ID が「未表示」に積まれ、持ち越し分から無作為に1つがリザルトに出る（一度出したものは二度と出ない）。1回のリザルトに出るのは仮説の一行1つ＋一言メモ1つまで。一言メモは story.md に無い事実を足さず、その異変自体の内容（`detail`）から起こす。1行は日本語20字・英語40字以内で、使う文字は `public/fonts/note-chars.txt`（日本語）に含まれること（足りなければ `npm run check:note-fonts` の手順でサブセットを更新）。**全エントリが `memo` を持つ**（#325 の2段目、374件。planned・non_image も。新しい異変を足すときは `memo` も書く＝vitest が要求する）。同じ言い回し・同じ題材の繰り返しを避け、ja・en とも同一文言を2回使わない（テストで縛る）。文言を直すときは台帳 `prompts/anomalies.yaml` の `memo` を直接直す（直したら `scripts/memo-overlap-report.py` で類似を確認）。実在の会社名・商品名・人物名は書かない。「シャッター」は一言メモ内では物の名前としてのみ許す（kako-jun 決定、Issue #325「#338 の2点」）。仮説の一行（`MEMO_FLAG_TEXT`）は従来どおり `knownFrom: 'child'` で、段階ゲートの禁止語検査も維持する。メモを直して新しい文字が増えると、vitest（`src/data/investigationNotes.test.ts`。台帳の全 `memo` を読む）が `public/fonts/note-chars.txt` の欠字で落ちる。その文字を足して `scripts/build-note-fonts.py build` でフォントを作り直し、`npm run check:note-fonts`（woff2 が一覧の全字を持つか）と `npm run check:note-wrap`（全件の実描画で1行に収まるか）で確かめる。検証は `parseMemoFlags` / `parseMemo`（`src/utils/anomalyLedger.ts`）。
+- `memo_flag` / `memo`（#325）: リザルトの捜査メモの出し分け。**台帳が正本**（`memo` の文言は kako-jun が承認済み、2026-11-12。台帳が唯一の正本で、直したい行は台帳を直接直す。再生成スクリプトは無い）で、コードに異変 ID は書かない。`memo_flag` のある異変を報告するとそのフラグが「未表示」に積まれ、リザルトで仮説の一行（文言は `src/data/investigationNotes.ts` の `MEMO_FLAG_TEXT`、段階ゲート `knownFrom` つき）として1回だけ出る。`reiwa: true` の異変は `memo_flag` を書かなくても `reiwa` を立てる。`memo` のある異変を報告するとその ID が「未表示」に積まれ、持ち越し分から無作為に1つがリザルトに出る（一度出したものは二度と出ない）。1回のリザルトに出るのは仮説の一行1つ＋一言メモ1つまで。一言メモは story.md に無い事実を足さず、その異変自体の内容（`detail`）から起こす。1行は日本語20字・英語40字以内で、使う文字は `public/fonts/note-chars.txt`（日本語）に含まれること（足りなければ `npm run check:note-fonts` の手順でサブセットを更新）。**全エントリが `memo` を持つ**（#325 の2段目。件数は `npm run ledger:summary` が真実。planned・non_image も。新しい異変を足すときは `memo` も書く＝vitest が要求する）。同じ言い回し・同じ題材の繰り返しを避け、ja・en とも同一文言を2回使わない（テストで縛る）。文言を直すときは台帳 `prompts/anomalies.yaml` の `memo` を直接直す（直したら `scripts/memo-overlap-report.py` で類似を確認）。実在の会社名・商品名・人物名は書かない。「シャッター」は一言メモ内では物の名前としてのみ許す（kako-jun 決定、Issue #325「#338 の2点」）。仮説の一行（`MEMO_FLAG_TEXT`）は従来どおり `knownFrom: 'child'` で、段階ゲートの禁止語検査も維持する。メモを直して新しい文字が増えると、vitest（`src/data/investigationNotes.test.ts`。台帳の全 `memo` を読む）が `public/fonts/note-chars.txt` の欠字で落ちる。その文字を足して `scripts/build-note-fonts.py build` でフォントを作り直し、`npm run check:note-fonts`（woff2 が一覧の全字を持つか）と `npm run check:note-wrap`（全件の実描画で1行に収まるか）で確かめる。検証は `parseMemoFlags` / `parseMemo`（`src/utils/anomalyLedger.ts`）。
 - `spec`: 制作仕様への参照（任意の文字列。例: `candidate-pool.md の ### AR-01-outlets-multiply`）。
-- non_image の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口が未設計（#80）なので**空でよい**。image は従来どおり必須。
+- **解除の原則（non_image 全件・画像も同じ。kako-jun 2026-11-12「異変は指摘されたら必ず解除される」）**: 正しいカテゴリで報告した瞬間に異変は解除され、元の見た目・挙動に戻る。誤報（カテゴリ違い）では解除されない。解除は出現・報告側の共通処理が担うので、個々の異変は「解除時に元へ戻す」だけを実装する。解除できない・戻せない案は成立しないので台帳から削除する。この原則は各エントリの `detail` に繰り返し書かない（ここが正本）。
+- **報告できる範囲（non_image 全件。kako-jun 2026-11-12）**: カメラに関する異変（`feed_glitch`、`sound`、特定カメラだけの異変）は、そのカメラを開いている間だけ報告できる。監視モニター全体の異変（`ui_corruption`、`rule_break`。TIME・ランプ・つまみ・数字表示・スピーカー・ボタン・ルーペ・筐体の色・REPORT の綴りなど）は、選択中のカメラに関係なくどのカメラを見ていても報告できる。区別は既存の `anomaly_type` で足りるため追加フィールドは作らない。
+- **点滅の安全上限（実装担当向け）**: 画面や部品を点滅させる異変は、1秒に3回以下・小さな輝度差（白一色の全面フラッシュにしない）・数回で終わる、`prefers-reduced-motion` では点滅させず静止状態にする。超えない（WCAG 2.3.1）。
+- **欠番を作らない（kako-jun 2026-11-12）**: 不採用・削除・他の種類への移動で `RT-*` の id が空いたら、すぐ別の実現可能な異変を新しく考えてその id で埋める。id は種類ごとに 01 からの連番のまま保つ（テストが検査する）。
+- **異変の見える場所（kako-jun 2026-11-12）**: 操作せずに常に見えている部分（モニター・筐体・TIME や REPORTS の数字窓・ランプ・つまみ・キー・REPORT ボタン自体など）に限る。REPORT を押して開く一覧（カテゴリボタン・並び・文言）や、1クリックしないと見えない場所への仕掛けは反則なので作らない。ルーペのように常時使える常設部品の異変（`RT-UI-21`）は、気づく手がかりが常にあるので許す。
+- non_image の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口を新設せず、メタ的な異変として最後の既存カテゴリ `Surreal` で報告する（#80 の決定。全件 `Surreal`）。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に画像以外の種類、non_image に画像の種類）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
 - ゲーム（`virtual:anomalies`）に渡るのは `kind: image` かつ `status: produced` だけ。planned と non_image は検証されるが抽選には出ない（出現ロジックと効果は #78・#79・#80）。
 - 件数の要約: `npm run ledger:summary`（kind / status / category / anomaly_type とそのクロス集計。ビルドと同じ検証を通る）。
@@ -150,6 +155,8 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | `sound`         | 音（画像以外）             | 誰もいない通路でシャッター音が鳴る           |
 | `ui_corruption` | UI の崩れ（画像以外）      | 画面表示が壊れる                             |
 | `rule_break`    | ルール違反（画像以外）     | タイマーの異常                               |
+
+`feed_glitch` の見せ方（#78）: RT-FEED-01〜06・11・19〜26 は画面側の効果が実装済み（種類と台帳 ID の対応は `src/utils/feedGlitch.ts`、描画は `src/styles/feedGlitch.css`）。開発サーバーで `?glitch=<種類>`（`zoom` `tilt` `blur` `bright` `dark` `blocks` `scanburn` `lost` `shake` `hardshake` `wave` `chroma` `static` `blink` `deadpixels` `ghost` `fade`）を付けると全カメラで強制発火して見られる（本番ビルドでは無効）。RT-FEED-07〜10・12〜18 は見送りで、理由は各エントリの `note` に書いてある。出現（抽選）はまだ無く（#77）、効果が実在しても status は `planned` のまま（昇格は別途）。
 
 ## カテゴリ（ゲーム内分類）
 
