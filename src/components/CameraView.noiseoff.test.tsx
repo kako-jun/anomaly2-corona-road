@@ -96,7 +96,7 @@ describe('noise off by double tap (#342)', () => {
     expect(view.container.querySelector('.noise-hint')).toBeNull()
   })
 
-  it('a double tap switches the noise off for NOISE_OFF_MS, counts down, then on again', () => {
+  it('a double tap switches the noise off for NOISE_OFF_MS, then on again', () => {
     const { glass } = setup()
     tap(glass)
     act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS / 2))

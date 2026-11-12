@@ -398,7 +398,7 @@ src/
 │   ├── CameraView.tsx   # CRT monitor (picture, noise, OSD, subtitles)
 │   ├── NoiseCanvas.tsx
 │   ├── Loupe.tsx        # The round magnifier on the control panel (#341; gesture in hooks/useLoupeGesture.ts, numbers in utils/loupe.ts)
-│   ├── (noise off #342: hooks/useNoiseOff.ts, numbers + hint text in utils/noiseOff.ts)
+│   ├── (noise off #342: hooks/useNoiseOff.ts, numbers in utils/noiseOff.ts)
 │   ├── CameraStrip.tsx  # Numbered camera push buttons
 │   ├── Knob.tsx         # BRIGHTNESS / CONTRAST knob
 │   ├── GameHUD.tsx      # Display windows (time, reports, strike lamps)
