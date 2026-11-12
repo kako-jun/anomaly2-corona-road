@@ -246,14 +246,16 @@
 .note-sketch {
   /* The scribble that goes with an anomaly's one-liner (#325): right under the last synopsis line (the one-liner is the
      last), at the right edge, over the rules like a doodle in the margin. It is out of the flow, so it moves nothing.
-     The box (56 x 56) is the room that is free in the worst case: below the last line of a 6-line synopsis (133px of
-     the 194px sheet, hypothesis + one-liner) and right of the longest scribble (244.5px of 308px, elder3 dawn in
-     Japanese): 3px under the line, 7px left of the scribble, 8px above the number box. check:note-wrap measures it. */
+     The box (50 x 50) is the room that is free in the worst case, measured on the sheet: below the last line of a 6-line
+     synopsis (133px of the 194px sheet, hypothesis + one-liner) and right of the longest handwritten scribble (244.5px of
+     308px, elder3 dawn in Japanese). 6px under the line (the text box of the English hand is about 3px taller than its
+     line), 3px from the edge and 50px square leave about 9px above the number box and 8px left of the scribble even when
+     the 3.3 degree tilt swings a corner out by 1.5px. check:note-wrap measures it. */
   position: absolute;
-  right: 0;
-  top: calc(100% + 3px);
-  max-width: 56px;
-  max-height: 56px;
+  right: 3px;
+  top: calc(100% + 6px);
+  max-width: 50px;
+  max-height: 50px;
   transform: rotate(var(--tilt-sketch));
   transform-origin: 50% 50%;
   pointer-events: none;
