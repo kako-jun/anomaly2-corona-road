@@ -78,9 +78,9 @@ lines:
 ```yaml
 flags:
   elder1:
-    foundUnique: 20 # 見つけた異変の数（重複なし。foundIds の長さ。用語は prompts/README.md の用語集）
+    foundUnique: 10 # 見つけた異変の数（重複なし。foundIds の長さ。用語は prompts/README.md の用語集）
   child:
-    foundUnique: 120
+    foundUnique: 100
     reiwaFound: 3 # 令和の異変を重複なしで3つ
     requires: [elder3] # 他のフラグが先に立っていること
 ```
