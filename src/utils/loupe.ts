@@ -1,4 +1,3 @@
-import type { Language } from './language'
 
 /**
  * The magnifier loupe (#341). Every number kako-jun tunes by eye lives here, in this one place.
@@ -19,12 +18,6 @@ export const LOUPE = {
   /** How fast the magnified spot follows the finger: the time (ms) it takes to cover about 63% of the remaining distance. */
   FOLLOW_TAU_MS: 55,
 } as const
-
-/** The always-visible hint near the monitor (no hidden operations). Follows the browser's language, like the note. */
-export const LOUPE_HINT: Record<Language, string> = {
-  ja: '押し続けるとルーペ',
-  en: 'Hold to magnify',
-}
 
 /**
  * The centre of the magnified spot, in the glass's own px, kept so that the source window (DIAMETER / ZOOM wide)
