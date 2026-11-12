@@ -3480,7 +3480,7 @@ anomalies:
     camera_id: 'CAM07'
     element_id: 'CAM07-E07'
     base_photo: 'public/images/cam7.webp'
-    category: 'object'
+    category: ['object', 'person']
     anomaly_type: 'state_change'
     phase: 'early'
     subtlety: 'subtle'
