@@ -7125,8 +7125,8 @@ anomalies:
     anomaly_type: 'ui_corruption'
     detail: 'model number becomes 100: 筐体下端帯の型番プレート（画像 model-plate.webp、alt は Video Monitor CR-42、Cabinet.tsx）の「42」の部分が、4人目（子供）を発見するために必要な異変の数「100」に置き換わり、CR-42 が CR-100 に見える（kako-jun 2026-11-12「100は42の置き換えでいい」）。数字は dialogue/flags.yaml の flags.child.foundUnique から読み、コードに直書きしない（節目を変えても追従する）。実現: プレートは画像なので、画像の「42」の位置に同じ地色の CSS の板を重ねて隠し、その上に数字の文字（元の彫り込みに近い縁取り書体）を重ねて描く。3桁になるので重ねる範囲は「42」より横に広く取り、プレートの右端から食み出さない（--plate-h は縦長 20px / 横長 40px。縦長では数字が読める最小高さに注意）。alt も同じ数字に追従させる。出現は老人1人目を見つけた後（flags.yaml の elder1 の旗が立ってから。答えを先に見せない）。RT-UI-14 との違い: RT-UI-14 は「42」が「24」のように別の数字に入れ替わるだけで意味を持たない（出現条件なし）。この案は置き換わる数字が必ず「子供の発見に必要な異変の数」で、プレイヤーへのヒントになる。同じ型番プレートを触るので、同時には出現させない。'
     memo:
-      ja: 'プレートの数が１００だ。'
-      en: 'The plate now reads CR-100.'
+      ja: 'プレートの数がやけに大きい。'
+      en: 'The plate number is oddly large.'
   - id: 'RT-UI-29'
     status: 'planned'
     kind: 'non_image'
