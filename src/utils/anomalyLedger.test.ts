@@ -915,7 +915,8 @@ describe('the real ledger keeps category well-formed (#347)', () => {
       'AR-06-wall-gecko',
       'AR-01-ceiling-spider',
     ]) {
-      expect(catsOf(id), id).toEqual(['Object'])
+      expect(catsOf(id)[0], id).toBe('Object')
+      expect(catsOf(id), id).not.toContain('Person')
     }
     for (const id of [
       'AR-03-face-ornament',
@@ -932,7 +933,7 @@ describe('the real ledger keeps category well-formed (#347)', () => {
     }
     expect(catsOf('AR-01-window-peeping-face')[0]).toBe('Person')
   })
-  it('a thing on a wall or the floor is both Object and Environment; hung / airborne / on-a-stand is not (kako-jun 2026-11-12, #347)', () => {
+  it('a thing on a wall or the floor is both Object and Environment; on the ceiling too; on a stand is not (kako-jun 2026-11-12, #347)', () => {
     const catsOf = (id: string) => {
       const r = records.find(x => x.id === id)
       expect(r, id).toBeDefined()
@@ -967,15 +968,21 @@ describe('the real ledger keeps category well-formed (#347)', () => {
     // the primary category is unchanged
     expect(catsOf('AR-03-silver-can')[0]).toBe('Object')
     expect(catsOf('AR-02-puddle')[0]).toBe('Environment')
-    // hung from the ceiling, stuck to the ceiling, on a stand
+    // ceiling (hung / stuck / fixtures) and animals: both as well
     for (const id of [
       'AR-07-crane',
       'AR-04-ceiling-balloon',
+      'AR-06-ceiling-umbrellas',
       'AR-01-ceiling-lanterns',
       'AR-04-flypaper',
-      'AR-02-coffee',
-      'AR-02-ashtray',
+      'AR-02-cat',
+      'AR-06-wall-gecko',
     ]) {
+      expect(catsOf(id), id).toContain('Object')
+      expect(catsOf(id), id).toContain('Environment')
+    }
+    // on a stand: neither wall nor floor nor ceiling
+    for (const id of ['AR-02-coffee', 'AR-02-ashtray']) {
       expect(catsOf(id), id).not.toContain('Environment')
     }
   })
