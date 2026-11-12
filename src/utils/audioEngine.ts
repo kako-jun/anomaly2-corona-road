@@ -86,7 +86,7 @@ export const createAudioEngine = (
       build()
       if (!context) return
       try {
-        if (context.state === 'suspended') await context.resume()
+        if (context.state !== 'running') await context.resume()
       } catch {
         /* a refused resume stays silent; the next gesture tries again */
       }
@@ -108,23 +108,46 @@ export const createAudioEngine = (
 }
 
 /**
- * Unlock the engine on the first user gesture (pointerdown / keydown / touchend), once the context is running the
- * listeners go away. Returns a remover. Browsers differ on which gesture counts, hence three events.
+ * Keep the engine running: every user gesture (pointerdown / keydown / touchend) and every return of the page to
+ * visible calls `unlock()` when the context is not running, and a context that leaves `running` (iOS interrupts it
+ * when the app goes to the background) is resumed on its `statechange`. A resume outside a gesture may be refused;
+ * the next gesture then does it. The listeners are installed once and stay until the returned remover is called
+ * (they do nothing while running), so there is nothing to leak or re-arm.
  */
 export const installAudioUnlock = (
   engine: AudioEngine,
-  target: Pick<Window, 'addEventListener' | 'removeEventListener'> = window
+  target: Pick<Window, 'addEventListener' | 'removeEventListener'> = window,
+  doc: Pick<
+    Document,
+    'addEventListener' | 'removeEventListener' | 'visibilityState'
+  > = document
 ): (() => void) => {
-  const events = ['pointerdown', 'keydown', 'touchend'] as const
-  const remove = () =>
-    events.forEach(e => target.removeEventListener(e, onGesture))
-  const onGesture = () => {
+  const gestures = ['pointerdown', 'keydown', 'touchend'] as const
+  let watched: AudioContext | null = null
+  const onState = () => {
+    if (watched && watched.state !== 'running') void engine.unlock()
+  }
+  const kick = () => {
+    if (engine.ctx()?.state === 'running') return
     void engine.unlock().then(() => {
-      if (engine.ctx()?.state === 'running') remove()
+      const c = engine.ctx()
+      if (c && c !== watched) {
+        watched = c
+        c.addEventListener?.('statechange', onState)
+      }
     })
   }
-  events.forEach(e => target.addEventListener(e, onGesture))
-  return remove
+  const onVisible = () => {
+    if (doc.visibilityState === 'visible') kick()
+  }
+  gestures.forEach(e => target.addEventListener(e, kick))
+  doc.addEventListener('visibilitychange', onVisible)
+  return () => {
+    gestures.forEach(e => target.removeEventListener(e, kick))
+    doc.removeEventListener('visibilitychange', onVisible)
+    watched?.removeEventListener?.('statechange', onState)
+    watched = null
+  }
 }
 
 /** The one engine the game uses. */

@@ -156,8 +156,8 @@ const RECIPES: Record<SynthName, (c: Ctx) => SoundHandle> = {
   knock: c => {
     const t0 = c.ctx.currentTime + 0.02
     ;[0, 0.28, 0.52].forEach(dt => {
-      tone(c, 'sine', 110, t0 + dt, 0.9, 0.12, 0.002)
-      noiseHit(c, t0 + dt, 0.4, 0.05, 'lowpass', 900)
+      tone(c, 'sine', 110, t0 + dt, 0.6, 0.12, 0.002)
+      noiseHit(c, t0 + dt, 0.3, 0.05, 'lowpass', 900)
     })
     return { stop: () => {} }
   },
@@ -178,8 +178,8 @@ const RECIPES: Record<SynthName, (c: Ctx) => SoundHandle> = {
   /** Camera shutter: two short noise clicks. */
   shutter: c => {
     const t0 = c.ctx.currentTime + 0.02
-    noiseHit(c, t0, 0.6, 0.03, 'highpass', 2500)
-    noiseHit(c, t0 + 0.07, 0.5, 0.05, 'bandpass', 1800, 2)
+    noiseHit(c, t0, 0.5, 0.03, 'highpass', 2500)
+    noiseHit(c, t0 + 0.07, 0.4, 0.05, 'bandpass', 1800, 2)
     return { stop: () => {} }
   },
   /** Short dissonant cluster (minor second + tritone). */

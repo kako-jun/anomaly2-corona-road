@@ -50,4 +50,21 @@ describe('synth sounds', () => {
     }
     expect(playSynth(engine, 'hum')).toBeNull()
   })
+
+  it.each(NAMES)('%s stays within headroom at full volume', async name => {
+    const m = makeMockContext()
+    const engine = createAudioEngine({
+      createContext: () => m.ctx,
+      volume: 100,
+    })
+    await engine.unlock()
+    playSynth(engine, name)
+    const peaks = m.nodes
+      .filter(n => n.kind === 'gain' && n !== (engine.master() as unknown))
+      .map(n => (n.gain as { peak: number }).peak)
+    // no single envelope may exceed 0.6; sustained sounds stack at most 2 unit oscillators behind one gain (<= 1)
+    expect(Math.max(0, ...peaks)).toBeLessThanOrEqual(0.6)
+    const oscs = m.nodes.filter(n => n.kind === 'oscillator').length
+    if (name === 'hum') expect(peaks[0] * oscs).toBeLessThanOrEqual(1)
+  })
 })

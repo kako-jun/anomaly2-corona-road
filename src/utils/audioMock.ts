@@ -1,6 +1,7 @@
 /** Test double for AudioContext: records the nodes made, enough to check graph and gain values. */
 export interface MockParam {
   value: number
+  peak: number
   cancelScheduledValues: (t: number) => void
   setValueAtTime: (v: number, t: number) => void
   linearRampToValueAtTime: (v: number, t: number) => void
@@ -18,12 +19,14 @@ export const makeMockContext = (initial: AudioContextState = 'suspended') => {
   const param = (): MockParam => {
     const p: MockParam = {
       value: 1,
+      peak: 0,
       cancelScheduledValues: () => {},
       setValueAtTime: v => {
         p.value = v
       },
       linearRampToValueAtTime: v => {
         p.value = v
+        p.peak = Math.max(p.peak, v)
       },
       exponentialRampToValueAtTime: v => {
         p.value = v
@@ -56,6 +59,13 @@ export const makeMockContext = (initial: AudioContextState = 'suspended') => {
     sampleRate: 8000,
     destination,
     resumeCalls: 0,
+    listeners: [] as ((e: unknown) => void)[],
+    addEventListener: (_t: string, f: (e: unknown) => void) => {
+      ctx.listeners.push(f)
+    },
+    removeEventListener: (_t: string, f: (e: unknown) => void) => {
+      ctx.listeners = ctx.listeners.filter(x => x !== f)
+    },
     resume: async () => {
       ctx.resumeCalls++
       ctx.state = 'running'
