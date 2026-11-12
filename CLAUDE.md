@@ -105,8 +105,9 @@ Meta-anomalies challenge the player's trust in the game interface itself (not im
 ### Accessibility
 
 - **Color-blind Safe**: Anomaly categories are always text labels, never color-only and never emoji (see DESIGN.md §2.3)
-- **Multi-input controls**: Touch swipe, mouse drag, keyboard (← → / A D / 1–8), and the numbered camera buttons — all four paths switch cameras
+- **Multi-input controls**: Touch swipe, mouse drag, keyboard (← → / A D / 1–8), the numbered camera buttons, and a short tap on the monitor's frame (left band = previous, right band = next; never on the picture, #354) — all five paths switch cameras
 - **Magnifier loupe (#341)**: press and hold the monitor (`LOUPE.HOLD_MS`, hardly moving) and a round loupe shows on the control panel; moving while holding moves the magnified spot (smoothed), letting go removes it. A faster move past `SWIPE_PX` before it shows is still the camera swipe; once it shows, sideways movement moves the loupe, never the camera. Only the picture is magnified (`ZOOM`); the noise and scanlines are drawn above it at the monitor's own size (same grain). All numbers are in `src/utils/loupe.ts`. A text hint ("Hold to magnify" / 「押し続けるとルーペ」, browser language) is always on the monitor frame. Pointer events for touch / mouse / pen; mouse / touch only (no keyboard)
+- **Edge tap (#354)**: a short tap (released within `LOUPE.HOLD_MS`, moved at most `HOLD_SLOP_PX`) on the left of the monitor goes to the previous camera, on the right to the next (cameras wrap, like the swipe and the number keys). The pointer handlers are on the whole `.bezel`: the zone is only the frame outside the picture: left of the `.glass` box = previous, right of it = next (`edgeTapDirection` in `src/utils/loupe.ts`); the top / bottom band counts only in those same columns, so the corners extend the side bands. The direction and the zone test use the x where the press began, and only a press that began on the frame counts: a press that began on the picture (`.glass`) never switches, wherever it is released. A tap on the picture does nothing, short or not, and the middle of the top / bottom band does nothing. A press that became the loupe or a swipe never switches. The loupe only starts for a press that began on the picture (`.glass`). Small arrowheads on the frame's sides (`.edge-mark`, aria-hidden, always visible) are the sign; the number buttons and the arrow keys do the same without it
 - **Clear Feedback**: A green / red on-screen display (OSD) message on the monitor for every report (correct / wrong)
 - **Mobile-first, desktop-equal**: 480 px column on desktop, full-bleed on mobile; never assumes a touchscreen
 
@@ -144,7 +145,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 #### Camera System
 
 - [x] 8 camera feeds defined (with provisional WebP imagery)
-- [x] Multi-input navigation (touch swipe / mouse drag / keyboard / numbered buttons)
+- [x] Multi-input navigation (touch swipe / mouse drag / keyboard / numbered buttons / frame tap)
 - [x] Numbered camera buttons with a green selected lamp (no anomaly indicator)
 - [x] Anomalies shown as transparent overlay images on the base photo, with the same brightness / contrast filter as the photo
 - [x] Monitor OSD (`CAM n`, REC)

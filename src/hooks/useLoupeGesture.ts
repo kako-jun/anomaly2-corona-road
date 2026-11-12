@@ -6,7 +6,12 @@ import {
   useRef,
   useState,
 } from 'react'
-import { LOUPE, clampLoupeCenter, followStep } from '../utils/loupe'
+import {
+  LOUPE,
+  clampLoupeCenter,
+  edgeTapDirection,
+  followStep,
+} from '../utils/loupe'
 
 /** What the loupe needs to draw: the magnified spot as a fraction of the picture frame, and the sizes it is drawn against. */
 export interface LoupeView {
@@ -23,6 +28,7 @@ interface Options {
   enabled: boolean
   glassRef: RefObject<HTMLElement>
   frameRef: RefObject<HTMLElement>
+  /** Camera change from a swipe or from a short tap on the left / right of the monitor (#354). */
   onSwipe: (direction: 'next' | 'prev') => void
   /** Changes when the camera changes: a loupe held through a camera switch is closed. */
   resetKey?: unknown
@@ -44,6 +50,8 @@ interface Geometry {
  *  - pointer down starts a hold timer (HOLD_MS); moving more than HOLD_SLOP_PX first cancels the hold;
  *  - hold done: the loupe shows, the camera swipe is off, moving moves the magnified spot (smoothed);
  *  - release without a loupe: horizontal travel over SWIPE_PX switches the camera; release with a loupe: it disappears.
+ *  - edge tap (#354): the handlers sit on the whole bezel. A short press (under HOLD_MS, within HOLD_SLOP_PX) that began on the bezel,
+ *    by the x where it began, in the left / right zone (edgeTapDirection) switches the camera; the loupe only starts for a press that began on the glass.
  * A second pointer (another finger) is ignored while one is down.
  */
 export const useLoupeGesture = ({
@@ -60,6 +68,8 @@ export const useLoupeGesture = ({
     startY: 0,
     x: 0,
     y: 0,
+    downAt: 0,
+    startOnGlass: false,
     mode: 'idle' as 'idle' | 'pending' | 'moved' | 'loupe',
     timer: 0,
     raf: 0,
@@ -169,7 +179,17 @@ export const useLoupeGesture = ({
     } catch {
       /* capture is best effort */
     }
-    if (enabled) st.timer = window.setTimeout(showLoupe, LOUPE.HOLD_MS)
+    st.downAt = performance.now()
+    const g = glassRef.current?.getBoundingClientRect()
+    const onGlass =
+      !!g &&
+      e.clientX >= g.left &&
+      e.clientX <= g.right &&
+      e.clientY >= g.top &&
+      e.clientY <= g.bottom
+    st.startOnGlass = onGlass
+    if (enabled && onGlass)
+      st.timer = window.setTimeout(showLoupe, LOUPE.HOLD_MS)
   }
 
   const onPointerMove = (e: ReactPointerEvent<HTMLElement>) => {
@@ -203,9 +223,19 @@ export const useLoupeGesture = ({
     if (e.pointerId !== st.id) return
     const diff = st.startX - e.clientX
     const wasLoupe = st.mode === 'loupe'
+    const wasPending = st.mode === 'pending'
+    const heldMs = performance.now() - st.downAt
+    const startOnGlass = st.startOnGlass
+    const startX = st.startX
     reset()
-    if (!wasLoupe && Math.abs(diff) > LOUPE.SWIPE_PX) {
+    if (wasLoupe) return
+    if (Math.abs(diff) > LOUPE.SWIPE_PX) {
       onSwipe(diff > 0 ? 'next' : 'prev')
+    } else if (wasPending && !startOnGlass && heldMs < LOUPE.HOLD_MS) {
+      // the direction is by where the press began (a press that began on the picture is never a tap)
+      const g = glassRef.current?.getBoundingClientRect()
+      const dir = g ? edgeTapDirection(startX, g.left, g.width) : null
+      if (dir) onSwipe(dir)
     }
   }
 

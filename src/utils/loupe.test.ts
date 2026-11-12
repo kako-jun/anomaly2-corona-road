@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LOUPE, clampLoupeCenter, followStep } from './loupe'
+import { LOUPE, clampLoupeCenter, edgeTapDirection, followStep } from './loupe'
 
 describe('clampLoupeCenter', () => {
   const half = LOUPE.DIAMETER_PX / LOUPE.ZOOM / 2
@@ -37,5 +37,20 @@ describe('followStep', () => {
   })
   it('jumps at once with a zero time constant (reduced motion)', () => {
     expect(followStep(0, 100, 16, 0)).toBe(100)
+  })
+})
+
+describe('edgeTapDirection (#354)', () => {
+  const left = 100
+  const width = 400
+  it('left of the picture box is prev, right of it is next', () => {
+    expect(edgeTapDirection(left - 1, left, width)).toBe('prev')
+    expect(edgeTapDirection(left + width + 1, left, width)).toBe('next')
+  })
+  it('the box itself, edges included, is nothing', () => {
+    expect(edgeTapDirection(left, left, width)).toBeNull()
+    expect(edgeTapDirection(left + 1, left, width)).toBeNull()
+    expect(edgeTapDirection(left + width - 1, left, width)).toBeNull()
+    expect(edgeTapDirection(left + width, left, width)).toBeNull()
   })
 })

@@ -134,8 +134,10 @@ export const CameraView = ({
 
   return (
     <section className="tube" aria-label="Monitor">
-      <div className="bezel">
-        <div className="glass" style={style} ref={glassRef} {...handlers}>
+      <div className="bezel" {...handlers}>
+        <div className="edge-mark edge-mark--prev" aria-hidden="true" />
+        <div className="edge-mark edge-mark--next" aria-hidden="true" />
+        <div className="glass" style={style} ref={glassRef}>
           <div className="pic">
             <div
               className="pic__frame"
