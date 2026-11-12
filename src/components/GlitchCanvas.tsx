@@ -7,12 +7,12 @@ const HEIGHT = 160
 interface GlitchCanvasProps {
   /** `blocks`: coarse compression blocks that change ~8 times a second. `deadpixels`: fixed dots, drawn once. */
   kind: 'blocks' | 'deadpixels'
-  /** Seeds the fixed dots so each camera keeps its own. */
-  seed: number
+  /** Seeds the fixed dots so each camera keeps its own (`deadpixels` only; `blocks` is random). */
+  seed?: number
 }
 
 /** Low-res canvas for the two glitches that are drawn rather than filtered (#78). Like NoiseCanvas it animates only while the tab is visible and motion is allowed. */
-export const GlitchCanvas = ({ kind, seed }: GlitchCanvasProps) => {
+export const GlitchCanvas = ({ kind, seed = 0 }: GlitchCanvasProps) => {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {

@@ -213,7 +213,7 @@ export const CameraView = ({
           {(feedGlitch === 'wave' || feedGlitch === 'chroma') && (
             <FeedGlitchFilters />
           )}
-          {feedGlitch === 'blocks' && <GlitchCanvas kind="blocks" seed={0} />}
+          {feedGlitch === 'blocks' && <GlitchCanvas kind="blocks" />}
           {feedGlitch === 'deadpixels' && (
             <GlitchCanvas kind="deadpixels" seed={camera.id * 7919} />
           )}
@@ -234,7 +234,7 @@ export const CameraView = ({
               NO SIGNAL
             </div>
           )}
-          {feedGlitchForced && (
+          {feedGlitchForced && feedGlitch && (
             <div className="osd osd-dev">DEV GLITCH: {feedGlitch}</div>
           )}
           <div className="osd osd-cam">CAM {camera.id}</div>
@@ -279,6 +279,8 @@ export const CameraView = ({
           brightness={brightness}
           contrast={contrast}
           noiseOff={noise.off}
+          feedGlitch={feedGlitch}
+          glitchSeed={camera.id * 7919}
         />
       )}
     </section>

@@ -4,25 +4,30 @@
    The strength is chosen so each one is visible at the default knob setting (knobs only filter .pic img, not .pic). */
 
 /* RT-FEED-01 frame crop: zoomed in */
-.glass[data-glitch='zoom'] .pic {
+.glass[data-glitch='zoom'] .pic,
+.loupe[data-glitch='zoom'] .loupe__frame {
   transform: scale(1.22);
 }
 
 /* RT-FEED-02 angle shifted */
-.glass[data-glitch='tilt'] .pic {
+.glass[data-glitch='tilt'] .pic,
+.loupe[data-glitch='tilt'] .loupe__frame {
   transform: rotate(4deg) scale(1.12);
 }
 
 /* RT-FEED-03 focus blur */
-.glass[data-glitch='blur'] .pic {
-  filter: blur(4px);
+.glass[data-glitch='blur'] .pic,
+.loupe[data-glitch='blur'] .loupe__frame {
+  filter: blur(calc(4px * var(--zoom, 1)));
 }
 
 /* RT-FEED-04 exposure shift: blown out / crushed */
-.glass[data-glitch='bright'] .pic {
+.glass[data-glitch='bright'] .pic,
+.loupe[data-glitch='bright'] .loupe__frame {
   filter: brightness(2.3) contrast(0.7);
 }
-.glass[data-glitch='dark'] .pic {
+.glass[data-glitch='dark'] .pic,
+.loupe[data-glitch='dark'] .loupe__frame {
   filter: brightness(0.32) contrast(1.15);
 }
 
@@ -66,12 +71,20 @@
     );
 }
 
+/* The loupe magnifies the monitor's picture, so the picture's glitch is drawn in it too (the same rules, keyed by
+   .loupe[data-glitch] on the magnified frame). Layers that are monitor-sized (blocks, dead pixels, burn, black frame,
+   black screen) sit in .loupe__fx like the noise: not magnified. A lost feed is black in the loupe as well. */
+.loupe[data-glitch='lost'] .loupe__frame {
+  visibility: hidden;
+}
+
 /* RT-FEED-11 camera lost: black screen. It says NO SIGNAL and keeps the grain, so it cannot be mistaken for a photo
    that failed to load (an empty box would have no text and no noise). */
 .lost {
   background: #000;
 }
-.glass[data-glitch='lost'] .noise {
+.glass[data-glitch='lost'] .noise,
+.loupe[data-glitch='lost'] .noise {
   opacity: 0.38;
   mix-blend-mode: screen;
 }
@@ -92,12 +105,14 @@
 }
 
 /* RT-FEED-19 shake / hard shake (the picture keeps its own flicker too) */
-.glass[data-glitch='shake'] .pic {
+.glass[data-glitch='shake'] .pic,
+.loupe[data-glitch='shake'] .loupe__frame {
   animation:
     flick 5.3s ease-in-out infinite,
     fg-shake 0.16s steps(1) infinite;
 }
-.glass[data-glitch='hardshake'] .pic {
+.glass[data-glitch='hardshake'] .pic,
+.loupe[data-glitch='hardshake'] .loupe__frame {
   animation:
     flick 5.3s ease-in-out infinite,
     fg-hardshake 0.22s steps(1) infinite;
@@ -132,17 +147,20 @@
 }
 
 /* RT-FEED-20 distortion: slices pulled sideways (SVG filter in FeedGlitchFilters) */
-.glass[data-glitch='wave'] .pic {
+.glass[data-glitch='wave'] .pic,
+.loupe[data-glitch='wave'] .loupe__frame {
   filter: url(#fg-wave);
 }
 
 /* RT-FEED-21 chromatic aberration (SVG filter in FeedGlitchFilters) */
-.glass[data-glitch='chroma'] .pic {
+.glass[data-glitch='chroma'] .pic,
+.loupe[data-glitch='chroma'] .loupe__frame {
   filter: url(#fg-chroma);
 }
 
 /* RT-FEED-22 static noise: the ordinary grain, turned up and drawn normally instead of as a faint overlay */
-.glass[data-glitch='static'] .noise {
+.glass[data-glitch='static'] .noise,
+.loupe[data-glitch='static'] .noise {
   opacity: 0.8;
   mix-blend-mode: normal;
 }
@@ -174,7 +192,8 @@
 }
 
 /* RT-FEED-25 overlay ghosting: the previous frame stays faintly, a little to the side and drifting */
-.pic img.ghost {
+.pic img.ghost,
+.loupe__frame img.ghost {
   filter: brightness(var(--bri, 1)) contrast(var(--con, 1)) saturate(0.9);
   opacity: 0.5;
   animation: fg-ghost 2.6s ease-in-out infinite;
@@ -190,7 +209,8 @@
 }
 
 /* RT-FEED-26 a moment of faded colour: washed out for about a second every few seconds */
-.glass[data-glitch='fade'] .pic {
+.glass[data-glitch='fade'] .pic,
+.loupe[data-glitch='fade'] .loupe__frame {
   animation:
     flick 5.3s ease-in-out infinite,
     fg-fade 4.5s ease-in-out infinite;
@@ -222,7 +242,9 @@
 /* Reduced motion: the movement stops, the glitch stays visible as one still state */
 @media (prefers-reduced-motion: reduce) {
   .glass[data-glitch='shake'] .pic,
-  .glass[data-glitch='hardshake'] .pic {
+  .glass[data-glitch='hardshake'] .pic,
+  .loupe[data-glitch='shake'] .loupe__frame,
+  .loupe[data-glitch='hardshake'] .loupe__frame {
     animation: none;
     transform: translate(2%, 1.5%) scale(1.1) rotate(1deg);
   }
@@ -230,11 +252,13 @@
     animation: none;
     opacity: 0.45;
   }
-  .pic img.ghost {
+  .pic img.ghost,
+  .loupe__frame img.ghost {
     animation: none;
     transform: translate(3%, 0);
   }
-  .glass[data-glitch='fade'] .pic {
+  .glass[data-glitch='fade'] .pic,
+  .loupe[data-glitch='fade'] .loupe__frame {
     animation: none;
     filter: saturate(0.05) brightness(1.25) contrast(0.7);
   }

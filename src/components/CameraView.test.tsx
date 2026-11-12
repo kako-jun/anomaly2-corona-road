@@ -453,7 +453,12 @@ describe('CameraView feed glitch (#78)', () => {
     expect(screen.getByText('DEV GLITCH: zoom')).toBeInTheDocument()
   })
 
-  it('a glitch does not hide the anomaly overlay path or the base photo', () => {
+  it('does not print the dev label when there is no glitch (ending)', () => {
+    render(<CameraView {...props({ feedGlitchForced: true })} />)
+    expect(screen.queryByText(/DEV GLITCH/)).toBeNull()
+  })
+
+  it('a glitch keeps the base photo', () => {
     render(<CameraView {...props({ feedGlitch: 'static' })} />)
     expect(baseOf(cams[0])).toBeInTheDocument()
   })
