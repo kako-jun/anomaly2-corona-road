@@ -13,6 +13,9 @@ export type Language = 'ja' | 'en'
 export interface SaveSettings {
   brightness?: number
   contrast?: number
+  /** Sound (#79): master volume 0..100 (absent = the default) and the mute switch (absent = sound on). */
+  volume?: number
+  muted?: boolean
   /** Reserved for a future settings screen (#292). Read for compatibility with old saves, but neither written nor used: the language comes from the browser at every start. */
   language?: Language
 }
@@ -281,15 +284,23 @@ export const validateSave = (raw: unknown): SaveData | null => {
   if (lastShift) out.lastShift = lastShift
   if (settings !== undefined) {
     if (!isRecord(settings)) return null
-    const { brightness, contrast, language } = settings
+    const { brightness, contrast, language, volume, muted } = settings
     if (brightness !== undefined && typeof brightness !== 'number') return null
     if (contrast !== undefined && typeof contrast !== 'number') return null
     if (language !== undefined && language !== 'ja' && language !== 'en')
       return null
+    if (
+      volume !== undefined &&
+      (typeof volume !== 'number' || !(volume >= 0 && volume <= 100))
+    )
+      return null
+    if (muted !== undefined && typeof muted !== 'boolean') return null
     out.settings = {
       ...(brightness !== undefined ? { brightness } : {}),
       ...(contrast !== undefined ? { contrast } : {}),
       ...(language !== undefined ? { language } : {}),
+      ...(volume !== undefined ? { volume } : {}),
+      ...(muted !== undefined ? { muted } : {}),
     }
   }
   return out

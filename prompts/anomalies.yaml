@@ -6512,7 +6512,7 @@ anomalies:
     memo:
       ja: '雑音に混じって古い歌謡曲のような旋律。'
       en: 'Old tune breaks through the static.'
-    note: '昭和テーマ。category は environment（仮）。出現のたびにカメラを無作為に選び、選ばれたカメラを見ている間だけ鳴らす。音素材と再生機構が必要（Issue #70）。注意: 台帳の既存 AR-01-door-ajar の candidate_id は旧番号の CR-SH-05 で、この音案とは別物。'
+    note: '昭和テーマ。category は environment（仮）。出現のたびにカメラを無作為に選び、選ばれたカメラを見ている間だけ鳴らす。音は WebAudio 合成（オリジナル旋律）で作る。再生基盤は実装済み（docs/audio.md、Issue #79）。注意: 台帳の既存 AR-01-door-ajar の candidate_id は旧番号の CR-SH-05 で、この音案とは別物。'
   - id: 'CR-SH-06'
     status: 'planned'
     kind: 'non_image'
@@ -6905,7 +6905,7 @@ anomalies:
     memo:
       ja: 'かすかな食器の音。'
       en: 'The faint sound of dishes.'
-    note: '昭和テーマの音。別担当が載せる CR-SH-04（宴会の声）・CR-SH-05（ラジオ歌謡）・CR-SH-06（記録映画の声）とは別の音'
+    note: '昭和テーマの音。別担当が載せる CR-SH-04（宴会の声）・CR-SH-05（ラジオ歌謡）・CR-SH-06（記録映画の声）とは別の音。音は WebAudio 合成で作る想定で、聴いて足りなければ素材にする（docs/audio.md）'
   - id: 'RT-SND-12'
     status: 'planned'
     kind: 'non_image'
