@@ -6,7 +6,7 @@
 
 ## ゲームでの使われ方
 
-再生は `src/hooks/useSubtitle.ts`、選択は `src/utils/dialogueEngine.ts`、時間などの設定値は `src/utils/gameConfig.ts` の `DIALOGUE_CONFIG`（開始待ち 4 秒、雑談の間の無言 30 秒、中間コメント 240 秒）。優先順位は フラグ会話 > 誤報 > 中間コメント > 雑談。誤報は即座に、フラグ会話は表示中の字幕の直後に割り込む（中断された会話の残りは捨てる）。ただしフラグ会話の最中は誤報も別のフラグも割り込まず、待たせる。会話は最初の1行が画面に出た時に使用済みになる（出る前に割り込まれた会話は使われない）。中間コメントも実際に再生した時に済みになる。`closing` の `ending` 台詞は、`child` フラグ成立後に新たに発生した異変を一件も報告せず時間切れになった時に再生され、同時に画面が `public/images/ending-bar.webp`（1か月後のバー）に切り替わる（判定は `src/utils/endingJudge.ts`、Issue #86。令和の印（`REIWA_IDS` が空、#83）が入るまで `child` は通常プレイでは立たず、ending には到達できない（テストと localStorage への手動注入でのみ確認できる）。`final` フラグは使わない。撤収は ending にならない）。
+再生は `src/hooks/useSubtitle.ts`、選択は `src/utils/dialogueEngine.ts`、時間などの設定値は `src/utils/gameConfig.ts` の `DIALOGUE_CONFIG`（開始待ち 4 秒、雑談の間の無言 30 秒、中間コメント 240 秒）。優先順位は フラグ会話 > 誤報 > 出現ヒント > 中間コメント > 雑談。出現ヒント（#343）は、異変が未報告のまま `DIALOGUE_CONFIG.hintDelayMs`（既定 45 秒のプレイ時間）経つと、`hintMinGapMs`（既定 20 秒）のプレイ時間ごとに「機会」が回ってきて、機会ごとに確率 `hintChance`（既定 0.5）でその異変の `spawn-hints.yaml` の会話を1件出す（外れたら次の機会まで待つ。乱数は機会ごとに1回）。誤報用の `anomaly-lines.yaml` とはプールが別で、使用済みにならず、同じ異変に未報告のあいだ何度でも出る（直前にその異変で出した案は、他に案があれば避ける。保存データには何も書かない）。出す直前に未報告かを確認する。当たりの機会に別の会話が表示中などで出せなかった場合、その当たりは次の機会に持ち越さず捨てる（実効の確率は `hintChance` よりわずかに低い。意図）。ヒントの会話はすべて `tone: serious` なので、出た直後は `seriousQuietMs`（20 秒）の間、雑談が抑えられる（仕様）。表示が始まったヒントは、途中で報告されても最後まで出す（途中で切ると不自然）。その後は出ない。案が無い異変には出さず、共通の誤報会話には落とさない。ヒント同士は最短 `hintMinGapMs`（ウォール時計）空け、表示中の会話には割り込まず次の pick で出る。`seriousQuietMs` は受けず、誤報と同じく割り込みやすい（一貫性のため）。`hintEnabled: false` で全体を切れる。ヒント用の台詞は「お手つきをした前提」にしない（まだ何も間違えていない）。ヒントの強さは台詞しだい（942通りの本番稿は画面内の位置まで。何が変わるかは言わない）。誤報は即座に、フラグ会話は表示中の字幕の直後に割り込む（中断された会話の残りは捨てる）。ただしフラグ会話の最中は誤報も別のフラグも割り込まず、待たせる。会話は最初の1行が画面に出た時に使用済みになる（出る前に割り込まれた会話は使われない）。中間コメントも実際に再生した時に済みになる。`closing` の `ending` 台詞は、`child` フラグ成立後に新たに発生した異変を一件も報告せず時間切れになった時に再生され、同時に画面が `public/images/ending-bar.webp`（1か月後のバー）に切り替わる（判定は `src/utils/endingJudge.ts`、Issue #86。令和の印（`REIWA_IDS` が空、#83）が入るまで `child` は通常プレイでは立たず、ending には到達できない（テストと localStorage への手動注入でのみ確認できる）。`final` フラグは使わない。撤収は ending にならない）。
 
 ## ファイル
 
@@ -20,6 +20,7 @@
 | `story.yaml`         | フラグ会話                             | `flag: <flags.yaml のフラグ名>`                                    |
 | `false-report.yaml`  | 共通の誤報の会話（ヒントなし）         | なし                                                               |
 | `anomaly-lines.yaml` | 異変ごとの会話（ヒント入りの誤報会話） | `anomaly: <prompts/anomalies.yaml の id>`                          |
+| `spawn-hints.yaml`   | 異変の出現ヒント（見つからない時に確率で出る。誤報とは別のプール） | `anomaly: <prompts/anomalies.yaml の id>`（台帳の画像異変 produced 全件に3案以上、計 942 通り。`npm run check:spawn-hints` が不足・id 重複（終了コード 1）と、よく出る行・述語の偏りを報告する） |
 
 ## 1通りの形
 
@@ -35,7 +36,7 @@ dialogues:
 ```
 
 - 通常の会話は2〜4行。`closing` の `ending` だけは、1か月後のバーで自動進行するエンディング会話劇として長い1件にまとめる。
-- `id` はファイル全体で一意。接頭辞は種類で決まる: `opening-` `closing-` `midpoint-` `chatter-` `story-` `false-report-`、異変ごとは `an-<異変id>-`（例: `an-AR-01-notice-sample-01`）。末尾は連番（実例は `sample-NN`）。
+- `id` はファイル全体で一意。接頭辞は種類で決まる: `opening-` `closing-` `midpoint-` `chatter-` `story-` `false-report-`、異変ごとは `an-<異変id>-`（例: `an-AR-01-notice-sample-01`）、出現ヒントは `spawn-hint-<異変id>-`。末尾は連番（実例は `sample-NN`）。
 - `tone`: `serious`（フラグ会話・誤報のヒント・深刻な中間コメントなど）の直後は、一定時間（既定20秒）雑談を出さない。何が `serious` かは台詞ごとの印で決める。雑談は `light` のみ（ビルドで検証）。
 - `who`: `A` = ベテラン刑事（おばさん）、`M` = 若い警備員。画面に話者は出さず、口調で見分けさせる。
 

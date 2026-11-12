@@ -102,6 +102,14 @@ export const DIALOGUE_CONFIG = {
   midpointAtSec: DEFAULT_CONFIG.totalDurationMs / 2 / 1000,
   /** Quiet time after a `serious` conversation before chatter may appear. */
   seriousQuietMs: 20_000,
+  /** Master switch of the spawn hint (#343): a hint subtitle for an anomaly left unreported too long (repeats, `spawn-hints.yaml`). */
+  hintEnabled: true,
+  /** How long an anomaly may stay unreported before its hint subtitle becomes due (play-time ms; provisional, tune by playing). */
+  hintDelayMs: 45_000,
+  /** Minimum gap between two spawn hints (wall-clock ms; provisional). */
+  hintMinGapMs: 20_000,
+  /** Chance (0-1) that a hint opportunity (once per `hintMinGapMs` of play time after `hintDelayMs`, per unreported anomaly) actually speaks; a miss waits for the next opportunity. */
+  hintChance: 0.5,
 }
 
 /**

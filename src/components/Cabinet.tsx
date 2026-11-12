@@ -22,6 +22,8 @@ interface CabinetProps {
   currentCameraIndex: number
   currentCamera: Camera
   anomalyHere?: Anomaly
+  /** Ids of the anomalies not reported yet (the spawn hint subtitle waits on them). */
+  openAnomalyIds?: string[]
   /** Anomalies out there that nobody has reported yet (drives the REPORT lamp, #344). */
   unreportedCount: number
   feedback: Feedback | null
@@ -42,6 +44,7 @@ export const Cabinet = ({
   currentCameraIndex,
   currentCamera,
   anomalyHere,
+  openAnomalyIds,
   unreportedCount,
   feedback,
   gameTime,
@@ -83,6 +86,7 @@ export const Cabinet = ({
       feedback?.kind === 'wrong' ? (feedback.anomalyId ?? null) : null,
     elapsedMs: stats.currentTime,
     foundThisPlay: stats.correctReports,
+    openAnomalyIds,
     flagEvent,
     ending,
     onClosingDone: onEndingDone,

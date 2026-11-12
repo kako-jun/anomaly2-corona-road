@@ -90,4 +90,22 @@ describe('useSubtitle English (#326)', () => {
     advance(10_000)
     expect(r.current).toMatchObject({ text: 'にほんご2', english: false })
   })
+
+  it('picks the language per line: a change while a conversation plays shows from the next line on', () => {
+    const entry = H.ledger.entries[0]
+    const saved = entry.lines
+    entry.lines = [
+      { who: 'A', text: 'にほんご1', en: 'English one' },
+      { who: 'M', text: 'にほんご2', en: 'English two' },
+    ]
+    try {
+      const r = firstLine(true, 'en')
+      expect(r.current.text).toBe('English one')
+      H.language = 'ja'
+      advance(10_000)
+      expect(r.current).toMatchObject({ text: 'にほんご2', english: false })
+    } finally {
+      entry.lines = saved
+    }
+  })
 })
