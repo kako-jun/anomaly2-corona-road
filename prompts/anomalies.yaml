@@ -24,7 +24,7 @@ anomalies:
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
     base_photo: 'public/images/cam2.webp'
-    category: ['object', 'person']
+    category: ['object', 'person', 'environment']
     anomaly_type: 'add_object'
     location: 'CAM02-E19 の周辺、差分左上 (560,549) px'
     detail: '右手前の台に灰皿と吸いかけのタバコが現れる'
@@ -56,7 +56,7 @@ anomalies:
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
     base_photo: 'public/images/cam2.webp'
-    category: 'object'
+    category: ['object', 'environment']
     anomaly_type: 'color_shift'
     location: 'CAM02-E19 の周辺、差分左上 (523,520) px'
     detail: '右手前の鉢がピンクから青になる'
@@ -104,7 +104,7 @@ anomalies:
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
     base_photo: 'public/images/cam2.webp'
-    category: ['object', 'person']
+    category: ['object', 'person', 'environment']
     anomaly_type: 'add_object'
     memo_flag: food
     location: 'CAM02-E19 の周辺、差分左上 (554,533) px'
@@ -153,7 +153,7 @@ anomalies:
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
     base_photo: 'public/images/cam2.webp'
-    category: 'object'
+    category: ['object', 'environment']
     anomaly_type: 'duplicate'
     location: 'CAM02-E19 の周辺、差分左上 (510,511) px'
     detail: '右手前の鉢が二つに増える'
@@ -234,7 +234,7 @@ anomalies:
     camera_id: 'CAM02'
     element_id: 'CAM02-E19'
     base_photo: 'public/images/cam2.webp'
-    category: 'object'
+    category: ['object', 'environment']
     anomaly_type: 'state_change'
     location: 'CAM02-E19 の周辺、差分左上 (523,516) px'
     detail: '右手前の鉢が丸形から四角形になる'
@@ -394,7 +394,7 @@ anomalies:
     camera_id: 'CAM06'
     element_id: 'CAM06-E12'
     base_photo: 'public/images/cam6.webp'
-    category: 'object'
+    category: ['object', 'environment']
     anomaly_type: 'state_change'
     location: 'CAM06-E12 の周辺、差分左上 (263,390) px'
     detail: 'メニュー板にクリームソーダの写真が現れる'
@@ -913,7 +913,7 @@ anomalies:
     camera_id: 'CAM01'
     element_id: 'CAM01-E19'
     base_photo: 'public/images/cam1.webp'
-    category: 'object'
+    category: ['object', 'environment']
     anomaly_type: 'add_object'
     phase: 'early'
     subtlety: 'medium'
@@ -1060,7 +1060,7 @@ anomalies:
     camera_id: 'CAM05'
     element_id: 'CAM05-E06'
     base_photo: 'public/images/cam5.webp'
-    category: 'object'
+    category: ['object', 'environment']
     anomaly_type: 'add_object'
     phase: 'early'
     subtlety: 'medium'

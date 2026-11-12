@@ -933,7 +933,7 @@ describe('the real ledger keeps category well-formed (#347)', () => {
     }
     expect(catsOf('AR-01-window-peeping-face')[0]).toBe('Person')
   })
-  it('a thing on a wall or the floor is both Object and Environment; on the ceiling too; on a stand is not (kako-jun 2026-11-12, #347)', () => {
+  it('a thing on a wall or the floor is both Object and Environment; on the ceiling and on a stand too (kako-jun 2026-11-12, #347)', () => {
     const catsOf = (id: string) => {
       const r = records.find(x => x.id === id)
       expect(r, id).toBeDefined()
@@ -981,10 +981,13 @@ describe('the real ledger keeps category well-formed (#347)', () => {
       expect(catsOf(id), id).toContain('Object')
       expect(catsOf(id), id).toContain('Environment')
     }
-    // on a stand: neither wall nor floor nor ceiling
+    // on a stand / shelf: the space is the floor / wall's, so both as well
     for (const id of ['AR-02-coffee', 'AR-02-ashtray']) {
-      expect(catsOf(id), id).not.toContain('Environment')
+      expect(catsOf(id), id).toContain('Object')
+      expect(catsOf(id), id).toContain('Environment')
     }
+    // floating in the air (smoke) touches no surface: nothing was added (its Environment is its own primary)
+    expect(catsOf('AR-02-smoke')).toEqual(['Environment', 'Object', 'Surreal'])
   })
   it('lists camera second or later on the surface-wide image entries', () => {
     const r = records.find(x => x.id === 'AR-07-floor-frost')
