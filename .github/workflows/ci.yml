@@ -28,6 +28,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Check fullwidth digits in Japanese dialogue
+        run: npm run check:fullwidth
+
+      - name: Check spawn hints (3+ per anomaly)
+        run: npm run check:spawn-hints
+
       - name: Test
         run: npm test
 
