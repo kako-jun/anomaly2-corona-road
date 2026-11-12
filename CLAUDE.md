@@ -535,7 +535,7 @@ src/
 
 #### Testing
 
-- Run with `npm test` (once) or `npm run test:watch`. CI runs **lint → test → build** in that order (`.github/workflows/ci.yml`).
+- Run with `npm test` (once) or `npm run test:watch`. CI runs **lint → `check:fullwidth` → `check:spawn-hints` → test → build** in that order (`.github/workflows/ci.yml`); the two checks are text-only and fast. Checks that open a real browser (`check:title`, `check:foot`, `check:scroll`, `check:note-wrap`, etc.) are not in CI.
 - Vitest + Testing Library. Tests sit next to the code as `*.test.ts` / `*.test.tsx`; shared setup is `src/test/setup.ts`.
 - Environments: the default is **node**, for pure functions (`src/utils/`). Hooks and components need the DOM: put `// @vitest-environment jsdom` at the top of that test file.
 - jsdom cannot verify: the real blocking effect of `inert`, touch input, the moving noise, and anything about CSS appearance. Check these in a real browser (production build served statically) before calling UI work done.
