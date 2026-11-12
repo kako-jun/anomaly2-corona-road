@@ -51,6 +51,24 @@ describe('CameraStrip', () => {
     expect(screen.getByRole('button', { name: 'Camera 2' })).toBeInTheDocument()
   })
 
+  it('lights no lamp, presses no key and ignores clicks while disabled (the ending camera, #273)', async () => {
+    const onSelect = vi.fn()
+    const { container } = render(
+      <CameraStrip
+        cameras={makeCameras(4)}
+        currentIndex={0}
+        onSelect={onSelect}
+        disabled
+      />
+    )
+    expect(container.querySelectorAll('.lamp.green.on')).toHaveLength(0)
+    expect(container.querySelectorAll('.key.pressed')).toHaveLength(0)
+    const keys = screen.getAllByRole('button')
+    expect(keys.every(k => (k as HTMLButtonElement).disabled)).toBe(true)
+    await userEvent.click(keys[2])
+    expect(onSelect).not.toHaveBeenCalled()
+  })
+
   it('calls onSelect with the clicked index', async () => {
     const { onSelect } = setup(0)
     await userEvent.click(screen.getByRole('button', { name: 'Camera 3' }))

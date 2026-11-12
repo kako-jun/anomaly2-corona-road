@@ -226,6 +226,7 @@ describe('buildNote after a shift', () => {
       '異変を、すべて見送った。',
       '指摘ではなく、家族を調べる。',
     ])
+    expect(v.scrib).toEqual(['家族に、何をされたのか。'])
   })
   it('English mirrors the structure', () => {
     const ja = after(shift())

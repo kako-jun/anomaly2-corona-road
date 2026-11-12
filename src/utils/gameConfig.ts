@@ -67,7 +67,8 @@ export const msToGameTime = (ms: number): string => {
   // Clamp to the shift: before 0 -> 22:00, after the end -> stop at 06:00.
   const clamped = Math.min(Math.max(0, ms), DEFAULT_CONFIG.totalDurationMs)
   const elapsedGameMinutes = Math.floor(clamped / 1000)
-  const minuteOfDay = (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
+  const minuteOfDay =
+    (GAME_START_MINUTE_OF_DAY + elapsedGameMinutes) % (24 * 60)
   const hours = Math.floor(minuteOfDay / 60)
   const minutes = minuteOfDay % 60
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
@@ -134,7 +135,7 @@ export const ALERT_UNREPORTED_MIN = 3
 
 /**
  * Pacing once the child has been found (the `child` flag is raised), Issue #86. kako-jun only said
- * "more anomalies appear after the child is found". The interval (15 s) is a PLACEHOLDER; the caps (4 normally, 8 here) are decided
+ * "more anomalies appear after the child is found". The interval (15 s) was decided by kako-jun (2026-11-12, #273); the caps (4 normally, 8 here) are decided
  * by kako-jun (2026-11-11, #344); reading "the end" as "after the child is found" was confirmed by kako-jun (2026-11-12, #325/#344).
  * They replace `anomalyIntervalMs` / `maxConcurrentAnomalies` of `DEFAULT_CONFIG` for the rest of the shift.
  */
@@ -143,9 +144,14 @@ export const CHILD_FOUND_PACING = {
   maxConcurrentAnomalies: 8,
 }
 
-/** The still image the screen switches to for the true ending (the bar one month later, 675x900). */
+/**
+ * The still image the screen switches to for the true ending (the bar one month later, 675x900).
+ * A virtual camera that exists only for the ending (kako-jun, 2026-11-12, #273): not one of the `CAMERAS`, so while
+ * it is shown no camera select key is lit and no camera operation is accepted. The "CAM 09" label is intentional
+ * and stays; how the scene looks is kako-jun's to decide (not too realistic, on purpose).
+ */
 export const ENDING_BAR_CAMERA: Camera = {
-  id: 9, // placeholder: only shown in the "CAM n" label on the monitor
+  id: 9, // only shown in the "CAM n" label on the monitor
   name: 'CAM 09',
   location: 'Bar',
   image: '/images/ending-bar.webp',
