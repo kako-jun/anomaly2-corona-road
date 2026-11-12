@@ -842,7 +842,7 @@ describe('useSubtitle: spawn hint (#343)', () => {
     expect(JSON.stringify(load())).toBe(before)
   })
 
-  it('with a gated spawn-hint, reads the saved flags once per opportunity, not on every frame', () => {
+  it('with a gated spawn-hint, reads the saved flags once per opportunity, from the very first step of opportunity 0', () => {
     H.ledger.entries = [
       ...H.all,
       {
@@ -854,8 +854,14 @@ describe('useSubtitle: spawn hint (#343)', () => {
     DIALOGUE_CONFIG.hintChance = 0
     const d = inSilence()
     const before = H.loads.n
+    for (let i = 0; i < 100; i++) d.set({ elapsedMs: HINT - 1600 + i * 16 })
+    expect(H.loads.n - before).toBe(0) // before the delay: no read
+    d.set({ elapsedMs: HINT })
+    expect(H.loads.n - before).toBe(1) // the first step of opportunity 0 reads (and caches)
     for (let i = 0; i < 200; i++) d.set({ elapsedMs: HINT + i * 16 })
-    expect(H.loads.n - before).toBeLessThanOrEqual(1)
+    expect(H.loads.n - before).toBe(1) // the rest of the opportunity reads nothing
+    d.set({ elapsedMs: HINT + OPP })
+    expect(H.loads.n - before).toBe(2) // the next opportunity reads again
   })
 
   it('a gated spawn-hint is silent until its flag is raised, then speaks at the next opportunity (the flag cache does not go stale)', () => {

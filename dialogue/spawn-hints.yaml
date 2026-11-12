@@ -470,8 +470,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-07-crane }
     lines:
-      - { who: M, text: '天井の真ん中が気になります', en: 'Ms. Ikawa, the middle of the ceiling is bugging me.' }
-      - { who: A, text: 'こっちも　そこ見てみる', en: "I'll check there too." }
+      - { who: M, text: "天井の真ん中が気になります", en: "The middle of the ceiling is bugging me." }
+      - { who: A, text: "こっちも　そこ見てみる", en: "I'll check there too." }
   - id: spawn-hint-AR-07-crane-03
     tone: serious
     when: { anomaly: AR-07-crane }
@@ -681,19 +681,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-blue-brick }
     lines:
-      - { who: M, text: "店の下のほうの帯　中央より少し右です", en: "The band along the bottom of the shops, a little right of center." }
-      - { who: A, text: "下の帯ね　見てみる", en: "The lower band. I'll look." }
+      - { who: M, text: "店の下のほう　中央より少し右です", en: "The bottom of the shops, a little right of center." }
+      - { who: A, text: "下のほうね　見てみる", en: "The bottom. I'll look." }
   - id: spawn-hint-AR-05-blue-brick-02
     tone: serious
     when: { anomaly: AR-05-blue-brick }
     lines:
-      - { who: A, text: "下端の帯の辺り　真ん中の少し右かな", en: "Around the lower band. Slightly right of center?" }
+      - { who: A, text: "下端の辺り　真ん中の少し右かな", en: "Around the bottom edge. Slightly right of center?" }
   - id: spawn-hint-AR-05-blue-brick-03
     tone: serious
     when: { anomaly: AR-05-blue-brick }
     lines:
-      - { who: M, text: "店の足元のラインを　確認してください", en: "Please check the line at the shop's base." }
-      - { who: A, text: "足元のラインね　分かった", en: "The base line. Got it." }
+      - { who: M, text: "店の足元の辺りを　確認してください", en: "Please check the area at the shops' base." }
+      - { who: A, text: "足元ね　分かった", en: "The base. Got it." }
   - id: spawn-hint-AR-06-tilted-notice-01
     tone: serious
     when: { anomaly: AR-06-tilted-notice }
@@ -1518,7 +1518,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-round-puddle }
     lines:
-      - { who: M, text: '床の真ん中あたりの辺りに　目を向けてください', en: "Please turn your eyes to the middle of the floor." }
+      - { who: M, text: '床の真ん中あたりに　目を向けてください', en: "Please turn your eyes to the middle of the floor." }
       - { who: A, text: 'うん　そっちを見てみる', en: "Yeah. I'll look that way." }
   - id: spawn-hint-AR-07-diamond-tile-01
     tone: serious
@@ -2111,7 +2111,7 @@ dialogues:
     tone: serious
     when: { anomaly: AR-04-sign-hollow }
     lines:
-      - { who: M, text: '奥の右寄りの上の　ほうはどうでしょう', en: "How about the upper back, right of center?" }
+      - { who: M, text: "奥の右寄りの上のほうは　どうでしょう", en: "How about the upper back, right of center?" }
       - { who: A, text: "そこか　可能性はあるね", en: "There? It's possible." }
   - id: spawn-hint-AR-04-sign-hollow-02
     tone: serious
@@ -2338,35 +2338,35 @@ dialogues:
     tone: serious
     when: { anomaly: AR-05-joint-into-glass }
     lines:
-      - { who: M, text: "床の線です　手前から奥まで", en: "The lines on the floor, from the front to the back." }
+      - { who: M, text: "床の手前から奥にかけてです", en: "From the front of the floor to the back." }
       - { who: A, text: "手前の床から奥へね", en: "From the near floor toward the back." }
   - id: spawn-hint-AR-05-joint-into-glass-02
     tone: serious
     when: { anomaly: AR-05-joint-into-glass }
     lines:
-      - { who: A, text: "床だよ　手前から　奥のガラスのほうまで続く辺り", en: "The floor. Running from the front toward the glass." }
+      - { who: A, text: "手前から奥　中央付近だよ", en: "Front to back, around the center." }
   - id: spawn-hint-AR-05-joint-into-glass-03
     tone: serious
     when: { anomaly: AR-05-joint-into-glass }
     lines:
-      - { who: M, text: "床の線の行き先を　目で追ってください", en: "Follow the lines on the floor with your eyes." }
-      - { who: A, text: "行き先ね　追ってみる", en: "Where they lead. I'll follow." }
+      - { who: M, text: "床の中央付近を　手前から目で追ってください", en: "Please run your eyes over the center of the floor from the front." }
+      - { who: A, text: "中央付近ね　手前から見ていく", en: "Around the center. I'll go from the front." }
   - id: spawn-hint-AR-05-brick-round-01
     tone: serious
     when: { anomaly: AR-05-brick-round }
     lines:
-      - { who: A, text: "店の下の帯の辺り　中央より少し右かな", en: "Along the band under the shops. A bit right of center?" }
-      - { who: M, text: "下の帯ですね　順に見ます", en: "The lower band. I'll go along it." }
+      - { who: A, text: "店の下の端　中央より少し右かな", en: "The lower edge of the shops. A bit right of center?" }
+      - { who: M, text: "下の端ですね　順に見ます", en: "The lower edge. I'll go along it." }
   - id: spawn-hint-AR-05-brick-round-02
     tone: serious
     when: { anomaly: AR-05-brick-round }
     lines:
-      - { who: M, text: "下の帯の真ん中あたりです", en: "It's around the middle of the lower band." }
+      - { who: M, text: "下の端の真ん中あたりです", en: "It's around the middle of the lower edge." }
   - id: spawn-hint-AR-05-brick-round-03
     tone: serious
     when: { anomaly: AR-05-brick-round }
     lines:
-      - { who: A, text: "足元の帯をなぞってみよう　真ん中から右だ", en: "Let's trace the band at the base. From the middle to the right." }
+      - { who: A, text: "足元の端を　見てみよう　真ん中から右だ", en: "Let's look at the edge at the base. From the middle to the right." }
   - id: spawn-hint-AR-05-sign-digit-missing-01
     tone: serious
     when: { anomaly: AR-05-sign-digit-missing }
@@ -4483,8 +4483,8 @@ dialogues:
     tone: serious
     when: { anomaly: AR-03-ceiling-eye }
     lines:
-      - { who: A, text: '右奥の天井　絶対ここだよ！', en: "It's definitely the back right ceiling!" }
-      - { who: M, text: 'ええ　期待しましょう', en: "Yes. Let's hope so." }
+      - { who: A, text: "右奥の天井　絶対ここだよ！", en: "It's definitely the back right ceiling!" }
+      - { who: M, text: "ええ　確認しましょう", en: "Yes. Let's check." }
   - id: spawn-hint-AR-03-ceiling-eye-02
     tone: serious
     when: { anomaly: AR-03-ceiling-eye }
