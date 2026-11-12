@@ -4,7 +4,7 @@ import type { Band } from '../utils/titleFx'
 import { NoiseCanvas } from './NoiseCanvas'
 
 /**
- * Random short bursts of the monitor's horizontal-line noise over the title photo: the same canvas noise and
+ * Random bursts (0.4-1.1 s, every 0.8-3.5 s) of the monitor's horizontal-line noise over the title photo: the same canvas noise and
  * scanlines as the cabinet (`.fx.noise`, `.fx.scan`) plus white tear bands. Nothing at all with
  * prefers-reduced-motion.
  */

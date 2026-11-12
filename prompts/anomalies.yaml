@@ -6512,7 +6512,7 @@ anomalies:
     memo:
       ja: '雑音に混じって古い歌謡曲のような旋律。'
       en: 'Old tune breaks through the static.'
-    note: '昭和テーマ。category は environment（仮）。出現のたびにカメラを無作為に選び、選ばれたカメラを見ている間だけ鳴らす。音素材と再生機構が必要（Issue #70）。注意: 台帳の既存 AR-01-door-ajar の candidate_id は旧番号の CR-SH-05 で、この音案とは別物。'
+    note: '昭和テーマ。category は environment（仮）。出現のたびにカメラを無作為に選び、選ばれたカメラを見ている間だけ鳴らす。音は WebAudio 合成（オリジナル旋律）で作る。再生基盤は実装済み（docs/audio.md、Issue #79）。注意: 台帳の既存 AR-01-door-ajar の candidate_id は旧番号の CR-SH-05 で、この音案とは別物。'
   - id: 'CR-SH-06'
     status: 'planned'
     kind: 'non_image'
@@ -6630,7 +6630,7 @@ anomalies:
     memo:
       ja: '時刻だけ進み、映像が止まる。時計は正常？'
       en: 'Clock runs, picture still. Clock right?'
-    note: 'asset 併用'
+    note: '見送り(#78): カメラ画面に時計が無く、時刻だけ進む見え方が作れない（時計の置き場が決まってから）。元の注記: asset 併用'
   - id: 'RT-FEED-08'
     status: 'planned'
     kind: 'non_image'
@@ -6640,7 +6640,7 @@ anomalies:
     memo:
       ja: '別のカメラと同じ映像。どちらが本物？'
       en: 'Same feed on two cameras. Which is real?'
-    note: 'asset 併用'
+    note: '見送り(#78): 別カメラの映像を借りるカメラ切替側の変更で、出現・報告(#77/#80)と一緒に設計する。元の注記: asset 併用'
   - id: 'RT-FEED-09'
     status: 'planned'
     kind: 'non_image'
@@ -6650,7 +6650,7 @@ anomalies:
     memo:
       ja: '何かが一瞬横切った。'
       en: 'Something crossed the frame.'
-    note: 'asset 併用'
+    note: '見送り(#78): 画像素材（横切る人影）が要る。効果エンジンだけでは作れない。元の注記: asset 併用'
   - id: 'RT-FEED-10'
     status: 'planned'
     kind: 'non_image'
@@ -6660,7 +6660,7 @@ anomalies:
     memo:
       ja: '画面の一部だけ明滅する。'
       en: 'One part of the screen flickers.'
-    note: 'asset 併用'
+    note: '見送り(#78): 画像素材（明滅対象）が要る。効果エンジンだけでは作れない。元の注記: asset 併用'
   - id: 'RT-FEED-11'
     status: 'planned'
     kind: 'non_image'
@@ -6679,6 +6679,7 @@ anomalies:
     memo:
       ja: 'カメラの表示名が変わる。'
       en: 'The camera labels change.'
+    note: '見送り(#78): ラベルの変更はカメラ切替側の変更で、出現・報告(#77/#80)と一緒に設計する。'
   - id: 'RT-FEED-14'
     status: 'planned'
     kind: 'non_image'
@@ -6688,6 +6689,7 @@ anomalies:
     memo:
       ja: 'カメラを切り替えられない。故障か？'
       en: 'Can''t switch cameras. A fault?'
+    note: '見送り(#78): 切替不能はカメラ切替の操作側の変更で、出現・報告(#77/#80)と一緒に設計する。'
   - id: 'RT-FEED-15'
     status: 'planned'
     kind: 'non_image'
@@ -6697,6 +6699,7 @@ anomalies:
     memo:
       ja: 'カメラが勝手に切替。選択は効く？'
       en: 'Camera switches itself. Selection works?'
+    note: '見送り(#78): 自動切替はカメラ切替の操作側の変更で、出現・報告(#77/#80)と一緒に設計する。'
   - id: 'RT-FEED-18'
     status: 'planned'
     kind: 'non_image'
@@ -6706,6 +6709,7 @@ anomalies:
     memo:
       ja: '同じ数秒が繰り返される。どこから始まる？'
       en: 'Same few seconds repeat. Where start?'
+    note: '見送り(#78): 基準になる動画がなく静止写真なので、ループは見た目で成立しない。'
   - id: 'RT-FEED-19'
     status: 'planned'
     kind: 'non_image'
@@ -6878,7 +6882,7 @@ anomalies:
     memo:
       ja: 'かすかな食器の音。'
       en: 'The faint sound of dishes.'
-    note: '昭和テーマの音。別担当が載せる CR-SH-04（宴会の声）・CR-SH-05（ラジオ歌謡）・CR-SH-06（記録映画の声）とは別の音'
+    note: '昭和テーマの音。別担当が載せる CR-SH-04（宴会の声）・CR-SH-05（ラジオ歌謡）・CR-SH-06（記録映画の声）とは別の音。音は WebAudio 合成で作る想定で、聴いて足りなければ素材にする（docs/audio.md）'
   - id: 'RT-SND-12'
     status: 'planned'
     kind: 'non_image'
@@ -7150,6 +7154,7 @@ anomalies:
     memo:
       ja: 'このカメラだけ白黒だ。'
       en: 'Only this camera is in black and white.'
+    note: '見送り(#78): 効果エンジン(#78)の後に出現・報告(#77/#80)と一緒に実装する。'
   - id: 'RT-FEED-28'
     status: 'planned'
     kind: 'non_image'
@@ -7159,6 +7164,7 @@ anomalies:
     memo:
       ja: 'このカメラだけノイズがない。'
       en: 'Only this camera has no noise.'
+    note: '見送り(#78): 効果エンジン(#78)の後に出現・報告(#77/#80)と一緒に実装する。'
   - id: 'RT-UI-30'
     status: 'planned'
     kind: 'non_image'
@@ -7177,6 +7183,7 @@ anomalies:
     memo:
       ja: '映像の上下に黒い帯がある。'
       en: 'Black bars cover the top and bottom.'
+    note: '見送り(#78): 効果エンジン(#78)の後に出現・報告(#77/#80)と一緒に実装する。'
   - id: 'RT-FEED-16'
     status: 'planned'
     kind: 'non_image'
@@ -7186,6 +7193,7 @@ anomalies:
     memo:
       ja: '映像が緑がかっている。'
       en: 'The picture has a green cast.'
+    note: '見送り(#78): 効果エンジン(#78)の後に出現・報告(#77/#80)と一緒に実装する。'
   - id: 'RT-FEED-17'
     status: 'planned'
     kind: 'non_image'
@@ -7195,6 +7203,7 @@ anomalies:
     memo:
       ja: '映像が上下逆さまだ。'
       en: 'The picture is upside down.'
+    note: '見送り(#78): 効果エンジン(#78)の後に出現・報告(#77/#80)と一緒に実装する。'
   - id: 'RT-UI-19'
     status: 'planned'
     kind: 'non_image'

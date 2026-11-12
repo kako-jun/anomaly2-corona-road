@@ -22,7 +22,7 @@ prompts/
 - `.agents/skills/corona-road-anomaly/SKILL.md` — 候補選定から差分合成・レビュー・登録までの反復手順（prompts/ の外にある制作スキル）。
 - 異変の全件は `anomalies.yaml`（制作済み=`produced`、未制作=`planned`、画像=`image`、画面の乱れ・音・UI・ルール=`non_image`。用語は下の「用語集」）。`candidate-pool.md` には、台帳の planned 画像案の制作仕様の詳細と方針の説明だけがある（採用/不採用の状態は無い。不要な案は台帳から削除する。昇格ルールは下の「台帳の書式」）。
 - `queue/index.html` と `atlas/*.svg` は**生成物**。手で編集せず、元の正本を直して再生成する。
-- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、昭和の音の案は台帳の `kind: non_image`（`CR-SH-04`〜`06`）にある。
+- 昭和テーマの方針は制作スキルの「昭和の時間が戻る異変」、昭和の音の案は台帳の `kind: non_image`（`CR-SH-04`〜`06`）にある。音（`anomaly_type: sound` 18件）の合成か素材かの分類と音声基盤は `docs/audio.md`。
 - 4人目（令和のZ世代の子供）の「令和の異変（どれでも3つ見つければ条件成立）」の異変は台帳にある（画像は `anomalies.yaml` の `reiwa: true` が印で、ゲームはビルド時にこれを読んで令和の異変を決める（#83）。音は `CR-RZ-07`〜`09`（画像以外の異変、未実装 #79）。昭和でない令和の物。方針は `docs/story.md` の「進行」節）。
 
 ## 用語集（正本）
@@ -154,6 +154,8 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | `sound`         | 音（画像以外）             | 誰もいない通路でシャッター音が鳴る           |
 | `ui_corruption` | UI の崩れ（画像以外）      | 画面表示が壊れる                             |
 | `rule_break`    | ルール違反（画像以外）     | タイマーの異常                               |
+
+`feed_glitch` の見せ方（#78）: RT-FEED-01〜06・11・19〜26 は画面側の効果が実装済み（種類と台帳 ID の対応は `src/utils/feedGlitch.ts`、描画は `src/styles/feedGlitch.css`）。開発サーバーで `?glitch=<種類>`（`zoom` `tilt` `blur` `bright` `dark` `blocks` `scanburn` `lost` `shake` `hardshake` `wave` `chroma` `static` `blink` `deadpixels` `ghost` `fade`）を付けると全カメラで強制発火して見られる（本番ビルドでは無効）。RT-FEED-07〜10・12〜18 は見送りで、理由は各エントリの `note` に書いてある。出現（抽選）はまだ無く（#77）、効果が実在しても status は `planned` のまま（昇格は別途）。
 
 ## カテゴリ（ゲーム内分類）
 

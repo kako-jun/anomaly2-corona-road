@@ -7,7 +7,11 @@ import { Anomaly, Camera } from '../types/game'
 import { Feedback } from '../hooks/useGameState'
 import { overlayPlacement } from '../utils/anomalyOverlay'
 import { cx } from '../utils/cx'
+import { FeedGlitchKind } from '../utils/feedGlitch'
+import { FeedGlitchFilters } from './FeedGlitchFilters'
+import { GlitchCanvas } from './GlitchCanvas'
 import { NoiseCanvas } from './NoiseCanvas'
+import '../styles/feedGlitch.css'
 
 /**
  * Puts each part of a text in its own span (class `cls`) and keeps the separator as a text node before every part
@@ -59,6 +63,10 @@ interface CameraViewProps {
   /** CSS filter multipliers from the knobs. */
   brightness: number
   contrast: number
+  /** The feed glitch of this camera, if any (#78): the picture goes wrong while this camera is watched. */
+  feedGlitch?: FeedGlitchKind
+  /** Dev only: the glitch was forced from the URL, so the screen names it (never set in production). */
+  feedGlitchForced?: boolean
   onSwipe: (direction: 'next' | 'prev') => void
   /** Where the magnifier loupe is drawn (the control panel, #341). Without it the loupe is off: only the swipe works. */
   loupeHost?: HTMLElement | null
@@ -72,6 +80,8 @@ export const CameraView = ({
   subtitle,
   brightness,
   contrast,
+  feedGlitch,
+  feedGlitchForced,
   onSwipe,
   loupeHost,
 }: CameraViewProps) => {
@@ -140,6 +150,7 @@ export const CameraView = ({
           className={cx('glass', noise.off && 'noise-off')}
           style={style}
           ref={glassRef}
+          data-glitch={feedGlitch}
         >
           <div className="pic">
             <div
@@ -188,11 +199,44 @@ export const CameraView = ({
                   }}
                 />
               )}
+              {feedGlitch === 'ghost' && (
+                <img
+                  className="ghost"
+                  src={camera.image}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                />
+              )}
             </div>
           </div>
+          {(feedGlitch === 'wave' || feedGlitch === 'chroma') && (
+            <FeedGlitchFilters />
+          )}
+          {feedGlitch === 'blocks' && <GlitchCanvas kind="blocks" />}
+          {feedGlitch === 'deadpixels' && (
+            <GlitchCanvas kind="deadpixels" seed={camera.id * 7919} />
+          )}
+          {feedGlitch === 'scanburn' && (
+            <div className="fx scanburn" aria-hidden="true" />
+          )}
+          {feedGlitch === 'blink' && (
+            <div className="fx blackframe" aria-hidden="true" />
+          )}
+          {feedGlitch === 'lost' && (
+            <div className="fx lost" aria-hidden="true" />
+          )}
           <NoiseCanvas />
           <div className="fx scan" aria-hidden="true" />
           <div className="fx vignette" aria-hidden="true" />
+          {feedGlitch === 'lost' && (
+            <div className="osd osd-nosignal" role="status">
+              NO SIGNAL
+            </div>
+          )}
+          {feedGlitchForced && feedGlitch && (
+            <div className="osd osd-dev">DEV GLITCH: {feedGlitch}</div>
+          )}
           <div className="osd osd-cam">CAM {camera.id}</div>
           <div className="osd osd-rec">
             <i className="rec-dot" />
@@ -235,6 +279,8 @@ export const CameraView = ({
           brightness={brightness}
           contrast={contrast}
           noiseOff={noise.off}
+          feedGlitch={feedGlitch}
+          glitchSeed={camera.id * 7919}
         />
       )}
     </section>
