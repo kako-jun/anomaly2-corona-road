@@ -5,10 +5,9 @@
 import {
   SAVE_LIMITS,
   SAVE_VERSION,
-  canPersist,
   load,
   nextEpoch,
-  update,
+  updateChecked,
   validateSave,
   type SaveData,
 } from './saveData'
@@ -116,9 +115,9 @@ export const importedSave = (local: SaveData, imported: SaveData): SaveData => {
  */
 export const applyImport = (imported: SaveData): boolean => {
   const before = load()
-  update(cur => importedSave(cur, imported))
-  if (canPersist()) return true
-  update(() => before)
+  // The write's own result, not a flag left over from an earlier failure.
+  if (updateChecked(cur => importedSave(cur, imported)).saved) return true
+  updateChecked(() => before)
   return false
 }
 

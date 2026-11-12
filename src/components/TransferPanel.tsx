@@ -14,13 +14,19 @@ interface TransferPanelProps {
   onClose: () => void
   /** The save was replaced by an imported code. */
   onImported: () => void
+  /** The import could not be stored and was rolled back (optional: lets the screen re-read the save state). */
+  onImportFailed?: () => void
 }
 
 /**
  * Save transfer (#84): EXPORT shows this device's code (with COPY), IMPORT reads a pasted one and replaces
  * this device's progress after a confirmation. The instructions are always on screen.
  */
-export const TransferPanel = ({ onClose, onImported }: TransferPanelProps) => {
+export const TransferPanel = ({
+  onClose,
+  onImported,
+  onImportFailed,
+}: TransferPanelProps) => {
   const [code, setCode] = useState('')
   const [text, setText] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -122,6 +128,7 @@ export const TransferPanel = ({ onClose, onImported }: TransferPanelProps) => {
                   if (!applyImport(pending)) {
                     setPending(null)
                     setError(TRANSFER_ERROR_TEXT.notSaved)
+                    onImportFailed?.()
                     return
                   }
                   setPending(null)

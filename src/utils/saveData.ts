@@ -366,7 +366,12 @@ export interface SaveStore {
   load: () => SaveData
   /** Apply `fn` to the latest save (storage merged into memory), keep and write the result. */
   update: (fn: (current: SaveData) => SaveData) => SaveData
-  /** False once a read or write has failed: progress lives in memory only (show a notice). */
+  /** Like `update`, and also says whether this write reached storage (not a flag left over from an earlier failure). */
+  updateChecked: (fn: (current: SaveData) => SaveData) => {
+    save: SaveData
+    saved: boolean
+  }
+  /** False while the last read or write failed (progress lives in memory only: show a notice); a later successful write clears it. */
   canPersist: () => boolean
   /**
    * Try a write now (scratch key, then removed) so a storage that rejects writes (quota, some
@@ -431,19 +436,21 @@ export const createSaveStore = (opts: SaveStoreOptions): SaveStore => {
     return null
   }
 
-  const write = (data: SaveData) => {
-    if (newerSave) return
+  /** Write the save. Returns whether it reached storage; a success also clears an earlier failure (the notice follows the truth). */
+  const write = (data: SaveData): boolean => {
+    if (newerSave) return false
     const s = storage()
     if (!s) {
       persistable = false
-      return
+      return false
     }
     try {
       s.setItem(key, JSON.stringify(data))
     } catch {
       persistable = false
-      return
+      return false
     }
+    persistable = true
     if (!persistRequested) {
       persistRequested = true
       try {
@@ -452,6 +459,7 @@ export const createSaveStore = (opts: SaveStoreOptions): SaveStore => {
         // best effort only
       }
     }
+    return true
   }
 
   const latest = (): SaveData => {
@@ -470,6 +478,11 @@ export const createSaveStore = (opts: SaveStoreOptions): SaveStore => {
       memory = next
       write(next)
       return next
+    },
+    updateChecked: fn => {
+      const next = fn(latest())
+      memory = next
+      return { save: next, saved: write(next) }
     },
     canPersist: () => persistable,
     probe: () => {
@@ -499,5 +512,6 @@ const defaultStore = createSaveStore({
 
 export const load = defaultStore.load
 export const update = defaultStore.update
+export const updateChecked = defaultStore.updateChecked
 export const canPersist = defaultStore.canPersist
 export const probe = defaultStore.probe

@@ -25,6 +25,8 @@ interface StartScreenProps {
   language?: Language
   /** Enables the save transfer key (#84); called after an imported code replaced the save. */
   onTransferred?: () => void
+  /** An import could not be stored: the save state changed (the notice may need to appear or clear). */
+  onTransferFailed?: () => void
 }
 
 const startKeyClass = 'key start-key'
@@ -44,6 +46,7 @@ export const StartScreen = ({
   onStartOver,
   language = 'ja',
   onTransferred,
+  onTransferFailed,
 }: StartScreenProps) => {
   const [transferring, setTransferring] = useState(false)
   const [confirming, setConfirming] = useState(false)
@@ -124,6 +127,7 @@ export const StartScreen = ({
             // Back to the key that opened the panel.
             setTimeout(() => transferKeyRef.current?.focus(), 0)
           }}
+          onImportFailed={onTransferFailed}
           onImported={() => {
             // A START OVER confirmation left open would offer to erase the progress just imported.
             setConfirming(false)

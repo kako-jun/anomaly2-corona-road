@@ -776,3 +776,38 @@ describe('nextEpoch', () => {
     expect(nextEpoch(SAVE_LIMITS.epoch - 1)).toBe(SAVE_LIMITS.epoch)
   })
 })
+
+describe('updateChecked and canPersist follow the latest write', () => {
+  const failing = () => {
+    const { storage } = fakeStorage()
+    let fail = false
+    const wrapped = {
+      ...storage,
+      getItem: (k: string) => storage.getItem(k),
+      removeItem: (k: string) => storage.removeItem(k),
+      setItem: (k: string, v: string) => {
+        if (fail) throw new Error('quota')
+        storage.setItem(k, v)
+      },
+    } as unknown as Storage
+    return { wrapped, setFail: (f: boolean) => (fail = f) }
+  }
+  it('reports each write on its own, and a success clears an earlier failure', () => {
+    const { wrapped, setFail } = failing()
+    const store = createSaveStore({ getStorage: () => wrapped })
+    setFail(true)
+    expect(store.updateChecked(c => ({ ...c, loops: 1 })).saved).toBe(false)
+    expect(store.canPersist()).toBe(false)
+    setFail(false)
+    expect(store.updateChecked(c => ({ ...c, loops: 2 })).saved).toBe(true)
+    expect(store.canPersist()).toBe(true)
+  })
+  it('never clears the flag of a newer-version save it refuses to touch', () => {
+    const { storage } = fakeStorage({
+      [SAVE_KEY]: JSON.stringify({ v: 99 }),
+    })
+    const store = createSaveStore({ getStorage: () => storage })
+    expect(store.updateChecked(c => c).saved).toBe(false)
+    expect(store.canPersist()).toBe(false)
+  })
+})
