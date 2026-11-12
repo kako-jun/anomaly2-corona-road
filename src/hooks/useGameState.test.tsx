@@ -25,7 +25,7 @@ vi.mock('../data/anomalyLedger', () => ({
   preloadOverlays: preload,
 }))
 
-// Small flags instead of the provisional real ones (20/50/100 found): 'two' at 2 found, 'loopy' after 1 loop.
+// Small flags instead of the real ones (10/30/60, child 100): 'two' at 2 found, 'loopy' after 1 loop.
 vi.mock('virtual:dialogue', () => ({
   default: {
     flags: [
