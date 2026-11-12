@@ -88,21 +88,23 @@ printCross(
   r => `${r.kind}/${r.status}`
 )
 
-// also_categories (#347): entries with extra correct categories, and the chance that pressing one of the
-// four non-camera category keys at random on a produced image entry is correct ((1 + also) / 4 on average).
+// category as an array (#347): entries with more than one correct report, and the chance that pressing one of
+// the four non-camera category keys at random on a produced image entry is correct (the average of
+// non-camera correct answers / 4; a listed camera adds a fifth key, so it is counted apart).
 const images = records.filter(
   r => r.kind === 'image' && r.status === 'produced'
 )
-const withAlso = images.filter(r => r.alsoCategories?.length)
-const hit =
-  images.reduce((s, r) => s + (1 + (r.alsoCategories?.length ?? 0)) / 4, 0) /
-  images.length
+const all = r => r.categories ?? (r.category ? [r.category] : [])
+const nonCamera = r => all(r).filter(c => c !== 'Camera').length
+const withArray = images.filter(r => r.categories?.length)
+const withCamera = images.filter(r => all(r).includes('Camera'))
+const hit = images.reduce((s, r) => s + nonCamera(r) / 4, 0) / images.length
 console.log(
-  `\nalso_categories (produced image entries: ${images.length})\n  with also_categories  ${withAlso.length}`
+  `\ncategory as an array (produced image entries: ${images.length})\n  category is an array  ${withArray.length}\n  camera also correct   ${withCamera.length}`
 )
-printCounts('  also_categories length', r =>
+printCounts('  correct categories per entry', r =>
   r.kind === 'image' && r.status === 'produced'
-    ? String(r.alsoCategories?.length ?? 0)
+    ? String(all(r).length)
     : '(not produced image)'
 )
 console.log(

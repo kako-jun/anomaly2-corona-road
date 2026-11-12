@@ -19,9 +19,10 @@ export interface AnomalyOverlay {
 export interface Anomaly {
   /** Ledger id (prompts/anomalies.yaml). */
   id: string
+  /** Primary category (first of the ledger's `category`): shown in the feedback. */
   category: AnomalyCategory
-  /** Optional extra correct reports (ledger `also_categories`). */
-  alsoCategories?: AnomalyCategory[]
+  /** Every correct report, primary first (ledger `category` as an array); absent = `category` alone. */
+  categories?: AnomalyCategory[]
   cameraId: number
   detectedAt?: number
   phase: GamePhase

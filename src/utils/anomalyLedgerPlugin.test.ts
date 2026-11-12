@@ -217,33 +217,55 @@ describe('anomaly-ledger vite plugin', () => {
     )
   })
 
-  describe('also_categories (#236)', () => {
-    const withAlso = (line: string) =>
-      `anomalies:\n${entryYaml()}\n    ${line}\n`
+  describe('category as an array (#347)', () => {
+    // entryYaml() writes `category: 'object'`; swap that one line for the given YAML.
+    const withCat = (line: string, id = 'a1') =>
+      entryYaml({
+        id,
+        overlay: `assets/anomaly-overlays/cam01/${id}.webp`,
+      }).replace("category: 'object'", line)
+    const doc = (...entries: string[]) => `anomalies:\n${entries.join('\n')}\n`
     const parse = (out: unknown) =>
       JSON.parse((out as string).replace('export default ', ''))
 
     it.each([
-      ['single-quoted', "also_categories: ['person']"],
-      ['double-quoted', 'also_categories: ["person"]'],
-      ['unquoted', 'also_categories: [person]'],
-    ])('emits alsoCategories from a %s value', async (_n, line) => {
-      const { out } = await run(withAlso(line))
+      ['single-quoted', "category: ['object', 'person']"],
+      ['double-quoted', 'category: ["object", "person"]'],
+      ['unquoted', 'category: [object, person]'],
+      ['a block sequence', 'category:\n      - object\n      - person'],
+    ])('emits categories from %s', async (_n, line) => {
+      const { out } = await run(doc(withCat(line)))
       const json = parse(out)
-      expect(json[0].alsoCategories).toEqual(['Person'])
+      expect(json[0].categories).toEqual(['Object', 'Person'])
       expect(json[0].category).toBe('Object')
     })
 
-    it('fails the build on an unknown value, naming the entry', async () => {
-      await expect(run(withAlso("also_categories: ['ghost']"))).rejects.toThrow(
-        /entry "a1".*also_categories/
+    it('keeps the order and accepts three items', async () => {
+      const { out } = await run(
+        doc(withCat("category: [' surreal ', 'environment', 'person']"))
       )
+      expect(parse(out)[0].categories).toEqual([
+        'Surreal',
+        'Environment',
+        'Person',
+      ])
     })
 
-    it('fails the build when it equals category', async () => {
-      await expect(
-        run(withAlso("also_categories: ['object']"))
-      ).rejects.toThrow(/entry "a1".*also_categories/)
+    it('accepts camera second or later', async () => {
+      const { out } = await run(
+        doc(withCat("category: ['environment', 'camera']"))
+      )
+      expect(parse(out)[0].categories).toEqual(['Environment', 'Camera'])
+    })
+
+    it.each([
+      ['an unknown item', "category: ['object', 'ghost']", /category "ghost"/],
+      ['a duplicate', "category: ['object', 'Object']", /duplicated/],
+      ['camera first', "category: ['camera', 'object']", /cannot be first/],
+      ['an empty array', 'category: []', /category/],
+    ])('fails the build on %s, naming the entry', async (_n, line, re) => {
+      await expect(run(doc(withCat(line)))).rejects.toThrow(re)
+      await expect(run(doc(withCat(line)))).rejects.toThrow(/entry "a1"/)
     })
 
     it('names the second entry when only it is invalid', async () => {
@@ -251,58 +273,19 @@ describe('anomaly-ledger vite plugin', () => {
         'assets/anomaly-overlays/cam01/a1.webp',
         'assets/anomaly-overlays/cam01/a2.webp',
       ])
-      const second = entryYaml({
-        id: 'a2',
-        overlay: 'assets/anomaly-overlays/cam01/a2.webp',
-      })
-      const yaml = `anomalies:\n${entryYaml()}\n    also_categories: ['person']\n${second}\n    also_categories: ['ghost']\n`
-      await expect(run(yaml)).rejects.toThrow(/entry "a2".*also_categories/)
-    })
-
-    it('trims a padded value', async () => {
-      const { out } = await run(withAlso("also_categories: [' person ']"))
-      expect(parse(out)[0].alsoCategories).toEqual(['Person'])
-    })
-
-    it('treats an empty cell as no column', async () => {
-      const { out } = await run(withAlso("also_categories: ['']"))
-      expect('alsoCategories' in parse(out)[0]).toBe(false)
-    })
-
-    it('fails the build on a padded invalid value, naming the trimmed value', async () => {
       await expect(
-        run(withAlso("also_categories: [' ghost ']"))
-      ).rejects.toThrow(/entry "a1".*also_categories "ghost" is unknown/)
+        run(
+          doc(
+            withCat("category: ['object', 'person']"),
+            withCat("category: ['object', 'ghost']", 'a2')
+          )
+        )
+      ).rejects.toThrow(/entry "a2".*category/)
     })
 
-    it('emits alsoCategories from a YAML block sequence', async () => {
-      const { out } = await run(
-        withAlso('also_categories:\n      - person\n      - surreal')
-      )
-      expect(parse(out)[0].alsoCategories).toEqual(['Person', 'Surreal'])
-    })
-
-    it('emits alsoCategories from a YAML flow sequence with two items', async () => {
-      const { out } = await run(
-        withAlso("also_categories: ['person', 'surreal']")
-      )
-      expect(parse(out)[0].alsoCategories).toEqual(['Person', 'Surreal'])
-    })
-
-    it.each([
-      ['not an array', "also_categories: 'person'"],
-      ['duplicated', "also_categories: ['person', 'Person']"],
-      ['camera', "also_categories: ['person', 'camera']"],
-      ['same as category', "also_categories: ['person', 'object']"],
-    ])('fails the build when it is %s', async (_n, line) => {
-      await expect(run(withAlso(line))).rejects.toThrow(
-        /entry "a1".*also_categories/
-      )
-    })
-
-    it('leaves entries without the column unchanged (no alsoCategories key)', async () => {
-      const { out } = await run(`anomalies:\n${entryYaml()}\n`)
-      expect('alsoCategories' in parse(out)[0]).toBe(false)
+    it('a string category leaves the entry without a categories key', async () => {
+      const { out } = await run(doc(entryYaml()))
+      expect('categories' in parse(out)[0]).toBe(false)
     })
   })
 })

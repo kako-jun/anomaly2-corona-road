@@ -312,163 +312,43 @@ describe('parseLedger', () => {
   })
 })
 
-describe('parseLedgerEntry also_categories (#236)', () => {
-  it('is undefined (key absent) when the column is missing', () => {
-    const e = parseLedgerEntry(raw(), 0)
-    expect(e.alsoCategories).toBeUndefined()
-    expect('alsoCategories' in e).toBe(false)
+describe('parseLedgerEntry category as a string or an array (#347)', () => {
+  const cats = (v: unknown) => parseLedgerEntry(raw({ category: v }), 0)
+  it('a string is one category: category set, no categories key', () => {
+    const e = cats('object')
+    expect(e.category).toBe('Object')
+    expect('categories' in e).toBe(false)
   })
-  it('is undefined (key absent) when the value is null', () => {
-    const e = parseLedgerEntry(raw({ also_categories: null }), 0)
-    expect('alsoCategories' in e).toBe(false)
+  it('a one-item array means the same as the string', () => {
+    const e = cats(['object'])
+    expect(e.category).toBe('Object')
+    expect('categories' in e).toBe(false)
   })
-  it.each([
-    ['object', 'Object'],
-    ['environment', 'Environment'],
-    ['person', 'Person'],
-    ['surreal', 'Surreal'],
-  ])('accepts %s when it differs from category', (value, expected) => {
-    const category = expected === 'Person' ? 'camera' : 'person'
-    expect(
-      parseLedgerEntry(raw({ category, also_categories: [value] }), 0)
-        .alsoCategories
-    ).toEqual([expected])
+  it('an array keeps its order; the first is the primary', () => {
+    const e = cats(['surreal', 'person', 'object'])
+    expect(e.category).toBe('Surreal')
+    expect(e.categories).toEqual(['Surreal', 'Person', 'Object'])
   })
-  it('treats case like parseCategory does', () => {
-    expect(
-      parseLedgerEntry(raw({ also_categories: ['PERSON'] }), 0).alsoCategories
-    ).toEqual(['Person'])
-    expect(
-      parseLedgerEntry(raw({ also_categories: ['Surreal'] }), 0).alsoCategories
-    ).toEqual(['Surreal'])
-  })
-  it('rejects an unknown value, naming the entry', () => {
-    expect(() =>
-      parseLedgerEntry(raw({ also_categories: ['ghost'] }), 0)
-    ).toThrow(/entry "AR-01-notice".*also_categories "ghost" is unknown/)
-  })
-  it.each(['object', 'Object', 'OBJECT'])(
-    'rejects %s when it equals category, naming the entry',
-    v => {
-      expect(() => parseLedgerEntry(raw({ also_categories: [v] }), 0)).toThrow(
-        /entry "AR-01-notice".*is the same as category/
-      )
-    }
-  )
-  it.each([
-    ['a number item', [12]],
-    ['a boolean item', [true]],
-    ['a plain string', 'person'],
-  ])('rejects a value that is %s', (_n, v) => {
-    expect(() => parseLedgerEntry(raw({ also_categories: v }), 0)).toThrow(
-      /entry "AR-01-notice".*also_categories/
-    )
-  })
-  it.each(['camera', ' Camera ', 'CAMERA'])(
-    'rejects camera as also_categories (%j) with the entry id',
-    v => {
-      expect(() => parseLedgerEntry(raw({ also_categories: [v] }), 0)).toThrow(
-        /entry "AR-01-notice".*also_categories "[Cc][Aa][Mm][Ee][Rr][Aa]" is not allowed/
-      )
-    }
-  )
-
-  it('adds alsoCategories without changing any other field', () => {
-    const base = parseLedgerEntry(raw(), 0)
-    const withAlso = parseLedgerEntry(raw({ also_categories: ['person'] }), 0)
-    expect(withAlso).toEqual({ ...base, alsoCategories: ['Person'] })
-  })
-  it('trims surrounding whitespace and accepts the value', () => {
-    expect(
-      parseLedgerEntry(raw({ also_categories: [' person '] }), 0).alsoCategories
-    ).toEqual(['Person'])
-  })
-  it.each(['', '   '])('treats blank %j as no column', v => {
-    const e = parseLedgerEntry(raw({ also_categories: [v] }), 0)
-    expect('alsoCategories' in e).toBe(false)
-  })
-  it('reports the trimmed value in the unknown error', () => {
-    expect(() =>
-      parseLedgerEntry(raw({ also_categories: [' ghost '] }), 0)
-    ).toThrow(/entry "AR-01-notice".*also_categories "ghost" is unknown/)
-  })
-  it('rejects a padded value equal to category', () => {
-    expect(() =>
-      parseLedgerEntry(raw({ also_categories: [' object '] }), 0)
-    ).toThrow(/entry "AR-01-notice".*also_categories "object" is the same as/)
-  })
-})
-
-describe('parseLedgerEntry also_categories array shapes (#240)', () => {
-  const also = (v: unknown, over: Record<string, unknown> = {}) =>
-    parseLedgerEntry(raw({ also_categories: v, ...over }), 0).alsoCategories
-  it('accepts two items and keeps their order', () => {
-    expect(also(['person', 'surreal'])).toEqual(['Person', 'Surreal'])
-    expect(also(['surreal', 'person'])).toEqual(['Surreal', 'Person'])
-  })
-  it('accepts three or more items and keeps their order', () => {
-    expect(also(['surreal', 'environment', 'person'])).toEqual([
-      'Surreal',
-      'Environment',
+  it('treats case and surrounding whitespace like parseCategory', () => {
+    expect(cats([' PERSON ', '\tSurreal  ']).categories).toEqual([
       'Person',
+      'Surreal',
     ])
   })
-  it.each([
-    ['an empty array', []],
-    ['only blank items', ['', '  ']],
-  ])('treats %s as no column', (_n, v) => {
-    const e = parseLedgerEntry(raw({ also_categories: v }), 0)
-    expect('alsoCategories' in e).toBe(false)
-  })
   it('skips blank items among valid ones', () => {
-    expect(also(['person', '  ', 'surreal'])).toEqual(['Person', 'Surreal'])
+    expect(cats(['person', '  ', 'surreal']).categories).toEqual([
+      'Person',
+      'Surreal',
+    ])
   })
-  it('trims every item', () => {
-    expect(also([' person ', '\tsurreal  '])).toEqual(['Person', 'Surreal'])
+  it('changes no other field', () => {
+    const base = parseLedgerEntry(raw(), 0)
+    const multi = cats(['object', 'person'])
+    expect({ ...multi, categories: undefined }).toEqual(base)
   })
-  it.each([
-    ['a number', [12]],
-    ['null', [null]],
-    ['a nested array', [['person']]],
-    ['a valid item then a number', ['person', 3]],
-  ])('rejects an item that is %s', (_n, v) => {
-    expect(() => parseLedgerEntry(raw({ also_categories: v }), 0)).toThrow(
-      /entry "AR-01-notice".*"also_categories" has a non-string item/
-    )
-  })
-  it.each([
-    ['true', true],
-    ['a number', 12],
-    ['an object', { a: 1 }],
-  ])('rejects %s as not an array', (_n, v) => {
-    expect(() => parseLedgerEntry(raw({ also_categories: v }), 0)).toThrow(
-      /entry "AR-01-notice".*"also_categories" is not an array/
-    )
-  })
-  it('rejects a bare string', () => {
-    expect(() =>
-      parseLedgerEntry(raw({ also_categories: 'person' }), 0)
-    ).toThrow(/entry "AR-01-notice".*"also_categories" is not an array/)
-  })
-  it('rejects camera mixed in with valid items', () => {
-    expect(() =>
-      parseLedgerEntry(raw({ also_categories: ['person', 'camera'] }), 0)
-    ).toThrow(/entry "AR-01-notice".*also_categories "camera" is not allowed/)
-    expect(() =>
-      parseLedgerEntry(
-        raw({ category: 'person', also_categories: ['object', 'camera'] }),
-        0
-      )
-    ).toThrow(/also_categories "camera" is not allowed/)
-  })
-  it('rejects the primary category in the middle of the array', () => {
-    expect(() =>
-      parseLedgerEntry(
-        raw({ also_categories: ['person', 'object', 'surreal'] }),
-        0
-      )
-    ).toThrow(
-      /entry "AR-01-notice".*also_categories "object" is the same as category/
+  it('names the entry for an unknown item (also after the first)', () => {
+    expect(() => cats(['object', 'ghost'])).toThrow(
+      /entry "AR-01-notice".*category "ghost" is unknown/
     )
   })
   it.each([
@@ -476,16 +356,59 @@ describe('parseLedgerEntry also_categories array shapes (#240)', () => {
     ['person', 'PERSON'],
     [' Person ', 'person'],
   ])('rejects duplicates (%j, %j)', (a, b) => {
-    expect(() =>
-      parseLedgerEntry(raw({ also_categories: [a, 'surreal', b] }), 0)
-    ).toThrow(/entry "AR-01-notice".*also_categories "person" is duplicated/i)
+    expect(() => cats([a, 'surreal', b])).toThrow(
+      /entry "AR-01-notice".*category "person" is duplicated/i
+    )
   })
-  it('accepts every non-camera combination that avoids the primary', () => {
+  it.each([
+    ['a number item', [12]],
+    ['null item', [null]],
+    ['a nested array', [['person']]],
+    ['a valid item then a number', ['person', 3]],
+  ])('rejects %s', (_n, v) => {
+    expect(() => cats(v)).toThrow(
+      /entry "AR-01-notice".*"category" has a non-string item/
+    )
+  })
+  it.each([
+    ['true', true],
+    ['a number', 12],
+    ['an object', { a: 1 }],
+  ])('rejects %s', (_n, v) => {
+    expect(() => cats(v)).toThrow(/entry "AR-01-notice".*"category"/)
+  })
+  it.each([
+    ['an empty array', []],
+    ['only blank items', ['', '  ']],
+  ])('rejects %s on an image entry', (_n, v) => {
+    expect(() => cats(v)).toThrow(/"category" is missing or blank/)
+  })
+  it('accepts every non-camera combination of the four keys', () => {
     const all = ['object', 'environment', 'person', 'surreal']
     for (const primary of all) {
       const others = all.filter(c => c !== primary)
-      expect(also(others, { category: primary })).toHaveLength(3)
+      expect(cats([primary, ...others]).categories).toHaveLength(4)
     }
+  })
+  it.each(['camera', ' Camera ', 'CAMERA'])(
+    'rejects camera first on an image entry (%j), as a string or an array',
+    v => {
+      expect(() => cats(v)).toThrow(
+        /entry "AR-01-notice".*category "camera" cannot be first on an image entry/i
+      )
+      expect(() => cats([v, 'surreal'])).toThrow(/cannot be first/)
+    }
+  )
+  it('accepts camera second or later on an image entry', () => {
+    expect(cats(['environment', 'camera']).categories).toEqual([
+      'Environment',
+      'Camera',
+    ])
+    expect(cats(['surreal', 'environment', 'camera']).categories).toEqual([
+      'Surreal',
+      'Environment',
+      'Camera',
+    ])
   })
 })
 
@@ -614,43 +537,20 @@ describe('parseLedgerRecord: accepted shapes (#77)', () => {
       ).toBe('Surreal')
     }
   )
-  it('accepts a valid also_categories on non-image entries', () => {
+  it('accepts a category array on non-image entries (primary first)', () => {
     expect(
       parseLedgerRecord(
         nonImage({
           anomaly_type: 'sound',
-          category: 'environment',
-          also_categories: ['object'],
+          category: ['environment', 'object'],
         }),
         0
-      ).alsoCategories
-    ).toEqual(['Object'])
+      ).categories
+    ).toEqual(['Environment', 'Object'])
     expect(
-      parseLedgerRecord(nonImage({ also_categories: ['surreal'] }), 0)
-        .alsoCategories
-    ).toEqual(['Surreal'])
-  })
-})
-
-describe('parseLedgerRecord also_categories without category (#240)', () => {
-  const noCat = (v: unknown) =>
-    without(
-      nonImage({ anomaly_type: 'ui_corruption', also_categories: v }),
-      'category'
-    )
-  it.each([
-    ['an empty array', []],
-    ['null', null],
-    ['blank items only', ['', ' ']],
-  ])('tolerates %s', (_n, v) => {
-    const r = parseLedgerRecord(noCat(v), 0)
-    expect(r.alsoCategories).toBeUndefined()
-    expect('alsoCategories' in r).toBe(false)
-  })
-  it('rejects a non-empty array', () => {
-    expect(() => parseLedgerRecord(noCat(['x']), 0)).toThrow(
-      /also_categories needs a category/
-    )
+      parseLedgerRecord(nonImage({ category: ['camera', 'surreal'] }), 0)
+        .categories
+    ).toEqual(['Camera', 'Surreal'])
   })
 })
 
@@ -762,24 +662,14 @@ describe('parseLedgerRecord: rejected shapes (#77)', () => {
       /sound needs one/,
     ],
     [
-      'also_categories without category',
-      without(
-        nonImage({
-          anomaly_type: 'ui_corruption',
-          also_categories: ['object'],
-        }),
-        'category'
-      ),
-      /also_categories needs a category/,
+      'feed_glitch with camera second only',
+      nonImage({ category: ['object', 'camera'] }),
+      /feed_glitch needs category camera/,
     ],
     [
-      'non-image also_categories camera',
-      nonImage({
-        anomaly_type: 'sound',
-        category: 'environment',
-        also_categories: ['camera'],
-      }),
-      /also_categories "camera" is not allowed/,
+      'image entry with camera first',
+      raw({ category: ['camera', 'surreal'] }),
+      /category "camera" cannot be first on an image entry/,
     ],
     [
       'ui_corruption with an invalid category',
@@ -987,40 +877,60 @@ describe('the real ledger carries the memo marks (#325)', () => {
   })
 })
 
-describe('the real ledger keeps also_categories well-formed and applied (#347)', () => {
+describe('the real ledger keeps category well-formed (#347)', () => {
   const records = parseLedgerRecords(
     parseYaml(
       readFileSync(resolve(__dirname, '../../prompts/anomalies.yaml'), 'utf8')
     )
   )
-  const byId = new Map(records.map(r => [r.id, r]))
-  it('no entry lists its primary category, camera, or a repeat in also_categories', () => {
+  it('has no leftover also_categories key', () => {
+    const text = readFileSync(
+      resolve(__dirname, '../../prompts/anomalies.yaml'),
+      'utf8'
+    )
+    expect(text).not.toMatch(/also_?categor/)
+  })
+  it('every image entry has a non-camera primary; arrays have no repeat', () => {
     for (const r of records) {
-      const also = r.alsoCategories ?? []
-      expect(also, r.id).not.toContain(r.category)
-      expect(also, r.id).not.toContain('Camera')
-      expect(new Set(also).size, r.id).toBe(also.length)
-      if (also.length) expect(r.category, r.id).toBeDefined()
+      const all = r.categories ?? (r.category ? [r.category] : [])
+      expect(new Set(all).size, r.id).toBe(all.length)
+      if (r.kind === 'image') expect(r.category, r.id).not.toBe('Camera')
     }
   })
-  it('every active row of scripts/also-categories-input.tsv is in the ledger (apply-also-categories.py)', () => {
-    const input = resolve(__dirname, '../../scripts/also-categories-input.tsv')
-    expect(existsSync(input)).toBe(true)
-    const rows = readFileSync(input, 'utf8')
-      .split('\n')
-      .filter(l => l.trim() && !l.startsWith('#'))
-    expect(rows.length).toBeGreaterThan(0)
-    for (const line of rows) {
-      const [id, , prim, also] = line.split('\t')
-      const r = byId.get(id)
-      expect(r, `${id} is not in the ledger`).toBeDefined()
-      expect(r?.category, `${id} primary differs from the input`).toBe(
-        parseCategory(prim)
-      )
-      for (const a of also.split(',')) {
-        const cat = parseCategory(a)
-        expect(r?.alsoCategories, `${id} lacks ${a}`).toContain(cat)
-      }
+  it('a non-human animal is not a person; a human-shaped picture is (kako-jun 2026-11-12)', () => {
+    const catsOf = (id: string) => {
+      const r = records.find(x => x.id === id)
+      expect(r, id).toBeDefined()
+      return r?.categories ?? [r?.category]
     }
+    for (const id of [
+      'AR-05-aisle-goldfish',
+      'AR-02-cat',
+      'AR-08-cat',
+      'AR-03-walking-cat',
+      'AR-07-stairs-cat',
+      'AR-01-threshold-pigeon',
+      'AR-08-pillar-sparrow',
+      'AR-04-rat-left-floor',
+      'AR-06-wall-gecko',
+      'AR-01-ceiling-spider',
+    ]) {
+      expect(catsOf(id), id).toEqual(['Object'])
+    }
+    for (const id of [
+      'AR-03-face-ornament',
+      'AR-05-film-poster',
+      'AR-01-wall-faces',
+      'AR-06-wall-same-poster',
+      'AR-02-shutter-crayon-drawings',
+      'AR-07-pictogram-flip',
+    ]) {
+      expect(catsOf(id), id).toContain('Person')
+    }
+    expect(catsOf('AR-01-window-peeping-face')[0]).toBe('Person')
+  })
+  it('lists camera second or later on the surface-wide image entries', () => {
+    const r = records.find(x => x.id === 'AR-07-floor-frost')
+    expect(r?.categories).toEqual(['Environment', 'Surreal', 'Camera'])
   })
 })

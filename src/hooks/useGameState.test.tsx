@@ -334,9 +334,12 @@ describe('reporting', () => {
     expect(result.current.feedback?.message).toMatch(/WRONG CATEGORY/)
   })
 
-  describe('also_categories (#236)', () => {
+  describe('category as an array (#347)', () => {
     const withAlso = () => {
-      ledger.push({ ...entry('a', 1, 'Object'), alsoCategories: ['Person'] })
+      ledger.push({
+        ...entry('a', 1, 'Object'),
+        categories: ['Object', 'Person'],
+      })
       const hook = start()
       advance(FIRST + 100)
       return hook
@@ -350,7 +353,7 @@ describe('reporting', () => {
       expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
     })
 
-    it('a category listed in also_categories is correct too, and the feedback still names the primary', () => {
+    it('a category listed after the first is correct too, and the feedback still names the primary', () => {
       const { result } = withAlso()
       act(() => result.current.reportAnomaly('Person'))
       expect(result.current.stats.correctReports).toBe(1)
@@ -359,12 +362,12 @@ describe('reporting', () => {
       expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
     })
 
-    it('every extra category in the array is correct, feedback names the primary', () => {
+    it('every category in the array is correct, feedback names the primary', () => {
       for (const c of ['Person', 'Surreal'] as const) {
         ledger.length = 0
         ledger.push({
           ...entry('a', 1, 'Object'),
-          alsoCategories: ['Person', 'Surreal'],
+          categories: ['Object', 'Person', 'Surreal'],
         })
         const { result, unmount } = start()
         advance(FIRST + 100)
@@ -398,11 +401,39 @@ describe('reporting', () => {
       }
     })
 
+    it('the real ledger: AR-07-floor-frost is correct as Camera or Environment, a false report as Object (#347)', () => {
+      const rec = parseLedgerRecords(
+        parseYaml(
+          readFileSync(
+            resolve(__dirname, '../../prompts/anomalies.yaml'),
+            'utf8'
+          )
+        )
+      ).find(r => r.id === 'AR-07-floor-frost')
+      expect(rec).toBeDefined()
+      for (const [c, ok] of [
+        ['Environment', true],
+        ['Camera', true],
+        ['Surreal', true],
+        ['Object', false],
+        ['Person', false],
+      ] as const) {
+        ledger.length = 0
+        ledger.push({ ...toLedgerEntry(rec!), cameraId: 1 })
+        const { result, unmount } = start()
+        advance(FIRST + 100)
+        act(() => result.current.reportAnomaly(c))
+        expect(result.current.stats.correctReports, c).toBe(ok ? 1 : 0)
+        expect(result.current.stats.misreports, c).toBe(ok ? 0 : 1)
+        unmount()
+      }
+    })
+
     it('a category outside the array is a false report', () => {
       ledger.length = 0
       ledger.push({
         ...entry('a', 1, 'Object'),
-        alsoCategories: ['Person', 'Surreal'],
+        categories: ['Object', 'Person', 'Surreal'],
       })
       const { result } = start()
       advance(FIRST + 100)
@@ -420,7 +451,7 @@ describe('reporting', () => {
       expect(result.current.activeAnomalyHere?.id).toBe('a')
     })
 
-    it('an anomaly without also_categories accepts only its primary category', () => {
+    it('an anomaly with a single category accepts only its primary category', () => {
       const { result } = withAnomaly('Object')
       act(() => result.current.reportAnomaly('Person'))
       expect(result.current.stats.misreports).toBe(1)
