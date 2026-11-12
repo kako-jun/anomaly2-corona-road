@@ -989,6 +989,34 @@ describe('the real ledger keeps category well-formed (#347)', () => {
     // floating in the air (smoke) touches no surface: nothing was added (its Environment is its own primary)
     expect(catsOf('AR-02-smoke')).toEqual(['Environment', 'Object', 'Surreal'])
   })
+  it('no animal is a Person, whatever surface it is on (kako-jun 2026-11-12, #347)', () => {
+    for (const id of [
+      'AR-02-cat',
+      'AR-08-cat',
+      'AR-03-walking-cat',
+      'AR-07-stairs-cat',
+      'AR-01-cat-in-frosted-window',
+      'AR-01-threshold-pigeon',
+      'AR-08-pillar-sparrow',
+      'AR-04-rat-left-floor',
+      'AR-06-wall-gecko',
+      'AR-01-ceiling-spider',
+      'AR-05-aisle-goldfish',
+      'AR-05-floor-turtle',
+    ]) {
+      const r = records.find(x => x.id === id)
+      expect(r, id).toBeDefined()
+      expect(r?.categories ?? [r?.category], id).not.toContain('Person')
+    }
+    for (const id of [
+      'AR-03-tube-light-bent',
+      'AR-08-ceiling-light-inverse',
+      'AR-08-vent-square',
+      'AR-02-rusty-vent',
+    ]) {
+      expect(records.find(x => x.id === id)?.categories, id).toContain('Object')
+    }
+  })
   it('lists camera second or later on the surface-wide image entries', () => {
     const r = records.find(x => x.id === 'AR-07-floor-frost')
     expect(r?.categories).toEqual(['Environment', 'Surreal', 'Camera'])
