@@ -136,8 +136,6 @@ export const CameraView = ({
   return (
     <section className="tube" aria-label="Monitor">
       <div className="bezel" {...handlers} onClick={noise.askMotion}>
-        <div className="edge-mark edge-mark--prev" aria-hidden="true" />
-        <div className="edge-mark edge-mark--next" aria-hidden="true" />
         <div
           className={cx('glass', noise.off && 'noise-off')}
           style={style}
