@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ComponentProps } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -294,6 +294,22 @@ describe('Cabinet true ending screen (Issue #86)', () => {
     expect(baseSrc(container)).toBe(cameras[0].image)
     rerender(<Cabinet {...makeProps({ ending: 'ending' })} />)
     expect(baseSrc(container)).toBe('/images/ending-bar.webp')
+  })
+
+  it('lights no camera key and takes no key switch during the ending (#273)', () => {
+    const onSwitch = vi.fn()
+    const { container, rerender } = render(
+      <Cabinet {...makeProps({ ending: 'dawn', onSwitch })} />
+    )
+    expect(container.querySelectorAll('.lamp.green.on')).toHaveLength(1)
+    rerender(<Cabinet {...makeProps({ ending: 'ending', onSwitch })} />)
+    expect(container.querySelectorAll('.lamp.green.on')).toHaveLength(0)
+    expect(container.querySelectorAll('.cam-cell .key.pressed')).toHaveLength(0)
+    expect(container.querySelector('.lamp-big.lit, .lamp-big.alert')).toBeNull()
+    expect(container.querySelector('.osd-cam')?.textContent).toBe('CAM 09')
+    fireEvent.keyDown(window, { key: '2' })
+    fireEvent.keyDown(window, { key: 'ArrowRight' })
+    expect(onSwitch).not.toHaveBeenCalled()
   })
 })
 

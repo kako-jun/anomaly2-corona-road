@@ -251,6 +251,21 @@ describe('ReportButton', () => {
     }
   }
 
+  it('keeps the lamp off, lit or blinking, when lampsOff (the ending camera, #273)', () => {
+    const { container } = render(
+      <ReportButton
+        open
+        alert
+        lampsOff
+        buttonRef={createRef<HTMLButtonElement>()}
+        onToggle={vi.fn()}
+      />
+    )
+    const lamp = container.querySelector('.lamp-big') as HTMLElement
+    expect(lamp).not.toHaveClass('lit')
+    expect(lamp).not.toHaveClass('alert')
+  })
+
   it('is collapsed, with an unlit lamp and unpressed key, when closed', () => {
     const { btn, lamp } = renderButton(false)
     expect(btn).toHaveAttribute('aria-expanded', 'false')

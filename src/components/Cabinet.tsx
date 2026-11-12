@@ -87,7 +87,15 @@ export const Cabinet = ({
     wasOpenRef.current = reportOpen
   }, [reportOpen])
 
-  useCameraKeys(!reportOpen, CAMERAS.length, onSwitch)
+  // The ending's virtual camera (CAM 09) takes no camera operation at all: keys and swipes are ignored (#273).
+  const inEnding = ending === 'ending'
+  useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
+  const handleSwipe = useCallback(
+    (d: 'next' | 'prev') => {
+      if (!inEnding) onSwitch(d)
+    },
+    [inEnding, onSwitch]
+  )
 
   const subtitle = useSubtitle({
     wrongFeedbackId: feedback?.kind === 'wrong' ? feedback.id : null,
@@ -124,7 +132,7 @@ export const Cabinet = ({
           contrast={contrastFilter(contrast)}
           feedGlitch={ending === 'ending' ? undefined : FORCED_GLITCH}
           feedGlitchForced={FORCED_GLITCH !== undefined}
-          onSwipe={onSwitch}
+          onSwipe={handleSwipe}
           loupeHost={loupeHost}
         />
         <section className="panel" aria-label="Control panel">
@@ -142,10 +150,12 @@ export const Cabinet = ({
             cameras={cameras}
             currentIndex={currentCameraIndex}
             onSelect={onSwitch}
+            disabled={inEnding}
           />
           <ReportButton
             open={reportOpen}
             alert={shouldAlert(unreportedCount)}
+            lampsOff={inEnding}
             buttonRef={reportBtnRef}
             onToggle={() => setReportOpen(o => !o)}
           />
