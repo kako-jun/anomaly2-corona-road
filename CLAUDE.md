@@ -390,7 +390,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS
 - **State Management**: Custom hooks (useGameState)
-- **Deployment**: Cloudflare Pages (Git integration): a push to `main` builds and publishes to https://anomaly2.llll-ll.com/. GitHub Actions CI only lints, tests and builds
+- **Deployment**: Cloudflare Pages (Git integration): a push to `main` builds and publishes to https://anomaly2.llll-ll.com/. GitHub Actions CI lints, runs the text-only checks (`check:fullwidth`, `check:spawn-hints`), tests and builds
 
 ### File Structure
 
