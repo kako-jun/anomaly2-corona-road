@@ -161,21 +161,29 @@ export const InvestigationNote = ({
           </div>
           <div className="note-notes">
             <div className="note-syn">
-              {view.sketch && <Sketch src={view.sketch} />}
               {view.lines.map(l => (
                 <p key={l.text}>{l.text}</p>
               ))}
             </div>
-            {view.scrib.length > 0 && (
-              <div className="note-scrib note-hw">
-                {view.scrib.map((s, i) => (
-                  <p
-                    key={s}
-                    style={{ transform: `rotate(var(--tilt-scrib-${i}))` }}
-                  >
-                    {s}
-                  </p>
-                ))}
+            {(view.scrib.length > 0 || view.sketch) && (
+              <div className="note-tail">
+                {view.scrib.length > 0 && (
+                  <div className="note-scrib note-hw">
+                    {view.scrib.map((s, i) => (
+                      <p
+                        key={s}
+                        style={{ transform: `rotate(var(--tilt-scrib-${i}))` }}
+                      >
+                        {s}
+                      </p>
+                    ))}
+                  </div>
+                )}
+                {view.sketch && (
+                  <div className="note-bay">
+                    <Sketch src={view.sketch} />
+                  </div>
+                )}
               </div>
             )}
           </div>

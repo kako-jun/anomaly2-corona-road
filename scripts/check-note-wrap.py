@@ -361,7 +361,7 @@ SKETCH = """
   if (img.getAttribute('alt') !== '' || img.getAttribute('aria-hidden') !== 'true') res.push('the memo scribble is not hidden from assistive technology (alt="" and aria-hidden)')
   if (img.getAttribute('loading') !== 'lazy') res.push('the memo scribble is not lazy (it must be fetched only when shown)')
   if (document.querySelectorAll('.note-sketch').length !== 1) res.push('more than one memo scribble on the sheet')
-  if (img.parentElement.className !== 'note-syn') res.push('the memo scribble is not inside the synopsis')
+  if (img.parentElement.className !== 'note-bay') res.push('the memo scribble is not in the bay beside the scribbles')
   const R = b => ({ l: b.left / sc, r: b.right / sc, t: b.top / sc, b: b.bottom / sc })
   const ib = R(img.getBoundingClientRect()), notes = R(document.querySelector('.note-notes').getBoundingClientRect())
   const form = R(document.querySelector('.note-form').getBoundingClientRect())
@@ -428,7 +428,8 @@ RULEFIT = """
 # English lowercase (8px: no cut at all), 3.2px (26%) under the English caps and 4.2px (32%) under the Japanese tops.
 # Past either the memo reads as struck through. (A scribble is turned, so its two ends differ; its middle sits about 5px
 # up.)
-# A memo scribble's transparent margin, per side, in its own pixels (the file is trimmed to its drawing, 2px of air kept)
+# A memo scribble's transparent margin, per side, in its own pixels: the files are trimmed to the drawing with 2px of air
+# (prompts/README.md), so 4px is that air plus the encoder's soft edge; a drawing lost in a wider margin is drawn too small.
 SKETCH_MARGIN_MAX = 4
 RULE_BELOW_MAX = 3
 RULE_ABOVE_MAX = 13
@@ -573,6 +574,9 @@ def check_after(browser, problems):
             for w, h in ((360, 640), (1280, 720)):
                 page.set_viewport_size({"width": w, "height": h})
                 page.wait_for_timeout(60)
+                if (w, h) == (360, 640):
+                    size = page.evaluate("(() => { const i = document.querySelector('.note-sketch'); return i ? [i.offsetWidth, i.offsetHeight] : null })()")
+                    print(f"sketch [{lang}] {k['file']}: drawn {size[0]}x{size[1]}px at the worst sheet" if size else f"sketch [{lang}] {k['file']}: missing")
                 for msg in page.evaluate(SKETCH) + page.evaluate(LAYOUT) + page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
                     problems.append(f"[{lang} {w}x{h}] elder3/dawn + {k['file']}: {msg}")
             page.close()

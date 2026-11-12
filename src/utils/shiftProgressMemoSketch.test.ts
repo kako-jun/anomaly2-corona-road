@@ -123,7 +123,7 @@ describe('the memo scribble across shifts', () => {
     expect(img.getAttribute('alt')).toBe('')
     expect(img.getAttribute('aria-hidden')).toBe('true')
     expect(img.getAttribute('loading')).toBe('lazy')
-    expect(container.querySelector('.note-syn')?.contains(img)).toBe(true)
+    expect(container.querySelector('.note-bay')?.contains(img)).toBe(true)
     expect(
       [...container.querySelectorAll('.note-syn p')].map(e => e.textContent)
     ).toContain('メモcat')
