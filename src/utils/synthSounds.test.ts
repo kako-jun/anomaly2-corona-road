@@ -51,20 +51,30 @@ describe('synth sounds', () => {
     expect(playSynth(engine, 'hum')).toBeNull()
   })
 
-  it.each(NAMES)('%s stays within headroom at full volume', async name => {
-    const m = makeMockContext()
-    const engine = createAudioEngine({
-      createContext: () => m.ctx,
-      volume: 100,
-    })
-    await engine.unlock()
-    playSynth(engine, name)
-    const peaks = m.nodes
-      .filter(n => n.kind === 'gain' && n !== (engine.master() as unknown))
-      .map(n => (n.gain as { peak: number }).peak)
-    // no single envelope may exceed 0.6; sustained sounds stack at most 2 unit oscillators behind one gain (<= 1)
-    expect(Math.max(0, ...peaks)).toBeLessThanOrEqual(0.6)
-    const oscs = m.nodes.filter(n => n.kind === 'oscillator').length
-    if (name === 'hum') expect(peaks[0] * oscs).toBeLessThanOrEqual(1)
-  })
+  it.each(NAMES)(
+    '%s: summed peaks stay within headroom at full volume',
+    async name => {
+      const m = makeMockContext()
+      const engine = createAudioEngine({
+        createContext: () => m.ctx,
+        volume: 100,
+      })
+      await engine.unlock()
+      playSynth(engine, name)
+      // Worst case: at any moment, every source that is sounding is at its envelope peak. Each oscillator / noise
+      // source is unit amplitude behind its own gain, so the sum of the gain peaks active at that moment bounds the
+      // output. Gains with no schedule (LFO depth, buzz) modulate rather than sound and are skipped.
+      const ev = m.nodes
+        .filter(n => n.kind === 'gain' && n !== (engine.master() as unknown))
+        .map(n => n.gain as { peak: number; start: number; end: number })
+        .filter(g => Number.isFinite(g.start) && g.peak > 0)
+      const at = (t: number) =>
+        ev
+          .filter(g => g.start <= t && t <= g.end)
+          .reduce((a, g) => a + g.peak, 0)
+      const sum = Math.max(0, ...ev.map(g => at(g.start + 0.0001)))
+      const oscMul = name === 'hum' ? 2 : 1 // hum: two unit sines share one gain
+      expect(sum * oscMul).toBeLessThanOrEqual(1)
+    }
+  )
 })

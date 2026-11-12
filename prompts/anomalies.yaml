@@ -6500,7 +6500,7 @@ anomalies:
     memo:
       ja: '誰もいないのに遠くから笑い声。'
       en: 'Laughter far off. No one there.'
-    note: '昭和テーマ。category は environment（仮）。出現のたびにカメラを無作為に選び、選ばれたカメラを見ている間だけ鳴らす。楽しげ・懐かしげなのに不気味に聞こえるのが狙い。実在の楽曲・番組・人物は使わない。音は WebAudio 合成（オリジナル旋律）で作る。再生基盤は実装済み（docs/audio.md、Issue #79）。注意: 台帳の既存 AR-01-noren の candidate_id は旧番号の CR-SH-04 で、この音案とは別物（候補IDの旧番号との重複）。'
+    note: '昭和テーマ。category は environment（仮）。出現のたびにカメラを無作為に選び、選ばれたカメラを見ている間だけ鳴らす。楽しげ・懐かしげなのに不気味に聞こえるのが狙い。実在の楽曲・番組・人物は使わない。音素材と再生機構が必要（Issue #70）。注意: 台帳の既存 AR-01-noren の candidate_id は旧番号の CR-SH-04 で、この音案とは別物（候補IDの旧番号との重複）。'
   - id: 'CR-SH-05'
     status: 'planned'
     kind: 'non_image'
@@ -6512,7 +6512,7 @@ anomalies:
     memo:
       ja: '雑音に混じって古い歌謡曲のような旋律。'
       en: 'Old tune breaks through the static.'
-    note: '昭和テーマ。category は environment（仮）。出現のたびにカメラを無作為に選び、選ばれたカメラを見ている間だけ鳴らす。音素材と再生機構が必要（Issue #70）。注意: 台帳の既存 AR-01-door-ajar の candidate_id は旧番号の CR-SH-05 で、この音案とは別物。'
+    note: '昭和テーマ。category は environment（仮）。出現のたびにカメラを無作為に選び、選ばれたカメラを見ている間だけ鳴らす。音は WebAudio 合成（オリジナル旋律）で作る。再生基盤は実装済み（docs/audio.md、Issue #79）。注意: 台帳の既存 AR-01-door-ajar の candidate_id は旧番号の CR-SH-05 で、この音案とは別物。'
   - id: 'CR-SH-06'
     status: 'planned'
     kind: 'non_image'

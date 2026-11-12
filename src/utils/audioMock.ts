@@ -2,6 +2,9 @@
 export interface MockParam {
   value: number
   peak: number
+  /** Time of the first scheduled value and of the last exponential ramp end (Infinity = never ends). */
+  start: number
+  end: number
   cancelScheduledValues: (t: number) => void
   setValueAtTime: (v: number, t: number) => void
   linearRampToValueAtTime: (v: number, t: number) => void
@@ -20,16 +23,20 @@ export const makeMockContext = (initial: AudioContextState = 'suspended') => {
     const p: MockParam = {
       value: 1,
       peak: 0,
+      start: Infinity,
+      end: Infinity,
       cancelScheduledValues: () => {},
-      setValueAtTime: v => {
+      setValueAtTime: (v, t) => {
         p.value = v
+        p.start = Math.min(p.start, t)
       },
       linearRampToValueAtTime: v => {
         p.value = v
         p.peak = Math.max(p.peak, v)
       },
-      exponentialRampToValueAtTime: v => {
+      exponentialRampToValueAtTime: (v, t) => {
         p.value = v
+        p.end = t
       },
     }
     return p
