@@ -9,7 +9,7 @@
 
 Exact duplicates are a vitest failure; this lists the close ones (difflib ratio) for a human to judge. A report
 tool, not a gate: colour or position swaps of the same kind of change ("one tile turned X") score high on purpose.
-Reads prompts/anomalies.yaml directly (the machine-written memo blocks).
+Reads prompts/anomalies.yaml directly.
 """
 import difflib
 import re

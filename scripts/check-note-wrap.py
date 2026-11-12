@@ -58,7 +58,7 @@ def open_note(browser, save, locale=None):
 
 
 def ledger_memos():
-    """[{id, ja, en}] for every ledger entry that has a `memo` (the file is machine-written by scripts/apply-memos.py)."""
+    """[{id, ja, en}] for every ledger entry that has a `memo` (the ledger is the only master of the wording)."""
     text = open(os.path.join(os.path.dirname(__file__), "..", "prompts", "anomalies.yaml"), encoding="utf-8").read()
     out = []
     pat = re.compile(r"^  - id: ['\"]?([^'\"\s]+)['\"]?\s*$|^      (ja|en): '((?:[^']|'')*)'\s*$", re.M)
