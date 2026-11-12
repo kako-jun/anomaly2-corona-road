@@ -226,8 +226,9 @@ export const useGameState = () => {
 
       if (
         anomalyOnCamera &&
-        (anomalyOnCamera.category === category ||
-          anomalyOnCamera.alsoCategories?.includes(category))
+        (anomalyOnCamera.categories ?? [anomalyOnCamera.category]).includes(
+          category
+        )
       ) {
         setStats(prev => ({
           ...prev,

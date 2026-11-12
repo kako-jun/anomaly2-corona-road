@@ -397,26 +397,21 @@ describe('createAnomaly', () => {
       '/hashed.webp'
     )
   })
-  it('carries alsoCategories over when the entry has one', () => {
-    const a = createAnomaly({ ...e, alsoCategories: ['Person'] }, 'early', 'u')
-    expect(a.alsoCategories).toEqual(['Person'])
-    expect(a.category).toBe('Object')
-  })
-  it('carries two alsoCategories over in order', () => {
+  it('carries categories over when the entry has them, primary first', () => {
     const a = createAnomaly(
-      { ...e, alsoCategories: ['Person', 'Surreal'] },
+      { ...e, categories: ['Object', 'Person', 'Surreal'] },
       'early',
       'u'
     )
-    expect(a.alsoCategories).toEqual(['Person', 'Surreal'])
+    expect(a.categories).toEqual(['Object', 'Person', 'Surreal'])
+    expect(a.category).toBe('Object')
   })
-  it('has no alsoCategories key for an empty array', () => {
+  it('has no categories key for an empty array', () => {
     expect(
-      'alsoCategories' in
-        createAnomaly({ ...e, alsoCategories: [] }, 'early', 'u')
+      'categories' in createAnomaly({ ...e, categories: [] }, 'early', 'u')
     ).toBe(false)
   })
-  it('has no alsoCategories key when the entry has none', () => {
-    expect('alsoCategories' in createAnomaly(e, 'early', 'u')).toBe(false)
+  it('has no categories key when the entry has none', () => {
+    expect('categories' in createAnomaly(e, 'early', 'u')).toBe(false)
   })
 })

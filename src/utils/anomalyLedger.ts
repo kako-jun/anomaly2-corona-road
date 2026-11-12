@@ -64,9 +64,13 @@ export interface MemoText {
 export interface LedgerEntry {
   id: string
   cameraId: number
+  /** The primary category (the first of the ledger's `category`): shown in the feedback, drawn by, counted by. */
   category: AnomalyCategory
-  /** Optional extra correct reports for a genuinely split anomaly (each differs from `category`, no duplicates). */
-  alsoCategories?: AnomalyCategory[]
+  /**
+   * Every correct report (the ledger's `category` as an array, primary first, no duplicates); present only when
+   * the ledger lists more than one. Absent = `category` alone is correct.
+   */
+  categories?: AnomalyCategory[]
   anomalyType: ImageAnomalyType
   /** Repo-relative path of the transparent overlay, e.g. `assets/anomaly-overlays/cam01/notice.webp`. */
   overlay: string
@@ -130,45 +134,41 @@ export const parseCategory = (text: string): AnomalyCategory => {
 }
 
 /**
- * Optional `also_categories`: absent / null / empty (or only blank items) -> undefined; otherwise an
- * array of valid categories, each different from `category`, no camera, no duplicates.
+ * The ledger's `category`: a string (one category) or an array (several correct reports, #347). The first is the
+ * primary; the rest are grazing answers that are also correct. Blank items are skipped; every item must be a valid
+ * category and none may repeat. An image entry cannot have `camera` first (camera is the whole feed's glitch), but
+ * may list it second or later (a big surface change that reads as the whole screen being wrong).
+ * Returns the list (primary first).
  */
-export const parseAlsoCategories = (
+export const parseCategories = (
   value: unknown,
-  category: AnomalyCategory
-): AnomalyCategory[] | undefined => {
-  if (value === undefined || value === null) return undefined
-  if (!Array.isArray(value)) {
-    throw new Error('"also_categories" is not an array')
-  }
+  kind: LedgerKind
+): AnomalyCategory[] => {
+  const list = Array.isArray(value) ? value : [value]
   const result: AnomalyCategory[] = []
-  for (const item of value) {
+  for (const item of list) {
     if (typeof item !== 'string') {
-      throw new Error('"also_categories" has a non-string item')
-    }
-    // Same preprocessing as the other fields (trim); a blank item counts as "no item".
-    const text = item.trim()
-    if (text === '') continue
-    let also: AnomalyCategory
-    try {
-      also = parseCategory(text)
-    } catch {
-      throw new Error(`also_categories "${text}" is unknown`)
-    }
-    if (also === 'Camera') {
       throw new Error(
-        `also_categories "${text}" is not allowed (camera is a non-image anomaly, not an image entry)`
+        Array.isArray(value)
+          ? '"category" has a non-string item'
+          : '"category" is missing or not a string'
       )
     }
-    if (also === category) {
-      throw new Error(`also_categories "${text}" is the same as category`)
+    const text = item.trim()
+    if (text === '') continue
+    const cat = parseCategory(text)
+    if (result.includes(cat)) {
+      throw new Error(`category "${text}" is duplicated`)
     }
-    if (result.includes(also)) {
-      throw new Error(`also_categories "${text}" is duplicated`)
-    }
-    result.push(also)
+    result.push(cat)
   }
-  return result.length > 0 ? result : undefined
+  if (result.length === 0) throw new Error('"category" is missing or blank')
+  if (kind === 'image' && result[0] === 'Camera') {
+    throw new Error(
+      'category "camera" cannot be first on an image entry (camera is a whole-feed glitch; list it second or later only for a big surface change)'
+    )
+  }
+  return result
 }
 
 export const parseAnomalyType = (text: string): AnomalyType => {
@@ -199,7 +199,8 @@ export interface LedgerRecord {
   cameraId?: number
   /** Absent only for non-image `ui_corruption` / `rule_break` (no report window yet, #80); every image entry has one. */
   category?: AnomalyCategory
-  alsoCategories?: AnomalyCategory[]
+  /** Every correct report (primary first); only when the ledger's `category` lists more than one. */
+  categories?: AnomalyCategory[]
   /** The ledger's `reiwa: true` (a thing the Showa era did not have); absent = not Reiwa. Any kind may carry it. */
   reiwa?: true
   /** The ledger's `memo_flag` (a name or a list of names from MEMO_FLAGS, no duplicates). Any kind may carry it. */
@@ -313,30 +314,17 @@ export const parseLedgerRecord = (
 
     // category: required for image. Non-image: feed_glitch must be camera, sound needs one,
     // ui_corruption / rule_break may leave it empty (no report window yet, #80).
-    let category: AnomalyCategory | undefined
+    let categories: AnomalyCategory[] | undefined
     if (kind === 'image' || has(rec, 'category')) {
-      category = parseCategory(field(rec, 'category'))
+      categories = parseCategories(rec.category, kind)
     }
+    const category = categories?.[0]
     if (anomalyType === 'feed_glitch' && category !== 'Camera') {
       throw new Error('feed_glitch needs category camera')
     }
     if (anomalyType === 'sound' && category === undefined) {
       throw new Error('"category" is missing (sound needs one)')
     }
-    if (category === undefined && has(rec, 'also_categories')) {
-      const also = rec.also_categories
-      const blank =
-        also === null ||
-        (Array.isArray(also) &&
-          also.every(i => typeof i === 'string' && i.trim() === ''))
-      if (!blank) {
-        throw new Error('also_categories needs a category')
-      }
-    }
-    const alsoCategories =
-      category === undefined
-        ? undefined
-        : parseAlsoCategories(rec.also_categories, category)
 
     const detail = kind === 'non_image' ? field(rec, 'detail') : undefined
     // reiwa: optional; only `true` is accepted (omit it for a non-Reiwa entry).
@@ -373,7 +361,7 @@ export const parseLedgerRecord = (
       anomalyType,
       ...(cameraId !== undefined ? { cameraId } : {}),
       ...(category ? { category } : {}),
-      ...(alsoCategories ? { alsoCategories } : {}),
+      ...(categories && categories.length > 1 ? { categories } : {}),
       ...(reiwa ? { reiwa } : {}),
       ...(memoFlags ? { memoFlags } : {}),
       ...(memo ? { memo } : {}),
@@ -408,7 +396,7 @@ export const toLedgerEntry = (r: LedgerRecord): LedgerEntry => {
     id: r.id,
     cameraId: r.cameraId,
     category: r.category,
-    ...(r.alsoCategories ? { alsoCategories: r.alsoCategories } : {}),
+    ...(r.categories ? { categories: r.categories } : {}),
     anomalyType: r.anomalyType as ImageAnomalyType,
     overlay: r.overlay,
     origin: r.origin,
