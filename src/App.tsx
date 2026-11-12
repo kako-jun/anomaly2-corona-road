@@ -18,7 +18,11 @@ import { InstallBanner } from './components/InstallBanner'
 import { ScreenTransition } from './components/ScreenTransition'
 import { buildNote } from './utils/investigationNote'
 import { useLanguage } from './utils/language'
-import { preloadCabinet, preloadTitleNotes } from './utils/uiPreload'
+import {
+  preloadCabinet,
+  preloadCameraImages,
+  preloadTitleNotes,
+} from './utils/uiPreload'
 import { SAVE_KEY, load } from './utils/saveData'
 import { resetProgress } from './utils/shiftProgress'
 import { applyUpdate, subscribeUpdate, updateWaiting } from './utils/swUpdate'
@@ -54,6 +58,8 @@ function useScreen(): [string, ReactNode] {
   }, [])
   useEffect(() => {
     ready.current = preloadCabinet()
+    // The cameras' photos come after the UI parts and the fonts, at low priority; START does not wait for them (#396).
+    void ready.current.then(() => preloadCameraImages())
   }, [])
   // The title notes of the chosen language only (a switch fetches the other one).
   useEffect(() => {
