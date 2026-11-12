@@ -231,7 +231,7 @@ See **DESIGN.md** for the unified design system (Material 3-inspired tokens for 
   - Mid phase: 4-5 variants per camera (16-20 images)
   - Late phase: 5-6 variants per camera (20-24 images)
   - **Total: ~50-60 anomaly images**
-- [x] Implement image preloading system (#284, see DESIGN.md §7; overlays on idle: `src/utils/preload.ts`)
+- [x] Implement image preloading system (#284, see DESIGN.md §7; overlays on idle: `src/utils/preload.ts`; the eight cameras' base photos on idle after the UI parts, `preloadCameraImages` in `src/utils/uiPreload.ts`, #396: about 3MB, outside the 800KB UI budget, START does not wait)
 - [ ] Create image transition system
 
 **Anomaly Types to Visualize:**
