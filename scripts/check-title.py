@@ -51,7 +51,7 @@ WIDE_SIGN_MIN = 0.35  # a wide screen crops the tall board top and bottom by des
 BLUR_PX_MAX = 10  # the radius never exceeds this (measured on swiftshader: sign still legible far above, but the look gets muddy)
 BLUR_STRONG_MAX = 0.4  # the sign's centre under the strong part of the patch (mask x opacity > 0.5) at most this share of the time
 BLUR_EDGE_MIN = 0.5  # with the patch centred on the sign at full strength, the sign keeps this much of its edge contrast
-BLUR_VISIBLE_MIN = 1.2  # ... and the patch changes the picture by at least this mean grey level (8px measured: 3.4 at 360x640, 1.6 at 1280x720)
+BLUR_VISIBLE_MIN = 1.0  # ... and the patch changes the picture under it by at least this mean grey level (measured over the patch's own area, so the screen size does not dilute it)
 CLEAR_MIN = 0.85  # of the part of the board that is on screen, the note and the key may cover at most 15% (worst point of the pan)
 
 
@@ -205,6 +205,9 @@ def blur_legibility(p):
 
     p.add_style_tag(content=".start-burst{display:none!important}")
     box = p.evaluate(SETUP, [list(SIGN)])
+    r = p.evaluate("() => { const b = document.querySelector('.start-blur-x').getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }")
+    pw_, ph_ = p.evaluate("() => [innerWidth, innerHeight]")
+    area = [max(0, int(r[0])), max(0, int(r[1])), min(pw_, int(r[2])), min(ph_, int(r[3]))]
     p.wait_for_timeout(250)
     grey = lambda: np.asarray(Image.open(io.BytesIO(p.screenshot())).convert("L"), dtype=float)
     on = grey()
@@ -217,7 +220,8 @@ def blur_legibility(p):
         c = a[box[1]:box[3], box[0]:box[2]]
         return np.abs(np.diff(c, axis=1)).mean() + np.abs(np.diff(c, axis=0)).mean()
 
-    return edges(on) / edges(off), float(np.abs(on - off).mean())
+    d = np.abs(on - off)[area[1]:area[3], area[0]:area[2]]
+    return edges(on) / edges(off), float(d.mean())
 
 
 def overlap(a, b):
@@ -411,8 +415,9 @@ def main():
             p.goto(url)
             p.wait_for_selector(".start-screen")
             still = p.evaluate("() => document.getAnimations().filter(a => a.animationName && a.animationName.startsWith('start-pan')).length === 0")
-            print(f"reduced motion: photo still -> {'ok' if still else 'MOVES'}")
-            bad += not still
+            faint = p.evaluate("() => { const b = getComputedStyle(document.querySelector('.start-blur')); return parseFloat(b.opacity) > 0 && parseFloat(b.opacity) < 1 && /blur/.test(b.backdropFilter) }")
+            print(f"reduced motion: photo and blur patch still, patch faint and fixed -> {'ok' if still and faint else 'MOVES / not faint'}")
+            bad += not (still and faint)
             ctx.close()
             # noise burst: appears within 8 s (the longest gap is 3.5 s) and lasts under 1.4 s
             ctx = b.new_context(viewport={"width": 390, "height": 844})
