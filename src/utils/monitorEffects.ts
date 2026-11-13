@@ -19,7 +19,15 @@ import type { Anomaly } from '../types/game'
  * `exclusive` group, named after the part they touch (prompts/README.md); they then never run together.
  */
 export const MONITOR_EFFECTS: Readonly<Record<string, { what: string }>> = {
+  'RT-UI-02': { what: 'TIME / REPORTS headings swapped' },
+  'RT-UI-06': { what: 'HUD heading text corrupted' },
+  'RT-UI-07': { what: 'Japanese / symbols mixed into the HUD headings' },
+  'RT-UI-08': { what: 'digit windows glow orange-red' },
   'RT-UI-11': { what: 'cabinet tilted' },
+  'RT-UI-17': { what: 'digit glow drops out (cut-away digits)' },
+  'RT-UI-18': { what: 'faint other digit smeared over the digits' },
+  'RT-UI-23': { what: 'TIME colon blinks fast' },
+  'RT-UI-26': { what: 'REPORT label misspelled' },
 }
 
 export const hasMonitorEffect = (id: string): boolean =>

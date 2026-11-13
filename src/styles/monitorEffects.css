@@ -9,3 +9,65 @@
 .retro[data-fx~='RT-UI-11'] .cabinet {
   transform: rotate(3deg) scale(0.9);
 }
+
+/* RT-UI-08 digit glow colour: the TIME / REPORTS windows glow orange-red instead of green (the lamps are other parts).
+   Same custom-property-free override of the .vfd colour and glow in retro.css. */
+.retro[data-fx~='RT-UI-08'] .vfd {
+  color: #ffb27a;
+  text-shadow:
+    0 0 8px #ff5a1f,
+    0 0 2px #ffe3cf;
+}
+
+/* RT-UI-17 digit glow drop-out: GameHUD wraps every digit in .dg and marks every second one .dg--cut. A horizontal
+   band across the glyph is cut away (the value is unchanged, only the shape breaks). The mask also removes the glow
+   of the cut part, so the band reads as dark. */
+.retro[data-fx~='RT-UI-17'] .dg {
+  display: inline-block;
+}
+.retro[data-fx~='RT-UI-17'] .dg--cut {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0 30%,
+    transparent 30% 58%,
+    #000 58% 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0 30%,
+    transparent 30% 58%,
+    #000 58% 100%
+  );
+}
+
+/* RT-UI-18 digit ghost smear: a faint other digit (data-ghost, set by GameHUD) sits over each digit and the glow is
+   pulled into a vertical smear. */
+.retro[data-fx~='RT-UI-18'] .dg {
+  position: relative;
+  display: inline-block;
+  text-shadow:
+    0 -4px 3px rgba(121, 255, 208, 0.45),
+    0 4px 3px rgba(121, 255, 208, 0.45),
+    0 0 8px #2fe3a8;
+}
+.retro[data-fx~='RT-UI-18'] .dg::after {
+  content: attr(data-ghost) / '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.3;
+  filter: blur(1px);
+  transform: translateY(2px) scaleY(1.4);
+  pointer-events: none;
+}
+
+/* RT-UI-23 colon blink tempo: the TIME colon blinks fast (period 0.34 s = at most 3 blinks a second). Under
+   prefers-reduced-motion the colon is normally still, so it vanishes instead (readable without motion). */
+.retro[data-fx~='RT-UI-23'] .clock-colon {
+  animation-duration: 0.34s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .retro[data-fx~='RT-UI-23'] .clock-colon {
+    opacity: 0;
+  }
+}

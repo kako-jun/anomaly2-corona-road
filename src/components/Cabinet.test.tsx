@@ -824,6 +824,47 @@ describe('Cabinet monitor effects (data-fx, #408)', () => {
     expect(Number(m![2])).toBeGreaterThan(0.7)
     expect(Number(m![2])).toBeLessThanOrEqual(1)
   })
+  it('RT-UI-26: the REPORT key shows a misspelling while it runs, keeps its accessible name, and is plain again after (and on the ending)', () => {
+    const props = makeProps()
+    const { rerender } = render(<Cabinet {...props} />)
+    const key = () => screen.getByRole('button', { name: 'REPORT' })
+    expect(key().textContent).toBe('REPORT')
+    rerender(<Cabinet {...props} monitorEffects={new Set(['RT-UI-26'])} />)
+    expect(key().textContent).not.toBe('REPORT')
+    expect(key().textContent).toMatch(/^(REPROT|RAPORT|REP0RT)$/)
+    rerender(<Cabinet {...props} monitorEffects={new Set()} />)
+    expect(key().textContent).toBe('REPORT')
+    rerender(
+      <Cabinet
+        {...props}
+        ending="ending"
+        monitorEffects={new Set(['RT-UI-26'])}
+      />
+    )
+    expect(key().textContent).toBe('REPORT')
+  })
+  it('the HUD headings follow RT-UI-02 and not on the ending', () => {
+    const props = makeProps({ monitorEffects: new Set(['RT-UI-02']) })
+    const { container, rerender } = render(<Cabinet {...props} />)
+    const labels = () =>
+      [...container.querySelectorAll('.status .label')].map(l => l.textContent)
+    expect(labels().slice(0, 2)).toEqual(['REPORTS', 'TIME'])
+    rerender(<Cabinet {...props} ending="ending" />)
+    expect(labels().slice(0, 2)).toEqual(['TIME', 'REPORTS'])
+  })
+  it('the digit / colon rules are keyed on their ids', () => {
+    for (const id of ['RT-UI-08', 'RT-UI-17', 'RT-UI-18', 'RT-UI-23'])
+      expect(css).toContain(`[data-fx~='${id}']`)
+    // the colon: at most 3 blinks a second (period >= 1/3 s), and gone under reduced motion
+    const m = css.match(
+      /RT-UI-23.\] \.clock-colon \{\s*animation-duration:\s*([\d.]+)s/
+    )
+    expect(Number(m?.[1])).toBeGreaterThanOrEqual(1 / 3)
+    expect(Number(m?.[1])).toBeLessThan(1)
+    expect(css).toMatch(
+      /prefers-reduced-motion: reduce\)[^}]*\{\s*\.retro\[data-fx~=.RT-UI-23.\] \.clock-colon \{\s*opacity: 0/
+    )
+  })
   it('every CSS rule in monitorEffects.css is for an id in the table', async () => {
     const { MONITOR_EFFECTS } = await import('../utils/monitorEffects')
     const ids = [...css.matchAll(/data-fx~='([^']+)'/g)].map(m => m[1])

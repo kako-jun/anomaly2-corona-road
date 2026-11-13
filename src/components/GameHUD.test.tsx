@@ -57,3 +57,54 @@ describe('GameHUD', () => {
     expect(clock.querySelector('.clock-colon')).toHaveTextContent(':')
   })
 })
+
+describe('GameHUD monitor effects (#416)', () => {
+  const hud = (...ids: string[]) =>
+    render(
+      <GameHUD
+        gameTime="12:34"
+        stats={makeStats({ correctReports: 7 })}
+        fx={new Set(ids)}
+      />
+    ).container
+  const labels = (c: HTMLElement) =>
+    [...c.querySelectorAll('.label')].map(l => l.textContent)
+
+  it('swaps the TIME / REPORTS headings and leaves the numbers (RT-UI-02)', () => {
+    const c = hud('RT-UI-02')
+    expect(labels(c)).toEqual(['REPORTS', 'TIME', 'STRIKES'])
+    expect(c.querySelector('[role=timer]')).toHaveAttribute(
+      'aria-label',
+      '12:34'
+    )
+    expect(c.querySelector('.vfd--reports')?.textContent).toBe(
+      `7/${DEFAULT_CONFIG.minCorrectReports}`
+    )
+  })
+  it('corrupts / mixes the headings (RT-UI-06 / 07)', () => {
+    expect(labels(hud('RT-UI-06'))).not.toContain('TIME')
+    expect(labels(hud('RT-UI-07')).join('')).toMatch(/時/)
+  })
+  it('plain text and no digit spans without a digit effect', () => {
+    const c = hud()
+    expect(c.querySelector('.dg')).toBeNull()
+    expect(labels(c)).toEqual(['TIME', 'REPORTS', 'STRIKES'])
+  })
+  it('RT-UI-17 cuts every second digit of each window, the value unchanged', () => {
+    const c = hud('RT-UI-17')
+    expect(c.querySelectorAll('[role=timer] .dg--cut')).toHaveLength(2)
+    expect(c.querySelectorAll('.vfd--reports .dg--cut').length).toBeGreaterThan(
+      0
+    )
+    expect(c.querySelector('[role=timer] span')?.textContent).toBe('12:34')
+  })
+  it('RT-UI-18 gives every digit a ghost that is another digit', () => {
+    const c = hud('RT-UI-18')
+    const dgs = [...c.querySelectorAll('.dg')]
+    expect(dgs.length).toBeGreaterThan(4)
+    for (const d of dgs) {
+      expect(d.getAttribute('data-ghost')).toMatch(/^\d$/)
+      expect(d.getAttribute('data-ghost')).not.toBe(d.textContent)
+    }
+  })
+})
