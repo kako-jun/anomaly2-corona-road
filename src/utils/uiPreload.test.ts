@@ -93,3 +93,47 @@ describe('camera image preload (#396)', () => {
     expect(requested).toHaveLength(8)
   })
 })
+
+import { reportNoteUrls } from '../data/reportNotes'
+
+describe('report note preload (#396)', () => {
+  it('lists the five pictures of one language only', () => {
+    const ja = reportNoteUrls('ja')
+    const en = reportNoteUrls('en')
+    expect(ja).toHaveLength(5)
+    expect(en).toHaveLength(5)
+    expect(ja.every(u => u.startsWith('/report-notes/ja-'))).toBe(true)
+    expect(en.every(u => u.startsWith('/report-notes/en-'))).toBe(true)
+  })
+
+  it('requests each picture once, low priority, and ignores a failed one', async () => {
+    const requested: string[] = []
+    const cache = new Map<string, CameraImage>()
+    const load = createCameraPreloader(reportNoteUrls('en'), {
+      createImage: () => {
+        const img: CameraImage = {
+          src: '',
+          decode: () =>
+            img.src.endsWith('en-object.webp')
+              ? Promise.reject(new Error('x'))
+              : Promise.resolve(),
+        }
+        let src = ''
+        Object.defineProperty(img, 'src', {
+          set: (v: string) => {
+            src = v
+            requested.push(v)
+          },
+          get: () => src,
+        })
+        return img
+      },
+      schedule: fn => fn(),
+      cache,
+    })
+    await expect(load()).resolves.toBeUndefined()
+    await load()
+    expect(requested).toEqual(reportNoteUrls('en'))
+    expect([...cache.keys()]).toEqual(requested)
+  })
+})

@@ -14,6 +14,7 @@ import { useLanguage } from './utils/language'
 import {
   preloadCabinet,
   preloadCameraImages,
+  preloadReportNotes,
   preloadTitleNotes,
 } from './utils/uiPreload'
 import { SAVE_KEY, load } from './utils/saveData'
@@ -49,8 +50,13 @@ function useScreen(): [string, ReactNode] {
   }, [])
   useEffect(() => {
     ready.current = preloadCabinet()
-    // The cameras' photos come after the UI parts and the fonts, at low priority; START does not wait for them (#396).
-    void ready.current.then(() => preloadCameraImages())
+    // The report dialog's notes (this language), then the cameras' photos, come after the UI parts and the
+    // fonts, at low priority; START does not wait for them (#396).
+    void ready.current
+      .then(() => preloadReportNotes(language))
+      .then(() => preloadCameraImages())
+    // The language is decided once at start (#292).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   // The title notes of the chosen language only (a switch fetches the other one).
   useEffect(() => {
