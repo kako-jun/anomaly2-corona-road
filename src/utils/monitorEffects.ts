@@ -4,8 +4,9 @@ import type { Anomaly } from '../types/game'
  * The effects of the monitor-scope anomalies (ui_corruption, rule_break: reported from any camera, #404 batch 3).
  *
  * THE ONE TABLE: one line per ledger id. The ledger (prompts/anomalies.yaml) says the anomaly exists; this table says
- * the game can draw it (`hasNonImageEffect` reads it, and nonImageSpawn.test.ts makes the two agree both ways: a
- * `produced` ledger entry without a line here, or a line here whose entry is not `produced`, fails the test).
+ * the game can draw it (`hasNonImageEffect` reads it). The two must agree both ways, and monitorEffects.test.ts checks
+ * it: a `produced` ledger entry without a line here fails (so does nonImageSpawn.test.ts), and so does a line here
+ * whose entry is not `produced`.
  *
  * How an effect is drawn (the mechanism is the same for all, only the draw differs):
  *  - `runningMonitorEffects(anomalies)` is the set of ids running now. Whatever draws an effect asks only "is my id in

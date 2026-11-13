@@ -1,5 +1,5 @@
 import './App.css'
-import { useEffect, useReducer, useRef, useState } from 'react'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import './styles/retro.css'
 import { useGameState } from './hooks/useGameState'
@@ -116,6 +116,10 @@ function useScreen(): [string, ReactNode] {
     reportAnomaly,
     gameTime,
   } = useGameState()
+  const monitorEffects = useMemo(
+    () => runningMonitorEffects(activeAnomalies),
+    [activeAnomalies]
+  )
 
   // A new version of the app is applied (reload) only while the player is on the title itself (not in a shift, a
   // result, an ending or the note before a shift), in every tab, so a reload never costs progress (#388).
@@ -216,7 +220,7 @@ function useScreen(): [string, ReactNode] {
         soundAnomalyHere={soundOnCamera(activeAnomalies, currentCamera.id)}
         heldVoiceId={heldVoice.current}
         feedGlitchHere={feedGlitchHere}
-        monitorEffects={runningMonitorEffects(activeAnomalies)}
+        monitorEffects={monitorEffects}
         openAnomalyIds={activeAnomalies
           .filter(a => !a.detectedAt)
           .map(a => a.id)}

@@ -732,10 +732,25 @@ describe('Cabinet monitor effects (data-fx, #408)', () => {
     rerender(<Cabinet {...props} monitorEffects={new Set()} />)
     expect(retroEl(container).hasAttribute('data-fx')).toBe(false)
   })
-  it('the tilt rule is keyed on RT-UI-11 and rotates the cabinet by a few degrees and shrinks it so it stays in view (a transform, so the loupe can read it)', () => {
-    expect(css).toMatch(
-      /\.retro\[data-fx~='RT-UI-11'\] \.cabinet\s*\{\s*transform:\s*rotate\(3deg\) scale\(0.9\);/
+  it('no effect is drawn on the ending CAM 09 (like the feed glitch), and it is back otherwise', () => {
+    const props = makeProps({ monitorEffects: new Set(['RT-UI-11']) })
+    const { container, rerender } = render(
+      <Cabinet {...props} ending="ending" />
     )
+    expect(retroEl(container).hasAttribute('data-fx')).toBe(false)
+    rerender(<Cabinet {...props} ending="withdraw" />)
+    expect(retroEl(container).getAttribute('data-fx')).toBe('RT-UI-11')
+  })
+  it('the tilt rule is keyed on RT-UI-11 and rotates the cabinet by a few degrees and shrinks it so it stays in view (a transform, so the loupe can read it)', () => {
+    const m = css.match(
+      /\.retro\[data-fx~='RT-UI-11'\] \.cabinet\s*\{\s*transform:\s*rotate\((-?[\d.]+)deg\)\s*scale\(([\d.]+)\);/
+    )
+    expect(m).not.toBeNull()
+    // a few degrees, and a little smaller (the numbers may be tuned without touching this test)
+    expect(Math.abs(Number(m![1]))).toBeGreaterThanOrEqual(1)
+    expect(Math.abs(Number(m![1]))).toBeLessThanOrEqual(6)
+    expect(Number(m![2])).toBeGreaterThan(0.7)
+    expect(Number(m![2])).toBeLessThanOrEqual(1)
   })
   it('every CSS rule in monitorEffects.css is for an id in the table', async () => {
     const { MONITOR_EFFECTS } = await import('../utils/monitorEffects')

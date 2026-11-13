@@ -298,7 +298,7 @@ export const Cabinet = ({
   return (
     <div
       className="retro"
-      data-fx={fxAttribute(monitorEffects)}
+      data-fx={fxAttribute(ending === 'ending' ? NO_EFFECTS : monitorEffects)}
       style={WEAR === null ? undefined : ({ '--wear': WEAR } as CSSProperties)}
     >
       <main className="cabinet" ref={cabinetRef}>
