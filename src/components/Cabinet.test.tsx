@@ -558,6 +558,39 @@ describe('sound anomaly lifecycle', () => {
     hold.mockRestore()
     release.mockRestore()
   })
+  it('does not reload or release the held voice when the audio context returns to running', async () => {
+    const listeners: (() => void)[] = []
+    const fake = {
+      state: 'suspended',
+      addEventListener: (_t: string, f: () => void) => listeners.push(f),
+      removeEventListener: () => {},
+    }
+    const ctx = vi
+      .spyOn(gameAudio, 'ctx')
+      .mockReturnValue(fake as unknown as AudioContext)
+    const unlock = vi
+      .spyOn(gameAudio, 'unlock')
+      .mockResolvedValue(undefined as never)
+    const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(true)
+    const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const { unmount } = render(
+      <Cabinet {...makeProps()} heldVoiceId="RT-SND-06" />
+    )
+    await waitFor(() => expect(listeners.length).toBeGreaterThan(0))
+    await waitFor(() => expect(hold).toHaveBeenCalledTimes(1))
+    fake.state = 'running'
+    await act(async () => {
+      listeners.forEach(f => f())
+    })
+    await act(async () => {})
+    expect(hold).toHaveBeenCalledTimes(1)
+    expect(release).not.toHaveBeenCalled()
+    unmount()
+    ctx.mockRestore()
+    unlock.mockRestore()
+    hold.mockRestore()
+    release.mockRestore()
+  })
   it('stops retrying a voice that keeps failing instead of fetching every few seconds forever', async () => {
     vi.useFakeTimers()
     const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(false)

@@ -158,6 +158,7 @@ describe('voice loop timing', () => {
     expect((list[2].starts as number[])[0]).toBeCloseTo(t0 + 2 * (D - FADE), 6)
     const stoppedAt = 67
     handle?.stop()
+    expect(vi.getTimerCount()).toBe(0)
     ;(mock.raw as { currentTime: number }).currentTime = 200
     vi.advanceTimersByTime(300000)
     expect(sources(mock)).toHaveLength(3)
