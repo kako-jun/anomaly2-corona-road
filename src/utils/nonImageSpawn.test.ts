@@ -570,6 +570,23 @@ describe('exhaustedGroups (#427)', () => {
       { key: 'cam:1', ids: ['a', 'rz'], last: 'a' },
     ])
     expect(exhaustedGroups(images, [], ['a'], true)).toEqual([])
+    // a non-image entry with no registered effect can never be drawn: not a candidate either, but released
+    const noEffect = glitch('NO-SUCH-EFFECT')
+    expect(hasNonImageEffect(noEffect)).toBe(false)
+    expect(
+      exhaustedGroups(
+        [],
+        [glitch('RT-FEED-22'), noEffect],
+        ['RT-FEED-22'],
+        false
+      )
+    ).toEqual([
+      {
+        key: 'non-image',
+        ids: ['RT-FEED-22', 'NO-SUCH-EFFECT'],
+        last: 'RT-FEED-22',
+      },
+    ])
   })
   it('a group with no candidate at all is never "used up"', () => {
     expect(exhaustedGroups([], [], ['x'], false)).toEqual([])

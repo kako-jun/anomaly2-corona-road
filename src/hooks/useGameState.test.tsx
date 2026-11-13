@@ -1514,25 +1514,29 @@ describe('spawn rules (#418, #427)', () => {
       }
     })
 
-    it('RT-FEED-28 takes no watched camera among its extra cameras either', () => {
+    it('RT-FEED-28 takes its extra cameras only among the free ones: not the watched camera, not a busy one', () => {
+      // rng 0.5 everywhere: one extra camera is asked for, and it is the middle of whatever list it is drawn from.
+      vi.spyOn(Math, 'random').mockReturnValue(0.5)
+      ledger.push(entry('i3', 3), entry('i4', 4), entry('i5', 5))
+      const hook = start() // watching camera 1
+      advance(FIRST + INTERVAL * 2 + 300)
+      expect(
+        hook.result.current.activeAnomalies.map(x => x.cameraId).sort()
+      ).toEqual([3, 4, 5])
       nonImage.push({
         id: 'RT-FEED-28',
         category: 'Camera',
         anomalyType: 'feed_glitch',
       })
-      // rng 0 .. 0.99 steers the glitch's extra-camera count (1 to 3); the kind of RT-FEED-28 is always `nonoise`.
-      for (const v of [0, 0.4, 0.7, 0.99]) {
-        const spy = vi.spyOn(Math, 'random').mockReturnValue(v)
-        const hook = start()
-        advance(FIRST + 100)
-        const a = hook.result.current.activeAnomalies[0]
-        expect(a.feedGlitch).toBe('nonoise')
-        expect(a.cameraId).not.toBe(1)
-        expect(a.feedGlitchCameraIds).toBeDefined()
-        expect(a.feedGlitchCameraIds).not.toContain(1)
-        hook.unmount()
-        spy.mockRestore()
-      }
+      advance(INTERVAL + 300)
+      const g = hook.result.current.activeAnomalies.find(
+        x => x.id === 'RT-FEED-28'
+      )
+      expect(g?.feedGlitch).toBe('nonoise')
+      const free = [2, 6, 7, 8] // not 1 (watched), not 3, 4, 5 (busy)
+      expect(free).toContain(g!.cameraId)
+      expect(g!.feedGlitchCameraIds).toHaveLength(2)
+      for (const id of g!.feedGlitchCameraIds!) expect(free).toContain(id)
     })
 
     it('a spawn lands out of sight; looking at it right after shows it, and it never lands on the camera now watched', () => {
@@ -1638,6 +1642,30 @@ describe('spawn rules (#418, #427)', () => {
         advance(1500)
         // 'b' was found last, so 'a' comes, whichever way the rng leans
         expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual([
+          'a',
+        ])
+        hook.unmount()
+        spy.mockRestore()
+        saveData.update(cur => ({ ...cur, retiredIds: [] }))
+      }
+    })
+
+    it('the avoided id stays avoided across a spawn from another group, until its own group is drawn from (#427)', () => {
+      for (const v of [0, 0.99]) {
+        const spy = vi.spyOn(Math, 'random').mockReturnValue(v)
+        ledger.length = 0
+        ledger.push(entry('a', 2), entry('b', 2), entry('c', 4))
+        saveData.update(cur => ({ ...cur, retiredIds: ['a', 'b'] }))
+        const hook = start()
+        switchTo(hook, 2)
+        advance(FIRST + 100)
+        expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual([
+          'c',
+        ])
+        switchTo(hook, 3)
+        advance(INTERVAL + 100)
+        expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual([
+          'c',
           'a',
         ])
         hook.unmount()

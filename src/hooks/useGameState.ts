@@ -105,6 +105,8 @@ export const useGameState = () => {
   // Ledger ids already shown this shift (no repeats within a shift).
   const usedLedgerIdsRef = useRef<Set<string>>(new Set())
   // Per group (#427): the id found last before the group was refilled, avoided on the next draw from that group.
+  // Deliberately kept across shifts and START OVER (the ref lives as long as the page): it is only a one-draw preference
+  // for variety, never a rule, and a draw falls back to it when the group has no other choice.
   const avoidNextRef = useRef<Map<string, string>>(new Map())
   // The child has been found (flag saved): the rest of this shift, and later shifts, run faster (Issue #86).
   const childFoundRef = useRef(false)
