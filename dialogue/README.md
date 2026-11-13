@@ -85,6 +85,10 @@ flags:
     requires: [elder3] # 他のフラグが先に立っていること
 ```
 
-使えるキー: `foundUnique`（重複なしの異変数）、`foundTotal`（重複ありの正解報告数）、`reiwaFound`（令和の異変 = 台帳で `reiwa: true` の `produced` の異変（画像、および出現する画像以外の異変 #77）を、重複なしで何個。印は台帳から自動で決まり、ここには id を書かない）、`loops`（周回数）、`found`（見つけているべき異変 id のリスト）、`requires`（フラグ名のリスト）。定義済みのフラグ名は `elder1` `elder2` `elder3` `child` `childResponse`。`childResponse` は `child` と同時に立ち、直後に短いストーリー会話を再生する。エンディングは累計進行フラグではなく、子供発見後の同一勤務の特殊条件で起動する。節目の数値は**仮の例**で確定ではない（`docs/story.md` 未決）。
+**人物のフラグ（`elder1` `elder2` `elder3` `child`、#430）**: 条件は『その人物が画面に**出現してよい条件**』で、フラグ自体は**台帳の `story_flag` を持つ人物異変を Person で指摘した瞬間**に立つ（条件を満たしただけでは立たない）。立つとその `story` 会話が始まり、会話が終わるまで人物の絵は残る。`requires` で出現の順序を固定する（`elder2` は `elder1`、`elder3` は `elder2`、`child` は `elder3` が立ってから。人物は同時に2人出ない）。
+
+**出来事で立つフラグ（`trigger`、#430）**: `reiwaPrelude: { trigger: reiwaAppeared }`（令和の異変が初めて出現した時）、`childPrelude: { trigger: childDue }`（子供の出現条件を満たした時）。条件（`foundUnique` など）とは併用できず、ゲームがその出来事で一度だけ立てて、`story` 会話（前触れの字幕）を再生する。同じフラグの会話を複数書くと袋から1つ。
+
+使えるキー: `foundUnique`（重複なしの異変数）、`foundTotal`（重複ありの正解報告数）、`reiwaFound`（令和の異変 = 台帳で `reiwa: true` の `produced` の異変（画像、および出現する画像以外の異変 #77）を、重複なしで何個。印は台帳から自動で決まり、ここには id を書かない）、`loops`（周回数）、`found`（見つけているべき異変 id のリスト）、`requires`（フラグ名のリスト）。定義済みのフラグ名は `elder1` `elder2` `elder3` `child` `childResponse` `reiwaPrelude` `childPrelude`。`childResponse` は `child` と同時に立ち、直後に短いストーリー会話を再生する。エンディングは累計進行フラグではなく、子供発見後の同一勤務の特殊条件で起動する。節目の数値は**仮の例**で確定ではない（`docs/story.md` 未決）。
 
 `unlock` はすべての会話種類に指定できる任意のフラグ名。`story.when.flag` は「立ったフラグに対応する会話」の指定であり、`unlock` はその会話が候補に入る時期を遅らせる条件。未成立の会話は抽選袋に入らず、使用済みにもならない。成立後は通常の抽選対象になる。未指定なら従来どおり常に候補になる。`flags.yaml` に無いフラグ名を指定するとビルドが失敗する。`loops` 条件のフラグは、周回が終わった次の勤務の開始時に立つ（`foundUnique` `foundTotal` は報告の瞬間に立つ）。

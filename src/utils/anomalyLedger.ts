@@ -84,6 +84,11 @@ export interface LedgerEntry {
   unlockFlag?: string
   /** Never appears while another unreported anomaly of the same group is running (the ledger's `exclusive`, #77). */
   exclusiveGroup?: string
+  /**
+   * A story person (#430): the flag (dialogue/flags.yaml) that reporting this anomaly raises. Never drawn by the
+   * ordinary draw: it appears on its own, as soon as the flag's conditions hold, and stays until it is reported.
+   */
+  storyFlag?: string
   /** Hypothesis memo flags this anomaly raises when reported (the ledger's `memo_flag`, #325). */
   memoFlags?: MemoFlag[]
   /** The one-line memo of this anomaly (the ledger's `memo`, #325). */
@@ -232,6 +237,8 @@ export interface LedgerRecord {
   unlockFlag?: string
   /** The ledger's `exclusive`: a group name; two unreported anomalies of one group never run together. Any kind. */
   exclusiveGroup?: string
+  /** The ledger's `story_flag` (#430): a story person. Image entries only. */
+  storyFlag?: string
   /** The ledger's `memo_flag` (a name or a list of names from MEMO_FLAGS, no duplicates). Any kind may carry it. */
   memoFlags?: MemoFlag[]
   /** The ledger's `memo`: a Japanese and an English one-liner. Any kind may carry it. */
@@ -275,6 +282,57 @@ export const parseExclusive = (value: unknown): string | undefined => {
     )
   }
   return value
+}
+
+/** Optional `story_flag`: a flag name (checked against dialogue/flags.yaml at build time). */
+export const parseStoryFlag = (value: unknown): string | undefined => {
+  if (value === undefined || value === null) return undefined
+  if (typeof value !== 'string' || !/^[A-Za-z][A-Za-z0-9]*$/.test(value)) {
+    throw new Error(
+      `story_flag "${String(value)}" must be a flag name (letters and digits)`
+    )
+  }
+  return value
+}
+
+/**
+ * Story persons (#430) must be consistent with dialogue/flags.yaml: the flag exists, one person per flag, and no two
+ * persons share a camera (they are spread over different cameras). Persons are image entries, so the camera is fixed.
+ */
+export const checkStoryPersons = (
+  records: readonly {
+    id: string
+    storyFlag?: string
+    cameraId?: number
+  }[],
+  flagNames: ReadonlySet<string>
+): void => {
+  const flags = new Map<string, string>()
+  const cameras = new Map<number, string>()
+  for (const r of records) {
+    if (r.storyFlag === undefined) continue
+    if (!flagNames.has(r.storyFlag)) {
+      throw new Error(
+        `anomalies.yaml entry "${r.id}": story_flag "${r.storyFlag}" is not defined in dialogue/flags.yaml`
+      )
+    }
+    const sameFlag = flags.get(r.storyFlag)
+    if (sameFlag !== undefined) {
+      throw new Error(
+        `anomalies.yaml entry "${r.id}": story_flag "${r.storyFlag}" is already used by "${sameFlag}" (one person per flag)`
+      )
+    }
+    flags.set(r.storyFlag, r.id)
+    if (r.cameraId !== undefined) {
+      const sameCam = cameras.get(r.cameraId)
+      if (sameCam !== undefined) {
+        throw new Error(
+          `anomalies.yaml entry "${r.id}": CAM${String(r.cameraId).padStart(2, '0')} already holds the story person "${sameCam}" (one person per camera)`
+        )
+      }
+      cameras.set(r.cameraId, r.id)
+    }
+  }
 }
 
 /** Every `unlock.flag` of the records must be a flag defined in dialogue/flags.yaml (an unknown one fails the build). */
@@ -425,6 +483,15 @@ export const parseLedgerRecord = (
     const reiwa = rec.reiwa === true ? (true as const) : undefined
     const unlockFlag = parseUnlock(rec.unlock)
     const exclusiveGroup = parseExclusive(rec.exclusive)
+    const storyFlag = parseStoryFlag(rec.story_flag)
+    if (storyFlag !== undefined) {
+      if (kind !== 'image')
+        throw new Error('story_flag is only allowed on an image entry')
+      if (categories?.length !== 1 || categories[0] !== 'Person')
+        throw new Error(
+          'a story person must have category person alone (no other accepted category)'
+        )
+    }
     const memoFlags = parseMemoFlags(rec.memo_flag)
     const memo = parseMemo(rec.memo)
     const memoImage = parseMemoImage(rec.memo_image)
@@ -462,6 +529,7 @@ export const parseLedgerRecord = (
       ...(reiwa ? { reiwa } : {}),
       ...(unlockFlag ? { unlockFlag } : {}),
       ...(exclusiveGroup ? { exclusiveGroup } : {}),
+      ...(storyFlag ? { storyFlag } : {}),
       ...(memoFlags ? { memoFlags } : {}),
       ...(memo ? { memo } : {}),
       ...(memoImage ? { memoImage } : {}),
@@ -529,6 +597,7 @@ export const toLedgerEntry = (r: LedgerRecord): LedgerEntry => {
     ...(r.reiwa ? { reiwa: r.reiwa } : {}),
     ...(r.unlockFlag ? { unlockFlag: r.unlockFlag } : {}),
     ...(r.exclusiveGroup ? { exclusiveGroup: r.exclusiveGroup } : {}),
+    ...(r.storyFlag ? { storyFlag: r.storyFlag } : {}),
     ...(r.memoFlags ? { memoFlags: r.memoFlags } : {}),
     ...(r.memo ? { memo: r.memo } : {}),
     ...(r.memoImage ? { memoImage: r.memoImage } : {}),

@@ -15,11 +15,32 @@ import { CHILD_FOUND_PACING, DEFAULT_CONFIG } from '../utils/gameConfig'
 import { resetProgress } from '../utils/shiftProgress'
 import { useGameState } from './useGameState'
 
+const personEntry = vi.hoisted(() => ({
+  id: 'person-guest',
+  cameraId: 6,
+  category: 'Person' as const,
+  anomalyType: 'add_person' as const,
+  overlay: 'assets/person-guest.webp',
+  origin: { x: 1, y: 2 },
+  size: { w: 3, h: 4 },
+  storyFlag: 'guest',
+}))
+
 // A small, controllable ledger instead of the real one (mutated in place per test).
 const ledger = vi.hoisted(() => [] as LedgerEntry[])
 // The non-image side (#77): empty unless a test pushes into it, so the image tests below are not disturbed.
 const nonImage = vi.hoisted(() => [] as NonImageEntry[])
 vi.mock('virtual:non-image-anomalies', () => ({ default: nonImage }))
+// The real ledger plus one story person (#430): flag 'guest' (see the dialogue mock below).
+vi.mock('virtual:anomalies', async importOriginal => {
+  const actual = await importOriginal<{ default: LedgerEntry[] }>()
+  return {
+    default: [
+      ...actual.default.filter(e => !e.storyFlag),
+      { ...personEntry, id: 'person-guest', cameraId: 6 },
+    ],
+  }
+})
 // Voices count as drawable only after their file answered (#407): a test decides which ones have.
 const readyVoices = vi.hoisted(() => new Set<string>())
 vi.mock('../utils/voiceSounds', async importOriginal => {
@@ -48,6 +69,8 @@ vi.mock('virtual:dialogue', () => ({
       { name: 'loopy', when: { loops: 1 } },
       // The child flag (Issue #86): tests seed foundTotal 49 so the next correct report raises it.
       { name: 'child', when: { foundTotal: 50 } },
+      // A story person (#430): may appear after 100 found and the flag 'two'; the flag rises when it is reported.
+      { name: 'guest', when: { foundUnique: 100, requires: ['two'] } },
     ],
     entries: [
       {
@@ -56,6 +79,13 @@ vi.mock('virtual:dialogue', () => ({
         tone: 'serious',
         when: { flag: 'two' },
         lines: [{ who: 'A', text: 'two' }],
+      },
+      {
+        kind: 'story',
+        id: 'story-guest',
+        tone: 'serious',
+        when: { flag: 'guest' },
+        lines: [{ who: 'A', text: 'guest' }],
       },
       {
         kind: 'story',
@@ -1709,5 +1739,154 @@ describe('spawn rules (#418, #427)', () => {
       act(() => resetProgress())
       expect(saveData.load().retiredIds).toEqual([])
     })
+  })
+})
+
+describe('a story person (#430)', () => {
+  const ids = Array.from({ length: 100 }, (_, i) => `seen-${i}`)
+  const seed = (extra: Partial<saveData.SaveData> = {}) =>
+    saveData.update(cur => ({
+      ...cur,
+      foundIds: ids,
+      flags: { two: true },
+      ...extra,
+    }))
+  const person = () => ({ ...personEntry })
+  const switchTo = (hook: ReturnType<typeof start>, cameraId: number) => {
+    const index = hook.result.current.cameras.findIndex(c => c.id === cameraId)
+    act(() => hook.result.current.switchCamera(index))
+  }
+
+  it('appears at once when its conditions hold, on its own fixed camera, even with a full cap and an empty ordinary ledger', () => {
+    seed()
+    ledger.push(person())
+    const hook = start()
+    advance(600)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+    expect(hook.result.current.activeAnomalies[0].cameraId).toBe(6)
+    expect(hook.result.current.activeAnomalies[0].storyFlag).toBe('guest')
+  })
+
+  it('does not appear before its conditions hold', () => {
+    seed({ foundIds: ids.slice(0, 99) })
+    ledger.push(person())
+    const hook = start()
+    advance(2000)
+    expect(hook.result.current.activeAnomalies).toEqual([])
+    // the hundredth find lets it appear (the condition is a permission, the flag rises only on a report)
+    saveData.update(cur => ({ ...cur, foundIds: ids }))
+    advance(600)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+    expect(saveData.load().flags.guest).toBeUndefined()
+  })
+
+  it('is never drawn by the ordinary draw', () => {
+    ledger.push(person())
+    const hook = startAway()
+    advance(FIRST + INTERVAL * 3)
+    expect(hook.result.current.activeAnomalies).toEqual([])
+  })
+
+  it('waits while its camera is the watched one (#418), then appears when the player looks away', () => {
+    seed()
+    ledger.push(person())
+    const hook = start()
+    switchTo(hook, 6)
+    advance(2000)
+    expect(hook.result.current.activeAnomalies).toEqual([])
+    switchTo(hook, 1)
+    advance(600)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+  })
+
+  it('waits while another anomaly holds its camera, and removes nothing for it', () => {
+    ledger.push(entry('busy', 6), person())
+    const hook = startAway()
+    advance(FIRST + 100)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual(['busy'])
+    seed()
+    advance(3000)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual(['busy'])
+    reportAt(hook.result, 'Object')
+    advance(600)
+    expect(
+      hook.result.current.activeAnomalies.some(a => a.id === 'person-guest')
+    ).toBe(true)
+  })
+
+  it('stays across shifts until it is reported (not by time)', () => {
+    seed()
+    ledger.push(person())
+    const first = startAway()
+    advance(DEFAULT_CONFIG.totalDurationMs - 2000)
+    expect(
+      first.result.current.activeAnomalies.some(a => a.id === 'person-guest')
+    ).toBe(true)
+    first.unmount()
+    const second = startAway()
+    advance(600)
+    expect(
+      second.result.current.activeAnomalies.some(a => a.id === 'person-guest')
+    ).toBe(true)
+    expect(saveData.load().flags.guest).toBeUndefined()
+  })
+
+  it('a report raises its flag (not the condition), keeps the picture until releasePerson, and is drawn once only', () => {
+    seed()
+    ledger.push(person())
+    const hook = start()
+    advance(600)
+    switchTo(hook, 6)
+    expect(hook.result.current.activeAnomalyHere?.id).toBe('person-guest')
+    // a wrong category is an ordinary false report: the person stays
+    act(() => hook.result.current.reportAnomaly('Object'))
+    expect(hook.result.current.stats.misreports).toBe(1)
+    expect(hook.result.current.activeAnomalyHere?.id).toBe('person-guest')
+    act(() => hook.result.current.reportAnomaly('Person'))
+    expect(saveData.load().flags.guest).toBe(true)
+    expect(saveData.load().pendingStories).toContain('guest')
+    expect(hook.result.current.flagEvent?.flags).toContain('guest')
+    // still shown while its conversation runs, but no longer counted as unreported
+    expect(hook.result.current.activeAnomalyHere?.id).toBe('person-guest')
+    expect(hook.result.current.unreportedCount).toBe(0)
+    // a camera switch does not take it away
+    switchTo(hook, 1)
+    switchTo(hook, 6)
+    expect(hook.result.current.activeAnomalyHere?.id).toBe('person-guest')
+    advance(3000)
+    expect(
+      hook.result.current.activeAnomalies.filter(a => a.id === 'person-guest')
+    ).toHaveLength(1)
+    act(() => hook.result.current.releasePerson('guest'))
+    expect(hook.result.current.activeAnomalyHere).toBeUndefined()
+    advance(3000)
+    expect(
+      hook.result.current.activeAnomalies.some(a => a.id === 'person-guest')
+    ).toBe(false)
+  })
+
+  it('a held person keeps its camera: no other anomaly is drawn there meanwhile', () => {
+    seed()
+    ledger.push(person(), entry('later', 6))
+    const hook = start()
+    advance(600)
+    switchTo(hook, 6)
+    act(() => hook.result.current.reportAnomaly('Person'))
+    switchTo(hook, 1)
+    advance(FIRST + INTERVAL)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+    act(() => hook.result.current.releasePerson('guest'))
+    advance(INTERVAL)
+    expect(
+      hook.result.current.activeAnomalies.some(a => a.id === 'later')
+    ).toBe(true)
   })
 })

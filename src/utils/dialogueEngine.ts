@@ -32,6 +32,11 @@ export interface FlagProgress {
   flags: Readonly<Record<string, boolean>>
   /** Ids of Reiwa-themed anomalies. The ledger has no marking yet (docs/story.md), so the caller supplies it. */
   reiwaIds: ReadonlySet<string>
+  /**
+   * Flags that are raised by hand, not by `newlyRaisedFlags`: the story persons' flags (#430). Their conditions say
+   * when the person may APPEAR (`isFlagMet`); the flag itself rises when the person is reported.
+   */
+  manualFlags?: ReadonlySet<string>
 }
 
 /** Quiet time after a `serious` conversation before chatter may appear (setting; default 20 s). */
@@ -301,6 +306,8 @@ export const isFlagMet = (
   raised: Readonly<Record<string, boolean>> = progress.flags
 ): boolean => {
   const w = def.when
+  // A trigger flag is raised by the game when the event happens, never by progress (#430).
+  if (w.trigger !== undefined) return false
   const found = new Set(progress.foundIds)
   if (w.foundUnique !== undefined && found.size < w.foundUnique) return false
   if (w.foundTotal !== undefined && (progress.foundTotal ?? 0) < w.foundTotal)
@@ -332,7 +339,8 @@ export const newlyRaisedFlags = (
   while (changed) {
     changed = false
     for (const def of defs) {
-      if (raised[def.name] || !isFlagMet(def, progress, raised)) continue
+      if (raised[def.name] || progress.manualFlags?.has(def.name)) continue
+      if (!isFlagMet(def, progress, raised)) continue
       raised[def.name] = true
       out.push(def.name)
       changed = true
@@ -340,6 +348,24 @@ export const newlyRaisedFlags = (
   }
   return out
 }
+
+/**
+ * The story persons (#430) that may appear now: their flag is not raised yet and its conditions hold (`requires` makes
+ * them come one at a time, in order). `personFlags` is in the order of `defs`.
+ */
+export const duePersonFlags = (
+  defs: readonly FlagDef[],
+  progress: FlagProgress,
+  personFlags: ReadonlySet<string>
+): string[] =>
+  defs
+    .filter(
+      d =>
+        personFlags.has(d.name) &&
+        !progress.flags[d.name] &&
+        isFlagMet(d, progress)
+    )
+    .map(d => d.name)
 
 // ---- priority ----------------------------------------------------------------------------
 

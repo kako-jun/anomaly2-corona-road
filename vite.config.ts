@@ -6,6 +6,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { parse as parseYaml } from 'yaml'
 import {
+  checkStoryPersons,
   checkUnlockFlags,
   isGameRecord,
   isNonImageGameRecord,
@@ -34,6 +35,7 @@ const readLedgerRecords = (addWatchFile: (path: string) => void) => {
     } | null
   )?.flags
   checkUnlockFlags(records, new Set(Object.keys(flags ?? {})))
+  checkStoryPersons(records, new Set(Object.keys(flags ?? {})))
   return records
 }
 

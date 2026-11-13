@@ -37,3 +37,40 @@ dialogues:
       - { who: M, text: 'はい　怖がらせたくなかったので', en: "Yes. I didn't want to scare them." }
       - { who: A, text: '子供には優しいんだね　父性本能かな？', en: "You're good with kids. Paternal instincts, maybe?" }
       - { who: M, text: 'そこまでじゃないですよ　心配だっただけです', en: "I wouldn't go that far. I was just worried." }
+  # 子供の前触れ（#430）。台詞は kako-jun の承認待ち（仮）。袋から1つ。
+  - id: story-reiwa-prelude-1
+    tone: serious
+    when: { flag: reiwaPrelude }
+    lines:
+      - { who: A, text: '今の異変　見たことのない種類じゃない？', en: "That anomaly just now... I've never seen that kind before." }
+      - { who: M, text: 'はい　これまでと　何かが違います', en: "Yes. Something is different from the others." }
+  - id: story-reiwa-prelude-2
+    tone: serious
+    when: { flag: reiwaPrelude }
+    lines:
+      - { who: M, text: '出河さん　新しい種類の　異変が出ているような', en: "Dekawa-san, it looks like a new kind of anomaly is showing up." }
+      - { who: A, text: 'うん　昭和じゃない匂いがする…', en: "Yeah. It doesn't smell like the Showa era..." }
+  - id: story-reiwa-prelude-3
+    tone: serious
+    when: { flag: reiwaPrelude }
+    lines:
+      - { who: A, text: '老人たちの記憶とは　別のものだよね', en: "That isn't from the elders' memories, is it?" }
+      - { who: M, text: '誰か別の人の　ものかもしれません', en: "It may belong to someone else." }
+  - id: story-child-prelude-1
+    tone: serious
+    when: { flag: childPrelude }
+    lines:
+      - { who: A, text: '…空気が　変わった気がする', en: "...The air just changed." }
+      - { who: M, text: '僕もです　何かが近づいてます', en: "I feel it too. Something is getting close." }
+  - id: story-child-prelude-2
+    tone: serious
+    when: { flag: childPrelude }
+    lines:
+      - { who: M, text: '急に静かになりましたね', en: "It suddenly got quiet." }
+      - { who: A, text: '嫌な感じじゃない　むしろ…', en: "It's not a bad feeling. If anything..." }
+  - id: story-child-prelude-3
+    tone: serious
+    when: { flag: childPrelude }
+    lines:
+      - { who: A, text: '樫原くん　カメラから目を離さないで', en: "Kashihara, don't take your eyes off the cameras." }
+      - { who: M, text: 'はい　何か来る気がします', en: "Yes. I think something is coming." }

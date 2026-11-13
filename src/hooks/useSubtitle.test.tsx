@@ -414,6 +414,31 @@ describe('useSubtitle: flag stories', () => {
     expect(w.seen.slice(0, 5)).toEqual(['op1a', 'st1a', 'st1b', 'st2a', 'st2b'])
   })
 
+  it('reports the end of a story conversation (#430), once, only after its last line has gone', () => {
+    const done: string[] = []
+    const d = driver({ onStoryDone: f => done.push(f) })
+    advance(OPEN_AT)
+    d.set({ flagEvent: { seq: 1, flags: ['f1'] } })
+    const w = watch(d.result)
+    w.step(subtitleHoldMs('op1a') + 2 * GAP + 10) // st1a is on screen
+    expect(done).toEqual([])
+    w.step(subtitleHoldMs('st1a') + 2 * GAP + 10) // st1b is on screen: still talking
+    expect(shown(d.result)).toBe('st1b')
+    expect(done).toEqual([])
+    w.step(subtitleHoldMs('st1b') + 10) // st1b is over
+    expect(done).toEqual(['f1'])
+    w.step(30_000)
+    expect(done).toEqual(['f1'])
+  })
+
+  it('an ordinary conversation does not report a story end', () => {
+    const done: string[] = []
+    const d = driver({ onStoryDone: f => done.push(f) })
+    advance(OPEN_AT)
+    watch(d.result).step(20_000)
+    expect(done).toEqual([])
+  })
+
   it('a story that was pending at the end stays in the save, and plays at the next start', () => {
     const d = driver()
     advance(OPEN_AT)
