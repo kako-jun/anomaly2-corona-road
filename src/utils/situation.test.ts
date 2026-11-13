@@ -79,11 +79,36 @@ describe('situation detection (every opportunity speaks)', () => {
     expect(t.take(1000 + CFG.expireMs)).toBe('brink')
     expect(t.take(1000 + CFG.expireMs + 1)).toBeNull()
   })
-  it('one waiting situation is not replaced by a new opportunity', () => {
+  it('the waiting place goes to the more pressing situation (brink > cold > hot > tenth), in either order of arrival', () => {
     const t = createSituationTracker(ALWAYS, () => 0)
     t.misreport(1000, 2)
-    t.found(2000, 2000, 10, 0)
+    t.found(2000, 2000, 10, 0) // tenth arrives while brink waits: dropped
     expect(t.take(2000)).toBe('brink')
+
+    const u = createSituationTracker(ALWAYS, () => 0)
+    u.found(1000, 1000, 10, 0) // tenth waits
+    u.tick(CFG.coldAfterMs + 1000, 2000) // cold replaces it
+    expect(u.take(2000)).toBe('cold')
+    u.misreport(3000, 2) // brink replaces cold
+    expect(u.take(3000)).toBe('brink')
+    u.tick(CFG.coldAfterMs * 2 + 1000, 4000) // cold does not replace brink
+    expect(u.take(4000)).toBe('brink')
+
+    const v = createSituationTracker(ALWAYS, () => 0)
+    for (const [i, at] of [0, 1000, 2000].entries()) v.found(at, at, i + 1, 0) // hot waits
+    expect(v.take(2000)).toBe('hot')
+    v.found(3000, 3000, 10, 0) // tenth is below hot: dropped
+    expect(v.take(3000)).toBe('hot')
+  })
+  it('the find that reaches the quota does not also offer hot (the quota conversation speaks there)', () => {
+    const t = createSituationTracker(ALWAYS, () => 0)
+    for (const [i, at] of [0, 1000].entries()) t.found(at, at, i + 1, 0)
+    t.found(2000, 2000, 3, 0, true) // the third find in the window, and the one that reached the quota
+    expect(t.take(2000)).toBeNull()
+    const u = createSituationTracker(ALWAYS, () => 0)
+    for (const [i, at] of [0, 1000].entries()) u.found(at, at, i + 1, 0)
+    u.found(2000, 2000, 3, 0, false)
+    expect(u.take(2000)).toBe('hot')
   })
 })
 

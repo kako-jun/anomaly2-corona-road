@@ -1220,15 +1220,66 @@ describe('useSubtitle: situations (#428)', () => {
     expect(brink).toBeGreaterThan(first)
   })
 
-  it('a situation that was not said before it expired is dropped', () => {
+  it('a situation that becomes due when the shift ends is not said: the closing plays alone', () => {
     const d = driver()
     afterOpening()
-    // The conversation on screen at this time is long enough: make the brink opportunity then let it expire unsaid by
-    // keeping the shift closing (ignored after the ending).
     d.set({ ending: 'dawn' })
     d.set({ misreports: MISS_CAP })
     const w = watch(d.result)
     w.step(60_000)
     expect(w.seen.some(t => t.startsWith('sb'))).toBe(false)
+  })
+
+  it('a situation that did not get to speak within expireMs is dropped (not carried to a later slot)', () => {
+    const rules = DIALOGUE_CONFIG.situations
+    const saved = rules.expireMs
+    rules.expireMs = 1000 // shorter than the silence before the next slot
+    try {
+      const d = driver()
+      afterOpening()
+      d.set({ misreports: MISS_CAP })
+      const w = watch(d.result)
+      w.step(8 * SILENCE)
+      expect(w.seen.some(t => t.startsWith('sb'))).toBe(false)
+    } finally {
+      rules.expireMs = saved
+    }
+  })
+
+  it('over several seeded shifts through the real hook: a situation replaces a chatter, never adds a conversation, and is not said every time', () => {
+    const seeded = (seed: number) => () => {
+      seed = (seed + 0x6d2b79f5) | 0
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+    }
+    const conversations = (seed: number, trigger: boolean) => {
+      resetStore()
+      localStorage.clear()
+      vi.mocked(Math.random).mockImplementation(seeded(seed))
+      const d = driver()
+      afterOpening()
+      if (trigger) d.set({ misreports: MISS_CAP })
+      const w = watch(d.result)
+      w.step(8 * SILENCE)
+      d.unmount()
+      // One conversation = one first line (a first line is the one that starts a conversation).
+      const firsts = /^(ch1a|ch2a|ch3a|sb1a|sb2a|sc1a|st1a)$/
+      return {
+        n: w.seen.filter(t => firsts.test(t)).length,
+        spoke: w.seen.some(t => t.startsWith('sb')),
+      }
+    }
+    let spoke = 0
+    let silent = 0
+    for (let seed = 1; seed <= 12; seed++) {
+      const on = conversations(seed, true)
+      const off = conversations(seed, false)
+      expect(on.n).toBe(off.n)
+      if (on.spoke) spoke++
+      else silent++
+    }
+    expect(spoke).toBeGreaterThan(0)
+    expect(silent).toBeGreaterThan(0)
   })
 })

@@ -257,10 +257,10 @@ export const pickStory = (
   )
 
 /**
- * False report: that anomaly's own conversations first (each once); when they are used up, or there
- * are none, the common false-report conversations (bag). Once the quota is met (#428) the common
- * `quota: met` conversations (their own bag) take over entirely: the hints are no longer needed, and
- * the talk is about having found enough already. The two common bags are separate.
+ * False report: that anomaly's own conversations first (each once, met or not: they carry the hints, which
+ * still help to find the next one); when they are used up, or there are none, the common false-report
+ * conversations (bag). Once the quota is met (#428) the common bag is the `quota: met` one (the talk
+ * is about having found enough already); before it, the ordinary one. The two common bags are separate.
  */
 export const pickFalseReport = (
   ledger: DialogueLedger,
@@ -277,10 +277,6 @@ export const pickFalseReport = (
       ),
       flags
     )
-  if (quota === 'met') {
-    const p = drawChatterBag(common(true), used, rng)
-    if (p) return p
-  }
   if (anomalyId !== null) {
     const own = ledger.entries.filter(
       e =>
@@ -301,6 +297,10 @@ export const pickFalseReport = (
         },
       }
     }
+  }
+  if (quota === 'met') {
+    const p = drawChatterBag(common(true), used, rng)
+    if (p) return p
   }
   return drawChatterBag(common(false), used, rng)
 }

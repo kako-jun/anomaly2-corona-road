@@ -77,38 +77,38 @@ dialogues:
       - { who: A, text: '目が疲れてきた　一度遠くを見ようかな', en: 'My eyes are tired. Maybe I should look far away for a moment.' }
       - { who: M, text: 'いいですね　１０秒だけでも違います', en: 'Good idea. Even ten seconds helps.' }
   - id: situation-brink-01
-    tone: light
+    tone: serious
     when: { situation: brink }
     lines:
       - { who: A, text: 'まずい　あと１回間違えたら撤収だ', en: 'Uh-oh. One more mistake and we pull out.' }
       - { who: M, text: 'はい　慎重にいきましょう', en: 'Yes, let us be careful.' }
   - id: situation-brink-02
-    tone: light
+    tone: serious
     when: { situation: brink }
     lines:
       - { who: M, text: '出河さん　お手つきは残り１回です', en: 'Ms. Dekawa, you have one slip left.' }
       - { who: A, text: '分かってる　確信が持てるまで押さない', en: 'I know. I will not press until I am sure.' }
   - id: situation-brink-03
-    tone: light
+    tone: serious
     when: { situation: brink }
     lines:
       - { who: A, text: '手が震えてきた　深呼吸しよう', en: 'My hands are shaking. Deep breath.' }
       - { who: M, text: '吸って　吐いて　です', en: 'In, and out.' }
   - id: situation-brink-04
-    tone: light
+    tone: serious
     when: { situation: brink }
     lines:
       - { who: A, text: '崖っぷちってこういうことか', en: 'So this is what the edge feels like.' }
       - { who: M, text: '落ち着いて見れば大丈夫ですよ', en: 'If you look calmly, it will be fine.' }
       - { who: A, text: '樫原くんは冷静でいいなあ', en: 'You are lucky to be so calm, Kashihara.' }
   - id: situation-brink-05
-    tone: light
+    tone: serious
     when: { situation: brink }
     lines:
       - { who: M, text: '焦らなくていいです　時間はあります', en: 'No need to rush. There is time.' }
       - { who: A, text: 'ありがとう　少し落ち着く', en: 'Thanks. Let me settle down for a moment.' }
   - id: situation-brink-06
-    tone: light
+    tone: serious
     when: { situation: brink }
     lines:
       - { who: A, text: 'もう間違えられない　目を見開いていくよ', en: 'I cannot be wrong again. Eyes wide open.' }
@@ -117,13 +117,13 @@ dialogues:
     tone: light
     when: { situation: tenth }
     lines:
-      - { who: A, text: 'あっ　これで１０件目だよ', en: 'Oh, that makes ten.' }
+      - { who: A, text: 'あっ　１０件目まで来たよ', en: 'Oh, we have made it to ten.' }
       - { who: M, text: '大台ですね　すごいです', en: 'A big milestone. Impressive.' }
   - id: situation-tenth-02
     tone: light
     when: { situation: tenth }
     lines:
-      - { who: M, text: '出河さん　今ので１０件目です', en: 'Ms. Dekawa, that was your tenth.' }
+      - { who: M, text: '出河さん　１０件目に届きましたね', en: 'Ms. Dekawa, you have reached ten.' }
       - { who: A, text: 'そんなに見つけてた？　自分でびっくり', en: 'That many? I surprised myself.' }
   - id: situation-tenth-03
     tone: light

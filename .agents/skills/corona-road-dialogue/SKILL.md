@@ -41,7 +41,7 @@ For every conversation, decide its ledger file, trigger, tone, and release point
 ## Draft and review
 
 1. Work in a focused batch with one kind or one story milestone. Read nearby entries first to avoid repeated setups, punchlines, or phrasing.
-2. Give each entry a unique kind-prefixed ID, its supported `when` condition, and a valid tone. Use 2–4 subtitle lines unless canon requires a shorter form; `closing` with `result: withdraw` is one short line from 出河さん only. The `closing` ending scene is a single auto-advancing conversation and may be longer. Do not add unsupported YAML fields.
+2. Give each entry a unique kind-prefixed ID, its supported `when` condition, and a valid tone. Use 2–4 subtitle lines unless canon requires a shorter form; `closing` with `result: withdraw` and `quota: unmet` is one short line from 出河さん only (the quota-met withdraws are 2–4 lines with both speakers). The `closing` ending scene is a single auto-advancing conversation and may be longer. Do not add unsupported YAML fields.
 3. Keep dialogue in natural spoken Japanese. Use the full-width space between phrases; `?`, `!`, and `…` are allowed. Do not use Japanese/ASCII commas or periods, half-width spaces, tabs, or line breaks inside subtitle text. In particular, put a full-width space after `?` or `!` when the sentence continues.
 4. Run a separate review pass after drafting. Give an independent reviewer the canon references, changed dialogue, and review criteria without the author's intended interpretation. Check:
    - correct speaker and relationship voice, including occasional unintentional chattiness from 樫原くん;

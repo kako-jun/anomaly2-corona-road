@@ -922,12 +922,19 @@ describe('quota and situation conversations (#428)', () => {
     const next = pickClosing(ledger, 'dawn', used, rng0, {}, 'met')!
     expect(next.entry.id).not.toBe(drawn[2])
   })
-  it('a false report after the quota uses its own bag, not the anomaly lines or the pre-quota one', () => {
+  it('a false report after the quota: the anomaly own unused hint conversation first, then the after-quota bag', () => {
+    const first = pickFalseReport(ledger, 'x', noUsed(), rng0, {}, 'met')!
+    expect(first.entry.id).toBe('an-x-1')
+    expect(first.used.usedLines).toEqual({ x: ['an-x-1'] })
     for (const r of [0, 0.99]) {
-      const p = pickFalseReport(ledger, 'x', noUsed(), () => r, {}, 'met')!
+      // Used up (or an anomaly with none): the after-quota bag, never the pre-quota one.
+      const p = pickFalseReport(ledger, 'x', first.used, () => r, {}, 'met')!
       expect(p.entry.id).toMatch(/^fr-after/)
-      expect(p.used.usedLines).toEqual({}) // the anomaly's own lines stay unused
+      const q = pickFalseReport(ledger, null, noUsed(), () => r, {}, 'met')!
+      expect(q.entry.id).toMatch(/^fr-after/)
     }
+  })
+  it('a false report before the quota: the anomaly own line first, then the pre-quota common bag, never the after-quota ones', () => {
     // Before the quota: the anomaly's own line first, then the pre-quota common one; never the after-quota ones.
     const first = pickFalseReport(ledger, 'x', noUsed(), rng0, {}, 'unmet')!
     expect(first.entry.id).toBe('an-x-1')

@@ -37,13 +37,30 @@ export interface SituationConfig {
   expireMs: number
 }
 
+/**
+ * Which situation wins the one waiting place when two are due before either has spoken: the more pressing first
+ * (brink > cold > hot > tenth). A lower one that arrives while a higher one waits is dropped; a higher one replaces
+ * a lower one that waits.
+ */
+export const SITUATION_PRIORITY: readonly Situation[] = [
+  'brink',
+  'cold',
+  'hot',
+  'tenth',
+]
+
 export interface SituationTracker {
-  /** A correct report was made (`found` = correct reports so far this shift, `misreports` = false reports so far). */
+  /**
+   * A correct report was made (`found` = correct reports so far this shift, `misreports` = false reports so far).
+   * `quotaJustReached`: this find is the one that reached the quota, which has its own conversation, so `hot` is not
+   * offered on the same find (two cheerful lines back to back).
+   */
   found: (
     playMs: number,
     wallMs: number,
     found: number,
-    misreports: number
+    misreports: number,
+    quotaJustReached?: boolean
   ) => void
   /** A false report was made (`misreports` = false reports so far). */
   misreport: (wallMs: number, misreports: number) => void
@@ -76,17 +93,26 @@ export const createSituationTracker = (
   let coldSpent = 0
   let pending: { situation: Situation; at: number } | null = null
 
-  /** One opportunity: dropped when something waits already or the limits say no, otherwise rolled once. */
+  /**
+   * One opportunity: dropped when the limits say no, otherwise rolled once; it takes the waiting place when it is
+   * free or held by a less pressing situation (`SITUATION_PRIORITY`).
+   */
   const offer = (s: Situation, wallMs: number) => {
     const rule = cfg.rules[s]
-    if (pending !== null) return
     if (shown[s] >= rule.maxPerShift) return
     if (wallMs - lastAt[s] < rule.minGapMs) return
-    if (rng() < rule.chance) pending = { situation: s, at: wallMs }
+    if (!(rng() < rule.chance)) return
+    if (
+      pending !== null &&
+      SITUATION_PRIORITY.indexOf(pending.situation) <=
+        SITUATION_PRIORITY.indexOf(s)
+    )
+      return
+    pending = { situation: s, at: wallMs }
   }
 
   return {
-    found: (playMs, wallMs, found, misreports) => {
+    found: (playMs, wallMs, found, misreports, quotaJustReached = false) => {
       times.push(playMs)
       lastFindAt = playMs
       coldSpent = 0
@@ -96,8 +122,9 @@ export const createSituationTracker = (
       }
       const recent = times.filter(t => playMs - t <= cfg.hotWindowMs).length
       if (
-        recent === cfg.hotCount ||
-        (misreports === 0 && found === cfg.hotCleanCount)
+        !quotaJustReached &&
+        (recent === cfg.hotCount ||
+          (misreports === 0 && found === cfg.hotCleanCount))
       )
         offer('hot', wallMs)
     },

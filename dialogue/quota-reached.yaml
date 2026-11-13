@@ -3,7 +3,7 @@ dialogues:
   - id: quota-reached-01
     tone: light
     lines:
-      - { who: A, text: 'よし　これで今夜の分は見つけたかな', en: "Good, I think that covers tonight's share." }
+      - { who: A, text: 'よし　今夜の分は見つけたかな', en: "Good, I think we have found tonight's share." }
       - { who: M, text: 'はい　ここからは余裕ですよ', en: 'Yes, from here on we can relax.' }
   - id: quota-reached-02
     tone: light
@@ -13,7 +13,7 @@ dialogues:
   - id: quota-reached-03
     tone: light
     lines:
-      - { who: M, text: '出河さん　今ので目標は達成です', en: 'Ms. Dekawa, that one completes the target.' }
+      - { who: M, text: '出河さん　目標は達成ですよ', en: 'Ms. Dekawa, the target is reached.' }
       - { who: A, text: 'ほんと？　顔がにやけちゃう', en: 'Really? I cannot stop grinning.' }
   - id: quota-reached-04
     tone: light
@@ -23,7 +23,7 @@ dialogues:
   - id: quota-reached-05
     tone: light
     lines:
-      - { who: A, text: '樫原くん　今ので十分だったよね？', en: 'Kashihara, that was enough, right?' }
+      - { who: A, text: '樫原くん　もう十分だよね？', en: 'Kashihara, that is enough by now, right?' }
       - { who: M, text: 'はい　十分です　あとはおまけですね', en: 'Yes. The rest is a bonus.' }
       - { who: A, text: 'おまけが大事なんだけどね', en: 'The bonus matters too, you know.' }
   - id: quota-reached-06

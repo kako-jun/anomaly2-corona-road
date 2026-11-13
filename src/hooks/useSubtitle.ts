@@ -393,15 +393,15 @@ export const useSubtitle = (input: SubtitleInput) => {
         // The first call only sets the baseline (a hook mounted with finds already made reports no event).
         if (seen) {
           if (found > seen.found) {
-            if (
+            const reached =
               !quotaDone &&
               seen.found < DEFAULT_CONFIG.minCorrectReports &&
               found >= DEFAULT_CONFIG.minCorrectReports
-            ) {
+            if (reached) {
               pendingQuota = true
               wake()
             }
-            situations.found(elapsedMs, now, found, misreports)
+            situations.found(elapsedMs, now, found, misreports, reached)
           }
           if (misreports > seen.misreports)
             situations.misreport(now, misreports)

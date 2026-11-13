@@ -394,32 +394,43 @@ dialogues:
     tone: serious
     when: { result: withdraw, quota: met }
     lines:
-      - { who: A, text: '撤収するけど　今夜の分は見つけたからね', en: 'We are pulling out, but we did find what we needed tonight.' }
+      - { who: A, text: '撤収するよ　でも今夜の分は見つけたからね', en: 'We are pulling out, but we did find what we needed tonight.' }
+      - { who: M, text: 'はい　成果は報告できます', en: 'Yes, we have results to report.' }
   - id: closing-withdraw-22
     tone: serious
     when: { result: withdraw, quota: met }
     lines:
-      - { who: A, text: 'お手つきが続いた　でも成果は持って帰ろう', en: 'The slips piled up, but let us take our results home.' }
+      - { who: M, text: '出河さん　今日はここまでにしましょう', en: 'Ms. Dekawa, let us stop here for today.' }
+      - { who: A, text: 'お手つきが続いちゃった　悔しい', en: 'The slips piled up. So frustrating.' }
+      - { who: M, text: 'それでも見つけた分は残ります', en: 'Even so, what you found stays.' }
+      - { who: A, text: 'そうだね　それは持って帰る', en: 'True. I will take that home.' }
   - id: closing-withdraw-23
     tone: serious
     when: { result: withdraw, quota: met }
     lines:
-      - { who: A, text: '最後に崩れちゃった　それでも悪くない夜だった', en: 'I fell apart at the end, but it was not a bad night.' }
+      - { who: A, text: '最後に崩れちゃったなあ', en: 'I fell apart at the end.' }
+      - { who: M, text: '悪い夜ではなかったですよ', en: 'It was not a bad night.' }
+      - { who: A, text: '樫原くんがそう言うなら　少し安心', en: 'If you say so, Kashihara, I feel a little better.' }
   - id: closing-withdraw-24
     tone: serious
     when: { result: withdraw, quota: met }
     lines:
-      - { who: A, text: '悔しい　でも仕事は果たしたよ', en: 'Frustrating, but we did the job.' }
+      - { who: A, text: '悔しいけど　仕事は果たしたよ', en: 'Frustrating, but we did the job.' }
+      - { who: M, text: 'はい　胸を張って引き上げましょう', en: 'Yes, let us pull out with our heads up.' }
+      - { who: A, text: 'うん　先に立つね', en: 'Yeah. I will head out first.' }
   - id: closing-withdraw-25
     tone: serious
     when: { result: withdraw, quota: met }
     lines:
-      - { who: A, text: 'ここで引き上げ　胸は張っていいよね', en: 'Pulling out here. I can still hold my head up, right?' }
+      - { who: M, text: '撤収です', en: 'Time to withdraw.' }
+      - { who: A, text: 'はいはい　帰りますよ　でも胸は張っていいよね？', en: 'Yes, yes, going home. But I can still hold my head up, right?' }
+      - { who: M, text: 'もちろんです', en: 'Of course.' }
   - id: closing-withdraw-26
     tone: serious
     when: { result: withdraw, quota: met }
     lines:
       - { who: A, text: '焦りが出ちゃった　見つけた分だけ誇りにする', en: 'I got hasty. I will take pride in what we found.' }
+      - { who: M, text: '次の夜は落ち着いていきましょう', en: 'Let us stay calm on the next night.' }
   - id: closing-ending-01
     tone: serious
     when: { result: ending }

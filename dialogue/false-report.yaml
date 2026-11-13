@@ -121,8 +121,8 @@ dialogues:
     tone: light
     when: { quota: met }
     lines:
-      - { who: A, text: 'あっ　もう十分見つけたのに　最後に間違えた', en: 'Oh, I had already found enough and I slipped at the end.' }
-      - { who: M, text: 'はい　でも今夜の分は届いてますよ', en: "Yes, but you have reached tonight's mark." }
+      - { who: A, text: 'あっ　もう十分見つけたのに　間違えた', en: 'Oh, I had found enough already and still got one wrong.' }
+      - { who: M, text: 'はい　今のは違いましたが　成果はそのままです', en: 'Yes, that one was wrong, but your results stand.' }
   - id: false-report-met-02
     tone: light
     when: { quota: met }
@@ -135,7 +135,7 @@ dialogues:
     when: { quota: met }
     lines:
       - { who: A, text: 'ちぇっ　ここまで順調だったのに', en: 'Tch, and it was going so well.' }
-      - { who: M, text: 'お手つきは１回です　大丈夫ですよ', en: 'It is one slip. It is fine.' }
+      - { who: M, text: 'お手つきくらい　大丈夫ですよ', en: 'A slip like that is fine.' }
   - id: false-report-met-04
     tone: light
     when: { quota: met }
