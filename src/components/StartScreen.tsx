@@ -4,6 +4,8 @@ import '../styles/start.css'
 import { NEXT_HINT, NOTES_LABEL, titleNotes } from '../data/titleNotes'
 import type { Language } from '../utils/saveData'
 import { nextPage, prevPage, swipeDirection } from '../utils/titlePager'
+import { initialPerf, stepPerf } from '../utils/titlePerf'
+import type { PerfLevel } from '../utils/titlePerf'
 import { TitleNoise } from './TitleNoise'
 import { TransferPanel } from './TransferPanel'
 
@@ -12,6 +14,10 @@ const panOffsets = () =>
   ({
     '--start-pan-x-delay': `${-Math.floor(Math.random() * 70)}s`,
     '--start-pan-y-delay': `${-Math.floor(Math.random() * 53)}s`,
+    // the blur patch (#331): loops of 61 s, 47 s and 37 s
+    '--start-blur-x-delay': `${-Math.floor(Math.random() * 61)}s`,
+    '--start-blur-y-delay': `${-Math.floor(Math.random() * 47)}s`,
+    '--start-blur-power-delay': `${-Math.floor(Math.random() * 37)}s`,
   }) as CSSProperties
 
 interface StartScreenProps {
@@ -89,6 +95,21 @@ export const StartScreen = ({
     return () => document.body.classList.remove('start-open')
   }, [])
 
+  // A slow device: the blur patch and the noise step down, once and for good (utils/titlePerf.ts, #331).
+  const [perf, setPerf] = useState<PerfLevel>('full')
+  useEffect(() => {
+    if (typeof requestAnimationFrame !== 'function') return
+    let state = initialPerf
+    let id = 0
+    const tick = (now: number) => {
+      state = stepPerf(state, now)
+      setPerf(state.level)
+      if (state.level !== 'off') id = requestAnimationFrame(tick)
+    }
+    id = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(id)
+  }, [])
+
   const notes = useMemo(() => titleNotes(language), [language])
   const [page, setPage] = useState(0)
   const swipeStart = useRef<number | null>(null)
@@ -101,13 +122,23 @@ export const StartScreen = ({
   const current = Math.min(page, notes.length - 1)
 
   return (
-    <main className="start-screen" style={pan}>
+    <main
+      className={
+        perf === 'full' ? 'start-screen' : `start-screen start-perf-${perf}`
+      }
+      style={pan}
+    >
       <div className="start-photo" aria-hidden="true">
         {/* two nested slow drifts (x outside, y inside) with different periods: no corner where the speed jumps */}
         <div className="start-pan-x">
           <img src="/images/logo.webp" alt="" draggable={false} />
         </div>
-        <TitleNoise />
+        <div className="start-blur-x">
+          <div className="start-blur-y">
+            <div className="start-blur" />
+          </div>
+        </div>
+        {perf !== 'off' && <TitleNoise />}
       </div>
       <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
       {onTransferred && (

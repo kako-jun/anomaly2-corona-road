@@ -89,7 +89,12 @@ describe('start.css: the notes', () => {
     )
   })
   it('puts no dark surface behind anything: no vignette, scrim or plate', () => {
-    expect(code).not.toMatch(/vignette|scrim|radial-gradient|surface\.webp/)
+    expect(code).not.toMatch(/vignette|scrim|surface\.webp/)
+    // the soft round mask of the blur patch (#331) is the only gradient, and it is a mask, never a background
+    root.walkDecls(d => {
+      if (/radial-gradient/.test(d.value))
+        expect(d.prop).toMatch(/^(-webkit-)?mask-image$/)
+    })
     // the only backgrounds are the tear bands and the pager's filled dot
     root.walkRules(r => {
       if (/start-band|start-pager-dots i\.on/.test(r.selector)) return
@@ -129,5 +134,79 @@ describe('start.css: the notes', () => {
   })
   it('has no language switch (the language comes from the browser only)', () => {
     expect(code).not.toMatch(/start-lang/)
+  })
+})
+
+describe('start.css: the drifting blur patch (#331)', () => {
+  const pct = (v: string) => parseFloat(v)
+  const screen = (p: string) => decl('.start-screen', p)!
+  it('is a big patch (radius 40-55% of the photo) with a fixed radius of 6-10 px that breathes by opacity only', () => {
+    expect(pct(screen('--blur-w'))).toBeGreaterThanOrEqual(80)
+    expect(pct(screen('--blur-w'))).toBeLessThanOrEqual(110)
+    expect(pct(screen('--blur-h'))).toBeGreaterThanOrEqual(80)
+    expect(pct(screen('--blur-h'))).toBeLessThanOrEqual(110)
+    expect(pct(screen('--blur-px'))).toBeGreaterThanOrEqual(6)
+    expect(pct(screen('--blur-px'))).toBeLessThanOrEqual(10)
+    expect(pct(screen('--blur-fade-min'))).toBeGreaterThan(0)
+    expect(pct(screen('--blur-fade-min'))).toBeLessThan(0.5)
+    // the radius is never animated (it repaints every frame): the keyframes touch opacity only
+    root.walkAtRules('keyframes', (r: AtRule) => {
+      if (r.params === 'start-blur-power')
+        r.walkDecls(d => expect(d.prop).toBe('opacity'))
+    })
+  })
+  it('loops x, y and the strength in coprime periods that also avoid the photo drift (70 s, 53 s)', () => {
+    const loops = [
+      decl('.start-blur-x', 'animation')!,
+      decl('.start-blur-y', 'animation')!,
+      decl('.start-blur', 'animation')!,
+    ].map(a => seconds(a) * 2)
+    expect(loops).toEqual([61, 47, 37])
+    const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a)
+    for (const a of [...loops, 70, 53])
+      for (const b of [...loops, 70, 53]) if (a !== b) expect(gcd(a, b)).toBe(1)
+    for (const sel of ['.start-blur-x', '.start-blur-y', '.start-blur'])
+      expect(decl(sel, 'animation')).toContain('infinite alternate')
+  })
+  it('is a masked backdrop blur that takes no pointer', () => {
+    expect(decl('.start-blur', 'backdrop-filter')).toContain('blur(')
+    expect(decl('.start-blur', 'mask-image')).toContain(
+      'radial-gradient(closest-side'
+    )
+    expect(decl('.start-blur-x', 'pointer-events')).toBe('none')
+  })
+  it('stays within the margin the travel leaves: the patch never moves more than 40% of its size', () => {
+    expect(pct(screen('--blur-travel'))).toBeLessThanOrEqual(40)
+  })
+  it('in the lite step-down also stops the photo drift (a drifting photo under the patch is blurred again every frame)', () => {
+    const stopped: string[] = []
+    root.walkRules(/start-perf-lite/, (r: Rule) => {
+      r.walkDecls('animation', d => {
+        if (d.value === 'none') stopped.push(r.selector)
+      })
+    })
+    const all = stopped.join(',')
+    for (const sel of ['.start-pan-x', '.start-photo img', '.start-blur'])
+      expect(all).toContain(sel)
+  })
+  it('has a way out: no patch without backdrop-filter, still with prefers-reduced-motion', () => {
+    let supports = false
+    let still = false
+    root.walkAtRules('supports', (a: AtRule) => {
+      if (a.params.includes('not'))
+        a.walkDecls('display', d => {
+          if (d.value === 'none') supports = true
+        })
+    })
+    root.walkAtRules('media', (m: AtRule) => {
+      if (m.params.includes('prefers-reduced-motion'))
+        m.walkRules(/start-blur/, r => {
+          r.walkDecls('animation', d => {
+            if (d.value === 'none') still = true
+          })
+        })
+    })
+    expect(supports).toBe(true)
+    expect(still).toBe(true)
   })
 })
