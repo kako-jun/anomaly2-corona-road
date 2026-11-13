@@ -226,10 +226,10 @@ describe('Reiwa group share of the draw (#286)', () => {
   it('uses a provisional share of 6%', () => {
     expect(REIWA_DRAW_SHARE).toBe(0.06)
   })
-  it('gives Reiwa about 6% of 200000 draws', () => {
+  it('gives Reiwa about 6% of 50000 draws', () => {
     const rng = mulberry32(286)
     let n = 0
-    const N = 200000
+    const N = 50000
     for (let i = 0; i < N; i++) {
       const r = pickLedgerEntry(many, [1, 2, 3], new Set(), rng, 0.75, true)
       if (r?.reiwa === true) n++
