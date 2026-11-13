@@ -211,7 +211,7 @@ const RECIPES: Record<SynthName, (c: Ctx) => SoundHandle> = {
     noiseHit(c, c.ctx.currentTime + 0.01, 0.2, 0.09, 'bandpass', 2600)
     return { stop: () => {} }
   },
-  /** Low mains hum: 50 Hz + 100 Hz sines. */
+  /** Low mains hum: 50 Hz + 100 Hz + 300 Hz sines. */
   hum: c =>
     sustained(c, 0.02, dest =>
       [50, 100, 300].map(f => {
