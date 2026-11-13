@@ -440,13 +440,22 @@ body.start-open #root {
   }
 }
 
-/* ----- save transfer (#84): a small text key at the top right (the panel itself is in transfer.css) ----- */
+/* ----- the top corners (#84, #426): small text keys. TRANSFER SAVE at the top right, FULL / EXIT (fullscreen) at the top left, away from the signboard (the right side of the photo, x 59-86%) (the panel itself is in transfer.css) ----- */
+.start-fullscreen-key,
 .start-transfer-key {
   position: absolute;
   top: max(10px, env(safe-area-inset-top));
-  right: 10px;
   z-index: 3;
+}
+.start-transfer-key {
+  right: 10px;
+}
+.start-fullscreen-key {
+  left: 10px;
+}
+.start-top-key {
   min-height: 44px;
+  min-width: 64px; /* FULL and EXIT are the same width: the row does not shift when it flips */
   padding: 0 12px;
   font: inherit;
   font-size: 12px;
@@ -460,7 +469,7 @@ body.start-open #root {
     0 0 6px #000;
   cursor: pointer;
 }
-.start-transfer-key:focus-visible {
+.start-top-key:focus-visible {
   outline: 3px solid #ffd27a;
   outline-offset: 3px;
 }

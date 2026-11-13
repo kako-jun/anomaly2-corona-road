@@ -406,6 +406,7 @@ src/
 │   ├── NoiseCanvas.tsx
 │   ├── Loupe.tsx        # The round magnifier on the control panel (#341; gesture in hooks/useLoupeGesture.ts, numbers in utils/loupe.ts)
 │   ├── (noise off #342: hooks/useNoiseOff.ts, numbers in utils/noiseOff.ts)
+│   ├── (title fullscreen key #426: utils/fullscreen.ts; FULL/EXIT at the top left of StartScreen (away from the signboard; TRANSFER SAVE stays at the top right). Not offered where `document.fullscreenEnabled` is not true (iPhone Safari) or in a standalone PWA; ESC is followed by `fullscreenchange`. Not on the playing screen)
 │   ├── (sound foundation #79: utils/audioEngine.ts, audioSettings.ts, synthSounds.ts; plan in docs/audio.md)
 │   ├── CameraStrip.tsx  # Numbered camera push buttons
 │   ├── Knob.tsx         # BRIGHTNESS / CONTRAST / VOL knob
