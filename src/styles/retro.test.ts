@@ -178,6 +178,41 @@ describe('retro.css', () => {
     expect(steady).toBe(true)
   })
 
+  it('blinks the REC dot as a crisp on/off: only opacity 1 and 0.15, 1.6s, no steps(), stopped under reduced motion (#424)', () => {
+    const anim = decls('.rec-dot', 'animation').find(v => v !== 'none') ?? ''
+    expect(anim).toContain('rec-blink')
+    expect(anim).toContain('1.6s')
+    expect(anim).not.toContain('steps(')
+    let frames = 0
+    const levels = new Set<string>()
+    const stops: string[] = []
+    root_.walkAtRules('keyframes', at => {
+      if (at.params !== 'rec-blink') return
+      at.walkRules(r => {
+        frames++
+        stops.push(...r.selectors)
+        r.walkDecls(d => {
+          expect(d.prop).toBe('opacity')
+          levels.add(d.value)
+        })
+      })
+    })
+    expect(frames).toBeGreaterThan(0)
+    expect([...levels].sort()).toEqual(['0.15', '1'])
+    expect(stops).toEqual(['0%', '49.99%', '50%', '99.99%'])
+    let reduced = false
+    root_.walkAtRules('media', media => {
+      if (!media.params.includes('prefers-reduced-motion: reduce')) return
+      media.walkRules(r => {
+        if (!r.selectors.includes('.rec-dot')) return
+        r.walkDecls('animation', d => {
+          if (d.value === 'none') reduced = true
+        })
+      })
+    })
+    expect(reduced).toBe(true)
+  })
+
   it('stops the clock animation when reduced motion is requested', () => {
     expect(
       decls('.clock-colon', 'animation').some(
