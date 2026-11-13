@@ -60,6 +60,14 @@ describe('Knob with its own rest position and printed text (VOL, #79)', () => {
     expect(screen.getByRole('slider', { name: 'Volume' })).toBeInTheDocument()
     expect(screen.getByText('VOL')).toBeInTheDocument()
   })
+  it('describes the reset as the default value, not the centre, for VOL', () => {
+    render(<Knob label="Volume" value={10} resetTo={70} onChange={vi.fn()} />)
+    expect(
+      screen.getByRole('slider', { name: 'Volume' })
+    ).toHaveAccessibleDescription(
+      'Use arrow keys to adjust. Press Enter or Space to reset to default (70).'
+    )
+  })
   it('a click, Enter and Space go back to resetTo, not the centre', () => {
     const onChange = vi.fn()
     render(<Knob label="Volume" value={10} resetTo={70} onChange={onChange} />)

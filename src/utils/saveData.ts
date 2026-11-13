@@ -311,15 +311,23 @@ export const validateSave = (raw: unknown): SaveData | null => {
  * Merge two saves of the same player (two tabs). Within one epoch data only grows: counts take the larger value,
  * ids and flags are unions. Settings merge field by field, `b` winning where both have a field.
  */
+/** Field by field, `b` winning. The legacy `muted` (#79) is never carried over, so a stale tab cannot write it back. */
+const mergeSettings = (
+  a: SaveSettings | undefined,
+  b: SaveSettings | undefined
+): SaveSettings | undefined => {
+  if (!a && !b) return undefined
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { muted: _m, ...merged } = { ...a, ...b }
+  return merged
+}
+
 export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
   // A higher epoch (a reset happened) wins whole: the older generation's progress is dropped.
   if (a.epoch !== b.epoch) {
     const [win, lose] = a.epoch > b.epoch ? [a, b] : [b, a]
     // Settings are not progress: they merge field by field like within one epoch (the winner's fields win).
-    const settings =
-      win.settings || lose.settings
-        ? { ...lose.settings, ...win.settings }
-        : undefined
+    const settings = mergeSettings(lose.settings, win.settings)
     return settings ? { ...win, settings } : win
   }
   // Own keys only, and built with fromEntries: a key like "__proto__" must stay plain data.
@@ -356,8 +364,7 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
       : (b.lastShift ?? a.lastShift)
   if (lastShift) out.lastShift = lastShift
   // Field by field: `b` wins where both have it, so a setting only one tab has is not lost.
-  const settings =
-    a.settings || b.settings ? { ...a.settings, ...b.settings } : undefined
+  const settings = mergeSettings(a.settings, b.settings)
   if (settings) out.settings = settings
   return out
 }

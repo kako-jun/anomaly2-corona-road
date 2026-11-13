@@ -817,6 +817,12 @@ describe('sound settings (#79)', () => {
     const s = save({ settings: { volume: 35, muted: true } })
     expect(validateSave(s)?.settings).toEqual({ volume: 35, muted: true })
   })
+  it('never carries a legacy muted through a settings merge (a stale tab cannot write it back)', () => {
+    const a = save({ settings: { volume: 20, muted: true } })
+    const b = save({ settings: { volume: 40 } })
+    expect(mergeSave(a, b).settings).toEqual({ volume: 40 })
+    expect(mergeSave(b, a).settings).toEqual({ volume: 20 })
+  })
   it.each([
     ['a volume over 100', { volume: 101 }],
     ['a negative volume', { volume: -1 }],

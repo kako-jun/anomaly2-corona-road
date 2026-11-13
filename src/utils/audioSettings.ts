@@ -22,7 +22,10 @@ export const readAudioVolume = (): number => {
 export const initGameAudio = (
   engine: AudioEngine = gameAudio
 ): (() => void) => {
-  engine.setVolume(readAudioVolume())
+  const s = load().settings
+  // Legacy mute (#79): fold it into the volume once, so dropping `muted` on later merges cannot un-mute.
+  if (s?.muted === true) saveVolume(0, engine)
+  else engine.setVolume(readAudioVolume())
   return installAudioUnlock(engine)
 }
 

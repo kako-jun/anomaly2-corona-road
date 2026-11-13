@@ -1,10 +1,18 @@
 // @vitest-environment jsdom
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createAudioEngine } from './audioEngine'
 import { initGameAudio, readAudioVolume, saveVolume } from './audioSettings'
 import { makeMockContext } from './audioMock'
 import { load, update } from './saveData'
 import { resetProgress } from './shiftProgress'
+
+// `update` merges (and drops a legacy `muted`), so a legacy save is planted straight into storage.
+const plantLegacy = (settings: Record<string, unknown>) => {
+  localStorage.setItem(
+    'corona-road:save',
+    JSON.stringify({ ...load(), settings })
+  )
+}
 
 beforeEach(() => {
   update(cur => ({ ...cur, settings: undefined }))
@@ -55,20 +63,34 @@ describe('audio settings', () => {
     remove()
   })
 
-  it('reads a legacy muted:true save as volume 0 and drops it on the next save', () => {
-    update(cur => ({ ...cur, settings: { volume: 80, muted: true } }))
-    expect(readAudioVolume()).toBe(0)
-    const engine = createAudioEngine({
+  // A cold start: the page loads with an old save in storage and no memory yet (fresh modules).
+  const coldStart = async (settings: Record<string, unknown>) => {
+    plantLegacy(settings)
+    vi.resetModules()
+    const audio = await import('./audioSettings')
+    const eng = await import('./audioEngine')
+    const store = await import('./saveData')
+    const engine = eng.createAudioEngine({
       createContext: () => makeMockContext().ctx,
     })
-    initGameAudio(engine)()
+    return { audio, engine, store }
+  }
+
+  it('a cold start with a legacy muted:true save is silent and the save now holds volume 0 without muted', async () => {
+    const { audio, engine, store } = await coldStart({
+      volume: 80,
+      muted: true,
+    })
+    audio.initGameAudio(engine)()
     expect(engine.getVolume()).toBe(0)
-    saveVolume(40, engine)
-    expect(load().settings).toEqual({ volume: 40 })
+    expect(store.load().settings).toEqual({ volume: 0 })
+    audio.saveVolume(40, engine)
+    expect(store.load().settings).toEqual({ volume: 40 })
   })
 
-  it('a legacy muted:false save keeps its volume', () => {
-    update(cur => ({ ...cur, settings: { volume: 55, muted: false } }))
-    expect(readAudioVolume()).toBe(55)
+  it('a legacy muted:false save keeps its volume', async () => {
+    const { audio, engine } = await coldStart({ volume: 55, muted: false })
+    audio.initGameAudio(engine)()
+    expect(engine.getVolume()).toBe(55)
   })
 })

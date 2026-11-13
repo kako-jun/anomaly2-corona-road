@@ -90,7 +90,8 @@ export const Knob = ({
       </div>
       <div className="label">{text ?? label}</div>
       <span id={hintId} className="knob-sr-only">
-        Use arrow keys to adjust. Press Enter or Space to reset to centre.
+        Use arrow keys to adjust. Press Enter or Space to reset to{' '}
+        {resetTo === KNOB_DEFAULT ? 'centre' : `default (${resetTo})`}.
       </span>
     </div>
   )
