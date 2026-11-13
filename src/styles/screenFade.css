@@ -1,4 +1,4 @@
-/* Screen transitions (#336). Duration comes from SCREEN_FADE_MS through --screen-fade-ms. */
+/* Screen transitions (#336). Durations come from transitionTiming() through --screen-fade-out-ms / -in-ms / -ms. */
 .screen-fade-root {
   display: contents;
 }
@@ -9,11 +9,14 @@
   background: #000;
   opacity: 0;
   pointer-events: none;
-  transition: opacity calc(var(--screen-fade-ms) / 2) linear;
+  /* Rising from black (back to 0) takes the in time. */
+  transition: opacity var(--screen-fade-in-ms) linear;
 }
 .screen-fade-veil[data-dark='true'] {
   opacity: 1;
   pointer-events: auto;
+  /* Going dark takes the out time. */
+  transition-duration: var(--screen-fade-out-ms);
 }
 /* cross: the old screen lies over the new one and fades away. */
 .screen-fade-ghost {
