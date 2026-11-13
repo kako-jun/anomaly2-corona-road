@@ -124,6 +124,7 @@ input,
 textarea {
   user-select: text;
   -webkit-user-select: text;
+  -webkit-touch-callout: default; /* iOS: keep the field's edit menu (paste) */
 }
 
 img {

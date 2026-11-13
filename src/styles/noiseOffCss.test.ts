@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const css = readFileSync('src/styles/loupe.css', 'utf8')
@@ -34,13 +34,6 @@ describe('loupe press CSS (#409)', () => {
 
 describe('no text selection (#432)', () => {
   const index = readFileSync('src/index.css', 'utf8')
-  const all = [
-    'src/index.css',
-    'src/styles/loupe.css',
-    'src/styles/retro.css',
-    'src/styles/start.css',
-    'src/components/investigationNote.css',
-  ].map(p => readFileSync(p, 'utf8'))
 
   it('body switches selection, the iOS callout off by default', () => {
     const rule = index.match(/\nbody\s*\{([^{}]*)\}/)
@@ -62,9 +55,20 @@ describe('no text selection (#432)', () => {
     expect(rules[0][2]).toMatch(/-webkit-user-select:\s*text/)
   })
   it('no other rule in the app re-enables or repeats user-select', () => {
-    const rest = all.slice(1).join('\n')
-    expect(rest).not.toMatch(/user-select/)
-    expect(all[0].match(/user-select:\s*text/g)).toHaveLength(2)
+    // plain fs walk: the vitest config has `css: false`, which blanks css imports (so no import.meta.glob here)
+    const walk = (d: string): string[] =>
+      readdirSync(d, { withFileTypes: true }).flatMap(e =>
+        e.isDirectory() ? walk(`${d}/${e.name}`) : [`${d}/${e.name}`]
+      )
+    const all = walk('src')
+    const css = all.filter(p => p.endsWith('.css'))
+    expect(css.length).toBeGreaterThan(5)
+    const code = all.filter(p => /\.tsx?$/.test(p) && !/\.test\.tsx?$/.test(p))
+    const hits = [...css, ...code]
+      .filter(p => p !== 'src/index.css')
+      .filter(p => /user-?select/i.test(readFileSync(p, 'utf8')))
+    expect(hits).toEqual([])
+    expect(index.match(/user-select:\s*text/g)).toHaveLength(2)
   })
   it('images cannot be dragged out', () => {
     expect(index).toMatch(/\nimg\s*\{\s*-webkit-user-drag:\s*none/)
