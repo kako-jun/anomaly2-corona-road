@@ -712,6 +712,55 @@ describe('voice anomalies (#407)', () => {
       expect(hook.result.current.feedback?.message).toMatch(/NO ANOMALY HERE/)
     })
 
+    it('starting a shift forgets which voices were decoded (so a voice from an earlier shift can be taken back)', async () => {
+      const voiceSounds = await import('../utils/voiceSounds')
+      const ctx = {
+        state: 'running',
+        decodeAudioData: vi.fn().mockResolvedValue({ duration: 68 }),
+      }
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => ({
+          ok: true,
+          arrayBuffer: async () => new ArrayBuffer(8),
+        }))
+      )
+      vi.useRealTimers()
+      expect(
+        await voiceSounds.holdVoice(
+          { ctx: () => ctx, master: () => null } as never,
+          'CR-SH-04'
+        )
+      ).toBe(true)
+      voiceSounds.releaseVoice('CR-SH-04')
+      vi.useFakeTimers()
+      expect(voiceSounds.voiceWasLoaded('CR-SH-04')).toBe(true)
+      start()
+      expect(voiceSounds.voiceWasLoaded('CR-SH-04')).toBe(false)
+      vi.unstubAllGlobals()
+    })
+
+    it('two spawns in one batch land on different cameras (the free cameras are not read from a stale list)', () => {
+      // Non-image entries draw their camera at random, so a stale free list shows up as a shared camera.
+      for (let trial = 0; trial < 40; trial++) {
+        nonImage.length = 0
+        nonImage.push(
+          { id: 'RT-FEED-22', category: 'Camera', anomalyType: 'feed_glitch' },
+          { id: 'RT-FEED-23', category: 'Camera', anomalyType: 'feed_glitch' }
+        )
+        const hook = start()
+        // A catch-up frame (a long pause) can run several spawns before React re-renders.
+        act(() => {
+          vi.advanceTimersByTime(FIRST + 100)
+          vi.advanceTimersByTime(INTERVAL + 100)
+        })
+        const cams = hook.result.current.activeAnomalies.map(a => a.cameraId)
+        expect(cams).toHaveLength(2)
+        expect(new Set(cams).size).toBe(2)
+        hook.unmount()
+      }
+    })
+
     it('a report in the same batch as a new spawn does not overwrite the spawned anomaly', () => {
       ledger.push(entry('a', 1), entry('b', 2))
       const { result } = start()
