@@ -178,11 +178,11 @@ describe('retro.css', () => {
     expect(steady).toBe(true)
   })
 
-  it('blinks the REC dot as a crisp on/off: only opacity 1 and 0.15, 1.6s, no steps(), stopped under reduced motion (#424)', () => {
+  it('blinks the REC dot as a crisp on/off: only opacity 1 and 0.15, 1.6s, step-end, stopped under reduced motion (#424)', () => {
     const anim = decls('.rec-dot', 'animation').find(v => v !== 'none') ?? ''
     expect(anim).toContain('rec-blink')
     expect(anim).toContain('1.6s')
-    expect(anim).not.toContain('steps(')
+    expect(anim).toMatch(/\bsteps\(\s*1\s*,\s*(end|jump-end)\s*\)|\bstep-end\b/)
     let frames = 0
     const levels = new Set<string>()
     const stops: string[] = []
@@ -199,7 +199,7 @@ describe('retro.css', () => {
     })
     expect(frames).toBeGreaterThan(0)
     expect([...levels].sort()).toEqual(['0.15', '1'])
-    expect(stops).toEqual(['0%', '49.99%', '50%', '99.99%'])
+    expect(stops).toEqual(['0%', '50%'])
     let reduced = false
     root_.walkAtRules('media', media => {
       if (!media.params.includes('prefers-reduced-motion: reduce')) return
