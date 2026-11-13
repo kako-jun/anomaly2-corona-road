@@ -47,3 +47,12 @@ describe('reportLabel / ghostDigit', () => {
       expect(ghostDigit(String(d))).not.toBe(String(d))
   })
 })
+
+describe('colonVariant (RT-UI-23)', () => {
+  it('is undefined when off; fast or steady (both reachable) when on', async () => {
+    const { colonVariant } = await import('./hudText')
+    expect(colonVariant(false)).toBeUndefined()
+    expect(colonVariant(true, () => 0.1)).toBe('fast')
+    expect(colonVariant(true, () => 0.9)).toBe('steady')
+  })
+})

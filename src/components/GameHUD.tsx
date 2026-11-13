@@ -2,13 +2,15 @@ import { ReactNode } from 'react'
 import { GameStats } from '../types/game'
 import { cx } from '../utils/cx'
 import { DEFAULT_CONFIG } from '../utils/gameConfig'
-import { ghostDigit, hudLabel } from '../utils/hudText'
+import { ColonVariant, ghostDigit, hudLabel } from '../utils/hudText'
 
 interface GameHUDProps {
   gameTime: string
   stats: GameStats
   /** The monitor effects running now (RT-UI-02/06/07 headings, RT-UI-17/18 digits; src/utils/monitorEffects.ts). */
   fx?: ReadonlySet<string>
+  /** RT-UI-23: how the TIME colon misbehaves (picked by Cabinet when the effect starts). */
+  colonVariant?: ColonVariant
 }
 
 const NO_FX: ReadonlySet<string> = new Set()
@@ -42,7 +44,12 @@ const digits = (
 }
 
 /** Display windows: TIME / REPORTS (VFD) and STRIKES (lamps). */
-export const GameHUD = ({ gameTime, stats, fx = NO_FX }: GameHUDProps) => {
+export const GameHUD = ({
+  gameTime,
+  stats,
+  fx = NO_FX,
+  colonVariant,
+}: GameHUDProps) => {
   const max = DEFAULT_CONFIG.maxMisreports
   const [hh, mm] = gameTime.split(':')
   const correct = String(stats.correctReports)
@@ -54,7 +61,16 @@ export const GameHUD = ({ gameTime, stats, fx = NO_FX }: GameHUDProps) => {
         <div className="vfd vfd--center" role="timer" aria-label={gameTime}>
           <span aria-hidden="true">
             {digits(hh, 0, fx)}
-            <span className="clock-colon">:</span>
+            <span
+              className={cx(
+                'clock-colon',
+                fx.has('RT-UI-23') &&
+                  colonVariant &&
+                  `clock-colon--${colonVariant}`
+              )}
+            >
+              :
+            </span>
             {digits(mm, hh.length, fx)}
           </span>
         </div>

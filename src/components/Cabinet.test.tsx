@@ -857,12 +857,12 @@ describe('Cabinet monitor effects (data-fx, #408)', () => {
       expect(css).toContain(`[data-fx~='${id}']`)
     // the colon: at most 3 blinks a second (period >= 1/3 s), and gone under reduced motion
     const m = css.match(
-      /RT-UI-23.\] \.clock-colon \{\s*animation-duration:\s*([\d.]+)s/
+      /RT-UI-23.\] \.clock-colon--fast \{\s*animation-duration:\s*([\d.]+)s/
     )
     expect(Number(m?.[1])).toBeGreaterThanOrEqual(1 / 3)
     expect(Number(m?.[1])).toBeLessThan(1)
     expect(css).toMatch(
-      /prefers-reduced-motion: reduce\)[^}]*\{\s*\.retro\[data-fx~=.RT-UI-23.\] \.clock-colon \{\s*opacity: 0/
+      /prefers-reduced-motion: reduce\)[^}]*\{\s*\.retro\[data-fx~=.RT-UI-23.\] \.clock-colon--fast,\s*\.retro\[data-fx~=.RT-UI-23.\] \.clock-colon--steady \{\s*opacity: 0/
     )
   })
   it('every CSS rule in monitorEffects.css is for an id in the table', async () => {

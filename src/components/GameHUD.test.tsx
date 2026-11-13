@@ -108,3 +108,26 @@ describe('GameHUD monitor effects (#416)', () => {
     }
   })
 })
+
+describe('GameHUD colon (RT-UI-23)', () => {
+  it.each(['fast', 'steady'] as const)(
+    'puts the %s class on the colon only while the effect runs',
+    v => {
+      const on = render(
+        <GameHUD
+          gameTime="01:02"
+          stats={makeStats()}
+          fx={new Set(['RT-UI-23'])}
+          colonVariant={v}
+        />
+      ).container
+      expect(on.querySelector('.clock-colon')).toHaveClass(`clock-colon--${v}`)
+      const off = render(
+        <GameHUD gameTime="01:02" stats={makeStats()} colonVariant={v} />
+      ).container
+      expect(off.querySelector('.clock-colon')).not.toHaveClass(
+        `clock-colon--${v}`
+      )
+    }
+  )
+})

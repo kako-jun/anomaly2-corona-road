@@ -26,7 +26,7 @@ import {
 } from '../utils/voiceSounds'
 import { HUM_MODES, SOUND_EFFECTS } from '../utils/nonImageEffects'
 import { fxAttribute } from '../utils/monitorEffects'
-import { reportLabel } from '../utils/hudText'
+import { colonVariant, reportLabel } from '../utils/hudText'
 import '../styles/monitorEffects.css'
 import { readAudioVolume, saveVolume } from '../utils/audioSettings'
 import { FeedGlitchKind, forcedFeedGlitch } from '../utils/feedGlitch'
@@ -287,6 +287,8 @@ export const Cabinet = ({
   const fx = inEnding ? NO_EFFECTS : monitorEffects
   // RT-UI-26: one misspelling per run of the effect (a boolean dependency, not the set)
   const misspelled = fx.has('RT-UI-26')
+  const colonActive = fx.has('RT-UI-23')
+  const colonKind = useMemo(() => colonVariant(colonActive), [colonActive])
   const reportKeyLabel = useMemo(() => reportLabel(misspelled), [misspelled])
   useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
   const handleEdgeTap = useCallback(
@@ -339,7 +341,12 @@ export const Cabinet = ({
         />
         <section className="panel" aria-label="Control panel">
           <div className="loupe-host" ref={setLoupeHost} />
-          <GameHUD gameTime={gameTime} stats={stats} fx={fx} />
+          <GameHUD
+            gameTime={gameTime}
+            stats={stats}
+            fx={fx}
+            colonVariant={colonKind}
+          />
           <div className="row knobs">
             <Knob
               label="Brightness"

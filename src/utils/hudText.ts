@@ -41,3 +41,11 @@ export const reportLabel = (
 
 /** The digit used as the faint ghost behind a digit (RT-UI-18): always another digit. */
 export const ghostDigit = (d: string): string => String((Number(d) + 3) % 10)
+
+/** RT-UI-23: the colon either blinks fast or stays lit; one is picked each time the effect starts. */
+export type ColonVariant = 'fast' | 'steady'
+export const colonVariant = (
+  active: boolean,
+  rng: () => number = Math.random
+): ColonVariant | undefined =>
+  active ? (rng() < 0.5 ? 'fast' : 'steady') : undefined
