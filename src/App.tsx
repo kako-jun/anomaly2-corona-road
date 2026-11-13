@@ -21,14 +21,45 @@ import {
 import { SAVE_KEY, load } from './utils/saveData'
 import { resetProgress } from './utils/shiftProgress'
 import { setUpdateSafe } from './utils/swUpdate'
+import { gameAudio } from './utils/audioEngine'
+import { playSynth } from './utils/synthSounds'
+import { soundOnCamera, voiceToHold } from './utils/nonImageEffects'
 
 function App() {
   const [screenKey, screen] = useScreen()
+  const previousScreen = useRef(screenKey)
+  useEffect(() => {
+    if (
+      previousScreen.current !== screenKey &&
+      (screenKey === 'memo-before' || screenKey === 'result')
+    ) {
+      playSynth(gameAudio, 'paper')
+    }
+    previousScreen.current = screenKey
+  }, [screenKey])
+  useEffect(() => {
+    let last = 0
+    const click = (event: MouseEvent) => {
+      const target = event.target
+      if (
+        !(target instanceof Element) ||
+        !target.closest('button:not(:disabled)')
+      )
+        return
+      const now = performance.now()
+      if (now - last < 90) return
+      last = now
+      void gameAudio.unlock().then(() => playSynth(gameAudio, 'button'))
+    }
+    document.addEventListener('click', click)
+    return () => document.removeEventListener('click', click)
+  }, [])
   return <ScreenTransition screenKey={screenKey}>{screen}</ScreenTransition>
 }
 
 function useScreen(): [string, ReactNode] {
   const ready = useRef<Promise<void>>(Promise.resolve())
+  const heldVoice = useRef<string | undefined>(undefined)
   const [loading, setLoading] = useState(false)
   // The title's start key opens the investigation note; its key starts the shift (#297).
   const [memo, setMemo] = useState(false)
@@ -167,6 +198,11 @@ function useScreen(): [string, ReactNode] {
     ]
   }
 
+  heldVoice.current = voiceToHold(
+    activeAnomalies,
+    currentCamera.id,
+    heldVoice.current
+  )
   return [
     'shift',
     <>
@@ -176,6 +212,8 @@ function useScreen(): [string, ReactNode] {
         currentCameraIndex={currentCameraIndex}
         currentCamera={currentCamera}
         anomalyHere={activeAnomalyHere}
+        soundAnomalyHere={soundOnCamera(activeAnomalies, currentCamera.id)}
+        heldVoiceId={heldVoice.current}
         feedGlitchHere={feedGlitchHere}
         openAnomalyIds={activeAnomalies
           .filter(a => !a.detectedAt)

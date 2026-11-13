@@ -6,6 +6,17 @@ import { Anomaly, AnomalyCategory, Camera, GameStats } from '../types/game'
 import { CAMERAS, ENDING_BAR_CAMERA } from '../utils/gameConfig'
 import { KNOB_DEFAULT, brightnessFilter, contrastFilter } from '../utils/knob'
 import { gameAudio, DEFAULT_VOLUME } from '../utils/audioEngine'
+import { playSynth } from '../utils/synthSounds'
+import {
+  VOICE_IDS,
+  VOICE_RETRY_LIMIT,
+  holdVoice,
+  playVoice,
+  probeVoices,
+  releaseVoice,
+  voiceRetryDelay,
+} from '../utils/voiceSounds'
+import { HUM_MODES, SOUND_EFFECTS } from '../utils/nonImageEffects'
 import { readAudioVolume, saveVolume } from '../utils/audioSettings'
 import { FeedGlitchKind, forcedFeedGlitch } from '../utils/feedGlitch'
 import { parseWear } from '../utils/wear'
@@ -32,6 +43,9 @@ interface CabinetProps {
   currentCameraIndex: number
   currentCamera: Camera
   anomalyHere?: Anomaly
+  soundAnomalyHere?: Anomaly
+  /** The voice anomaly whose decoded buffer should be kept (one at a time). */
+  heldVoiceId?: string
   /** The feed glitch of the running feed_glitch anomaly on the watched camera, if any (#77). */
   feedGlitchHere?: FeedGlitchKind
   /** Ids of the anomalies not reported yet (the spawn hint subtitle waits on them). */
@@ -56,6 +70,8 @@ export const Cabinet = ({
   currentCameraIndex,
   currentCamera,
   anomalyHere,
+  soundAnomalyHere,
+  heldVoiceId,
   feedGlitchHere,
   openAnomalyIds,
   unreportedCount,
@@ -80,6 +96,134 @@ export const Cabinet = ({
   const wasOpenRef = useRef(false)
   // where the magnifier loupe is drawn (#341); null until mounted
   const [loupeHost, setLoupeHost] = useState<HTMLDivElement | null>(null)
+
+  const [audioGeneration, setAudioGeneration] = useState(0)
+  useEffect(() => {
+    let cancelled = false
+    let watched: AudioContext | null = null
+    const onState = () => {
+      if (watched?.state === 'running') setAudioGeneration(n => n + 1)
+    }
+    const alreadyRunning = gameAudio.ctx()?.state === 'running'
+    void gameAudio.unlock().then(() => {
+      if (cancelled) return
+      watched = gameAudio.ctx()
+      void probeVoices()
+      watched?.addEventListener('statechange', onState)
+      if (!alreadyRunning) onState()
+    })
+    return () => {
+      cancelled = true
+      watched?.removeEventListener('statechange', onState)
+    }
+  }, [])
+
+  const humMode = HUM_MODES[soundAnomalyHere?.id ?? ''] ?? 'normal'
+  useEffect(() => {
+    if (ending || humMode === 'off') return
+    let cancelled = false
+    let stop = () => {}
+    void gameAudio.unlock().then(() => {
+      if (!cancelled) {
+        const sound = playSynth(
+          gameAudio,
+          humMode === 'loud'
+            ? 'humGrow'
+            : humMode === 'wobble'
+              ? 'wobble'
+              : 'hum'
+        )
+        stop = () => sound?.stop()
+      }
+    })
+    return () => {
+      cancelled = true
+      stop()
+    }
+  }, [ending, humMode, audioGeneration])
+
+  const anomalySoundId = soundAnomalyHere?.id
+  const anomalySound = anomalySoundId
+    ? SOUND_EFFECTS[anomalySoundId]
+    : undefined
+  const audible = volume > 0
+  // Keep one decoded voice while its anomaly is unreported; free it on report, shift end, silence or unmount.
+  // A failed load retries with exponential backoff and gives up after a few tries (a missing or short file is permanent).
+  const [voiceLoads, setVoiceLoads] = useState(0)
+  useEffect(() => {
+    if (!heldVoiceId || ending || !audible) return
+    let cancelled = false
+    let timer: number | undefined
+    const load = (attempt: number) => {
+      void gameAudio
+        .unlock()
+        .then(() => !cancelled && holdVoice(gameAudio, heldVoiceId))
+        .then(ok => {
+          if (cancelled) return
+          if (ok) setVoiceLoads(n => n + 1)
+          else if (attempt + 1 < VOICE_RETRY_LIMIT)
+            timer = window.setTimeout(
+              () => load(attempt + 1),
+              voiceRetryDelay(attempt)
+            )
+        })
+    }
+    load(0)
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+      releaseVoice(heldVoiceId)
+    }
+  }, [heldVoiceId, ending, audible])
+  useEffect(() => {
+    if (!anomalySoundId || !VOICE_IDS.has(anomalySoundId) || ending || !audible)
+      return
+    const playing = playVoice(gameAudio, anomalySoundId)
+    return () => playing?.stop()
+  }, [
+    anomalySoundId,
+    currentCameraIndex,
+    ending,
+    audioGeneration,
+    audible,
+    voiceLoads,
+  ])
+  useEffect(() => {
+    const sound = anomalySound
+    if (!sound || ending || !audible) return
+    let playing: ReturnType<typeof playSynth> = null
+    let timer: number
+    let cancelled = false
+    const play = () => {
+      if (cancelled) return
+      playing = playSynth(gameAudio, sound)
+      if (sound !== 'buzz') {
+        // A fresh interval and a fresh sound variation each time: no fixed loop.
+        timer = window.setTimeout(play, 9000 + Math.random() * 16000)
+      }
+    }
+    // Deferral avoids consuming a sound during React StrictMode's setup/cleanup probe.
+    timer = window.setTimeout(play, 0)
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+      playing?.stop()
+    }
+  }, [
+    anomalySound,
+    anomalySoundId,
+    currentCameraIndex,
+    ending,
+    audioGeneration,
+    audible,
+  ])
+
+  const previousCamera = useRef(currentCameraIndex)
+  useEffect(() => {
+    if (previousCamera.current !== currentCameraIndex && !ending)
+      playSynth(gameAudio, 'static')
+    previousCamera.current = currentCameraIndex
+  }, [currentCameraIndex, ending])
 
   const changeVolume = useCallback((v: number) => {
     gameAudio.setVolume(v)

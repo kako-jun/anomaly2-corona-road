@@ -24,6 +24,7 @@ import {
 } from '../utils/anomalyData'
 import { reportTargetsFor } from '../utils/reportTarget'
 import { isAudible } from '../utils/audioSettings'
+import { voiceReady } from '../utils/voiceSounds'
 import type { FlagEvent } from './useSubtitle'
 import {
   raiseFlagsAtStart,
@@ -293,7 +294,7 @@ export const useGameState = () => {
       for (;;) {
         const spawn = pickSpawn(
           ANOMALY_LEDGER,
-          nonImageLedger,
+          nonImageLedger.filter(entry => voiceReady(entry.id)),
           freeCameraIds,
           used,
           {
@@ -338,7 +339,12 @@ export const useGameState = () => {
         }))
         return 'spawned'
       }
-      return hasUnusedEntry(ANOMALY_LEDGER, nonImageLedger, used, reiwaUnlocked)
+      return hasUnusedEntry(
+        ANOMALY_LEDGER,
+        nonImageLedger.filter(entry => voiceReady(entry.id)),
+        used,
+        reiwaUnlocked
+      )
         ? 'no-free-camera'
         : 'exhausted'
     },

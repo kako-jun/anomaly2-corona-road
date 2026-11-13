@@ -1,13 +1,16 @@
 // @vitest-environment jsdom
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ComponentProps } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Feedback } from '../hooks/useGameState'
 import { makeCameras, makeStats } from '../test/factories'
 import { gameAudio } from '../utils/audioEngine'
+import * as synth from '../utils/synthSounds'
+import * as voice from '../utils/voiceSounds'
+import { saveVolume } from '../utils/audioSettings'
 import { load } from '../utils/saveData'
 import { Cabinet } from './Cabinet'
 
@@ -504,5 +507,211 @@ describe('Cabinet VOL knob (#79)', () => {
     })
     unmount()
     expect(load().settings?.volume).toBe(100)
+  })
+})
+
+describe('sound anomaly lifecycle', () => {
+  it('stops voice on mute and report and resumes it when volume returns', () => {
+    const stop = vi.fn()
+    const play = vi.spyOn(voice, 'playVoice').mockReturnValue({ stop })
+    const anomaly = {
+      id: 'RT-SND-06',
+      cameraId: cameras[0].id,
+      category: 'Environment' as const,
+      phase: 'early' as const,
+    }
+    const props = makeProps()
+    const { rerender, unmount } = render(
+      <Cabinet {...props} soundAnomalyHere={anomaly} />
+    )
+    expect(play).toHaveBeenCalledTimes(1)
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'Volume' }), {
+      key: 'Home',
+    })
+    expect(stop).toHaveBeenCalledTimes(1)
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'Volume' }), {
+      key: 'End',
+    })
+    expect(play).toHaveBeenCalledTimes(2)
+    rerender(<Cabinet {...props} soundAnomalyHere={undefined} />)
+    expect(stop).toHaveBeenCalledTimes(2)
+    unmount()
+    play.mockRestore()
+    saveVolume(70)
+  })
+  it('holds a voice once across re-renders, releases it on unmount, and does not reload on unrelated changes', async () => {
+    const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(true)
+    const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const props = makeProps()
+    const { rerender, unmount } = render(
+      <Cabinet {...props} heldVoiceId="RT-SND-06" currentCameraIndex={0} />
+    )
+    await waitFor(() => expect(hold).toHaveBeenCalledTimes(1))
+    rerender(
+      <Cabinet {...props} heldVoiceId="RT-SND-06" currentCameraIndex={1} />
+    )
+    await act(async () => {})
+    expect(hold).toHaveBeenCalledTimes(1)
+    expect(release).not.toHaveBeenCalled()
+    unmount()
+    expect(release).toHaveBeenCalledWith('RT-SND-06')
+    hold.mockRestore()
+    release.mockRestore()
+  })
+  it('does not reload or release the held voice when the audio context returns to running', async () => {
+    const listeners: (() => void)[] = []
+    const fake = {
+      state: 'suspended',
+      addEventListener: (_t: string, f: () => void) => listeners.push(f),
+      removeEventListener: () => {},
+    }
+    const ctx = vi
+      .spyOn(gameAudio, 'ctx')
+      .mockReturnValue(fake as unknown as AudioContext)
+    const unlock = vi
+      .spyOn(gameAudio, 'unlock')
+      .mockResolvedValue(undefined as never)
+    const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(true)
+    const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const { unmount } = render(
+      <Cabinet {...makeProps()} heldVoiceId="RT-SND-06" />
+    )
+    await waitFor(() => expect(listeners.length).toBeGreaterThan(0))
+    await waitFor(() => expect(hold).toHaveBeenCalledTimes(1))
+    fake.state = 'running'
+    await act(async () => {
+      listeners.forEach(f => f())
+    })
+    await act(async () => {})
+    expect(hold).toHaveBeenCalledTimes(1)
+    expect(release).not.toHaveBeenCalled()
+    unmount()
+    ctx.mockRestore()
+    unlock.mockRestore()
+    hold.mockRestore()
+    release.mockRestore()
+  })
+  it('stops retrying a voice that keeps failing instead of fetching every few seconds forever', async () => {
+    vi.useFakeTimers()
+    const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(false)
+    const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const { unmount } = render(
+      <Cabinet {...makeProps()} heldVoiceId="RT-SND-06" />
+    )
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10 * 60 * 1000)
+    })
+    expect(hold).toHaveBeenCalledTimes(voice.VOICE_RETRY_LIMIT)
+    unmount()
+    hold.mockRestore()
+    release.mockRestore()
+    vi.useRealTimers()
+  })
+  it('repeats intermittent sounds throughout five minutes and stops after report', () => {
+    vi.useFakeTimers()
+    const random = vi.spyOn(Math, 'random').mockReturnValue(0.5)
+    const stop = vi.fn()
+    const play = vi.spyOn(synth, 'playSynth').mockReturnValue({ stop })
+    const anomaly = {
+      id: 'CR-RZ-07',
+      cameraId: cameras[0].id,
+      category: 'Environment' as const,
+      phase: 'early' as const,
+    }
+    const props = makeProps()
+    const { rerender, unmount } = render(
+      <Cabinet {...props} soundAnomalyHere={anomaly} />
+    )
+    act(() => vi.advanceTimersByTime(300000))
+    const count = play.mock.calls.filter(([, name]) => name === 'chime').length
+    expect(count).toBeGreaterThan(10)
+    rerender(<Cabinet {...props} soundAnomalyHere={undefined} />)
+    act(() => vi.advanceTimersByTime(30000))
+    expect(play.mock.calls.filter(([, name]) => name === 'chime')).toHaveLength(
+      count
+    )
+    unmount()
+    play.mockRestore()
+    random.mockRestore()
+    vi.useRealTimers()
+  })
+  it('does not consume a one-shot sound while the volume is zero', async () => {
+    saveVolume(0)
+    const stop = vi.fn()
+    const play = vi.spyOn(synth, 'playSynth').mockReturnValue({ stop })
+    const anomaly = {
+      id: 'CR-RZ-07',
+      cameraId: cameras[0].id,
+      category: 'Environment' as const,
+      phase: 'early' as const,
+    }
+    const { unmount } = render(
+      <Cabinet {...makeProps()} soundAnomalyHere={anomaly} />
+    )
+    expect(play.mock.calls.some(([, name]) => name === 'chime')).toBe(false)
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'Volume' }), {
+      key: 'End',
+    })
+    await waitFor(() =>
+      expect(play.mock.calls.some(([, name]) => name === 'chime')).toBe(true)
+    )
+    unmount()
+    play.mockRestore()
+    saveVolume(70)
+  })
+  it('selects only the watched unreported sound and stops it on camera change and report', async () => {
+    const { soundOnCamera } = await import('../utils/nonImageEffects')
+    const stop = vi.fn()
+    const play = vi
+      .spyOn(synth, 'playSynth')
+      .mockImplementation((_engine, name) =>
+        name === 'buzz' ? { stop } : null
+      )
+    const anomaly = {
+      id: 'RT-SND-03',
+      cameraId: cameras[0].id,
+      category: 'Environment' as const,
+      phase: 'early' as const,
+    }
+    const props = makeProps()
+    const { rerender, unmount } = render(
+      <Cabinet
+        {...props}
+        soundAnomalyHere={soundOnCamera([anomaly], cameras[0].id)}
+      />
+    )
+    await waitFor(() => expect(play).toHaveBeenCalledWith(gameAudio, 'buzz'))
+    rerender(
+      <Cabinet
+        {...props}
+        currentCameraIndex={1}
+        currentCamera={cameras[1]}
+        soundAnomalyHere={soundOnCamera([anomaly], cameras[1].id)}
+      />
+    )
+    expect(stop).toHaveBeenCalledTimes(1)
+    rerender(
+      <Cabinet
+        {...props}
+        soundAnomalyHere={soundOnCamera([anomaly], cameras[0].id)}
+      />
+    )
+    await waitFor(() =>
+      expect(
+        play.mock.calls.filter(([, name]) => name === 'buzz')
+      ).toHaveLength(2)
+    )
+    rerender(
+      <Cabinet
+        {...props}
+        soundAnomalyHere={soundOnCamera(
+          [{ ...anomaly, detectedAt: 1 }],
+          cameras[0].id
+        )}
+      />
+    )
+    expect(stop).toHaveBeenCalledTimes(2)
+    unmount()
+    play.mockRestore()
   })
 })
