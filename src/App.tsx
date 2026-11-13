@@ -24,6 +24,7 @@ import { setUpdateSafe } from './utils/swUpdate'
 import { gameAudio } from './utils/audioEngine'
 import { playSynth } from './utils/synthSounds'
 import { soundOnCamera, voiceToHold } from './utils/nonImageEffects'
+import { runningMonitorEffects } from './utils/monitorEffects'
 
 function App() {
   const [screenKey, screen] = useScreen()
@@ -215,6 +216,7 @@ function useScreen(): [string, ReactNode] {
         soundAnomalyHere={soundOnCamera(activeAnomalies, currentCamera.id)}
         heldVoiceId={heldVoice.current}
         feedGlitchHere={feedGlitchHere}
+        monitorEffects={runningMonitorEffects(activeAnomalies)}
         openAnomalyIds={activeAnomalies
           .filter(a => !a.detectedAt)
           .map(a => a.id)}

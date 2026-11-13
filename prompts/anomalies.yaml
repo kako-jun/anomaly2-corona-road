@@ -6981,10 +6981,11 @@ anomalies:
       ja: 'カーソルや反応表示が乱れる。'
       en: 'Cursor and hover feedback glitch.'
   - id: 'RT-UI-11'
-    status: 'planned'
+    status: 'produced'
     kind: 'non_image'
     category: 'Surreal'
     anomaly_type: 'ui_corruption'
+    exclusive: 'cabinet-transform'
     detail: 'cabinet tilted: モニターの筐体ごと画面が数度傾く（枠・ボタンも一緒に傾く。操作は変わらない）。'
     memo:
       ja: 'モニターごと画面が傾いた。'

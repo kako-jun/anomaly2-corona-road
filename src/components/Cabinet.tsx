@@ -17,6 +17,8 @@ import {
   voiceRetryDelay,
 } from '../utils/voiceSounds'
 import { HUM_MODES, SOUND_EFFECTS } from '../utils/nonImageEffects'
+import { fxAttribute } from '../utils/monitorEffects'
+import '../styles/monitorEffects.css'
 import { readAudioVolume, saveVolume } from '../utils/audioSettings'
 import { FeedGlitchKind, forcedFeedGlitch } from '../utils/feedGlitch'
 import { parseWear } from '../utils/wear'
@@ -26,6 +28,8 @@ import { GameHUD } from './GameHUD'
 import { Knob } from './Knob'
 import { shouldAlert } from '../utils/reportAlert'
 import { ReportButton, ReportDialog } from './ReportPanel'
+
+const NO_EFFECTS: ReadonlySet<string> = new Set()
 
 // Fixed at module load: changing `?wear=` needs a page reload.
 const WEAR = parseWear(window.location.search)
@@ -48,6 +52,8 @@ interface CabinetProps {
   heldVoiceId?: string
   /** The feed glitch of the running feed_glitch anomaly on the watched camera, if any (#77). */
   feedGlitchHere?: FeedGlitchKind
+  /** The monitor-scope effects running now (ui_corruption / rule_break, src/utils/monitorEffects.ts); absent = none. */
+  monitorEffects?: ReadonlySet<string>
   /** Ids of the anomalies not reported yet (the spawn hint subtitle waits on them). */
   openAnomalyIds?: string[]
   /** Anomalies out there that nobody has reported yet (drives the REPORT lamp, #344). */
@@ -73,6 +79,7 @@ export const Cabinet = ({
   soundAnomalyHere,
   heldVoiceId,
   feedGlitchHere,
+  monitorEffects = NO_EFFECTS,
   openAnomalyIds,
   unreportedCount,
   feedback,
@@ -291,6 +298,7 @@ export const Cabinet = ({
   return (
     <div
       className="retro"
+      data-fx={fxAttribute(monitorEffects)}
       style={WEAR === null ? undefined : ({ '--wear': WEAR } as CSSProperties)}
     >
       <main className="cabinet" ref={cabinetRef}>
