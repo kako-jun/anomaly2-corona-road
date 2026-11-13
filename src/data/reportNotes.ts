@@ -5,8 +5,8 @@
  * FROM this table, so a picture cannot disagree with it. The words are the category definitions of
  * `prompts/README.md` (the ledger) in short; change both together.
  *
- * The pictures are not preloaded: they are loaded when the dialog opens (`loading="lazy"` is not needed, the dialog
- * mounts them), so they sit outside the 800KB UI preload budget and have their own ceilings below.
+ * The pictures of the browser language are preloaded on idle time (#396, `preloadReportNotes`); the dialog
+ * mounts the same URLs, so they sit outside the 800KB UI preload budget and have their own ceilings below.
  */
 import table from './reportNotes.json'
 import type { Language } from '../utils/language'
@@ -51,3 +51,7 @@ export const reportNote = (
 
 /** The raw table for the vitest checks. */
 export const REPORT_NOTE_TABLE = table
+
+/** The picture files of one language (every category), for the preload (#396). */
+export const reportNoteUrls = (language: Language): string[] =>
+  table.notes.map(n => `${REPORT_NOTES_DIR}/${n[language].file}`)
