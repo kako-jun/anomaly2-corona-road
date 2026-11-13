@@ -414,7 +414,7 @@ def main():
             p = ctx.new_page()
             p.goto(url)
             p.wait_for_selector(".start-screen")
-            still = p.evaluate("() => document.getAnimations().filter(a => a.animationName && a.animationName.startsWith('start-pan')).length === 0")
+            still = p.evaluate("() => document.getAnimations().filter(a => a.animationName && a.animationName.startsWith('start-pan') || a.animationName.startsWith('start-blur')).length === 0")
             faint = p.evaluate("() => { const b = getComputedStyle(document.querySelector('.start-blur')); return parseFloat(b.opacity) > 0 && parseFloat(b.opacity) < 1 && /blur/.test(b.backdropFilter) }")
             print(f"reduced motion: photo and blur patch still, patch faint and fixed -> {'ok' if still and faint else 'MOVES / not faint'}")
             bad += not (still and faint)
