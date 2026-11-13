@@ -5,19 +5,16 @@
       "ja": {
         "file": "ja-1.webp",
         "heading": "① カメラ切替",
-        "lines": ["番号ボタンをタップ。", "または、画面の左右の枠をタップ。"],
-        "alt": "カメラ切替。番号ボタンをタップ。または、画面の左右の枠をタップ。",
+        "lines": ["番号ボタンをタップ。", "または、左右の枠をタップ。"],
+        "alt": "カメラ切替。番号ボタンをタップ。または、左右の枠をタップ。",
         "width": 600,
         "height": 450
       },
       "en": {
         "file": "en-1.webp",
         "heading": "1. SWITCH CAMERA",
-        "lines": [
-          "Tap a number button,",
-          "or tap the frame at the screen's left or right."
-        ],
-        "alt": "Switch camera. Tap a number button, or tap the frame at the screen's left or right.",
+        "lines": ["Tap a number button,", "or tap the left or right frame."],
+        "alt": "Switch camera. Tap a number button, or tap the left or right frame.",
         "width": 600,
         "height": 450
       }
@@ -41,10 +38,10 @@
         "heading": "2. KNOBS",
         "lines": [
           "Drag a knob left or right",
-          "for brightness, contrast and volume.",
+          "for brightness, contrast, volume.",
           "Tap it to reset."
         ],
-        "alt": "Knobs. Drag a knob left or right for brightness, contrast and volume. Tap it to reset.",
+        "alt": "Knobs. Drag a knob left or right for brightness, contrast, volume. Tap it to reset.",
         "width": 600,
         "height": 450
       }
