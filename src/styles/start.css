@@ -440,14 +440,18 @@ body.start-open #root {
   }
 }
 
-/* ----- the top right (#84, #426): small text keys in one row, FULL (fullscreen) left of TRANSFER SAVE (the panel itself is in transfer.css) ----- */
-.start-topright {
+/* ----- the top corners (#84, #426): small text keys. TRANSFER SAVE at the top right, FULL / EXIT (fullscreen) at the top left, away from the signboard (the right side of the photo, x 59-86%) (the panel itself is in transfer.css) ----- */
+.start-fullscreen-key,
+.start-transfer-key {
   position: absolute;
   top: max(10px, env(safe-area-inset-top));
-  right: 10px;
   z-index: 3;
-  display: flex;
-  gap: 8px;
+}
+.start-transfer-key {
+  right: 10px;
+}
+.start-fullscreen-key {
+  left: 10px;
 }
 .start-top-key {
   min-height: 44px;
@@ -468,10 +472,4 @@ body.start-open #root {
 .start-top-key:focus-visible {
   outline: 3px solid #ffd27a;
   outline-offset: 3px;
-}
-/* a narrow, not-very-tall portrait screen (about 9:16 and wider than 27:50; measured with check:title: 360x640 82%, 375x667 83%, 390x700 84%, 430x740 84% of the signboard clear, below the 85% floor; 360x680 85%, 390x844 92% pass): the FULL / EXIT key would cover the signboard, so it is not shown there. TRANSFER SAVE stays. (#426) */
-@media (max-width: 480px) and (min-aspect-ratio: 27/50) and (max-aspect-ratio: 1/1) {
-  .start-top-key.start-fullscreen-key {
-    display: none;
-  }
 }

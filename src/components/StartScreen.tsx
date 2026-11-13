@@ -156,28 +156,24 @@ export const StartScreen = ({
         {perf !== 'off' && <TitleNoise />}
       </div>
       <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
-      {(canFull || onTransferred) && (
-        <div className="start-topright">
-          {canFull && (
-            <button
-              type="button"
-              className="start-top-key start-fullscreen-key"
-              onClick={() => void toggleFullscreen()}
-            >
-              {full ? 'EXIT' : 'FULL'}
-            </button>
-          )}
-          {onTransferred && (
-            <button
-              type="button"
-              ref={transferKeyRef}
-              className="start-top-key"
-              onClick={() => setTransferring(true)}
-            >
-              TRANSFER SAVE
-            </button>
-          )}
-        </div>
+      {canFull && (
+        <button
+          type="button"
+          className="start-top-key start-fullscreen-key"
+          onClick={() => void toggleFullscreen()}
+        >
+          {full ? 'EXIT' : 'FULL'}
+        </button>
+      )}
+      {onTransferred && (
+        <button
+          type="button"
+          ref={transferKeyRef}
+          className="start-top-key start-transfer-key"
+          onClick={() => setTransferring(true)}
+        >
+          TRANSFER SAVE
+        </button>
       )}
       {onTransferred && transferring && (
         <TransferPanel

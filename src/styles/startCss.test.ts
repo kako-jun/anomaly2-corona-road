@@ -210,22 +210,3 @@ describe('start.css: the drifting blur patch (#331)', () => {
     expect(still).toBe(true)
   })
 })
-
-describe('start.css: the fullscreen key on a narrow short portrait screen (#426)', () => {
-  it('is display:none inside the narrow-portrait media query only, and shown otherwise', () => {
-    let hidden = false
-    let outside = false
-    root.walkRules('.start-top-key.start-fullscreen-key', (r: Rule) => {
-      r.walkDecls('display', (d: Declaration) => {
-        const p = r.parent as AtRule | undefined
-        if (p?.type === 'atrule' && p.name === 'media') {
-          expect(p.params).toMatch(/max-width:\s*480px/)
-          expect(p.params).toMatch(/aspect-ratio/)
-          if (d.value === 'none') hidden = true
-        } else outside = true
-      })
-    })
-    expect(hidden).toBe(true)
-    expect(outside).toBe(false)
-  })
-})
