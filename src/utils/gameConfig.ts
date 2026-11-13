@@ -154,7 +154,7 @@ export const DIALOGUE_CONFIG = {
     },
     hotCount: 3,
     hotWindowMs: 90_000,
-    hotCleanCount: 4,
+    hotCleanCount: 5,
     coldAfterMs: 120_000,
     brinkMisreports: DEFAULT_CONFIG.maxMisreports - 1,
     tenthCount: 10,

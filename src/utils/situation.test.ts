@@ -25,7 +25,7 @@ const seeded = (seed: number) => () => {
 }
 
 describe('situation detection (every opportunity speaks)', () => {
-  it('hot: three finds within the window, or the fourth find with no false report', () => {
+  it('hot: three finds within the window, or the fifth find with no false report', () => {
     const t = createSituationTracker(ALWAYS, () => 0)
     t.found(10_000, 10_000, 1, 0)
     t.found(40_000, 40_000, 2, 0)
@@ -33,17 +33,18 @@ describe('situation detection (every opportunity speaks)', () => {
     t.found(70_000, 70_000, 3, 0)
     expect(t.take(70_000)).toBe('hot')
 
+    // The clean run counts from the fifth find (hotCleanCount): the fourth is the quota find, which has its own line.
     const slow = createSituationTracker(ALWAYS, () => 0)
-    for (const [i, at] of [0, 200_000, 400_000].entries())
+    const times = [0, 100_000, 200_000, 300_000, 400_000]
+    for (const [i, at] of times.slice(0, 4).entries())
       slow.found(at, at, i + 1, 0)
-    expect(slow.take(400_000)).toBeNull() // too far apart
-    slow.found(450_000, 450_000, 4, 0)
-    expect(slow.take(450_000)).toBe('hot') // fourth with a clean run
+    expect(slow.take(300_000)).toBeNull() // too far apart, and not yet the fifth
+    slow.found(times[4], times[4], 5, 0)
+    expect(slow.take(times[4])).toBe('hot') // fifth with a clean run
 
     const missed = createSituationTracker(ALWAYS, () => 0)
-    for (const [i, at] of [0, 200_000, 400_000, 450_000].entries())
-      missed.found(at, at, i + 1, 1)
-    expect(missed.take(450_000)).toBeNull() // a false report spoils the clean run
+    for (const [i, at] of times.entries()) missed.found(at, at, i + 1, 1)
+    expect(missed.take(times[4])).toBeNull() // a false report spoils the clean run
   })
   it('tenth: the tenth find of the shift, and it wins over hot', () => {
     const t = createSituationTracker(ALWAYS, () => 0)
@@ -99,6 +100,13 @@ describe('situation detection (every opportunity speaks)', () => {
     expect(v.take(2000)).toBe('hot')
     v.found(3000, 3000, 10, 0) // tenth is below hot: dropped
     expect(v.take(3000)).toBe('hot')
+  })
+  it('a hot that already waits is dropped when the quota is reached', () => {
+    const t = createSituationTracker(ALWAYS, () => 0)
+    for (const [i, at] of [0, 1000, 2000].entries()) t.found(at, at, i + 1, 0)
+    expect(t.take(2000)).toBe('hot') // waits (three finds in the window)
+    t.found(3000, 3000, 4, 0, true) // the fourth find reaches the quota
+    expect(t.take(3000)).toBeNull()
   })
   it('the find that reaches the quota does not also offer hot (the quota conversation speaks there)', () => {
     const t = createSituationTracker(ALWAYS, () => 0)

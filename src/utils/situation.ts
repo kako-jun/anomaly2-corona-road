@@ -114,6 +114,8 @@ export const createSituationTracker = (
   return {
     found: (playMs, wallMs, found, misreports, quotaJustReached = false) => {
       times.push(playMs)
+      // The quota conversation speaks now: a cheerful hot that already waits would follow it too closely.
+      if (quotaJustReached && pending?.situation === 'hot') pending = null
       lastFindAt = playMs
       coldSpent = 0
       if (found === cfg.tenthCount) {

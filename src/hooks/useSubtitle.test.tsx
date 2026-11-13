@@ -116,6 +116,14 @@ const H = vi.hoisted(() => {
     ),
     e(
       'situation',
+      'situation-hot-1',
+      { situation: 'hot' },
+      'light',
+      'sh1a',
+      'sh1b'
+    ),
+    e(
+      'situation',
       'situation-tenth-1',
       { situation: 'tenth' },
       'light',
@@ -1176,6 +1184,21 @@ describe('useSubtitle: situations (#428)', () => {
     expect(w.seen).toContain('sb1a')
     // It is spent when shown: the bag has not yet refilled, a second one is never the same text.
     expect(load().usedChatter).toContain('situation-brink-1')
+  })
+
+  it('a clean run (five finds, no false report) brings a hot conversation in the real hook, after the quota line', () => {
+    const d = driver()
+    afterOpening()
+    const w = watch(d.result)
+    for (let n = 1; n <= 5; n++) {
+      // Finds are far apart in play time, so only the clean run (not three-in-a-row) can make hot.
+      d.set({ foundThisPlay: n, elapsedMs: 100_000 * n })
+      w.step(60_000)
+    }
+    w.step(4 * SILENCE)
+    expect(w.seen).toContain('qr1a')
+    expect(w.seen).toContain('sh1a')
+    expect(w.seen.indexOf('sh1a')).toBeGreaterThan(w.seen.indexOf('qr1a'))
   })
 
   it('a miss of the dice says nothing and uses nothing up', () => {
