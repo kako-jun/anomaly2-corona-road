@@ -259,10 +259,10 @@ export const Cabinet = ({
     wasOpenRef.current = reportOpen
   }, [reportOpen])
 
-  // The ending's virtual camera (CAM 09) takes no camera operation at all: keys and swipes are ignored (#273).
+  // The ending's virtual camera (CAM 09) takes no camera operation at all: keys and edge taps are ignored (#273).
   const inEnding = ending === 'ending'
   useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
-  const handleSwipe = useCallback(
+  const handleEdgeTap = useCallback(
     (d: 'next' | 'prev') => {
       if (!inEnding) onSwitch(d)
     },
@@ -306,7 +306,7 @@ export const Cabinet = ({
             ending === 'ending' ? undefined : (FORCED_GLITCH ?? feedGlitchHere)
           }
           feedGlitchForced={FORCED_GLITCH !== undefined}
-          onSwipe={handleSwipe}
+          onEdgeTap={handleEdgeTap}
           loupeHost={loupeHost}
         />
         <section className="panel" aria-label="Control panel">

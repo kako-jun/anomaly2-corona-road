@@ -7057,7 +7057,7 @@ anomalies:
     kind: 'non_image'
     category: 'Surreal'
     anomaly_type: 'ui_corruption'
-    detail: 'camera key missing: カメラ選択キー（番号キー1〜8のどれか1つ）が消えて枠だけ残る。そのカメラへはスワイプや他のキー経由で行けるので詰まない。'
+    detail: 'camera key missing: カメラ選択キー（番号キー1〜8のどれか1つ）が消えて枠だけ残る。そのカメラへは画面端タップや他のキー経由で行けるので詰まない。'
     memo:
       ja: 'カメラのキーが一つ消えている。'
       en: 'One camera key has vanished.'
@@ -7066,10 +7066,10 @@ anomalies:
     kind: 'non_image'
     category: 'Surreal'
     anomaly_type: 'ui_corruption'
-    detail: 'loupe broken: ルーペが使えなくなる（長押ししても出ない / 出ても拡大されず素通し / すぐ消える）。ルーペは画面に説明を出さない仕様なので、気づく手がかりは、操作パネルで細部を見ようと長押しした人が試した時に出ない、という体験そのもの。異変の間でも長押し以外の操作（報告・カメラ切替・タップ）は何も奪われない。'
+    detail: 'loupe broken: ルーペが使えなくなる（押しても出ない / 出ても拡大されず素通し / すぐ消える）。ルーペは画面に説明を出さない仕様なので、気づく手がかりは、操作パネルで細部を見ようと押した人が試した時に出ない、という体験そのもの。異変の間でも押す以外の操作（報告・カメラ切替・タップ）は何も奪われない。'
     memo:
       ja: 'ルーペが出てこない。'
-      en: 'The loupe does not work when held.'
+      en: 'The loupe does not work when pressed.'
   - id: 'RT-UI-22'
     status: 'planned'
     kind: 'non_image'
@@ -7215,7 +7215,7 @@ anomalies:
     kind: 'non_image'
     category: 'Surreal'
     anomaly_type: 'rule_break'
-    detail: 'switch direction reversed: スワイプ・画面端タップ・矢印キー（左右）によるカメラ切替の向きが全部逆になる（左へ払うと前のカメラ、左端タップと右矢印が前のカメラ）。数字キー（1〜8）での直接選択は向きがないので逆にならず、どのカメラへも必ず行ける。'
+    detail: 'switch direction reversed: 画面端タップ・矢印キー（左右）によるカメラ切替の向きが全部逆になる（左端タップと右矢印が前のカメラ）。数字キー（1〜8）での直接選択は向きがないので逆にならず、どのカメラへも必ず行ける。'
     memo:
       ja: '切替の向きが逆になっている。'
       en: 'The switching direction is reversed.'
@@ -7260,7 +7260,7 @@ anomalies:
     kind: 'non_image'
     category: 'Surreal'
     anomaly_type: 'rule_break'
-    detail: 'switch lag: カメラ選択キーを押してから映像が切り替わるまで約1秒の遅れが出る（押した直後は元の映像のままで、選択ランプは先に動く）。遅れるのはスワイプ・画面端タップ・矢印キー・数字キー・カメラ選択キーのすべての切替操作（RT-RULE-01 の向き逆と同時には出ない）。RT-FEED-14 の切替不能とは別で、必ず切り替わる。'
+    detail: 'switch lag: カメラ選択キーを押してから映像が切り替わるまで約1秒の遅れが出る（押した直後は元の映像のままで、選択ランプは先に動く）。遅れるのは画面端タップ・矢印キー・数字キー・カメラ選択キーのすべての切替操作（RT-RULE-01 の向き逆と同時には出ない）。RT-FEED-14 の切替不能とは別で、必ず切り替わる。'
     memo:
       ja: 'カメラ切替の反応が遅い。'
       en: 'Camera switching responds late.'

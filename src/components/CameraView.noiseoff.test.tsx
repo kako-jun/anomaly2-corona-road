@@ -26,10 +26,10 @@ const rect = () =>
   }) as DOMRect
 
 let host: HTMLDivElement
-let onSwipe: ReturnType<typeof vi.fn>
+let onEdgeTap: ReturnType<typeof vi.fn>
 
 const setup = (withHost = true) => {
-  onSwipe = vi.fn()
+  onEdgeTap = vi.fn()
   const view = render(
     <CameraView
       camera={cams[0]}
@@ -38,7 +38,7 @@ const setup = (withHost = true) => {
       subtitle={{ text: '', visible: false }}
       brightness={1}
       contrast={1}
-      onSwipe={onSwipe}
+      onEdgeTap={onEdgeTap}
       loupeHost={withHost ? host : undefined}
     />
   )
@@ -92,7 +92,7 @@ describe('noise off by double tap (#342)', () => {
     tap(glass)
     act(() => void vi.advanceTimersByTime(1000))
     expect(isOff(glass)).toBe(false)
-    expect(onSwipe).not.toHaveBeenCalled()
+    expect(onEdgeTap).not.toHaveBeenCalled()
     expect(view.container.querySelector('.noise-hint')).toBeNull()
   })
 
@@ -107,6 +107,28 @@ describe('noise off by double tap (#342)', () => {
     expect(isOff(glass)).toBe(true)
     act(() => void vi.advanceTimersByTime(1000))
     expect(isOff(glass)).toBe(false)
+  })
+
+  it('the loupe flashes on each tap of a knock (instant loupe, #409) but the knock still works and nothing is left open', () => {
+    const { glass } = setup()
+    const open = () => host.querySelector('[data-testid="loupe"]')
+    const ev = {
+      pointerId: 1,
+      clientX: 300,
+      clientY: 300,
+      pointerType: 'touch',
+      button: 0,
+    }
+    fireEvent.pointerDown(glass, ev)
+    expect(open()).not.toBeNull()
+    fireEvent.pointerUp(glass, ev)
+    expect(open()).toBeNull()
+    act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS / 2))
+    fireEvent.pointerDown(glass, ev)
+    expect(open()).not.toBeNull()
+    fireEvent.pointerUp(glass, ev)
+    expect(open()).toBeNull()
+    expect(isOff(glass)).toBe(true)
   })
 
   it('knocking again resets the remaining time to the full length (not an extension)', () => {
@@ -143,13 +165,13 @@ describe('noise off by double tap (#342)', () => {
       button: 0,
     }
     fireEvent.pointerDown(glass, ev)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 5))
+    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 5))
     fireEvent.pointerUp(glass, ev)
     tap(glass)
     expect(isOff(glass)).toBe(false)
   })
 
-  it('a swipe is not a tap and clears a pending first tap', () => {
+  it('a horizontal drag is not a tap, switches no camera and clears a pending first tap', () => {
     const { glass } = setup()
     tap(glass)
     fireEvent.pointerDown(glass, {
@@ -166,7 +188,7 @@ describe('noise off by double tap (#342)', () => {
       pointerType: 'touch',
       button: 0,
     })
-    expect(onSwipe).toHaveBeenCalledWith('next')
+    expect(onEdgeTap).not.toHaveBeenCalled()
     tap(glass)
     expect(isOff(glass)).toBe(false)
   })
@@ -180,18 +202,18 @@ describe('noise off by double tap (#342)', () => {
       pointerType: 'touch',
       button: 0,
     })
-    // small drag (over the hold slop, under the swipe distance)
+    // small drag (over the tap slop)
     tap(glass)
     fireEvent.pointerDown(glass, ev(300))
-    fireEvent.pointerMove(glass, ev(300 + LOUPE.HOLD_SLOP_PX + 5))
-    fireEvent.pointerUp(glass, ev(300 + LOUPE.HOLD_SLOP_PX + 5))
+    fireEvent.pointerMove(glass, ev(300 + LOUPE.TAP_SLOP_PX + 5))
+    fireEvent.pointerUp(glass, ev(300 + LOUPE.TAP_SLOP_PX + 5))
     tap(glass)
     expect(isOff(glass)).toBe(false)
     act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS + 50))
     // loupe
     tap(glass)
     fireEvent.pointerDown(glass, ev(300))
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 5))
+    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 5))
     fireEvent.pointerUp(glass, ev(300))
     tap(glass)
     expect(isOff(glass)).toBe(false)
@@ -207,7 +229,7 @@ describe('noise off by double tap (#342)', () => {
     const { bezel, glass } = setup()
     tap(bezel, 50, 300)
     tap(bezel, 50, 300)
-    expect(onSwipe).toHaveBeenCalledTimes(2)
+    expect(onEdgeTap).toHaveBeenCalledTimes(2)
     expect(isOff(glass)).toBe(false)
   })
 
@@ -223,7 +245,7 @@ describe('noise off by double tap (#342)', () => {
       button: 0,
     }
     fireEvent.pointerDown(glass, ev)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 5))
+    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 5))
     expect(host.querySelector('.loupe')!.classList.contains('noise-off')).toBe(
       true
     )
