@@ -10,6 +10,7 @@ import { playSynth } from '../utils/synthSounds'
 import {
   VOICE_IDS,
   VOICE_RETRY_LIMIT,
+  voiceWasLoaded,
   holdVoice,
   playVoice,
   probeVoices,
@@ -169,7 +170,9 @@ export const Cabinet = ({
               () => load(attempt + 1),
               voiceRetryDelay(attempt)
             )
-          else onVoiceUnavailable?.(heldVoiceId)
+          // A voice that played once may have been heard: a failed re-read later never takes it back.
+          else if (!voiceWasLoaded(heldVoiceId))
+            onVoiceUnavailable?.(heldVoiceId)
         })
     }
     load(0)

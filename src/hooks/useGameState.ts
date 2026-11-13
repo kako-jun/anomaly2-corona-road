@@ -257,13 +257,14 @@ export const useGameState = () => {
           correctReports: prev.correctReports + 1,
           detectedAnomalies: prev.detectedAnomalies + 1,
         }))
-        setActiveAnomalies(prev =>
-          prev.map(a =>
-            a.id === anomalyOnCamera.id
-              ? { ...a, detectedAt: statsRef.current.currentTime }
-              : a
-          )
+        // The ref is updated here too (not only by the effect after render), so a withdrawal in the same tick sees
+        // this anomaly as reported and leaves it alone.
+        activeAnomaliesRef.current = activeAnomaliesRef.current.map(a =>
+          a.id === anomalyOnCamera.id
+            ? { ...a, detectedAt: statsRef.current.currentTime }
+            : a
         )
+        setActiveAnomalies(activeAnomaliesRef.current)
         pushFeedback('correct', `CONFIRMED — ${anomalyOnCamera.category}`)
         if (afterChildIdsRef.current.has(anomalyOnCamera.id)) {
           afterChildReportedRef.current += 1
@@ -358,8 +359,9 @@ export const useGameState = () => {
         }))
         return 'spawned'
       }
-      // Not filtered by voiceReady: a voice still waiting for its file to answer must keep the shift from being
-      // called exhausted (that is permanent for the shift); the failed ones are taken out by the retry in the loop.
+      // Not filtered by voiceReady: a voice whose file has not answered yet must keep the shift from being called
+      // exhausted (that is permanent for the shift). A voice whose probe failed (404, under 60 s) is never used up,
+      // so it counts as unused for the rest of the shift; that only keeps the cheap retry going, nothing is drawn.
       return hasUnusedEntry(ANOMALY_LEDGER, nonImageLedger, used, reiwaUnlocked)
         ? 'no-free-camera'
         : 'exhausted'

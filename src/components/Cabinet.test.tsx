@@ -615,6 +615,30 @@ describe('sound anomaly lifecycle', () => {
     release.mockRestore()
     vi.useRealTimers()
   })
+  it('does not take back a voice that was decoded once, even if a later re-read keeps failing', async () => {
+    vi.useFakeTimers()
+    const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(false)
+    const loaded = vi.spyOn(voice, 'voiceWasLoaded').mockReturnValue(true)
+    const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const gone = vi.fn()
+    const { unmount } = render(
+      <Cabinet
+        {...makeProps()}
+        heldVoiceId="RT-SND-06"
+        onVoiceUnavailable={gone}
+      />
+    )
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10 * 60 * 1000)
+    })
+    expect(hold).toHaveBeenCalledTimes(voice.VOICE_RETRY_LIMIT)
+    expect(gone).not.toHaveBeenCalled()
+    unmount()
+    hold.mockRestore()
+    loaded.mockRestore()
+    release.mockRestore()
+    vi.useRealTimers()
+  })
   it('repeats intermittent sounds throughout five minutes and stops after report', () => {
     vi.useFakeTimers()
     const random = vi.spyOn(Math, 'random').mockReturnValue(0.5)

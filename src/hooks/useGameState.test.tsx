@@ -678,6 +678,35 @@ describe('voice anomalies (#407)', () => {
       expect(hook.result.current.feedback?.message).toMatch(/NO ANOMALY HERE/)
     })
 
+    it('a report and a withdrawal in the same tick count the anomaly once (reported, not taken back)', () => {
+      const hook = running()
+      const cam = hook.result.current.activeAnomalies[0].cameraId
+      act(() =>
+        hook.result.current.switchCamera(
+          hook.result.current.cameras.findIndex(c => c.id === cam)
+        )
+      )
+      act(() => {
+        hook.result.current.reportAnomaly('Environment')
+        hook.result.current.withdrawAnomaly('RT-SND-06')
+      })
+      expect(hook.result.current.stats.totalAnomalies).toBe(1)
+      expect(hook.result.current.stats.correctReports).toBe(1)
+      expect(hook.result.current.activeAnomalies).toHaveLength(1)
+    })
+
+    it('a voice taken back after the child was found is not counted as one that appeared after it (no false ending)', () => {
+      readyVoices.add('RT-SND-06')
+      nonImage.push(voice())
+      saveData.update(cur => ({ ...cur, flags: { ...cur.flags, child: true } }))
+      const { result } = start()
+      advance(FIRST + 100)
+      expect(result.current.activeAnomalies).toHaveLength(1)
+      act(() => result.current.withdrawAnomaly('RT-SND-06'))
+      advance(DEFAULT_CONFIG.totalDurationMs)
+      expect(result.current.ending?.closing).toBe('dawn')
+    })
+
     it('leaves a reported voice and an unknown id alone', () => {
       const hook = running()
       const cam = hook.result.current.activeAnomalies[0].cameraId
