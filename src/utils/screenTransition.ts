@@ -16,7 +16,7 @@ export interface TransitionTiming {
 const DEFAULT_TIMING: TransitionTiming = { outMs: 200, inMs: 200 }
 
 /**
- * The start of a shift (the note before it -> the monitor): kako-jun wants the monitor to appear slowly out of
+ * The start of a shift (the note before it, or the result note's "once more", -> the monitor): kako-jun wants the monitor to appear slowly out of
  * the black, about 3x the usual time (#336). The darkening stays short (the note is only left), the rest is the
  * slow rise: 1200 ms in all.
  */

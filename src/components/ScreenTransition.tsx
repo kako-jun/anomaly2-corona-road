@@ -61,7 +61,7 @@ export const ScreenTransition = ({
       timing.outMs + FALLBACK_MS
     )
     return () => clearTimeout(timer)
-    // timing is derived from shownKey/screenKey (both in deps) and only read for the fallback delay.
+    // timing is derived from shownKey and screenKey (screenKey is in deps; shownKey only changes together with dipping) and is only read for the fallback delay.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dipping, screenKey])
 

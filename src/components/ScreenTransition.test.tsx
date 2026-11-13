@@ -49,6 +49,8 @@ describe('transitionTiming', () => {
       ['shift', 'result'],
       ['result', 'title'],
       ['memo-before', 'title'],
+      ['shift', 'memo-before'],
+      ['result', 'memo-before'],
     ]
     for (const [from, to] of others) {
       expect(totalMs(transitionTiming(from, to))).toBe(SCREEN_FADE_MS)
