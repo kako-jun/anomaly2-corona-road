@@ -80,15 +80,19 @@ describe('Reiwa ids from the ledger (#83)', () => {
     const e = parseLedger(ledgerOf(raw('a', { reiwa: true })))
     expect(reiwaIdsOf([...e, ...e])).toEqual(['a'])
   })
-  it('real ledger: exactly the six reiwa: true entries, all image + produced', () => {
+  it('real ledger: six image and three sound Reiwa entries are produced', () => {
     const yaml = parseYaml(
       readFileSync(resolve(__dirname, '../../prompts/anomalies.yaml'), 'utf8')
     )
     const marked = parseLedgerRecords(yaml).filter(r => r.reiwa)
-    expect(marked).toHaveLength(6)
+    expect(marked).toHaveLength(9)
+    expect(marked.every(r => r.status === 'produced')).toBe(true)
     expect(
-      marked.every(r => r.kind === 'image' && r.status === 'produced')
-    ).toBe(true)
+      marked
+        .filter(r => r.kind === 'non_image')
+        .map(r => r.id)
+        .sort()
+    ).toEqual(['CR-RZ-07', 'CR-RZ-08', 'CR-RZ-09'])
     const ids = reiwaIdsOf(parseLedger(yaml))
     expect(new Set(ids).size).toBe(ids.length)
     expect(ids.sort()).toEqual([

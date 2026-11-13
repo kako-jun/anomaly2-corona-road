@@ -1,4 +1,6 @@
 import { CSSProperties, useId, useRef } from 'react'
+import { gameAudio } from '../utils/audioEngine'
+import { playSynth } from '../utils/synthSounds'
 import {
   dragKnobValue,
   keyKnobValue,
@@ -25,6 +27,15 @@ export const Knob = ({
   onChange,
 }: KnobProps) => {
   const hintId = useId()
+  const lastSound = useRef(0)
+  const change = (v: number) => {
+    onChange(v)
+    const now = performance.now()
+    if (v !== value && now - lastSound.current > 90) {
+      lastSound.current = now
+      playSynth(gameAudio, 'knob')
+    }
+  }
   const dragRef = useRef<{
     x: number
     y: number
@@ -57,7 +68,7 @@ export const Knob = ({
           const d = dragRef.current
           if (d) {
             if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5) d.moved = true
-            if (d.moved) onChange(dragKnobValue(d.value, d.x, e.clientX))
+            if (d.moved) change(dragKnobValue(d.value, d.x, e.clientX))
           }
         }}
         onPointerUp={e => {
@@ -65,7 +76,7 @@ export const Knob = ({
           if (d) {
             const moved =
               d.moved || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5
-            onChange(moved ? dragKnobValue(d.value, d.x, e.clientX) : resetTo)
+            change(moved ? dragKnobValue(d.value, d.x, e.clientX) : resetTo)
           }
           dragRef.current = null
         }}
@@ -83,7 +94,7 @@ export const Knob = ({
           if (next === null) return
           e.preventDefault()
           e.stopPropagation()
-          onChange(next)
+          change(next)
         }}
       >
         <i className="mark" />

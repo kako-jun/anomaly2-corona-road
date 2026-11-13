@@ -18,6 +18,15 @@ export type SynthName =
   | 'chime'
   | 'shutter'
   | 'stinger'
+  | 'button'
+  | 'knob'
+  | 'paper'
+  | 'static'
+  | 'wobble'
+  | 'beat'
+  | 'dishes'
+  | 'radio'
+  | 'humGrow'
 
 const noiseBuffers = new WeakMap<BaseAudioContext, AudioBuffer>()
 
@@ -98,11 +107,13 @@ const noiseHit = (
 const sustained = (
   { ctx, out }: Ctx,
   level: number,
-  build: (dest: AudioNode) => AudioScheduledSourceNode[]
+  build: (dest: AudioNode) => AudioScheduledSourceNode[],
+  fade = 0.4,
+  initial = 0.0001
 ): SoundHandle => {
   const g = ctx.createGain()
-  g.gain.setValueAtTime(0.0001, ctx.currentTime)
-  g.gain.linearRampToValueAtTime(level, ctx.currentTime + 0.4)
+  g.gain.setValueAtTime(initial, ctx.currentTime)
+  g.gain.linearRampToValueAtTime(level, ctx.currentTime + fade)
   g.connect(out)
   const sources = build(g)
   sources.forEach(src => src.start())
@@ -122,10 +133,88 @@ const sustained = (
 }
 
 const RECIPES: Record<SynthName, (c: Ctx) => SoundHandle> = {
+  beat: c => {
+    const t = c.ctx.currentTime + 0.02
+    const interval = 0.24 + Math.random() * 0.08
+    for (let i = 0; i < 8; i++) {
+      noiseHit(c, t + i * interval, 0.18, 0.05, 'highpass', 4500)
+      if (i % 2 === 0) tone(c, 'sine', 190, t + i * interval, 0.16, 0.09)
+    }
+    return { stop: () => {} }
+  },
+  dishes: c => {
+    const t = c.ctx.currentTime + 0.02
+    const pitch = (Math.random() - 0.5) * 100
+    ;[0, 0.17, 0.49].forEach((d, i) => {
+      ;[1170, 1683, 2330].forEach((f, j) =>
+        tone(c, 'sine', f + pitch + i * 37, t + d, 0.14 / (j + 1), 0.22)
+      )
+    })
+    return { stop: () => {} }
+  },
+  radio: c => {
+    const t = c.ctx.currentTime + 0.02
+    const interval = 0.27 + Math.random() * 0.07
+    ;[392, 440, 523, 440, 349, 392].forEach((f, i) => {
+      if (i !== 3) tone(c, 'triangle', f, t + i * interval, 0.18, 0.22)
+      noiseHit(c, t + i * interval, 0.1, 0.19, 'bandpass', 1400)
+    })
+    return { stop: () => {} }
+  },
+  wobble: c =>
+    sustained(c, 0.055, dest => {
+      const tones = [50, 100, 300].map(freq => {
+        const tone = c.ctx.createOscillator()
+        tone.frequency.value = freq
+        tone.connect(dest)
+        return tone
+      })
+      const lfo = c.ctx.createOscillator()
+      lfo.frequency.value = 0.4
+      const depth = c.ctx.createGain()
+      depth.gain.value = 35
+      lfo.connect(depth).connect(tones[2].frequency)
+      return [...tones, lfo]
+    }),
+  humGrow: c =>
+    sustained(
+      c,
+      0.14,
+      dest =>
+        [50, 100, 300].map(f => {
+          const o = c.ctx.createOscillator()
+          o.frequency.value = f
+          o.connect(dest)
+          return o
+        }),
+      5,
+      0.02
+    ),
+  button: c => {
+    const t = c.ctx.currentTime + 0.01
+    noiseHit(c, t, 0.24, 0.045, 'bandpass', 2100, 0.7)
+    noiseHit(c, t + 0.012, 0.09, 0.035, 'lowpass', 700)
+    return { stop: () => {} }
+  },
+  knob: c => {
+    noiseHit(c, c.ctx.currentTime + 0.01, 0.25, 0.055, 'bandpass', 1800, 2)
+    return { stop: () => {} }
+  },
+  paper: c => {
+    const t = c.ctx.currentTime + 0.01
+    ;[0, 0.08, 0.16].forEach((d, i) =>
+      noiseHit(c, t + d, 0.18, 0.16, 'bandpass', 900 + i * 500)
+    )
+    return { stop: () => {} }
+  },
+  static: c => {
+    noiseHit(c, c.ctx.currentTime + 0.01, 0.2, 0.09, 'bandpass', 2600)
+    return { stop: () => {} }
+  },
   /** Low mains hum: 50 Hz + 100 Hz sines. */
   hum: c =>
-    sustained(c, 0.25, dest =>
-      [50, 100].map(f => {
+    sustained(c, 0.02, dest =>
+      [50, 100, 300].map(f => {
         const o = c.ctx.createOscillator()
         o.frequency.value = f
         o.connect(dest)
@@ -155,31 +244,44 @@ const RECIPES: Record<SynthName, (c: Ctx) => SoundHandle> = {
   /** Three knocks on something hard: a low thump plus a noise tick. */
   knock: c => {
     const t0 = c.ctx.currentTime + 0.02
+    const spacing = 0.85 + Math.random() * 0.3
     ;[0, 0.28, 0.52].forEach(dt => {
-      tone(c, 'sine', 110, t0 + dt, 0.6, 0.12, 0.002)
-      noiseHit(c, t0 + dt, 0.3, 0.05, 'lowpass', 900)
+      tone(c, 'sine', 110, t0 + dt * spacing, 0.6, 0.12, 0.002)
+      noiseHit(c, t0 + dt * spacing, 0.3, 0.05, 'lowpass', 900)
     })
     return { stop: () => {} }
   },
   /** Distant footsteps: low-passed noise thuds, alternating pitch. */
   footsteps: c => {
     const t0 = c.ctx.currentTime + 0.02
-    for (let i = 0; i < 6; i++)
-      noiseHit(c, t0 + i * 0.55, 0.5, 0.12, 'lowpass', i % 2 ? 260 : 200, 2)
+    const pace = 0.85 + Math.random() * 0.3
+    ;[0, 0.8, 1.48, 2.04, 2.49, 2.85].forEach((dt, i) =>
+      noiseHit(
+        c,
+        t0 + dt * pace,
+        0.25 + i * 0.11,
+        0.12,
+        'lowpass',
+        450 + i * 90,
+        2
+      )
+    )
     return { stop: () => {} }
   },
   /** A generic two-note phone alert (no real product's tune). */
   chime: c => {
     const t0 = c.ctx.currentTime + 0.02
-    tone(c, 'sine', 1318, t0, 0.35, 0.35)
-    tone(c, 'sine', 1760, t0 + 0.12, 0.35, 0.5)
+    const pitch = 0.96 + Math.random() * 0.08
+    tone(c, 'sine', 1318 * pitch, t0, 0.35, 0.35)
+    tone(c, 'sine', 1760 * pitch, t0 + 0.12, 0.35, 0.5)
     return { stop: () => {} }
   },
   /** Camera shutter: two short noise clicks. */
   shutter: c => {
     const t0 = c.ctx.currentTime + 0.02
+    const gap = 0.06 + Math.random() * 0.03
     noiseHit(c, t0, 0.5, 0.03, 'highpass', 2500)
-    noiseHit(c, t0 + 0.07, 0.4, 0.05, 'bandpass', 1800, 2)
+    noiseHit(c, t0 + gap, 0.4, 0.05, 'bandpass', 1800, 2)
     return { stop: () => {} }
   },
   /** Short dissonant cluster (minor second + tritone). */
@@ -202,7 +304,26 @@ export const playSynth = (
   const out = engine.master()
   if (!ctx || !out || ctx.state !== 'running') return null
   try {
-    return RECIPES[name]({ ctx, out })
+    const gate = ctx.createGain()
+    gate.connect(out)
+    const sound = RECIPES[name]({ ctx, out: gate })
+    if (
+      name !== 'hum' &&
+      name !== 'humGrow' &&
+      name !== 'buzz' &&
+      name !== 'wobble'
+    )
+      setTimeout(() => gate.disconnect(), 4000)
+    return {
+      stop: () => {
+        sound.stop()
+        const t = ctx.currentTime
+        gate.gain.cancelScheduledValues(t)
+        gate.gain.setValueAtTime(gate.gain.value, t)
+        gate.gain.linearRampToValueAtTime(0, t + 0.03)
+        setTimeout(() => gate.disconnect(), 100)
+      },
+    }
   } catch {
     return null
   }
