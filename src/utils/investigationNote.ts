@@ -3,6 +3,7 @@ import {
   MEMO_FLAG_TEXT,
   LAST_NIGHT,
   OUTCOMES,
+  QUOTA_MET_LINES,
   STAGES,
   STAGE_FLAGS,
 } from '../data/investigationNotes'
@@ -34,6 +35,14 @@ export const outcomeOf = (shift: LastShift): Outcome =>
       : shift.fresh > 0
         ? 'newKinds'
         : 'noNewKinds'
+
+/** Whether the night ended at dawn with the quota met (#428): the result memo then says a little happier thing. */
+export const quotaMetAtDawn = (shift: LastShift): boolean =>
+  shift.closing === 'dawn' && shift.found >= DEFAULT_CONFIG.minCorrectReports
+
+/** The quota-met line of a night: by the night number, so a night reads the same each time and the nights differ. */
+export const quotaMetLine = (nightNo: number) =>
+  QUOTA_MET_LINES[(Math.max(1, nightNo) - 1) % QUOTA_MET_LINES.length]
 
 /**
  * The Shift row: the in-game clock, not the real time (kako-jun, #297). A night that ran out (dawn, true ending)
@@ -128,6 +137,8 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
       lines.push({ text: t(l) })
     if (input.shift.found > 0)
       for (const l of o.ifFound ?? []) lines.push({ text: t(l) })
+    if (quotaMetAtDawn(input.shift))
+      lines.push({ text: t(quotaMetLine(Math.max(1, save.loops))) })
     for (const l of STAGES[stage].lines.slice(-STAGES[stage].tail))
       lines.push({ text: t(l) })
     // The memos this result earned (#325), chosen when the shift ended: the hypothesis first, then the one-liner.

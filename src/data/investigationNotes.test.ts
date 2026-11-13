@@ -10,6 +10,7 @@ import {
   MEMO_FLAG_TEXT,
   MEMO_LINE_KNOWN_FROM,
   OUTCOMES,
+  QUOTA_MET_LINES,
   STAGES,
   STAGE_FLAGS,
 } from './investigationNotes'
@@ -39,6 +40,7 @@ const LEDGER_MEMOS: Pair[] = parseLedgerRecords(
 const ALL = [
   STAGES,
   OUTCOMES,
+  QUOTA_MET_LINES,
   LAST_NIGHT,
   LABELS,
   MEMO_FLAG_TEXT,
@@ -81,6 +83,10 @@ describe('investigation note data', () => {
         expect(l.ja.length, l.ja).toBeLessThanOrEqual(JA_MAX)
         expect(l.en.length, l.en).toBeLessThanOrEqual(EN_MAX)
       }
+    for (const l of QUOTA_MET_LINES) {
+      expect(l.ja.length, l.ja).toBeLessThanOrEqual(JA_MAX)
+      expect(l.en.length, l.en).toBeLessThanOrEqual(EN_MAX)
+    }
     for (const l of Object.values(LAST_NIGHT)) {
       expect(l.ja.length).toBeLessThanOrEqual(JA_MAX)
       expect(l.en.length).toBeLessThanOrEqual(EN_MAX)
@@ -127,6 +133,19 @@ describe('investigation note data', () => {
           MAX_RULED
         )
       }
+    }
+  })
+  it('a quota-met dawn (stock + one quota line + kept tail + the two memo lines) still fits the ruled area; there are at least 5 variants (#428)', () => {
+    expect(QUOTA_MET_LINES.length).toBeGreaterThanOrEqual(5)
+    expect(new Set(QUOTA_MET_LINES.map(l => l.ja)).size).toBe(
+      QUOTA_MET_LINES.length
+    )
+    for (const [stage, t] of Object.entries(STAGES)) {
+      if (stage === 'start') continue
+      for (const o of [OUTCOMES.newKinds, OUTCOMES.noNewKinds])
+        expect(o.lines.length + 1 + t.tail + 2, stage).toBeLessThanOrEqual(
+          MAX_RULED
+        )
     }
   })
   it('the two languages break a stage at the same places (same number of lines)', () => {
@@ -243,6 +262,11 @@ describe('no spoilers: every sentence is shown only from the stage where it is k
         p,
       }))
     ),
+    ...QUOTA_MET_LINES.map(p => ({
+      where: 'quota met',
+      stage: p.knownFrom,
+      p,
+    })),
     ...Object.entries(LAST_NIGHT).map(([o, p]) => ({
       where: `last night ${o}`,
       stage: p.knownFrom,

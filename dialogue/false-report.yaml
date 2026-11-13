@@ -117,3 +117,63 @@ dialogues:
       - { who: A, text: 'えっ　また違う？　今日はだめだなあ', en: "Huh, wrong again? I'm having a bad night." }
       - { who: M, text: '今日はまだ終わってないですよ', en: "The night isn't over yet." }
       - { who: A, text: 'そうだね　ここから取り返す！', en: "Right. I'll make up for it from here!" }
+  - id: false-report-met-01
+    tone: light
+    when: { quota: met }
+    lines:
+      - { who: A, text: 'あっ　もう十分見つけたのに　最後に間違えた', en: 'Oh, I had already found enough and I slipped at the end.' }
+      - { who: M, text: 'はい　でも今夜の分は届いてますよ', en: "Yes, but you have reached tonight's mark." }
+  - id: false-report-met-02
+    tone: light
+    when: { quota: met }
+    lines:
+      - { who: A, text: 'うわ　調子に乗った', en: 'Ugh, I got ahead of myself.' }
+      - { who: M, text: '少しだけ乗ってましたね', en: 'Just a little.' }
+      - { who: A, text: '正直に言わないで', en: 'Do not be so honest.' }
+  - id: false-report-met-03
+    tone: light
+    when: { quota: met }
+    lines:
+      - { who: A, text: 'ちぇっ　ここまで順調だったのに', en: 'Tch, and it was going so well.' }
+      - { who: M, text: 'お手つきは１回です　大丈夫ですよ', en: 'It is one slip. It is fine.' }
+  - id: false-report-met-04
+    tone: light
+    when: { quota: met }
+    lines:
+      - { who: M, text: '今のは違いますよ', en: 'That one was not it.' }
+      - { who: A, text: '分かってる　ちょっと照れくさい', en: 'I know. A bit embarrassing.' }
+      - { who: M, text: '見つけた分は残りますから', en: 'What you found stays.' }
+  - id: false-report-met-05
+    tone: light
+    when: { quota: met }
+    lines:
+      - { who: A, text: 'もう十分なのに　欲が出ちゃった', en: 'I had enough and still got greedy.' }
+      - { who: M, text: '欲張りは　出河さんの悪い癖ですね', en: 'Greed is your bad habit, Ms. Dekawa.' }
+      - { who: A, text: '言うねえ', en: 'You do not hold back.' }
+  - id: false-report-met-06
+    tone: light
+    when: { quota: met }
+    lines:
+      - { who: A, text: '格好悪いところ見せちゃったね', en: 'I showed you something uncool.' }
+      - { who: M, text: 'いえ　ここまで頼もしかったですよ', en: 'No, you were reliable up to now.' }
+  - id: false-report-met-07
+    tone: light
+    when: { quota: met }
+    lines:
+      - { who: A, text: 'ああ　最後まで格好よくいきたかった', en: 'Ah, I wanted to look cool to the very end.' }
+      - { who: M, text: 'まだ夜は続いてますよ', en: 'The night is not over yet.' }
+  - id: false-report-met-08
+    tone: light
+    when: { quota: met }
+    lines:
+      - { who: A, text: '見間違い？　今までは当たってたのに', en: 'A mistake? I was right until now.' }
+      - { who: M, text: '好調の波が　ひと休みですかね', en: 'Maybe the good streak is taking a break.' }
+      - { who: A, text: 'ひどい！', en: 'That is mean!' }
+  - id: false-report-met-09
+    tone: light
+    when: { quota: met }
+    lines:
+      - { who: M, text: 'あ　今のは違いました', en: 'Ah, that one was wrong.' }
+      - { who: A, text: 'もう　恥ずかしいなあ', en: 'Oh, how embarrassing.' }
+      - { who: M, text: '見つけた数は減りませんよ', en: 'It does not take away what you found.' }
+      - { who: A, text: 'それでも悔しいの！', en: 'I am still annoyed!' }

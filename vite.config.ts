@@ -14,7 +14,11 @@ import {
   toLedgerEntry,
   toNonImageEntry,
 } from './src/utils/anomalyLedger'
-import { DIALOGUE_FILES, parseDialogueLedger } from './src/utils/dialogueLedger'
+import {
+  DIALOGUE_FILES,
+  dialogueCountShortfalls,
+  parseDialogueLedger,
+} from './src/utils/dialogueLedger'
 
 const LEDGER_PATH = resolve(__dirname, 'prompts/anomalies.yaml')
 const FLAGS_PATH = resolve(__dirname, 'dialogue/flags.yaml')
@@ -125,7 +129,12 @@ const dialogueLedgerPlugin = (): Plugin => ({
       typeof parseDialogueLedger
     >[0]
     for (const file of DIALOGUE_FILES) parsed[file] = read(file)
-    return `export default ${JSON.stringify(parseDialogueLedger(parsed, anomalyIds))}`
+    const ledger = parseDialogueLedger(parsed, anomalyIds)
+    // Too few conversations for a condition (#428): the same lines would come round too often.
+    const short = dialogueCountShortfalls(ledger.entries)
+    if (short.length > 0)
+      throw new Error(`dialogue/: too few conversations: ${short.join('; ')}`)
+    return `export default ${JSON.stringify(ledger)}`
   },
 })
 

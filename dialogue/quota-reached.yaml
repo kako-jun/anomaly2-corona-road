@@ -1,0 +1,38 @@
+# ノルマ（正解の報告 4 件）に届いた瞬間に 1 シフト 1 回だけ出る短い会話（Issue #428）。
+dialogues:
+  - id: quota-reached-01
+    tone: light
+    lines:
+      - { who: A, text: 'よし　これで今夜の分は見つけたかな', en: "Good, I think that covers tonight's share." }
+      - { who: M, text: 'はい　ここからは余裕ですよ', en: 'Yes, from here on we can relax.' }
+  - id: quota-reached-02
+    tone: light
+    lines:
+      - { who: A, text: 'やった　ひとまず一安心', en: 'Yes. A relief for now.' }
+      - { who: M, text: '出河さん　嬉しそうですね', en: 'You look happy, Ms. Dekawa.' }
+  - id: quota-reached-03
+    tone: light
+    lines:
+      - { who: M, text: '出河さん　今ので目標は達成です', en: 'Ms. Dekawa, that one completes the target.' }
+      - { who: A, text: 'ほんと？　顔がにやけちゃう', en: 'Really? I cannot stop grinning.' }
+  - id: quota-reached-04
+    tone: light
+    lines:
+      - { who: A, text: 'ふふ　調子いいね　このまま行こう', en: 'Heh, going well. Let us keep it up.' }
+      - { who: M, text: 'はい　油断は禁物ですけど', en: 'Yes, though we should not let our guard down.' }
+  - id: quota-reached-05
+    tone: light
+    lines:
+      - { who: A, text: '樫原くん　今ので十分だったよね？', en: 'Kashihara, that was enough, right?' }
+      - { who: M, text: 'はい　十分です　あとはおまけですね', en: 'Yes. The rest is a bonus.' }
+      - { who: A, text: 'おまけが大事なんだけどね', en: 'The bonus matters too, you know.' }
+  - id: quota-reached-06
+    tone: light
+    lines:
+      - { who: M, text: 'ひと息つけますね', en: 'You can catch your breath now.' }
+      - { who: A, text: 'うん　肩の力が抜けた', en: 'Yeah, my shoulders relaxed.' }
+  - id: quota-reached-07
+    tone: light
+    lines:
+      - { who: A, text: 'やっと一息　でも画面からは目を離さないよ', en: 'Finally a breather, but I am not taking my eyes off the screens.' }
+      - { who: M, text: 'それでこそ出河さんです', en: 'That is the Ms. Dekawa I know.' }

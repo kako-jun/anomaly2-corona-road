@@ -9,6 +9,14 @@ export type Who = 'A' | 'M'
 export type Tone = 'light' | 'serious'
 export type ClosingResult = 'dawn' | 'withdraw' | 'ending'
 export type MidpointStage = 'few' | 'mid' | 'many'
+/** Whether the quota (`minCorrectReports`) was met when the conversation is chosen (#428). */
+export type Quota = 'met' | 'unmet'
+/**
+ * A state inside the shift that a conversation may react to (#428): `hot` (finds in quick succession, or four or more
+ * with no false report), `cold` (nothing found for a long time), `brink` (two false reports: one more is a withdraw),
+ * `tenth` (the tenth find of the shift).
+ */
+export type Situation = 'hot' | 'cold' | 'brink' | 'tenth'
 
 /** One spoken line: `A` = the veteran detective, `M` = the young security guard. */
 export interface DialogueLine {
@@ -30,8 +38,10 @@ export type DialogueEntry = Base &
   (
     | { kind: 'opening'; when: Record<string, never> }
     | { kind: 'chatter'; when: Record<string, never> }
-    | { kind: 'false-report'; when: Record<string, never> }
-    | { kind: 'closing'; when: { result: ClosingResult } }
+    | { kind: 'false-report'; when: { quota?: 'met' } }
+    | { kind: 'quota-reached'; when: Record<string, never> }
+    | { kind: 'situation'; when: { situation: Situation } }
+    | { kind: 'closing'; when: { result: ClosingResult; quota?: Quota } }
     | { kind: 'midpoint'; when: { stage: MidpointStage } }
     | { kind: 'story'; when: { flag: string } }
     | { kind: 'anomaly-line'; when: { anomaly: string } }
@@ -75,6 +85,8 @@ export const DIALOGUE_FILES = [
   'chatter',
   'story',
   'false-report',
+  'quota-reached',
+  'situation',
   'anomaly-lines',
   'spawn-hints',
 ] as const
@@ -87,6 +99,8 @@ const KIND_OF_FILE: Record<DialogueFile, DialogueKind> = {
   chatter: 'chatter',
   story: 'story',
   'false-report': 'false-report',
+  'quota-reached': 'quota-reached',
+  situation: 'situation',
   'anomaly-lines': 'anomaly-line',
   'spawn-hints': 'spawn-hint',
 }
@@ -99,6 +113,8 @@ const ID_PREFIX: Record<DialogueKind, string> = {
   chatter: 'chatter-',
   story: 'story-',
   'false-report': 'false-report-',
+  'quota-reached': 'quota-reached-',
+  situation: 'situation-',
   'anomaly-line': 'an-',
   'spawn-hint': 'spawn-hint-',
 }
@@ -107,6 +123,13 @@ const WHO: readonly string[] = ['A', 'M']
 const TONES: readonly string[] = ['light', 'serious']
 const RESULTS: readonly string[] = ['dawn', 'withdraw', 'ending']
 const STAGES: readonly string[] = ['few', 'mid', 'many']
+const QUOTAS: readonly string[] = ['met', 'unmet']
+export const SITUATIONS: readonly Situation[] = [
+  'hot',
+  'cold',
+  'brink',
+  'tenth',
+]
 
 /** Japanese and full-width punctuation that film subtitles must not contain. */
 const FORBIDDEN_PUNCTUATION = /[、。，．､｡,.]/
@@ -275,15 +298,65 @@ export const parseEntry = (
     }
     let entry: DialogueEntry
     switch (kind) {
-      case 'closing':
+      case 'closing': {
+        // dawn / withdraw are split by whether the quota was met (#428); the ending has no quota.
+        if (!isRecord(raw.when))
+          throw new Error('kind "closing" needs "when: { result }"')
+        const w = raw.when
+        onlyKeys(w, ['result', 'quota'], 'kind "closing" when')
+        const result = oneOf<ClosingResult>(
+          whenKey({ result: w.result }, 'result', kind),
+          RESULTS,
+          'when.result'
+        )
+        if (result === 'ending') {
+          if (w.quota !== undefined)
+            throw new Error('the ending takes no "when.quota"')
+          entry = { ...base, kind, when: { result } }
+        } else {
+          if (w.quota === undefined)
+            throw new Error(
+              `a ${result} closing needs "when: { quota }" (met | unmet)`
+            )
+          const quota = oneOf<Quota>(
+            whenKey({ quota: w.quota }, 'quota', kind),
+            QUOTAS,
+            'when.quota'
+          )
+          entry = { ...base, kind, when: { result, quota } }
+        }
+        break
+      }
+      case 'false-report': {
+        // No `when` = before the quota is met; `quota: met` = a false report after it (#428).
+        if (raw.when === undefined || raw.when === null) {
+          entry = { ...base, kind, when: {} }
+          break
+        }
+        if (!isRecord(raw.when)) throw new Error('"when" is not a mapping')
+        if (Object.keys(raw.when).length === 0) {
+          entry = { ...base, kind, when: {} }
+          break
+        }
+        onlyKeys(raw.when, ['quota'], 'kind "false-report" when')
         entry = {
           ...base,
           kind,
           when: {
-            result: oneOf<ClosingResult>(
-              whenKey(raw.when, 'result', kind),
-              RESULTS,
-              'when.result'
+            quota: oneOf<'met'>(str(raw.when, 'quota'), ['met'], 'when.quota'),
+          },
+        }
+        break
+      }
+      case 'situation':
+        entry = {
+          ...base,
+          kind,
+          when: {
+            situation: oneOf<Situation>(
+              whenKey(raw.when, 'situation', kind),
+              SITUATIONS,
+              'when.situation'
             ),
           },
         }
@@ -469,3 +542,63 @@ export const parseDialogueLedger = (
   }
   return { flags, entries }
 }
+
+// ---- minimum counts per condition (#428) ----------------------------------------------------
+
+/**
+ * A condition whose conversations must not run short: with fewer than `min`, the same few lines would come round
+ * again and again. `check:dialogue-counts` and the build fail below it (like `check:spawn-hints` for the hints).
+ * The minimums are kako-jun's (#428); more is welcome.
+ */
+export interface CountRule {
+  label: string
+  min: number
+  match: (e: DialogueEntry) => boolean
+}
+
+export const DIALOGUE_COUNT_RULES: readonly CountRule[] = [
+  ...(['met', 'unmet'] as const).map(q => ({
+    label: `closing dawn / quota ${q}`,
+    min: 10,
+    match: (e: DialogueEntry) =>
+      e.kind === 'closing' && e.when.result === 'dawn' && e.when.quota === q,
+  })),
+  {
+    label: 'closing withdraw / quota met',
+    min: 5,
+    match: e =>
+      e.kind === 'closing' &&
+      e.when.result === 'withdraw' &&
+      e.when.quota === 'met',
+  },
+  {
+    label: 'false-report / quota met',
+    min: 8,
+    match: e => e.kind === 'false-report' && e.when.quota === 'met',
+  },
+  { label: 'quota-reached', min: 5, match: e => e.kind === 'quota-reached' },
+  ...SITUATIONS.map(s => ({
+    label: `situation ${s}`,
+    min: 5,
+    match: (e: DialogueEntry) =>
+      e.kind === 'situation' && e.when.situation === s,
+  })),
+]
+
+/** Each rule with how many conversations match it, in order. */
+export const countByCondition = (
+  entries: readonly DialogueEntry[]
+): { label: string; min: number; count: number }[] =>
+  DIALOGUE_COUNT_RULES.map(r => ({
+    label: r.label,
+    min: r.min,
+    count: entries.filter(r.match).length,
+  }))
+
+/** Messages for the conditions below their minimum (empty = fine). */
+export const dialogueCountShortfalls = (
+  entries: readonly DialogueEntry[]
+): string[] =>
+  countByCondition(entries)
+    .filter(c => c.count < c.min)
+    .map(c => `${c.label}: ${c.count} (needs ${c.min} or more)`)

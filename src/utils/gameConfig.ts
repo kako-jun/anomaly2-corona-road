@@ -1,4 +1,5 @@
 import { GameConfig, Camera } from '../types/game'
+import type { SituationConfig } from './situation'
 
 export const DEFAULT_CONFIG: GameConfig = {
   totalDurationMs: 480_000, // 8 real minutes = 22:00 -> 06:00 in game
@@ -139,6 +140,26 @@ export const DIALOGUE_CONFIG = {
   hintMinGapMs: 20_000,
   /** Chance (0-1) that a hint opportunity (once per `hintMinGapMs` of play time after `hintDelayMs`, per unreported anomaly) actually speaks; a miss waits for the next opportunity. */
   hintChance: 0.5,
+  /**
+   * Situation lines (#428, `situation.ts`): conversations that react to the state of the shift. Provisional values to
+   * tune by playing. Each situation speaks with its own `chance` (a miss is forgotten), takes the place of a chatter
+   * (not an extra subtitle), keeps `minGapMs` (wall clock) from its own last line and speaks at most `maxPerShift` times.
+   */
+  situations: {
+    rules: {
+      hot: { chance: 0.5, minGapMs: 90_000, maxPerShift: 2 },
+      cold: { chance: 0.5, minGapMs: 120_000, maxPerShift: 2 },
+      brink: { chance: 0.7, minGapMs: 0, maxPerShift: 2 },
+      tenth: { chance: 0.7, minGapMs: 0, maxPerShift: 2 },
+    },
+    hotCount: 3,
+    hotWindowMs: 90_000,
+    hotCleanCount: 4,
+    coldAfterMs: 120_000,
+    brinkMisreports: DEFAULT_CONFIG.maxMisreports - 1,
+    tenthCount: 10,
+    expireMs: 60_000,
+  } satisfies SituationConfig,
 }
 
 /**

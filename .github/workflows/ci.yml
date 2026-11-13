@@ -34,6 +34,9 @@ jobs:
       - name: Check spawn hints (3+ per anomaly)
         run: npm run check:spawn-hints
 
+      - name: Check dialogue counts per condition (quota / situation)
+        run: npm run check:dialogue-counts
+
       - name: Test
         run: npm test
 

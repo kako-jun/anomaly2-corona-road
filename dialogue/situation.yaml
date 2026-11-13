@@ -1,0 +1,153 @@
+# シフト内の状態に反応する会話（Issue #428）。調子がいい（hot）・悪い（cold）・崖っぷち（brink）・10 件目（tenth）。確率で間引かれ、雑談の枠を 1 つ使う。
+dialogues:
+  - id: situation-hot-01
+    tone: light
+    when: { situation: hot }
+    lines:
+      - { who: A, text: '今夜は冴えてる　次々見える', en: 'I am sharp tonight. I keep spotting them.' }
+      - { who: M, text: 'はい　いい流れですよ', en: 'Yes, it is a good flow.' }
+  - id: situation-hot-02
+    tone: light
+    when: { situation: hot }
+    lines:
+      - { who: M, text: '出河さん　絶好調ですね', en: 'Ms. Dekawa, you are on fire.' }
+      - { who: A, text: 'でしょ？　自分でも怖いくらい', en: 'Right? It scares even me.' }
+  - id: situation-hot-03
+    tone: light
+    when: { situation: hot }
+    lines:
+      - { who: A, text: '目が慣れてきた　どんどん行くよ', en: 'My eyes have adjusted. Here I go.' }
+      - { who: M, text: '焦らず　１つずつお願いします', en: 'Do not rush. One at a time, please.' }
+  - id: situation-hot-04
+    tone: light
+    when: { situation: hot }
+    lines:
+      - { who: A, text: 'この調子この調子', en: 'Keep it up, keep it up.' }
+      - { who: M, text: '調子に乗ると　お手つきしますよ', en: 'If you get cocky you will slip.' }
+      - { who: A, text: '縁起でもない！', en: 'Do not jinx it!' }
+  - id: situation-hot-05
+    tone: light
+    when: { situation: hot }
+    lines:
+      - { who: M, text: '続けて当てましたね　どうやってるんですか', en: 'You hit them one after another. How do you do it?' }
+      - { who: A, text: '勘と経験　あと眼鏡', en: 'Instinct, experience and my glasses.' }
+      - { who: M, text: '眼鏡は大事ですね', en: 'Glasses matter, indeed.' }
+  - id: situation-hot-06
+    tone: light
+    when: { situation: hot }
+    lines:
+      - { who: A, text: 'ふふん　今夜はもらったかも', en: 'Heh, tonight might be mine.' }
+      - { who: M, text: 'まだ夜は長いですよ', en: 'The night is still long.' }
+  - id: situation-cold-01
+    tone: light
+    when: { situation: cold }
+    lines:
+      - { who: A, text: 'ずいぶん静かだね　見落としてないよね？', en: 'It is awfully quiet. I have not missed anything, have I?' }
+      - { who: M, text: 'たぶん　今は変化がないだけです', en: 'Probably nothing is changing right now.' }
+  - id: situation-cold-02
+    tone: light
+    when: { situation: cold }
+    lines:
+      - { who: A, text: '長いこと何も見つけてない　眠くなる', en: 'Nothing found for ages. I am getting sleepy.' }
+      - { who: M, text: '眠気覚ましに　画面を見渡しましょう', en: 'Let us scan all the screens to wake up.' }
+  - id: situation-cold-03
+    tone: light
+    when: { situation: cold }
+    lines:
+      - { who: M, text: '出河さん　しばらく動きがありませんね', en: 'Ms. Dekawa, nothing has moved for a while.' }
+      - { who: A, text: '嵐の前ってやつかな', en: 'Maybe the calm before the storm.' }
+      - { who: M, text: '怖いこと言わないでください', en: 'Please do not say scary things.' }
+  - id: situation-cold-04
+    tone: light
+    when: { situation: cold }
+    lines:
+      - { who: A, text: '手持ち無沙汰だね　お菓子でもつまもうか', en: 'Nothing to do. Shall we snack on something?' }
+      - { who: M, text: '勤務中ですよ', en: 'We are on duty.' }
+      - { who: A, text: '固いなあ', en: 'So stiff.' }
+  - id: situation-cold-05
+    tone: light
+    when: { situation: cold }
+    lines:
+      - { who: A, text: 'あくびが出ちゃう　何もない時間って長いね', en: 'I keep yawning. Empty time is so long.' }
+      - { who: M, text: '何もないのが　本当は一番ですよ', en: 'Nothing happening is actually the best.' }
+  - id: situation-cold-06
+    tone: light
+    when: { situation: cold }
+    lines:
+      - { who: A, text: '目が疲れてきた　一度遠くを見ようかな', en: 'My eyes are tired. Maybe I should look far away for a moment.' }
+      - { who: M, text: 'いいですね　１０秒だけでも違います', en: 'Good idea. Even ten seconds helps.' }
+  - id: situation-brink-01
+    tone: light
+    when: { situation: brink }
+    lines:
+      - { who: A, text: 'まずい　あと１回間違えたら撤収だ', en: 'Uh-oh. One more mistake and we pull out.' }
+      - { who: M, text: 'はい　慎重にいきましょう', en: 'Yes, let us be careful.' }
+  - id: situation-brink-02
+    tone: light
+    when: { situation: brink }
+    lines:
+      - { who: M, text: '出河さん　お手つきは残り１回です', en: 'Ms. Dekawa, you have one slip left.' }
+      - { who: A, text: '分かってる　確信が持てるまで押さない', en: 'I know. I will not press until I am sure.' }
+  - id: situation-brink-03
+    tone: light
+    when: { situation: brink }
+    lines:
+      - { who: A, text: '手が震えてきた　深呼吸しよう', en: 'My hands are shaking. Deep breath.' }
+      - { who: M, text: '吸って　吐いて　です', en: 'In, and out.' }
+  - id: situation-brink-04
+    tone: light
+    when: { situation: brink }
+    lines:
+      - { who: A, text: '崖っぷちってこういうことか', en: 'So this is what the edge feels like.' }
+      - { who: M, text: '落ち着いて見れば大丈夫ですよ', en: 'If you look calmly, it will be fine.' }
+      - { who: A, text: '樫原くんは冷静でいいなあ', en: 'You are lucky to be so calm, Kashihara.' }
+  - id: situation-brink-05
+    tone: light
+    when: { situation: brink }
+    lines:
+      - { who: M, text: '焦らなくていいです　時間はあります', en: 'No need to rush. There is time.' }
+      - { who: A, text: 'ありがとう　少し落ち着く', en: 'Thanks. Let me settle down for a moment.' }
+  - id: situation-brink-06
+    tone: light
+    when: { situation: brink }
+    lines:
+      - { who: A, text: 'もう間違えられない　目を見開いていくよ', en: 'I cannot be wrong again. Eyes wide open.' }
+      - { who: M, text: '瞬きはしてください', en: 'Please do blink.' }
+  - id: situation-tenth-01
+    tone: light
+    when: { situation: tenth }
+    lines:
+      - { who: A, text: 'あっ　これで１０件目だよ', en: 'Oh, that makes ten.' }
+      - { who: M, text: '大台ですね　すごいです', en: 'A big milestone. Impressive.' }
+  - id: situation-tenth-02
+    tone: light
+    when: { situation: tenth }
+    lines:
+      - { who: M, text: '出河さん　今ので１０件目です', en: 'Ms. Dekawa, that was your tenth.' }
+      - { who: A, text: 'そんなに見つけてた？　自分でびっくり', en: 'That many? I surprised myself.' }
+  - id: situation-tenth-03
+    tone: light
+    when: { situation: tenth }
+    lines:
+      - { who: A, text: 'ふふ　２桁に乗った', en: 'Heh, we made it to double digits.' }
+      - { who: M, text: '今夜は大漁ですね', en: 'A big catch tonight.' }
+  - id: situation-tenth-04
+    tone: light
+    when: { situation: tenth }
+    lines:
+      - { who: A, text: '１０件目　ちょっと記念に拍手', en: 'Number ten. A little applause to mark it.' }
+      - { who: M, text: '拍手しましょうか', en: 'Shall I clap?' }
+      - { who: A, text: 'ぱちぱち', en: 'Clap clap.' }
+  - id: situation-tenth-05
+    tone: light
+    when: { situation: tenth }
+    lines:
+      - { who: M, text: '１０件目ですね　お疲れさまです', en: 'That is ten. Good work.' }
+      - { who: A, text: '気は抜かないよ', en: 'I am not letting up.' }
+  - id: situation-tenth-06
+    tone: light
+    when: { situation: tenth }
+    lines:
+      - { who: A, text: 'いつの間にか１０件　数えてなかった', en: 'Ten already. I was not counting.' }
+      - { who: M, text: '俺は数えてました', en: 'I was counting.' }
+      - { who: A, text: '細かい！', en: 'So particular!' }

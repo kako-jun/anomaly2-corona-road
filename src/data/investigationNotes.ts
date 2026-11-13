@@ -287,6 +287,19 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
   },
 }
 
+/**
+ * One more line on the result of a dawn that met the quota (#428; kako-jun: a little happy, no numbers or stamps).
+ * Which one is picked by the night number (`quotaMetLine`), so the same night always reads the same and the nights differ.
+ */
+export const QUOTA_MET_LINES: KnownPair[] = [
+  k('start', '今夜は、手応えがあった。', 'Felt a solid hit tonight.'),
+  k('start', '見つけた数は、足りていた。', 'Found enough tonight.'),
+  k('start', '朝まで、いい夜だった。', 'A good night, start to finish.'),
+  k('start', '気分のいい夜だった。', 'A good-feeling night.'),
+  k('start', '目がよく見えた夜だった。', 'My eyes were sharp tonight.'),
+  k('start', 'うまく見つけられた夜だった。', 'A night of finding things well.'),
+]
+
 /** Added to the synopsis of a start-of-night memo when the last night gave nothing, or ended in a withdraw. */
 export const LAST_NIGHT: Record<'noNewKinds' | 'withdraw', KnownPair> = {
   noNewKinds: k(

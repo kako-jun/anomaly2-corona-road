@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import ledger from 'virtual:dialogue'
-import type { MidpointStage, Tone } from '../utils/dialogueLedger'
+import type {
+  MidpointStage,
+  Quota,
+  Situation,
+  Tone,
+} from '../utils/dialogueLedger'
 import type { SelectedSource } from '../utils/dialogueEngine'
 import {
   LastShown,
@@ -13,7 +18,12 @@ import {
   selectNext,
   storyFlagNames,
 } from '../utils/dialogueEngine'
-import { DIALOGUE_CONFIG, SUBTITLE_EN_ENABLED } from '../utils/gameConfig'
+import {
+  DEFAULT_CONFIG,
+  DIALOGUE_CONFIG,
+  SUBTITLE_EN_ENABLED,
+} from '../utils/gameConfig'
+import { createSituationTracker } from '../utils/situation'
 import { load, update } from '../utils/saveData'
 import {
   SUBTITLE_GAP_MS,
@@ -37,6 +47,8 @@ export interface SubtitleInput {
   elapsedMs: number
   /** Correct reports so far this play (picks the midpoint stage). */
   foundThisPlay: number
+  /** False reports so far this play (absent = 0): the brink situation and the tenth find read it, #428. */
+  misreports?: number
   /**
    * Ids of the anomalies on the cameras that are not reported yet (absent = none). One left unreported for
    * `hintDelayMs` of play time gets a hint subtitle (#343).
@@ -57,6 +69,7 @@ interface Machine {
   falseReport: (anomalyId: string | null) => void
   flags: (names: string[]) => void
   checkMidpoint: (elapsedMs: number, found: number) => void
+  progress: (elapsedMs: number, found: number, misreports: number) => void
   anomalies: (elapsedMs: number, openIds: readonly string[]) => void
   end: (result: 'dawn' | 'withdraw' | 'ending') => void
 }
@@ -71,12 +84,14 @@ interface PlayMeta {
   hint?: string
   /** The spawn-hint conversation that was drawn. */
   hintLine?: string
+  /** The situation a situation conversation was for. */
+  situation?: Situation
 }
 
 /**
  * Movie-style subtitles driven by the dialogue ledger: one line at a time, a conversation of 2-4
- * lines, then a silence. Priority at each pick: flag story > false report > spawn hint > midpoint >
- * chatter (`selectNext`). A false report cuts in at once; a raised flag cuts in after the line on screen
+ * lines, then a silence. Priority at each pick: flag story > false report > spawn hint > quota reached >
+ * situation > midpoint > chatter (`selectNext`). A false report cuts in at once; a raised flag cuts in after the line on screen
  * (the rest of the interrupted conversation is dropped); the midpoint comment waits for the next
  * pick. A story conversation is not cut by a false report or a flag; what it displaces waits. A
  * conversation counts as used (and a story as played, a midpoint as done) when its first line is
@@ -119,6 +134,14 @@ export const useSubtitle = (input: SubtitleInput) => {
     let pendingFalse: { anomalyId: string | null } | null = null
     let pendingMidpoint: MidpointStage | null = null
     let midpointDone = false
+    // Quota (#428): the finds so far this play, the one-time quota reached conversation, and the situation lines.
+    let foundNow = 0
+    let progressSeen: { found: number; misreports: number } | null = null
+    let pendingQuota = false
+    let quotaDone = false
+    const situations = createSituationTracker(cfg.situations)
+    const quotaNow = (): Quota =>
+      foundNow >= DEFAULT_CONFIG.minCorrectReports ? 'met' : 'unmet'
     // Spawn hints (#343), per open anomaly: play time it was first seen, the last opportunity that spoke ("spent"),
     // the dice of the current opportunity (rolled once), the conversation shown last; and the last hint's wall time.
     let openIds: readonly string[] = []
@@ -209,7 +232,10 @@ export const useSubtitle = (input: SubtitleInput) => {
       // A raised flag or a false report that waited does not wait out the silence.
       later(
         selectAndPlay,
-        pendingFlags.length > 0 || pendingFalse || dueHints().length > 0
+        pendingFlags.length > 0 ||
+          pendingFalse ||
+          pendingQuota ||
+          dueHints().length > 0
           ? SUBTITLE_GAP_MS
           : cfg.chatterIntervalMs
       )
@@ -267,6 +293,12 @@ export const useSubtitle = (input: SubtitleInput) => {
         if (meta.hintLine !== undefined) lastHintLine[meta.hint] = meta.hintLine
         lastHintAt = Date.now()
       }
+      if (meta.source === 'quota-reached') {
+        quotaDone = true
+        pendingQuota = false
+      }
+      if (meta.situation !== undefined)
+        situations.settle(meta.situation, Date.now())
       if (meta.source === 'midpoint') {
         midpointDone = true
         pendingMidpoint = null
@@ -295,6 +327,9 @@ export const useSubtitle = (input: SubtitleInput) => {
         pendingFalseReport: pendingFalse,
         pendingSpawnHints: dueHints(),
         lastSpawnHints: lastHintLine,
+        pendingQuotaReached: pendingQuota,
+        pendingSituation: situations.take(Date.now()),
+        quota: quotaNow(),
         pendingMidpoint,
         last,
         nowMs: Date.now(),
@@ -312,6 +347,7 @@ export const useSubtitle = (input: SubtitleInput) => {
         flag: sel.flag,
         hint: sel.hintedAnomaly,
         hintLine: sel.hintedAnomaly === undefined ? undefined : sel.entry.id,
+        situation: sel.situation,
       })
     }
 
@@ -348,6 +384,30 @@ export const useSubtitle = (input: SubtitleInput) => {
         pendingMidpoint = midpointStage(found)
         if (fresh) wake()
       },
+      progress: (elapsedMs, found, misreports) => {
+        if (closing) return
+        foundNow = found
+        const seen = progressSeen
+        progressSeen = { found, misreports }
+        const now = Date.now()
+        // The first call only sets the baseline (a hook mounted with finds already made reports no event).
+        if (seen) {
+          if (found > seen.found) {
+            if (
+              !quotaDone &&
+              seen.found < DEFAULT_CONFIG.minCorrectReports &&
+              found >= DEFAULT_CONFIG.minCorrectReports
+            ) {
+              pendingQuota = true
+              wake()
+            }
+            situations.found(elapsedMs, now, found, misreports)
+          }
+          if (misreports > seen.misreports)
+            situations.misreport(now, misreports)
+        }
+        situations.tick(elapsedMs, now)
+      },
       anomalies: (elapsedMs, ids) => {
         if (closing) return
         const wasDue = dueHints().length
@@ -365,13 +425,15 @@ export const useSubtitle = (input: SubtitleInput) => {
         pendingFlags.length = 0
         pendingFalse = null
         pendingMidpoint = null
+        pendingQuota = false
         lines = []
         const picked = pickClosing(
           ledger,
           result,
           used,
           Math.random,
-          load().flags
+          load().flags,
+          quotaNow()
         )
         if (!picked) {
           hide()
@@ -418,6 +480,15 @@ export const useSubtitle = (input: SubtitleInput) => {
   useEffect(() => {
     machineRef.current?.checkMidpoint(input.elapsedMs, input.foundThisPlay)
   }, [input.elapsedMs, input.foundThisPlay])
+
+  const misreports = input.misreports ?? 0
+  useEffect(() => {
+    machineRef.current?.progress(
+      input.elapsedMs,
+      input.foundThisPlay,
+      misreports
+    )
+  }, [input.elapsedMs, input.foundThisPlay, misreports])
 
   const openKey = (input.openAnomalyIds ?? []).join(',')
   useEffect(() => {

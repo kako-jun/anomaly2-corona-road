@@ -13,6 +13,7 @@ import {
   pickFalseReport,
   pickMidpoint,
   pickOpening,
+  pickSituation,
   pickSpawnHint,
   pickStory,
   selectNext,
@@ -152,8 +153,8 @@ describe('pick by kind and when', () => {
     mk('opening-1', 'opening'),
     mk('chatter-1', 'chatter'),
     mk('false-report-1', 'false-report'),
-    mk('closing-d', 'closing', { result: 'dawn' }),
-    mk('closing-w', 'closing', { result: 'withdraw' }),
+    mk('closing-d', 'closing', { result: 'dawn', quota: 'unmet' }),
+    mk('closing-w', 'closing', { result: 'withdraw', quota: 'unmet' }),
     mk('midpoint-f', 'midpoint', { stage: 'few' }),
     mk('midpoint-m', 'midpoint', { stage: 'many' }),
     mk('story-a', 'story', { flag: 'a' }),
@@ -207,7 +208,7 @@ describe('unlock (post-flag release gate)', () => {
     lk('opening-u', 'opening', 'g'),
     lk('chatter-u', 'chatter', 'g'),
     lk('false-report-u', 'false-report', 'g'),
-    lk('closing-u', 'closing', 'g', { result: 'dawn' }),
+    lk('closing-u', 'closing', 'g', { result: 'dawn', quota: 'unmet' }),
     lk('midpoint-u', 'midpoint', 'g', { stage: 'mid' }),
     lk('story-u', 'story', 'g', { flag: 'a' }),
   ]
@@ -857,5 +858,178 @@ describe('spawn hint (#343)', () => {
     })
     expect(p?.hintedAnomaly).toBe('x')
     expect(p?.entry.id).toBe('spawn-hint-x-2')
+  })
+})
+
+describe('quota and situation conversations (#428)', () => {
+  const dawnMet = ['dm1', 'dm2', 'dm3']
+  const ledger = ledgerOf([
+    ...dawnMet.map(id => mk(id, 'closing', { result: 'dawn', quota: 'met' })),
+    mk('du1', 'closing', { result: 'dawn', quota: 'unmet' }),
+    mk('du2', 'closing', { result: 'dawn', quota: 'unmet' }),
+    mk('wm1', 'closing', { result: 'withdraw', quota: 'met' }),
+    mk('wu1', 'closing', { result: 'withdraw', quota: 'unmet' }),
+    mk('ending-1', 'closing', { result: 'ending' }),
+    mk('fr-before', 'false-report'),
+    mk('fr-after-1', 'false-report', { quota: 'met' }),
+    mk('fr-after-2', 'false-report', { quota: 'met' }),
+    mk('an-x-1', 'anomaly-line', { anomaly: 'x' }),
+    mk('qr1', 'quota-reached'),
+    mk('qr2', 'quota-reached'),
+    mk('s-hot1', 'situation', { situation: 'hot' }),
+    mk('s-hot2', 'situation', { situation: 'hot' }),
+    mk('s-cold1', 'situation', { situation: 'cold' }),
+    mk('chatter-1', 'chatter'),
+  ])
+
+  it('a dawn is drawn from the bag of its quota only', () => {
+    for (const r of [0, 0.5, 0.99]) {
+      expect(
+        dawnMet.includes(
+          pickClosing(ledger, 'dawn', noUsed(), () => r, {}, 'met')!.entry.id
+        )
+      ).toBe(true)
+      expect(
+        pickClosing(ledger, 'dawn', noUsed(), () => r, {}, 'unmet')!.entry.id
+      ).toMatch(/^du/)
+    }
+  })
+  it('a withdraw is split by the quota too, and the ending ignores it', () => {
+    expect(
+      pickClosing(ledger, 'withdraw', noUsed(), rng0, {}, 'met')?.entry.id
+    ).toBe('wm1')
+    expect(
+      pickClosing(ledger, 'withdraw', noUsed(), rng0, {}, 'unmet')?.entry.id
+    ).toBe('wu1')
+    expect(
+      pickClosing(ledger, 'ending', noUsed(), rng0, {}, 'met')?.entry.id
+    ).toBe('ending-1')
+  })
+  it('the dawn bags do not repeat until each is empty, and are independent of each other', () => {
+    let used = noUsed()
+    const drawn: string[] = []
+    for (let i = 0; i < 3; i++) {
+      const p = pickClosing(ledger, 'dawn', used, rng0, {}, 'met')!
+      drawn.push(p.entry.id)
+      used = p.used
+    }
+    expect(new Set(drawn).size).toBe(3) // a full round, no repeat
+    // The unmet bag has not been touched by that round.
+    expect(pickClosing(ledger, 'dawn', used, rng0, {}, 'unmet')?.entry.id).toBe(
+      'du1'
+    )
+    // A refill after a round never starts with the one drawn last.
+    const next = pickClosing(ledger, 'dawn', used, rng0, {}, 'met')!
+    expect(next.entry.id).not.toBe(drawn[2])
+  })
+  it('a false report after the quota uses its own bag, not the anomaly lines or the pre-quota one', () => {
+    for (const r of [0, 0.99]) {
+      const p = pickFalseReport(ledger, 'x', noUsed(), () => r, {}, 'met')!
+      expect(p.entry.id).toMatch(/^fr-after/)
+      expect(p.used.usedLines).toEqual({}) // the anomaly's own lines stay unused
+    }
+    // Before the quota: the anomaly's own line first, then the pre-quota common one; never the after-quota ones.
+    const first = pickFalseReport(ledger, 'x', noUsed(), rng0, {}, 'unmet')!
+    expect(first.entry.id).toBe('an-x-1')
+    expect(
+      pickFalseReport(ledger, 'x', first.used, rng0, {}, 'unmet')!.entry.id
+    ).toBe('fr-before')
+    expect(pickFalseReport(ledger, null, noUsed(), rng0, {})!.entry.id).toBe(
+      'fr-before'
+    )
+  })
+  it('with no after-quota conversation the false report falls back to the ordinary ones', () => {
+    const l = ledgerOf([mk('fr-before', 'false-report')])
+    expect(pickFalseReport(l, null, noUsed(), rng0, {}, 'met')!.entry.id).toBe(
+      'fr-before'
+    )
+  })
+  it('a situation has one bag per situation, and a conversation already used waits for the refill', () => {
+    const a = pickSituation(ledger, 'hot', noUsed(), rng0)!
+    expect(a.entry.id).toBe('s-hot1')
+    const b = pickSituation(ledger, 'hot', a.used, rng0)!
+    expect(b.entry.id).toBe('s-hot2') // s-hot1 is used until the bag is empty
+    const c = pickSituation(ledger, 'hot', b.used, rng0)!
+    expect(c.entry.id).toBe('s-hot1') // refilled; not the one drawn last
+    expect(c.used.usedChatter.filter(id => id.startsWith('s-hot'))).toEqual([
+      's-hot1',
+    ])
+    expect(pickSituation(ledger, 'cold', b.used, rng0)!.entry.id).toBe(
+      's-cold1'
+    )
+    expect(pickSituation(ledger, 'brink', noUsed(), rng0)).toBeNull()
+  })
+  it('selectNext: quota-reached and situation come after the hint and before the midpoint / chatter', () => {
+    const l = ledgerOf([
+      ...ledger.entries,
+      mk('midpoint-m', 'midpoint', { stage: 'many' }),
+    ])
+    const base = { ledger: l, used: noUsed(), rng: rng0 }
+    expect(
+      selectNext({
+        ...base,
+        pendingQuotaReached: true,
+        pendingSituation: 'hot',
+        pendingMidpoint: 'many',
+      })?.source
+    ).toBe('quota-reached')
+    expect(
+      selectNext({
+        ...base,
+        pendingSituation: 'hot',
+        pendingMidpoint: 'many',
+      })
+    ).toMatchObject({ source: 'situation', situation: 'hot' })
+    expect(
+      selectNext({
+        ...base,
+        pendingFalseReport: { anomalyId: null },
+        pendingQuotaReached: true,
+        pendingSituation: 'hot',
+        quota: 'met',
+      })?.source
+    ).toBe('false-report')
+    expect(
+      selectNext({
+        ...base,
+        pendingSituation: 'hot',
+        pendingMidpoint: 'many',
+        pendingFlags: [],
+        pendingSpawnHints: [],
+      })?.source
+    ).toBe('situation')
+  })
+  it('a situation counts as a chatter slot: the chatter gate holds it after a serious conversation', () => {
+    const last = { tone: 'serious' as const, endedAtMs: 1000 }
+    expect(
+      selectNext({
+        ledger,
+        used: noUsed(),
+        rng: rng0,
+        pendingSituation: 'hot',
+        last,
+        nowMs: 2000,
+      })
+    ).toBeNull()
+    expect(
+      selectNext({
+        ledger,
+        used: noUsed(),
+        rng: rng0,
+        pendingSituation: 'hot',
+        last,
+        nowMs: 1000 + DEFAULT_SERIOUS_QUIET_MS,
+      })?.source
+    ).toBe('situation')
+  })
+  it('a situation without conversations is skipped (chatter comes instead)', () => {
+    expect(
+      selectNext({
+        ledger,
+        used: noUsed(),
+        rng: rng0,
+        pendingSituation: 'brink',
+      })?.source
+    ).toBe('chatter')
   })
 })

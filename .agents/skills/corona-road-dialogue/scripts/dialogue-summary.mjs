@@ -10,6 +10,8 @@ const files = [
   'chatter',
   'story',
   'false-report',
+  'quota-reached',
+  'situation',
   'anomaly-lines',
 ]
 
