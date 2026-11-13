@@ -272,6 +272,57 @@ export const pickSpawn = (
   return pickIn(group[0], group[1])
 }
 
+/** The group an entry is retired/refilled with (#427): one camera's images, or the camera-free non-image entries. */
+const NON_IMAGE_GROUP = 'non-image'
+
+/**
+ * Groups used up by retired ids (#427). A group is one camera's image entries (fixed `cameraId`) or all non-image
+ * entries (their camera is drawn at appearance). It is used up when it has at least one candidate (the same gates
+ * `pickSpawn` applies that do not change within a moment: the Reiwa lock, the `unlock` flag, a non-image effect) and
+ * every candidate is retired. Returns, per used-up group, every id of the group (all of them become drawable again,
+ * candidate or not) and the group's last retired id in `retired` order (the one just found, to be avoided once on the
+ * redraw). `nonImages` should already be filtered to the playable ones (`voiceReady`).
+ */
+export const exhaustedGroups = (
+  images: readonly LedgerEntry[],
+  nonImages: readonly NonImageEntry[],
+  retired: readonly string[],
+  reiwaUnlocked: boolean,
+  flags: Readonly<Record<string, boolean>> = {}
+): { ids: string[]; last: string }[] => {
+  if (retired.length === 0) return []
+  const retiredSet = new Set(retired)
+  const groups = new Map<string, { all: string[]; candidates: string[] }>()
+  const add = (
+    key: string,
+    e: { id: string; reiwa?: true; unlockFlag?: string },
+    playable: boolean
+  ) => {
+    const g = groups.get(key) ?? { all: [], candidates: [] }
+    g.all.push(e.id)
+    if (
+      playable &&
+      (reiwaUnlocked || e.reiwa !== true) &&
+      (e.unlockFlag === undefined || flags[e.unlockFlag] === true)
+    )
+      g.candidates.push(e.id)
+    groups.set(key, g)
+  }
+  for (const e of images) add(`cam:${e.cameraId}`, e, true)
+  for (const e of nonImages) add(NON_IMAGE_GROUP, e, hasNonImageEffect(e))
+  const out: { ids: string[]; last: string }[] = []
+  for (const g of groups.values()) {
+    if (
+      g.candidates.length === 0 ||
+      !g.candidates.every(id => retiredSet.has(id))
+    )
+      continue
+    const last = [...retired].reverse().find(id => g.candidates.includes(id))
+    if (last !== undefined) out.push({ ids: g.all, last })
+  }
+  return out
+}
+
 /**
  * True while an unused entry (of either kind) that could appear when a camera frees up still exists. Only the Reiwa
  * lock counts as "never" (as before): an entry waiting for a flag, for sound, or for its exclusive group is still

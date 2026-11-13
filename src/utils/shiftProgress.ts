@@ -43,7 +43,7 @@ const withRaisedFlags = (cur: SaveData, out: string[]): SaveData => {
   return { ...cur, flags, pendingStories }
 }
 
-/** A correct report: count it, remember the id, save, and return the flags that just rose. */
+/** A correct report: count it, remember the id (and retire it from the draw, #427), save, and return the flags that just rose. */
 export const recordFound = (anomalyId: string): string[] => {
   const out: string[] = []
   update(cur =>
@@ -55,6 +55,9 @@ export const recordFound = (anomalyId: string): string[] => {
           foundIds: cur.foundIds.includes(anomalyId)
             ? cur.foundIds
             : [...cur.foundIds, anomalyId],
+          retiredIds: cur.retiredIds.includes(anomalyId)
+            ? cur.retiredIds
+            : [...cur.retiredIds, anomalyId],
         },
         anomalyId,
         MEMO_INDEX.get(anomalyId)
@@ -120,3 +123,16 @@ export const shiftDurationMs = (
   closing === 'withdraw'
     ? Math.min(Math.max(0, elapsedMs), DEFAULT_CONFIG.totalDurationMs)
     : DEFAULT_CONFIG.totalDurationMs
+
+/**
+ * Un-retire ids (#427): a group of anomalies was used up, so all of its ids may be drawn again. `foundIds` is not
+ * touched (statistics, milestones and the Reiwa/child conditions keep counting what was ever found).
+ */
+export const unretire = (ids: readonly string[]): void => {
+  if (ids.length === 0) return
+  const drop = new Set(ids)
+  update(cur => ({
+    ...cur,
+    retiredIds: cur.retiredIds.filter(id => !drop.has(id)),
+  }))
+}

@@ -6492,7 +6492,7 @@ anomalies:
   - id: 'CR-SH-04'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal', 'person']
     anomaly_type: 'sound'
     phase: 'mid'
     subtlety: 'medium'
@@ -6504,7 +6504,7 @@ anomalies:
   - id: 'CR-SH-05'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     phase: 'mid'
     subtlety: 'subtle'
@@ -6516,7 +6516,7 @@ anomalies:
   - id: 'CR-SH-06'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal', 'person']
     anomaly_type: 'sound'
     phase: 'late'
     subtlety: 'medium'
@@ -6529,7 +6529,7 @@ anomalies:
     reiwa: true
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: '遠くから、無名の一般的なスマホ通知音が間をあけて不規則に鳴る。'
     memo:
@@ -6542,7 +6542,7 @@ anomalies:
     reiwa: true
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: 'ワイヤレスイヤホンから漏れるような、小さな無名のビート音。'
     memo:
@@ -6555,7 +6555,7 @@ anomalies:
     reiwa: true
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: '誰もいない通路で、自撮りのシャッター音が間をあけて不規則に鳴る。'
     memo:
@@ -6782,7 +6782,7 @@ anomalies:
   - id: 'RT-SND-01'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: 'ambience missing: 環境音が急に消える。'
     memo:
@@ -6791,7 +6791,7 @@ anomalies:
   - id: 'RT-SND-02'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: 'hum grows: 低いハム音が大きくなる。'
     memo:
@@ -6800,7 +6800,7 @@ anomalies:
   - id: 'RT-SND-03'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: 'fluorescent buzz: 蛍光灯のジリジリ音。'
     memo:
@@ -6809,7 +6809,7 @@ anomalies:
   - id: 'RT-SND-04'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal', 'person']
     anomaly_type: 'sound'
     detail: 'distant footsteps / running footsteps: 奥から足音 / 近づく速い足音。'
     memo:
@@ -6818,7 +6818,7 @@ anomalies:
   - id: 'RT-SND-05'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal', 'person']
     anomaly_type: 'sound'
     detail: 'knock: シャッター/壁/ガラスを叩く音。'
     memo:
@@ -6827,7 +6827,7 @@ anomalies:
   - id: 'RT-SND-06'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal', 'person']
     anomaly_type: 'sound'
     detail: 'whisper: 聞き取れない囁き。'
     memo:
@@ -6836,7 +6836,7 @@ anomalies:
   - id: 'RT-SND-07'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal', 'person']
     anomaly_type: 'sound'
     detail: 'reversed announcement: 逆再生の館内放送。'
     memo:
@@ -6845,7 +6845,7 @@ anomalies:
   - id: 'RT-SND-08'
     status: 'planned'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: 'wrong location sound: 見ていないカメラの音が鳴る。'
     memo:
@@ -6854,7 +6854,7 @@ anomalies:
   - id: 'RT-SND-09'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: 'report stinger: 異変中だけ短い不協和音。'
     memo:
@@ -6863,7 +6863,7 @@ anomalies:
   - id: 'RT-SND-10'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: 'hum wobble: 常時鳴っている低いハム音の高さが、ゆっくり上下にゆらぐ（報告の前から聞こえる。大きくなる RT-SND-02 とは別）。前提の常時ハムは実装済み（docs/audio.md）。50/100Hz の基音はスマホの小型スピーカーでは揺れが聞き取りにくいので、揺れは小型スピーカーでも聞こえる帯域の倍音成分（数百Hz前後）で作る（実装済み: synthSounds の wobble）。'
     memo:
@@ -6872,7 +6872,7 @@ anomalies:
   - id: 'RT-SND-11'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: '食器の音がかすかに鳴る（WebAudio 合成の dishes で実装済み。音素材は不要）'
     memo:
@@ -6882,7 +6882,7 @@ anomalies:
   - id: 'RT-SND-12'
     status: 'produced'
     kind: 'non_image'
-    category: 'environment'
+    category: ['environment', 'surreal', 'person']
     anomaly_type: 'sound'
     detail: '古い館内放送がかすかに混ざる（声素材 rt-snd-12 を再生機構でループ再生（再生側に帯域制限は無い）。聴感は実機確認待ち）'
     memo:
@@ -7082,7 +7082,7 @@ anomalies:
     status: 'produced'
     kind: 'non_image'
     exclusive: 'noise'
-    category: 'Surreal'
+    category: ['Surreal', 'camera']
     anomaly_type: 'ui_corruption'
     detail: 'noise gone for good: モニター全体のノイズ（粒状）と走査線が全カメラで消えっぱなしになり、画面がのっぺり澄む。叩く / 振るで10秒消える機能（#342）と違い、操作しなくても消えていて、時間で戻らない。常にノイズがあるのが通常状態なので、消えていること自体が手がかり。異変中に叩いても振っても見え方は変わらない。'
     memo:

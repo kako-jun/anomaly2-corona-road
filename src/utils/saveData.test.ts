@@ -833,3 +833,30 @@ describe('sound settings (#79)', () => {
     expect(validateSave({ ...save(), settings })).toBeNull()
   })
 })
+
+describe('retiredIds (#427)', () => {
+  it('treats an old save without retiredIds as none, and keeps a valid list without duplicates', () => {
+    const old: Record<string, unknown> = { ...save() }
+    delete old.retiredIds
+    expect(validateSave(old)?.retiredIds).toEqual([])
+    expect(
+      validateSave({ ...save(), retiredIds: ['a', 'a', 'b'] })?.retiredIds
+    ).toEqual(['a', 'b'])
+  })
+  it('rejects a retiredIds that is not a string array', () => {
+    expect(validateSave({ ...save(), retiredIds: 'x' })).toBeNull()
+    expect(validateSave({ ...save(), retiredIds: [1] })).toBeNull()
+  })
+  it('merges as a union within one epoch, and the higher epoch wins whole', () => {
+    expect(
+      mergeSave(save({ retiredIds: ['a'] }), save({ retiredIds: ['b', 'a'] }))
+        .retiredIds
+    ).toEqual(['a', 'b'])
+    expect(
+      mergeSave(
+        save({ retiredIds: ['a'], epoch: 0 }),
+        save({ retiredIds: [], epoch: 1 })
+      ).retiredIds
+    ).toEqual([])
+  })
+})

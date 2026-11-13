@@ -230,3 +230,27 @@ describe('recordEndingReached / resetProgress (#294)', () => {
     expect(p.load().settings).toBeUndefined()
   })
 })
+
+describe('retiredIds (#427)', () => {
+  it('a correct report retires the id once; foundIds and foundTotal are unaffected by un-retiring', async () => {
+    const p = await fresh()
+    p.recordFound('a')
+    p.recordFound('a')
+    p.recordFound('b')
+    expect(p.load().retiredIds).toEqual(['a', 'b'])
+    p.unretire(['a', 'zzz'])
+    expect(p.load().retiredIds).toEqual(['b'])
+    expect(p.load().foundIds).toEqual(['a', 'b'])
+    expect(p.load().foundTotal).toBe(3)
+    // found again after the refill: retired again, still one entry in foundIds
+    p.recordFound('a')
+    expect(p.load().retiredIds).toEqual(['b', 'a'])
+    expect(p.load().foundIds).toEqual(['a', 'b'])
+  })
+  it('START OVER (resetProgress) clears it', async () => {
+    const p = await fresh()
+    p.recordFound('a')
+    p.resetProgress()
+    expect(p.load().retiredIds).toEqual([])
+  })
+})

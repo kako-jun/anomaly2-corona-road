@@ -45,6 +45,11 @@ export interface SaveData {
   foundTotal: number
   /** Distinct anomaly ids ever found. Its length drives foundUnique flag thresholds. */
   foundIds: string[]
+  /**
+   * Ids correctly reported and not to be drawn again until their group (one camera's images, or the non-image group)
+   * is used up (#427). Separate from `foundIds` (the statistics' source of truth), which never shrinks. Absent = [].
+   */
+  retiredIds: string[]
   /** Completed plays (dawn or withdraw). */
   loops: number
   /** Raised story flags (names from dialogue/flags.yaml). */
@@ -79,6 +84,7 @@ export const emptySave = (): SaveData => ({
   v: SAVE_VERSION,
   foundTotal: 0,
   foundIds: [],
+  retiredIds: [],
   loops: 0,
   flags: {},
   usedLines: {},
@@ -105,7 +111,7 @@ export const SAVE_LIMITS = {
   count: 1_000_000_000,
   /** Largest generation number. Reset and import step it by one and stop here. */
   epoch: 1_000_000_000,
-  /** Items in one id list (foundIds, usedChatter, one usedLines entry, the memo queues). */
+  /** Items in one id list (foundIds, retiredIds, usedChatter, one usedLines entry, the memo queues). */
   listLength: 20_000,
   /** Keys in `flags` and in `usedLines`. */
   keys: 2_000,
@@ -227,6 +233,9 @@ export const validateSave = (raw: unknown): SaveData | null => {
   // Absent in saves written before the field existed (same version): treated as none.
   const pendingStories = rec.pendingStories ?? []
   if (!isStringArray(pendingStories)) return null
+  // Absent in saves written before the field existed (same version): none retired.
+  const retiredIds = rec.retiredIds ?? []
+  if (!isStringArray(retiredIds)) return null
   // Absent in saves written before the memo queues existed (same version): empty.
   const memoLists = {
     pendingMemoFlags: rec.pendingMemoFlags ?? [],
@@ -260,6 +269,7 @@ export const validateSave = (raw: unknown): SaveData | null => {
     v: SAVE_VERSION,
     foundTotal,
     foundIds: uniq(foundIds),
+    retiredIds: uniq(retiredIds),
     loops,
     flags: { ...(flags as Record<string, boolean>) },
     usedLines: Object.fromEntries(
@@ -342,6 +352,7 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
     v: SAVE_VERSION,
     foundTotal: Math.max(a.foundTotal, b.foundTotal),
     foundIds: uniq([...a.foundIds, ...b.foundIds]),
+    retiredIds: uniq([...a.retiredIds, ...b.retiredIds]),
     loops: Math.max(a.loops, b.loops),
     flags: { ...a.flags, ...b.flags },
     usedLines,

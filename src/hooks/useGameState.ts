@@ -19,6 +19,7 @@ import {
   REIWA_UNLOCK_FLAG,
   createAnomaly,
   createNonImageAnomaly,
+  exhaustedGroups,
   hasUnusedEntry,
   pickSpawn,
 } from '../utils/anomalyData'
@@ -32,6 +33,7 @@ import {
   recordShiftEnd,
   shiftDurationMs,
   recordEndingReached,
+  unretire,
 } from '../utils/shiftProgress'
 import {
   ANOMALY_LEDGER,
@@ -269,7 +271,9 @@ export const useGameState = () => {
         // The state update is a function of the latest state (not the ref's value), so an anomaly that spawned in
         // the same batch is not overwritten.
         setActiveAnomalies(markReported)
-        pushFeedback('correct', `CONFIRMED — ${anomalyOnCamera.category}`)
+        // The category the player chose, never the ledger's first one: a ledger may accept several, and the
+        // player must not see that (#423).
+        pushFeedback('correct', `CONFIRMED — ${category}`)
         if (afterChildIdsRef.current.has(anomalyOnCamera.id)) {
           afterChildReportedRef.current += 1
         }
@@ -306,8 +310,14 @@ export const useGameState = () => {
    */
   const spawnAnomaly = useCallback(
     (currentTime: number): 'spawned' | 'no-free-camera' | 'exhausted' => {
+      // Never on the camera being watched (#418): the player must not see an anomaly pop in. It appears on a camera
+      // out of sight, so switching there shows it already present. No exception: when the watched camera is the only
+      // free one, this returns 'no-free-camera' and the caller retries. Every camera of a multi-camera glitch
+      // (RT-FEED-28) is drawn from this same list, so none of them is the watched one either.
+      const watchedId = CAMERAS[currentIndexRef.current]?.id
       const freeCameraIds = CAMERAS.filter(
         c =>
+          c.id !== watchedId &&
           !activeAnomaliesRef.current.some(
             a => showsOnCamera(a, c.id) && !a.detectedAt
           )
@@ -315,13 +325,25 @@ export const useGameState = () => {
       const used = usedLedgerIdsRef.current
       // Reiwa anomalies join the draw once elder3 is saved; one raised mid-shift counts from the next spawn.
       const reiwaUnlocked = load().flags[REIWA_UNLOCK_FLAG] === true
+      const playableNonImages = nonImageLedger.filter(entry =>
+        voiceReady(entry.id)
+      )
+      // A group (one camera's images / the non-image entries) whose candidates have all been found is refilled now
+      // (#427): its retired ids are released, and the one found last is avoided once so it does not come straight back.
+      const refilled = exhaustedGroups(
+        ANOMALY_LEDGER,
+        playableNonImages,
+        load().retiredIds,
+        reiwaUnlocked,
+        load().flags
+      )
+      unretire(refilled.flatMap(g => g.ids))
+      const justFound = new Set(refilled.map(g => g.last))
+      // Retired (found) ids are out of the draw like the ones already shown this shift.
+      const blocked = new Set([...used, ...load().retiredIds])
       for (;;) {
-        const spawn = pickSpawn(
-          ANOMALY_LEDGER,
-          nonImageLedger.filter(entry => voiceReady(entry.id)),
-          freeCameraIds,
-          used,
-          {
+        const draw = (skip: ReadonlySet<string>) =>
+          pickSpawn(ANOMALY_LEDGER, playableNonImages, freeCameraIds, skip, {
             reiwaUnlocked,
             flags: load().flags,
             audible: isAudible(),
@@ -330,10 +352,14 @@ export const useGameState = () => {
                 .filter(a => !a.detectedAt && a.exclusiveGroup)
                 .map(a => a.exclusiveGroup as string)
             ),
-          }
-        )
+          })
+        const spawn =
+          (justFound.size > 0
+            ? draw(new Set([...blocked, ...justFound]))
+            : null) ?? draw(blocked)
         if (!spawn) break
         used.add(spawn.entry.id)
+        blocked.add(spawn.entry.id)
         let newAnomaly: Anomaly
         if (spawn.kind === 'image') {
           let url: string
@@ -369,7 +395,12 @@ export const useGameState = () => {
       // Not filtered by voiceReady: a voice whose file has not answered yet must keep the shift from being called
       // exhausted (that is permanent for the shift). A voice whose probe failed (404, under 60 s) is never used up,
       // so it counts as unused for the rest of the shift; that only keeps the cheap retry going, nothing is drawn.
-      return hasUnusedEntry(ANOMALY_LEDGER, nonImageLedger, used, reiwaUnlocked)
+      return hasUnusedEntry(
+        ANOMALY_LEDGER,
+        nonImageLedger,
+        blocked,
+        reiwaUnlocked
+      )
         ? 'no-free-camera'
         : 'exhausted'
     },
