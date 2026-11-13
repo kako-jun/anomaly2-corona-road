@@ -11,6 +11,9 @@ export const VOICE_IDS = new Set([
 const MIN_SECONDS = 60
 const FADE = 1
 const CURVE_POINTS = 64
+/** A failed load is tried again this many times in all, 5 s then doubling (5, 10, 20, 40 s), and then left alone. */
+export const VOICE_RETRY_LIMIT = 5
+export const voiceRetryDelay = (attempt: number): number => 5000 * 2 ** attempt
 /** How often the loop tops up copies, measured against the audio clock. */
 const REFILL_MS = 1000
 

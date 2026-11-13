@@ -28,13 +28,21 @@ export const hasSoundEffect = (id: string): boolean =>
   Object.hasOwn(HUM_MODES, id) ||
   VOICE_IDS.has(id)
 
-/** The voice to keep decoded: the one on the watched camera, else any other unreported one (one buffer at a time). */
+/**
+ * The voice to keep decoded: the one on the watched camera; on a camera without a voice, the one already held while
+ * it is still unreported (sticky, so switching cameras never frees and re-decodes it); else any other unreported one.
+ */
 export const voiceToHold = (
   anomalies: Anomaly[],
-  cameraId: number
+  cameraId: number,
+  current?: string
 ): string | undefined => {
   const open = anomalies.filter(a => !a.detectedAt && VOICE_IDS.has(a.id))
-  return (open.find(a => a.cameraId === cameraId) ?? open[0])?.id
+  return (
+    open.find(a => a.cameraId === cameraId) ??
+    open.find(a => a.id === current) ??
+    open[0]
+  )?.id
 }
 export const soundOnCamera = (
   anomalies: Anomaly[],

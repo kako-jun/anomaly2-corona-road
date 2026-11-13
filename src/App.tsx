@@ -59,6 +59,7 @@ function App() {
 
 function useScreen(): [string, ReactNode] {
   const ready = useRef<Promise<void>>(Promise.resolve())
+  const heldVoice = useRef<string | undefined>(undefined)
   const [loading, setLoading] = useState(false)
   // The title's start key opens the investigation note; its key starts the shift (#297).
   const [memo, setMemo] = useState(false)
@@ -197,6 +198,11 @@ function useScreen(): [string, ReactNode] {
     ]
   }
 
+  heldVoice.current = voiceToHold(
+    activeAnomalies,
+    currentCamera.id,
+    heldVoice.current
+  )
   return [
     'shift',
     <>
@@ -207,7 +213,7 @@ function useScreen(): [string, ReactNode] {
         currentCamera={currentCamera}
         anomalyHere={activeAnomalyHere}
         soundAnomalyHere={soundOnCamera(activeAnomalies, currentCamera.id)}
-        heldVoiceId={voiceToHold(activeAnomalies, currentCamera.id)}
+        heldVoiceId={heldVoice.current}
         feedGlitchHere={feedGlitchHere}
         openAnomalyIds={activeAnomalies
           .filter(a => !a.detectedAt)

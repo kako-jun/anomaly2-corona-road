@@ -7,6 +7,8 @@ import {
   probeVoices,
   releaseVoice,
   voiceReady,
+  voiceRetryDelay,
+  VOICE_RETRY_LIMIT,
   voiceUrl,
 } from './voiceSounds'
 
@@ -154,11 +156,29 @@ describe('voice loop timing', () => {
     list = sources(mock)
     expect(list).toHaveLength(3)
     expect((list[2].starts as number[])[0]).toBeCloseTo(t0 + 2 * (D - FADE), 6)
+    const stoppedAt = 67
     handle?.stop()
     ;(mock.raw as { currentTime: number }).currentTime = 200
     vi.advanceTimersByTime(300000)
     expect(sources(mock)).toHaveLength(3)
-    for (const s of list)
-      expect((s.stops as number[]).length).toBeGreaterThan(0)
+    // every copy is cut off right at the stop time, so one booked for the future never sounds
+    for (const s of list) {
+      const start = (s.starts as number[])[0]
+      const stops = s.stops as number[]
+      expect(stops.length).toBeGreaterThan(0)
+      for (const t of stops) {
+        expect(t).toBeLessThanOrEqual(stoppedAt + 0.1)
+        if (start > stoppedAt) expect(t).toBeLessThan(start)
+      }
+    }
+  })
+})
+
+describe('voice load retry', () => {
+  it('backs off exponentially and has a finite limit', () => {
+    expect([0, 1, 2, 3].map(voiceRetryDelay)).toEqual([
+      5000, 10000, 20000, 40000,
+    ])
+    expect(VOICE_RETRY_LIMIT).toBe(5)
   })
 })

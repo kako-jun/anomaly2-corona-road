@@ -6866,7 +6866,7 @@ anomalies:
     kind: 'non_image'
     category: 'environment'
     anomaly_type: 'sound'
-    detail: 'hum wobble: 常時鳴っている低いハム音の高さが、ゆっくり上下にゆらぐ（報告の前から聞こえる。大きくなる RT-SND-02 とは別）。前提の常時ハムは docs/audio.md の段階では未実装で、その実装が先に要る。50/100Hz の基音はスマホの小型スピーカーでは揺れが聞き取りにくいので、揺れは小型スピーカーでも聞こえる帯域の倍音成分（数百Hz前後）で作る（実装は別担当）。'
+    detail: 'hum wobble: 常時鳴っている低いハム音の高さが、ゆっくり上下にゆらぐ（報告の前から聞こえる。大きくなる RT-SND-02 とは別）。前提の常時ハムは実装済み（docs/audio.md）。50/100Hz の基音はスマホの小型スピーカーでは揺れが聞き取りにくいので、揺れは小型スピーカーでも聞こえる帯域の倍音成分（数百Hz前後）で作る（実装済み: synthSounds の wobble）。'
     memo:
       ja: '低い唸りの音が揺れる。'
       en: 'The hum pitch keeps wavering.'
@@ -6875,7 +6875,7 @@ anomalies:
     kind: 'non_image'
     category: 'environment'
     anomaly_type: 'sound'
-    detail: '食器の音がかすかに鳴る（音素材と再生機構が必要）'
+    detail: '食器の音がかすかに鳴る（WebAudio 合成の dishes で実装済み。音素材は不要）'
     memo:
       ja: 'かすかな食器の音。'
       en: 'The faint sound of dishes.'

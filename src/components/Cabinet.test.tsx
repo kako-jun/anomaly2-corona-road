@@ -539,6 +539,41 @@ describe('sound anomaly lifecycle', () => {
     play.mockRestore()
     saveVolume(70)
   })
+  it('holds a voice once across re-renders, releases it on unmount, and does not reload on unrelated changes', async () => {
+    const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(true)
+    const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const props = makeProps()
+    const { rerender, unmount } = render(
+      <Cabinet {...props} heldVoiceId="RT-SND-06" currentCameraIndex={0} />
+    )
+    await waitFor(() => expect(hold).toHaveBeenCalledTimes(1))
+    rerender(
+      <Cabinet {...props} heldVoiceId="RT-SND-06" currentCameraIndex={1} />
+    )
+    await act(async () => {})
+    expect(hold).toHaveBeenCalledTimes(1)
+    expect(release).not.toHaveBeenCalled()
+    unmount()
+    expect(release).toHaveBeenCalledWith('RT-SND-06')
+    hold.mockRestore()
+    release.mockRestore()
+  })
+  it('stops retrying a voice that keeps failing instead of fetching every few seconds forever', async () => {
+    vi.useFakeTimers()
+    const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(false)
+    const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const { unmount } = render(
+      <Cabinet {...makeProps()} heldVoiceId="RT-SND-06" />
+    )
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10 * 60 * 1000)
+    })
+    expect(hold).toHaveBeenCalledTimes(voice.VOICE_RETRY_LIMIT)
+    unmount()
+    hold.mockRestore()
+    release.mockRestore()
+    vi.useRealTimers()
+  })
   it('repeats intermittent sounds throughout five minutes and stops after report', () => {
     vi.useFakeTimers()
     const random = vi.spyOn(Math, 'random').mockReturnValue(0.5)

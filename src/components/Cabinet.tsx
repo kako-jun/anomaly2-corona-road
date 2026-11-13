@@ -9,10 +9,12 @@ import { gameAudio, DEFAULT_VOLUME } from '../utils/audioEngine'
 import { playSynth } from '../utils/synthSounds'
 import {
   VOICE_IDS,
+  VOICE_RETRY_LIMIT,
   holdVoice,
   playVoice,
   probeVoices,
   releaseVoice,
+  voiceRetryDelay,
 } from '../utils/voiceSounds'
 import { HUM_MODES, SOUND_EFFECTS } from '../utils/nonImageEffects'
 import { readAudioVolume, saveVolume } from '../utils/audioSettings'
@@ -146,28 +148,33 @@ export const Cabinet = ({
     : undefined
   const audible = volume > 0
   // Keep one decoded voice while its anomaly is unreported; free it on report, shift end, silence or unmount.
+  // A failed load retries with exponential backoff and gives up after a few tries (a missing or short file is permanent).
   const [voiceLoads, setVoiceLoads] = useState(0)
   useEffect(() => {
     if (!heldVoiceId || ending || !audible) return
     let cancelled = false
     let timer: number | undefined
-    const load = () => {
+    const load = (attempt: number) => {
       void gameAudio
         .unlock()
         .then(() => !cancelled && holdVoice(gameAudio, heldVoiceId))
         .then(ok => {
           if (cancelled) return
           if (ok) setVoiceLoads(n => n + 1)
-          else timer = window.setTimeout(load, 5000)
+          else if (attempt + 1 < VOICE_RETRY_LIMIT)
+            timer = window.setTimeout(
+              () => load(attempt + 1),
+              voiceRetryDelay(attempt)
+            )
         })
     }
-    load()
+    load(0)
     return () => {
       cancelled = true
       window.clearTimeout(timer)
       releaseVoice(heldVoiceId)
     }
-  }, [heldVoiceId, ending, audible, audioGeneration])
+  }, [heldVoiceId, ending, audible])
   useEffect(() => {
     if (!anomalySoundId || !VOICE_IDS.has(anomalySoundId) || ending || !audible)
       return
