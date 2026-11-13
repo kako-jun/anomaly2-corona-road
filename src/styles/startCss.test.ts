@@ -140,14 +140,20 @@ describe('start.css: the notes', () => {
 describe('start.css: the drifting blur patch (#331)', () => {
   const pct = (v: string) => parseFloat(v)
   const screen = (p: string) => decl('.start-screen', p)!
-  it('is a big patch (radius 40-55% of the photo), strong enough to see but gentle: 1-6 px, min below max', () => {
+  it('is a big patch (radius 40-55% of the photo) with a fixed radius of 6-10 px that breathes by opacity only', () => {
     expect(pct(screen('--blur-w'))).toBeGreaterThanOrEqual(80)
     expect(pct(screen('--blur-w'))).toBeLessThanOrEqual(110)
     expect(pct(screen('--blur-h'))).toBeGreaterThanOrEqual(80)
     expect(pct(screen('--blur-h'))).toBeLessThanOrEqual(110)
-    expect(pct(screen('--blur-max'))).toBeLessThanOrEqual(6)
-    expect(pct(screen('--blur-min'))).toBeGreaterThanOrEqual(1)
-    expect(pct(screen('--blur-min'))).toBeLessThan(pct(screen('--blur-max')))
+    expect(pct(screen('--blur-px'))).toBeGreaterThanOrEqual(6)
+    expect(pct(screen('--blur-px'))).toBeLessThanOrEqual(10)
+    expect(pct(screen('--blur-fade-min'))).toBeGreaterThan(0)
+    expect(pct(screen('--blur-fade-min'))).toBeLessThan(0.5)
+    // the radius is never animated (it repaints every frame): the keyframes touch opacity only
+    root.walkAtRules('keyframes', (r: AtRule) => {
+      if (r.params === 'start-blur-power')
+        r.walkDecls(d => expect(d.prop).toBe('opacity'))
+    })
   })
   it('loops x, y and the strength in coprime periods that also avoid the photo drift (70 s, 53 s)', () => {
     const loops = [
@@ -164,7 +170,9 @@ describe('start.css: the drifting blur patch (#331)', () => {
   })
   it('is a masked backdrop blur that takes no pointer', () => {
     expect(decl('.start-blur', 'backdrop-filter')).toContain('blur(')
-    expect(decl('.start-blur', 'mask-image')).toContain('radial-gradient(closest-side')
+    expect(decl('.start-blur', 'mask-image')).toContain(
+      'radial-gradient(closest-side'
+    )
     expect(decl('.start-blur-x', 'pointer-events')).toBe('none')
   })
   it('stays within the margin the travel leaves: the patch never moves more than 40% of its size', () => {
@@ -174,9 +182,10 @@ describe('start.css: the drifting blur patch (#331)', () => {
     let supports = false
     let still = false
     root.walkAtRules('supports', (a: AtRule) => {
-      if (a.params.includes('not')) a.walkDecls('display', d => {
-        if (d.value === 'none') supports = true
-      })
+      if (a.params.includes('not'))
+        a.walkDecls('display', d => {
+          if (d.value === 'none') supports = true
+        })
     })
     root.walkAtRules('media', (m: AtRule) => {
       if (m.params.includes('prefers-reduced-motion'))

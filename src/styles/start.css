@@ -110,8 +110,8 @@ body.start-open #root {
   --blur-w: 90%;
   --blur-h: 90%;
   --blur-travel: 35%; /* of the patch's own size, each way */
-  --blur-max: 4px;
-  --blur-min: 1.5px;
+  --blur-px: 8px; /* the radius never changes (animating it repaints every frame); the strength breathes by opacity */
+  --blur-fade-min: 0.2; /* the patch's opacity at its faintest (1 at its strongest) */
 }
 .start-blur-x {
   position: absolute;
@@ -132,8 +132,8 @@ body.start-open #root {
 .start-blur {
   position: absolute;
   inset: 0;
-  -webkit-backdrop-filter: blur(var(--blur-max));
-  backdrop-filter: blur(var(--blur-max));
+  -webkit-backdrop-filter: blur(var(--blur-px));
+  backdrop-filter: blur(var(--blur-px));
   -webkit-mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.7) 40%, transparent 100%);
   mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.7) 40%, transparent 100%);
   animation: start-blur-power 18.5s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
@@ -157,12 +157,10 @@ body.start-open #root {
 }
 @keyframes start-blur-power {
   from {
-    -webkit-backdrop-filter: blur(var(--blur-min));
-    backdrop-filter: blur(var(--blur-min));
+    opacity: var(--blur-fade-min);
   }
   to {
-    -webkit-backdrop-filter: blur(var(--blur-max));
-    backdrop-filter: blur(var(--blur-max));
+    opacity: 1;
   }
 }
 /* no backdrop-filter (old engines): no patch at all */
@@ -171,6 +169,18 @@ body.start-open #root {
     display: none;
   }
 }
+/* a slow device (utils/titlePerf.ts): first the patch stops moving (still and faint, like reduced motion), then it is gone */
+.start-perf-lite .start-blur-x,
+.start-perf-lite .start-blur-y,
+.start-perf-lite .start-blur {
+  animation: none;
+}
+.start-perf-lite .start-blur {
+  opacity: var(--blur-fade-min);
+}
+.start-perf-off .start-blur-x {
+  display: none;
+}
 @media (prefers-reduced-motion: reduce) {
   .start-blur-x,
   .start-blur-y,
@@ -178,8 +188,7 @@ body.start-open #root {
     animation: none;
   }
   .start-blur {
-    -webkit-backdrop-filter: blur(var(--blur-min));
-    backdrop-filter: blur(var(--blur-min));
+    opacity: var(--blur-fade-min);
   }
 }
 /* a burst of the monitor's noise (canvas + scanlines from retro.css) and white tear bands */
