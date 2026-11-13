@@ -601,7 +601,17 @@ def check_after(browser, problems):
 DIGITS = """() => {
   const res = [], form = document.querySelector('.note-form'), fr = form.getBoundingClientRect()
   const cols = document.querySelector('.note-fcols')
+  // The two columns must keep 3px of air in total, not just fit: the full-width digits are about 3% wider in another engine
+  // (headless shell, phones). A column's air is the least slack its rows leave after the label's own text (the widest row sets it).
+  const sc = document.querySelector('.note-paper').getBoundingClientRect().width / 340
+  let air = 0
+  for (const col of document.querySelectorAll('.note-fcol')) {
+    let least = Infinity
+    for (const fl of col.querySelectorAll('.note-fl')) { const rg = document.createRange(); rg.selectNodeContents(fl); least = Math.min(least, (fl.getBoundingClientRect().width - rg.getBoundingClientRect().width) / sc) }
+    air += least
+  }
   if (cols.scrollWidth > cols.clientWidth + 1) res.push('the two columns of the numbers box are wider than the box')
+  else if (air < 3) res.push(`the two columns of the numbers box leave only ${air.toFixed(1)}px of air (need 3)`)
   for (const row of form.querySelectorAll('.note-fr')) {
     const fl = row.querySelector('.note-fl'), b = row.querySelector('b'), sm = row.querySelector('small'), name = fl.textContent
     if (fl.scrollWidth > fl.clientWidth + 1) res.push(`label "${name}" does not fit its column`)

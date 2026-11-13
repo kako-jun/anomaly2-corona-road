@@ -353,10 +353,10 @@
   width: 14px;
 }
 .note-ja .note-form[data-digits='2'] .note-fcol .note-fr b {
-  font-size: 17px;
+  font-size: 16px;
 }
 .note-ja .note-form[data-digits='3'] .note-fcol .note-fr b {
-  font-size: 15.5px;
+  font-size: 15px;
 }
 .note-ja .note-form[data-digits='3'] .note-fcol .note-fl {
   font-size: 12px;
@@ -366,7 +366,7 @@
   width: 12px;
 }
 .note-ja .note-form[data-digits='3'] .note-fcols {
-  gap: 10px;
+  gap: 8px;
 }
 .note-ja .note-form[data-digits='3'] .note-fcol + .note-fcol {
   padding-left: 8px;
