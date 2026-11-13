@@ -30,3 +30,6 @@ dist-ssr
 # (delete each item folder after its overlay is committed). See the corona-road-anomaly skill.
 experiments/
 __pycache__/
+
+# TypeScript build info
+*.tsbuildinfo

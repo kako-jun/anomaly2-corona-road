@@ -1,7 +1,7 @@
 /**
  * The title screen's way out on a slow device (#331): the blur patch and the noise are decoration, so when the frames are too
  * slow for long enough they step down, once and for good (never back up: that would flicker).
- *   full -> lite (the patch stops moving: still and faint) -> off (no patch, no noise; the photo's drift stays)
+ *   full -> lite (the patch stops moving, still and faint, and the photo's drift stops too) -> off (no patch, no noise; the photo stays still)
  * Pure functions: `stepPerf` takes the state and one animation-frame time and returns the next state.
  */
 export type PerfLevel = 'full' | 'lite' | 'off'

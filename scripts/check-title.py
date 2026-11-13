@@ -36,6 +36,7 @@ Run: `npm run check:title`   (or: uv run --script scripts/check-title.py [--url 
 import argparse
 import glob
 import os
+import signal
 import socket
 import subprocess
 import sys
@@ -251,7 +252,7 @@ def main():
         port = free_port()
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         proc = subprocess.Popen(["npx", "vite", "--port", str(port), "--strictPort"], cwd=root,
-                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
         url = f"http://localhost:{port}/"
         for _ in range(60):
             try:
@@ -454,7 +455,14 @@ def main():
             b.close()
     finally:
         if proc:
-            proc.terminate()
+            # npx and the vite it started (its own process group), nothing else; SIGKILL if it does not leave in 5 s
+            try:
+                os.killpg(proc.pid, signal.SIGTERM)
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
     sys.exit(1 if bad else 0)
 
 
