@@ -331,6 +331,8 @@ export const exhaustedGroups = (
  * True while an unused entry (of either kind) that could appear when a camera frees up still exists. Only the Reiwa
  * lock counts as "never" (as before): an entry waiting for a flag, for sound, or for its exclusive group is still
  * unused, because any of those can change during the shift, so the spawner keeps retrying instead of giving up.
+ * It is called with the ledger BEFORE the device filter (`monitorEffectPlayable`, RT-UI-10 on a touch device), on purpose:
+ * a mouse-only entry that can never be drawn here still counts as unused, so the shift is not called exhausted for it.
  */
 export const hasUnusedEntry = (
   images: readonly LedgerEntry[],

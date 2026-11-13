@@ -989,3 +989,46 @@ describe('Cabinet monitor effects (data-fx, #408)', () => {
     for (const id of ids) expect(Object.keys(MONITOR_EFFECTS)).toContain(id)
   })
 })
+
+describe('RT-UI-21 loupe broken (the entry through Cabinet)', () => {
+  const rect = (w: number, h: number) =>
+    ({
+      left: 0,
+      top: 0,
+      right: w,
+      bottom: h,
+      width: w,
+      height: h,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    }) as DOMRect
+  const press = (fx: string[]) => {
+    const spy = vi
+      .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+      .mockImplementation(() => rect(400, 600))
+    const { container } = render(
+      <Cabinet {...makeProps({ monitorEffects: new Set(fx) })} />
+    )
+    const glass = container.querySelector('.glass') as HTMLElement
+    fireEvent.pointerDown(glass, {
+      pointerId: 1,
+      clientX: 200,
+      clientY: 300,
+      pointerType: 'touch',
+      button: 0,
+    })
+    const shown = !!container.querySelector('[data-testid="loupe"]')
+    spy.mockRestore()
+    return shown
+  }
+  it('pressing the picture shows the loupe normally (the harness works)', () => {
+    expect(press([])).toBe(true)
+  })
+  it('with RT-UI-21 running, pressing the picture shows no loupe', () => {
+    expect(press(['RT-UI-21'])).toBe(false)
+  })
+  it('another running effect does not take the loupe away', () => {
+    expect(press(['RT-UI-11'])).toBe(true)
+  })
+})

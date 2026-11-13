@@ -280,32 +280,37 @@ describe('input-side effects (#437): RT-UI-10 / 21 / 30', () => {
     expect(new Set(shapes).size).toBeGreaterThanOrEqual(3)
     expect(css).not.toMatch(/RT-UI-10'\][^{]*\{[^}]*pointer-events: none/)
   })
-  it('the whole-screen flash is a fixed veil over the viewport that takes no pointer events, pulses at most 3 a second with a faint peak, then rests', () => {
-    expect(css).toMatch(
-      /RT-UI-30'\]::after \{[^}]*position: fixed;\s*inset: 0;[^}]*pointer-events: none;[^}]*animation: screen-flash ([\d.]+)s linear infinite/
-    )
-    const total = Number(css.match(/animation: screen-flash ([\d.]+)s/)![1])
+  it('the whole-screen flash is a fixed veil over the viewport that takes no pointer events; its pulses (at most 3 a second, faint peak) END after a few and a still veil stays', () => {
+    const rule = css.match(/RT-UI-30'\]::after \{([^}]*)\}/)![1]
+    expect(rule).toMatch(/position: fixed;\s*inset: 0;/)
+    expect(rule).toMatch(/pointer-events: none;/)
+    // the resting state is the still veil, not 0: it stays after the pulses until the report
+    const rest = Number(rule.match(/\n\s*opacity: ([\d.]+);/)![1])
+    expect(rest).toBeGreaterThan(0)
+    // a finite animation (iteration count 1), never `infinite`
+    const use = rule.match(/animation: screen-flash ([\d.]+)s linear (\w+);/)!
+    expect(use[2]).toBe('1')
+    expect(rule).not.toMatch(/infinite/)
+    const total = Number(use[1])
     const body = css.match(/@keyframes screen-flash \{([\s\S]*?)\n\}/)![1]
-    // peaks are the stops with a non-zero opacity; each pulse (rise + fall) lasts 1/3 s or more
     const blocks = [...body.matchAll(/([\d.%,\s]+)\{\s*opacity: ([\d.]+);/g)]
-    const peaks = blocks
-      .filter(b => Number(b[2]) > 0)
-      .flatMap(b => b[1].match(/[\d.]+(?=%)/g)!.map(Number))
-      .sort((x, y) => x - y)
-    const valleys = blocks
-      .filter(b => Number(b[2]) === 0)
-      .flatMap(b => b[1].match(/[\d.]+(?=%)/g)!.map(Number))
-      .sort((x, y) => x - y)
+    const stops = (pred: (o: number) => boolean) =>
+      blocks
+        .filter(b => pred(Number(b[2])))
+        .flatMap(b => b[1].match(/[\d.]+(?=%)/g)!.map(Number))
+        .sort((x, y) => x - y)
+    const peaks = stops(o => o > rest)
     expect(peaks.length).toBeGreaterThanOrEqual(2)
     expect(peaks.length).toBeLessThanOrEqual(5) // a few times, not a strobe
-    const gaps = peaks.slice(1).map((p, i) => ((p - peaks[i]) / 100) * total)
-    for (const g of gaps) expect(g).toBeGreaterThanOrEqual(1 / 3)
-    // it rests: the last pulse ends well before the cycle does
-    expect(Math.max(...valleys.filter(v => v < 100))).toBeLessThan(40)
+    for (const [i, p] of peaks.slice(1).entries())
+      expect(((p - peaks[i]) / 100) * total).toBeGreaterThanOrEqual(1 / 3)
+    // the keyframes start and end on the resting veil (so nothing jumps when the animation ends)
+    expect(stops(o => o === rest)).toEqual(expect.arrayContaining([0, 100]))
     const peak = Math.max(...blocks.map(b => Number(b[2])))
     expect(peak).toBeLessThanOrEqual(0.2) // never a full white flash
+    expect(total).toBeLessThanOrEqual(3) // over within a few seconds
     expect(css).toMatch(
-      /@media \(prefers-reduced-motion: reduce\) \{\s*\.retro\[data-fx~='RT-UI-30'\]::after \{\s*animation: none;\s*opacity: 0\.05;/
+      /@media \(prefers-reduced-motion: reduce\) \{\s*\.retro\[data-fx~='RT-UI-30'\]::after \{\s*animation: none;\s*\}/
     )
   })
 })

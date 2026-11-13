@@ -1711,3 +1711,37 @@ describe('spawn rules (#418, #427)', () => {
     })
   })
 })
+
+describe('RT-UI-10 cursor glitch is drawn only with a mouse (#437)', () => {
+  const stubFinePointer = (fine: boolean) =>
+    vi.stubGlobal(
+      'matchMedia',
+      (q: string) =>
+        ({
+          matches: fine && q.includes('pointer: fine'),
+          media: q,
+          addEventListener: () => {},
+          removeEventListener: () => {},
+        }) as unknown as MediaQueryList
+    )
+  afterEach(() => vi.unstubAllGlobals())
+  const spawnedIds = (fine: boolean) => {
+    stubFinePointer(fine)
+    nonImage.push({
+      id: 'RT-UI-10',
+      category: 'Surreal',
+      anomalyType: 'ui_corruption',
+    })
+    const hook = startAway()
+    advance(FIRST + 100)
+    const ids = hook.result.current.activeAnomalies.map(a => a.id)
+    hook.unmount()
+    return ids
+  }
+  it('is drawn when the device has a hover-capable fine pointer', () => {
+    expect(spawnedIds(true)).toEqual(['RT-UI-10'])
+  })
+  it('is never drawn on a touch device (nothing would show), and the shift keeps retrying instead of ending', () => {
+    expect(spawnedIds(false)).toEqual([])
+  })
+})
