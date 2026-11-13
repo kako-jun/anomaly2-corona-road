@@ -10,7 +10,7 @@
 
 ### ノルマと特殊条件の会話（#428）
 
-ゲームの規則は変えず、**台詞の選び方だけ**がノルマ（`minCorrectReports`、正解の報告 4 件）と、そのシフト内の状態に反応する。
+**物語にはノルマ・勝敗・採点・数の目標がない**（`docs/story.md`）。台詞は「十分」「目標」「ノルマ」「満点」「数」を言わず、嬉しさは手応え・冴え・収穫など刑事の実感で表す。撤収を決めるのは出河さん（A）で、樫原くん（M）が言い出さない。ゲームの規則は変えず、**台詞の選び方だけ**がノルマ（`minCorrectReports`、正解の報告 4 件）と、そのシフト内の状態に反応する。
 
 - **終わりの会話**: `closing` の `dawn` と `withdraw` は `when.quota: met | unmet`（終了の瞬間にノルマを満たしていたか）を必ず持ち、条件ごとに**別の抽選袋**になる。`ending` は `quota` を持たない（付けるとビルドが落ちる）。
 - **誤報**: `false-report.yaml` の `when` なしはノルマ前、`when: { quota: met }` はノルマ達成後のお手つき。達成後も、**その異変の未使用の `anomaly-lines`（ヒント入り）を先に出し**（ヒントは次を見つける助けになるので、達成後も捨てない）、使い切った・無い時に後者の専用の袋から引く（袋が無ければ従来どおり）。撤収（3 回目）は `closing` の `withdraw` × `quota: met`。
@@ -21,18 +21,18 @@
 
 ## ファイル
 
-| ファイル             | 種類                                   | `when`                                                             |
-| -------------------- | -------------------------------------- | ------------------------------------------------------------------ |
-| `flags.yaml`         | フラグの定義                           | （下記）                                                           |
-| `opening.yaml`       | 開始時の定番のやり取り                 | なし                                                               |
-| `closing.yaml`       | 終了時の会話                           | `result: dawn \| withdraw \| ending`（夜明け／撤収／エンディング）。dawn と withdraw は `quota: met \| unmet` も必須 |
-| `midpoint.yaml`      | 経過時点の中間コメント                 | `stage: few \| mid \| many`（その回の見つけた数の段階）            |
-| `chatter.yaml`       | 雑談                                   | なし（`tone: light` のみ）                                         |
-| `story.yaml`         | フラグ会話                             | `flag: <flags.yaml のフラグ名>`                                    |
-| `false-report.yaml`  | 共通の誤報の会話（ヒントなし）         | なし（ノルマ前）／`quota: met`（ノルマ達成後）                     |
-| `quota-reached.yaml` | ノルマに届いた瞬間の会話（1 シフト 1 回） | なし                                                            |
-| `situation.yaml`     | シフト内の状態に反応する会話（確率で出る） | `situation: hot \| cold \| brink \| tenth`                      |
-| `anomaly-lines.yaml` | 異変ごとの会話（ヒント入りの誤報会話） | `anomaly: <prompts/anomalies.yaml の id>`                          |
+| ファイル             | 種類                                                               | `when`                                                                                                                                                                                           |
+| -------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `flags.yaml`         | フラグの定義                                                       | （下記）                                                                                                                                                                                         |
+| `opening.yaml`       | 開始時の定番のやり取り                                             | なし                                                                                                                                                                                             |
+| `closing.yaml`       | 終了時の会話                                                       | `result: dawn \| withdraw \| ending`（夜明け／撤収／エンディング）。dawn と withdraw は `quota: met \| unmet` も必須                                                                             |
+| `midpoint.yaml`      | 経過時点の中間コメント                                             | `stage: few \| mid \| many`（その回の見つけた数の段階）                                                                                                                                          |
+| `chatter.yaml`       | 雑談                                                               | なし（`tone: light` のみ）                                                                                                                                                                       |
+| `story.yaml`         | フラグ会話                                                         | `flag: <flags.yaml のフラグ名>`                                                                                                                                                                  |
+| `false-report.yaml`  | 共通の誤報の会話（ヒントなし）                                     | なし（ノルマ前）／`quota: met`（ノルマ達成後）                                                                                                                                                   |
+| `quota-reached.yaml` | ノルマに届いた瞬間の会話（1 シフト 1 回）                          | なし                                                                                                                                                                                             |
+| `situation.yaml`     | シフト内の状態に反応する会話（確率で出る）                         | `situation: hot \| cold \| brink \| tenth`                                                                                                                                                       |
+| `anomaly-lines.yaml` | 異変ごとの会話（ヒント入りの誤報会話）                             | `anomaly: <prompts/anomalies.yaml の id>`                                                                                                                                                        |
 | `spawn-hints.yaml`   | 異変の出現ヒント（見つからない時に確率で出る。誤報とは別のプール） | `anomaly: <prompts/anomalies.yaml の id>`（台帳の画像異変 produced 全件に3案以上、計 942 通り。`npm run check:spawn-hints` が不足・id 重複（終了コード 1）と、よく出る行・述語の偏りを報告する） |
 
 ## 1通りの形

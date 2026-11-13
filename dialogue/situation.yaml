@@ -17,7 +17,7 @@ dialogues:
     when: { situation: hot }
     lines:
       - { who: A, text: '目が慣れてきた　どんどん行くよ', en: 'My eyes have adjusted. Here I go.' }
-      - { who: M, text: '焦らず　１つずつお願いします', en: 'Do not rush. One at a time, please.' }
+      - { who: M, text: '焦らず　確かめてからでお願いします', en: 'Do not rush. Please check before you report.' }
   - id: situation-hot-04
     tone: light
     when: { situation: hot }
@@ -37,13 +37,13 @@ dialogues:
     when: { situation: hot }
     lines:
       - { who: A, text: 'ふふん　今夜はもらったかも', en: 'Heh, tonight might be mine.' }
-      - { who: M, text: 'まだ夜は長いですよ', en: 'The night is still long.' }
+      - { who: M, text: 'その顔　久しぶりに見ました', en: 'I have not seen that face in a while.' }
   - id: situation-cold-01
     tone: light
     when: { situation: cold }
     lines:
       - { who: A, text: 'ずいぶん静かだね　見落としてないよね？', en: 'It is awfully quiet. I have not missed anything, have I?' }
-      - { who: M, text: 'たぶん　今は変化がないだけです', en: 'Probably nothing is changing right now.' }
+      - { who: M, text: 'たぶん　でも一度見直しましょうか', en: 'Probably not, but shall we look over everything once?' }
   - id: situation-cold-02
     tone: light
     when: { situation: cold }
@@ -56,14 +56,14 @@ dialogues:
     lines:
       - { who: M, text: '出河さん　しばらく動きがありませんね', en: 'Ms. Dekawa, nothing has moved for a while.' }
       - { who: A, text: '嵐の前ってやつかな', en: 'Maybe the calm before the storm.' }
-      - { who: M, text: '怖いこと言わないでください', en: 'Please do not say scary things.' }
+      - { who: M, text: 'それなら　今のうちに目を休めます', en: 'Then I will rest my eyes while I can.' }
   - id: situation-cold-04
     tone: light
     when: { situation: cold }
     lines:
-      - { who: A, text: '手持ち無沙汰だね　お菓子でもつまもうか', en: 'Nothing to do. Shall we snack on something?' }
-      - { who: M, text: '勤務中ですよ', en: 'We are on duty.' }
-      - { who: A, text: '固いなあ', en: 'So stiff.' }
+      - { who: M, text: '手持ち無沙汰ですね　お菓子つまみます？', en: 'Nothing to do. Want to snack on something?' }
+      - { who: A, text: '夜中のお菓子は　体に悪いよ', en: 'Midnight snacks are bad for you.' }
+      - { who: M, text: 'じゃあ　俺だけ食べます', en: 'Then I will eat alone.' }
   - id: situation-cold-05
     tone: light
     when: { situation: cold }
@@ -86,7 +86,7 @@ dialogues:
     tone: serious
     when: { situation: brink }
     lines:
-      - { who: M, text: '出河さん　お手つきは残り１回です', en: 'Ms. Dekawa, you have one slip left.' }
+      - { who: M, text: '出河さん　次に外したら引き上げですよね', en: 'Ms. Dekawa, one more miss and we pull out, right?' }
       - { who: A, text: '分かってる　確信が持てるまで押さない', en: 'I know. I will not press until I am sure.' }
   - id: situation-brink-03
     tone: serious
@@ -105,7 +105,7 @@ dialogues:
     tone: serious
     when: { situation: brink }
     lines:
-      - { who: M, text: '焦らなくていいです　時間はあります', en: 'No need to rush. There is time.' }
+      - { who: M, text: '焦らなくていいです　見るだけならタダです', en: 'No need to rush. Looking costs nothing.' }
       - { who: A, text: 'ありがとう　少し落ち着く', en: 'Thanks. Let me settle down for a moment.' }
   - id: situation-brink-06
     tone: serious

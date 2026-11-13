@@ -121,8 +121,8 @@ dialogues:
     tone: light
     when: { quota: met }
     lines:
-      - { who: A, text: 'あっ　もう十分見つけたのに　間違えた', en: 'Oh, I had found enough already and still got one wrong.' }
-      - { who: M, text: 'はい　今のは違いましたが　成果はそのままです', en: 'Yes, that one was wrong, but your results stand.' }
+      - { who: A, text: 'あっ　気がゆるんだ　間違えた', en: 'Oh, I let my guard down and got one wrong.' }
+      - { who: M, text: 'はい　今のは違いました　ひと呼吸おきましょう', en: 'Yes, that one was wrong. Let us take a breath.' }
   - id: false-report-met-02
     tone: light
     when: { quota: met }
@@ -142,13 +142,13 @@ dialogues:
     lines:
       - { who: M, text: '今のは違いますよ', en: 'That one was not it.' }
       - { who: A, text: '分かってる　ちょっと照れくさい', en: 'I know. A bit embarrassing.' }
-      - { who: M, text: '見つけた分は残りますから', en: 'What you found stays.' }
+      - { who: M, text: '照れる出河さん　珍しいですね', en: 'Ms. Dekawa embarrassed. That is rare.' }
   - id: false-report-met-05
     tone: light
     when: { quota: met }
     lines:
-      - { who: A, text: 'もう十分なのに　欲が出ちゃった', en: 'I had enough and still got greedy.' }
-      - { who: M, text: '欲張りは　出河さんの悪い癖ですね', en: 'Greed is your bad habit, Ms. Dekawa.' }
+      - { who: A, text: 'たくさん見つけたのに　欲が出ちゃった', en: 'I found plenty and still got greedy.' }
+      - { who: M, text: '欲張るところ　出河さんらしいですね', en: 'Being greedy is so like you, Ms. Dekawa.' }
       - { who: A, text: '言うねえ', en: 'You do not hold back.' }
   - id: false-report-met-06
     tone: light
