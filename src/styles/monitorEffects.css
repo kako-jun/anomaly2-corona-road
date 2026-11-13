@@ -173,5 +173,5 @@
 .retro[data-fx~='RT-UI-25'] .lamp.on.amber,
 .retro[data-fx~='RT-UI-25'] .lamp-big.lit,
 .retro[data-fx~='RT-UI-25'] .lamp-big.alert {
-  filter: grayscale(1) brightness(1.7);
+  filter: grayscale(1) brightness(2.6);
 }
