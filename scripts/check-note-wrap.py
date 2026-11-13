@@ -598,6 +598,68 @@ def check_after(browser, problems):
     return measured
 
 
+DIGITS = """() => {
+  const res = [], form = document.querySelector('.note-form'), fr = form.getBoundingClientRect()
+  const cols = document.querySelector('.note-fcols')
+  // The two columns must keep 3px of air in total, not just fit: the full-width digits are about 3% wider in another engine
+  // (headless shell, phones). A column's air is the least slack its rows leave after the label's own text (the widest row sets it).
+  const sc = document.querySelector('.note-paper').getBoundingClientRect().width / 340
+  let air = 0
+  for (const col of document.querySelectorAll('.note-fcol')) {
+    let least = Infinity
+    for (const fl of col.querySelectorAll('.note-fl')) { const rg = document.createRange(); rg.selectNodeContents(fl); least = Math.min(least, (fl.getBoundingClientRect().width - rg.getBoundingClientRect().width) / sc) }
+    air += least
+  }
+  if (cols.scrollWidth > cols.clientWidth + 1) res.push('the two columns of the numbers box are wider than the box')
+  else if (air < 3) res.push(`the two columns of the numbers box leave only ${air.toFixed(1)}px of air (need 3)`)
+  for (const row of form.querySelectorAll('.note-fr')) {
+    const fl = row.querySelector('.note-fl'), b = row.querySelector('b'), sm = row.querySelector('small'), name = fl.textContent
+    if (fl.scrollWidth > fl.clientWidth + 1) res.push(`label "${name}" does not fit its column`)
+    const lg = document.createRange(); lg.selectNodeContents(fl)
+    const llines = new Set([...lg.getClientRects()].map(x => Math.round(x.top))).size
+    if (llines !== 1) res.push(`the label "${name}" wraps onto ${llines} lines`)
+    if (row.scrollWidth > row.clientWidth + 1) res.push(`row "${name}" overflows its column`)
+    if (b) {
+      const rg = document.createRange(); rg.selectNodeContents(b)
+      const lines = new Set([...rg.getClientRects()].map(x => Math.round(x.top))).size
+      if (lines !== 1) res.push(`the number "${b.textContent}" of "${name}" wraps onto ${lines} lines`)
+      if (b.scrollWidth > b.clientWidth + 1) res.push(`the number "${b.textContent}" of "${name}" overflows its own box`)
+      const lr = fl.getBoundingClientRect(), br = b.getBoundingClientRect()
+      if (br.left < lr.right - 1) res.push(`the number of "${name}" overlaps its label`)
+    }
+    if (sm && sm.textContent && sm.getBoundingClientRect().right > fr.right + 1) res.push(`the unit of "${name}" leaves the numbers box`)
+  }
+  return res
+}"""
+
+
+def check_digits(browser, problems):
+    """The numbers box with every count at 1..3 digits (the most the note shows, #429), in both languages, at every viewport:
+    no number wraps, nothing leaves its column or the box, no label is cut. A count above 999 reads as 999 (NOTE_MAX_COUNT), so 9999
+    must look like 999."""
+    measured = 0
+    for locale, lang in (("ja-JP", "ja"), ("en-US", "en")):
+        # (found, fresh, misreports, total, kinds): equal counts, and one mixed row set (2 new kinds a night, #430; the clock-time shift row is separate)
+        cases = [(n, n, n, n, n) for n in (1, 12, 123, 999, 9999)] + [(12, 12, 3, 123, 345), (2, 2, 0, 345, 120)]
+        for found, fresh, miss, total, kinds in cases:
+            shift = {"found": found, "fresh": fresh, "misreports": miss, "durationMs": 200000, "closing": "withdraw", "raised": []}
+            page = open_note(browser, base(foundTotal=total, foundIds=[f"X{i}" for i in range(kinds)], loops=3, lastShift=shift), locale=locale)
+            if not page.evaluate("document.querySelector('.note-screen').classList.contains('note-%s')" % lang):
+                problems.append(f"[{locale}] digits: the page did not open in the expected language")
+            for w, h in VIEWPORTS:
+                page.set_viewport_size({"width": w, "height": h})
+                page.wait_for_timeout(60)
+                for msg in page.evaluate(DIGITS):
+                    problems.append(f"[{lang} {w}x{h}] {found}/{fresh}/{miss}/{total}/{kinds}: {msg}")
+                measured += 1
+            level = page.evaluate("document.querySelector('.note-form').dataset.digits")
+            want = min(max(len(str(v)) for v in (found, fresh, miss, total, kinds)), 3)
+            if level != str(want):
+                problems.append(f"[{lang}] {found}/{fresh}/{miss}/{total}/{kinds}: data-digits is {level}, want {want} (9999 must read as 999)")
+            page.close()
+    return measured
+
+
 def main():
     problems = []
     with sync_playwright() as pw:
@@ -605,6 +667,14 @@ def main():
         last = {"found": 12, "fresh": 3, "misreports": 0, "durationMs": 480000, "closing": "dawn", "raised": ["elder3"]}
         withdrew = {"found": 2, "fresh": 0, "misreports": 4, "durationMs": 200000, "closing": "withdraw", "raised": []}
         measured = False
+        if "--digits-only" in sys.argv:
+            n = check_digits(browser, problems)
+            browser.close()
+            if problems:
+                print("\nPROBLEMS:", *problems, sep="\n  ")
+                sys.exit(1)
+            print(f"\nnote wrap check (numbers box only): 1-3 digits fit at every viewport ({n} sheets measured)")
+            return
         if "--after-only" in sys.argv:
             measured_after = check_after(browser, problems)
             browser.close()
@@ -673,6 +743,7 @@ def main():
                 for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
                     problems.append(f"[ja-JP {w}x{h}] {stage}/{'fresh' if shift else 'plain'}: {msg}")
             page.close()
+        print(f"numbers box sheets measured (1-3 digits): {check_digits(browser, problems)}")
         browser.close()
     if problems:
         print("\nPROBLEMS:", *problems, sep="\n  ")
