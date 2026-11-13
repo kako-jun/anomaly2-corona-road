@@ -13,6 +13,13 @@ import {
   edgeTapDirection,
   followStep,
 } from '../utils/loupe'
+import {
+  accumulatedTilt,
+  localRect,
+  toLocalPoint,
+  unrotatedSize,
+  type Tilt,
+} from '../utils/tiltGeometry'
 
 /** What the loupe needs to draw: the magnified spot as a fraction of the picture frame, and the sizes it is drawn against. */
 export interface LoupeView {
@@ -40,7 +47,13 @@ interface Options {
   resetKey?: unknown
 }
 
+/**
+ * Sizes and positions in the glass's own axes (origin at its top-left): the cabinet may be rotated (RT-UI-11), and the
+ * bounding rects below are then not the elements' own. `box` / `theta` turn a pointer into those axes (tiltGeometry.ts).
+ */
 interface Geometry {
+  box: DOMRect
+  tilt: Tilt
   glassL: number
   glassT: number
   glassW: number
@@ -77,6 +90,8 @@ export const useLoupeGesture = ({
     y: 0,
     downAt: 0,
     startOnGlass: false,
+    /** the press's x in the glass's own axes and the glass's own width (the edge tap, RT-UI-11) */
+    startLocal: null as { x: number; w: number } | null,
     drifted: false,
     mode: 'idle' as 'idle' | 'pending' | 'moved' | 'loupe',
     raf: 0,
@@ -91,15 +106,20 @@ export const useLoupeGesture = ({
     const g = glassRef.current?.getBoundingClientRect()
     const f = frameRef.current?.getBoundingClientRect()
     if (!g || !f || g.width <= 0 || g.height <= 0) return null
+    const tilt = accumulatedTilt(glassRef.current)
+    const glass = unrotatedSize(g.width, g.height, tilt)
+    const frame = localRect(f, g, tilt)
     return {
-      glassL: g.left,
-      glassT: g.top,
-      glassW: g.width,
-      glassH: g.height,
-      frameL: f.left,
-      frameT: f.top,
-      frameW: f.width,
-      frameH: f.height,
+      box: g,
+      tilt,
+      glassL: 0,
+      glassT: 0,
+      glassW: glass.w,
+      glassH: glass.h,
+      frameL: frame.left,
+      frameT: frame.top,
+      frameW: frame.width,
+      frameH: frame.height,
     }
   }
 
@@ -121,9 +141,10 @@ export const useLoupeGesture = ({
   const setTarget = () => {
     const { geo, x, y } = s.current
     if (!geo) return
+    const p = toLocalPoint(x, y, geo.box, geo.tilt)
     s.current.target = clampLoupeCenter(
-      x - geo.glassL,
-      y - geo.glassT,
+      p.x - geo.glassL,
+      p.y - geo.glassT,
       geo.glassW,
       geo.glassH
     )
@@ -189,13 +210,19 @@ export const useLoupeGesture = ({
     }
     st.downAt = performance.now()
     const g = glassRef.current?.getBoundingClientRect()
+    const tilt = accumulatedTilt(glassRef.current)
+    const size = g && unrotatedSize(g.width, g.height, tilt)
+    const p = g && toLocalPoint(e.clientX, e.clientY, g, tilt)
     const onGlass =
       !!g &&
-      e.clientX >= g.left &&
-      e.clientX <= g.right &&
-      e.clientY >= g.top &&
-      e.clientY <= g.bottom
+      !!size &&
+      !!p &&
+      p.x >= 0 &&
+      p.x <= size.w &&
+      p.y >= 0 &&
+      p.y <= size.h
     st.startOnGlass = onGlass
+    st.startLocal = p && size ? { x: p.x, w: size.w } : null
     if (enabled && onGlass) showLoupe()
   }
 
@@ -231,7 +258,7 @@ export const useLoupeGesture = ({
     const heldMs = performance.now() - st.downAt
     const short = !st.drifted && heldMs < LOUPE.TAP_MAX_MS
     const startOnGlass = st.startOnGlass
-    const startX = st.startX
+    const startLocal = st.startLocal
     reset()
     // every way out except a short tap on the picture forgets a pending first tap (a long press, a drag, a bezel tap)
     const prevTap = st.lastTap
@@ -244,8 +271,9 @@ export const useLoupeGesture = ({
       } else st.lastTap = tap
     } else if (wasPending && !startOnGlass && short) {
       // the direction is by where the press began (a press that began on the picture is never an edge tap)
-      const g = glassRef.current?.getBoundingClientRect()
-      const dir = g ? edgeTapDirection(startX, g.left, g.width) : null
+      const dir = startLocal
+        ? edgeTapDirection(startLocal.x, 0, startLocal.w)
+        : null
       if (dir) onEdgeTap(dir)
     }
   }

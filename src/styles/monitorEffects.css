@@ -1,0 +1,11 @@
+/* Monitor-scope anomaly effects (ui_corruption / rule_break, #404). One block per ledger id, keyed on the `data-fx`
+   attribute that Cabinet writes on .retro (see src/utils/monitorEffects.ts). Static: nothing here moves, so
+   prefers-reduced-motion needs no special case unless an effect animates. */
+
+/* RT-UI-11 cabinet tilted: the whole cabinet (frame, buttons, picture) leans a few degrees; operation is unchanged.
+   scale(0.9) only keeps the leaning corners inside the screen (the cabinet is full-bleed on a phone).
+   `transform` (not the `rotate` property) so the loupe / edge-tap geometry can read the angle from the computed matrix
+   (src/utils/tiltGeometry.ts). */
+.retro[data-fx~='RT-UI-11'] .cabinet {
+  transform: rotate(3deg) scale(0.9);
+}

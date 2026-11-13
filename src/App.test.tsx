@@ -49,6 +49,7 @@ vi.mock('./hooks/useGameState', async () => {
         currentCameraIndex: 0,
         currentCamera: {},
         activeAnomalyHere: undefined,
+        activeAnomalies: [],
         feedback: null,
         ending:
           gameState === 'win' ? { closing: 'ending', outcome: 'win' } : null,

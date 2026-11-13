@@ -787,3 +787,47 @@ describe('sound anomaly lifecycle', () => {
     play.mockRestore()
   })
 })
+
+describe('Cabinet monitor effects (data-fx, #408)', () => {
+  const retroEl = (c: HTMLElement) => c.querySelector('.retro') as HTMLElement
+  const css = readFileSync(
+    resolve(process.cwd(), 'src/styles/monitorEffects.css'),
+    'utf8'
+  )
+
+  it('writes no data-fx while nothing runs, and the running ids while something does', () => {
+    const props = makeProps()
+    const { container, rerender } = render(<Cabinet {...props} />)
+    expect(retroEl(container).hasAttribute('data-fx')).toBe(false)
+    rerender(<Cabinet {...props} monitorEffects={new Set(['RT-UI-11'])} />)
+    expect(retroEl(container).getAttribute('data-fx')).toBe('RT-UI-11')
+    rerender(<Cabinet {...props} monitorEffects={new Set()} />)
+    expect(retroEl(container).hasAttribute('data-fx')).toBe(false)
+  })
+  it('no effect is drawn on the ending CAM 09 (like the feed glitch), and it is back otherwise', () => {
+    const props = makeProps({ monitorEffects: new Set(['RT-UI-11']) })
+    const { container, rerender } = render(
+      <Cabinet {...props} ending="ending" />
+    )
+    expect(retroEl(container).hasAttribute('data-fx')).toBe(false)
+    rerender(<Cabinet {...props} ending="withdraw" />)
+    expect(retroEl(container).getAttribute('data-fx')).toBe('RT-UI-11')
+  })
+  it('the tilt rule is keyed on RT-UI-11 and rotates the cabinet by a few degrees and shrinks it so it stays in view (a transform, so the loupe can read it)', () => {
+    const m = css.match(
+      /\.retro\[data-fx~='RT-UI-11'\] \.cabinet\s*\{\s*transform:\s*rotate\((-?[\d.]+)deg\)\s*scale\(([\d.]+)\);/
+    )
+    expect(m).not.toBeNull()
+    // a few degrees, and a little smaller (the numbers may be tuned without touching this test)
+    expect(Math.abs(Number(m![1]))).toBeGreaterThanOrEqual(1)
+    expect(Math.abs(Number(m![1]))).toBeLessThanOrEqual(6)
+    expect(Number(m![2])).toBeGreaterThan(0.7)
+    expect(Number(m![2])).toBeLessThanOrEqual(1)
+  })
+  it('every CSS rule in monitorEffects.css is for an id in the table', async () => {
+    const { MONITOR_EFFECTS } = await import('../utils/monitorEffects')
+    const ids = [...css.matchAll(/data-fx~='([^']+)'/g)].map(m => m[1])
+    expect(ids.length).toBeGreaterThan(0)
+    for (const id of ids) expect(Object.keys(MONITOR_EFFECTS)).toContain(id)
+  })
+})

@@ -5,6 +5,7 @@ import type { ReportScope } from '../types/game'
 import type { Anomaly } from '../types/game'
 import type { SynthName } from './synthSounds'
 import { VOICE_IDS } from './voiceSounds'
+import { hasMonitorEffect } from './monitorEffects'
 
 export const SOUND_EFFECTS: Record<string, SynthName> = {
   'RT-SND-03': 'buzz',
@@ -74,7 +75,11 @@ export const feedGlitchKindsFor = (entry: NonImageEntry): FeedGlitchKind[] =>
 export const hasNonImageEffect = (entry: NonImageEntry): boolean =>
   feedGlitchKindsFor(entry).length > 0 ||
   // The five voices are drawn like the other sounds; `voiceReady` still keeps one out until its file answered.
-  (entry.anomalyType === 'sound' && hasSoundEffect(entry.id))
+  (entry.anomalyType === 'sound' && hasSoundEffect(entry.id)) ||
+  // ui_corruption / rule_break: the table in monitorEffects.ts
+  ((entry.anomalyType === 'ui_corruption' ||
+    entry.anomalyType === 'rule_break') &&
+    hasMonitorEffect(entry.id))
 
 /** The kind to draw this time (random among the kinds of the entry), or undefined when it has no feed glitch. */
 export const pickFeedGlitchKind = (
