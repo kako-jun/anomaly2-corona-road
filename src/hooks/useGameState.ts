@@ -20,6 +20,7 @@ import {
   createAnomaly,
   createNonImageAnomaly,
   exhaustedGroups,
+  groupKeyOfSpawn,
   hasUnusedEntry,
   pickSpawn,
 } from '../utils/anomalyData'
@@ -103,6 +104,8 @@ export const useGameState = () => {
   const ledgerExhaustedRef = useRef(false)
   // Ledger ids already shown this shift (no repeats within a shift).
   const usedLedgerIdsRef = useRef<Set<string>>(new Set())
+  // Per group (#427): the id found last before the group was refilled, avoided on the next draw from that group.
+  const avoidNextRef = useRef<Map<string, string>>(new Map())
   // The child has been found (flag saved): the rest of this shift, and later shifts, run faster (Issue #86).
   const childFoundRef = useRef(false)
   // Ids that appeared after the child was found in this shift, and how many of them were reported.
@@ -323,29 +326,36 @@ export const useGameState = () => {
           )
       ).map(c => c.id)
       const used = usedLedgerIdsRef.current
+      const save = load()
       // Reiwa anomalies join the draw once elder3 is saved; one raised mid-shift counts from the next spawn.
-      const reiwaUnlocked = load().flags[REIWA_UNLOCK_FLAG] === true
+      const reiwaUnlocked = save.flags[REIWA_UNLOCK_FLAG] === true
       const playableNonImages = nonImageLedger.filter(entry =>
         voiceReady(entry.id)
       )
       // A group (one camera's images / the non-image entries) whose candidates have all been found is refilled now
-      // (#427): its retired ids are released, and the one found last is avoided once so it does not come straight back.
+      // (#427): its retired ids are released. The one found last is remembered per group and avoided on the next draw
+      // FROM THAT GROUP (it may take several spawns to come to it, e.g. when its camera is the watched one), so it does
+      // not come straight back while the group has another choice.
       const refilled = exhaustedGroups(
         ANOMALY_LEDGER,
         playableNonImages,
-        load().retiredIds,
+        save.retiredIds,
         reiwaUnlocked,
-        load().flags
+        save.flags
       )
       unretire(refilled.flatMap(g => g.ids))
-      const justFound = new Set(refilled.map(g => g.last))
+      for (const g of refilled) avoidNextRef.current.set(g.key, g.last)
+      const released = new Set(refilled.flatMap(g => g.ids))
       // Retired (found) ids are out of the draw like the ones already shown this shift.
-      const blocked = new Set([...used, ...load().retiredIds])
+      const blocked = new Set([
+        ...used,
+        ...save.retiredIds.filter(id => !released.has(id)),
+      ])
       for (;;) {
         const draw = (skip: ReadonlySet<string>) =>
           pickSpawn(ANOMALY_LEDGER, playableNonImages, freeCameraIds, skip, {
             reiwaUnlocked,
-            flags: load().flags,
+            flags: save.flags,
             audible: isAudible(),
             busyGroups: new Set(
               activeAnomaliesRef.current
@@ -353,11 +363,13 @@ export const useGameState = () => {
                 .map(a => a.exclusiveGroup as string)
             ),
           })
+        const avoid = new Set(avoidNextRef.current.values())
         const spawn =
-          (justFound.size > 0
-            ? draw(new Set([...blocked, ...justFound]))
-            : null) ?? draw(blocked)
+          (avoid.size > 0 ? draw(new Set([...blocked, ...avoid])) : null) ??
+          draw(blocked)
         if (!spawn) break
+        // This group has now been drawn from: the avoided id is free again.
+        avoidNextRef.current.delete(groupKeyOfSpawn(spawn))
         used.add(spawn.entry.id)
         blocked.add(spawn.entry.id)
         let newAnomaly: Anomaly
@@ -395,12 +407,10 @@ export const useGameState = () => {
       // Not filtered by voiceReady: a voice whose file has not answered yet must keep the shift from being called
       // exhausted (that is permanent for the shift). A voice whose probe failed (404, under 60 s) is never used up,
       // so it counts as unused for the rest of the shift; that only keeps the cheap retry going, nothing is drawn.
-      return hasUnusedEntry(
-        ANOMALY_LEDGER,
-        nonImageLedger,
-        blocked,
-        reiwaUnlocked
-      )
+      // 'Exhausted' is decided on the ids shown THIS shift only. Found (retired) ids that are not yet released
+      // (their group still has an unfound candidate) do not stop the shift: the spawner keeps its 1 s retry, so the
+      // shift can never end up unable to show anything for good.
+      return hasUnusedEntry(ANOMALY_LEDGER, nonImageLedger, used, reiwaUnlocked)
         ? 'no-free-camera'
         : 'exhausted'
     },

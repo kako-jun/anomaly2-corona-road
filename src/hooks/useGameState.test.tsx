@@ -1520,15 +1520,34 @@ describe('spawn rules (#418, #427)', () => {
         category: 'Camera',
         anomalyType: 'feed_glitch',
       })
-      for (let i = 0; i < 12; i++) {
+      // rng 0 .. 0.99 steers the glitch's extra-camera count (1 to 3); the kind of RT-FEED-28 is always `nonoise`.
+      for (const v of [0, 0.4, 0.7, 0.99]) {
+        const spy = vi.spyOn(Math, 'random').mockReturnValue(v)
         const hook = start()
         advance(FIRST + 100)
         const a = hook.result.current.activeAnomalies[0]
-        if (a?.feedGlitch === 'nonoise') {
-          expect(a.feedGlitchCameraIds).not.toContain(1)
-        }
+        expect(a.feedGlitch).toBe('nonoise')
+        expect(a.cameraId).not.toBe(1)
+        expect(a.feedGlitchCameraIds).toBeDefined()
+        expect(a.feedGlitchCameraIds).not.toContain(1)
         hook.unmount()
+        spy.mockRestore()
       }
+    })
+
+    it('a spawn lands out of sight; looking at it right after shows it, and it never lands on the camera now watched', () => {
+      ledger.push(entry('a', 2), entry('b', 3))
+      const hook = start()
+      switchTo(hook, 2) // before the first spawn
+      advance(FIRST + 100)
+      expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual(['b'])
+      switchTo(hook, 3) // right after it appeared
+      expect(hook.result.current.activeAnomalyHere?.id).toBe('b')
+      // now camera 3 is watched and holds 'b'; 'a' (camera 2) is free and not watched
+      advance(INTERVAL)
+      expect(hook.result.current.activeAnomalies.map(x => x.id).sort()).toEqual(
+        ['a', 'b']
+      )
     })
   })
 
@@ -1602,6 +1621,59 @@ describe('spawn rules (#418, #427)', () => {
       const { result } = start()
       advance(FIRST + 100)
       expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['a'])
+    })
+
+    it('a group refilled while its camera is watched still avoids the one found last on its next draw', () => {
+      for (const v of [0, 0.99]) {
+        const spy = vi.spyOn(Math, 'random').mockReturnValue(v)
+        ledger.length = 0
+        ledger.push(entry('a', 2), entry('b', 2))
+        saveData.update(cur => ({ ...cur, retiredIds: ['a', 'b'] }))
+        const hook = start()
+        switchTo(hook, 2) // the group's camera is the watched one: refilled now, cannot be drawn yet
+        advance(FIRST + 100)
+        expect(hook.result.current.activeAnomalies).toEqual([])
+        expect(saveData.load().retiredIds).toEqual([])
+        switchTo(hook, 3)
+        advance(1500)
+        // 'b' was found last, so 'a' comes, whichever way the rng leans
+        expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual([
+          'a',
+        ])
+        hook.unmount()
+        spy.mockRestore()
+        saveData.update(cur => ({ ...cur, retiredIds: [] }))
+      }
+    })
+
+    it('found-but-not-released ids do not stop the shift: the report that exhausts a group is followed by a refill', () => {
+      ledger.push(entry('a', 2), entry('c', 2))
+      saveData.update(cur => ({ ...cur, retiredIds: ['a'] }))
+      const hook = start()
+      advance(FIRST + 100)
+      expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual(['c'])
+      advance(INTERVAL * 2) // failed attempts while 'a' is retired and 'c' is up: must not end the spawning
+      switchTo(hook, 2)
+      act(() => hook.result.current.reportAnomaly('Object'))
+      switchTo(hook, 3)
+      advance(3000)
+      // both found now -> the group is refilled; 'c' was shown this shift, so 'a' is what can come
+      expect(hook.result.current.activeAnomalies.some(x => x.id === 'a')).toBe(
+        true
+      )
+    })
+
+    it('only the non-image group is refilled when only it is used up', () => {
+      nonImage.push({
+        id: 'RT-FEED-22',
+        category: 'Camera',
+        anomalyType: 'feed_glitch',
+      })
+      ledger.push(entry('c', 3), entry('d', 3))
+      saveData.update(cur => ({ ...cur, retiredIds: ['c', 'RT-FEED-22'] }))
+      start()
+      advance(FIRST + 100)
+      expect(saveData.load().retiredIds).toEqual(['c'])
     })
 
     it('START OVER clears the retired ids', () => {

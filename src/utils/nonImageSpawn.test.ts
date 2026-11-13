@@ -545,7 +545,7 @@ describe('exhaustedGroups (#427)', () => {
   it('a camera whose images are all retired is refilled alone (other cameras are untouched)', () => {
     const images = [img('a', 1), img('b', 1), img('c', 2), img('d', 2)]
     expect(exhaustedGroups(images, [], ['a', 'c', 'b'], false)).toEqual([
-      { ids: ['a', 'b'], last: 'b' },
+      { key: 'cam:1', ids: ['a', 'b'], last: 'b' },
     ])
   })
   it('the non-image group is separate from the cameras', () => {
@@ -553,19 +553,44 @@ describe('exhaustedGroups (#427)', () => {
     const nons = [sound('RT-FEED-22'), sound('RT-FEED-01')]
     expect(
       exhaustedGroups(images, nons, ['RT-FEED-01', 'RT-FEED-22'], false)
-    ).toEqual([{ ids: ['RT-FEED-22', 'RT-FEED-01'], last: 'RT-FEED-22' }])
+    ).toEqual([
+      {
+        key: 'non-image',
+        ids: ['RT-FEED-22', 'RT-FEED-01'],
+        last: 'RT-FEED-22',
+      },
+    ])
     expect(exhaustedGroups(images, nons, ['a'], false)).toEqual([
-      { ids: ['a'], last: 'a' },
+      { key: 'cam:1', ids: ['a'], last: 'a' },
     ])
   })
   it('Reiwa and entries without an effect are not candidates, but are released with the group', () => {
     const images = [img('a', 1), { ...img('rz', 1), reiwa: true as const }]
     expect(exhaustedGroups(images, [], ['a'], false)).toEqual([
-      { ids: ['a', 'rz'], last: 'a' },
+      { key: 'cam:1', ids: ['a', 'rz'], last: 'a' },
     ])
     expect(exhaustedGroups(images, [], ['a'], true)).toEqual([])
   })
   it('a group with no candidate at all is never "used up"', () => {
     expect(exhaustedGroups([], [], ['x'], false)).toEqual([])
+  })
+  it('an entry waiting for an unraised unlock flag is not a candidate, a raised one is (#427)', () => {
+    const images = [
+      img('a', 1),
+      { ...img('z', 1), unlockFlag: 'late' } as LedgerEntry,
+    ]
+    expect(exhaustedGroups(images, [], ['a'], false, {})).toEqual([
+      { key: 'cam:1', ids: ['a', 'z'], last: 'a' },
+    ])
+    expect(exhaustedGroups(images, [], ['a'], false, { late: true })).toEqual(
+      []
+    )
+  })
+  it('only the non-image group comes back when only it is used up', () => {
+    const images = [img('a', 1), img('b', 1)]
+    const nons = [glitch('RT-FEED-22')]
+    expect(exhaustedGroups(images, nons, ['a', 'RT-FEED-22'], false)).toEqual([
+      { key: 'non-image', ids: ['RT-FEED-22'], last: 'RT-FEED-22' },
+    ])
   })
 })
