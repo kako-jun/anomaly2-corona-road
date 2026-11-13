@@ -19,7 +19,7 @@ const REFILL_MS = 1000
 
 /** Voices whose file answered with a valid length (metadata only; nothing decoded is kept). */
 const available = new Set<string>()
-/** Voices decoded at least once in this page's life: the player may have heard them, so they are never taken back. */
+/** Voices decoded at least once in this shift: the player may have heard them, so they are not taken back. */
 const loaded = new Set<string>()
 
 /** The single decoded voice kept in memory (a 70 s buffer is ~13 MB; five at once would be ~69 MB). */
@@ -45,7 +45,10 @@ export const voiceUrl = (id: string): string => {
 export const voiceReady = (id: string): boolean =>
   !VOICE_IDS.has(id) || available.has(id)
 
-/** True once this voice was decoded successfully (a later failed reload, e.g. offline, does not make it unplayable). */
+/** Forget which voices were decoded: called when a shift starts, so "it may have been heard" holds for one shift only. */
+export const resetVoiceHistory = (): void => loaded.clear()
+
+/** True once this voice was decoded successfully in this shift (a later failed reload, e.g. offline, does not make it unplayable). */
 export const voiceWasLoaded = (id: string): boolean => loaded.has(id)
 
 /** Ask each file for its length through a metadata-only media element (no download of the whole file, no decoding). */

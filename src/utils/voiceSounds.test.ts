@@ -8,6 +8,7 @@ import {
   releaseVoice,
   voiceReady,
   voiceWasLoaded,
+  resetVoiceHistory,
   voiceRetryDelay,
   VOICE_RETRY_LIMIT,
   voiceUrl,
@@ -116,6 +117,15 @@ describe('resident voice buffer', () => {
     expect(await holdVoice(engine, 'CR-SH-06')).toBe(false)
     expect(voiceWasLoaded('CR-SH-06')).toBe(true)
     releaseVoice('CR-SH-06')
+  })
+
+  it('forgets the decoded history when a new shift starts', async () => {
+    const { engine } = await setup()
+    expect(await holdVoice(engine, 'CR-SH-06')).toBe(true)
+    expect(voiceWasLoaded('CR-SH-06')).toBe(true)
+    releaseVoice('CR-SH-06')
+    resetVoiceHistory()
+    expect(voiceWasLoaded('CR-SH-06')).toBe(false)
   })
 
   it('drops a voice released while it was still loading', async () => {

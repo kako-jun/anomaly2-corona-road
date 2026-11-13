@@ -170,7 +170,7 @@ export const Cabinet = ({
               () => load(attempt + 1),
               voiceRetryDelay(attempt)
             )
-          // A voice that played once may have been heard: a failed re-read later never takes it back.
+          // A voice decoded once in this shift may have been heard: a failed re-read later does not take it back.
           else if (!voiceWasLoaded(heldVoiceId))
             onVoiceUnavailable?.(heldVoiceId)
         })

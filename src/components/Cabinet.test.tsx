@@ -639,6 +639,28 @@ describe('sound anomaly lifecycle', () => {
     release.mockRestore()
     vi.useRealTimers()
   })
+  it('takes back a voice that was never decoded in this shift once its retries run out (history reset at the shift start)', async () => {
+    vi.useFakeTimers()
+    voice.resetVoiceHistory()
+    const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(false)
+    const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const gone = vi.fn()
+    const { unmount } = render(
+      <Cabinet
+        {...makeProps()}
+        heldVoiceId="CR-SH-06"
+        onVoiceUnavailable={gone}
+      />
+    )
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10 * 60 * 1000)
+    })
+    expect(gone).toHaveBeenCalledWith('CR-SH-06')
+    unmount()
+    hold.mockRestore()
+    release.mockRestore()
+    vi.useRealTimers()
+  })
   it('repeats intermittent sounds throughout five minutes and stops after report', () => {
     vi.useFakeTimers()
     const random = vi.spyOn(Math, 'random').mockReturnValue(0.5)

@@ -24,7 +24,7 @@ import {
 } from '../utils/anomalyData'
 import { reportTargetsFor, showsOnCamera } from '../utils/reportTarget'
 import { isAudible } from '../utils/audioSettings'
-import { voiceReady } from '../utils/voiceSounds'
+import { resetVoiceHistory, voiceReady } from '../utils/voiceSounds'
 import type { FlagEvent } from './useSubtitle'
 import {
   raiseFlagsAtStart,
@@ -142,6 +142,7 @@ export const useGameState = () => {
   const startGame = useCallback(() => {
     // After the true ending the save cannot start a shift; the title offers "start over" only (#294).
     if (load().endingReached) return
+    resetVoiceHistory()
     setStats({
       currentTime: 0,
       correctReports: 0,
@@ -259,12 +260,15 @@ export const useGameState = () => {
         }))
         // The ref is updated here too (not only by the effect after render), so a withdrawal in the same tick sees
         // this anomaly as reported and leaves it alone.
-        activeAnomaliesRef.current = activeAnomaliesRef.current.map(a =>
-          a.id === anomalyOnCamera.id
-            ? { ...a, detectedAt: statsRef.current.currentTime }
-            : a
-        )
-        setActiveAnomalies(activeAnomaliesRef.current)
+        const reportedAt = statsRef.current.currentTime
+        const markReported = (list: Anomaly[]) =>
+          list.map(a =>
+            a.id === anomalyOnCamera.id ? { ...a, detectedAt: reportedAt } : a
+          )
+        activeAnomaliesRef.current = markReported(activeAnomaliesRef.current)
+        // The state update is a function of the latest state (not the ref's value), so an anomaly that spawned in
+        // the same batch is not overwritten.
+        setActiveAnomalies(markReported)
         pushFeedback('correct', `CONFIRMED — ${anomalyOnCamera.category}`)
         if (afterChildIdsRef.current.has(anomalyOnCamera.id)) {
           afterChildReportedRef.current += 1
@@ -354,6 +358,7 @@ export const useGameState = () => {
           )
         }
         if (childFoundRef.current) afterChildIdsRef.current.add(spawn.entry.id)
+        activeAnomaliesRef.current = [...activeAnomaliesRef.current, newAnomaly]
         setActiveAnomalies(prev => [...prev, newAnomaly])
         setStats(prev => ({
           ...prev,

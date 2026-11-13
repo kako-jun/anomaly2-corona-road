@@ -712,6 +712,27 @@ describe('voice anomalies (#407)', () => {
       expect(hook.result.current.feedback?.message).toMatch(/NO ANOMALY HERE/)
     })
 
+    it('a report in the same batch as a new spawn does not overwrite the spawned anomaly', () => {
+      ledger.push(entry('a', 1), entry('b', 2))
+      const { result } = start()
+      advance(FIRST + 100)
+      const first = result.current.activeAnomalies[0]
+      act(() =>
+        result.current.switchCamera(
+          result.current.cameras.findIndex(c => c.id === first.cameraId)
+        )
+      )
+      act(() => {
+        vi.advanceTimersByTime(INTERVAL + 600)
+        result.current.reportAnomaly(first.category)
+      })
+      expect(result.current.activeAnomalies).toHaveLength(2)
+      expect(result.current.stats.totalAnomalies).toBe(2)
+      expect(
+        result.current.activeAnomalies.filter(a => a.detectedAt)
+      ).toHaveLength(1)
+    })
+
     it('a report and a withdrawal in the same tick count the anomaly once (reported, not taken back)', () => {
       const hook = running()
       const cam = hook.result.current.activeAnomalies[0].cameraId
