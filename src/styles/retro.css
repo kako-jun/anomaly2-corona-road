@@ -167,10 +167,14 @@
   border-radius: 50%;
   background: #ff3b30;
   box-shadow: 0 0 6px #f33;
-  animation: blink 1.6s steps(2) infinite;
+  animation: rec-blink 1.6s steps(1, end) infinite;
 }
 
-@keyframes blink {
+/* Crisp on/off: step-end holds each value for its whole half, so 0.8s lit, 0.8s dim and no middle level (#424). */
+@keyframes rec-blink {
+  0% {
+    opacity: 1;
+  }
   50% {
     opacity: 0.15;
   }
