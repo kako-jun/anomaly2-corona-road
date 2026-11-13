@@ -67,8 +67,8 @@ interface CameraViewProps {
   feedGlitch?: FeedGlitchKind
   /** Dev only: the glitch was forced from the URL, so the screen names it (never set in production). */
   feedGlitchForced?: boolean
-  onSwipe: (direction: 'next' | 'prev') => void
-  /** Where the magnifier loupe is drawn (the control panel, #341). Without it the loupe is off: only the swipe works. */
+  onEdgeTap: (direction: 'next' | 'prev') => void
+  /** Where the magnifier loupe is drawn (the control panel, #341). Without it the loupe is off. */
   loupeHost?: HTMLElement | null
 }
 
@@ -82,7 +82,7 @@ export const CameraView = ({
   contrast,
   feedGlitch,
   feedGlitchForced,
-  onSwipe,
+  onEdgeTap,
   loupeHost,
 }: CameraViewProps) => {
   const glassRef = useRef<HTMLDivElement>(null)
@@ -92,7 +92,7 @@ export const CameraView = ({
     enabled: !!loupeHost,
     glassRef,
     frameRef,
-    onSwipe,
+    onEdgeTap,
     onKnock: noise.trigger,
     resetKey: camera.image,
   })
@@ -227,6 +227,12 @@ export const CameraView = ({
           )}
           {feedGlitch === 'lost' && (
             <div className="fx lost" aria-hidden="true" />
+          )}
+          {feedGlitch === 'letterbox' && (
+            <div className="fx letterbox" aria-hidden="true" />
+          )}
+          {feedGlitch === 'heavyvignette' && (
+            <div className="fx heavyvignette" aria-hidden="true" />
           )}
           <NoiseCanvas />
           <div className="fx scan" aria-hidden="true" />

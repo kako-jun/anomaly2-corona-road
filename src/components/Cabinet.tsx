@@ -10,6 +10,7 @@ import { playSynth } from '../utils/synthSounds'
 import {
   VOICE_IDS,
   VOICE_RETRY_LIMIT,
+  voiceWasLoaded,
   holdVoice,
   playVoice,
   probeVoices,
@@ -67,6 +68,8 @@ interface CabinetProps {
   onEndingDone: () => void
   onSwitch: (to: 'prev' | 'next' | number) => void
   onReport: (category: AnomalyCategory) => void
+  /** A voice anomaly whose file could not be loaded after every retry: the game takes it back (#407). */
+  onVoiceUnavailable?: (id: string) => void
 }
 
 /** The in-game screen: CRT monitor + control panel. Mounted only while playing, so its local state resets every shift. */
@@ -89,6 +92,7 @@ export const Cabinet = ({
   onEndingDone,
   onSwitch,
   onReport,
+  onVoiceUnavailable,
 }: CabinetProps) => {
   const [brightness, setBrightness] = useState(KNOB_DEFAULT)
   const [contrast, setContrast] = useState(KNOB_DEFAULT)
@@ -173,6 +177,9 @@ export const Cabinet = ({
               () => load(attempt + 1),
               voiceRetryDelay(attempt)
             )
+          // A voice decoded once in this shift may have been heard: a failed re-read later does not take it back.
+          else if (!voiceWasLoaded(heldVoiceId))
+            onVoiceUnavailable?.(heldVoiceId)
         })
     }
     load(0)
@@ -181,7 +188,7 @@ export const Cabinet = ({
       window.clearTimeout(timer)
       releaseVoice(heldVoiceId)
     }
-  }, [heldVoiceId, ending, audible])
+  }, [heldVoiceId, ending, audible, onVoiceUnavailable])
   useEffect(() => {
     if (!anomalySoundId || !VOICE_IDS.has(anomalySoundId) || ending || !audible)
       return
@@ -266,10 +273,10 @@ export const Cabinet = ({
     wasOpenRef.current = reportOpen
   }, [reportOpen])
 
-  // The ending's virtual camera (CAM 09) takes no camera operation at all: keys and swipes are ignored (#273).
+  // The ending's virtual camera (CAM 09) takes no camera operation at all: keys and edge taps are ignored (#273).
   const inEnding = ending === 'ending'
   useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
-  const handleSwipe = useCallback(
+  const handleEdgeTap = useCallback(
     (d: 'next' | 'prev') => {
       if (!inEnding) onSwitch(d)
     },
@@ -314,7 +321,7 @@ export const Cabinet = ({
             ending === 'ending' ? undefined : (FORCED_GLITCH ?? feedGlitchHere)
           }
           feedGlitchForced={FORCED_GLITCH !== undefined}
-          onSwipe={handleSwipe}
+          onEdgeTap={handleEdgeTap}
           loupeHost={loupeHost}
         />
         <section className="panel" aria-label="Control panel">

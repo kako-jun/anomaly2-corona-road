@@ -19,6 +19,16 @@ const ledger = vi.hoisted(() => [] as LedgerEntry[])
 // The non-image side (#77): empty unless a test pushes into it, so the image tests below are not disturbed.
 const nonImage = vi.hoisted(() => [] as NonImageEntry[])
 vi.mock('virtual:non-image-anomalies', () => ({ default: nonImage }))
+// Voices count as drawable only after their file answered (#407): a test decides which ones have.
+const readyVoices = vi.hoisted(() => new Set<string>())
+vi.mock('../utils/voiceSounds', async importOriginal => {
+  const actual = await importOriginal<typeof import('../utils/voiceSounds')>()
+  return {
+    ...actual,
+    voiceReady: (id: string) =>
+      !actual.VOICE_IDS.has(id) || readyVoices.has(id),
+  }
+})
 const preload = vi.hoisted(() => vi.fn())
 vi.mock('../data/anomalyLedger', () => ({
   ANOMALY_LEDGER: ledger,
@@ -104,6 +114,7 @@ beforeEach(() => {
   ;(saveData as unknown as { resetStore: () => void }).resetStore()
   ledger.length = 0
   nonImage.length = 0
+  readyVoices.clear()
 })
 afterEach(() => {
   vi.useRealTimers()
@@ -586,6 +597,40 @@ describe('non-image anomalies (#77)', () => {
     expect(hook.result.current.activeAnomalies[0].detectedAt).toBeUndefined()
   })
 
+  it('noise gone (RT-FEED-28) shows on every camera it was given, and a report on any of them clears it', () => {
+    nonImage.push(glitch('RT-FEED-28'))
+    const hook = start()
+    advance(FIRST + 100)
+    const [a] = hook.result.current.activeAnomalies
+    expect(a.feedGlitch).toBe('nonoise')
+    const ids = a.feedGlitchCameraIds!
+    expect(ids[0]).toBe(a.cameraId)
+    expect(ids.length).toBeGreaterThanOrEqual(1)
+    expect(ids.length).toBeLessThanOrEqual(3)
+    const last = ids[ids.length - 1]
+    for (const c of hook.result.current.cameras) {
+      watch(hook, c.id)
+      expect(hook.result.current.feedGlitchHere).toBe(
+        ids.includes(c.id) ? 'nonoise' : undefined
+      )
+    }
+    watch(hook, last)
+    act(() => hook.result.current.reportAnomaly('Camera'))
+    expect(hook.result.current.stats.correctReports).toBe(1)
+    expect(hook.result.current.feedGlitchHere).toBeUndefined()
+  })
+
+  it('noise gone never takes a camera that already has an anomaly, and its extra cameras take no other anomaly', () => {
+    for (let c = 1; c <= 8; c++) ledger.push(entry(`img${c}`, c))
+    nonImage.push(glitch('RT-FEED-28'))
+    nonImage.push(glitch('RT-FEED-22'))
+    const { result } = start()
+    advance(FIRST + INTERVAL * 20)
+    const open = result.current.activeAnomalies.filter(a => !a.detectedAt)
+    const shown = open.flatMap(a => a.feedGlitchCameraIds ?? [a.cameraId])
+    expect(new Set(shown).size).toBe(shown.length)
+  })
+
   it('shares the cap and the camera slots with image anomalies, and is used once per shift', () => {
     nonImage.push(glitch())
     for (let c = 1; c <= 8; c++) ledger.push(entry(`img${c}`, c))
@@ -605,6 +650,179 @@ describe('non-image anomalies (#77)', () => {
     const { result } = start()
     advance(FIRST + INTERVAL * 2)
     expect(result.current.stats.totalAnomalies).toBe(0)
+  })
+})
+
+describe('voice anomalies (#407)', () => {
+  const voice = (id = 'RT-SND-06'): NonImageEntry => ({
+    id,
+    category: 'Environment',
+    anomalyType: 'sound',
+  })
+
+  it('does not appear while its file has not answered, and does once it has', () => {
+    nonImage.push(voice())
+    const { result } = start()
+    advance(FIRST + INTERVAL * 3)
+    expect(result.current.stats.totalAnomalies).toBe(0)
+    readyVoices.add('RT-SND-06')
+    advance(INTERVAL)
+    expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['RT-SND-06'])
+  })
+
+  it('a voice still waiting for its file does not end the draw for the shift (not exhausted)', () => {
+    nonImage.push(voice())
+    const { result } = start()
+    advance(FIRST + INTERVAL * 8)
+    expect(result.current.stats.totalAnomalies).toBe(0)
+    readyVoices.add('RT-SND-06')
+    advance(INTERVAL)
+    expect(result.current.stats.totalAnomalies).toBe(1)
+  })
+
+  describe('withdrawAnomaly', () => {
+    const running = () => {
+      readyVoices.add('RT-SND-06')
+      nonImage.push(voice())
+      const hook = start()
+      advance(FIRST + 100)
+      return hook
+    }
+
+    it('takes a running voice back as if it never appeared, and it is not drawn again', () => {
+      const { result } = running()
+      expect(result.current.unreportedCount).toBe(1)
+      act(() => result.current.withdrawAnomaly('RT-SND-06'))
+      expect(result.current.activeAnomalies).toEqual([])
+      expect(result.current.unreportedCount).toBe(0)
+      expect(result.current.stats.totalAnomalies).toBe(0)
+      advance(INTERVAL * 5)
+      expect(result.current.stats.totalAnomalies).toBe(0)
+    })
+
+    it('a report after the withdrawal is an ordinary false report on an empty camera (nothing to confirm)', () => {
+      const hook = running()
+      const cam = hook.result.current.activeAnomalies[0].cameraId
+      act(() => hook.result.current.withdrawAnomaly('RT-SND-06'))
+      const index = hook.result.current.cameras.findIndex(c => c.id === cam)
+      act(() => hook.result.current.switchCamera(index))
+      act(() => hook.result.current.reportAnomaly('Environment'))
+      expect(hook.result.current.stats.correctReports).toBe(0)
+      expect(hook.result.current.stats.misreports).toBe(1)
+      expect(hook.result.current.feedback?.message).toMatch(/NO ANOMALY HERE/)
+    })
+
+    it('starting a shift forgets which voices were decoded (so a voice from an earlier shift can be taken back)', async () => {
+      const voiceSounds = await import('../utils/voiceSounds')
+      const ctx = {
+        state: 'running',
+        decodeAudioData: vi.fn().mockResolvedValue({ duration: 68 }),
+      }
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => ({
+          ok: true,
+          arrayBuffer: async () => new ArrayBuffer(8),
+        }))
+      )
+      vi.useRealTimers()
+      expect(
+        await voiceSounds.holdVoice(
+          { ctx: () => ctx, master: () => null } as never,
+          'CR-SH-04'
+        )
+      ).toBe(true)
+      voiceSounds.releaseVoice('CR-SH-04')
+      vi.useFakeTimers()
+      expect(voiceSounds.voiceWasLoaded('CR-SH-04')).toBe(true)
+      start()
+      expect(voiceSounds.voiceWasLoaded('CR-SH-04')).toBe(false)
+      vi.unstubAllGlobals()
+    })
+
+    it('two spawns in one batch land on different cameras (the free cameras are not read from a stale list)', () => {
+      // Non-image entries draw their camera at random, so a stale free list shows up as a shared camera.
+      for (let trial = 0; trial < 40; trial++) {
+        nonImage.length = 0
+        nonImage.push(
+          { id: 'RT-FEED-22', category: 'Camera', anomalyType: 'feed_glitch' },
+          { id: 'RT-FEED-23', category: 'Camera', anomalyType: 'feed_glitch' }
+        )
+        const hook = start()
+        // A catch-up frame (a long pause) can run several spawns before React re-renders.
+        act(() => {
+          vi.advanceTimersByTime(FIRST + 100)
+          vi.advanceTimersByTime(INTERVAL + 100)
+        })
+        const cams = hook.result.current.activeAnomalies.map(a => a.cameraId)
+        expect(cams).toHaveLength(2)
+        expect(new Set(cams).size).toBe(2)
+        hook.unmount()
+      }
+    })
+
+    it('a report in the same batch as a new spawn does not overwrite the spawned anomaly', () => {
+      ledger.push(entry('a', 1), entry('b', 2))
+      const { result } = start()
+      advance(FIRST + 100)
+      const first = result.current.activeAnomalies[0]
+      act(() =>
+        result.current.switchCamera(
+          result.current.cameras.findIndex(c => c.id === first.cameraId)
+        )
+      )
+      act(() => {
+        vi.advanceTimersByTime(INTERVAL + 600)
+        result.current.reportAnomaly(first.category)
+      })
+      expect(result.current.activeAnomalies).toHaveLength(2)
+      expect(result.current.stats.totalAnomalies).toBe(2)
+      expect(
+        result.current.activeAnomalies.filter(a => a.detectedAt)
+      ).toHaveLength(1)
+    })
+
+    it('a report and a withdrawal in the same tick count the anomaly once (reported, not taken back)', () => {
+      const hook = running()
+      const cam = hook.result.current.activeAnomalies[0].cameraId
+      act(() =>
+        hook.result.current.switchCamera(
+          hook.result.current.cameras.findIndex(c => c.id === cam)
+        )
+      )
+      act(() => {
+        hook.result.current.reportAnomaly('Environment')
+        hook.result.current.withdrawAnomaly('RT-SND-06')
+      })
+      expect(hook.result.current.stats.totalAnomalies).toBe(1)
+      expect(hook.result.current.stats.correctReports).toBe(1)
+      expect(hook.result.current.activeAnomalies).toHaveLength(1)
+    })
+
+    it('a voice taken back after the child was found is not counted as one that appeared after it (no false ending)', () => {
+      readyVoices.add('RT-SND-06')
+      nonImage.push(voice())
+      saveData.update(cur => ({ ...cur, flags: { ...cur.flags, child: true } }))
+      const { result } = start()
+      advance(FIRST + 100)
+      expect(result.current.activeAnomalies).toHaveLength(1)
+      act(() => result.current.withdrawAnomaly('RT-SND-06'))
+      advance(DEFAULT_CONFIG.totalDurationMs)
+      expect(result.current.ending?.closing).toBe('dawn')
+    })
+
+    it('leaves a reported voice and an unknown id alone', () => {
+      const hook = running()
+      const cam = hook.result.current.activeAnomalies[0].cameraId
+      const index = hook.result.current.cameras.findIndex(c => c.id === cam)
+      act(() => hook.result.current.switchCamera(index))
+      act(() => hook.result.current.reportAnomaly('Environment'))
+      act(() => hook.result.current.withdrawAnomaly('RT-SND-06'))
+      act(() => hook.result.current.withdrawAnomaly('nope'))
+      expect(hook.result.current.activeAnomalies).toHaveLength(1)
+      expect(hook.result.current.stats.totalAnomalies).toBe(1)
+      expect(hook.result.current.stats.correctReports).toBe(1)
+    })
   })
 })
 

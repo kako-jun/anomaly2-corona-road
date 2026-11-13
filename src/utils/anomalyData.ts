@@ -292,6 +292,25 @@ export const hasUnusedEntry = (
   )
 
 /**
+ * RT-FEED-28: 1 to 3 cameras in all, uniformly (the drawn one first; the others at random among the FREE cameras only,
+ * so the one-anomaly-per-camera rule holds: a camera that already has an anomaly never becomes a second camera).
+ * The ledger says only "1 to 3 at random"; the count is uniform over 1, 2, 3 (fewer when too few cameras are free).
+ */
+export const pickGlitchCameras = (
+  cameraId: number,
+  freeCameraIds: readonly number[],
+  rng: () => number
+): number[] => {
+  const rest = freeCameraIds.filter(id => id !== cameraId)
+  const extra = Math.min(Math.floor(rng() * 3), rest.length)
+  const picked = [cameraId]
+  for (let i = 0; i < extra; i++) {
+    picked.push(rest.splice(Math.floor(rng() * rest.length), 1)[0])
+  }
+  return picked
+}
+
+/**
  * The running anomaly for a non-image entry on the camera drawn for it. A `feed_glitch` carries the kind drawn now
  * (it shows only while that camera is watched); `ui_corruption` / `rule_break` are `monitor` scope (reported from any
  * camera). The camera still holds the slot, so the image rules (one at a time per camera) stay as they are.
@@ -300,9 +319,14 @@ export const createNonImageAnomaly = (
   entry: NonImageEntry,
   cameraId: number,
   phase: GamePhase,
-  rng: () => number = Math.random
+  rng: () => number = Math.random,
+  freeCameraIds: readonly number[] = []
 ): Anomaly => {
   const feedGlitch = pickFeedGlitchKind(entry, rng)
+  const feedGlitchCameraIds =
+    feedGlitch === 'nonoise'
+      ? pickGlitchCameras(cameraId, freeCameraIds, rng)
+      : undefined
   return {
     id: entry.id,
     category: entry.category,
@@ -312,5 +336,6 @@ export const createNonImageAnomaly = (
     scope: reportScopeOf(entry.anomalyType),
     ...(entry.exclusiveGroup ? { exclusiveGroup: entry.exclusiveGroup } : {}),
     ...(feedGlitch ? { feedGlitch } : {}),
+    ...(feedGlitchCameraIds ? { feedGlitchCameraIds } : {}),
   }
 }

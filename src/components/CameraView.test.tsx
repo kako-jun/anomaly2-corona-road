@@ -71,7 +71,7 @@ const props = (over: Partial<Props> = {}): Props => ({
   subtitle: { text: '', visible: false },
   brightness: 1,
   contrast: 1,
-  onSwipe: vi.fn(),
+  onEdgeTap: vi.fn(),
   ...over,
 })
 
@@ -433,6 +433,8 @@ describe('CameraView feed glitch (#78)', () => {
     ['scanburn', '.scanburn'],
     ['blink', '.blackframe'],
     ['ghost', 'img.ghost'],
+    ['letterbox', '.letterbox'],
+    ['heavyvignette', '.heavyvignette'],
   ] as const)('%s renders %s', (kind, selector) => {
     const { container } = render(
       <CameraView {...props({ feedGlitch: kind })} />
