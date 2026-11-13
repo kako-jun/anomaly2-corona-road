@@ -126,6 +126,8 @@ describe('loupe gesture (#341)', () => {
       heldPos: out.held && {
         left: out.held.style.left,
         top: out.held.style.top,
+        width: out.held.style.width,
+        height: out.held.style.height,
       },
     }
     view.unmount()
@@ -150,9 +152,13 @@ describe('loupe gesture (#341)', () => {
   it('letterbox bars are placed by the held spot, not by the circle centre (the held layer is offset)', () => {
     const r = press('letterbox')
     expect(r.held).not.toBeNull()
-    // held glass y = 100 (150 - glass top 50): the layer's top = d/2 - 100
-    expect(r.heldPos!.top).toBe(`${LOUPE.DIAMETER_PX / 2 - 100}px`)
-    expect(r.heldPos!.left).toBe(`${LOUPE.DIAMETER_PX / 2 - 200}px`)
+    // held glass y = 100 (150 - glass top 50), x = 200: the layer is the glass times ZOOM, like the picture
+    expect(r.heldPos!.top).toBe(`${LOUPE.DIAMETER_PX / 2 - 100 * LOUPE.ZOOM}px`)
+    expect(r.heldPos!.left).toBe(
+      `${LOUPE.DIAMETER_PX / 2 - 200 * LOUPE.ZOOM}px`
+    )
+    expect(r.heldPos!.width).toBe(`${GLASS.width * LOUPE.ZOOM}px`)
+    expect(r.heldPos!.height).toBe(`${GLASS.height * LOUPE.ZOOM}px`)
   })
 
   it('a quick horizontal swipe switches the camera and never shows the loupe', () => {

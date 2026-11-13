@@ -92,15 +92,16 @@ export const Loupe = ({
         )}
       </div>
       {(feedGlitch === 'letterbox' || feedGlitch === 'heavyvignette') && (
-        // monitor-sized like the noise, but placed so the held spot of the glass is at the circle's centre
-        // (the bars / the dark corners belong to the picture's position, not to the circle)
+        // the bars / dark corners belong to the picture, so this layer is the glass magnified like the picture
+        // (glass * ZOOM) and placed so the held spot of the glass is at the circle's centre; the clamp keeps
+        // x * ZOOM >= d / 2, so the circle is always covered. The grain and lines are not magnified (a grain is a grain).
         <div
           className="loupe__held"
           style={{
-            width: view.glassW,
-            height: view.glassH,
-            left: d / 2 - view.x,
-            top: d / 2 - view.y,
+            width: view.glassW * LOUPE.ZOOM,
+            height: view.glassH * LOUPE.ZOOM,
+            left: d / 2 - view.x * LOUPE.ZOOM,
+            top: d / 2 - view.y * LOUPE.ZOOM,
           }}
         >
           <div
