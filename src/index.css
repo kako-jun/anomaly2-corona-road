@@ -113,6 +113,22 @@ body {
   background: var(--surface-0);
   color: var(--text-hi);
   overscroll-behavior: none;
+  /* #432: nothing in the game is meant to be selected (drag, double / triple click, Ctrl+A, long press).
+     Only the transfer-code field below is an exception. Reading (aria), focus, Ctrl+F and the context menu are untouched. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default; /* iOS: keep the field's edit menu (paste) */
+}
+
+img {
+  -webkit-user-drag: none;
 }
 
 #root {
