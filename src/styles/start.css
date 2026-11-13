@@ -75,7 +75,6 @@ body.start-open #root {
   /* y: a different period (53 s loop), so the path wanders instead of repeating a figure */
   animation: start-pan-y 26.5s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
   animation-delay: var(--start-pan-y-delay, 0s);
-  user-select: none;
   pointer-events: none;
 }
 /* Slow drift in every direction: each axis only travels +-margin (90% of what the zoom leaves), so the edge never shows. */
@@ -238,7 +237,6 @@ body.start-open #root {
 }
 .start-notes img {
   display: block;
-  user-select: none;
   -webkit-user-drag: none;
 }
 .start-page {

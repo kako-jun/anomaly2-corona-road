@@ -31,3 +31,42 @@ describe('loupe press CSS (#409)', () => {
     expect(rule![1]).toMatch(/touch-action:\s*none/)
   })
 })
+
+describe('no text selection (#432)', () => {
+  const index = readFileSync('src/index.css', 'utf8')
+  const all = [
+    'src/index.css',
+    'src/styles/loupe.css',
+    'src/styles/retro.css',
+    'src/styles/start.css',
+    'src/components/investigationNote.css',
+  ].map(p => readFileSync(p, 'utf8'))
+
+  it('body switches selection, the iOS callout off by default', () => {
+    const rule = index.match(/\nbody\s*\{([^{}]*)\}/)
+    expect(rule).not.toBeNull()
+    expect(rule![1]).toMatch(/\n\s*user-select:\s*none/)
+    expect(rule![1]).toMatch(/-webkit-user-select:\s*none/)
+    expect(rule![1]).toMatch(/-webkit-touch-callout:\s*none/)
+  })
+  it('only input and textarea get selection back', () => {
+    const re = /([^{}]+)\{([^{}]*user-select:\s*text[^{}]*)\}/g
+    const rules = [...index.matchAll(re)]
+    expect(rules).toHaveLength(1)
+    expect(
+      rules[0][1]
+        .split(',')
+        .map(x => x.trim())
+        .sort()
+    ).toEqual(['input', 'textarea'])
+    expect(rules[0][2]).toMatch(/-webkit-user-select:\s*text/)
+  })
+  it('no other rule in the app re-enables or repeats user-select', () => {
+    const rest = all.slice(1).join('\n')
+    expect(rest).not.toMatch(/user-select/)
+    expect(all[0].match(/user-select:\s*text/g)).toHaveLength(2)
+  })
+  it('images cannot be dragged out', () => {
+    expect(index).toMatch(/\nimg\s*\{\s*-webkit-user-drag:\s*none/)
+  })
+})

@@ -76,9 +76,6 @@
    the hook also cancels touchmove; no text selection / long-press menu while pressing */
 .glass {
   touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
 }
 
 /* edge tap (#354): the handlers are on the whole .bezel; a short tap on the left / right goes to the previous / next
@@ -86,9 +83,6 @@
 .bezel {
   position: relative;
   touch-action: pan-y pinch-zoom;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
 }
 
 /* #342: shaking / double-tapping the monitor switches the grain and the lines off for NOISE_OFF_MS (numbers in src/utils/noiseOff.ts).

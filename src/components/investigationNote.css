@@ -271,7 +271,6 @@
   transform: rotate(var(--tilt-sketch));
   transform-origin: 50% 50%;
   pointer-events: none;
-  user-select: none;
 }
 
 .note-form {
