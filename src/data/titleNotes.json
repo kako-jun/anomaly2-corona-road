@@ -5,16 +5,16 @@
       "ja": {
         "file": "ja-1.webp",
         "heading": "① カメラ切替",
-        "lines": ["番号ボタンをタップ。", "または、画面を左右にスワイプ。"],
-        "alt": "カメラ切替。番号ボタンをタップ。または、画面を左右にスワイプ。",
+        "lines": ["番号ボタンをタップ。", "または、左右の枠をタップ。"],
+        "alt": "カメラ切替。番号ボタンをタップ。または、左右の枠をタップ。",
         "width": 600,
         "height": 450
       },
       "en": {
         "file": "en-1.webp",
         "heading": "1. SWITCH CAMERA",
-        "lines": ["Tap a number button,", "or swipe the screen left or right."],
-        "alt": "Switch camera. Tap a number button, or swipe the screen left or right.",
+        "lines": ["Tap a number button,", "or tap the left or right frame."],
+        "alt": "Switch camera. Tap a number button, or tap the left or right frame.",
         "width": 600,
         "height": 450
       }
@@ -25,11 +25,11 @@
         "file": "ja-2.webp",
         "heading": "② つまみ",
         "lines": [
-          "明るさとコントラストは、",
+          "明るさ・コントラスト・音量は、",
           "つまみを左右にドラッグ。",
-          "タップすると中央に戻る。"
+          "タップすると初期位置に戻る。"
         ],
-        "alt": "つまみ。明るさとコントラストは、つまみを左右にドラッグ。タップすると中央に戻る。",
+        "alt": "つまみ。明るさ・コントラスト・音量は、つまみを左右にドラッグ。タップすると初期位置に戻る。",
         "width": 600,
         "height": 450
       },
@@ -38,10 +38,10 @@
         "heading": "2. KNOBS",
         "lines": [
           "Drag a knob left or right",
-          "for brightness and contrast.",
-          "Tap it to go back to the centre."
+          "for brightness, contrast, volume.",
+          "Tap it to reset."
         ],
-        "alt": "Knobs. Drag a knob left or right for brightness and contrast. Tap it to go back to the centre.",
+        "alt": "Knobs. Drag a knob left or right for brightness, contrast, volume. Tap it to reset.",
         "width": 600,
         "height": 450
       }

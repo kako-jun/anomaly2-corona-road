@@ -6,6 +6,7 @@ import type { Anomaly } from '../types/game'
 import type { LedgerEntry, NonImageEntry } from './anomalyLedger'
 import {
   createNonImageAnomaly,
+  pickGlitchCameras,
   hasUnusedEntry,
   spawnableEntries,
   pickNonImageEntry,
@@ -74,6 +75,78 @@ describe('the ledger and the effects agree', () => {
       )
     )
     for (const e of drawn) expect(producedIds.has(e.id), e.id).toBe(true)
+  })
+})
+
+describe('the six feed filters (#406)', () => {
+  const css = readFileSync(
+    join(process.cwd(), 'src/styles/feedGlitch.css'),
+    'utf8'
+  )
+  const cases = [
+    ['RT-FEED-12', 'letterbox'],
+    ['RT-FEED-16', 'green'],
+    ['RT-FEED-17', 'flip'],
+    ['RT-FEED-18', 'heavyvignette'],
+    ['RT-FEED-27', 'mono'],
+    ['RT-FEED-28', 'nonoise'],
+  ] as const
+  it.each(cases)(
+    '%s is drawn as %s and the stylesheet has a rule for it',
+    (id, kind) => {
+      expect(pickFeedGlitchKind(glitch(id), () => 0)).toBe(kind)
+      expect(css).toMatch(new RegExp(`data-glitch='${kind}'|\\.${kind}\\b`))
+    }
+  )
+  it('pickGlitchCameras gives 1 to 3 distinct cameras with the drawn one first', () => {
+    const all = [1, 2, 3, 4, 5, 6, 7, 8]
+    expect(pickGlitchCameras(4, all, () => 0)).toEqual([4])
+    const three = pickGlitchCameras(4, all, () => 0.99)
+    expect(three.length).toBe(3)
+    expect(three[0]).toBe(4)
+    expect(new Set(three).size).toBe(3)
+    expect(pickGlitchCameras(4, [4], () => 0.99)).toEqual([4])
+  })
+  it('takes the other cameras only from the free ones (a camera with an anomaly is never a second camera)', () => {
+    // free: 4 (drawn), 6; busy: 1, 2, 3, 5, 7, 8
+    for (const r of [0, 0.4, 0.99]) {
+      const got = pickGlitchCameras(4, [4, 6], () => r)
+      expect(got.every(id => id === 4 || id === 6)).toBe(true)
+    }
+  })
+  it('the count is uniform over 1, 2, 3 (the ledger only says "1 to 3 at random")', () => {
+    const all = [1, 2, 3, 4, 5, 6]
+    expect(pickGlitchCameras(1, all, () => 0).length).toBe(1)
+    expect(pickGlitchCameras(1, all, () => 0.4).length).toBe(2)
+    expect(pickGlitchCameras(1, all, () => 0.99).length).toBe(3)
+  })
+  it('createNonImageAnomaly gives only RT-FEED-28 a camera list', () => {
+    const cams = [1, 2, 3, 4]
+    const a = createNonImageAnomaly(
+      glitch('RT-FEED-28'),
+      2,
+      'early',
+      () => 0.99,
+      cams
+    )
+    expect(a.feedGlitchCameraIds?.length).toBe(3)
+    expect(
+      createNonImageAnomaly(glitch('RT-FEED-27'), 2, 'early', () => 0.99, cams)
+        .feedGlitchCameraIds
+    ).toBeUndefined()
+  })
+  it('a report on any camera of the list is a hit, on another camera it is not', () => {
+    const list = [
+      {
+        id: 'RT-FEED-28',
+        category: 'Camera',
+        cameraId: 2,
+        phase: 'early',
+        feedGlitchCameraIds: [2, 5],
+      },
+    ] as Anomaly[]
+    expect(reportTargetsFor(list, 5, 'Camera').hit?.id).toBe('RT-FEED-28')
+    expect(reportTargetsFor(list, 3, 'Camera').hit).toBeUndefined()
   })
 })
 
