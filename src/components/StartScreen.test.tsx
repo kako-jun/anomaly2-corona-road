@@ -412,9 +412,8 @@ describe('StartScreen fullscreen key (#426)', () => {
     setup()
     await userEvent.click(screen.getByRole('button', { name: 'FULL' }))
     expect(enter).toHaveBeenCalledTimes(1)
-    expect(screen.getByRole('button', { name: 'EXIT' })).toHaveAttribute(
-      'aria-pressed',
-      'true'
+    expect(screen.getByRole('button', { name: 'EXIT' })).not.toHaveAttribute(
+      'aria-pressed'
     )
     // the browser leaves on its own (ESC)
     ;(document as unknown as Record<string, unknown>).fullscreenElement = null

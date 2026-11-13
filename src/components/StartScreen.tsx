@@ -162,7 +162,6 @@ export const StartScreen = ({
             <button
               type="button"
               className="start-top-key start-fullscreen-key"
-              aria-pressed={full}
               onClick={() => void toggleFullscreen()}
             >
               {full ? 'EXIT' : 'FULL'}

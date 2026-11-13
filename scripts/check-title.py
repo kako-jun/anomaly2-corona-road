@@ -10,7 +10,7 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
      edge never shows (the margin must stay >= 0 on all four sides)
   2. the signboard stays in view: the share of its area that is on screen at the worst point of the drift (phones:
      nearly all; wide screens cut the top and bottom by the cover crop, which is accepted, so only a floor), and of
-     the part that is on screen the note and the START key cover at most 15% (>= 85% clear)
+     the part that is on screen the note, the START key and the top-right keys cover at most 15% (>= 85% clear)
   3. the visible note is wholly inside the viewport and overlaps the START key,
      on every page (1/3 ... 3/3); on a wide / landscape screen the note's right edge is the START key's (within 2px)
   4. the page turns by click, by keyboard (Enter, arrows), by touch-style drag and by mouse drag, wraps from the last to the first,
@@ -87,7 +87,9 @@ SWEEP = """([sign]) => {
   const sec = document.querySelector('.start-notes')
   const noteHidden = sec.getBoundingClientRect().height === 0 && getComputedStyle(sec).visibility === 'hidden'
   const noteVisible = noteImg && !noteHidden
-  const cover = [noteVisible && rr(noteImg), rr(document.querySelector('.start-deck'))].filter(Boolean)
+  // the top-right key row (FULL / TRANSFER SAVE, #426) covers the board too, when it is there
+  const topKeys = document.querySelector('.start-topright')
+  const cover = [noteVisible && rr(noteImg), rr(document.querySelector('.start-deck')), topKeys && rr(topKeys)].filter(Boolean)
   const inter = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]))
   let minSlack = 1e9, minSign = 1, minClear = 1
   const at = (tx, ty) => {

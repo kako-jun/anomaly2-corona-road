@@ -37,6 +37,7 @@ describe('canFullscreen', () => {
 describe('with the real document', () => {
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.unstubAllGlobals()
     delete (document as unknown as Record<string, unknown>).fullscreenEnabled
     delete (document as unknown as Record<string, unknown>).fullscreenElement
     delete (document as unknown as Record<string, unknown>).exitFullscreen
@@ -54,7 +55,6 @@ describe('with the real document', () => {
     expect(fullscreenAvailable()).toBe(true)
     stubMatch(true)
     expect(fullscreenAvailable()).toBe(false)
-    vi.unstubAllGlobals()
   })
   it('toggle enters, then leaves, and swallows a refusal', async () => {
     const enter = vi.fn().mockResolvedValue(undefined)

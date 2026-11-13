@@ -451,6 +451,7 @@ body.start-open #root {
 }
 .start-top-key {
   min-height: 44px;
+  min-width: 64px; /* FULL and EXIT are the same width: the row does not shift when it flips */
   padding: 0 12px;
   font: inherit;
   font-size: 12px;
