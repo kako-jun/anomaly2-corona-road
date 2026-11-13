@@ -18,6 +18,8 @@ interface ReportButtonProps {
   alert?: boolean
   /** The ending's virtual camera is on screen (#273): every lamp is off, never lit and never blinking. */
   lampsOff?: boolean
+  /** The key caption: REPORT, or a misspelling while RT-UI-26 runs (the accessible name stays REPORT). */
+  label?: string
   buttonRef: RefObject<HTMLButtonElement>
   onToggle: () => void
 }
@@ -31,6 +33,7 @@ export const ReportButton = ({
   open,
   alert = false,
   lampsOff = false,
+  label = 'REPORT',
   buttonRef,
   onToggle,
 }: ReportButtonProps) => (
@@ -48,11 +51,12 @@ export const ReportButton = ({
         ref={buttonRef}
         type="button"
         className={cx('key key-report', open && 'pressed')}
+        aria-label="REPORT"
         aria-expanded={open}
         aria-haspopup="dialog"
         onClick={onToggle}
       >
-        REPORT
+        {label}
       </button>
     </div>
   </div>

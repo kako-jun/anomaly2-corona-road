@@ -107,3 +107,38 @@ describe('runningMonitorEffects: appear, draw, report from any camera, clear', (
     ).toBe(0)
   })
 })
+
+describe('digit window / text batch (#416)', () => {
+  const ids = [
+    'RT-UI-02',
+    'RT-UI-06',
+    'RT-UI-07',
+    'RT-UI-08',
+    'RT-UI-17',
+    'RT-UI-18',
+    'RT-UI-23',
+    'RT-UI-26',
+  ]
+  it.each(ids)(
+    '%s runs, is reportable from any camera, and clears on the report',
+    id => {
+      const a = run(id, 3)
+      expect(runningMonitorEffects([a]).has(id)).toBe(true)
+      for (const cam of [1, 4, 8])
+        expect(reportTargetsFor([a], cam, 'Surreal').hit?.id).toBe(id)
+      expect(runningMonitorEffects([{ ...a, detectedAt: 9 }]).size).toBe(0)
+    }
+  )
+  it('the headings and the digits are guarded by exclusive groups in the ledger', () => {
+    const ledger = parse(
+      readFileSync(join(process.cwd(), 'prompts/anomalies.yaml'), 'utf8')
+    ) as { anomalies: { id: string; exclusive?: string }[] }
+    const g = (id: string) => ledger.anomalies.find(e => e.id === id)?.exclusive
+    expect(['RT-UI-02', 'RT-UI-06', 'RT-UI-07'].map(g)).toEqual(
+      Array(3).fill('hud-labels')
+    )
+    expect(['RT-UI-08', 'RT-UI-17', 'RT-UI-18'].map(g)).toEqual(
+      Array(3).fill('digit-window')
+    )
+  })
+})

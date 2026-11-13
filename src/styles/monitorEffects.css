@@ -10,6 +10,76 @@
   transform: rotate(3deg) scale(0.9);
 }
 
+/* RT-UI-08 digit glow colour: the TIME / REPORTS windows glow orange-red instead of green (the lamps are other parts).
+   Same custom-property-free override of the .vfd colour and glow in retro.css. */
+.retro[data-fx~='RT-UI-08'] .vfd {
+  color: #ffb27a;
+  text-shadow:
+    0 0 8px #ff5a1f,
+    0 0 2px #ffe3cf;
+}
+
+/* RT-UI-17 digit glow drop-out: GameHUD wraps every digit in .dg and marks every second one .dg--cut. A horizontal
+   band across the glyph is cut away (the value is unchanged, only the shape breaks). The mask also removes the glow
+   of the cut part, so the band reads as dark. */
+.retro[data-fx~='RT-UI-17'] .dg {
+  display: inline-block;
+}
+.retro[data-fx~='RT-UI-17'] .dg--cut {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0 30%,
+    transparent 30% 58%,
+    #000 58% 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0 30%,
+    transparent 30% 58%,
+    #000 58% 100%
+  );
+}
+
+/* RT-UI-18 digit ghost smear: a faint other digit (the aria-hidden .dg__g that GameHUD adds, so it is never read out)
+   sits over each digit and the glow is pulled a little into a vertical smear. .vfd clips it to the window frame. */
+.retro[data-fx~='RT-UI-18'] .vfd {
+  overflow: clip;
+}
+.retro[data-fx~='RT-UI-18'] .dg {
+  position: relative;
+  display: inline-block;
+  text-shadow:
+    0 -3px 3px rgba(121, 255, 208, 0.5),
+    0 3px 3px rgba(121, 255, 208, 0.5),
+    0 0 8px #2fe3a8;
+}
+.retro[data-fx~='RT-UI-18'] .dg__g {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.4;
+  filter: blur(0.6px);
+  text-shadow: none;
+  transform: translateY(3px) scaleY(1.25);
+  pointer-events: none;
+}
+
+/* RT-UI-23 colon blink tempo: the TIME colon blinks fast (--fast, period 0.34 s = at most 3 blinks a second) or stays lit (--steady); Cabinet picks one at random when the effect starts. Under
+   prefers-reduced-motion the colon is normally still, so it vanishes instead (readable without motion). */
+.retro[data-fx~='RT-UI-23'] .clock-colon--fast {
+  animation-duration: 0.34s;
+}
+.retro[data-fx~='RT-UI-23'] .clock-colon--steady {
+  animation: none;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .retro[data-fx~='RT-UI-23'] .clock-colon--fast,
+  .retro[data-fx~='RT-UI-23'] .clock-colon--steady {
+    opacity: 0;
+  }
+}
+
 /* RT-UI-16 monitor mirrored: the whole cabinet (picture, TIME, text, buttons) is flipped left-right. Operation is
    unchanged: the buttons are pressed where they are drawn. A `transform` for the same reason as RT-UI-11 (the loupe, the
    edge tap and the knob drag read the matrix, src/utils/tiltGeometry.ts); exclusive with RT-UI-11 (cabinet-transform). */
