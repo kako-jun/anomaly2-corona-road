@@ -178,6 +178,17 @@ describe('start.css: the drifting blur patch (#331)', () => {
   it('stays within the margin the travel leaves: the patch never moves more than 40% of its size', () => {
     expect(pct(screen('--blur-travel'))).toBeLessThanOrEqual(40)
   })
+  it('in the lite step-down also stops the photo drift (a drifting photo under the patch is blurred again every frame)', () => {
+    const stopped: string[] = []
+    root.walkRules(/start-perf-lite/, (r: Rule) => {
+      r.walkDecls('animation', d => {
+        if (d.value === 'none') stopped.push(r.selector)
+      })
+    })
+    const all = stopped.join(',')
+    for (const sel of ['.start-pan-x', '.start-photo img', '.start-blur'])
+      expect(all).toContain(sel)
+  })
   it('has a way out: no patch without backdrop-filter, still with prefers-reduced-motion', () => {
     let supports = false
     let still = false

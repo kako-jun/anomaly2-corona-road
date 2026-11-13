@@ -26,7 +26,7 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
      fixed-radius backdrop-filter (<= BLUR_PX_MAX) whose strength breathes by opacity only, and: (a) over the whole joint cycle
      (x 61 s, y 47 s, strength 37 s) the signboard's centre is under the strong part of the patch (mask x opacity > 0.5) for at
      most BLUR_STRONG_MAX of the time; (b) with the patch centred on the sign at full strength the sign's edges keep at least
-     BLUR_EDGE_MIN of their contrast (it stays legible) and the patch really changes the picture (BLUR_VISIBLE_MIN mean pixel
+     BLUR_EDGE_MIN of their contrast (it stays legible) and the patch really changes the picture (blur_visible_min mean pixel
      difference); with prefers-reduced-motion no patch animation runs and the patch is the faint fixed one
 Not wired to CI (it needs a Chromium: --chrome or $CHROME, default ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome).
 Starts `npx vite` on a free port (and stops only that process) unless --url is given.
@@ -51,7 +51,14 @@ WIDE_SIGN_MIN = 0.35  # a wide screen crops the tall board top and bottom by des
 BLUR_PX_MAX = 10  # the radius never exceeds this (measured on swiftshader: sign still legible far above, but the look gets muddy)
 BLUR_STRONG_MAX = 0.4  # the sign's centre under the strong part of the patch (mask x opacity > 0.5) at most this share of the time
 BLUR_EDGE_MIN = 0.5  # with the patch centred on the sign at full strength, the sign keeps this much of its edge contrast
-BLUR_VISIBLE_MIN = 1.0  # ... and the patch changes the picture under it by at least this mean grey level (measured over the patch's own area, so the screen size does not dilute it)
+# ... and the middle of the patch (its central 40% x 40%) changes the picture by at least this mean grey level. The photo is plain
+# wall on a big screen, so the floor falls with the width: set between the 4px patch kako-jun could not tell from none (5.7 / 2.1 /
+# 1.5 / 0.8 at 360 / 1280 / 1920 / 3440 px wide) and the 8px one (9.4 / 3.6 / 2.5 / 1.5; 5.2 at 898, 1.9 at 2560): about 0.8x of the 8px value
+BLUR_VISIBLE_MIN = ((500, 7.5), (700, 5.0), (1000, 4.5), (1600, 2.8), (2200, 2.0), (3000, 1.5), (99999, 1.1))  # (screen width below, floor)
+
+
+def blur_visible_min(w):
+    return next(v for lim, v in BLUR_VISIBLE_MIN if w < lim)
 CLEAR_MIN = 0.85  # of the part of the board that is on screen, the note and the key may cover at most 15% (worst point of the pan)
 
 
@@ -207,7 +214,9 @@ def blur_legibility(p):
     box = p.evaluate(SETUP, [list(SIGN)])
     r = p.evaluate("() => { const b = document.querySelector('.start-blur-x').getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }")
     pw_, ph_ = p.evaluate("() => [innerWidth, innerHeight]")
-    area = [max(0, int(r[0])), max(0, int(r[1])), min(pw_, int(r[2])), min(ph_, int(r[3]))]
+    # the middle of the patch (its central 40% x 40%): where the blur is at its full strength
+    cx, cy, hw, hh = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2, (r[2] - r[0]) * 0.2, (r[3] - r[1]) * 0.2
+    area = [max(0, int(cx - hw)), max(0, int(cy - hh)), min(pw_, int(cx + hw)), min(ph_, int(cy + hh))]
     p.wait_for_timeout(250)
     grey = lambda: np.asarray(Image.open(io.BytesIO(p.screenshot())).convert("L"), dtype=float)
     on = grey()
@@ -299,8 +308,8 @@ def main():
                         keep, vis = blur_legibility(p)
                         if keep < BLUR_EDGE_MIN:
                             errs.append(f"the signboard keeps only {keep:.0%} of its edges under the blur (< {BLUR_EDGE_MIN:.0%})")
-                        if vis < BLUR_VISIBLE_MIN:
-                            errs.append(f"the blur patch changes the picture by only {vis:.1f} grey levels (< {BLUR_VISIBLE_MIN})")
+                        if vis < blur_visible_min(w):
+                            errs.append(f"the blur patch changes the picture by only {vis:.1f} grey levels (< {blur_visible_min(w)})")
                     for page in range(3):
                         r = p.evaluate(RECTS)
                         if r["status"] != f"{page + 1}/3":
@@ -414,7 +423,7 @@ def main():
             p = ctx.new_page()
             p.goto(url)
             p.wait_for_selector(".start-screen")
-            still = p.evaluate("() => document.getAnimations().filter(a => a.animationName && a.animationName.startsWith('start-pan') || a.animationName.startsWith('start-blur')).length === 0")
+            still = p.evaluate("() => document.getAnimations().filter(a => a.animationName && (a.animationName.startsWith('start-pan') || a.animationName.startsWith('start-blur'))).length === 0")
             faint = p.evaluate("() => { const b = getComputedStyle(document.querySelector('.start-blur')); return parseFloat(b.opacity) > 0 && parseFloat(b.opacity) < 1 && /blur/.test(b.backdropFilter) }")
             print(f"reduced motion: photo and blur patch still, patch faint and fixed -> {'ok' if still and faint else 'MOVES / not faint'}")
             bad += not (still and faint)

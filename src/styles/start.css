@@ -169,7 +169,10 @@ body.start-open #root {
     display: none;
   }
 }
-/* a slow device (utils/titlePerf.ts): first the patch stops moving (still and faint, like reduced motion), then it is gone */
+/* a slow device (utils/titlePerf.ts): first the patch stops moving (still and faint, like reduced motion) and the photo's drift stops
+   too (a drifting photo under the patch is blurred again every frame), then the patch is gone */
+.start-perf-lite .start-pan-x,
+.start-perf-lite .start-photo img,
 .start-perf-lite .start-blur-x,
 .start-perf-lite .start-blur-y,
 .start-perf-lite .start-blur {
