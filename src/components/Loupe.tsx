@@ -106,6 +106,12 @@ export const Loupe = ({
         {feedGlitch === 'lost' && (
           <div className="fx lost" aria-hidden="true" />
         )}
+        {feedGlitch === 'letterbox' && (
+          <div className="fx letterbox" aria-hidden="true" />
+        )}
+        {feedGlitch === 'heavyvignette' && (
+          <div className="fx heavyvignette" aria-hidden="true" />
+        )}
         <NoiseCanvas />
         <div className="fx scan" />
       </div>

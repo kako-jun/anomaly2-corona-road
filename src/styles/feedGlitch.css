@@ -227,6 +227,54 @@
   }
 }
 
+/* RT-FEED-12 letterbox: black bars cover the top and bottom, the view gets wide and narrow */
+.letterbox {
+  background: linear-gradient(
+    180deg,
+    #000 0,
+    #000 15%,
+    transparent 15%,
+    transparent 85%,
+    #000 85%,
+    #000 100%
+  );
+}
+
+/* RT-FEED-16 green tint: night-vision green, the colour stays but leans green */
+.glass[data-glitch='green'] .pic,
+.loupe[data-glitch='green'] .loupe__frame {
+  filter: sepia(1) hue-rotate(55deg) saturate(2.6) brightness(0.95);
+}
+
+/* RT-FEED-17 upside down: only the picture box turns; the OSD sits outside it and stays upright */
+.glass[data-glitch='flip'] .pic,
+.loupe[data-glitch='flip'] .loupe__frame {
+  transform: scaleY(-1);
+}
+
+/* RT-FEED-18 heavy vignette: corners down to about 0.9, only the centre bright (the ordinary .vignette stays, 0.55) */
+.heavyvignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    rgba(0, 0, 0, 0.9) 85%
+  );
+}
+
+/* RT-FEED-27 monochrome: saturation zero for as long as the camera is watched */
+.glass[data-glitch='mono'] .pic,
+.loupe[data-glitch='mono'] .loupe__frame {
+  filter: grayscale(1);
+}
+
+/* RT-FEED-28 noise gone: the grain and the scanlines are off on this camera and do not come back with time */
+.glass[data-glitch='nonoise'] .noise,
+.glass[data-glitch='nonoise'] .scan,
+.loupe[data-glitch='nonoise'] .noise,
+.loupe[data-glitch='nonoise'] .scan {
+  opacity: 0;
+}
+
 /* Dev only: names the forced glitch on the screen */
 .osd-dev {
   left: 8%;

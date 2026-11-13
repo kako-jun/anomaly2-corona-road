@@ -43,6 +43,8 @@ export interface Anomaly {
   exclusiveGroup?: string
   /** Non-image only: the camera feed glitch drawn on `cameraId` while it is watched (removed when reported). */
   feedGlitch?: FeedGlitchKind
+  /** A feed glitch that shows on several cameras (RT-FEED-28): every camera it shows on, `cameraId` included; absent = `cameraId` alone. */
+  feedGlitchCameraIds?: number[]
 }
 
 export interface Camera {

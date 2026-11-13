@@ -291,6 +291,21 @@ export const hasUnusedEntry = (
       hasNonImageEffect(e)
   )
 
+/** RT-FEED-28: 1 to 3 cameras in all (the drawn one first, the others at random among the rest). */
+export const pickGlitchCameras = (
+  cameraId: number,
+  allCameraIds: readonly number[],
+  rng: () => number
+): number[] => {
+  const rest = allCameraIds.filter(id => id !== cameraId)
+  const extra = Math.min(Math.floor(rng() * 3), rest.length)
+  const picked = [cameraId]
+  for (let i = 0; i < extra; i++) {
+    picked.push(rest.splice(Math.floor(rng() * rest.length), 1)[0])
+  }
+  return picked
+}
+
 /**
  * The running anomaly for a non-image entry on the camera drawn for it. A `feed_glitch` carries the kind drawn now
  * (it shows only while that camera is watched); `ui_corruption` / `rule_break` are `monitor` scope (reported from any
@@ -300,9 +315,14 @@ export const createNonImageAnomaly = (
   entry: NonImageEntry,
   cameraId: number,
   phase: GamePhase,
-  rng: () => number = Math.random
+  rng: () => number = Math.random,
+  allCameraIds: readonly number[] = []
 ): Anomaly => {
   const feedGlitch = pickFeedGlitchKind(entry, rng)
+  const feedGlitchCameraIds =
+    feedGlitch === 'nonoise'
+      ? pickGlitchCameras(cameraId, allCameraIds, rng)
+      : undefined
   return {
     id: entry.id,
     category: entry.category,
@@ -312,5 +332,6 @@ export const createNonImageAnomaly = (
     scope: reportScopeOf(entry.anomalyType),
     ...(entry.exclusiveGroup ? { exclusiveGroup: entry.exclusiveGroup } : {}),
     ...(feedGlitch ? { feedGlitch } : {}),
+    ...(feedGlitchCameraIds ? { feedGlitchCameraIds } : {}),
   }
 }

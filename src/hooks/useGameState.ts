@@ -22,7 +22,7 @@ import {
   hasUnusedEntry,
   pickSpawn,
 } from '../utils/anomalyData'
-import { reportTargetsFor } from '../utils/reportTarget'
+import { reportTargetsFor, showsOnCamera } from '../utils/reportTarget'
 import { isAudible } from '../utils/audioSettings'
 import { voiceReady } from '../utils/voiceSounds'
 import type { FlagEvent } from './useSubtitle'
@@ -328,7 +328,9 @@ export const useGameState = () => {
           newAnomaly = createNonImageAnomaly(
             spawn.entry,
             spawn.cameraId,
-            getGamePhase(currentTime)
+            getGamePhase(currentTime),
+            Math.random,
+            CAMERAS.map(c => c.id)
           )
         }
         if (childFoundRef.current) afterChildIdsRef.current.add(spawn.entry.id)
@@ -441,7 +443,7 @@ export const useGameState = () => {
   )
   // The feed glitch to draw now: a running (not yet reported) feed_glitch on the watched camera only (#77).
   const feedGlitchHere = activeAnomalies.find(
-    a => a.cameraId === watchedId && !a.detectedAt && a.feedGlitch
+    a => showsOnCamera(a, watchedId) && !a.detectedAt && a.feedGlitch
   )?.feedGlitch
 
   const unreportedCount = activeAnomalies.filter(a => !a.detectedAt).length
