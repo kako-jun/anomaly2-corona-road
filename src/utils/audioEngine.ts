@@ -1,13 +1,14 @@
 /**
  * Sound foundation (#79): one shared AudioContext behind a thin wrapper. Master gain -> destination, so a volume or
- * mute change reaches every sound at once. The browser keeps a context suspended until a user gesture, so
+ * change reaches every sound at once. There is no separate mute: volume 0 is silence
+ * (the VOL knob, #79). The browser keeps a context suspended until a user gesture, so
  * `unlock()` (called from the first pointer/key event) creates and resumes it. Anything that fails (no
  * AudioContext, resume refused, a node throwing) is swallowed: the game goes on in silence.
  */
 
 /** Volume the master starts at when the save has none (0..100). Provisional; to tune by ear. */
 export const DEFAULT_VOLUME = 70
-/** Ramp time (s) for volume / mute changes, so they do not click. */
+/** Ramp time (s) for volume changes, so they do not click. */
 const RAMP_S = 0.03
 
 export interface AudioEngine {
@@ -17,10 +18,8 @@ export interface AudioEngine {
   ctx: () => AudioContext | null
   master: () => GainNode | null
   setVolume: (v: number) => void
-  setMuted: (m: boolean) => void
   getVolume: () => number
-  isMuted: () => boolean
-  /** Linear gain the master is meant to have now (0 while muted). */
+  /** Linear gain the master is meant to have now (volume / 100; 0 at volume 0). */
   effectiveGain: () => number
 }
 
@@ -28,7 +27,6 @@ export interface AudioEngineOptions {
   /** Factory for the context; defaults to `new AudioContext()`. Tests inject a mock. */
   createContext?: () => AudioContext
   volume?: number
-  muted?: boolean
 }
 
 const clampVolume = (v: number): number =>
@@ -38,12 +36,11 @@ export const createAudioEngine = (
   opts: AudioEngineOptions = {}
 ): AudioEngine => {
   let volume = clampVolume(opts.volume ?? DEFAULT_VOLUME)
-  let muted = opts.muted ?? false
   let context: AudioContext | null = null
   let masterNode: GainNode | null = null
   let failed = false
 
-  const effectiveGain = () => (muted ? 0 : volume / 100)
+  const effectiveGain = () => volume / 100
 
   const applyGain = () => {
     if (!context || !masterNode) return
@@ -97,12 +94,7 @@ export const createAudioEngine = (
       volume = clampVolume(v)
       applyGain()
     },
-    setMuted: m => {
-      muted = m
-      applyGain()
-    },
     getVolume: () => volume,
-    isMuted: () => muted,
     effectiveGain,
   }
 }

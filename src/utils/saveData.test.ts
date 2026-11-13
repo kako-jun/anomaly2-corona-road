@@ -813,9 +813,15 @@ describe('updateChecked and canPersist follow the latest write', () => {
 })
 
 describe('sound settings (#79)', () => {
-  it('keeps a valid volume and mute switch', () => {
+  it('keeps a valid volume and a legacy mute switch (read as volume 0, never written any more)', () => {
     const s = save({ settings: { volume: 35, muted: true } })
     expect(validateSave(s)?.settings).toEqual({ volume: 35, muted: true })
+  })
+  it('never carries a legacy muted through a settings merge (a stale tab cannot write it back)', () => {
+    const a = save({ settings: { volume: 20, muted: true } })
+    const b = save({ settings: { volume: 40 } })
+    expect(mergeSave(a, b).settings).toEqual({ volume: 40 })
+    expect(mergeSave(b, a).settings).toEqual({ volume: 20 })
   })
   it.each([
     ['a volume over 100', { volume: 101 }],

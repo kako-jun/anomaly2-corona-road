@@ -1,7 +1,9 @@
 /**
- * Sound settings (#79): the master volume and the mute switch live in the save's `settings` (docs/save-data.md), so
- * they survive START OVER and stay on this device when a transfer code is imported. `initGameAudio` is called once at
- * start-up: it applies the saved values to the shared engine and arms the first-gesture unlock.
+ * Sound settings (#79): the master volume (0..100) lives in the save's `settings.volume` (docs/save-data.md), so it
+ * survives START OVER and stays on this device when a transfer code is imported. Volume 0 is the mute (the VOL knob;
+ * there is no separate switch). An older save may still carry `settings.muted: true`: at start-up it is folded into
+ * volume 0 (saved without `muted`) so a muted player stays silent; settings merges never carry `muted` over.
+ * `initGameAudio` is called once at start-up: it applies the saved volume to the shared engine and arms the first-gesture unlock.
  */
 import {
   AudioEngine,
@@ -11,44 +13,40 @@ import {
 } from './audioEngine'
 import { load, update } from './saveData'
 
-export const readAudioSettings = (): { volume: number; muted: boolean } => {
+export const readAudioVolume = (): number => {
   const s = load().settings
-  return { volume: s?.volume ?? DEFAULT_VOLUME, muted: s?.muted ?? false }
+  if (s?.muted === true) return 0
+  return s?.volume ?? DEFAULT_VOLUME
 }
 
 /**
- * Can the player hear a sound now (#79)? Volume 0 (or below) and the mute switch both mean silence. The draw leaves
- * `sound` anomalies out while this is false (nobody could find them); one already running stays and can be reported.
+ * Can the player hear a sound now (#79)? Volume 0 (or below) is silence; a legacy `muted: true` is read as volume 0
+ * (`readAudioVolume`). The draw leaves `sound` anomalies out while this is false (nobody could find them); one already
+ * running stays and can be reported.
  */
-export const isAudible = (): boolean => {
-  const { volume, muted } = readAudioSettings()
-  return volume > 0 && !muted
-}
+export const isAudible = (): boolean => readAudioVolume() > 0
 
 export const initGameAudio = (
   engine: AudioEngine = gameAudio
 ): (() => void) => {
-  const { volume, muted } = readAudioSettings()
-  engine.setVolume(volume)
-  engine.setMuted(muted)
+  const s = load().settings
+  // Legacy mute (#79): fold it into the volume once, so dropping `muted` on later merges cannot un-mute.
+  if (s?.muted === true) saveVolume(0, engine)
+  else engine.setVolume(readAudioVolume())
   return installAudioUnlock(engine)
 }
 
+/** Apply a new volume to the engine and save it (also drops a legacy `muted`). Returns the clamped value. */
 export const saveVolume = (
   volume: number,
   engine: AudioEngine = gameAudio
-): void => {
+): number => {
   engine.setVolume(volume)
-  update(cur => ({
-    ...cur,
-    settings: { ...cur.settings, volume: engine.getVolume() },
-  }))
-}
-
-export const saveMuted = (
-  muted: boolean,
-  engine: AudioEngine = gameAudio
-): void => {
-  engine.setMuted(muted)
-  update(cur => ({ ...cur, settings: { ...cur.settings, muted } }))
+  const v = engine.getVolume()
+  update(cur => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { muted: _legacyMuted, ...rest } = cur.settings ?? {}
+    return { ...cur, settings: { ...rest, volume: v } }
+  })
+  return v
 }

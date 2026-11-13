@@ -2,8 +2,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import '../styles/screenFade.css'
 import {
-  SCREEN_FADE_MS,
   parseTransitionMode,
+  totalMs,
+  transitionTiming,
   prefersReducedMotion,
 } from '../utils/screenTransition'
 
@@ -40,6 +41,12 @@ export const ScreenTransition = ({
 
   const dipping = !plain && mode === 'fade' && shownKey !== screenKey
 
+  // The timing of the change in progress (kept after the screens are swapped: the rise from black still uses it).
+  const timingRef = useRef(transitionTiming(shownKey, screenKey))
+  if (shownKey !== screenKey)
+    timingRef.current = transitionTiming(shownKey, screenKey)
+  const timing = timingRef.current
+
   useEffect(() => {
     if (shownKey === screenKey) lastNode.current = children
   })
@@ -51,9 +58,11 @@ export const ScreenTransition = ({
     if (!dipping) return
     const timer = setTimeout(
       () => setShownKey(screenKey),
-      SCREEN_FADE_MS / 2 + FALLBACK_MS
+      timing.outMs + FALLBACK_MS
     )
     return () => clearTimeout(timer)
+    // timing is derived from shownKey and screenKey (screenKey is in deps; shownKey only changes together with dipping) and is only read for the fallback delay.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dipping, screenKey])
 
   // While the old screen is held, nothing it listens to globally may act: it has old props, and its handlers
@@ -80,7 +89,10 @@ export const ScreenTransition = ({
     lastKey.current = screenKey
     setGhost(old)
     setShownKey(screenKey)
-    const timer = setTimeout(() => setGhost(null), SCREEN_FADE_MS)
+    const timer = setTimeout(
+      () => setGhost(null),
+      totalMs(transitionTiming(old.key, screenKey))
+    )
     return () => clearTimeout(timer)
   }, [plain, mode, screenKey])
 
@@ -91,7 +103,13 @@ export const ScreenTransition = ({
   return (
     <div
       className="screen-fade-root"
-      style={{ '--screen-fade-ms': `${SCREEN_FADE_MS}ms` } as CSSProperties}
+      style={
+        {
+          '--screen-fade-out-ms': `${timing.outMs}ms`,
+          '--screen-fade-in-ms': `${timing.inMs}ms`,
+          '--screen-fade-ms': `${totalMs(timing)}ms`,
+        } as CSSProperties
+      }
     >
       {/* The same wrapper at the same place whether dipping or not: the old screen is never remounted, it keeps its
           own state (camera, knobs, the pan of the title picture); only `inert` is switched on. */}

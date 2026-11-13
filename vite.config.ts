@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 import { parse as parseYaml } from 'yaml'
 import {
   checkUnlockFlags,
@@ -135,6 +136,72 @@ export default defineConfig({
     anomalyLedgerPlugin(),
     nonImageLedgerPlugin(),
     dialogueLedgerPlugin(),
+    VitePWA({
+      // The new version waits; src/utils/swUpdate.ts applies it at the title (#388).
+      registerType: 'prompt',
+      injectRegister: false,
+      // The plugin injects the manifest link into index.html at build; the icons are already in public.
+      includeManifestIcons: false,
+      manifest: {
+        name: 'Anomaly²: Corona Road',
+        short_name: 'Corona Road',
+        id: '/',
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
+        theme_color: '#030a04',
+        background_color: '#030a04',
+        icons: [
+          {
+            src: '/icon-192.webp',
+            sizes: '192x192',
+            type: 'image/webp',
+            purpose: 'any',
+          },
+          {
+            src: '/icon-512.webp',
+            sizes: '512x512',
+            type: 'image/webp',
+            purpose: 'any',
+          },
+        ],
+      },
+      workbox: {
+        // Offline = the app shell only: HTML, JS, CSS, fonts and the UI parts (cabinet, notes, title). The camera
+        // and overlay pictures (public/images and the bundled overlays, several MB) are not precached; they are
+        // cached as they are played (below).
+        globPatterns: [
+          '**/*.{html,js,css}',
+          'fonts/*.woff2',
+          'ui/*.webp',
+          'note/*.svg',
+          'title-notes/*',
+          'images/logo.webp',
+          'icon-*.webp',
+          'apple-touch-icon.png',
+          'favicon-*.png',
+        ],
+        globIgnores: ['**/*.map'],
+        maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
+        // The host rewrites every path to /index.html (public/_redirects); the worker does the same offline.
+        navigateFallback: '/index.html',
+        clientsClaim: true,
+        runtimeCaching: [
+          {
+            urlPattern: ({ request, url }) =>
+              request.destination === 'image' &&
+              url.origin === self.location.origin,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'game-images',
+              cacheableResponse: { statuses: [200] },
+              // A picture replaced under the same name is refreshed in the background; ~13MB of pictures fit well inside 700 entries / 30 days.
+              expiration: { maxEntries: 700, maxAgeSeconds: 30 * 24 * 60 * 60 },
+            },
+          },
+        ],
+      },
+    }),
   ],
   base: '/',
   server: {
