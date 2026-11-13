@@ -1,6 +1,11 @@
 import { CAMERAS } from './gameConfig'
-import { createCameraPreloader, idleSchedule } from './preload'
+import {
+  createCameraPreloader,
+  idleSchedule,
+  type CameraImage,
+} from './preload'
 import { titleNotes } from '../data/titleNotes'
+import { reportNoteUrls } from '../data/reportNotes'
 import type { Language } from './saveData'
 
 /** The title notes' pictures of one language only (#296): the other language is fetched when the player switches. */
@@ -42,3 +47,26 @@ export const preloadCameraImages = createCameraPreloader(
   CAMERAS.map(c => c.image),
   { createImage: () => new Image(), schedule: idleSchedule }
 )
+
+/** Held so a decoded picture is not dropped before the dialog first opens (#396). */
+export const reportNoteImageCache = new Map<string, CameraImage>()
+
+const reportNoteLoaders = new Map<Language, () => Promise<void>>()
+
+/**
+ * The report dialog's sticky notes (the browser's language only, five pictures), loaded and decoded on idle
+ * time with low priority, so the first opening of SELECT CATEGORY does not stall on them (#396). Each language
+ * runs once; a failed picture is ignored (the dialog loads it as usual).
+ */
+export function preloadReportNotes(language: Language): Promise<void> {
+  let load = reportNoteLoaders.get(language)
+  if (!load) {
+    load = createCameraPreloader(reportNoteUrls(language), {
+      createImage: () => new Image(),
+      schedule: idleSchedule,
+      cache: reportNoteImageCache,
+    })
+    reportNoteLoaders.set(language, load)
+  }
+  return load()
+}

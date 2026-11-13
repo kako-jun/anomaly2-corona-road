@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.10"
-# dependencies = ["playwright"]
+# dependencies = ["playwright", "pillow", "numpy"]
 # ///
 """Title screen check in a real browser (#296). vitest/jsdom has no layout, so it cannot tell any of this.
 
@@ -22,6 +22,12 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
      (within 1px), >= 44px high, >= 10px apart, inside the viewport, the note hidden, the signboard clear, and the
      right edge and bottom where the START OVER key was (within 2px: the eye does not have to move)
   9. nothing dark covers the photo: no element other than the notes, the keys and the pager has a solid background
+  10. (#331) the drifting blur patch: it sits over the photo, under the noise, the notes and the key, takes no pointer, has a
+     fixed-radius backdrop-filter (<= BLUR_PX_MAX) whose strength breathes by opacity only, and: (a) over the whole joint cycle
+     (x 61 s, y 47 s, strength 37 s) the signboard's centre is under the strong part of the patch (mask x opacity > 0.5) for at
+     most BLUR_STRONG_MAX of the time; (b) with the patch centred on the sign at full strength the sign's edges keep at least
+     BLUR_EDGE_MIN of their contrast (it stays legible) and the patch really changes the picture (blur_visible_min mean pixel
+     difference); with prefers-reduced-motion no patch animation runs and the patch is the faint fixed one
 Not wired to CI (it needs a Chromium: --chrome or $CHROME, default ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome).
 Starts `npx vite` on a free port (and stops only that process) unless --url is given.
 
@@ -30,6 +36,7 @@ Run: `npm run check:title`   (or: uv run --script scripts/check-title.py [--url 
 import argparse
 import glob
 import os
+import signal
 import socket
 import subprocess
 import sys
@@ -42,6 +49,17 @@ SIZES = [(360, 640), (390, 844), (430, 932), (768, 1024), (898, 1000), (900, 100
 SIGN = (0.59, 0.09, 0.86, 0.66)
 PHONE_SIGN_MIN = 0.55  # a phone keeps most of the board in view
 WIDE_SIGN_MIN = 0.35  # a wide screen crops the tall board top and bottom by design (kako-jun agreed)
+BLUR_PX_MAX = 10  # the radius never exceeds this (measured on swiftshader: sign still legible far above, but the look gets muddy)
+BLUR_STRONG_MAX = 0.4  # the sign's centre under the strong part of the patch (mask x opacity > 0.5) at most this share of the time
+BLUR_EDGE_MIN = 0.5  # with the patch centred on the sign at full strength, the sign keeps this much of its edge contrast
+# ... and the middle of the patch (its central 40% x 40%) changes the picture by at least this mean grey level. The photo is plain
+# wall on a big screen, so the floor falls with the width: set between the 4px patch kako-jun could not tell from none (5.7 / 2.1 /
+# 1.5 / 0.8 at 360 / 1280 / 1920 / 3440 px wide) and the 8px one (9.4 / 3.6 / 2.5 / 1.5; 5.2 at 898, 1.9 at 2560): about 0.8x of the 8px value
+BLUR_VISIBLE_MIN = ((500, 7.5), (700, 5.0), (1000, 4.5), (1600, 2.8), (2200, 2.0), (3000, 1.5), (99999, 1.1))  # (screen width below, floor)
+
+
+def blur_visible_min(w):
+    return next(v for lim, v in BLUR_VISIBLE_MIN if w < lim)
 CLEAR_MIN = 0.85  # of the part of the board that is on screen, the note and the key may cover at most 15% (worst point of the pan)
 
 
@@ -91,6 +109,40 @@ SWEEP = """([sign]) => {
   return {minSlack, minSign, minClear}
 }"""
 
+# The mask in start.css: closest-side radial gradient, 1 at the centre, 0.7 at 40%, 0 at the edge (keep in step with it)
+BLUR = """([sign]) => {
+  const vw = innerWidth, vh = innerHeight
+  const box = document.querySelector('.start-blur-x'), blur = document.querySelector('.start-blur'), img = document.querySelector('.start-photo img')
+  if (!box || !blur) return {missing: true}
+  const st = getComputedStyle(blur), bs = getComputedStyle(box)
+  const own = {filter: st.backdropFilter || st.webkitBackdropFilter, events: bs.pointerEvents, mask: st.maskImage || st.webkitMaskImage}
+  const an = document.getAnimations()
+  const g = n => an.find(a => a.animationName === n)
+  const A = ['start-blur-x', 'start-blur-y', 'start-blur-power'].map(g)
+  if (A.some(a => !a)) return {...own, noAnim: true}
+  for (const a of an) { a.pause(); a.effect.updateTiming({delay: 0}) }
+  const D = A.map(a => a.effect.getComputedTiming().duration)
+  for (const n of ['start-pan-x', 'start-pan-y']) g(n).currentTime = g(n).effect.getComputedTiming().duration / 2
+  const r = img.getBoundingClientRect()
+  const cs = getComputedStyle(img).objectPosition.split(' ').map(x => parseFloat(x) / 100)
+  const s0 = Math.max(vw / 450, vh / 600), w = 450 * s0, h = 600 * s0
+  const k = r.width / vw, l = r.height / vh
+  const sx = r.left + ((vw - w) * cs[0] + (sign[0] + sign[2]) / 2 * w) * k, sy = r.top + ((vh - h) * cs[1] + (sign[1] + sign[3]) / 2 * h) * l
+  const N = 3000
+  let bad = 0
+  for (let i = 0; i < N; i++) {
+    A[0].currentTime = (i * 0.6180339 * D[0] * 7.31) % (2 * D[0])
+    A[1].currentTime = (i * 0.7548776 * D[1] * 5.17) % (2 * D[1])
+    A[2].currentTime = (i * 0.5698402 * D[2] * 3.91) % (2 * D[2])
+    const b = box.getBoundingClientRect()
+    const d = Math.hypot((sx - (b.left + b.width / 2)) / (b.width / 2), (sy - (b.top + b.height / 2)) / (b.height / 2))
+    const a = d >= 1 ? 0 : d <= 0.4 ? 1 - 0.3 * d / 0.4 : 0.7 * (1 - (d - 0.4) / 0.6)
+    if (a * parseFloat(getComputedStyle(blur).opacity) > 0.5) bad++
+  }
+  const z = e => { const s = document.querySelector(e); return s ? [...s.parentElement.children].indexOf(s) : -1 }
+  return {...own, px: parseFloat((own.filter.match(/[\\d.]+/) || [0])[0]), bad: bad / N, over: z('.start-blur-x') > z('.start-pan-x')}
+}"""
+
 RECTS = """() => {
   const q = s => document.querySelector(s)
   const r = e => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }
@@ -128,6 +180,60 @@ CONFIRM = """() => {
 }"""
 
 
+SETUP = """([sign]) => {
+  const an = document.getAnimations(), g = n => an.find(a => a.animationName === n)
+  for (const a of an) { a.pause(); a.effect.updateTiming({delay: 0}) }
+  const d = n => g(n).effect.getComputedTiming().duration
+  for (const n of ['start-pan-x', 'start-pan-y']) g(n).currentTime = d(n) / 2
+  g('start-blur-power').currentTime = d('start-blur-power')
+  const img = document.querySelector('.start-photo img'), vw = innerWidth, vh = innerHeight
+  const rr = img.getBoundingClientRect(), cs = getComputedStyle(img).objectPosition.split(' ').map(x => parseFloat(x) / 100)
+  const s0 = Math.max(vw / 450, vh / 600), w = 450 * s0, h = 600 * s0, k = rr.width / vw, l = rr.height / vh
+  const X = f => rr.left + ((vw - w) * cs[0] + f * w) * k, Y = f => rr.top + ((vh - h) * cs[1] + f * h) * l
+  const sx = X((sign[0] + sign[2]) / 2), sy = Y((sign[1] + sign[3]) / 2)
+  const box = document.querySelector('.start-blur-x'), bx = g('start-blur-x'), by = g('start-blur-y')
+  let best = 1e9, tx = 0.5, ty = 0.5
+  for (let i = 0; i <= 20; i++) for (let j = 0; j <= 20; j++) {
+    bx.currentTime = d('start-blur-x') * i / 20; by.currentTime = d('start-blur-y') * j / 20
+    const b = box.getBoundingClientRect(), e = Math.hypot(b.left + b.width / 2 - sx, b.top + b.height / 2 - sy)
+    if (e < best) { best = e; tx = i / 20; ty = j / 20 }
+  }
+  bx.currentTime = d('start-blur-x') * tx; by.currentTime = d('start-blur-y') * ty
+  const c = v => Math.round(Math.max(0, v))
+  return [c(X(sign[0])), c(Y(sign[1])), Math.min(vw, c(X(sign[2]))), Math.min(vh, c(Y(sign[3])))]
+}"""
+
+
+def blur_legibility(p):
+    """(share of the sign's edge contrast kept, mean grey-level change of the whole picture) with the patch centred on the
+    sign at full strength, against the same moment with the patch hidden. The noise burst is hidden for the measurement."""
+    import io
+    import numpy as np
+    from PIL import Image
+
+    p.add_style_tag(content=".start-burst{display:none!important}")
+    box = p.evaluate(SETUP, [list(SIGN)])
+    r = p.evaluate("() => { const b = document.querySelector('.start-blur-x').getBoundingClientRect(); return [b.left, b.top, b.right, b.bottom] }")
+    pw_, ph_ = p.evaluate("() => [innerWidth, innerHeight]")
+    # the middle of the patch (its central 40% x 40%): where the blur is at its full strength
+    cx, cy, hw, hh = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2, (r[2] - r[0]) * 0.2, (r[3] - r[1]) * 0.2
+    area = [max(0, int(cx - hw)), max(0, int(cy - hh)), min(pw_, int(cx + hw)), min(ph_, int(cy + hh))]
+    p.wait_for_timeout(250)
+    grey = lambda: np.asarray(Image.open(io.BytesIO(p.screenshot())).convert("L"), dtype=float)
+    on = grey()
+    p.evaluate("() => { document.querySelector('.start-blur-x').style.visibility = 'hidden' }")
+    p.wait_for_timeout(250)
+    off = grey()
+    p.evaluate("() => { document.querySelector('.start-blur-x').style.visibility = '' }")
+
+    def edges(a):
+        c = a[box[1]:box[3], box[0]:box[2]]
+        return np.abs(np.diff(c, axis=1)).mean() + np.abs(np.diff(c, axis=0)).mean()
+
+    d = np.abs(on - off)[area[1]:area[3], area[0]:area[2]]
+    return edges(on) / edges(off), float(d.mean())
+
+
 def overlap(a, b):
     return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
 
@@ -146,7 +252,7 @@ def main():
         port = free_port()
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         proc = subprocess.Popen(["npx", "vite", "--port", str(port), "--strictPort"], cwd=root,
-                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
         url = f"http://localhost:{port}/"
         for _ in range(60):
             try:
@@ -184,6 +290,27 @@ def main():
                             errs.append(f"signboard visible only {sw['minSign']:.0%} at worst (< {floor:.0%})")
                         if sw["minClear"] < CLEAR_MIN:
                             errs.append(f"note / key cover the signboard: only {sw['minClear']:.0%} of it is clear (< {CLEAR_MIN:.0%})")
+                    bl = p.evaluate(BLUR, [list(SIGN)])
+                    if bl.get("missing") or bl.get("noAnim"):
+                        errs.append("the blur patch is missing or not animated")
+                    else:
+                        if "blur" not in (bl["filter"] or ""):
+                            errs.append(f"the blur patch has no backdrop-filter ({bl['filter']})")
+                        if "radial-gradient" not in (bl["mask"] or ""):
+                            errs.append("the blur patch has no soft mask")
+                        if bl["events"] != "none":
+                            errs.append("the blur patch takes pointer events")
+                        if not bl["over"]:
+                            errs.append("the blur patch is not over the photo")
+                        if not 0 < bl["px"] <= BLUR_PX_MAX:
+                            errs.append(f"the blur radius is {bl['px']}px (must be 0 < r <= {BLUR_PX_MAX})")
+                        if bl["bad"] > BLUR_STRONG_MAX:
+                            errs.append(f"the signboard is under the strong blur for {bl['bad']:.0%} of the time (> {BLUR_STRONG_MAX:.0%})")
+                        keep, vis = blur_legibility(p)
+                        if keep < BLUR_EDGE_MIN:
+                            errs.append(f"the signboard keeps only {keep:.0%} of its edges under the blur (< {BLUR_EDGE_MIN:.0%})")
+                        if vis < blur_visible_min(w):
+                            errs.append(f"the blur patch changes the picture by only {vis:.1f} grey levels (< {blur_visible_min(w)})")
                     for page in range(3):
                         r = p.evaluate(RECTS)
                         if r["status"] != f"{page + 1}/3":
@@ -251,7 +378,7 @@ def main():
                         errs.append("a language switch is on screen")
                     p.close()
                     ctx.close()
-                    print(f"{lang} {w}x{h}: photo margin {sw.get('minSlack', 0):.1f}px, sign on screen {sw.get('minSign', 0):.0%}, clear of note/key {sw.get('minClear', 0):.0%} -> {'; '.join(errs) or 'ok'}")
+                    print(f"{lang} {w}x{h}: sign under strong blur {bl.get('bad', 0):.0%} of the time, edges kept {keep:.0%}, picture changed {vis:.1f}; photo margin {sw.get('minSlack', 0):.1f}px, sign on screen {sw.get('minSign', 0):.0%}, clear of note/key {sw.get('minClear', 0):.0%} -> {'; '.join(errs) or 'ok'}")
                     # the START OVER confirmation (a save that reached the true ending)
                     ctx = b.new_context(viewport={"width": w, "height": h}, locale="ja-JP" if lang == "ja" else "en-US")
                     ctx.add_init_script(SEED)
@@ -297,9 +424,10 @@ def main():
             p = ctx.new_page()
             p.goto(url)
             p.wait_for_selector(".start-screen")
-            still = p.evaluate("() => document.getAnimations().filter(a => a.animationName && a.animationName.startsWith('start-pan')).length === 0")
-            print(f"reduced motion: photo still -> {'ok' if still else 'MOVES'}")
-            bad += not still
+            still = p.evaluate("() => document.getAnimations().filter(a => a.animationName && (a.animationName.startsWith('start-pan') || a.animationName.startsWith('start-blur'))).length === 0")
+            faint = p.evaluate("() => { const b = getComputedStyle(document.querySelector('.start-blur')); return parseFloat(b.opacity) > 0 && parseFloat(b.opacity) < 1 && /blur/.test(b.backdropFilter) }")
+            print(f"reduced motion: photo and blur patch still, patch faint and fixed -> {'ok' if still and faint else 'MOVES / not faint'}")
+            bad += not (still and faint)
             ctx.close()
             # noise burst: appears within 8 s (the longest gap is 3.5 s) and lasts under 1.4 s
             ctx = b.new_context(viewport={"width": 390, "height": 844})
@@ -327,7 +455,14 @@ def main():
             b.close()
     finally:
         if proc:
-            proc.terminate()
+            # npx and the vite it started (its own process group), nothing else; SIGKILL if it does not leave in 5 s
+            try:
+                os.killpg(proc.pid, signal.SIGTERM)
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                os.killpg(proc.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
     sys.exit(1 if bad else 0)
 
 
