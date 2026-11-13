@@ -23,3 +23,11 @@ describe('noise off CSS (#342)', () => {
     )
   })
 })
+
+describe('loupe press CSS (#409)', () => {
+  it('.glass takes no browser touch gesture: the loupe starts on press, so touch-action is none', () => {
+    const rule = css.match(/\n\.glass\s*\{([^{}]*)\}/)
+    expect(rule).not.toBeNull()
+    expect(rule![1]).toMatch(/touch-action:\s*none/)
+  })
+})

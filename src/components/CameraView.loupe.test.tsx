@@ -96,7 +96,6 @@ describe('loupe gesture (#341)', () => {
     glass.getBoundingClientRect = () => rect(GLASS)
     frame.getBoundingClientRect = () => rect(GLASS)
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 10))
     expect(loupe()?.getAttribute('data-glitch')).toBe('blur')
   })
 
@@ -115,7 +114,6 @@ describe('loupe gesture (#341)', () => {
   it('moving after the loupe shows moves the loupe, and releasing far away does not switch the camera', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 1))
     const left = () => loupe()!.querySelector('.loupe__frame') as HTMLElement
     const before = left().style.left
     pe('pointerMove', glass, 150)
@@ -129,7 +127,6 @@ describe('loupe gesture (#341)', () => {
   it('follows smoothly: the first frame after a jump has not reached the target yet', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 1))
     const px = () =>
       parseFloat(
         (loupe()!.querySelector('.loupe__frame') as HTMLElement).style.left
@@ -147,7 +144,6 @@ describe('loupe gesture (#341)', () => {
   it('rounds the magnified spot at the edge: dragging out of the glass shows no more than the edge position', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 1))
     pe('pointerMove', glass, 5000, 5000)
     act(() => void vi.advanceTimersByTime(3000))
     const f = loupe()!.querySelector('.loupe__frame') as HTMLElement
@@ -162,7 +158,6 @@ describe('loupe gesture (#341)', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300, 300, 1)
     pe('pointerDown', glass, 100, 300, 2)
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 1))
     expect(loupe()).not.toBeNull()
     pe('pointerUp', glass, 100, 300, 2)
     expect(loupe()).not.toBeNull()
@@ -175,7 +170,6 @@ describe('loupe gesture (#341)', () => {
   it('a cancelled pointer (e.g. the browser took it for a scroll) removes the loupe and switches nothing', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 1))
     pe('pointerCancel', glass, 300)
     expect(loupe()).toBeNull()
     expect(onEdgeTap).not.toHaveBeenCalled()
@@ -198,7 +192,6 @@ describe('loupe gesture (#341)', () => {
       pointerType: 'mouse',
       button: 2,
     })
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS * 2))
     expect(loupe()).toBeNull()
   })
 
@@ -219,7 +212,6 @@ describe('loupe gesture (#341)', () => {
   it('draws the zoomed picture, and no noise canvas inside the scaled frame', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 1))
     const f = loupe()!.querySelector('.loupe__frame') as HTMLElement
     expect(parseFloat(f.style.width)).toBeCloseTo(400 * LOUPE.ZOOM)
     expect(f.querySelector('canvas, .noise')).toBeNull()
@@ -241,7 +233,6 @@ describe('loupe gesture, review cases (#341)', () => {
       height: 600,
     })
     pe('pointerDown', glass, 300) // 200 px into the glass, centre column
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 1))
     // u = (200 + 100 - 60) / 480 = 0.5
     expect(frameLeft()).toBeCloseTo(
       LOUPE.DIAMETER_PX / 2 - 0.5 * 480 * LOUPE.ZOOM
@@ -257,9 +248,10 @@ describe('loupe gesture, review cases (#341)', () => {
     expect(loupe()).not.toBeNull()
   })
 
-  it('leaves no timer behind when it unmounts mid-press', () => {
+  it('leaves no animation frame behind when it unmounts while the loupe follows', () => {
     const { glass, view } = setup()
     pe('pointerDown', glass, 300)
+    pe('pointerMove', glass, 200)
     view.unmount()
     expect(vi.getTimerCount()).toBe(0)
   })
@@ -272,7 +264,6 @@ describe('loupe gesture, review cases (#341)', () => {
       )
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 1))
     pe('pointerMove', glass, 200)
     // glass x 100 -> u = 100 / 400 = 0.25, with no timer advanced
     expect(frameLeft()).toBeCloseTo(
@@ -285,7 +276,6 @@ describe('loupe gesture, review cases (#341)', () => {
     const { glass, view } = setup()
     const hold = () => {
       pe('pointerDown', glass, 300)
-      act(() => void vi.advanceTimersByTime(LOUPE.TAP_MAX_MS + 1))
       expect(loupe()).not.toBeNull()
     }
     hold()

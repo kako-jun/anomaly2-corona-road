@@ -76,7 +76,6 @@ export const useLoupeGesture = ({
     startOnGlass: false,
     drifted: false,
     mode: 'idle' as 'idle' | 'pending' | 'moved' | 'loupe',
-    timer: 0,
     raf: 0,
     last: 0,
     cur: { x: 0, y: 0 },
@@ -126,9 +125,7 @@ export const useLoupeGesture = ({
   }
 
   const stopLoop = useCallback(() => {
-    window.clearTimeout(s.current.timer)
     window.cancelAnimationFrame(s.current.raf)
-    s.current.timer = 0
     s.current.raf = 0
   }, [])
 
