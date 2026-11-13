@@ -605,6 +605,9 @@ DIGITS = """() => {
   for (const row of form.querySelectorAll('.note-fr')) {
     const fl = row.querySelector('.note-fl'), b = row.querySelector('b'), sm = row.querySelector('small'), name = fl.textContent
     if (fl.scrollWidth > fl.clientWidth + 1) res.push(`label "${name}" does not fit its column`)
+    const lg = document.createRange(); lg.selectNodeContents(fl)
+    const llines = new Set([...lg.getClientRects()].map(x => Math.round(x.top))).size
+    if (llines !== 1) res.push(`the label "${name}" wraps onto ${llines} lines`)
     if (row.scrollWidth > row.clientWidth + 1) res.push(`row "${name}" overflows its column`)
     if (b) {
       const rg = document.createRange(); rg.selectNodeContents(b)
@@ -621,25 +624,28 @@ DIGITS = """() => {
 
 
 def check_digits(browser, problems):
-    """The numbers box with every count at 1..4 digits (the most the note shows, #429), in both languages, at every viewport:
-    no number wraps, nothing leaves its column or the box, no label is cut. The save holds 9999 kinds, so the widest case is
-    real data; a count above 9999 reads as 9999 (NOTE_MAX_COUNT)."""
+    """The numbers box with every count at 1..3 digits (the most the note shows, #429), in both languages, at every viewport:
+    no number wraps, nothing leaves its column or the box, no label is cut. A count above 999 reads as 999 (NOTE_MAX_COUNT), so 9999
+    must look like 999."""
     measured = 0
     for locale, lang in (("ja-JP", "ja"), ("en-US", "en")):
-        for n in (1, 12, 123, 1234, 99999):
-            shift = {"found": n, "fresh": n, "misreports": n, "durationMs": 200000, "closing": "withdraw", "raised": []}
-            page = open_note(browser, base(foundTotal=n, foundIds=[f"X{i}" for i in range(min(n, 9999))], loops=3, lastShift=shift), locale=locale)
+        # (found, fresh, misreports, total, kinds): equal counts, and one mixed row set (2 new kinds a night, #430; the clock-time shift row is separate)
+        cases = [(n, n, n, n, n) for n in (1, 12, 123, 999, 9999)] + [(12, 12, 3, 123, 345), (2, 2, 0, 345, 120)]
+        for found, fresh, miss, total, kinds in cases:
+            shift = {"found": found, "fresh": fresh, "misreports": miss, "durationMs": 200000, "closing": "withdraw", "raised": []}
+            page = open_note(browser, base(foundTotal=total, foundIds=[f"X{i}" for i in range(kinds)], loops=3, lastShift=shift), locale=locale)
             if not page.evaluate("document.querySelector('.note-screen').classList.contains('note-%s')" % lang):
                 problems.append(f"[{locale}] digits: the page did not open in the expected language")
             for w, h in VIEWPORTS:
                 page.set_viewport_size({"width": w, "height": h})
                 page.wait_for_timeout(60)
                 for msg in page.evaluate(DIGITS):
-                    problems.append(f"[{lang} {w}x{h}] {n} in every count: {msg}")
+                    problems.append(f"[{lang} {w}x{h}] {found}/{fresh}/{miss}/{total}/{kinds}: {msg}")
                 measured += 1
             level = page.evaluate("document.querySelector('.note-form').dataset.digits")
-            if level != str(min(len(str(n)), 4)):
-                problems.append(f"[{lang}] {n}: data-digits is {level}, want {min(len(str(n)), 4)} (99999 must read as 9999)")
+            want = min(max(len(str(v)) for v in (found, fresh, miss, total, kinds)), 3)
+            if level != str(want):
+                problems.append(f"[{lang}] {found}/{fresh}/{miss}/{total}/{kinds}: data-digits is {level}, want {want} (9999 must read as 999)")
             page.close()
     return measured
 
@@ -657,7 +663,7 @@ def main():
             if problems:
                 print("\nPROBLEMS:", *problems, sep="\n  ")
                 sys.exit(1)
-            print(f"\nnote wrap check (numbers box only): 1-4 digits fit at every viewport ({n} sheets measured)")
+            print(f"\nnote wrap check (numbers box only): 1-3 digits fit at every viewport ({n} sheets measured)")
             return
         if "--after-only" in sys.argv:
             measured_after = check_after(browser, problems)
@@ -727,7 +733,7 @@ def main():
                 for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
                     problems.append(f"[ja-JP {w}x{h}] {stage}/{'fresh' if shift else 'plain'}: {msg}")
             page.close()
-        print(f"numbers box sheets measured (1-4 digits): {check_digits(browser, problems)}")
+        print(f"numbers box sheets measured (1-3 digits): {check_digits(browser, problems)}")
         browser.close()
     if problems:
         print("\nPROBLEMS:", *problems, sep="\n  ")

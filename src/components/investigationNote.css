@@ -326,7 +326,7 @@
   white-space: nowrap;
 }
 /* A count never wraps and keeps the width its digits need (#429): the column grows to its widest row (a flex item cannot
-   shrink below its content), and the Japanese type tightens by the widest count (data-digits 1-4, at most 4 digits). */
+   shrink below its content), and the Japanese type tightens by the widest count (data-digits 1-3, at most 3 digits: 999). */
 .note-fr b {
   flex: none;
   white-space: nowrap;
@@ -352,41 +352,23 @@
   font-size: 12px;
   width: 14px;
 }
-.note-en .note-form[data-digits='4'] .note-fcol .note-fr b {
-  font-size: 23px; /* 4 digits keep a little air from the label ("False reports") */
-}
 .note-ja .note-form[data-digits='2'] .note-fcol .note-fr b {
   font-size: 17px;
 }
 .note-ja .note-form[data-digits='3'] .note-fcol .note-fr b {
-  font-size: 15px;
-  letter-spacing: -0.06em;
+  font-size: 15.5px;
 }
-.note-ja .note-form[data-digits='4'] .note-fcol .note-fr b {
-  font-size: 13.5px;
-  letter-spacing: -0.1em;
+.note-ja .note-form[data-digits='3'] .note-fcol .note-fl {
+  font-size: 12px;
 }
-.note-ja
-  .note-form:is([data-digits='3'], [data-digits='4'])
-  .note-fcol
-  .note-fl {
-  font-size: 11.5px;
-}
-.note-ja
-  .note-form:is([data-digits='3'], [data-digits='4'])
-  .note-fcol
-  .note-fr
-  small {
-  font-size: 11.5px;
+.note-ja .note-form[data-digits='3'] .note-fcol .note-fr small {
+  font-size: 12px;
   width: 12px;
 }
-.note-ja .note-form:is([data-digits='3'], [data-digits='4']) .note-fcols {
+.note-ja .note-form[data-digits='3'] .note-fcols {
   gap: 10px;
 }
-.note-ja
-  .note-form:is([data-digits='3'], [data-digits='4'])
-  .note-fcol
-  + .note-fcol {
+.note-ja .note-form[data-digits='3'] .note-fcol + .note-fcol {
   padding-left: 8px;
 }
 .note-blank {

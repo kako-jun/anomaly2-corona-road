@@ -49,10 +49,10 @@ export const fmtShiftEnd = (
     ? LABELS.shiftWithdrew(msToGameTime(durationMs))
     : LABELS.shiftUntil(msToGameTime(DEFAULT_CONFIG.totalDurationMs)))[lang]
 
-/** The most a count on the note can show (4 digits, #429). */
-export const NOTE_MAX_COUNT = 9999
+/** The most a count on the note can show (3 digits, #429). */
+export const NOTE_MAX_COUNT = 999
 
-/** The widest count of the numbers box (1-4 digits): the box tightens its type by this (the shift's clock time is not a count). */
+/** The widest count of the numbers box (1-3 digits): the box tightens its type by this (the shift's clock time is not a count). */
 export const noteDigitLevel = (
   view: Pick<NoteView, 'left' | 'right'>
 ): number =>
@@ -154,7 +154,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
   })
 
   // Japanese counts are written in full-width digits (#352); English keeps ASCII.
-  // A count is shown with 4 digits at most (#429): anything above NOTE_MAX_COUNT reads as NOTE_MAX_COUNT, so the numbers box
+  // A count is shown with 3 digits at most (#429): anything above NOTE_MAX_COUNT reads as NOTE_MAX_COUNT, so the numbers box
   // (investigationNote.css) is designed for exactly this worst case.
   const digits = (v: number): string => {
     const shown = Math.min(Math.max(0, Math.floor(v)), NOTE_MAX_COUNT)

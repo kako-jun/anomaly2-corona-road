@@ -128,7 +128,7 @@ describe('buildNote before a shift', () => {
     expect(v.shiftRow).toMatchObject({ label: '勤務', value: '０６:００まで' })
     expect(v.right.rows.map(r => r.value)).toEqual(['１４３', '６３'])
   })
-  it('shows a count with 4 digits at most, and reports the widest count for the numbers box (#429)', () => {
+  it('shows a count with 3 digits at most, and reports the widest count for the numbers box (#429)', () => {
     const big = (n: number, lang: 'ja' | 'en') =>
       buildNote(
         {
@@ -141,13 +141,13 @@ describe('buildNote before a shift', () => {
         },
         lang
       )
-    expect(NOTE_MAX_COUNT).toBe(9999)
-    expect(big(123456, 'ja').right.rows[0].value).toBe('９９９９')
-    expect(big(123456, 'en').right.rows[0].value).toBe('9999')
-    expect(big(123456, 'en').left.rows[0].value).toBe('9999')
+    expect(NOTE_MAX_COUNT).toBe(999)
+    expect(big(123456, 'ja').right.rows[0].value).toBe('９９９')
+    expect(big(123456, 'en').right.rows[0].value).toBe('999')
+    expect(big(123456, 'en').left.rows[0].value).toBe('999')
     expect(noteDigitLevel(big(7, 'ja'))).toBe(1)
-    expect(noteDigitLevel(big(1234, 'ja'))).toBe(4)
-    expect(noteDigitLevel(big(123456, 'en'))).toBe(4)
+    expect(noteDigitLevel(big(1234, 'ja'))).toBe(3)
+    expect(noteDigitLevel(big(123456, 'en'))).toBe(3)
   })
   it('adds the last-night line after a night without new kinds or a withdraw', () => {
     const base = { loops: 5, flags: { elder1: true } }
