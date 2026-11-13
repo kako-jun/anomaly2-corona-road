@@ -28,11 +28,11 @@
         "file": "ja-2.webp",
         "heading": "② つまみ",
         "lines": [
-          "明るさとコントラストは、",
+          "明るさ・コントラスト・音量は、",
           "つまみを左右にドラッグ。",
-          "タップすると中央に戻る。"
+          "タップすると初期位置に戻る。"
         ],
-        "alt": "つまみ。明るさとコントラストは、つまみを左右にドラッグ。タップすると中央に戻る。",
+        "alt": "つまみ。明るさ・コントラスト・音量は、つまみを左右にドラッグ。タップすると初期位置に戻る。",
         "width": 600,
         "height": 450
       },
@@ -41,10 +41,10 @@
         "heading": "2. KNOBS",
         "lines": [
           "Drag a knob left or right",
-          "for brightness and contrast.",
-          "Tap it to go back to the centre."
+          "for brightness, contrast and volume.",
+          "Tap it to reset."
         ],
-        "alt": "Knobs. Drag a knob left or right for brightness and contrast. Tap it to go back to the centre.",
+        "alt": "Knobs. Drag a knob left or right for brightness, contrast and volume. Tap it to reset.",
         "width": 600,
         "height": 450
       }

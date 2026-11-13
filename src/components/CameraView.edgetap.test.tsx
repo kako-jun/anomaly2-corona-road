@@ -147,16 +147,13 @@ describe('edge tap (#354)', () => {
     expect(onEdgeTap).toHaveBeenCalledWith('prev')
   })
 
-  it('a hold of TAP_MAX_MS or more is the loupe, not a tap: no camera change on release', () => {
+  it('a press of TAP_MAX_MS or more is not a tap: no camera change on release, and a press on the picture is the loupe at once', () => {
     const { bezel, glass } = setup()
     tap(bezel, 90, 300, LOUPE.TAP_MAX_MS - 1)
     expect(onEdgeTap).toHaveBeenCalledTimes(1)
     tap(bezel, 90, 300, LOUPE.TAP_MAX_MS)
     expect(onEdgeTap).toHaveBeenCalledTimes(1)
     pe('pointerDown', glass, GLASS.left + 10)
-    act(() => {
-      vi.advanceTimersByTime(LOUPE.TAP_MAX_MS)
-    })
     expect(loupe()).not.toBeNull()
     pe('pointerUp', glass, GLASS.left + 10)
     expect(loupe()).toBeNull()
@@ -182,7 +179,7 @@ describe('edge tap (#354)', () => {
     expect(onEdgeTap).not.toHaveBeenCalled()
   })
 
-  it('a drift past the hold slop is not a tap', () => {
+  it('a drift past the tap slop is not a tap', () => {
     const { bezel } = setup()
     pe('pointerDown', bezel, 90, 300)
     pe('pointerMove', bezel, 90, 300 + LOUPE.TAP_SLOP_PX + 1)
@@ -190,7 +187,7 @@ describe('edge tap (#354)', () => {
     expect(onEdgeTap).not.toHaveBeenCalled()
   })
 
-  it('a drift within the hold slop is still a tap', () => {
+  it('a drift within the tap slop is still a tap', () => {
     const { bezel } = setup()
     pe('pointerDown', bezel, 90, 300)
     pe('pointerMove', bezel, 90, 300 + LOUPE.TAP_SLOP_PX)

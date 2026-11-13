@@ -1,4 +1,4 @@
-/* Magnifier loupe (#341). Numbers the player feels (hold time, zoom, diameter) are in src/utils/loupe.ts, not here. */
+/* Magnifier loupe (#341). Numbers the player feels (tap ceiling, zoom, diameter) are in src/utils/loupe.ts, not here. */
 
 /* the loupe is drawn here, on the control panel; out of the flow so the layout never moves */
 .panel > .loupe-host {

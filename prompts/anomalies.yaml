@@ -7066,10 +7066,10 @@ anomalies:
     kind: 'non_image'
     category: 'Surreal'
     anomaly_type: 'ui_corruption'
-    detail: 'loupe broken: ルーペが使えなくなる（長押ししても出ない / 出ても拡大されず素通し / すぐ消える）。ルーペは画面に説明を出さない仕様なので、気づく手がかりは、操作パネルで細部を見ようと長押しした人が試した時に出ない、という体験そのもの。異変の間でも長押し以外の操作（報告・カメラ切替・タップ）は何も奪われない。'
+    detail: 'loupe broken: ルーペが使えなくなる（押しても出ない / 出ても拡大されず素通し / すぐ消える）。ルーペは画面に説明を出さない仕様なので、気づく手がかりは、操作パネルで細部を見ようと押した人が試した時に出ない、という体験そのもの。異変の間でも押す以外の操作（報告・カメラ切替・タップ）は何も奪われない。'
     memo:
       ja: 'ルーペが出てこない。'
-      en: 'The loupe does not work when held.'
+      en: 'The loupe does not work when pressed.'
   - id: 'RT-UI-22'
     status: 'planned'
     kind: 'non_image'
