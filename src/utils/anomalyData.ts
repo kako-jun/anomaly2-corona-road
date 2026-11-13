@@ -291,13 +291,17 @@ export const hasUnusedEntry = (
       hasNonImageEffect(e)
   )
 
-/** RT-FEED-28: 1 to 3 cameras in all (the drawn one first, the others at random among the rest). */
+/**
+ * RT-FEED-28: 1 to 3 cameras in all, uniformly (the drawn one first; the others at random among the FREE cameras only,
+ * so the one-anomaly-per-camera rule holds: a camera that already has an anomaly never becomes a second camera).
+ * The ledger says only "1 to 3 at random"; the count is uniform over 1, 2, 3 (fewer when too few cameras are free).
+ */
 export const pickGlitchCameras = (
   cameraId: number,
-  allCameraIds: readonly number[],
+  freeCameraIds: readonly number[],
   rng: () => number
 ): number[] => {
-  const rest = allCameraIds.filter(id => id !== cameraId)
+  const rest = freeCameraIds.filter(id => id !== cameraId)
   const extra = Math.min(Math.floor(rng() * 3), rest.length)
   const picked = [cameraId]
   for (let i = 0; i < extra; i++) {
@@ -316,12 +320,12 @@ export const createNonImageAnomaly = (
   cameraId: number,
   phase: GamePhase,
   rng: () => number = Math.random,
-  allCameraIds: readonly number[] = []
+  freeCameraIds: readonly number[] = []
 ): Anomaly => {
   const feedGlitch = pickFeedGlitchKind(entry, rng)
   const feedGlitchCameraIds =
     feedGlitch === 'nonoise'
-      ? pickGlitchCameras(cameraId, allCameraIds, rng)
+      ? pickGlitchCameras(cameraId, freeCameraIds, rng)
       : undefined
   return {
     id: entry.id,

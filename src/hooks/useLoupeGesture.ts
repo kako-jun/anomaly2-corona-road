@@ -22,6 +22,9 @@ export interface LoupeView {
   frameH: number
   glassW: number
   glassH: number
+  /** The held spot in glass pixels (the circle's centre shows this point of the monitor). */
+  x: number
+  y: number
 }
 
 interface Options {
@@ -110,6 +113,8 @@ export const useLoupeGesture = ({
       frameH: geo.frameH,
       glassW: geo.glassW,
       glassH: geo.glassH,
+      x: cur.x,
+      y: cur.y,
     })
   }, [])
 

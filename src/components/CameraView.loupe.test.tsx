@@ -103,6 +103,58 @@ describe('loupe gesture (#341)', () => {
     expect(loupe()?.getAttribute('data-glitch')).toBe('blur')
   })
 
+  const press = (glitch?: 'flip' | 'letterbox') => {
+    onSwipe = vi.fn()
+    const view = render(
+      <CameraView {...viewProps(cams[0], true)} feedGlitch={glitch} />
+    )
+    const glass = view.container.querySelector('.glass') as HTMLElement
+    const frame = view.container.querySelector('.pic__frame') as HTMLElement
+    glass.getBoundingClientRect = () => rect(GLASS)
+    frame.getBoundingClientRect = () => rect(GLASS)
+    pe('pointerDown', glass, 300, 150)
+    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 10))
+    act(() => void vi.advanceTimersByTime(3000))
+    const frameEl = loupe()!.querySelector('.loupe__frame') as HTMLElement
+    const out = {
+      top: parseFloat(frameEl.style.top),
+      origin: frameEl.style.transformOrigin,
+      held: loupe()!.querySelector('.loupe__held') as HTMLElement | null,
+    }
+    const result = {
+      ...out,
+      heldPos: out.held && {
+        left: out.held.style.left,
+        top: out.held.style.top,
+      },
+    }
+    view.unmount()
+    cleanup()
+    return result
+  }
+
+  it('upside down (RT-FEED-17): the loupe holds the mirrored row, so the spot under the finger is magnified', () => {
+    const plain = press()
+    const flip = press('flip')
+    // top = d/2 - v * H * ZOOM: v and 1 - v add up to the whole frame height
+    expect(plain.top + flip.top).toBeCloseTo(
+      LOUPE.DIAMETER_PX - GLASS.height * LOUPE.ZOOM,
+      3
+    )
+    expect(flip.top).not.toBeCloseTo(plain.top, 1)
+    const pv = parseFloat(plain.origin.split(' ')[1])
+    const fv = parseFloat(flip.origin.split(' ')[1])
+    expect(pv + fv).toBeCloseTo(100, 3)
+  })
+
+  it('letterbox bars are placed by the held spot, not by the circle centre (the held layer is offset)', () => {
+    const r = press('letterbox')
+    expect(r.held).not.toBeNull()
+    // held glass y = 100 (150 - glass top 50): the layer's top = d/2 - 100
+    expect(r.heldPos!.top).toBe(`${LOUPE.DIAMETER_PX / 2 - 100}px`)
+    expect(r.heldPos!.left).toBe(`${LOUPE.DIAMETER_PX / 2 - 200}px`)
+  })
+
   it('a quick horizontal swipe switches the camera and never shows the loupe', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)

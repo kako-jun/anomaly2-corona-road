@@ -609,6 +609,17 @@ describe('non-image anomalies (#77)', () => {
     expect(hook.result.current.feedGlitchHere).toBeUndefined()
   })
 
+  it('noise gone never takes a camera that already has an anomaly, and its extra cameras take no other anomaly', () => {
+    for (let c = 1; c <= 8; c++) ledger.push(entry(`img${c}`, c))
+    nonImage.push(glitch('RT-FEED-28'))
+    nonImage.push(glitch('RT-FEED-22'))
+    const { result } = start()
+    advance(FIRST + INTERVAL * 20)
+    const open = result.current.activeAnomalies.filter(a => !a.detectedAt)
+    const shown = open.flatMap(a => a.feedGlitchCameraIds ?? [a.cameraId])
+    expect(new Set(shown).size).toBe(shown.length)
+  })
+
   it('shares the cap and the camera slots with image anomalies, and is used once per shift', () => {
     nonImage.push(glitch())
     for (let c = 1; c <= 8; c++) ledger.push(entry(`img${c}`, c))

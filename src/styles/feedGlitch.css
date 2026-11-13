@@ -243,7 +243,7 @@
 /* RT-FEED-16 green tint: night-vision green, the colour stays but leans green */
 .glass[data-glitch='green'] .pic,
 .loupe[data-glitch='green'] .loupe__frame {
-  filter: sepia(1) hue-rotate(55deg) saturate(2.6) brightness(0.95);
+  filter: sepia(0.5) hue-rotate(50deg) saturate(1.6) brightness(0.95);
 }
 
 /* RT-FEED-17 upside down: only the picture box turns; the OSD sits outside it and stays upright */
@@ -273,6 +273,7 @@
 .loupe[data-glitch='nonoise'] .noise,
 .loupe[data-glitch='nonoise'] .scan {
   opacity: 0;
+  transition: none;
 }
 
 /* Dev only: names the forced glitch on the screen */

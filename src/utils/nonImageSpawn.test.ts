@@ -107,6 +107,19 @@ describe('the six feed filters (#406)', () => {
     expect(new Set(three).size).toBe(3)
     expect(pickGlitchCameras(4, [4], () => 0.99)).toEqual([4])
   })
+  it('takes the other cameras only from the free ones (a camera with an anomaly is never a second camera)', () => {
+    // free: 4 (drawn), 6; busy: 1, 2, 3, 5, 7, 8
+    for (const r of [0, 0.4, 0.99]) {
+      const got = pickGlitchCameras(4, [4, 6], () => r)
+      expect(got.every(id => id === 4 || id === 6)).toBe(true)
+    }
+  })
+  it('the count is uniform over 1, 2, 3 (the ledger only says "1 to 3 at random")', () => {
+    const all = [1, 2, 3, 4, 5, 6]
+    expect(pickGlitchCameras(1, all, () => 0).length).toBe(1)
+    expect(pickGlitchCameras(1, all, () => 0.4).length).toBe(2)
+    expect(pickGlitchCameras(1, all, () => 0.99).length).toBe(3)
+  })
   it('createNonImageAnomaly gives only RT-FEED-28 a camera list', () => {
     const cams = [1, 2, 3, 4]
     const a = createNonImageAnomaly(

@@ -285,7 +285,7 @@ export const useGameState = () => {
       const freeCameraIds = CAMERAS.filter(
         c =>
           !activeAnomaliesRef.current.some(
-            a => a.cameraId === c.id && !a.detectedAt
+            a => showsOnCamera(a, c.id) && !a.detectedAt
           )
       ).map(c => c.id)
       const used = usedLedgerIdsRef.current
@@ -330,7 +330,7 @@ export const useGameState = () => {
             spawn.cameraId,
             getGamePhase(currentTime),
             Math.random,
-            CAMERAS.map(c => c.id)
+            freeCameraIds
           )
         }
         if (childFoundRef.current) afterChildIdsRef.current.add(spawn.entry.id)
