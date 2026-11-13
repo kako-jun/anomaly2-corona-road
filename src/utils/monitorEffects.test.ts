@@ -9,6 +9,7 @@ import {
   MONITOR_EFFECTS,
   fxAttribute,
   hasMonitorEffect,
+  monitorEffectPlayable,
   runningMonitorEffects,
 } from './monitorEffects'
 import { hasNonImageEffect } from './nonImageEffects'
@@ -236,6 +237,75 @@ describe('digit window / text batch (#416)', () => {
     )
     expect(['RT-UI-08', 'RT-UI-17', 'RT-UI-18'].map(g)).toEqual(
       Array(3).fill('digit-window')
+    )
+  })
+})
+
+describe('input-side effects (#437): RT-UI-10 / 21 / 30', () => {
+  const css = readFileSync(
+    join(process.cwd(), 'src/styles/monitorEffects.css'),
+    'utf8'
+  )
+  const ledger = parse(
+    readFileSync(join(process.cwd(), 'prompts/anomalies.yaml'), 'utf8')
+  ) as { anomalies: { id: string; status?: string; exclusive?: string }[] }
+  const IDS = ['RT-UI-10', 'RT-UI-21', 'RT-UI-30']
+
+  it.each(IDS)(
+    '%s is produced, runs on a monitor-scope spawn, is reportable from any camera and the report clears it',
+    id => {
+      expect(ledger.anomalies.find(e => e.id === id)?.status).toBe('produced')
+      const a = run(id, 3)
+      expect(a.scope).toBe('monitor')
+      expect(fxAttribute(runningMonitorEffects([a]))).toBe(id)
+      for (const cam of [1, 4, 8])
+        expect(reportTargetsFor([a], cam, 'Surreal').hit?.id).toBe(id)
+      expect(
+        fxAttribute(runningMonitorEffects([{ ...a, detectedAt: 9 }]))
+      ).toBeUndefined()
+    }
+  )
+  it('the cursor effect is only drawn for a hover-capable fine pointer; the draw leaves it out on touch', () => {
+    expect(monitorEffectPlayable('RT-UI-10', false)).toBe(false)
+    expect(monitorEffectPlayable('RT-UI-10', true)).toBe(true)
+    expect(monitorEffectPlayable('RT-UI-30', false)).toBe(true)
+    expect(monitorEffectPlayable('RT-UI-21', false)).toBe(true)
+    expect(css).toMatch(
+      /@media \(hover: hover\) and \(pointer: fine\) \{\s*\.retro\[data-fx~='RT-UI-10'\] \{\s*animation: cursor-glitch/
+    )
+  })
+  it('the cursor keeps changing (several different shapes) and never stops the click (no pointer-events change)', () => {
+    const body = css.match(/@keyframes cursor-glitch \{([\s\S]*?)\n\}/)![1]
+    const shapes = [...body.matchAll(/cursor: ([a-z-]+);/g)].map(m => m[1])
+    expect(new Set(shapes).size).toBeGreaterThanOrEqual(3)
+    expect(css).not.toMatch(/RT-UI-10'\][^{]*\{[^}]*pointer-events: none/)
+  })
+  it('the whole-screen flash is a fixed veil over the viewport that takes no pointer events, pulses at most 3 a second with a faint peak, then rests', () => {
+    expect(css).toMatch(
+      /RT-UI-30'\]::after \{[^}]*position: fixed;\s*inset: 0;[^}]*pointer-events: none;[^}]*animation: screen-flash ([\d.]+)s linear infinite/
+    )
+    const total = Number(css.match(/animation: screen-flash ([\d.]+)s/)![1])
+    const body = css.match(/@keyframes screen-flash \{([\s\S]*?)\n\}/)![1]
+    // peaks are the stops with a non-zero opacity; each pulse (rise + fall) lasts 1/3 s or more
+    const blocks = [...body.matchAll(/([\d.%,\s]+)\{\s*opacity: ([\d.]+);/g)]
+    const peaks = blocks
+      .filter(b => Number(b[2]) > 0)
+      .flatMap(b => b[1].match(/[\d.]+(?=%)/g)!.map(Number))
+      .sort((x, y) => x - y)
+    const valleys = blocks
+      .filter(b => Number(b[2]) === 0)
+      .flatMap(b => b[1].match(/[\d.]+(?=%)/g)!.map(Number))
+      .sort((x, y) => x - y)
+    expect(peaks.length).toBeGreaterThanOrEqual(2)
+    expect(peaks.length).toBeLessThanOrEqual(5) // a few times, not a strobe
+    const gaps = peaks.slice(1).map((p, i) => ((p - peaks[i]) / 100) * total)
+    for (const g of gaps) expect(g).toBeGreaterThanOrEqual(1 / 3)
+    // it rests: the last pulse ends well before the cycle does
+    expect(Math.max(...valleys.filter(v => v < 100))).toBeLessThan(40)
+    const peak = Math.max(...blocks.map(b => Number(b[2])))
+    expect(peak).toBeLessThanOrEqual(0.2) // never a full white flash
+    expect(css).toMatch(
+      /@media \(prefers-reduced-motion: reduce\) \{\s*\.retro\[data-fx~='RT-UI-30'\]::after \{\s*animation: none;\s*opacity: 0\.05;/
     )
   })
 })

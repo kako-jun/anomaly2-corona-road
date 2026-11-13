@@ -314,6 +314,7 @@ export const Cabinet = ({
   // RT-UI-26: one misspelling per run of the effect (a boolean dependency, not the set)
   const misspelled = fx.has('RT-UI-26')
   const colonActive = fx.has('RT-UI-23')
+  const loupeBroken = fx.has('RT-UI-21')
   const colonKind = useMemo(() => colonVariant(colonActive), [colonActive])
   const reportKeyLabel = useMemo(() => reportLabel(misspelled), [misspelled])
   useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
@@ -364,6 +365,7 @@ export const Cabinet = ({
           feedGlitchForced={FORCED_GLITCH !== undefined}
           onEdgeTap={handleEdgeTap}
           loupeHost={loupeHost}
+          loupeBroken={loupeBroken}
         />
         <section className="panel" aria-label="Control panel">
           <div className="loupe-host" ref={setLoupeHost} />

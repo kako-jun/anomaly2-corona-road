@@ -325,3 +325,69 @@
   -webkit-mask-repeat: repeat-x;
   mask-repeat: repeat-x;
 }
+
+/* RT-UI-10 cursor glitch: with a mouse (a hover-capable fine pointer; touch has no cursor, so the draw leaves the effect
+   out there, see `needsFinePointer`), the cursor over the whole monitor keeps changing to a shape that does not match
+   what is under it (waiting, forbidden, busy, help), whatever is under it. Looks only: every click does what it did.
+   The animation sits on .retro and everything inside inherits it (!important beats the knob / key rules). A cursor
+   is not a flash or a movement of the picture, so reduced motion keeps it. */
+@media (hover: hover) and (pointer: fine) {
+  .retro[data-fx~='RT-UI-10'] {
+    animation: cursor-glitch 3.6s steps(1, end) infinite;
+  }
+  .retro[data-fx~='RT-UI-10'] * {
+    cursor: inherit !important;
+  }
+}
+@keyframes cursor-glitch {
+  0% {
+    cursor: wait;
+  }
+  20% {
+    cursor: not-allowed;
+  }
+  40% {
+    cursor: progress;
+  }
+  55% {
+    cursor: help;
+  }
+  75% {
+    cursor: no-drop;
+  }
+}
+
+/* RT-UI-30 whole screen flash: a white veil over the whole browser viewport (cabinet, knobs, buttons and all) pulses 3
+   times in the first 1.5 s of every 8 s cycle, then rests, so it can be noticed any time but is never a steady strobe:
+   a pulse is 0.5 s (2 a second, under the 3 a second limit), the peak is a faint 16% white (no full white flash).
+   The veil takes no pointer events. Reduced motion: no pulses, the veil stays at a faint steady 5% (still: #381). */
+.retro[data-fx~='RT-UI-30']::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  animation: screen-flash 8s linear infinite;
+}
+@keyframes screen-flash {
+  0%,
+  6.25%,
+  12.5%,
+  18.75%,
+  100% {
+    opacity: 0;
+  }
+  3.125%,
+  9.375%,
+  15.625% {
+    opacity: 0.16;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .retro[data-fx~='RT-UI-30']::after {
+    animation: none;
+    opacity: 0.05;
+  }
+}
