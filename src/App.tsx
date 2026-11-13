@@ -8,6 +8,7 @@ import { Cabinet } from './components/Cabinet'
 import { InvestigationNote } from './components/InvestigationNote'
 import { GameOverScreen } from './components/GameOverScreen'
 import { SaveNotice } from './components/SaveNotice'
+import { InstallBanner } from './components/InstallBanner'
 import { ScreenTransition } from './components/ScreenTransition'
 import { buildNote } from './utils/investigationNote'
 import { useLanguage } from './utils/language'
@@ -19,6 +20,7 @@ import {
 } from './utils/uiPreload'
 import { SAVE_KEY, load } from './utils/saveData'
 import { resetProgress } from './utils/shiftProgress'
+import { setUpdateSafe } from './utils/swUpdate'
 
 function App() {
   const [screenKey, screen] = useScreen()
@@ -82,6 +84,13 @@ function useScreen(): [string, ReactNode] {
     gameTime,
   } = useGameState()
 
+  // A new version of the app is applied (reload) only while the player is on the title itself (not in a shift, a
+  // result, an ending or the note before a shift), in every tab, so a reload never costs progress (#388).
+  const onTitleItself = gameState === 'idle' && !memo && !loading
+  useEffect(() => {
+    setUpdateSafe(onTitleItself)
+  }, [onTitleItself])
+
   const enterShift = async () => {
     setLoading(true)
     let timer: ReturnType<typeof setTimeout> | undefined
@@ -132,6 +141,7 @@ function useScreen(): [string, ReactNode] {
           }}
         />
         <SaveNotice />
+        <InstallBanner language={language} loops={load().loops} />
       </>,
     ]
   }

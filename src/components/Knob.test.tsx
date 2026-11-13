@@ -46,6 +46,42 @@ describe('Knob a11y', () => {
   })
 })
 
+describe('Knob with its own rest position and printed text (VOL, #79)', () => {
+  it('prints the short text but keeps the full accessible name', () => {
+    render(
+      <Knob
+        label="Volume"
+        text="VOL"
+        value={70}
+        resetTo={70}
+        onChange={vi.fn()}
+      />
+    )
+    expect(screen.getByRole('slider', { name: 'Volume' })).toBeInTheDocument()
+    expect(screen.getByText('VOL')).toBeInTheDocument()
+  })
+  it('describes the reset as the default value, not the centre, for VOL', () => {
+    render(<Knob label="Volume" value={10} resetTo={70} onChange={vi.fn()} />)
+    expect(
+      screen.getByRole('slider', { name: 'Volume' })
+    ).toHaveAccessibleDescription(
+      'Use arrow keys to adjust. Press Enter or Space to reset to default (70).'
+    )
+  })
+  it('a click, Enter and Space go back to resetTo, not the centre', () => {
+    const onChange = vi.fn()
+    render(<Knob label="Volume" value={10} resetTo={70} onChange={onChange} />)
+    const knob = screen.getByRole('slider', { name: 'Volume' })
+    ptr(fireEvent.pointerDown, knob, { clientX: 100, clientY: 100 })
+    ptr(fireEvent.pointerUp, knob, { clientX: 100, clientY: 100 })
+    expect(onChange).toHaveBeenLastCalledWith(70)
+    fireEvent.keyDown(knob, { key: 'Enter' })
+    expect(onChange).toHaveBeenLastCalledWith(70)
+    fireEvent.keyDown(knob, { key: ' ' })
+    expect(onChange).toHaveBeenLastCalledWith(70)
+  })
+})
+
 describe('Knob keyboard', () => {
   it.each(['Enter', ' '])('resets with %s', key => {
     const { knob, onChange } = setup(80)

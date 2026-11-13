@@ -6,7 +6,7 @@ import {
 } from './audioEngine'
 import { makeMockContext } from './audioMock'
 
-const setup = (opts: { volume?: number; muted?: boolean } = {}) => {
+const setup = (opts: { volume?: number } = {}) => {
   const m = makeMockContext()
   const engine = createAudioEngine({ createContext: () => m.ctx, ...opts })
   return { m, engine }
@@ -45,18 +45,19 @@ describe('audio engine', () => {
     expect(engine.getVolume()).toBe(DEFAULT_VOLUME)
   })
 
-  it('mute drives the master to 0 and unmute restores the volume', async () => {
+  it('volume 0 silences the master and raising it restores sound (there is no separate mute)', async () => {
     const { engine } = setup({ volume: 60 })
     await engine.unlock()
-    engine.setMuted(true)
+    engine.setVolume(0)
     expect(gainOf(engine)).toBe(0)
-    expect(engine.isMuted()).toBe(true)
-    engine.setMuted(false)
+    expect(engine.effectiveGain()).toBe(0)
+    engine.setVolume(60)
     expect(gainOf(engine)).toBeCloseTo(0.6)
   })
 
-  it('mute set before unlock is honoured by the new master', async () => {
-    const { engine } = setup({ muted: true })
+  it('a volume set before unlock is honoured by the new master', async () => {
+    const { engine } = setup()
+    engine.setVolume(0)
     await engine.unlock()
     expect(gainOf(engine)).toBe(0)
   })
@@ -70,7 +71,6 @@ describe('audio engine', () => {
     await expect(engine.unlock()).resolves.toBeUndefined()
     expect(engine.ctx()).toBeNull()
     expect(() => engine.setVolume(10)).not.toThrow()
-    expect(() => engine.setMuted(true)).not.toThrow()
   })
 
   it('swallows a refused resume', async () => {
