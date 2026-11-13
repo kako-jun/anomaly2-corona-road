@@ -172,3 +172,43 @@ describe('Knob pointer drag', () => {
     expect(onChange).not.toHaveBeenCalled()
   })
 })
+
+describe('Knob drag when the cabinet is mirrored (RT-UI-16)', () => {
+  const fakeMatrix = class {
+    a: number
+    b = 0
+    c = 0
+    d = 1
+    constructor(t: string) {
+      this.a = t === 'scaleX(-1)' ? -1 : 1
+    }
+  }
+  const drag = (wrapperStyle?: { transform: string }) => {
+    const onChange = vi.fn()
+    render(
+      <div style={wrapperStyle}>
+        <Knob label="Brightness" value={50} onChange={onChange} />
+      </div>
+    )
+    const knob = screen.getByRole('slider', { name: 'Brightness' })
+    ptr(fireEvent.pointerDown, knob, { clientX: 100, clientY: 100 })
+    ptr(fireEvent.pointerMove, knob, {
+      clientX: 100 + PX_FULL_RANGE / 4,
+      clientY: 100,
+    })
+    return onChange
+  }
+  it('without a mirror a drag to the right raises the value', () => {
+    expect(drag().mock.lastCall?.[0]).toBeGreaterThan(50)
+  })
+  it('the drag is read in the knob own axes: on a mirrored cabinet a drag to the right lowers it', () => {
+    vi.stubGlobal('DOMMatrix', fakeMatrix)
+    try {
+      expect(drag({ transform: 'scaleX(-1)' }).mock.lastCall?.[0]).toBeLessThan(
+        50
+      )
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+})

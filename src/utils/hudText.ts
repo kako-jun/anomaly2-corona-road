@@ -29,7 +29,7 @@ export const hudLabel = (label: HudLabel, fx: ReadonlySet<string>): string => {
 }
 
 /** Misspellings of REPORT for RT-UI-26 (the ledger's own examples). */
-export const REPORT_MISSPELLINGS = ['REPROT', 'RAPORT', 'REP0RT'] as const
+export const REPORT_MISSPELLINGS = ['REPROT', 'RAPORT', 'REPØRT'] as const
 
 export const reportLabel = (
   misspelled: boolean,

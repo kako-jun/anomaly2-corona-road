@@ -24,10 +24,15 @@ export const MONITOR_EFFECTS: Readonly<Record<string, { what: string }>> = {
   'RT-UI-07': { what: 'Japanese / symbols mixed into the HUD headings' },
   'RT-UI-08': { what: 'digit windows glow orange-red' },
   'RT-UI-11': { what: 'cabinet tilted' },
+  'RT-UI-15': { what: 'speaker grille pulses in silence' },
+  'RT-UI-16': { what: 'cabinet mirrored left-right' },
   'RT-UI-17': { what: 'digit glow drops out (cut-away digits)' },
   'RT-UI-18': { what: 'faint other digit smeared over the digits' },
-  'RT-UI-23': { what: 'TIME colon blinks fast' },
+  'RT-UI-22': { what: 'noise and scanlines gone for good' },
+  'RT-UI-23': { what: 'TIME colon blinks fast or stays lit' },
   'RT-UI-26': { what: 'REPORT label misspelled' },
+  'RT-UI-27': { what: 'speaker holes checkered' },
+  'RT-UI-29': { what: 'cabinet body tinted blue-green' },
 }
 
 export const hasMonitorEffect = (id: string): boolean =>

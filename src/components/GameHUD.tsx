@@ -36,9 +36,13 @@ const digits = (
         drop && (offset + i) % 2 === 1 && 'dg--cut',
         ghost && 'dg--ghost'
       )}
-      data-ghost={ghost ? ghostDigit(ch) : undefined}
     >
       {ch}
+      {ghost && (
+        <span className="dg__g" aria-hidden="true">
+          {ghostDigit(ch)}
+        </span>
+      )}
     </span>
   ))
 }

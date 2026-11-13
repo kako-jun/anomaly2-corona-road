@@ -103,8 +103,10 @@ describe('GameHUD monitor effects (#416)', () => {
     const dgs = [...c.querySelectorAll('.dg')]
     expect(dgs.length).toBeGreaterThan(4)
     for (const d of dgs) {
-      expect(d.getAttribute('data-ghost')).toMatch(/^\d$/)
-      expect(d.getAttribute('data-ghost')).not.toBe(d.textContent)
+      const g = d.querySelector('.dg__g')
+      expect(g).toHaveAttribute('aria-hidden', 'true')
+      expect(g?.textContent).toMatch(/^\d$/)
+      expect(g?.textContent).not.toBe(d.firstChild?.textContent)
     }
   })
 })
