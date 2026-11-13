@@ -10,8 +10,6 @@ export const DISMISS_KEY = 'corona-road:install-dismissed'
 /** After "later", the suggestion stays away this long. */
 export const DISMISS_DAYS = 7
 export const DISMISS_MS = DISMISS_DAYS * 24 * 60 * 60 * 1000
-/** The title must have been on screen this long before the suggestion appears (never the instant it starts). */
-export const INSTALL_DELAY_MS = 3000
 
 /** What to show: the browser's own install prompt behind a button, or the manual iOS steps. */
 export type Offer = 'native' | 'ios' | null
@@ -19,8 +17,6 @@ export type Offer = 'native' | 'ios' | null
 export interface OfferInput {
   /** At least one night has been played to its end (saved loops >= 1). */
   loops: number
-  /** The title has been on screen for INSTALL_DELAY_MS (the suggestion only ever lives on the title). */
-  titleSettled: boolean
   /** Already running as an installed app. */
   standalone: boolean
   /** Epoch ms of the last "later", or null. */
@@ -32,7 +28,7 @@ export interface OfferInput {
 }
 
 export const decideOffer = (i: OfferInput): Offer => {
-  if (i.loops < 1 || !i.titleSettled || i.standalone) return null
+  if (i.loops < 1 || i.standalone) return null
   // A time in the future (clock changed, hand-edited) is not a dismissal: it would hide the suggestion for good.
   if (
     i.dismissedAt !== null &&

@@ -1,8 +1,7 @@
-import { useEffect, useState, useSyncExternalStore } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import {
   decideOffer,
   hasNativePrompt,
-  INSTALL_DELAY_MS,
   isIos,
   isStandalone,
   promptInstall,
@@ -35,23 +34,16 @@ interface Props {
 
 /**
  * The install suggestion (#388): a small bar at the bottom of the title, LATER always visible. It lives on the
- * title only (never during a shift, a result or an ending, where this component is not mounted), appears
- * INSTALL_DELAY_MS after the title does, only once a night has been played to its end (loops >= 1), never when
- * already installed, and not for 7 days after LATER.
+ * title only (never during a shift, a result or an ending, where this component is not mounted), at once when
+ * the title appears, only once a night has been played to its end (loops >= 1), never when already installed,
+ * and not for 7 days after LATER.
  */
 export const InstallBanner = ({ language, loops }: Props) => {
-  // The title is the only place it lives; it waits a few seconds after the title appears.
-  const [titleSettled, setTitleSettled] = useState(false)
-  useEffect(() => {
-    const id = setTimeout(() => setTitleSettled(true), INSTALL_DELAY_MS)
-    return () => clearTimeout(id)
-  }, [])
   const native = useSyncExternalStore(subscribeInstall, hasNativePrompt)
   // Dismissal is read once and kept in state, so LATER hides the bar at once.
   const [dismissedAt, setDismissedAt] = useState<number | null>(readDismissedAt)
   const offer = decideOffer({
     loops,
-    titleSettled,
     standalone: isStandalone(),
     dismissedAt,
     now: Date.now(),

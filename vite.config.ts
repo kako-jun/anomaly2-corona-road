@@ -102,7 +102,7 @@ export default defineConfig({
       // The new version waits; src/utils/swUpdate.ts applies it at the title (#388).
       registerType: 'prompt',
       injectRegister: false,
-      // The manifest link is in index.html itself.
+      // The plugin injects the manifest link into index.html at build; the icons are already in public.
       includeManifestIcons: false,
       manifest: {
         name: 'Anomaly²: Corona Road',
@@ -153,11 +153,12 @@ export default defineConfig({
             urlPattern: ({ request, url }) =>
               request.destination === 'image' &&
               url.origin === self.location.origin,
-            handler: 'CacheFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'game-images',
               cacheableResponse: { statuses: [200] },
-              expiration: { maxEntries: 700 },
+              // A picture replaced under the same name is refreshed in the background; ~13MB of pictures fit well inside 700 entries / 30 days.
+              expiration: { maxEntries: 700, maxAgeSeconds: 30 * 24 * 60 * 60 },
             },
           },
         ],

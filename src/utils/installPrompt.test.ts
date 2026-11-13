@@ -18,7 +18,6 @@ import type { OfferInput } from './installPrompt'
 const NOW = 1_800_000_000_000
 const base: OfferInput = {
   loops: 1,
-  titleSettled: true,
   standalone: false,
   dismissedAt: null,
   now: NOW,
@@ -27,22 +26,11 @@ const base: OfferInput = {
 }
 
 describe('decideOffer (#388)', () => {
-  it('offers the native prompt after the first night, once the title has settled', () => {
+  it('offers the native prompt on the title after a night has been played', () => {
     expect(decideOffer(base)).toBe('native')
   })
   it('never before a night has ended (loops 0)', () => {
     expect(decideOffer({ ...base, loops: 0 })).toBeNull()
-  })
-  it('never the instant the title appears: it waits until the title has settled', () => {
-    expect(decideOffer({ ...base, titleSettled: false })).toBeNull()
-    expect(
-      decideOffer({
-        ...base,
-        titleSettled: false,
-        hasNativePrompt: false,
-        ios: true,
-      })
-    ).toBeNull()
   })
   it('never when already installed (standalone)', () => {
     expect(decideOffer({ ...base, standalone: true })).toBeNull()

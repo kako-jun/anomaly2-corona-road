@@ -6,7 +6,6 @@ import App from './App'
 import { SAVE_KEY } from './utils/saveData'
 import {
   DISMISS_KEY,
-  INSTALL_DELAY_MS,
   initInstallPrompt,
   resetInstallPromptForTest,
 } from './utils/installPrompt'
@@ -236,8 +235,6 @@ describe('App: title -> investigation note (#297) and the language from the brow
   })
 })
 
-const SETTLE = { timeout: INSTALL_DELAY_MS + 2000 }
-
 describe('App: the install suggestion (#388)', { timeout: 20000 }, () => {
   const fireInstall = () =>
     act(() => {
@@ -265,14 +262,11 @@ describe('App: the install suggestion (#388)', { timeout: 20000 }, () => {
     vi.unstubAllGlobals()
   })
 
-  it('is not shown the instant the title appears, even for a returning player with a held prompt; it comes a few seconds later', async () => {
+  it('shows on the title at once for a returning player with a held prompt', async () => {
     seed({ loops: 5 })
     render(<App />)
     fireInstall()
-    expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
-    expect(
-      await screen.findByRole('button', { name: 'LATER' }, SETTLE)
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'LATER' })).toBeInTheDocument()
   })
 
   it('is not shown on the investigation note before a shift', async () => {
@@ -280,9 +274,6 @@ describe('App: the install suggestion (#388)', { timeout: 20000 }, () => {
     render(<App />)
     fireInstall()
     await userEvent.click(screen.getByRole('button', { name: 'START SHIFT' }))
-    await act(async () => {
-      await new Promise(r => setTimeout(r, INSTALL_DELAY_MS + 200))
-    })
     expect(screen.getByText('CASE MEMO')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
   })
@@ -292,16 +283,10 @@ describe('App: the install suggestion (#388)', { timeout: 20000 }, () => {
     game.initial = 'win'
     render(<App />)
     fireInstall()
-    // On the result screen it is not offered, however long it stays.
-    await act(async () => {
-      await new Promise(r => setTimeout(r, INSTALL_DELAY_MS + 200))
-    })
+    // On the result screen it is not offered.
     expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
     await userEvent.click(screen.getByRole('button', { name: 'Back to title' }))
-    expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
-    expect(
-      await screen.findByRole('button', { name: 'ADD' }, SETTLE)
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'ADD' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'LATER' })).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: 'LATER' }))
     expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
@@ -314,9 +299,6 @@ describe('App: the install suggestion (#388)', { timeout: 20000 }, () => {
     render(<App />)
     fireInstall()
     await userEvent.click(screen.getByRole('button', { name: 'Back to title' }))
-    await act(async () => {
-      await new Promise(r => setTimeout(r, INSTALL_DELAY_MS + 200))
-    })
     expect(screen.queryByRole('button', { name: 'LATER' })).toBeNull()
   })
 
@@ -332,9 +314,7 @@ describe('App: the install suggestion (#388)', { timeout: 20000 }, () => {
     })
     render(<App />)
     await userEvent.click(screen.getByRole('button', { name: 'タイトルへ' }))
-    expect(
-      await screen.findByText(/ホーム画面に追加/, {}, SETTLE)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/ホーム画面に追加/)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '追加' })).toBeNull()
     expect(screen.getByRole('button', { name: 'あとで' })).toBeInTheDocument()
   })

@@ -82,7 +82,7 @@ describe('PWA (#388)', () => {
     expect(config).not.toMatch(/maskable|src: '[^']*\.svg'/)
   })
   it('the camera pictures are not precached (runtime cache only); the shell is', () => {
-    expect(config).toContain("handler: 'CacheFirst'")
+    expect(config).toContain("handler: 'StaleWhileRevalidate'")
     expect(config).not.toMatch(/globPatterns[\s\S]*'images\/\*/)
     expect(config).toContain("navigateFallback: '/index.html'")
   })

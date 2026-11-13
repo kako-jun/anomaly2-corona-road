@@ -743,10 +743,7 @@
   .cabinet {
     /* the picture's height: the viewport height, but never so tall that the 3:4 frame leaves the control column narrower than --col-min (tall screens such as 900x1000); (100vw - 8px*2 padding - 14px gap - --col-min) is the frame width left over */
     --col-min: 340px;
-    --tube-h: min(
-      var(--vh) - 16px,
-      (100vw - 30px - var(--col-min)) * 1679 / 1246
-    );
+    --tube-h: min(var(--vh) - 16px, (100vw - 30px - var(--col-min)) * 1679 / 1246);
     max-width: none;
     width: 100%;
     min-height: var(--vh);
@@ -1935,6 +1932,15 @@
 }
 #root:has(.install-banner) .start-screen {
   height: calc(var(--vh) - var(--install-bar-h));
+}
+/* The bar can arrive just after the title (the browser sends beforeinstallprompt a moment after load): ease the resize. */
+.start-screen {
+  transition: height 0.25s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .start-screen {
+    transition: none;
+  }
 }
 .install-banner {
   position: relative;
