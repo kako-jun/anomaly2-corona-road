@@ -71,7 +71,7 @@ const props = (over: Partial<Props> = {}): Props => ({
   subtitle: { text: '', visible: false },
   brightness: 1,
   contrast: 1,
-  onSwipe: vi.fn(),
+  onEdgeTap: vi.fn(),
   ...over,
 })
 

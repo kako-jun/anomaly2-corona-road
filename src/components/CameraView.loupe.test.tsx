@@ -25,7 +25,7 @@ const rect = (r: {
   }) as DOMRect
 
 let host: HTMLDivElement
-let onSwipe: ReturnType<typeof vi.fn>
+let onEdgeTap: ReturnType<typeof vi.fn>
 
 const viewProps = (camera: (typeof cams)[number], withHost: boolean) => ({
   camera,
@@ -34,12 +34,12 @@ const viewProps = (camera: (typeof cams)[number], withHost: boolean) => ({
   subtitle: { text: '', visible: false },
   brightness: 1,
   contrast: 1,
-  onSwipe,
+  onEdgeTap,
   loupeHost: withHost ? host : undefined,
 })
 
 const setup = (withHost = true, frameRect = GLASS) => {
-  onSwipe = vi.fn()
+  onEdgeTap = vi.fn()
   const view = render(<CameraView {...viewProps(cams[0], withHost)} />)
   const glass = view.container.querySelector('.glass') as HTMLElement
   const frame = view.container.querySelector('.pic__frame') as HTMLElement
@@ -77,20 +77,17 @@ afterEach(() => {
 })
 
 describe('loupe gesture (#341)', () => {
-  it('shows the loupe after the hold time, and removes it when released (no camera switch)', () => {
+  it('shows the loupe at once on press (no hold wait), and removes it when released (no camera switch)', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS - 10))
-    expect(loupe()).toBeNull()
-    act(() => void vi.advanceTimersByTime(20))
     expect(loupe()).not.toBeNull()
     pe('pointerUp', glass, 300)
     expect(loupe()).toBeNull()
-    expect(onSwipe).not.toHaveBeenCalled()
+    expect(onEdgeTap).not.toHaveBeenCalled()
   })
 
   it('shows the feed glitch in the loupe too (#78)', () => {
-    onSwipe = vi.fn()
+    onEdgeTap = vi.fn()
     const view = render(
       <CameraView {...viewProps(cams[0], true)} feedGlitch="blur" />
     )
@@ -99,12 +96,11 @@ describe('loupe gesture (#341)', () => {
     glass.getBoundingClientRect = () => rect(GLASS)
     frame.getBoundingClientRect = () => rect(GLASS)
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 10))
     expect(loupe()?.getAttribute('data-glitch')).toBe('blur')
   })
 
   const press = (glitch?: 'flip' | 'letterbox') => {
-    onSwipe = vi.fn()
+    onEdgeTap = vi.fn()
     const view = render(
       <CameraView {...viewProps(cams[0], true)} feedGlitch={glitch} />
     )
@@ -113,7 +109,6 @@ describe('loupe gesture (#341)', () => {
     glass.getBoundingClientRect = () => rect(GLASS)
     frame.getBoundingClientRect = () => rect(GLASS)
     pe('pointerDown', glass, 300, 150)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 10))
     act(() => void vi.advanceTimersByTime(3000))
     const frameEl = loupe()!.querySelector('.loupe__frame') as HTMLElement
     const out = {
@@ -161,44 +156,34 @@ describe('loupe gesture (#341)', () => {
     expect(r.heldPos!.height).toBe(`${GLASS.height * LOUPE.ZOOM}px`)
   })
 
-  it('a quick horizontal swipe switches the camera and never shows the loupe', () => {
+  it('a horizontal drag never switches the camera (no swipe, #409)', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
     pe('pointerMove', glass, 200)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS * 2))
-    expect(loupe()).toBeNull()
+    expect(loupe()).not.toBeNull()
     pe('pointerUp', glass, 200)
-    expect(onSwipe).toHaveBeenCalledWith('next')
+    expect(onEdgeTap).not.toHaveBeenCalled()
     pe('pointerDown', glass, 200)
     pe('pointerUp', glass, 300)
-    expect(onSwipe).toHaveBeenLastCalledWith('prev')
-  })
-
-  it('a short move under the swipe distance is nothing', () => {
-    const { glass } = setup()
-    pe('pointerDown', glass, 300)
-    pe('pointerUp', glass, 280)
-    expect(onSwipe).not.toHaveBeenCalled()
+    expect(onEdgeTap).not.toHaveBeenCalled()
   })
 
   it('moving after the loupe shows moves the loupe, and releasing far away does not switch the camera', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
     const left = () => loupe()!.querySelector('.loupe__frame') as HTMLElement
     const before = left().style.left
     pe('pointerMove', glass, 150)
     act(() => void vi.advanceTimersByTime(1000))
     expect(left().style.left).not.toBe(before)
     pe('pointerUp', glass, 150)
-    expect(onSwipe).not.toHaveBeenCalled()
+    expect(onEdgeTap).not.toHaveBeenCalled()
     expect(loupe()).toBeNull()
   })
 
   it('follows smoothly: the first frame after a jump has not reached the target yet', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
     const px = () =>
       parseFloat(
         (loupe()!.querySelector('.loupe__frame') as HTMLElement).style.left
@@ -216,7 +201,6 @@ describe('loupe gesture (#341)', () => {
   it('rounds the magnified spot at the edge: dragging out of the glass shows no more than the edge position', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
     pe('pointerMove', glass, 5000, 5000)
     act(() => void vi.advanceTimersByTime(3000))
     const f = loupe()!.querySelector('.loupe__frame') as HTMLElement
@@ -231,7 +215,6 @@ describe('loupe gesture (#341)', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300, 300, 1)
     pe('pointerDown', glass, 100, 300, 2)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
     expect(loupe()).not.toBeNull()
     pe('pointerUp', glass, 100, 300, 2)
     expect(loupe()).not.toBeNull()
@@ -244,19 +227,17 @@ describe('loupe gesture (#341)', () => {
   it('a cancelled pointer (e.g. the browser took it for a scroll) removes the loupe and switches nothing', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
     pe('pointerCancel', glass, 300)
     expect(loupe()).toBeNull()
-    expect(onSwipe).not.toHaveBeenCalled()
+    expect(onEdgeTap).not.toHaveBeenCalled()
   })
 
-  it('without a host the loupe is off but the swipe still works', () => {
+  it('without a host the loupe is off and a drag still switches no camera', () => {
     const { glass } = setup(false)
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS * 2))
     expect(loupe()).toBeNull()
     pe('pointerUp', glass, 100)
-    expect(onSwipe).toHaveBeenCalledWith('next')
+    expect(onEdgeTap).not.toHaveBeenCalled()
   })
 
   it('ignores a non-primary mouse button', () => {
@@ -268,7 +249,6 @@ describe('loupe gesture (#341)', () => {
       pointerType: 'mouse',
       button: 2,
     })
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS * 2))
     expect(loupe()).toBeNull()
   })
 
@@ -279,9 +259,8 @@ describe('loupe gesture (#341)', () => {
       glass.dispatchEvent(ev)
       return ev.defaultPrevented
     }
-    pe('pointerDown', glass, 300)
     expect(move()).toBe(false)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
+    pe('pointerDown', glass, 300)
     expect(move()).toBe(true)
     pe('pointerUp', glass, 300)
     expect(move()).toBe(false)
@@ -290,7 +269,6 @@ describe('loupe gesture (#341)', () => {
   it('draws the zoomed picture, and no noise canvas inside the scaled frame', () => {
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
     const f = loupe()!.querySelector('.loupe__frame') as HTMLElement
     expect(parseFloat(f.style.width)).toBeCloseTo(400 * LOUPE.ZOOM)
     expect(f.querySelector('canvas, .noise')).toBeNull()
@@ -312,51 +290,25 @@ describe('loupe gesture, review cases (#341)', () => {
       height: 600,
     })
     pe('pointerDown', glass, 300) // 200 px into the glass, centre column
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
     // u = (200 + 100 - 60) / 480 = 0.5
     expect(frameLeft()).toBeCloseTo(
       LOUPE.DIAMETER_PX / 2 - 0.5 * 480 * LOUPE.ZOOM
     )
   })
 
-  it('HOLD_SLOP_PX: 12 px of drift still holds, 13 px is not a hold', () => {
-    const a = setup()
-    pe('pointerDown', a.glass, 300)
-    pe('pointerMove', a.glass, 300 + LOUPE.HOLD_SLOP_PX)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
+  it('the loupe stays up through any amount of movement (it is not a hold any more)', () => {
+    const { glass } = setup()
+    pe('pointerDown', glass, 300)
+    pe('pointerMove', glass, 300 + LOUPE.TAP_SLOP_PX + 20)
     expect(loupe()).not.toBeNull()
-    pe('pointerUp', a.glass, 300)
-    cleanup()
-    const b = setup()
-    pe('pointerDown', b.glass, 300)
-    pe('pointerMove', b.glass, 300 + LOUPE.HOLD_SLOP_PX + 1)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
-    expect(loupe()).toBeNull()
-  })
-
-  it('a move away and back does not bring the loupe back (the hold is already lost)', () => {
-    const { glass } = setup()
-    pe('pointerDown', glass, 300)
-    pe('pointerMove', glass, 330)
     pe('pointerMove', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS * 2))
-    expect(loupe()).toBeNull()
+    expect(loupe()).not.toBeNull()
   })
 
-  it('SWIPE_PX: 50 px is not a swipe, 51 px is', () => {
-    const { glass } = setup()
-    pe('pointerDown', glass, 300)
-    pe('pointerUp', glass, 300 - LOUPE.SWIPE_PX)
-    expect(onSwipe).not.toHaveBeenCalled()
-    pe('pointerDown', glass, 300)
-    pe('pointerUp', glass, 300 - LOUPE.SWIPE_PX - 1)
-    expect(onSwipe).toHaveBeenCalledWith('next')
-  })
-
-  it('leaves no hold timer behind when it unmounts mid-press', () => {
+  it('leaves no animation frame behind when it unmounts while the loupe follows', () => {
     const { glass, view } = setup()
     pe('pointerDown', glass, 300)
-    expect(vi.getTimerCount()).toBeGreaterThan(0)
+    pe('pointerMove', glass, 200)
     view.unmount()
     expect(vi.getTimerCount()).toBe(0)
   })
@@ -369,7 +321,6 @@ describe('loupe gesture, review cases (#341)', () => {
       )
     const { glass } = setup()
     pe('pointerDown', glass, 300)
-    act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
     pe('pointerMove', glass, 200)
     // glass x 100 -> u = 100 / 400 = 0.25, with no timer advanced
     expect(frameLeft()).toBeCloseTo(
@@ -382,7 +333,6 @@ describe('loupe gesture, review cases (#341)', () => {
     const { glass, view } = setup()
     const hold = () => {
       pe('pointerDown', glass, 300)
-      act(() => void vi.advanceTimersByTime(LOUPE.HOLD_MS + 1))
       expect(loupe()).not.toBeNull()
     }
     hold()
@@ -396,7 +346,7 @@ describe('loupe gesture, review cases (#341)', () => {
     expect(loupe()).toBeNull()
     // and the press that was cut off does not switch anything when it ends
     pe('pointerUp', glass, 100)
-    expect(onSwipe).not.toHaveBeenCalled()
+    expect(onEdgeTap).not.toHaveBeenCalled()
   })
 })
 

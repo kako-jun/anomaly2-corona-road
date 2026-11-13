@@ -1,4 +1,4 @@
-/* Magnifier loupe (#341). Numbers the player feels (hold time, zoom, diameter) are in src/utils/loupe.ts, not here. */
+/* Magnifier loupe (#341). Numbers the player feels (tap ceiling, zoom, diameter) are in src/utils/loupe.ts, not here. */
 
 /* the loupe is drawn here, on the control panel; out of the flow so the layout never moves */
 .panel > .loupe-host {
@@ -72,10 +72,10 @@
   pointer-events: none;
 }
 
-/* pointer events for touch, mouse and pen: a vertical drag still scrolls the page until the loupe shows (then the
-   hook cancels touchmove); no text selection / long-press menu while holding */
+/* pointer events for touch, mouse and pen: the loupe shows on press, so the picture takes no browser gesture (touch-action: none) and
+   the hook also cancels touchmove; no text selection / long-press menu while pressing */
 .glass {
-  touch-action: pan-y pinch-zoom;
+  touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
