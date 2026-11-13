@@ -73,11 +73,8 @@ export const feedGlitchKindsFor = (entry: NonImageEntry): FeedGlitchKind[] =>
 /** True when the game has an effect for this entry (so it may be drawn). */
 export const hasNonImageEffect = (entry: NonImageEntry): boolean =>
   feedGlitchKindsFor(entry).length > 0 ||
-  // Voice materials are wired for playback but stay out of the draw until their ledger entries are promoted
-  // (listening / adoption pending, #79); the ledger and the effects are promoted together.
-  (entry.anomalyType === 'sound' &&
-    hasSoundEffect(entry.id) &&
-    !VOICE_IDS.has(entry.id))
+  // The five voices are drawn like the other sounds; `voiceReady` still keeps one out until its file answered.
+  (entry.anomalyType === 'sound' && hasSoundEffect(entry.id))
 
 /** The kind to draw this time (random among the kinds of the entry), or undefined when it has no feed glitch. */
 export const pickFeedGlitchKind = (

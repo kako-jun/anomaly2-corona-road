@@ -24,7 +24,7 @@ import {
 } from '../utils/anomalyData'
 import { reportTargetsFor, showsOnCamera } from '../utils/reportTarget'
 import { isAudible } from '../utils/audioSettings'
-import { voiceReady } from '../utils/voiceSounds'
+import { resetVoiceHistory, voiceReady } from '../utils/voiceSounds'
 import type { FlagEvent } from './useSubtitle'
 import {
   raiseFlagsAtStart,
@@ -120,9 +120,29 @@ export const useGameState = () => {
     activeAnomaliesRef.current = activeAnomalies
   }, [activeAnomalies])
 
+  /**
+   * Take back a running anomaly that can never be shown (a voice whose file failed to load for good, #407): it counts
+   * as if it never appeared - gone from the slots, the cap, the REPORT lamp and the false-report check - and its id
+   * stays used, so it is not drawn again this shift. A reported or unknown id is left alone.
+   */
+  const withdrawAnomaly = useCallback((id: string) => {
+    if (!activeAnomaliesRef.current.some(a => a.id === id && !a.detectedAt))
+      return
+    activeAnomaliesRef.current = activeAnomaliesRef.current.filter(
+      a => a.id !== id || a.detectedAt
+    )
+    setActiveAnomalies(prev => prev.filter(a => a.id !== id || a.detectedAt))
+    setStats(prev => ({
+      ...prev,
+      totalAnomalies: Math.max(0, prev.totalAnomalies - 1),
+    }))
+    afterChildIdsRef.current.delete(id)
+  }, [])
+
   const startGame = useCallback(() => {
     // After the true ending the save cannot start a shift; the title offers "start over" only (#294).
     if (load().endingReached) return
+    resetVoiceHistory()
     setStats({
       currentTime: 0,
       correctReports: 0,
@@ -238,13 +258,17 @@ export const useGameState = () => {
           correctReports: prev.correctReports + 1,
           detectedAnomalies: prev.detectedAnomalies + 1,
         }))
-        setActiveAnomalies(prev =>
-          prev.map(a =>
-            a.id === anomalyOnCamera.id
-              ? { ...a, detectedAt: statsRef.current.currentTime }
-              : a
+        // The ref is updated here too (not only by the effect after render), so a withdrawal in the same tick sees
+        // this anomaly as reported and leaves it alone.
+        const reportedAt = statsRef.current.currentTime
+        const markReported = (list: Anomaly[]) =>
+          list.map(a =>
+            a.id === anomalyOnCamera.id ? { ...a, detectedAt: reportedAt } : a
           )
-        )
+        activeAnomaliesRef.current = markReported(activeAnomaliesRef.current)
+        // The state update is a function of the latest state (not the ref's value), so an anomaly that spawned in
+        // the same batch is not overwritten.
+        setActiveAnomalies(markReported)
         pushFeedback('correct', `CONFIRMED — ${anomalyOnCamera.category}`)
         if (afterChildIdsRef.current.has(anomalyOnCamera.id)) {
           afterChildReportedRef.current += 1
@@ -334,6 +358,7 @@ export const useGameState = () => {
           )
         }
         if (childFoundRef.current) afterChildIdsRef.current.add(spawn.entry.id)
+        activeAnomaliesRef.current = [...activeAnomaliesRef.current, newAnomaly]
         setActiveAnomalies(prev => [...prev, newAnomaly])
         setStats(prev => ({
           ...prev,
@@ -341,12 +366,10 @@ export const useGameState = () => {
         }))
         return 'spawned'
       }
-      return hasUnusedEntry(
-        ANOMALY_LEDGER,
-        nonImageLedger.filter(entry => voiceReady(entry.id)),
-        used,
-        reiwaUnlocked
-      )
+      // Not filtered by voiceReady: a voice whose file has not answered yet must keep the shift from being called
+      // exhausted (that is permanent for the shift). A voice whose probe failed (404, under 60 s) is never used up,
+      // so it counts as unused for the rest of the shift; that only keeps the cheap retry going, nothing is drawn.
+      return hasUnusedEntry(ANOMALY_LEDGER, nonImageLedger, used, reiwaUnlocked)
         ? 'no-free-camera'
         : 'exhausted'
     },
@@ -466,6 +489,7 @@ export const useGameState = () => {
     startGame,
     switchCamera,
     reportAnomaly,
+    withdrawAnomaly,
     gameTime: msToGameTime(stats.currentTime),
   }
 }

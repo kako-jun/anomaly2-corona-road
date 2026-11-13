@@ -7,6 +7,8 @@ import {
   probeVoices,
   releaseVoice,
   voiceReady,
+  voiceWasLoaded,
+  resetVoiceHistory,
   voiceRetryDelay,
   VOICE_RETRY_LIMIT,
   voiceUrl,
@@ -105,6 +107,25 @@ describe('resident voice buffer', () => {
     expect(fetched).toHaveLength(2)
     releaseVoice('CR-SH-06')
     expect(playVoice(engine, 'CR-SH-06')).toBeNull()
+  })
+
+  it('remembers that a voice was decoded once, even after a later failure', async () => {
+    const { engine } = await setup()
+    expect(await holdVoice(engine, 'CR-SH-06')).toBe(true)
+    releaseVoice('CR-SH-06')
+    vi.mocked(fetch).mockRejectedValueOnce(new Error('offline'))
+    expect(await holdVoice(engine, 'CR-SH-06')).toBe(false)
+    expect(voiceWasLoaded('CR-SH-06')).toBe(true)
+    releaseVoice('CR-SH-06')
+  })
+
+  it('forgets the decoded history when a new shift starts', async () => {
+    const { engine } = await setup()
+    expect(await holdVoice(engine, 'CR-SH-06')).toBe(true)
+    expect(voiceWasLoaded('CR-SH-06')).toBe(true)
+    releaseVoice('CR-SH-06')
+    resetVoiceHistory()
+    expect(voiceWasLoaded('CR-SH-06')).toBe(false)
   })
 
   it('drops a voice released while it was still loading', async () => {

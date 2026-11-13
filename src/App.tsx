@@ -113,6 +113,7 @@ function useScreen(): [string, ReactNode] {
     startGame,
     switchCamera,
     reportAnomaly,
+    withdrawAnomaly,
     gameTime,
   } = useGameState()
 
@@ -226,6 +227,7 @@ function useScreen(): [string, ReactNode] {
         onEndingDone={finishEnding}
         onSwitch={switchCamera}
         onReport={reportAnomaly}
+        onVoiceUnavailable={withdrawAnomaly}
       />
       <SaveNotice />
     </>,

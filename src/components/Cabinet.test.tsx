@@ -595,17 +595,89 @@ describe('sound anomaly lifecycle', () => {
     vi.useFakeTimers()
     const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(false)
     const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const gone = vi.fn()
     const { unmount } = render(
-      <Cabinet {...makeProps()} heldVoiceId="RT-SND-06" />
+      <Cabinet
+        {...makeProps()}
+        heldVoiceId="RT-SND-06"
+        onVoiceUnavailable={gone}
+      />
     )
     await act(async () => {
       await vi.advanceTimersByTimeAsync(10 * 60 * 1000)
     })
     expect(hold).toHaveBeenCalledTimes(voice.VOICE_RETRY_LIMIT)
+    // Only after the last try is the anomaly given up (once), so a slow network never loses a voice early.
+    expect(gone).toHaveBeenCalledTimes(1)
+    expect(gone).toHaveBeenCalledWith('RT-SND-06')
     unmount()
     hold.mockRestore()
     release.mockRestore()
     vi.useRealTimers()
+  })
+  describe('a voice whose later reads keep failing', () => {
+    /** Decodes the voice for real once (so `voiceWasLoaded` is truly true), then makes every further fetch fail. */
+    const setupAfterDecode = async (id: string) => {
+      const ctx = {
+        state: 'running',
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        decodeAudioData: vi.fn().mockResolvedValue({ duration: 68 }),
+      }
+      vi.spyOn(gameAudio, 'ctx').mockReturnValue(ctx as unknown as AudioContext)
+      vi.spyOn(gameAudio, 'unlock').mockResolvedValue(undefined as never)
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => ({
+          ok: true,
+          arrayBuffer: async () => new ArrayBuffer(8),
+        }))
+      )
+      expect(await voice.holdVoice(gameAudio, id)).toBe(true)
+      voice.releaseVoice(id)
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async () => {
+          throw new Error('offline')
+        })
+      )
+    }
+    const renderAndExhaust = async (id: string) => {
+      const gone = vi.fn()
+      const { unmount } = render(
+        <Cabinet {...makeProps()} heldVoiceId={id} onVoiceUnavailable={gone} />
+      )
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(10 * 60 * 1000)
+      })
+      unmount()
+      return gone
+    }
+    afterEach(() => {
+      vi.restoreAllMocks()
+      vi.unstubAllGlobals()
+    })
+
+    it('is not taken back when it was decoded earlier in the same shift', async () => {
+      vi.useFakeTimers()
+      voice.resetVoiceHistory()
+      await setupAfterDecode('RT-SND-06')
+      expect(voice.voiceWasLoaded('RT-SND-06')).toBe(true)
+      expect(await renderAndExhaust('RT-SND-06')).not.toHaveBeenCalled()
+      vi.useRealTimers()
+    })
+
+    it('is taken back when the shift changed since it was decoded (history reset at the shift start)', async () => {
+      vi.useFakeTimers()
+      voice.resetVoiceHistory()
+      await setupAfterDecode('CR-SH-06')
+      voice.resetVoiceHistory()
+      expect(voice.voiceWasLoaded('CR-SH-06')).toBe(false)
+      expect(await renderAndExhaust('CR-SH-06')).toHaveBeenCalledWith(
+        'CR-SH-06'
+      )
+      vi.useRealTimers()
+    })
   })
   it('repeats intermittent sounds throughout five minutes and stops after report', () => {
     vi.useFakeTimers()
