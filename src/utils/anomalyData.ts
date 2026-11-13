@@ -264,9 +264,12 @@ export const hasUnusedEntry = (
   usedIds: ReadonlySet<string>,
   reiwaUnlocked: boolean
 ): boolean =>
-  spawnableEntries(images, reiwaUnlocked).some(e => !usedIds.has(e.id)) ||
-  spawnableEntries(nonImages, reiwaUnlocked).some(
-    e => !usedIds.has(e.id) && hasNonImageEffect(e)
+  images.some(e => !usedIds.has(e.id) && (reiwaUnlocked || e.reiwa !== true)) ||
+  nonImages.some(
+    e =>
+      !usedIds.has(e.id) &&
+      (reiwaUnlocked || e.reiwa !== true) &&
+      hasNonImageEffect(e)
   )
 
 /**

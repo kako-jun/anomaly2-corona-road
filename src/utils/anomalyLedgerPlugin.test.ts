@@ -102,7 +102,9 @@ describe('anomaly-ledger vite plugin', () => {
         size: { w: 3, h: 4 },
       },
     ])
-    expect(addWatchFile).toHaveBeenCalledTimes(1)
+    expect(addWatchFile).toHaveBeenCalledWith(
+      expect.stringMatching(/prompts\/anomalies\.yaml$/)
+    )
   })
 
   it('fails the build when the overlay file is missing, naming the entry', async () => {
