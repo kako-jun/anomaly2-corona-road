@@ -307,10 +307,6 @@ export const validateSave = (raw: unknown): SaveData | null => {
   return out
 }
 
-/**
- * Merge two saves of the same player (two tabs). Within one epoch data only grows: counts take the larger value,
- * ids and flags are unions. Settings merge field by field, `b` winning where both have a field.
- */
 /** Field by field, `b` winning. The legacy `muted` (#79) is never carried over, so a stale tab cannot write it back. */
 const mergeSettings = (
   a: SaveSettings | undefined,
@@ -322,6 +318,10 @@ const mergeSettings = (
   return merged
 }
 
+/**
+ * Merge two saves of the same player (two tabs). Within one epoch data only grows: counts take the larger value,
+ * ids and flags are unions. Settings merge field by field, `b` winning where both have a field.
+ */
 export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
   // A higher epoch (a reset happened) wins whole: the older generation's progress is dropped.
   if (a.epoch !== b.epoch) {

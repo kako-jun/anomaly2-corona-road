@@ -1,9 +1,9 @@
 /**
  * Sound settings (#79): the master volume (0..100) lives in the save's `settings.volume` (docs/save-data.md), so it
  * survives START OVER and stays on this device when a transfer code is imported. Volume 0 is the mute (the VOL knob;
- * there is no separate switch). An older save may still carry `settings.muted: true`: it is read as volume 0 so a
- * muted player stays silent, and it is dropped the next time the volume is saved. `initGameAudio` is called once at
- * start-up: it applies the saved volume to the shared engine and arms the first-gesture unlock.
+ * there is no separate switch). An older save may still carry `settings.muted: true`: at start-up it is folded into
+ * volume 0 (saved without `muted`) so a muted player stays silent; settings merges never carry `muted` over.
+ * `initGameAudio` is called once at start-up: it applies the saved volume to the shared engine and arms the first-gesture unlock.
  */
 import {
   AudioEngine,
