@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { STAGES } from '../data/investigationNotes'
-import { buildNote, fmtShiftEnd, outcomeOf, stageOf } from './investigationNote'
+import {
+  NOTE_MAX_COUNT,
+  buildNote,
+  fmtShiftEnd,
+  noteDigitLevel,
+  outcomeOf,
+  stageOf,
+} from './investigationNote'
 import { msToGameTime } from './gameConfig'
 import { toFullWidthDigits } from './fullWidth'
 import { emptySave } from './saveData'
@@ -120,6 +127,27 @@ describe('buildNote before a shift', () => {
     expect(v.left.rows.map(r => r.value)).toEqual(['９', '４', '１'])
     expect(v.shiftRow).toMatchObject({ label: '勤務', value: '０６:００まで' })
     expect(v.right.rows.map(r => r.value)).toEqual(['１４３', '６３'])
+  })
+  it('shows a count with 3 digits at most, and reports the widest count for the numbers box (#429)', () => {
+    const big = (n: number, lang: 'ja' | 'en') =>
+      buildNote(
+        {
+          mode: 'before',
+          save: save({
+            loops: 3,
+            foundTotal: n,
+            lastShift: shift({ found: n }),
+          }),
+        },
+        lang
+      )
+    expect(NOTE_MAX_COUNT).toBe(999)
+    expect(big(123456, 'ja').right.rows[0].value).toBe('９９９')
+    expect(big(123456, 'en').right.rows[0].value).toBe('999')
+    expect(big(123456, 'en').left.rows[0].value).toBe('999')
+    expect(noteDigitLevel(big(7, 'ja'))).toBe(1)
+    expect(noteDigitLevel(big(1234, 'ja'))).toBe(3)
+    expect(noteDigitLevel(big(123456, 'en'))).toBe(3)
   })
   it('adds the last-night line after a night without new kinds or a withdraw', () => {
     const base = { loops: 5, flags: { elder1: true } }
