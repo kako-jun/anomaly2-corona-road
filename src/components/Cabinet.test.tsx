@@ -889,6 +889,22 @@ describe('Cabinet monitor effects (data-fx, #408)', () => {
     cw.mockRestore()
     gcs.mockRestore()
   })
+  it('monitorEffects.css is imported before CameraView (which brings feedGlitch.css), so the later feed glitch rules win over RT-UI-22', () => {
+    const src = readFileSync(
+      resolve(process.cwd(), 'src/components/Cabinet.tsx'),
+      'utf8'
+    )
+    const fx = src.indexOf("import '../styles/monitorEffects.css'")
+    const cam = src.indexOf("from './CameraView'")
+    expect(fx).toBeGreaterThan(-1)
+    expect(cam).toBeGreaterThan(fx)
+    expect(
+      readFileSync(
+        resolve(process.cwd(), 'src/components/CameraView.tsx'),
+        'utf8'
+      )
+    ).toContain("import '../styles/feedGlitch.css'")
+  })
   it('every CSS rule in monitorEffects.css is for an id in the table', async () => {
     const { MONITOR_EFFECTS } = await import('../utils/monitorEffects')
     const ids = [...css.matchAll(/data-fx~='([^']+)'/g)].map(m => m[1])

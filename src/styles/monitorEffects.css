@@ -17,6 +17,7 @@
   transform: scaleX(-1);
 }
 
+/* ORDER: feedGlitch.css (imported through CameraView, after this file in Cabinet.tsx) must come later than this file, so RT-FEED-22 / 11 on a camera win over RT-UI-22; Cabinet.test.tsx checks the import order. */
 /* RT-UI-22 noise gone for good: the grain and the scanlines stay off on every camera and in the loupe, whatever is done to
    the monitor (a knock or a shake changes nothing: it is off already). Same two layers as the 10 s knock (#342). */
 .retro[data-fx~='RT-UI-22'] .noise,

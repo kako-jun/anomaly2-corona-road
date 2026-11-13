@@ -1,6 +1,8 @@
-import { describe, expect, it } from 'vitest'
+// @vitest-environment jsdom
+import { describe, expect, it, vi } from 'vitest'
 import {
   NO_TILT,
+  accumulatedTilt,
   localRect,
   toLocalDelta,
   toLocalPoint,
@@ -117,5 +119,45 @@ describe('tiltGeometry mirror (RT-UI-16)', () => {
     expect(toLocalDelta(30, 0, mirrored).x).toBeCloseTo(-30, 6)
     expect(toLocalDelta(30, 0).x).toBe(30)
     expect(toLocalDelta(30, 0, { theta: 0, scale: 0.9 }).x).toBeCloseTo(30, 6)
+  })
+})
+
+describe('accumulatedTilt composes a mirrored ancestor with a rotated child', () => {
+  it('theta = own - child (a mirror turns the child rotation round), mirror flag toggles', () => {
+    class M {
+      a: number
+      b: number
+      c: number
+      d: number
+      constructor(t: string) {
+        const q = /^m (\S+) (\S+) (\S+) (\S+)$/.exec(t)!
+        ;[this.a, this.b, this.c, this.d] = q.slice(1).map(Number)
+      }
+    }
+    vi.stubGlobal('DOMMatrix', M)
+    const th = 10 * DEG
+    const parent = document.createElement('div')
+    const child = document.createElement('div')
+    parent.appendChild(child)
+    const spy = vi.spyOn(window, 'getComputedStyle').mockImplementation(
+      el =>
+        ({
+          transform:
+            el === parent
+              ? 'm -1 0 0 1'
+              : el === child
+                ? `m ${Math.cos(th)} ${Math.sin(th)} ${-Math.sin(th)} ${Math.cos(th)}`
+                : 'none',
+        }) as unknown as CSSStyleDeclaration
+    )
+    try {
+      const t = accumulatedTilt(child)
+      expect(t.mirror).toBe(true)
+      expect(t.theta).toBeCloseTo(0 - th, 9)
+      expect(t.scale).toBeCloseTo(1, 9)
+    } finally {
+      spy.mockRestore()
+      vi.unstubAllGlobals()
+    }
   })
 })
