@@ -6,6 +6,7 @@ import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import {
   LedgerEntry,
+  NonImageEntry,
   parseLedgerRecords,
   toLedgerEntry,
 } from '../utils/anomalyLedger'
@@ -15,6 +16,9 @@ import { useGameState } from './useGameState'
 
 // A small, controllable ledger instead of the real one (mutated in place per test).
 const ledger = vi.hoisted(() => [] as LedgerEntry[])
+// The non-image side (#77): empty unless a test pushes into it, so the image tests below are not disturbed.
+const nonImage = vi.hoisted(() => [] as NonImageEntry[])
+vi.mock('virtual:non-image-anomalies', () => ({ default: nonImage }))
 const preload = vi.hoisted(() => vi.fn())
 vi.mock('../data/anomalyLedger', () => ({
   ANOMALY_LEDGER: ledger,
@@ -99,6 +103,7 @@ beforeEach(() => {
   localStorage.clear()
   ;(saveData as unknown as { resetStore: () => void }).resetStore()
   ledger.length = 0
+  nonImage.length = 0
 })
 afterEach(() => {
   vi.useRealTimers()
@@ -242,11 +247,12 @@ describe('spawning from the ledger', () => {
     ledger.push(entry('a', 1), entry('b', 1))
     const { result } = start()
     advance(FIRST + 100)
-    const some = vi.spyOn(ledger, 'some')
+    // One attempt reads the image ledger through `filter` a few times (#77: the draw checks both kinds).
+    const filter = vi.spyOn(ledger, 'filter')
     advance(INTERVAL + 10_000) // first attempt ~30 s after the spawn, then once a second
     expect(result.current.stats.totalAnomalies).toBe(1)
-    expect(some.mock.calls.length).toBeGreaterThanOrEqual(5)
-    expect(some.mock.calls.length).toBeLessThanOrEqual(15) // a frame loop would be ~600
+    expect(filter.mock.calls.length).toBeGreaterThanOrEqual(5)
+    expect(filter.mock.calls.length).toBeLessThanOrEqual(60) // a frame loop would be ~1800
   })
 
   it('skips an entry whose overlay cannot be resolved and spawns another, without stopping the loop', () => {
@@ -490,6 +496,115 @@ describe('reporting', () => {
     expect(result.current.activeAnomalyHere?.cameraId).toBe(1)
     act(() => result.current.switchCamera('next'))
     expect(result.current.activeAnomalyHere).toBeUndefined()
+  })
+})
+
+describe('non-image anomalies (#77)', () => {
+  const glitch = (id = 'RT-FEED-22'): NonImageEntry => ({
+    id,
+    category: 'Camera',
+    anomalyType: 'feed_glitch',
+  })
+  /** One shift where only a non-image entry exists; it appears on a camera drawn at random. */
+  const withGlitch = () => {
+    nonImage.push(glitch())
+    const hook = start()
+    advance(FIRST + 100)
+    return hook
+  }
+  const watch = (
+    hook: ReturnType<typeof withGlitch>,
+    cameraId: number
+  ): void => {
+    const index = hook.result.current.cameras.findIndex(c => c.id === cameraId)
+    act(() => hook.result.current.switchCamera(index))
+  }
+
+  it('appears without a fixed camera, in the same slot (one per camera), with no overlay', () => {
+    const { result } = withGlitch()
+    const [a] = result.current.activeAnomalies
+    expect(a.id).toBe('RT-FEED-22')
+    expect(a.overlay).toBeUndefined()
+    expect(a.feedGlitch).toBe('static')
+    expect(result.current.stats.totalAnomalies).toBe(1)
+  })
+
+  it('draws the camera at random each time (not always the same one)', () => {
+    const seen = new Set<number>()
+    for (let i = 0; i < 12; i++) {
+      nonImage.length = 0
+      nonImage.push(glitch())
+      const hook = start()
+      advance(FIRST + 100)
+      seen.add(hook.result.current.activeAnomalies[0].cameraId)
+      hook.unmount()
+    }
+    expect(seen.size).toBeGreaterThan(1)
+  })
+
+  it('shows the glitch only while its camera is watched', () => {
+    const hook = withGlitch()
+    const cam = hook.result.current.activeAnomalies[0].cameraId
+    watch(hook, cam)
+    expect(hook.result.current.feedGlitchHere).toBe('static')
+    const other = hook.result.current.cameras.find(c => c.id !== cam)!
+    watch(hook, other.id)
+    expect(hook.result.current.feedGlitchHere).toBeUndefined()
+    expect(hook.result.current.activeAnomalyHere).toBeUndefined()
+  })
+
+  it('a correct Camera report on its camera clears it, counts, and is remembered in the save', () => {
+    const hook = withGlitch()
+    const cam = hook.result.current.activeAnomalies[0].cameraId
+    watch(hook, cam)
+    act(() => hook.result.current.reportAnomaly('Camera'))
+    expect(hook.result.current.stats.correctReports).toBe(1)
+    expect(hook.result.current.stats.misreports).toBe(0)
+    expect(hook.result.current.feedGlitchHere).toBeUndefined()
+    expect(hook.result.current.feedback?.kind).toBe('correct')
+    expect(saveData.load().foundIds).toEqual(['RT-FEED-22'])
+  })
+
+  it('a wrong category is a false report and the glitch stays', () => {
+    const hook = withGlitch()
+    const cam = hook.result.current.activeAnomalies[0].cameraId
+    watch(hook, cam)
+    act(() => hook.result.current.reportAnomaly('Object'))
+    expect(hook.result.current.stats.misreports).toBe(1)
+    expect(hook.result.current.feedGlitchHere).toBe('static')
+    expect(hook.result.current.feedback?.message).toMatch(/WRONG CATEGORY/)
+    expect(hook.result.current.feedback?.anomalyId).toBe('RT-FEED-22')
+  })
+
+  it('the right category from another camera is a false report (a camera glitch is reported on its camera)', () => {
+    const hook = withGlitch()
+    const cam = hook.result.current.activeAnomalies[0].cameraId
+    watch(hook, hook.result.current.cameras.find(c => c.id !== cam)!.id)
+    act(() => hook.result.current.reportAnomaly('Camera'))
+    expect(hook.result.current.stats.misreports).toBe(1)
+    expect(hook.result.current.stats.correctReports).toBe(0)
+    expect(hook.result.current.activeAnomalies[0].detectedAt).toBeUndefined()
+  })
+
+  it('shares the cap and the camera slots with image anomalies, and is used once per shift', () => {
+    nonImage.push(glitch())
+    for (let c = 1; c <= 8; c++) ledger.push(entry(`img${c}`, c))
+    const { result } = start()
+    advance(FIRST + INTERVAL * 20)
+    const ids = result.current.activeAnomalies.map(a => a.id)
+    expect(ids.filter(id => id === 'RT-FEED-22').length).toBeLessThanOrEqual(1)
+    expect(
+      result.current.activeAnomalies.filter(a => !a.detectedAt).length
+    ).toBeLessThanOrEqual(DEFAULT_CONFIG.maxConcurrentAnomalies)
+    const cams = result.current.activeAnomalies.map(a => a.cameraId)
+    expect(new Set(cams).size).toBe(cams.length)
+  })
+
+  it('an entry without a registered effect never appears', () => {
+    nonImage.push({ ...glitch('RT-FEED-07') }) // no effect yet: it is still planned in the real ledger
+    const { result } = start()
+    advance(FIRST + INTERVAL * 2)
+    expect(result.current.stats.totalAnomalies).toBe(0)
   })
 })
 

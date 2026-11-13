@@ -5,7 +5,7 @@ import {
 } from '../data/investigationNotes'
 import type { Stage } from '../data/investigationNotes'
 import { MEMO_FLAGS } from './anomalyLedger'
-import type { LedgerEntry, MemoFlag, MemoText } from './anomalyLedger'
+import type { MemoFlag, MemoText } from './anomalyLedger'
 import type { SaveData } from './saveData'
 
 /**
@@ -26,7 +26,13 @@ export interface MemoMeta {
 
 /** The memo facts of every ledger entry that has any (`reiwa: true` also raises the `reiwa` flag). */
 export const memoIndexOf = (
-  entries: readonly LedgerEntry[]
+  entries: readonly {
+    id: string
+    reiwa?: true
+    memoFlags?: MemoFlag[]
+    memo?: MemoText
+    memoImage?: string
+  }[]
 ): ReadonlyMap<string, MemoMeta> => {
   const index = new Map<string, MemoMeta>()
   for (const e of entries) {

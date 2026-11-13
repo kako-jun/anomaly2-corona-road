@@ -341,7 +341,9 @@ describe('CameraView anomaly overlay', () => {
     rerender(
       <CameraView {...props({ camera: cams[1], anomalyHere: anomaly2 })} />
     )
-    expect(overlayOf(container)?.getAttribute('src')).toBe(anomaly2.overlay.url)
+    expect(overlayOf(container)?.getAttribute('src')).toBe(
+      anomaly2.overlay?.url
+    )
     rerender(
       <CameraView {...props({ camera: cams[0], anomalyHere: anomaly1 })} />
     )

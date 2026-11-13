@@ -5,7 +5,6 @@ import {
   CAMERAS,
   msToGameTime,
   getGamePhase,
-  DRAW_WEIGHT_EXPONENT,
 } from '../utils/gameConfig'
 import {
   CHILD_FLAG,
@@ -15,11 +14,16 @@ import {
 } from '../utils/endingJudge'
 import { load } from '../utils/saveData'
 import { STAGE_FLAGS } from '../data/investigationNotes'
+import nonImageLedger from 'virtual:non-image-anomalies'
 import {
   REIWA_UNLOCK_FLAG,
   createAnomaly,
-  pickLedgerEntry,
+  createNonImageAnomaly,
+  hasUnusedEntry,
+  pickSpawn,
 } from '../utils/anomalyData'
+import { reportTargetsFor } from '../utils/reportTarget'
+import { isAudible } from '../utils/audioSettings'
 import type { FlagEvent } from './useSubtitle'
 import {
   raiseFlagsAtStart,
@@ -220,16 +224,14 @@ export const useGameState = () => {
     (category: AnomalyCategory) => {
       if (endedRef.current || misreportCapRef.current) return
       const currentCamera = CAMERAS[currentIndexRef.current]
-      const anomalyOnCamera = activeAnomaliesRef.current.find(
-        a => a.cameraId === currentCamera.id && !a.detectedAt
+      // Camera-scope anomalies count only on the watched camera; monitor-scope ones from any camera (#77).
+      const { hit: anomalyOnCamera, shown } = reportTargetsFor(
+        activeAnomaliesRef.current,
+        currentCamera.id,
+        category
       )
 
-      if (
-        anomalyOnCamera &&
-        (anomalyOnCamera.categories ?? [anomalyOnCamera.category]).includes(
-          category
-        )
-      ) {
+      if (anomalyOnCamera) {
         setStats(prev => ({
           ...prev,
           correctReports: prev.correctReports + 1,
@@ -259,12 +261,8 @@ export const useGameState = () => {
       // Misreport — pure state, no setGameState inside the updater (React StrictMode safe).
       const newMisreports = statsRef.current.misreports + 1
       setStats(prev => ({ ...prev, misreports: prev.misreports + 1 }))
-      const reason = anomalyOnCamera ? 'WRONG CATEGORY' : 'NO ANOMALY HERE'
-      pushFeedback(
-        'wrong',
-        `FALSE REPORT — ${reason}`,
-        anomalyOnCamera?.id ?? null
-      )
+      const reason = shown ? 'WRONG CATEGORY' : 'NO ANOMALY HERE'
+      pushFeedback('wrong', `FALSE REPORT — ${reason}`, shown?.id ?? null)
       if (newMisreports >= DEFAULT_CONFIG.maxMisreports) {
         misreportCapRef.current = true
         // Brief delay so the result OSD is visible before the game-over screen.
@@ -293,25 +291,46 @@ export const useGameState = () => {
       // Reiwa anomalies join the draw once elder3 is saved; one raised mid-shift counts from the next spawn.
       const reiwaUnlocked = load().flags[REIWA_UNLOCK_FLAG] === true
       for (;;) {
-        const entry = pickLedgerEntry(
+        const spawn = pickSpawn(
           ANOMALY_LEDGER,
+          nonImageLedger,
           freeCameraIds,
           used,
-          Math.random,
-          DRAW_WEIGHT_EXPONENT,
-          reiwaUnlocked
+          {
+            reiwaUnlocked,
+            flags: load().flags,
+            audible: isAudible(),
+            busyGroups: new Set(
+              activeAnomaliesRef.current
+                .filter(a => !a.detectedAt && a.exclusiveGroup)
+                .map(a => a.exclusiveGroup as string)
+            ),
+          }
         )
-        if (!entry) break
-        used.add(entry.id)
-        let url: string
-        try {
-          url = overlayUrlFor(entry)
-        } catch (e) {
-          console.warn(`Skipping anomaly "${entry.id}":`, e)
-          continue
+        if (!spawn) break
+        used.add(spawn.entry.id)
+        let newAnomaly: Anomaly
+        if (spawn.kind === 'image') {
+          let url: string
+          try {
+            url = overlayUrlFor(spawn.entry)
+          } catch (e) {
+            console.warn(`Skipping anomaly "${spawn.entry.id}":`, e)
+            continue
+          }
+          newAnomaly = createAnomaly(
+            spawn.entry,
+            getGamePhase(currentTime),
+            url
+          )
+        } else {
+          newAnomaly = createNonImageAnomaly(
+            spawn.entry,
+            spawn.cameraId,
+            getGamePhase(currentTime)
+          )
         }
-        if (childFoundRef.current) afterChildIdsRef.current.add(entry.id)
-        const newAnomaly = createAnomaly(entry, getGamePhase(currentTime), url)
+        if (childFoundRef.current) afterChildIdsRef.current.add(spawn.entry.id)
         setActiveAnomalies(prev => [...prev, newAnomaly])
         setStats(prev => ({
           ...prev,
@@ -319,9 +338,7 @@ export const useGameState = () => {
         }))
         return 'spawned'
       }
-      return ANOMALY_LEDGER.some(
-        e => !used.has(e.id) && (reiwaUnlocked || e.reiwa !== true)
-      )
+      return hasUnusedEntry(ANOMALY_LEDGER, nonImageLedger, used, reiwaUnlocked)
         ? 'no-free-camera'
         : 'exhausted'
     },
@@ -411,9 +428,15 @@ export const useGameState = () => {
     return () => window.clearTimeout(timer)
   }, [feedback, clearFeedback])
 
+  const watchedId = CAMERAS[currentCameraIndex].id
+  // The image anomaly on the watched camera (the one with an overlay), if any.
   const activeAnomalyHere = activeAnomalies.find(
-    a => a.cameraId === CAMERAS[currentCameraIndex].id && !a.detectedAt
+    a => a.cameraId === watchedId && !a.detectedAt && a.overlay
   )
+  // The feed glitch to draw now: a running (not yet reported) feed_glitch on the watched camera only (#77).
+  const feedGlitchHere = activeAnomalies.find(
+    a => a.cameraId === watchedId && !a.detectedAt && a.feedGlitch
+  )?.feedGlitch
 
   const unreportedCount = activeAnomalies.filter(a => !a.detectedAt).length
 
@@ -425,6 +448,7 @@ export const useGameState = () => {
     currentCamera: CAMERAS[currentCameraIndex],
     activeAnomalies,
     activeAnomalyHere,
+    feedGlitchHere,
     unreportedCount,
     feedback,
     ending,

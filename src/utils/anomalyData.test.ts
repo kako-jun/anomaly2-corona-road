@@ -393,7 +393,7 @@ describe('createAnomaly', () => {
     expect(createAnomaly(e, 'early', 'u').detectedAt).toBeUndefined()
   })
   it('uses the resolved URL, not the repo-relative path', () => {
-    expect(createAnomaly(e, 'early', '/hashed.webp').overlay.url).toBe(
+    expect(createAnomaly(e, 'early', '/hashed.webp').overlay?.url).toBe(
       '/hashed.webp'
     )
   })

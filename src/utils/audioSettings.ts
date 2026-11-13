@@ -19,6 +19,13 @@ export const readAudioVolume = (): number => {
   return s?.volume ?? DEFAULT_VOLUME
 }
 
+/**
+ * Can the player hear a sound now (#79)? Volume 0 (or below) is silence; a legacy `muted: true` is read as volume 0
+ * (`readAudioVolume`). The draw leaves `sound` anomalies out while this is false (nobody could find them); one already
+ * running stays and can be reported.
+ */
+export const isAudible = (): boolean => readAudioVolume() > 0
+
 export const initGameAudio = (
   engine: AudioEngine = gameAudio
 ): (() => void) => {

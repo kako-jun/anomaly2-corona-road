@@ -6,16 +6,36 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { parse as parseYaml } from 'yaml'
 import {
+  checkUnlockFlags,
   isGameRecord,
+  isNonImageGameRecord,
   MEMO_IMAGE_DIR,
   parseLedgerRecords,
   toLedgerEntry,
+  toNonImageEntry,
 } from './src/utils/anomalyLedger'
 import { DIALOGUE_FILES, parseDialogueLedger } from './src/utils/dialogueLedger'
 
 const LEDGER_PATH = resolve(__dirname, 'prompts/anomalies.yaml')
+const FLAGS_PATH = resolve(__dirname, 'dialogue/flags.yaml')
 const VIRTUAL_ID = 'virtual:anomalies'
 const RESOLVED_ID = '\0' + VIRTUAL_ID
+
+/** Parse the ledger and check that every `unlock.flag` is a flag defined in dialogue/flags.yaml (#77). */
+const readLedgerRecords = (addWatchFile: (path: string) => void) => {
+  addWatchFile(LEDGER_PATH)
+  addWatchFile(FLAGS_PATH)
+  const records = parseLedgerRecords(
+    parseYaml(readFileSync(LEDGER_PATH, 'utf8'))
+  )
+  const flags = (
+    parseYaml(readFileSync(FLAGS_PATH, 'utf8')) as {
+      flags?: Record<string, unknown>
+    } | null
+  )?.flags
+  checkUnlockFlags(records, new Set(Object.keys(flags ?? {})))
+  return records
+}
 
 /**
  * Exposes the anomaly ledger (prompts/anomalies.yaml, the single source of truth) to the game as
@@ -30,10 +50,7 @@ const anomalyLedgerPlugin = (): Plugin => ({
   },
   load(id) {
     if (id !== RESOLVED_ID) return undefined
-    this.addWatchFile(LEDGER_PATH)
-    const records = parseLedgerRecords(
-      parseYaml(readFileSync(LEDGER_PATH, 'utf8'))
-    )
+    const records = readLedgerRecords(p => this.addWatchFile(p))
     // A memo scribble (#325) must exist for every entry that names one, planned or not: it is added by a file + a ledger line.
     for (const r of records) {
       if (
@@ -54,6 +71,26 @@ const anomalyLedgerPlugin = (): Plugin => ({
       }
     }
     return `export default ${JSON.stringify(entries)}`
+  },
+})
+
+const NON_IMAGE_VIRTUAL_ID = 'virtual:non-image-anomalies'
+const NON_IMAGE_RESOLVED_ID = '\0' + NON_IMAGE_VIRTUAL_ID
+
+/**
+ * The non-image side of the ledger for the game (#77): kind=non_image, status=produced entries only (planned ones are
+ * validated but not handed over). Whether an effect exists for each id is checked by a test (src/utils/nonImageSpawn.test.ts),
+ * so a produced entry without an effect cannot be merged.
+ */
+const nonImageLedgerPlugin = (): Plugin => ({
+  name: 'non-image-ledger',
+  resolveId(id) {
+    return id === NON_IMAGE_VIRTUAL_ID ? NON_IMAGE_RESOLVED_ID : undefined
+  },
+  load(id) {
+    if (id !== NON_IMAGE_RESOLVED_ID) return undefined
+    const records = readLedgerRecords(p => this.addWatchFile(p))
+    return `export default ${JSON.stringify(records.filter(isNonImageGameRecord).map(toNonImageEntry))}`
   },
 })
 
@@ -97,6 +134,7 @@ export default defineConfig({
   plugins: [
     react(),
     anomalyLedgerPlugin(),
+    nonImageLedgerPlugin(),
     dialogueLedgerPlugin(),
     VitePWA({
       // The new version waits; src/utils/swUpdate.ts applies it at the title (#388).

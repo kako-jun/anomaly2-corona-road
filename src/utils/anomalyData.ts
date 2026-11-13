@@ -1,6 +1,16 @@
 import { Anomaly, GamePhase } from '../types/game'
-import { LedgerEntry } from './anomalyLedger'
-import { DRAW_WEIGHT_EXPONENT, REIWA_DRAW_SHARE } from './gameConfig'
+import { LedgerEntry, NonImageEntry } from './anomalyLedger'
+import {
+  DRAW_WEIGHT_EXPONENT,
+  NON_IMAGE_DRAW_SHARE,
+  REIWA_DRAW_SHARE,
+  checkedShare,
+} from './gameConfig'
+import {
+  hasNonImageEffect,
+  pickFeedGlitchKind,
+  reportScopeOf,
+} from './nonImageEffects'
 
 /** Pick one element of a non-empty list uniformly. */
 const pickOne = <T>(list: readonly T[], rng: () => number): T =>
@@ -39,12 +49,42 @@ const groupBy = <T, K>(list: readonly T[], key: (t: T) => K): Map<K, T[]> => {
 /** The flag (dialogue/flags.yaml) after which Reiwa anomalies may appear: the third elder found (docs/story.md). */
 export const REIWA_UNLOCK_FLAG = 'elder3'
 
-/** The entries that may appear now: Reiwa ones only once `reiwaUnlocked` (the elder3 flag is raised). */
-export const spawnableEntries = (
-  entries: readonly LedgerEntry[],
-  reiwaUnlocked: boolean
-): readonly LedgerEntry[] =>
-  reiwaUnlocked ? entries : entries.filter(e => e.reiwa !== true)
+/** What decides whether an entry may be drawn now, besides Reiwa (all optional: no gate = nothing blocked). */
+export interface EntryGate {
+  /** Saved flags (dialogue/flags.yaml): an entry with `unlockFlag` waits until its flag is true. */
+  flags?: Readonly<Record<string, boolean>>
+  /** False = nothing can be heard (volume 0 or muted): `sound` entries are left out. Default true. */
+  audible?: boolean
+  /** Exclusive groups with an unreported anomaly running now: entries of those groups are left out. */
+  busyGroups?: ReadonlySet<string>
+}
+
+interface Gated {
+  reiwa?: true
+  anomalyType: string
+  unlockFlag?: string
+  exclusiveGroup?: string
+}
+
+/**
+ * The entries that may appear now: Reiwa ones only once `reiwaUnlocked` (the elder3 flag is raised), ones with an
+ * `unlock` flag only once it is saved, `sound` ones only while `gate.audible` is not false (kako-jun, #79), and none
+ * whose exclusive group is busy (an unreported anomaly of that group is running, #77).
+ */
+export const spawnableEntries = <T extends Gated>(
+  entries: readonly T[],
+  reiwaUnlocked: boolean,
+  gate: EntryGate = {}
+): readonly T[] =>
+  entries.filter(
+    e =>
+      (reiwaUnlocked || e.reiwa !== true) &&
+      (e.unlockFlag === undefined || gate.flags?.[e.unlockFlag] === true) &&
+      !(e.anomalyType === 'sound' && gate.audible === false) &&
+      !(
+        e.exclusiveGroup !== undefined && gate.busyGroups?.has(e.exclusiveGroup)
+      )
+  )
 
 /**
  * Pick the next ledger entry to show: only on a camera that has no anomaly now, never one already
@@ -66,9 +106,10 @@ export const pickLedgerEntry = (
   rng: () => number = Math.random,
   exponent: number = DRAW_WEIGHT_EXPONENT,
   reiwaUnlocked: boolean = false,
-  reiwaShare: number = REIWA_DRAW_SHARE
+  reiwaShare: number = REIWA_DRAW_SHARE,
+  gate: EntryGate = {}
 ): LedgerEntry | null => {
-  const all = spawnableEntries(entries, reiwaUnlocked).filter(
+  const all = spawnableEntries(entries, reiwaUnlocked, gate).filter(
     e => !usedIds.has(e.id) && freeCameraIds.includes(e.cameraId)
   )
   if (all.length === 0) return null
@@ -101,9 +142,175 @@ export const createAnomaly = (
   ...(entry.categories?.length ? { categories: entry.categories } : {}),
   cameraId: entry.cameraId,
   phase,
+  ...(entry.exclusiveGroup ? { exclusiveGroup: entry.exclusiveGroup } : {}),
   overlay: {
     url: overlayUrl,
     origin: entry.origin,
     size: entry.size,
   },
 })
+
+/**
+ * Pick the next non-image entry (#77): never one already used this shift, only one the game has an effect for, and
+ * Reiwa ones only when `reiwaUnlocked`. The type is chosen first (weighted like the image draw), then an entry
+ * uniformly. The camera is NOT part of the entry: it is drawn here, uniformly among the free cameras, every time
+ * (kako-jun, #70). Returns null when no entry is left or no camera is free.
+ */
+export const pickNonImageEntry = (
+  entries: readonly NonImageEntry[],
+  freeCameraIds: readonly number[],
+  usedIds: ReadonlySet<string>,
+  rng: () => number = Math.random,
+  exponent: number = DRAW_WEIGHT_EXPONENT,
+  reiwaUnlocked: boolean = false,
+  gate: EntryGate = {}
+): { entry: NonImageEntry; cameraId: number } | null => {
+  if (freeCameraIds.length === 0) return null
+  const candidates = spawnableEntries(entries, reiwaUnlocked, gate).filter(
+    e => !usedIds.has(e.id) && hasNonImageEffect(e)
+  )
+  if (candidates.length === 0) return null
+  const byType = groupBy(candidates, e => e.anomalyType)
+  const entry = pickOne(pickWeighted([...byType.values()], exponent, rng), rng)
+  return { entry, cameraId: pickOne(freeCameraIds, rng) }
+}
+
+/** What the next appearance is: an image entry (its camera is the ledger's) or a non-image one on a camera drawn now. */
+export type Spawn =
+  | { kind: 'image'; entry: LedgerEntry }
+  | { kind: 'non_image'; entry: NonImageEntry; cameraId: number }
+
+export interface SpawnOptions extends EntryGate {
+  rng?: () => number
+  exponent?: number
+  reiwaUnlocked?: boolean
+  reiwaShare?: number
+  /** Share of draws that are non-image while both sides have candidates (0-1, validated). */
+  nonImageShare?: number
+}
+
+/**
+ * Pick the next appearance across both kinds, in the same slot rules (a free camera, nothing used twice in a shift).
+ * Two stages, so each share keeps its meaning:
+ *  1. Reiwa (#286): while both a Reiwa and an ordinary candidate exist (image or non-image alike), one rng call sends
+ *     `reiwaShare` of ALL draws to the Reiwa group (the decided ~6% of appearances) and the rest to the ordinary one.
+ *  2. Inside the chosen group, while both an image and a non-image candidate exist, one more rng call sends
+ *     `nonImageShare` of that group's draws to the non-image side (so it is the share of the ordinary draws), the rest
+ *     to `pickLedgerEntry`.
+ * A stage with only one side available uses it with no extra rng call, so the old fallbacks (nothing left, camera
+ * full) are unchanged. Returns null only when nothing can appear now.
+ */
+export const pickSpawn = (
+  images: readonly LedgerEntry[],
+  nonImages: readonly NonImageEntry[],
+  freeCameraIds: readonly number[],
+  usedIds: ReadonlySet<string>,
+  opts: SpawnOptions = {}
+): Spawn | null => {
+  const {
+    rng = Math.random,
+    exponent = DRAW_WEIGHT_EXPONENT,
+    reiwaUnlocked = false,
+    reiwaShare = REIWA_DRAW_SHARE,
+    nonImageShare = NON_IMAGE_DRAW_SHARE,
+    flags,
+    audible,
+    busyGroups,
+  } = opts
+  const gate: EntryGate = { flags, audible, busyGroups }
+  checkedShare('nonImageShare', nonImageShare)
+  const isReiwa = (e: { reiwa?: true }) => e.reiwa === true
+  const canImage = (list: readonly LedgerEntry[]) =>
+    spawnableEntries(list, true, gate).some(
+      e => !usedIds.has(e.id) && freeCameraIds.includes(e.cameraId)
+    )
+  const canNon = (list: readonly NonImageEntry[]) =>
+    freeCameraIds.length > 0 &&
+    spawnableEntries(list, true, gate).some(
+      e => !usedIds.has(e.id) && hasNonImageEffect(e)
+    )
+  // Within one group (all Reiwa or none), so the image draw below never splits on Reiwa again.
+  const pickIn = (
+    imgs: readonly LedgerEntry[],
+    nons: readonly NonImageEntry[]
+  ): Spawn | null => {
+    const hasImage = canImage(imgs)
+    const hasNon = canNon(nons)
+    if (hasNon && (!hasImage || rng() < nonImageShare)) {
+      const picked = pickNonImageEntry(
+        nons,
+        freeCameraIds,
+        usedIds,
+        rng,
+        exponent,
+        true,
+        gate
+      )
+      return picked ? { kind: 'non_image', ...picked } : null
+    }
+    const entry = pickLedgerEntry(
+      imgs,
+      freeCameraIds,
+      usedIds,
+      rng,
+      exponent,
+      true,
+      reiwaShare,
+      gate
+    )
+    return entry ? { kind: 'image', entry } : null
+  }
+  const ordinary = [
+    images.filter(e => !isReiwa(e)),
+    nonImages.filter(e => !isReiwa(e)),
+  ] as const
+  const reiwa = [images.filter(isReiwa), nonImages.filter(isReiwa)] as const
+  const haveOrdinary = canImage(ordinary[0]) || canNon(ordinary[1])
+  const haveReiwa = reiwaUnlocked && (canImage(reiwa[0]) || canNon(reiwa[1]))
+  const useReiwa = haveReiwa && (!haveOrdinary || rng() < reiwaShare)
+  const group = useReiwa ? reiwa : ordinary
+  return pickIn(group[0], group[1])
+}
+
+/**
+ * True while an unused entry (of either kind) that could appear when a camera frees up still exists. Only the Reiwa
+ * lock counts as "never" (as before): an entry waiting for a flag, for sound, or for its exclusive group is still
+ * unused, because any of those can change during the shift, so the spawner keeps retrying instead of giving up.
+ */
+export const hasUnusedEntry = (
+  images: readonly LedgerEntry[],
+  nonImages: readonly NonImageEntry[],
+  usedIds: ReadonlySet<string>,
+  reiwaUnlocked: boolean
+): boolean =>
+  images.some(e => !usedIds.has(e.id) && (reiwaUnlocked || e.reiwa !== true)) ||
+  nonImages.some(
+    e =>
+      !usedIds.has(e.id) &&
+      (reiwaUnlocked || e.reiwa !== true) &&
+      hasNonImageEffect(e)
+  )
+
+/**
+ * The running anomaly for a non-image entry on the camera drawn for it. A `feed_glitch` carries the kind drawn now
+ * (it shows only while that camera is watched); `ui_corruption` / `rule_break` are `monitor` scope (reported from any
+ * camera). The camera still holds the slot, so the image rules (one at a time per camera) stay as they are.
+ */
+export const createNonImageAnomaly = (
+  entry: NonImageEntry,
+  cameraId: number,
+  phase: GamePhase,
+  rng: () => number = Math.random
+): Anomaly => {
+  const feedGlitch = pickFeedGlitchKind(entry, rng)
+  return {
+    id: entry.id,
+    category: entry.category,
+    ...(entry.categories?.length ? { categories: entry.categories } : {}),
+    cameraId,
+    phase,
+    scope: reportScopeOf(entry.anomalyType),
+    ...(entry.exclusiveGroup ? { exclusiveGroup: entry.exclusiveGroup } : {}),
+    ...(feedGlitch ? { feedGlitch } : {}),
+  }
+}

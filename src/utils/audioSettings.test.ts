@@ -1,7 +1,12 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createAudioEngine } from './audioEngine'
-import { initGameAudio, readAudioVolume, saveVolume } from './audioSettings'
+import {
+  initGameAudio,
+  isAudible,
+  readAudioVolume,
+  saveVolume,
+} from './audioSettings'
 import { makeMockContext } from './audioMock'
 import { load, update } from './saveData'
 import { resetProgress } from './shiftProgress'
@@ -92,5 +97,15 @@ describe('audio settings', () => {
     const { audio, engine } = await coldStart({ volume: 55, muted: false })
     audio.initGameAudio(engine)()
     expect(engine.getVolume()).toBe(55)
+  })
+})
+
+describe('isAudible (the draw leaves sound anomalies out when false, #79)', () => {
+  it('is true by default, false at volume 0, true again after raising it', () => {
+    expect(isAudible()).toBe(true)
+    update(cur => ({ ...cur, settings: { volume: 0 } }))
+    expect(isAudible()).toBe(false)
+    update(cur => ({ ...cur, settings: { volume: 40 } }))
+    expect(isAudible()).toBe(true)
   })
 })

@@ -33,10 +33,10 @@ prompts/
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
 | カテゴリ                     | 報告するときの分類。camera / object / environment / person / surreal の5つ。プレイヤーが報告パネルで選ぶ。パネルの各ボタンは「カテゴリキー」と呼ぶ                             | `category`（文字列または配列）                   |
 | 異変の種類                   | 異変のやり方（物を足す、状態を変える、音が鳴る、など）。一覧は下の「異変の種類 enum」。カテゴリとは別の軸                                                                      | `anomaly_type`（`add_object` `state_change` 等） |
-| 画像異変                     | 元写真に重ねる透過 overlay を描いて作る異変。ゲームの抽選に出るのはこれだけ（`produced` のもの）                                                                               | `kind: image`（省略時の既定）                    |
+| 画像異変                     | 元写真に重ねる透過 overlay を描いて作る異変。ゲームの抽選に出るのは、これと効果が実在する `produced` の画像以外の異変（#77）                                                                               | `kind: image`（省略時の既定）                    |
 | 画像以外の異変               | 画像を作らずに出す異変（画面の乱れ・音・UI の崩れ・ルール違反）。異変の種類は `feed_glitch` `sound` `ui_corruption` `rule_break` の4つだけ                                     | `kind: non_image`                                |
 | 見つけた異変の数（重複なし） | これまでに見つけた異変の、同じ異変を2度数えない個数。節目（老人3人、4人目の累計条件）の判定に使う。「見つけた種類の数」とは言わない                                            | `foundUnique`、`foundIds` の長さ                 |
-| 令和の異変                   | 昭和になかった物の異変。印は台帳の `reiwa: true`（`candidate_id` は制作番号で判定に使わない）。ゲームが数えるのは `produced` の画像異変のみ。老人3人目を見つけるまで出現しない | `reiwa: true`、`REIWA_IDS`                       |
+| 令和の異変                   | 昭和になかった物の異変。印は台帳の `reiwa: true`（`candidate_id` は制作番号で判定に使わない）。ゲームが数えるのは `produced` の異変（画像、および出現する画像以外の異変 #77。`REIWA_IDS` は両方の台帳から作る）。令和は出現全体の約6%（`REIWA_DRAW_SHARE`、画像以外の抽選割合とは独立）。老人3人目を見つけるまで出現しない | `reiwa: true`、`REIWA_IDS`                       |
 | 見つけた異変の数（延べ）     | 同じ異変を見つけ直した分も数えた正解報告の数。記録だけで判定には使わない                                                                                                       | `foundTotal`                                     |
 
 `kind` の旧い値（#271 で廃止、互換エイリアスなし）を台帳に書くと、ビルドが改名先を示すエラーで落ちる。
@@ -90,6 +90,8 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | `status`    | `produced`（制作済み）/ `planned`（未制作）                                                                                                                                                                                                          | `produced`      |
 | `kind`      | `image`（overlay を描く）/ `non_image`（画像なし）                                                                                                                                                                                                   | `image`         |
 | `reiwa`     | `true` のみ（令和の異変の印。`false` や他の値はエラー）                                                                                                                                                                                              | 省略=令和でない |
+| `unlock`    | `{ flag: <名前> }`（`dialogue/flags.yaml` に定義のあるフラグ名。未定義の名前はビルドが失敗する）。そのフラグが保存されるまで、この異変は出現の候補から外れる（令和の `elder3` と同じ流儀。#77）。条件が詳細の文章にしかない状態にしない | 省略=いつでも出る |
+| `exclusive` | 排他グループ名（小文字・数字・ハイフン）。同じ名前の異変が（報告前のまま）出ている間は、同じグループの別の異変は出現しない（同じ部品を触る異変の同時出現禁止。例: 型番プレートの `RT-UI-14` と `RT-UI-28`。#77）。報告で解除されればまた出る | 省略=制限なし |
 | `memo_flag` | `shutter` / `food` / `reiwa` のどれか、またはその配列（重複・未知の名前はエラー）。リザルトの捜査メモに「仮説の一行」を出すフラグ（#325）                                                                                                            | 省略=立てない   |
 | `memo`      | `ja` と `en` の一言（どちらも空でない1行。他のキーはエラー）。`ja` の数は全角数字（「１枚」「２つ」。#352）。その異変を見つけたあと、リザルトの捜査メモに出る一行（#325） | 省略=一言なし   |
 | `memo_image` | 画像のファイル名（`<異変ID>.webp` の1語。フォルダなし・`.webp` のみ。`memo` のある異変だけに付く）。ファイルは `public/note-sketches/` に置く。その異変の一言メモが選ばれたとき、リザルトの捜査メモにその落書きが添えて出る（#325） | 省略=落書きなし |
@@ -109,7 +111,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 - **異変の見える場所（kako-jun 2026-11-12）**: 操作せずに常に見えている部分（モニター・筐体・TIME や REPORTS の数字窓・ランプ・つまみ・キー・REPORT ボタン自体など）に限る。REPORT を押して開く一覧（カテゴリボタン・並び・文言）や、1クリックしないと見えない場所への仕掛けは反則なので作らない。ルーペのように常時使える常設部品の異変（`RT-UI-21`）は、気づく手がかりが常にあるので許す。
 - non_image の `category`: `feed_glitch` は `camera` 必須、`sound` は必須（推奨値は `environment`（仮）。コードは値を強制しない）。`ui_corruption` / `rule_break` は報告窓口を新設せず、メタ的な異変として最後の既存カテゴリ `Surreal` で報告する（#80 の決定。全件 `Surreal`）。image は従来どおり必須。
 - 検証はビルド時に全エントリへかかる（`src/utils/anomalyLedger.ts`）。未知の `status` / `kind` / `anomaly_type`、id 重複、必須欠落、kind と `anomaly_type` の食い違い（image に画像以外の種類、non_image に画像の種類）、planned でない image の overlay 欠落は、エントリ id つきでビルドが失敗する。
-- ゲーム（`virtual:anomalies`）に渡るのは `kind: image` かつ `status: produced` だけ。planned と non_image は検証されるが抽選には出ない（出現ロジックと効果は #78・#79・#80）。
+- ゲームに渡るのは `produced` だけ: `kind: image` は `virtual:anomalies`、`kind: non_image` は `virtual:non-image-anomalies`（#77。camera_id・overlay は渡さず、出現のたびにカメラを無作為に選ぶ）。planned は検証されるが抽選には出ない。non_image を `produced` にしてよいのは、効果がゲームに実在し `src/utils/nonImageEffects.ts` に登録されているものだけ（効果の無い produced は `nonImageSpawn.test.ts` が落とす）。昇格は効果を実ブラウザで確認してから。`sound`（`anomaly_type: sound`）は、保存された音量が 0 以下かミュート中の間は抽選から外す（聞こえないと見つけようがない。kako-jun 2026-11-12、#79）。出現した後に音量を 0 にしても出たままで、報告すれば解除できる。
 - 件数の要約: `npm run ledger:summary`（kind / status / category / anomaly_type とそのクロス集計。ビルドと同じ検証を通る）。
 
 **昇格ルール（planned → produced）**: 制作の詳細（box・生成プロンプト・overlay など）は**台帳のエントリへ移し**、`candidate-pool.md` の該当 `###` 節を**削除**する。台帳とプールに同じ案を二重に残さない。
@@ -156,7 +158,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | `ui_corruption` | UI の崩れ（画像以外）      | 画面表示が壊れる                             |
 | `rule_break`    | ルール違反（画像以外）     | タイマーの異常                               |
 
-`feed_glitch` の見せ方（#78）: RT-FEED-01〜06・11・19〜26 は画面側の効果が実装済み（種類と台帳 ID の対応は `src/utils/feedGlitch.ts`、描画は `src/styles/feedGlitch.css`）。開発サーバーで `?glitch=<種類>`（`zoom` `tilt` `blur` `bright` `dark` `blocks` `scanburn` `lost` `shake` `hardshake` `wave` `chroma` `static` `blink` `deadpixels` `ghost` `fade`）を付けると全カメラで強制発火して見られる（本番ビルドでは無効）。RT-FEED-07〜10・12〜18 は見送りで、理由は各エントリの `note` に書いてある。出現（抽選）はまだ無く（#77）、効果が実在しても status は `planned` のまま（昇格は別途）。
+`feed_glitch` の見せ方（#78）: RT-FEED-01〜06・11・19〜26 は画面側の効果が実装済み（種類と台帳 ID の対応は `src/utils/feedGlitch.ts`、描画は `src/styles/feedGlitch.css`）。開発サーバーで `?glitch=<種類>`（`zoom` `tilt` `blur` `bright` `dark` `blocks` `scanburn` `lost` `shake` `hardshake` `wave` `chroma` `static` `blink` `deadpixels` `ghost` `fade`）を付けると全カメラで強制発火して見られる（本番ビルドでは無効）。RT-FEED-07〜10・12〜18 は見送りで、理由は各エントリの `note` に書いてある。RT-FEED-01〜06・11・19〜26 は `produced`（#77）で、出現のたびに無作為なカメラで起き、そのカメラを見ている間だけ効果が出て、そのカメラで Camera を報告すると解除される（出現・報告の仕組みは CLAUDE.md の「Non-image anomalies in play」）。
 
 ## カテゴリ（ゲーム内分類）
 

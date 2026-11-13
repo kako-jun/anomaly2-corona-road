@@ -103,6 +103,24 @@ export const DRAW_WEIGHT_EXPONENT = 0.75
  */
 export const REIWA_DRAW_SHARE = 0.06
 
+/**
+ * Share of appearances given to non-image anomalies (#77), PROVISIONAL (20%; tune by playing; phase weights are
+ * undecided). It is the share of the ORDINARY (non-Reiwa) draws: Reiwa is split off first at `REIWA_DRAW_SHARE` of all
+ * draws (so Reiwa stays ~6% of appearances), then, while both non-image and image candidates exist, this fraction of
+ * the group's draws is a non-image anomaly and the rest an image one. Must be within [0, 1]: `checkedShare` throws
+ * otherwise. When only one side has candidates it is used with no extra rng call.
+ */
+export const NON_IMAGE_DRAW_SHARE = 0.2
+
+/** A draw share must be a number in [0, 1]; anything else (NaN, <0, >1) is a bug and throws instead of acting as 0 or 1. */
+export const checkedShare = (name: string, share: number): number => {
+  if (!(share >= 0 && share <= 1)) {
+    throw new Error(`${name} must be within [0, 1], got ${share}`)
+  }
+  return share
+}
+checkedShare('NON_IMAGE_DRAW_SHARE', NON_IMAGE_DRAW_SHARE)
+
 /** Dialogue timing and thresholds (docs/save-data.md and dialogue/README.md describe the behaviour). */
 export const DIALOGUE_CONFIG = {
   /** Wait after the shift starts before the opening conversation. */
