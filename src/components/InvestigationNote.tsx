@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { LABELS } from '../data/investigationNotes'
 import type { NoteLang } from '../data/investigationNotes'
+import { noteDigitLevel } from '../utils/investigationNote'
 import type { NoteRow, NoteView } from '../utils/investigationNote'
 import { HandFrame } from './HandFrame'
 import { NoteAction } from './NoteAction'
@@ -187,7 +188,7 @@ export const InvestigationNote = ({
               </div>
             )}
           </div>
-          <div className="note-form note-hw">
+          <div className="note-form note-hw" data-digits={noteDigitLevel(view)}>
             <HandFrame name="form" />
             <div className="note-fcols">
               <div className="note-fcol">

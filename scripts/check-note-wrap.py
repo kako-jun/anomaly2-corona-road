@@ -598,6 +598,52 @@ def check_after(browser, problems):
     return measured
 
 
+DIGITS = """() => {
+  const res = [], form = document.querySelector('.note-form'), fr = form.getBoundingClientRect()
+  const cols = document.querySelector('.note-fcols')
+  if (cols.scrollWidth > cols.clientWidth + 1) res.push('the two columns of the numbers box are wider than the box')
+  for (const row of form.querySelectorAll('.note-fr')) {
+    const fl = row.querySelector('.note-fl'), b = row.querySelector('b'), sm = row.querySelector('small'), name = fl.textContent
+    if (fl.scrollWidth > fl.clientWidth + 1) res.push(`label "${name}" does not fit its column`)
+    if (row.scrollWidth > row.clientWidth + 1) res.push(`row "${name}" overflows its column`)
+    if (b) {
+      const rg = document.createRange(); rg.selectNodeContents(b)
+      const lines = new Set([...rg.getClientRects()].map(x => Math.round(x.top))).size
+      if (lines !== 1) res.push(`the number "${b.textContent}" of "${name}" wraps onto ${lines} lines`)
+      if (b.scrollWidth > b.clientWidth + 1) res.push(`the number "${b.textContent}" of "${name}" overflows its own box`)
+      const lr = fl.getBoundingClientRect(), br = b.getBoundingClientRect()
+      if (br.left < lr.right - 1) res.push(`the number of "${name}" overlaps its label`)
+    }
+    if (sm && sm.textContent && sm.getBoundingClientRect().right > fr.right + 1) res.push(`the unit of "${name}" leaves the numbers box`)
+  }
+  return res
+}"""
+
+
+def check_digits(browser, problems):
+    """The numbers box with every count at 1..4 digits (the most the note shows, #429), in both languages, at every viewport:
+    no number wraps, nothing leaves its column or the box, no label is cut. The save holds 9999 kinds, so the widest case is
+    real data; a count above 9999 reads as 9999 (NOTE_MAX_COUNT)."""
+    measured = 0
+    for locale, lang in (("ja-JP", "ja"), ("en-US", "en")):
+        for n in (1, 12, 123, 1234, 99999):
+            shift = {"found": n, "fresh": n, "misreports": n, "durationMs": 200000, "closing": "withdraw", "raised": []}
+            page = open_note(browser, base(foundTotal=n, foundIds=[f"X{i}" for i in range(min(n, 9999))], loops=3, lastShift=shift), locale=locale)
+            if not page.evaluate("document.querySelector('.note-screen').classList.contains('note-%s')" % lang):
+                problems.append(f"[{locale}] digits: the page did not open in the expected language")
+            for w, h in VIEWPORTS:
+                page.set_viewport_size({"width": w, "height": h})
+                page.wait_for_timeout(60)
+                for msg in page.evaluate(DIGITS):
+                    problems.append(f"[{lang} {w}x{h}] {n} in every count: {msg}")
+                measured += 1
+            level = page.evaluate("document.querySelector('.note-form').dataset.digits")
+            if level != str(min(len(str(n)), 4)):
+                problems.append(f"[{lang}] {n}: data-digits is {level}, want {min(len(str(n)), 4)} (99999 must read as 9999)")
+            page.close()
+    return measured
+
+
 def main():
     problems = []
     with sync_playwright() as pw:
@@ -605,6 +651,14 @@ def main():
         last = {"found": 12, "fresh": 3, "misreports": 0, "durationMs": 480000, "closing": "dawn", "raised": ["elder3"]}
         withdrew = {"found": 2, "fresh": 0, "misreports": 4, "durationMs": 200000, "closing": "withdraw", "raised": []}
         measured = False
+        if "--digits-only" in sys.argv:
+            n = check_digits(browser, problems)
+            browser.close()
+            if problems:
+                print("\nPROBLEMS:", *problems, sep="\n  ")
+                sys.exit(1)
+            print(f"\nnote wrap check (numbers box only): 1-4 digits fit at every viewport ({n} sheets measured)")
+            return
         if "--after-only" in sys.argv:
             measured_after = check_after(browser, problems)
             browser.close()
@@ -673,6 +727,7 @@ def main():
                 for msg in page.evaluate(RULEFIT, [-RULE_BELOW_MAX, RULE_ABOVE_MAX]):
                     problems.append(f"[ja-JP {w}x{h}] {stage}/{'fresh' if shift else 'plain'}: {msg}")
             page.close()
+        print(f"numbers box sheets measured (1-4 digits): {check_digits(browser, problems)}")
         browser.close()
     if problems:
         print("\nPROBLEMS:", *problems, sep="\n  ")
