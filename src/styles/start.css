@@ -440,12 +440,16 @@ body.start-open #root {
   }
 }
 
-/* ----- save transfer (#84): a small text key at the top right (the panel itself is in transfer.css) ----- */
-.start-transfer-key {
+/* ----- the top right (#84, #426): small text keys in one row, FULL (fullscreen) left of TRANSFER SAVE (the panel itself is in transfer.css) ----- */
+.start-topright {
   position: absolute;
   top: max(10px, env(safe-area-inset-top));
   right: 10px;
   z-index: 3;
+  display: flex;
+  gap: 8px;
+}
+.start-top-key {
   min-height: 44px;
   padding: 0 12px;
   font: inherit;
@@ -460,7 +464,7 @@ body.start-open #root {
     0 0 6px #000;
   cursor: pointer;
 }
-.start-transfer-key:focus-visible {
+.start-top-key:focus-visible {
   outline: 3px solid #ffd27a;
   outline-offset: 3px;
 }
