@@ -6,6 +6,8 @@ import { ColonVariant, ghostDigit, hudLabel } from '../utils/hudText'
 
 interface GameHUDProps {
   gameTime: string
+  /** The time drawn in the TIME window when RT-UI-05 makes it lie (the timer's accessible name stays the real time). */
+  shownTime?: string
   stats: GameStats
   /** The monitor effects running now (RT-UI-02/06/07 headings, RT-UI-17/18 digits; src/utils/monitorEffects.ts). */
   fx?: ReadonlySet<string>
@@ -50,12 +52,17 @@ const digits = (
 /** Display windows: TIME / REPORTS (VFD) and STRIKES (lamps). */
 export const GameHUD = ({
   gameTime,
+  shownTime = gameTime,
   stats,
   fx = NO_FX,
   colonVariant,
 }: GameHUDProps) => {
   const max = DEFAULT_CONFIG.maxMisreports
-  const [hh, mm] = gameTime.split(':')
+  const [hh, mm] = shownTime.split(':')
+  // RT-UI-04: one more strike lamp lit than the real count (the accessible name below keeps the real number)
+  const litStrikes = fx.has('RT-UI-04')
+    ? Math.min(max, stats.misreports + 1)
+    : stats.misreports
   const correct = String(stats.correctReports)
   const min = String(DEFAULT_CONFIG.minCorrectReports)
   return (
@@ -95,10 +102,7 @@ export const GameHUD = ({
           aria-label={`Strikes ${stats.misreports} of ${max}`}
         >
           {Array.from({ length: max }, (_, i) => (
-            <i
-              key={i}
-              className={cx('lamp amber', i < stats.misreports && 'on')}
-            />
+            <i key={i} className={cx('lamp amber', i < litStrikes && 'on')} />
           ))}
         </div>
       </div>
