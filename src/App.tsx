@@ -23,7 +23,7 @@ import { resetProgress } from './utils/shiftProgress'
 import { setUpdateSafe } from './utils/swUpdate'
 import { gameAudio } from './utils/audioEngine'
 import { playSynth } from './utils/synthSounds'
-import { soundOnCamera } from './utils/nonImageEffects'
+import { soundOnCamera, voiceToHold } from './utils/nonImageEffects'
 
 function App() {
   const [screenKey, screen] = useScreen()
@@ -207,6 +207,7 @@ function useScreen(): [string, ReactNode] {
         currentCamera={currentCamera}
         anomalyHere={activeAnomalyHere}
         soundAnomalyHere={soundOnCamera(activeAnomalies, currentCamera.id)}
+        heldVoiceId={voiceToHold(activeAnomalies, currentCamera.id)}
         feedGlitchHere={feedGlitchHere}
         openAnomalyIds={activeAnomalies
           .filter(a => !a.detectedAt)

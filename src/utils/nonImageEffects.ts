@@ -11,18 +11,31 @@ export const SOUND_EFFECTS: Record<string, SynthName> = {
   'RT-SND-04': 'footsteps',
   'RT-SND-05': 'knock',
   'RT-SND-09': 'stinger',
-  'RT-SND-10': 'wobble',
   'RT-SND-11': 'dishes',
   'CR-RZ-07': 'chime',
   'CR-RZ-08': 'beat',
   'CR-RZ-09': 'shutter',
   'CR-SH-05': 'radio',
 }
+/** The anomalies that change the always-on hum instead of adding a sound: the one table for them. */
+export const HUM_MODES: Record<string, 'off' | 'loud' | 'wobble'> = {
+  'RT-SND-01': 'off',
+  'RT-SND-02': 'loud',
+  'RT-SND-10': 'wobble',
+}
 export const hasSoundEffect = (id: string): boolean =>
   Object.hasOwn(SOUND_EFFECTS, id) ||
-  VOICE_IDS.has(id) ||
-  id === 'RT-SND-01' ||
-  id === 'RT-SND-02'
+  Object.hasOwn(HUM_MODES, id) ||
+  VOICE_IDS.has(id)
+
+/** The voice to keep decoded: the one on the watched camera, else any other unreported one (one buffer at a time). */
+export const voiceToHold = (
+  anomalies: Anomaly[],
+  cameraId: number
+): string | undefined => {
+  const open = anomalies.filter(a => !a.detectedAt && VOICE_IDS.has(a.id))
+  return (open.find(a => a.cameraId === cameraId) ?? open[0])?.id
+}
 export const soundOnCamera = (
   anomalies: Anomaly[],
   cameraId: number

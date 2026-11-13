@@ -8,43 +8,122 @@ export const VOICE_IDS = new Set([
   'CR-SH-04',
   'CR-SH-06',
 ])
-const cache = new Map<string, AudioBuffer>()
-const pending = new Map<string, Promise<void>>()
 const MIN_SECONDS = 60
 const FADE = 1
+const CURVE_POINTS = 64
+/** How often the loop tops up copies, measured against the audio clock. */
+const REFILL_MS = 1000
 
-/** A voice is a spawn candidate only after its file is fetched, decoded and validated. */
+/** Voices whose file answered with a valid length (metadata only; nothing decoded is kept). */
+const available = new Set<string>()
+
+/** The single decoded voice kept in memory (a 70 s buffer is ~13 MB; five at once would be ~69 MB). */
+let resident: { id: string; buffer: AudioBuffer } | null = null
+const pending = new Map<string, Promise<boolean>>()
+/** Voices some holder still needs; `acquireVoice` keeps a buffer only for one of them. */
+const wanted = new Set<string>()
+
+/** The file to fetch: Ogg Vorbis where the browser plays it for sure, otherwise AAC in m4a (older iOS Safari has no Vorbis). */
+export const voiceUrl = (id: string): string => {
+  let ogg = false
+  try {
+    ogg =
+      typeof Audio !== 'undefined' &&
+      new Audio().canPlayType('audio/ogg; codecs="vorbis"') === 'probably'
+  } catch {
+    ogg = false
+  }
+  return `${import.meta.env.BASE_URL}audio/${id.toLowerCase()}.${ogg ? 'ogg' : 'm4a'}`
+}
+
+/** A voice is a spawn candidate only after its file reported a long enough duration. */
 export const voiceReady = (id: string): boolean =>
-  !VOICE_IDS.has(id) || cache.has(id)
+  !VOICE_IDS.has(id) || available.has(id)
 
-export const preloadVoices = async (engine: AudioEngine): Promise<void> => {
+/** Ask each file for its length through a metadata-only media element (no download of the whole file, no decoding). */
+export const probeVoices = (): Promise<void> =>
+  Promise.all(
+    [...VOICE_IDS].map(
+      id =>
+        new Promise<void>(resolve => {
+          if (available.has(id) || typeof Audio === 'undefined') {
+            resolve()
+            return
+          }
+          const el = new Audio()
+          const done = () => {
+            el.removeAttribute('src')
+            el.load()
+            resolve()
+          }
+          el.preload = 'metadata'
+          el.onloadedmetadata = () => {
+            if (el.duration >= MIN_SECONDS) available.add(id)
+            done()
+          }
+          el.onerror = done
+          el.src = voiceUrl(id)
+        })
+    )
+  ).then(() => undefined)
+
+/** Fetch and decode one voice and keep it as the only resident buffer. Resolves false when it cannot play. */
+const acquireVoice = (engine: AudioEngine, id: string): Promise<boolean> => {
   const ctx = engine.ctx()
-  if (!ctx) return
-  await Promise.all(
-    [...VOICE_IDS].map(id => {
-      if (cache.has(id)) return Promise.resolve()
-      let request = pending.get(id)
-      if (!request) {
-        request = fetch(
-          `${import.meta.env.BASE_URL}audio/${id.toLowerCase()}.ogg`
-        )
-          .then(response => {
-            if (!response.ok) throw new Error('voice unavailable')
-            return response.arrayBuffer()
-          })
-          .then(data => ctx.decodeAudioData(data))
-          .then(buffer => {
-            if (buffer.duration >= MIN_SECONDS) cache.set(id, buffer)
-          })
-          .catch(() => {
-            /* unavailable files cannot spawn; retry on the next preload */
-          })
-          .finally(() => pending.delete(id))
-        pending.set(id, request)
-      }
-      return request
-    })
-  )
+  if (!ctx || !VOICE_IDS.has(id)) return Promise.resolve(false)
+  if (resident?.id === id) return Promise.resolve(true)
+  let request = pending.get(id)
+  if (!request) {
+    request = fetch(voiceUrl(id))
+      .then(response => {
+        if (!response.ok) throw new Error('voice unavailable')
+        return response.arrayBuffer()
+      })
+      .then(data => ctx.decodeAudioData(data))
+      .then(buffer => {
+        if (buffer.duration < MIN_SECONDS) {
+          available.delete(id)
+          return false
+        }
+        // Only the voice that is still wanted stays; a release during the load drops it.
+        if (!wanted.has(id)) return false
+        available.add(id)
+        resident = { id, buffer }
+        return true
+      })
+      .catch(() => {
+        available.delete(id)
+        return false
+      })
+      .finally(() => pending.delete(id))
+    pending.set(id, request)
+  }
+  return request
+}
+
+export const holdVoice = (
+  engine: AudioEngine,
+  id: string
+): Promise<boolean> => {
+  wanted.clear()
+  wanted.add(id)
+  if (resident && resident.id !== id) resident = null
+  return acquireVoice(engine, id)
+}
+
+/** Free the decoded buffer when nobody needs this voice any more. */
+export const releaseVoice = (id: string): void => {
+  wanted.delete(id)
+  if (resident?.id === id) resident = null
+}
+
+const curve = (fadeIn: boolean): Float32Array => {
+  const c = new Float32Array(CURVE_POINTS)
+  for (let i = 0; i < CURVE_POINTS; i++) {
+    const x = (i / (CURVE_POINTS - 1)) * (Math.PI / 2)
+    c[i] = fadeIn ? Math.sin(x) : Math.cos(x)
+  }
+  return c
 }
 
 /** Schedule a long buffer in overlapping copies; stopping also cancels all future copies. */
@@ -54,10 +133,10 @@ export const playVoice = (
 ): SoundHandle | null => {
   const ctx = engine.ctx()
   const master = engine.master()
-  const buffer = cache.get(id)
+  const buffer = resident?.id === id ? resident.buffer : undefined
   if (!ctx || !master || !buffer || ctx.state !== 'running') return null
   let stopped = false
-  let timer: ReturnType<typeof setTimeout> | undefined
+  let timer: ReturnType<typeof setInterval> | undefined
   let nextStart = ctx.currentTime + 0.05
   const nodes = new Set<{ source: AudioBufferSourceNode; gain: GainNode }>()
   const schedule = () => {
@@ -69,10 +148,16 @@ export const playVoice = (
       source.connect(gain).connect(master)
       const startAt = nextStart
       nextStart += buffer.duration - FADE
+      // Equal-power crossfade: the overlapping fade-out and fade-in keep the summed power steady.
       gain.gain.setValueAtTime(0, startAt)
-      gain.gain.linearRampToValueAtTime(1, startAt + FADE)
+      gain.gain.setValueCurveAtTime(curve(true), startAt, FADE)
+      gain.gain.setValueAtTime(1, startAt + FADE)
       gain.gain.setValueAtTime(1, startAt + buffer.duration - FADE)
-      gain.gain.linearRampToValueAtTime(0, startAt + buffer.duration)
+      gain.gain.setValueCurveAtTime(
+        curve(false),
+        startAt + buffer.duration - FADE,
+        FADE
+      )
       const node = { source, gain }
       nodes.add(node)
       source.onended = () => {
@@ -86,8 +171,8 @@ export const playVoice = (
       stopped = true
     }
   }
-  // Two copies are reserved on the audio clock before playback starts. Later copies are
-  // scheduled more than a whole buffer ahead, so timer jitter does not create a gap.
+  // Two copies are reserved on the audio clock before playback starts; later ones are added whenever
+  // the next start is less than one whole buffer ahead, so timer jitter cannot open a gap.
   schedule()
   schedule()
   if (stopped) {
@@ -100,17 +185,15 @@ export const playVoice = (
     })
     return null
   }
-  const refill = () => {
-    if (stopped) return
-    schedule()
-    timer = setTimeout(refill, (buffer.duration - FADE) * 1000)
-  }
-  timer = setTimeout(refill, (buffer.duration / 2) * 1000)
+  timer = setInterval(() => {
+    while (!stopped && nextStart - ctx.currentTime < buffer.duration) schedule()
+  }, REFILL_MS)
   return {
     stop: () => {
       if (stopped) return
       stopped = true
-      if (timer) clearTimeout(timer)
+      if (timer) clearInterval(timer)
+      timer = undefined
       nodes.forEach(({ source, gain }) => {
         try {
           const now = ctx.currentTime

@@ -339,7 +339,12 @@ export const useGameState = () => {
         }))
         return 'spawned'
       }
-      return hasUnusedEntry(ANOMALY_LEDGER, nonImageLedger, used, reiwaUnlocked)
+      return hasUnusedEntry(
+        ANOMALY_LEDGER,
+        nonImageLedger.filter(entry => voiceReady(entry.id)),
+        used,
+        reiwaUnlocked
+      )
         ? 'no-free-camera'
         : 'exhausted'
     },

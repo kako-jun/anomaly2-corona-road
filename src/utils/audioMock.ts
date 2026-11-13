@@ -9,6 +9,9 @@ export interface MockParam {
   setValueAtTime: (v: number, t: number) => void
   linearRampToValueAtTime: (v: number, t: number) => void
   exponentialRampToValueAtTime: (v: number, t: number) => void
+  setValueCurveAtTime: (c: Float32Array, t: number, d: number) => void
+  /** Every automation call in order, for tests that check timing. */
+  events: { type: string; time?: number; value?: number; duration?: number }[]
 }
 export interface MockNode {
   kind: string
@@ -25,8 +28,20 @@ export const makeMockContext = (initial: AudioContextState = 'suspended') => {
       peak: 0,
       start: Infinity,
       end: Infinity,
-      cancelScheduledValues: () => {},
+      events: [],
+      cancelScheduledValues: t => {
+        p.events.push({ type: 'cancel', time: t })
+      },
+      setValueCurveAtTime: (c, t, d) => {
+        p.events.push({
+          type: 'curve',
+          time: t,
+          duration: d,
+          value: c[c.length - 1],
+        })
+      },
       setValueAtTime: (v, t) => {
+        p.events.push({ type: 'set', time: t, value: v })
         p.value = v
         p.start = Math.min(p.start, t)
       },
@@ -52,8 +67,14 @@ export const makeMockContext = (initial: AudioContextState = 'suspended') => {
         n.connections.push(to)
         return to
       },
-      start: () => {},
-      stop: () => {},
+      starts: [] as number[],
+      stops: [] as number[],
+      start: (t?: number) => {
+        ;(n.starts as number[]).push(t ?? 0)
+      },
+      stop: (t?: number) => {
+        ;(n.stops as number[]).push(t ?? 0)
+      },
       ...extra,
     }
     nodes.push(n)

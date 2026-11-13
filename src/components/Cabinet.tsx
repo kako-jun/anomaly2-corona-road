@@ -7,8 +7,14 @@ import { CAMERAS, ENDING_BAR_CAMERA } from '../utils/gameConfig'
 import { KNOB_DEFAULT, brightnessFilter, contrastFilter } from '../utils/knob'
 import { gameAudio, DEFAULT_VOLUME } from '../utils/audioEngine'
 import { playSynth } from '../utils/synthSounds'
-import { VOICE_IDS, playVoice, preloadVoices } from '../utils/voiceSounds'
-import { SOUND_EFFECTS } from '../utils/nonImageEffects'
+import {
+  VOICE_IDS,
+  holdVoice,
+  playVoice,
+  probeVoices,
+  releaseVoice,
+} from '../utils/voiceSounds'
+import { HUM_MODES, SOUND_EFFECTS } from '../utils/nonImageEffects'
 import { readAudioVolume, saveVolume } from '../utils/audioSettings'
 import { FeedGlitchKind, forcedFeedGlitch } from '../utils/feedGlitch'
 import { parseWear } from '../utils/wear'
@@ -36,6 +42,8 @@ interface CabinetProps {
   currentCamera: Camera
   anomalyHere?: Anomaly
   soundAnomalyHere?: Anomaly
+  /** The voice anomaly whose decoded buffer should be kept (one at a time). */
+  heldVoiceId?: string
   /** The feed glitch of the running feed_glitch anomaly on the watched camera, if any (#77). */
   feedGlitchHere?: FeedGlitchKind
   /** Ids of the anomalies not reported yet (the spawn hint subtitle waits on them). */
@@ -61,6 +69,7 @@ export const Cabinet = ({
   currentCamera,
   anomalyHere,
   soundAnomalyHere,
+  heldVoiceId,
   feedGlitchHere,
   openAnomalyIds,
   unreportedCount,
@@ -97,7 +106,7 @@ export const Cabinet = ({
     void gameAudio.unlock().then(() => {
       if (cancelled) return
       watched = gameAudio.ctx()
-      void preloadVoices(gameAudio)
+      void probeVoices()
       watched?.addEventListener('statechange', onState)
       if (!alreadyRunning) onState()
     })
@@ -107,14 +116,7 @@ export const Cabinet = ({
     }
   }, [])
 
-  const humMode =
-    soundAnomalyHere?.id === 'RT-SND-01'
-      ? 'off'
-      : soundAnomalyHere?.id === 'RT-SND-02'
-        ? 'loud'
-        : soundAnomalyHere?.id === 'RT-SND-10'
-          ? 'wobble'
-          : 'normal'
+  const humMode = HUM_MODES[soundAnomalyHere?.id ?? ''] ?? 'normal'
   useEffect(() => {
     if (ending || humMode === 'off') return
     let cancelled = false
@@ -143,15 +145,45 @@ export const Cabinet = ({
     ? SOUND_EFFECTS[anomalySoundId]
     : undefined
   const audible = volume > 0
+  // Keep one decoded voice while its anomaly is unreported; free it on report, shift end, silence or unmount.
+  const [voiceLoads, setVoiceLoads] = useState(0)
+  useEffect(() => {
+    if (!heldVoiceId || ending || !audible) return
+    let cancelled = false
+    let timer: number | undefined
+    const load = () => {
+      void gameAudio
+        .unlock()
+        .then(() => !cancelled && holdVoice(gameAudio, heldVoiceId))
+        .then(ok => {
+          if (cancelled) return
+          if (ok) setVoiceLoads(n => n + 1)
+          else timer = window.setTimeout(load, 5000)
+        })
+    }
+    load()
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+      releaseVoice(heldVoiceId)
+    }
+  }, [heldVoiceId, ending, audible, audioGeneration])
   useEffect(() => {
     if (!anomalySoundId || !VOICE_IDS.has(anomalySoundId) || ending || !audible)
       return
     const playing = playVoice(gameAudio, anomalySoundId)
     return () => playing?.stop()
-  }, [anomalySoundId, currentCameraIndex, ending, audioGeneration, audible])
+  }, [
+    anomalySoundId,
+    currentCameraIndex,
+    ending,
+    audioGeneration,
+    audible,
+    voiceLoads,
+  ])
   useEffect(() => {
     const sound = anomalySound
-    if (!sound || ending || sound === 'wobble' || !audible) return
+    if (!sound || ending || !audible) return
     let playing: ReturnType<typeof playSynth> = null
     let timer: number
     let cancelled = false

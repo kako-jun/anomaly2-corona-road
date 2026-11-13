@@ -162,7 +162,7 @@ const RECIPES: Record<SynthName, (c: Ctx) => SoundHandle> = {
     return { stop: () => {} }
   },
   wobble: c =>
-    sustained(c, 0.055, dest => {
+    sustained(c, 0.02, dest => {
       const tones = [50, 100, 300].map(freq => {
         const tone = c.ctx.createOscillator()
         tone.frequency.value = freq
