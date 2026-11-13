@@ -9,3 +9,88 @@
 .retro[data-fx~='RT-UI-11'] .cabinet {
   transform: rotate(3deg) scale(0.9);
 }
+
+/* RT-UI-16 monitor mirrored: the whole cabinet (picture, TIME, text, buttons) is flipped left-right. Operation is
+   unchanged: the buttons are pressed where they are drawn. A `transform` for the same reason as RT-UI-11 (the loupe, the
+   edge tap and the knob drag read the matrix, src/utils/tiltGeometry.ts); exclusive with RT-UI-11 (cabinet-transform). */
+.retro[data-fx~='RT-UI-16'] .cabinet {
+  transform: scaleX(-1);
+}
+
+/* RT-UI-22 noise gone for good: the grain and the scanlines stay off on every camera and in the loupe, whatever is done to
+   the monitor (a knock or a shake changes nothing: it is off already). Same two layers as the 10 s knock (#342). */
+.retro[data-fx~='RT-UI-22'] .noise,
+.retro[data-fx~='RT-UI-22'] .scan {
+  opacity: 0;
+}
+
+/* RT-UI-29 body tint: the cabinet face (the ground around the bezel, buttons and knobs) goes blue-green. The picture is
+   not touched (a filter on .cabinet would tint it, RT-FEED-21 / 26 do that). The face texture is multiplied by a colour. */
+.retro[data-fx~='RT-UI-29'] .cabinet {
+  background-color: #6fa9b0;
+  background-blend-mode: multiply;
+}
+/* the bezel is one picture (bezel_mon.webp, transparent opening): the same colour is multiplied in through that picture's own
+   alpha, so only the frame is tinted, never the opening (the picture). */
+.retro[data-fx~='RT-UI-29'] .bezel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #6fa9b0;
+  -webkit-mask: url('/ui/bezel_mon.webp') 0 0 / 100% 100% no-repeat;
+  mask: url('/ui/bezel_mon.webp') 0 0 / 100% 100% no-repeat;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* RT-UI-15 speaker grille pulse: the grille glows and swells although nothing is playing (motion + light; the holes and
+   their layout do not change). Reduced motion keeps the glow and drops the movement. */
+.retro[data-fx~='RT-UI-15'] .cabinet-foot > .speaker {
+  animation: speaker-pulse 1.6s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+@keyframes speaker-pulse {
+  0%,
+  100% {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 0 transparent);
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px var(--amber)) brightness(2.4);
+    transform: scaleY(1.18);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .retro[data-fx~='RT-UI-15'] .cabinet-foot > .speaker {
+    animation: none;
+    opacity: 1;
+    filter: drop-shadow(0 0 5px var(--amber)) brightness(2.4);
+  }
+}
+
+/* RT-UI-27 speaker holes checkered: every other hole of the 2-row grille is plugged, a plain checkerboard (still, no
+   glow). --speaker-cols (how many holes fit in a row) is written on .speaker by Cabinet, so the mask lines up with the
+   hole tile exactly; the tile and the mask are both 1/cols of the width. The mask does not take pointer events away. */
+.retro[data-fx~='RT-UI-27'] .cabinet-foot > .speaker {
+  --speaker-cols: 24;
+  background-size: calc(100% / var(--speaker-cols)) 100%;
+  background-repeat: repeat-x;
+  -webkit-mask-image: conic-gradient(
+    #000 0 25%,
+    transparent 0 50%,
+    #000 0 75%,
+    transparent 0
+  );
+  mask-image: conic-gradient(
+    #000 0 25%,
+    transparent 0 50%,
+    #000 0 75%,
+    transparent 0
+  );
+  -webkit-mask-size: calc(200% / var(--speaker-cols)) 100%;
+  mask-size: calc(200% / var(--speaker-cols)) 100%;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+}
