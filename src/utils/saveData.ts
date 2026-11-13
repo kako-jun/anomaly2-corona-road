@@ -13,8 +13,9 @@ export type Language = 'ja' | 'en'
 export interface SaveSettings {
   brightness?: number
   contrast?: number
-  /** Sound (#79): master volume 0..100 (absent = the default) and the mute switch (absent = sound on). */
+  /** Sound (#79): master volume 0..100 (absent = the default); 0 is the mute. */
   volume?: number
+  /** Legacy (#79): the old mute switch. Read as volume 0 when true, never written any more. */
   muted?: boolean
   /** Reserved for a future settings screen (#292). Read for compatibility with old saves, but neither written nor used: the language comes from the browser at every start. */
   language?: Language
@@ -306,6 +307,17 @@ export const validateSave = (raw: unknown): SaveData | null => {
   return out
 }
 
+/** Field by field, `b` winning. The legacy `muted` (#79) is never carried over, so a stale tab cannot write it back. */
+const mergeSettings = (
+  a: SaveSettings | undefined,
+  b: SaveSettings | undefined
+): SaveSettings | undefined => {
+  if (!a && !b) return undefined
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { muted: _m, ...merged } = { ...a, ...b }
+  return merged
+}
+
 /**
  * Merge two saves of the same player (two tabs). Within one epoch data only grows: counts take the larger value,
  * ids and flags are unions. Settings merge field by field, `b` winning where both have a field.
@@ -315,10 +327,7 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
   if (a.epoch !== b.epoch) {
     const [win, lose] = a.epoch > b.epoch ? [a, b] : [b, a]
     // Settings are not progress: they merge field by field like within one epoch (the winner's fields win).
-    const settings =
-      win.settings || lose.settings
-        ? { ...lose.settings, ...win.settings }
-        : undefined
+    const settings = mergeSettings(lose.settings, win.settings)
     return settings ? { ...win, settings } : win
   }
   // Own keys only, and built with fromEntries: a key like "__proto__" must stay plain data.
@@ -355,8 +364,7 @@ export const mergeSave = (a: SaveData, b: SaveData): SaveData => {
       : (b.lastShift ?? a.lastShift)
   if (lastShift) out.lastShift = lastShift
   // Field by field: `b` wins where both have it, so a setting only one tab has is not lost.
-  const settings =
-    a.settings || b.settings ? { ...a.settings, ...b.settings } : undefined
+  const settings = mergeSettings(a.settings, b.settings)
   if (settings) out.settings = settings
   return out
 }
