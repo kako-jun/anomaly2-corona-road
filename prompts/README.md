@@ -102,13 +102,12 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 
 - `cabinet-transform`: RT-UI-11, RT-UI-16
 - `model-plate`: RT-UI-14, RT-UI-28
-- `camera-lamp`: RT-UI-19, RT-UI-24
-- `report-lamp`: RT-UI-09, RT-UI-25
+- `camera-lamp`: RT-UI-19, RT-UI-24, RT-UI-25
 - `noise`: RT-UI-22, RT-FEED-28
 
 将来の排他（まだ台帳に無い異変。そのバッチで足す）:
 
-- `RT-RULE-02` は `report-lamp`（REPORT まわり）に入れる。
+- `RT-RULE-02`（REPORT まわり）が REPORT ランプを触るなら、そのバッチで RT-UI-09 と同じ新グループ（例 `report-lamp`）を作る。
 - `RT-UI-20`（カメラ選択キーが消える）は RT-UI-03 と同じキーを触るので、新グループ（例 `camera-key`: RT-UI-03, RT-UI-20）にする。
 
 | kind / status                        | 必須                                                                                        | 省略可・禁止                                                                                                                                                                              |

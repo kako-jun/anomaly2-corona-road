@@ -164,15 +164,10 @@
   filter: hue-rotate(100deg);
 }
 
-/* RT-UI-25 report / strike lamp wrong colour: the lit STRIKES lamps and the lit or blinking REPORT lamp are white
-   instead of amber and red. How many are lit, and when, is unchanged. */
-.retro[data-fx~='RT-UI-25'] .lamp.on.amber {
-  filter: grayscale(1) brightness(2.6);
-}
-/* the red picture is darker than the amber one, so it needs more lift to read as white */
-.retro[data-fx~='RT-UI-25'] .lamp-big.lit,
-.retro[data-fx~='RT-UI-25'] .lamp-big.alert {
-  filter: grayscale(1) brightness(4);
+/* RT-UI-25 camera lamp white: the selected camera's lamp is lit white instead of green (position right, only the colour
+   differs; the same part as RT-UI-24, a different colour, so the two share `camera-lamp`). */
+.retro[data-fx~='RT-UI-25'] .cam-cell .lamp.on.green {
+  filter: grayscale(1) brightness(2);
 }
 
 /* RT-UI-16 monitor mirrored: the whole cabinet (picture, TIME, text, buttons) is flipped left-right. Operation is

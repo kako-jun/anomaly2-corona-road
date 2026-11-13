@@ -143,14 +143,13 @@ describe('lamp effects (#415): RT-UI-03 / 09 / 12 / 19 / 24 / 25', () => {
     for (const id of LAMPS)
       expect(ledger.anomalies.find(e => e.id === id)?.status).toBe('produced')
   })
-  it('the contradicting pairs share an exclusive group named after the lamp they touch', () => {
+  it('the lamp effects that would contradict share an exclusive group named after the lamp they touch', () => {
     const g = (id: string) => ledger.anomalies.find(e => e.id === id)?.exclusive
     expect(g('RT-UI-19')).toBe('camera-lamp')
     expect(g('RT-UI-24')).toBe('camera-lamp')
-    expect(g('RT-UI-09')).toBe('report-lamp')
-    expect(g('RT-UI-25')).toBe('report-lamp')
+    expect(g('RT-UI-25')).toBe('camera-lamp')
   })
-  it('RT-UI-03 sinks some keys (not all) with the pressed picture, RT-UI-19 lights the green lamps, RT-UI-24 turns the selected one, RT-UI-25 greys the amber and red lit lamps', () => {
+  it('RT-UI-03 sinks some keys (not all) with the pressed picture, RT-UI-19 lights the green lamps, RT-UI-24 turns the selected one, RT-UI-25 makes it white', () => {
     expect(css).toMatch(
       /RT-UI-03'\] \.cam-cell:nth-child\(3n \+ 2\) \.key \{[^}]*cam-key-pressed\.webp[^}]*translateY\(3px\)/
     )
@@ -160,11 +159,12 @@ describe('lamp effects (#415): RT-UI-03 / 09 / 12 / 19 / 24 / 25', () => {
     expect(css).toMatch(
       /RT-UI-24'\] \.cam-cell \.lamp\.on\.green \{\s*filter: hue-rotate\(/
     )
-    for (const sel of ['.lamp.on.amber', '.lamp-big.lit', '.lamp-big.alert'])
-      expect(css).toContain(`[data-fx~='RT-UI-25'] ${sel}`)
     expect(css).toMatch(
-      /RT-UI-25'\] \.lamp-big\.alert \{\s*filter: grayscale\(1\)/
+      /RT-UI-25'\] \.cam-cell \.lamp\.on\.green \{\s*filter: grayscale\(1\) brightness\(/
     )
+    // the STRIKES / REPORT lamps are not touched any more (they are dark early on, so nothing would show)
+    expect(css).not.toMatch(/RT-UI-25'\][^{]*lamp-big/)
+    expect(css).not.toMatch(/RT-UI-25'\][^{]*amber/)
   })
   it.each([
     ['RT-UI-09', 'lamp-lie'],

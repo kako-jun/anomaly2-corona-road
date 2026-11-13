@@ -25,7 +25,7 @@ export const MONITOR_EFFECTS: Readonly<Record<string, { what: string }>> = {
   'RT-UI-12': { what: 'REC dot blinks irregularly' },
   'RT-UI-19': { what: 'all camera lamps lit' },
   'RT-UI-24': { what: 'selected camera lamp blue' },
-  'RT-UI-25': { what: 'STRIKES and REPORT lamps white' },
+  'RT-UI-25': { what: 'selected camera lamp white' },
   'RT-UI-15': { what: 'speaker grille pulses in silence' },
   'RT-UI-16': { what: 'cabinet mirrored left-right' },
   'RT-UI-22': { what: 'noise and scanlines gone for good' },
