@@ -1,11 +1,5 @@
 import './App.css'
-import {
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from 'react'
+import { useEffect, useReducer, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import './styles/retro.css'
 import { useGameState } from './hooks/useGameState'
@@ -25,7 +19,7 @@ import {
 } from './utils/uiPreload'
 import { SAVE_KEY, load } from './utils/saveData'
 import { resetProgress } from './utils/shiftProgress'
-import { applyUpdate, subscribeUpdate, updateWaiting } from './utils/swUpdate'
+import { setUpdateSafe } from './utils/swUpdate'
 
 function App() {
   const [screenKey, screen] = useScreen()
@@ -38,7 +32,6 @@ function useScreen(): [string, ReactNode] {
   // The title's start key opens the investigation note; its key starts the shift (#297).
   const [memo, setMemo] = useState(false)
   const language = useLanguage()
-  const updateReady = useSyncExternalStore(subscribeUpdate, updateWaiting)
   // The ending reached in another tab closes the note (storage events re-render this): without this the note
   // would open by itself after START OVER, without START SHIFT being pressed.
   const endingReached = load().endingReached
@@ -85,11 +78,12 @@ function useScreen(): [string, ReactNode] {
     gameTime,
   } = useGameState()
 
-  // A new version of the app waits until the player is on the title itself (not in a shift, a result, an ending
-  // or the note before a shift), so a reload never costs progress (#388).
+  // A new version of the app is applied (reload) only while the player is on the title itself (not in a shift, a
+  // result, an ending or the note before a shift), in every tab, so a reload never costs progress (#388).
+  const onTitleItself = gameState === 'idle' && !memo && !loading
   useEffect(() => {
-    if (updateReady && gameState === 'idle' && !memo && !loading) applyUpdate()
-  }, [updateReady, gameState, memo, loading])
+    setUpdateSafe(onTitleItself)
+  }, [onTitleItself])
 
   const enterShift = async () => {
     setLoading(true)
