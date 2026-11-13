@@ -20,6 +20,11 @@ import type { Anomaly } from '../types/game'
  */
 export const MONITOR_EFFECTS: Readonly<Record<string, { what: string }>> = {
   'RT-UI-11': { what: 'cabinet tilted' },
+  'RT-UI-15': { what: 'speaker grille pulses in silence' },
+  'RT-UI-16': { what: 'cabinet mirrored left-right' },
+  'RT-UI-22': { what: 'noise and scanlines gone for good' },
+  'RT-UI-27': { what: 'speaker holes checkered' },
+  'RT-UI-29': { what: 'cabinet body tinted blue-green' },
 }
 
 export const hasMonitorEffect = (id: string): boolean =>
