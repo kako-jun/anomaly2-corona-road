@@ -170,7 +170,7 @@ describe('lamp effects (#415): RT-UI-03 / 09 / 12 / 19 / 24 / 25', () => {
     ['RT-UI-09', 'lamp-lie'],
     ['RT-UI-12', 'rec-erratic'],
   ])(
-    '%s blinks irregularly but never faster than 3 a second (every lit or dark stretch of %s is 0.16 s or more) and has a reduced-motion block',
+    '%s blinks irregularly but never faster than 3 a second (every lit or dark stretch of %s is 1/6 s or more) and has a reduced-motion block',
     (id, name) => {
       const use = css.match(
         new RegExp(
@@ -188,9 +188,9 @@ describe('lamp effects (#415): RT-UI-03 / 09 / 12 / 19 / 24 / 25', () => {
       const stretches = edges
         .slice(1)
         .map((e, i) => ((e - edges[i]) / 100) * total)
-      // the last stretch wraps round to the first one, which is lit as well: it is as long as itself plus the first
-      for (const s of stretches.slice(0, -1))
-        expect(s).toBeGreaterThanOrEqual(0.16)
+      // Every lit or dark stretch, the last one too (it is a dark one, and the first one that follows it is a lit one:
+      // they are separate stretches), lasts 1/6 s or more, so a lit + dark pair is 1/3 s or more: 3 blinks a second at most.
+      for (const s of stretches) expect(s).toBeGreaterThanOrEqual(1 / 6)
       // irregular: not all the same length
       expect(new Set(stretches.map(s => s.toFixed(2))).size).toBeGreaterThan(3)
       expect(css).toMatch(

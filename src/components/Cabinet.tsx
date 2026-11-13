@@ -105,6 +105,7 @@ export const Cabinet = ({
   const cabinetRef = useRef<HTMLElement>(null)
   const reportBtnRef = useRef<HTMLButtonElement>(null)
   const wasOpenRef = useRef(false)
+  const speakerRef = useRef<HTMLDivElement>(null)
   // where the magnifier loupe is drawn (#341); null until mounted
   const [loupeHost, setLoupeHost] = useState<HTMLDivElement | null>(null)
 
@@ -273,6 +274,31 @@ export const Cabinet = ({
     wasOpenRef.current = reportOpen
   }, [reportOpen])
 
+  // RT-UI-27 (speaker holes checkered): the CSS mask must line up with the hole tile, so the number of holes in a row is
+  // written on the grille (the tile is 9/7 of the row pitch --hole-p wide; the browser fits a whole number of them).
+  // Boolean dependency: any other anomaly changing makes a new set (see src/utils/monitorEffects.ts).
+  const speakerChecker = monitorEffects.has('RT-UI-27') && ending !== 'ending'
+  useEffect(() => {
+    const el = speakerRef.current
+    if (!speakerChecker || !el) return
+    const fit = () => {
+      const pitch = parseFloat(
+        getComputedStyle(el).getPropertyValue('--hole-p')
+      )
+      const cols = Math.max(1, Math.round(el.clientWidth / ((pitch * 9) / 7)))
+      if (Number.isFinite(cols) && el.clientWidth > 0)
+        el.style.setProperty('--speaker-cols', String(cols))
+    }
+    fit()
+    const ro =
+      typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(fit)
+    ro?.observe(el)
+    return () => {
+      ro?.disconnect()
+      el.style.removeProperty('--speaker-cols')
+    }
+  }, [speakerChecker])
+
   // The ending's virtual camera (CAM 09) takes no camera operation at all: keys and edge taps are ignored (#273).
   const inEnding = ending === 'ending'
   useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
@@ -358,7 +384,7 @@ export const Cabinet = ({
         </section>
         {/* bottom strip (#304): speaker grille on the left, model plate fixed to the right, one row */}
         <div className="cabinet-foot">
-          <div className="speaker" aria-hidden="true" />
+          <div className="speaker" aria-hidden="true" ref={speakerRef} />
           <img
             className="model-plate"
             src="/ui/model-plate.webp"

@@ -1,5 +1,13 @@
-import { describe, expect, it } from 'vitest'
-import { NO_TILT, localRect, toLocalPoint, unrotatedSize } from './tiltGeometry'
+// @vitest-environment jsdom
+import { describe, expect, it, vi } from 'vitest'
+import {
+  NO_TILT,
+  accumulatedTilt,
+  localRect,
+  toLocalDelta,
+  toLocalPoint,
+  unrotatedSize,
+} from './tiltGeometry'
 import type { Tilt } from './tiltGeometry'
 
 const DEG = Math.PI / 180
@@ -13,12 +21,12 @@ const drawn = (
   h: number,
   cx: number,
   cy: number,
-  { theta, scale }: Tilt
+  { theta, scale, mirror }: Tilt
 ) => {
   const c = Math.cos(theta)
   const s = Math.sin(theta)
   const at = (lx: number, ly: number) => {
-    const dx = (lx - w / 2) * scale
+    const dx = (mirror ? -1 : 1) * (lx - w / 2) * scale
     const dy = (ly - h / 2) * scale
     return { x: cx + dx * c - dy * s, y: cy + dx * s + dy * c }
   }
@@ -39,6 +47,8 @@ const TILTS: [string, Tilt][] = [
   ['-3 deg', { theta: -3 * DEG, scale: 1 }],
   ['3 deg scaled to 0.9', { theta: 3 * DEG, scale: 0.9 }],
   ['10 deg scaled to 0.8', { theta: 10 * DEG, scale: 0.8 }],
+  ['mirrored (RT-UI-16)', { theta: 0, scale: 1, mirror: true }],
+  ['mirrored and turned', { theta: 5 * DEG, scale: 0.9, mirror: true }],
 ]
 
 describe('tiltGeometry (RT-UI-11)', () => {
@@ -95,4 +105,59 @@ describe('tiltGeometry (RT-UI-11)', () => {
       expect(l.height).toBeCloseTo(300, 6)
     }
   )
+})
+
+describe('tiltGeometry mirror (RT-UI-16)', () => {
+  const mirrored: Tilt = { theta: 0, scale: 1, mirror: true }
+  it('a press on the drawn left side is on the layout right side', () => {
+    const { box } = drawn(400, 600, 300, 350, mirrored)
+    // the drawn rect spans x 100..500: its left edge (x = 110) is the layout's right (x = 390)
+    expect(toLocalPoint(110, 350, box, mirrored).x).toBeCloseTo(390, 6)
+    expect(toLocalPoint(490, 350, box, mirrored).x).toBeCloseTo(10, 6)
+  })
+  it('a drag to the right on the screen is a drag to the left in the knob own axes (and unchanged without a mirror)', () => {
+    expect(toLocalDelta(30, 0, mirrored).x).toBeCloseTo(-30, 6)
+    expect(toLocalDelta(30, 0).x).toBe(30)
+    expect(toLocalDelta(30, 0, { theta: 0, scale: 0.9 }).x).toBeCloseTo(30, 6)
+  })
+})
+
+describe('accumulatedTilt composes a mirrored ancestor with a rotated child', () => {
+  it('theta = own - child (a mirror turns the child rotation round), mirror flag toggles', () => {
+    class M {
+      a: number
+      b: number
+      c: number
+      d: number
+      constructor(t: string) {
+        const q = /^m (\S+) (\S+) (\S+) (\S+)$/.exec(t)!
+        ;[this.a, this.b, this.c, this.d] = q.slice(1).map(Number)
+      }
+    }
+    vi.stubGlobal('DOMMatrix', M)
+    const th = 10 * DEG
+    const parent = document.createElement('div')
+    const child = document.createElement('div')
+    parent.appendChild(child)
+    const spy = vi.spyOn(window, 'getComputedStyle').mockImplementation(
+      el =>
+        ({
+          transform:
+            el === parent
+              ? 'm -1 0 0 1'
+              : el === child
+                ? `m ${Math.cos(th)} ${Math.sin(th)} ${-Math.sin(th)} ${Math.cos(th)}`
+                : 'none',
+        }) as unknown as CSSStyleDeclaration
+    )
+    try {
+      const t = accumulatedTilt(child)
+      expect(t.mirror).toBe(true)
+      expect(t.theta).toBeCloseTo(0 - th, 9)
+      expect(t.scale).toBeCloseTo(1, 9)
+    } finally {
+      spy.mockRestore()
+      vi.unstubAllGlobals()
+    }
+  })
 })

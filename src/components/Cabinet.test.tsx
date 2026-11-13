@@ -824,6 +824,87 @@ describe('Cabinet monitor effects (data-fx, #408)', () => {
     expect(Number(m![2])).toBeGreaterThan(0.7)
     expect(Number(m![2])).toBeLessThanOrEqual(1)
   })
+  it('RT-UI-16: the mirror is a scaleX(-1) on the cabinet, and runs alone beside the tilt id (data-fx lists both ids when given both)', () => {
+    expect(css).toMatch(
+      /\.retro\[data-fx~='RT-UI-16'\] \.cabinet\s*\{\s*transform:\s*scaleX\(-1\);/
+    )
+    const { container } = render(
+      <Cabinet
+        {...makeProps({ monitorEffects: new Set(['RT-UI-16', 'RT-UI-22']) })}
+      />
+    )
+    expect(retroEl(container).getAttribute('data-fx')).toBe('RT-UI-16 RT-UI-22')
+  })
+  it('RT-UI-22: the grain and the scanlines are off for good (opacity 0 on .noise and .scan)', () => {
+    const rule = css
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .match(/([^{}]*RT-UI-22[^{}]*)\{\s*opacity:\s*0;\s*\}/)
+    expect(rule).not.toBeNull()
+    const sel = rule![1].split(',').map(x => x.trim())
+    expect(sel.sort()).toEqual([
+      ".retro[data-fx~='RT-UI-22'] .noise",
+      ".retro[data-fx~='RT-UI-22'] .scan",
+    ])
+  })
+  it('RT-UI-29: only the cabinet face is tinted (a colour multiplied into its background, no filter that would tint the picture)', () => {
+    const m = css.match(/RT-UI-29'\] \.cabinet\s*\{([^}]*)\}/)
+    expect(m).not.toBeNull()
+    expect(m![1]).toMatch(/background-color:\s*#[0-9a-f]{6}/i)
+    expect(m![1]).toMatch(/background-blend-mode:\s*multiply/)
+    expect(m![1]).not.toMatch(/filter/)
+  })
+  it('RT-UI-15: the grille pulses with an animation (glow stays under reduced motion), and the holes are not touched', () => {
+    expect(css).toMatch(
+      /RT-UI-15'\] \.cabinet-foot > \.speaker\s*\{[^}]*animation:\s*speaker-pulse/
+    )
+    expect(css).toMatch(/@keyframes speaker-pulse/)
+    expect(css).toMatch(
+      /prefers-reduced-motion: reduce\)\s*\{\s*\.retro\[data-fx~='RT-UI-15'\][^{]*\{\s*animation:\s*none/
+    )
+  })
+  it('RT-UI-27: the holes are masked in a checkerboard (still: no animation), without taking pointer events', () => {
+    const m = css.match(/RT-UI-27'\] \.cabinet-foot > \.speaker\s*\{([^}]*)\}/)
+    expect(m).not.toBeNull()
+    expect(m![1]).toMatch(/mask-image:\s*conic-gradient/)
+    expect(m![1]).toMatch(/mask-size:\s*calc\(200% \/ var\(--speaker-cols\)\)/)
+    expect(m![1]).not.toMatch(/animation|pointer-events/)
+  })
+  it('RT-UI-27: Cabinet writes how many holes fit in a row on the grille, and takes it away when the effect ends', () => {
+    const cw = vi
+      .spyOn(HTMLElement.prototype, 'clientWidth', 'get')
+      .mockReturnValue(450)
+    const gcs = vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+      getPropertyValue: () => '10px',
+      transform: 'none',
+    } as unknown as CSSStyleDeclaration)
+    const props = makeProps()
+    const { container, rerender } = render(<Cabinet {...props} />)
+    const speaker = container.querySelector('.speaker') as HTMLElement
+    expect(speaker.style.getPropertyValue('--speaker-cols')).toBe('')
+    rerender(<Cabinet {...props} monitorEffects={new Set(['RT-UI-27'])} />)
+    // 450 px / (10 px * 9/7) = 35 holes
+    expect(speaker.style.getPropertyValue('--speaker-cols')).toBe('35')
+    rerender(<Cabinet {...props} monitorEffects={new Set()} />)
+    expect(speaker.style.getPropertyValue('--speaker-cols')).toBe('')
+    cw.mockRestore()
+    gcs.mockRestore()
+  })
+  it('monitorEffects.css is imported before CameraView (which brings feedGlitch.css), so the later feed glitch rules win over RT-UI-22', () => {
+    const src = readFileSync(
+      resolve(process.cwd(), 'src/components/Cabinet.tsx'),
+      'utf8'
+    )
+    const fx = src.indexOf("import '../styles/monitorEffects.css'")
+    const cam = src.indexOf("from './CameraView'")
+    expect(fx).toBeGreaterThan(-1)
+    expect(cam).toBeGreaterThan(fx)
+    expect(
+      readFileSync(
+        resolve(process.cwd(), 'src/components/CameraView.tsx'),
+        'utf8'
+      )
+    ).toContain("import '../styles/feedGlitch.css'")
+  })
   it('every CSS rule in monitorEffects.css is for an id in the table', async () => {
     const { MONITOR_EFFECTS } = await import('../utils/monitorEffects')
     const ids = [...css.matchAll(/data-fx~='([^']+)'/g)].map(m => m[1])

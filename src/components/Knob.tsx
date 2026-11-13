@@ -7,6 +7,7 @@ import {
   knobAngle,
   KNOB_DEFAULT,
 } from '../utils/knob'
+import { accumulatedTilt, toLocalDelta, type Tilt } from '../utils/tiltGeometry'
 
 interface KnobProps {
   label: string
@@ -41,7 +42,14 @@ export const Knob = ({
     y: number
     value: number
     moved: boolean
+    /** how the cabinet is drawn when the press began (tilted / mirrored, RT-UI-11 / 16): the drag is read in the knob's own axes */
+    tilt: Tilt
   } | null>(null)
+  // the horizontal travel of the drag in the knob's own axes (equals the screen's when nothing transforms the cabinet)
+  const travel = (
+    d: { x: number; y: number; tilt: Tilt },
+    e: { clientX: number; clientY: number }
+  ) => toLocalDelta(e.clientX - d.x, e.clientY - d.y, d.tilt).x
 
   return (
     <div className="knob-wrap">
@@ -61,14 +69,20 @@ export const Knob = ({
         onPointerDown={e => {
           if (e.button !== 0) return // primary button / touch / pen only
           e.currentTarget.setPointerCapture(e.pointerId)
-          dragRef.current = { x: e.clientX, y: e.clientY, value, moved: false }
+          dragRef.current = {
+            x: e.clientX,
+            y: e.clientY,
+            value,
+            moved: false,
+            tilt: accumulatedTilt(e.currentTarget),
+          }
           e.preventDefault()
         }}
         onPointerMove={e => {
           const d = dragRef.current
           if (d) {
             if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5) d.moved = true
-            if (d.moved) change(dragKnobValue(d.value, d.x, e.clientX))
+            if (d.moved) change(dragKnobValue(d.value, 0, travel(d, e)))
           }
         }}
         onPointerUp={e => {
@@ -76,7 +90,7 @@ export const Knob = ({
           if (d) {
             const moved =
               d.moved || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5
-            change(moved ? dragKnobValue(d.value, d.x, e.clientX) : resetTo)
+            change(moved ? dragKnobValue(d.value, 0, travel(d, e)) : resetTo)
           }
           dragRef.current = null
         }}
