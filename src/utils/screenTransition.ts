@@ -25,9 +25,13 @@ const START_SHIFT_TIMING: TransitionTiming = { outMs: 200, inMs: 1000 }
 /** The whole change, for the default timing (kept for the `cross` look and as the reference length). */
 export const SCREEN_FADE_MS = DEFAULT_TIMING.outMs + DEFAULT_TIMING.inMs
 
+/** A shift begins: the note before it, or the result note ("once more"), -> the monitor. */
+export const isShiftStart = (from: string, to: string): boolean =>
+  to === 'shift' && (from === 'memo-before' || from === 'result')
+
 /** The timing of the change from screen `from` to screen `to` (the `screenKey`s of `App`). */
 export const transitionTiming = (from: string, to: string): TransitionTiming =>
-  from === 'memo-before' && to === 'shift' ? START_SHIFT_TIMING : DEFAULT_TIMING
+  isShiftStart(from, to) ? START_SHIFT_TIMING : DEFAULT_TIMING
 
 export const totalMs = (t: TransitionTiming): number => t.outMs + t.inMs
 

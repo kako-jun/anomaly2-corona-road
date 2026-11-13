@@ -446,7 +446,7 @@ src/
 - **Component Composition**: Screen-based component structure
 - **Type Safety**: Strict TypeScript for all game logic
 - **Separation of Concerns**: UI components separate from game logic
-- **Screen transitions (#336)**: `App` returns `[screenKey, screen]` and `ScreenTransition` fades between them (dip to black; lengths only in `transitionTiming(from, to)` of `src/utils/screenTransition.ts`: 200+200 ms, but note-before -> monitor is 200 dark + 1000 slow rise from black, #336). State is committed at once; the old element is kept (same place, not remounted) and inert, global keys are stopped, so input during a change cannot double-run; the game clock of a new shift runs while the veil is black. Dev-only `?transition=fade|cross|none` for comparing; reduced motion disables it. Details: DESIGN.md "Screen transitions".
+- **Screen transitions (#336)**: `App` returns `[screenKey, screen]` and `ScreenTransition` fades between them (dip to black; lengths only in `transitionTiming(from, to)` of `src/utils/screenTransition.ts`: 200+200 ms, but every shift start (note or result -> monitor) is 200 dark + 1000 slow rise from black, #336). State is committed at once; the old element is kept (same place, not remounted) and inert, global keys are stopped, so input during a change cannot double-run; the game clock of a new shift runs while the veil is black. Dev-only `?transition=fade|cross|none` for comparing; reduced motion disables it. Details: DESIGN.md "Screen transitions".
 
 ---
 

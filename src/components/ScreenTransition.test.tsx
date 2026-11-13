@@ -39,10 +39,14 @@ describe('transitionTiming', () => {
     const start = transitionTiming('memo-before', 'shift')
     expect(totalMs(start)).toBe(SCREEN_FADE_MS * 3)
     expect(start.inMs).toBeGreaterThan(start.outMs)
+    expect(transitionTiming('result', 'shift')).toEqual(start)
     const others: [string, string][] = [
+      ['shift', 'title'],
+      ['title', 'shift'],
+      ['title', 'result'],
+      ['memo-before', 'result'],
       ['title', 'memo-before'],
       ['shift', 'result'],
-      ['result', 'shift'],
       ['result', 'title'],
       ['memo-before', 'title'],
     ]
