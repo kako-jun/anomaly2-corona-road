@@ -65,7 +65,7 @@ describe('the monitor effects table and the ledger agree', () => {
     expect(
       hasNonImageEffect(ui('RT-UI-11', { anomalyType: 'rule_break' }))
     ).toBe(true)
-    expect(hasNonImageEffect(ui('RT-UI-12'))).toBe(false)
+    expect(hasNonImageEffect(ui('RT-UI-13'))).toBe(false)
     expect(
       hasNonImageEffect(ui('RT-UI-11', { anomalyType: 'feed_glitch' }))
     ).toBe(false)
@@ -102,8 +102,140 @@ describe('runningMonitorEffects: appear, draw, report from any camera, clear', (
     expect(
       runningMonitorEffects([
         run('RT-UI-11', 1, { scope: 'camera' }),
-        run('RT-UI-12', 2),
+        run('RT-UI-13', 2),
       ]).size
     ).toBe(0)
+  })
+})
+
+describe('lamp effects (#415): RT-UI-03 / 09 / 12 / 19 / 24 / 25', () => {
+  const LAMPS = [
+    'RT-UI-03',
+    'RT-UI-09',
+    'RT-UI-12',
+    'RT-UI-19',
+    'RT-UI-24',
+    'RT-UI-25',
+  ]
+  const css = readFileSync(
+    join(process.cwd(), 'src/styles/monitorEffects.css'),
+    'utf8'
+  )
+  const ledger = parse(
+    readFileSync(join(process.cwd(), 'prompts/anomalies.yaml'), 'utf8')
+  ) as { anomalies: { id: string; status?: string; exclusive?: string }[] }
+
+  it.each(LAMPS)(
+    '%s: appears, is drawn via data-fx, is reportable from any camera, and the report clears it',
+    id => {
+      const a = run(id, 3)
+      expect(a.scope).toBe('monitor')
+      expect(fxAttribute(runningMonitorEffects([a]))).toBe(id)
+      expect(css).toContain(`[data-fx~='${id}']`)
+      for (const cam of [1, 4, 8])
+        expect(reportTargetsFor([a], cam, 'Surreal').hit?.id).toBe(id)
+      expect(
+        fxAttribute(runningMonitorEffects([{ ...a, detectedAt: 9 }]))
+      ).toBeUndefined()
+    }
+  )
+  it('all six are produced in the ledger', () => {
+    for (const id of LAMPS)
+      expect(ledger.anomalies.find(e => e.id === id)?.status).toBe('produced')
+  })
+  it('the lamp effects that would contradict share an exclusive group named after the lamp they touch', () => {
+    const g = (id: string) => ledger.anomalies.find(e => e.id === id)?.exclusive
+    expect(g('RT-UI-19')).toBe('camera-lamp')
+    expect(g('RT-UI-24')).toBe('camera-lamp')
+    expect(g('RT-UI-25')).toBe('camera-lamp')
+  })
+  it('RT-UI-03 sinks some keys (not all) with the pressed picture, RT-UI-19 lights the green lamps, RT-UI-24 turns the selected one, RT-UI-25 makes it white', () => {
+    expect(css).toMatch(
+      /RT-UI-03'\] \.cam-cell:nth-child\(3n \+ 2\) \.key \{[^}]*cam-key-pressed\.webp[^}]*translateY\(3px\)/
+    )
+    expect(css).toMatch(
+      /RT-UI-19'\] \.cam-cell \.lamp\.green \{[^}]*lamp-green-on\.webp/
+    )
+    expect(css).toMatch(
+      /RT-UI-24'\] \.cam-cell \.lamp\.on\.green \{\s*filter: hue-rotate\(/
+    )
+    expect(css).toMatch(
+      /RT-UI-25'\] \.cam-cell \.lamp\.on\.green \{\s*filter: grayscale\(1\) brightness\(/
+    )
+    // the STRIKES / REPORT lamps are not touched any more (they are dark early on, so nothing would show)
+    expect(css).not.toMatch(/RT-UI-25'\][^{]*lamp-big/)
+    expect(css).not.toMatch(/RT-UI-25'\][^{]*amber/)
+  })
+  it.each([
+    ['RT-UI-09', 'lamp-lie'],
+    ['RT-UI-12', 'rec-erratic'],
+  ])(
+    '%s blinks irregularly but never faster than 3 a second (every lit or dark stretch of %s is 1/6 s or more) and has a reduced-motion block',
+    (id, name) => {
+      const use = css.match(
+        new RegExp(
+          `\\[data-fx~='${id}'\\][^{]*\\{\\s*animation: ${name} ([\\d.]+)s`
+        )
+      )
+      expect(use).not.toBeNull()
+      const total = Number(use![1])
+      const body = css.match(
+        new RegExp(`@keyframes ${name} \\{([\\s\\S]*?)\\n\\}`)
+      )![1]
+      const stops = [...body.matchAll(/([\d.]+)% \{/g)].map(m => Number(m[1]))
+      expect(stops.length).toBeGreaterThanOrEqual(8)
+      const edges = [...stops, 100]
+      const stretches = edges
+        .slice(1)
+        .map((e, i) => ((e - edges[i]) / 100) * total)
+      // Every lit or dark stretch, the last one too (it is a dark one, and the first one that follows it is a lit one:
+      // they are separate stretches), lasts 1/6 s or more, so a lit + dark pair is 1/3 s or more: 3 blinks a second at most.
+      for (const s of stretches) expect(s).toBeGreaterThanOrEqual(1 / 6)
+      // irregular: not all the same length
+      expect(new Set(stretches.map(s => s.toFixed(2))).size).toBeGreaterThan(3)
+      expect(css).toMatch(
+        new RegExp(
+          `@media \\(prefers-reduced-motion: reduce\\) \\{\\s*\\.retro\\[data-fx~='${id}'\\][^{]*\\{\\s*animation: none;`
+        )
+      )
+    }
+  )
+  it('RT-UI-09 leaves the lamp alone while the picker is open (lit as always)', () => {
+    expect(css).toMatch(/RT-UI-09'\] \.lamp-big:not\(\.lit\)/)
+  })
+})
+
+describe('digit window / text batch (#416)', () => {
+  const ids = [
+    'RT-UI-02',
+    'RT-UI-06',
+    'RT-UI-07',
+    'RT-UI-08',
+    'RT-UI-17',
+    'RT-UI-18',
+    'RT-UI-23',
+    'RT-UI-26',
+  ]
+  it.each(ids)(
+    '%s runs, is reportable from any camera, and clears on the report',
+    id => {
+      const a = run(id, 3)
+      expect(runningMonitorEffects([a]).has(id)).toBe(true)
+      for (const cam of [1, 4, 8])
+        expect(reportTargetsFor([a], cam, 'Surreal').hit?.id).toBe(id)
+      expect(runningMonitorEffects([{ ...a, detectedAt: 9 }]).size).toBe(0)
+    }
+  )
+  it('the headings and the digits are guarded by exclusive groups in the ledger', () => {
+    const ledger = parse(
+      readFileSync(join(process.cwd(), 'prompts/anomalies.yaml'), 'utf8')
+    ) as { anomalies: { id: string; exclusive?: string }[] }
+    const g = (id: string) => ledger.anomalies.find(e => e.id === id)?.exclusive
+    expect(['RT-UI-02', 'RT-UI-06', 'RT-UI-07'].map(g)).toEqual(
+      Array(3).fill('hud-labels')
+    )
+    expect(['RT-UI-08', 'RT-UI-17', 'RT-UI-18'].map(g)).toEqual(
+      Array(3).fill('digit-window')
+    )
   })
 })

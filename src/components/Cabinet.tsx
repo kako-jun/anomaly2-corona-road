@@ -1,4 +1,11 @@
-import { CSSProperties, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { Feedback } from '../hooks/useGameState'
 import { useCameraKeys } from '../hooks/useCameraKeys'
 import { FlagEvent, useSubtitle } from '../hooks/useSubtitle'
@@ -19,6 +26,7 @@ import {
 } from '../utils/voiceSounds'
 import { HUM_MODES, SOUND_EFFECTS } from '../utils/nonImageEffects'
 import { fxAttribute } from '../utils/monitorEffects'
+import { colonVariant, reportLabel } from '../utils/hudText'
 import '../styles/monitorEffects.css'
 import { readAudioVolume, saveVolume } from '../utils/audioSettings'
 import { FeedGlitchKind, forcedFeedGlitch } from '../utils/feedGlitch'
@@ -301,6 +309,13 @@ export const Cabinet = ({
 
   // The ending's virtual camera (CAM 09) takes no camera operation at all: keys and edge taps are ignored (#273).
   const inEnding = ending === 'ending'
+  // the effects drawn now: none on the ending CAM 09
+  const fx = inEnding ? NO_EFFECTS : monitorEffects
+  // RT-UI-26: one misspelling per run of the effect (a boolean dependency, not the set)
+  const misspelled = fx.has('RT-UI-26')
+  const colonActive = fx.has('RT-UI-23')
+  const colonKind = useMemo(() => colonVariant(colonActive), [colonActive])
+  const reportKeyLabel = useMemo(() => reportLabel(misspelled), [misspelled])
   useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
   const handleEdgeTap = useCallback(
     (d: 'next' | 'prev') => {
@@ -331,7 +346,7 @@ export const Cabinet = ({
   return (
     <div
       className="retro"
-      data-fx={fxAttribute(ending === 'ending' ? NO_EFFECTS : monitorEffects)}
+      data-fx={fxAttribute(fx)}
       style={WEAR === null ? undefined : ({ '--wear': WEAR } as CSSProperties)}
     >
       <main className="cabinet" ref={cabinetRef}>
@@ -352,7 +367,12 @@ export const Cabinet = ({
         />
         <section className="panel" aria-label="Control panel">
           <div className="loupe-host" ref={setLoupeHost} />
-          <GameHUD gameTime={gameTime} stats={stats} />
+          <GameHUD
+            gameTime={gameTime}
+            stats={stats}
+            fx={fx}
+            colonVariant={colonKind}
+          />
           <div className="row knobs">
             <Knob
               label="Brightness"
@@ -378,6 +398,7 @@ export const Cabinet = ({
             open={reportOpen}
             alert={shouldAlert(unreportedCount)}
             lampsOff={inEnding}
+            label={reportKeyLabel}
             buttonRef={reportBtnRef}
             onToggle={() => setReportOpen(o => !o)}
           />
