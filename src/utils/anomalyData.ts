@@ -191,10 +191,14 @@ export interface SpawnOptions extends EntryGate {
 
 /**
  * Pick the next appearance across both kinds, in the same slot rules (a free camera, nothing used twice in a shift).
- * While both an image and a non-image candidate exist, one extra rng call sends `nonImageShare` of the draws to the
- * non-image side and the rest to `pickLedgerEntry` (unchanged, Reiwa share included); when only one side has a
- * candidate it is used with no extra call, so the old fallbacks (nothing left, camera full) are unchanged.
- * Returns null only when nothing can appear now.
+ * Two stages, so each share keeps its meaning:
+ *  1. Reiwa (#286): while both a Reiwa and an ordinary candidate exist (image or non-image alike), one rng call sends
+ *     `reiwaShare` of ALL draws to the Reiwa group (the decided ~6% of appearances) and the rest to the ordinary one.
+ *  2. Inside the chosen group, while both an image and a non-image candidate exist, one more rng call sends
+ *     `nonImageShare` of that group's draws to the non-image side (so it is the share of the ordinary draws), the rest
+ *     to `pickLedgerEntry`.
+ * A stage with only one side available uses it with no extra rng call, so the old fallbacks (nothing left, camera
+ * full) are unchanged. Returns null only when nothing can appear now.
  */
 export const pickSpawn = (
   images: readonly LedgerEntry[],
@@ -215,42 +219,57 @@ export const pickSpawn = (
   } = opts
   const gate: EntryGate = { flags, audible, busyGroups }
   checkedShare('nonImageShare', nonImageShare)
-  const imageFirst = () =>
-    pickLedgerEntry(
-      images,
+  const isReiwa = (e: { reiwa?: true }) => e.reiwa === true
+  const canImage = (list: readonly LedgerEntry[]) =>
+    spawnableEntries(list, true, gate).some(
+      e => !usedIds.has(e.id) && freeCameraIds.includes(e.cameraId)
+    )
+  const canNon = (list: readonly NonImageEntry[]) =>
+    freeCameraIds.length > 0 &&
+    spawnableEntries(list, true, gate).some(
+      e => !usedIds.has(e.id) && hasNonImageEffect(e)
+    )
+  // Within one group (all Reiwa or none), so the image draw below never splits on Reiwa again.
+  const pickIn = (
+    imgs: readonly LedgerEntry[],
+    nons: readonly NonImageEntry[]
+  ): Spawn | null => {
+    const hasImage = canImage(imgs)
+    const hasNon = canNon(nons)
+    if (hasNon && (!hasImage || rng() < nonImageShare)) {
+      const picked = pickNonImageEntry(
+        nons,
+        freeCameraIds,
+        usedIds,
+        rng,
+        exponent,
+        true,
+        gate
+      )
+      return picked ? { kind: 'non_image', ...picked } : null
+    }
+    const entry = pickLedgerEntry(
+      imgs,
       freeCameraIds,
       usedIds,
       rng,
       exponent,
-      reiwaUnlocked,
+      true,
       reiwaShare,
       gate
     )
-  const nonImageFirst = () =>
-    pickNonImageEntry(
-      nonImages,
-      freeCameraIds,
-      usedIds,
-      rng,
-      exponent,
-      reiwaUnlocked,
-      gate
-    )
-  const hasImage = spawnableEntries(images, reiwaUnlocked, gate).some(
-    e => !usedIds.has(e.id) && freeCameraIds.includes(e.cameraId)
-  )
-  const hasNon =
-    freeCameraIds.length > 0 &&
-    spawnableEntries(nonImages, reiwaUnlocked, gate).some(
-      e => !usedIds.has(e.id) && hasNonImageEffect(e)
-    )
-  const nonImageNow = hasNon && (!hasImage || rng() < nonImageShare)
-  if (nonImageNow) {
-    const picked = nonImageFirst()
-    return picked ? { kind: 'non_image', ...picked } : null
+    return entry ? { kind: 'image', entry } : null
   }
-  const entry = imageFirst()
-  return entry ? { kind: 'image', entry } : null
+  const ordinary = [
+    images.filter(e => !isReiwa(e)),
+    nonImages.filter(e => !isReiwa(e)),
+  ] as const
+  const reiwa = [images.filter(isReiwa), nonImages.filter(isReiwa)] as const
+  const haveOrdinary = canImage(ordinary[0]) || canNon(ordinary[1])
+  const haveReiwa = reiwaUnlocked && (canImage(reiwa[0]) || canNon(reiwa[1]))
+  const useReiwa = haveReiwa && (!haveOrdinary || rng() < reiwaShare)
+  const group = useReiwa ? reiwa : ordinary
+  return pickIn(group[0], group[1])
 }
 
 /**

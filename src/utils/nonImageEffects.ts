@@ -7,7 +7,7 @@ import type { ReportScope } from '../types/game'
  * Which non-image ledger entries have an effect the game can show (#77), and how each is reported.
  *
  * The ledger (prompts/anomalies.yaml) says which anomalies exist; this file only says how they are drawn. Only an
- * entry with an effect here may be `status: produced` (nonImageEffects.test.ts reads the ledger and checks it), so the
+ * entry with an effect here may be `status: produced` (nonImageSpawn.test.ts reads the ledger and checks it), so the
  * player is never given an anomaly nobody can see. Sound, UI and rule effects join the same way as they are built.
  * Removing an effect on report is not done here: the anomaly just becomes `detectedAt`, and whatever draws the
  * effect stops (see `useGameState`), so an effect only has to be a pure function of "is this anomaly running".

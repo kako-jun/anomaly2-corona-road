@@ -6570,7 +6570,6 @@ anomalies:
     memo:
       ja: '同じカメラなのに拡大。操作か？'
       en: 'Same camera, zoomed in. Manual?'
-    note: 'asset 併用'
   - id: 'RT-FEED-02'
     status: 'produced'
     kind: 'non_image'
@@ -6580,7 +6579,6 @@ anomalies:
     memo:
       ja: 'カメラの角度が少しずれた。固定が緩い？'
       en: 'The camera angle shifted. Loose mount?'
-    note: 'asset 併用'
   - id: 'RT-FEED-03'
     status: 'produced'
     kind: 'non_image'
@@ -6590,7 +6588,6 @@ anomalies:
     memo:
       ja: '映像のピントが外れた。レンズか信号か？'
       en: 'The image is out of focus. Lens or feed?'
-    note: 'asset 併用'
   - id: 'RT-FEED-04'
     status: 'produced'
     kind: 'non_image'
@@ -6600,7 +6597,6 @@ anomalies:
     memo:
       ja: '映像の明るさが極端に変わる。照明のせい？'
       en: 'Exposure shifts sharply. The lights?'
-    note: 'asset 併用'
   - id: 'RT-FEED-05'
     status: 'produced'
     kind: 'non_image'
@@ -6610,7 +6606,6 @@ anomalies:
     memo:
       ja: '映像のブロックノイズが増えた。'
       en: 'Blocky noise increased in the feed.'
-    note: 'asset 併用'
   - id: 'RT-FEED-06'
     status: 'produced'
     kind: 'non_image'
@@ -6620,7 +6615,6 @@ anomalies:
     memo:
       ja: '走査線や焼き付きが増えた。'
       en: 'More scan lines and image burn-in.'
-    note: 'asset 併用'
   - id: 'RT-FEED-07'
     status: 'planned'
     kind: 'non_image'

@@ -21,12 +21,6 @@ const FLAGS_PATH = resolve(__dirname, 'dialogue/flags.yaml')
 const VIRTUAL_ID = 'virtual:anomalies'
 const RESOLVED_ID = '\0' + VIRTUAL_ID
 
-/**
- * Exposes the anomaly ledger (prompts/anomalies.yaml, the single source of truth) to the game as
- * `virtual:anomalies`, trimmed to the fields the game needs and limited to kind=image, status=produced
- * entries (planned / non_image ones are validated but not handed to the game). A broken entry anywhere
- * in the ledger fails the build and the message names the entry.
- */
 /** Parse the ledger and check that every `unlock.flag` is a flag defined in dialogue/flags.yaml (#77). */
 const readLedgerRecords = (addWatchFile: (path: string) => void) => {
   addWatchFile(LEDGER_PATH)
@@ -43,6 +37,12 @@ const readLedgerRecords = (addWatchFile: (path: string) => void) => {
   return records
 }
 
+/**
+ * Exposes the anomaly ledger (prompts/anomalies.yaml, the single source of truth) to the game as
+ * `virtual:anomalies`, trimmed to the fields the game needs and limited to kind=image, status=produced
+ * entries (planned / non_image ones are validated but not handed to the game). A broken entry anywhere
+ * in the ledger fails the build and the message names the entry.
+ */
 const anomalyLedgerPlugin = (): Plugin => ({
   name: 'anomaly-ledger',
   resolveId(id) {
@@ -79,7 +79,7 @@ const NON_IMAGE_RESOLVED_ID = '\0' + NON_IMAGE_VIRTUAL_ID
 
 /**
  * The non-image side of the ledger for the game (#77): kind=non_image, status=produced entries only (planned ones are
- * validated but not handed over). Whether an effect exists for each id is checked by a test (src/utils/nonImageEffects.test.ts),
+ * validated but not handed over). Whether an effect exists for each id is checked by a test (src/utils/nonImageSpawn.test.ts),
  * so a produced entry without an effect cannot be merged.
  */
 const nonImageLedgerPlugin = (): Plugin => ({

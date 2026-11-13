@@ -54,7 +54,8 @@ describe('the ledger and the effects agree', () => {
   )
 
   it('every produced non_image entry has an effect the game can show (never a visible-nothing anomaly)', () => {
-    expect(produced.length).toBeGreaterThan(0)
+    // The 15 feed glitches promoted in #77; the ledger is the master, so this is only a floor against a mass demotion.
+    expect(produced.length).toBeGreaterThanOrEqual(15)
     for (const e of produced) {
       expect(
         hasNonImageEffect(
@@ -415,4 +416,47 @@ describe('unlock flag, exclusive group and audibility gates (#77, #79)', () => {
       ).exclusiveGroup
     ).toBe('g')
   })
+})
+
+describe('shares over many draws (#286 Reiwa 6% of all, #77 non-image of the ordinary)', () => {
+  const mulberry = (seed: number) => () => {
+    seed = (seed + 0x6d2b79f5) | 0
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+  const images = [
+    ...Array.from({ length: 24 }, (_, i) => img(`o${i}`, (i % 8) + 1)),
+    ...Array.from({ length: 4 }, (_, i) => ({
+      ...img(`r${i}`, (i % 8) + 1),
+      reiwa: true as const,
+    })),
+  ]
+  const non = ['RT-FEED-01', 'RT-FEED-02', 'RT-FEED-03', 'RT-FEED-22'].map(id =>
+    glitch(id)
+  )
+  it('keeps Reiwa at about 6% of all draws and non-image at its share of the ordinary draws', () => {
+    const rng = mulberry(77)
+    const free = [1, 2, 3, 4, 5, 6, 7, 8]
+    let reiwa = 0
+    let ordinaryNon = 0
+    let ordinary = 0
+    const N = 200_000
+    for (let i = 0; i < N; i++) {
+      const s = pickSpawn(images, non, free, new Set(), {
+        rng,
+        reiwaUnlocked: true,
+      })!
+      const isReiwa = s.kind === 'image' && s.entry.reiwa === true
+      if (isReiwa) reiwa++
+      else {
+        ordinary++
+        if (s.kind === 'non_image') ordinaryNon++
+      }
+    }
+    expect(reiwa / N).toBeGreaterThan(0.055)
+    expect(reiwa / N).toBeLessThan(0.065)
+    expect(ordinaryNon / ordinary).toBeGreaterThan(NON_IMAGE_DRAW_SHARE - 0.01)
+    expect(ordinaryNon / ordinary).toBeLessThan(NON_IMAGE_DRAW_SHARE + 0.01)
+  }, 60_000)
 })

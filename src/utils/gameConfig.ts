@@ -105,10 +105,10 @@ export const REIWA_DRAW_SHARE = 0.06
 
 /**
  * Share of appearances given to non-image anomalies (#77), PROVISIONAL (20%; tune by playing; phase weights are
- * undecided). While both non-image and image candidates exist, this fraction of draws is a non-image anomaly and the
- * rest the ordinary image draw (which keeps its own Reiwa share, so Reiwa images become about
- * `REIWA_DRAW_SHARE * (1 - NON_IMAGE_DRAW_SHARE)` of all draws). Must be within [0, 1]: `checkedShare` throws otherwise.
- * When only one side has candidates it is used with no extra rng call.
+ * undecided). It is the share of the ORDINARY (non-Reiwa) draws: Reiwa is split off first at `REIWA_DRAW_SHARE` of all
+ * draws (so Reiwa stays ~6% of appearances), then, while both non-image and image candidates exist, this fraction of
+ * the group's draws is a non-image anomaly and the rest an image one. Must be within [0, 1]: `checkedShare` throws
+ * otherwise. When only one side has candidates it is used with no extra rng call.
  */
 export const NON_IMAGE_DRAW_SHARE = 0.2
 
