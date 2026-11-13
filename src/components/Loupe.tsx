@@ -45,13 +45,15 @@ export const Loupe = ({
   glitchSeed = 0,
 }: LoupeProps) => {
   const d = LOUPE.DIAMETER_PX
+  // Upside down (RT-FEED-17): the monitor shows the photo's row 1 - v under the finger at v, so the held row is 1 - v.
+  const v = feedGlitch === 'flip' ? 1 - view.v : view.v
   const frameStyle: CSSProperties = {
     width: view.frameW * LOUPE.ZOOM,
     height: view.frameH * LOUPE.ZOOM,
     left: d / 2 - view.u * view.frameW * LOUPE.ZOOM,
-    top: d / 2 - view.v * view.frameH * LOUPE.ZOOM,
+    top: d / 2 - v * view.frameH * LOUPE.ZOOM,
     // zoom / tilt / shake scale about the held spot, so it stays under the circle's centre
-    transformOrigin: `${view.u * 100}% ${view.v * 100}%`,
+    transformOrigin: `${view.u * 100}% ${v * 100}%`,
   }
   const style = {
     width: d,
@@ -89,6 +91,25 @@ export const Loupe = ({
           />
         )}
       </div>
+      {(feedGlitch === 'letterbox' || feedGlitch === 'heavyvignette') && (
+        // the bars / dark corners belong to the picture, so this layer is the glass magnified like the picture
+        // (glass * ZOOM) and placed so the held spot of the glass is at the circle's centre; the clamp keeps
+        // x * ZOOM >= d / 2, so the circle is always covered. The grain and lines are not magnified (a grain is a grain).
+        <div
+          className="loupe__held"
+          style={{
+            width: view.glassW * LOUPE.ZOOM,
+            height: view.glassH * LOUPE.ZOOM,
+            left: d / 2 - view.x * LOUPE.ZOOM,
+            top: d / 2 - view.y * LOUPE.ZOOM,
+          }}
+        >
+          <div
+            className={`fx ${feedGlitch === 'letterbox' ? 'letterbox' : 'heavyvignette'}`}
+            aria-hidden="true"
+          />
+        </div>
+      )}
       <div
         className="loupe__fx"
         style={{ width: view.glassW, height: view.glassH }}

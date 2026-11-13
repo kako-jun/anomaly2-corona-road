@@ -56,6 +56,12 @@
   mix-blend-mode: screen;
 }
 
+/* monitor-sized glitch layers that follow the held spot (letterbox bars, heavy vignette): left/top inline */
+.loupe__held {
+  position: absolute;
+  pointer-events: none;
+}
+
 /* noise + scanlines at the monitor's own size (NOT magnified), centred in the circle and cropped by it */
 .loupe__fx {
   /* centred with inset + margin:auto (width/height are inline), NOT transform: a transform would make this a stacking

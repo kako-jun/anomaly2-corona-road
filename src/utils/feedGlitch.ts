@@ -26,6 +26,12 @@ export const FEED_GLITCH_KINDS = [
   'deadpixels',
   'ghost',
   'fade',
+  'letterbox',
+  'green',
+  'flip',
+  'heavyvignette',
+  'mono',
+  'nonoise',
 ] as const
 
 export type FeedGlitchKind = (typeof FEED_GLITCH_KINDS)[number]
@@ -49,6 +55,12 @@ export const FEED_GLITCH_LEDGER_ID: Record<FeedGlitchKind, string> = {
   deadpixels: 'RT-FEED-24',
   ghost: 'RT-FEED-25',
   fade: 'RT-FEED-26',
+  letterbox: 'RT-FEED-12',
+  green: 'RT-FEED-16',
+  flip: 'RT-FEED-17',
+  heavyvignette: 'RT-FEED-18',
+  mono: 'RT-FEED-27',
+  nonoise: 'RT-FEED-28',
 }
 
 /** The kinds that draw one ledger entry (exposure has two, shake has two); empty for an entry no kind draws. */

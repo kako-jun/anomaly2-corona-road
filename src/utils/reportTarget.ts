@@ -1,5 +1,10 @@
 import type { Anomaly, AnomalyCategory } from '../types/game'
 
+/** True when the anomaly is drawn on this camera (its own, or one of the several a multi-camera glitch shows on). */
+export const showsOnCamera = (a: Anomaly, cameraId: number): boolean =>
+  a.cameraId === cameraId ||
+  (a.feedGlitchCameraIds?.includes(cameraId) ?? false)
+
 /**
  * Which running anomaly a report of `category` from `cameraId` is judged against (#77).
  *
@@ -18,7 +23,7 @@ export const reportTargetsFor = (
   const open = anomalies.filter(a => !a.detectedAt)
   // The watched camera's own anomaly comes first, then monitor-wide ones.
   const candidates = [
-    ...open.filter(a => a.scope !== 'monitor' && a.cameraId === cameraId),
+    ...open.filter(a => a.scope !== 'monitor' && showsOnCamera(a, cameraId)),
     ...open.filter(a => a.scope === 'monitor'),
   ]
   const hit = candidates.find(a =>

@@ -433,6 +433,8 @@ describe('CameraView feed glitch (#78)', () => {
     ['scanburn', '.scanburn'],
     ['blink', '.blackframe'],
     ['ghost', 'img.ghost'],
+    ['letterbox', '.letterbox'],
+    ['heavyvignette', '.heavyvignette'],
   ] as const)('%s renders %s', (kind, selector) => {
     const { container } = render(
       <CameraView {...props({ feedGlitch: kind })} />
