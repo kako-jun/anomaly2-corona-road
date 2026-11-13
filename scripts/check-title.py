@@ -292,6 +292,13 @@ def main():
                             errs.append(f"signboard visible only {sw['minSign']:.0%} at worst (< {floor:.0%})")
                         if sw["minClear"] < CLEAR_MIN:
                             errs.append(f"note / key cover the signboard: only {sw['minClear']:.0%} of it is clear (< {CLEAR_MIN:.0%})")
+                    # (#426) the FULL / EXIT key is not shown on a narrow, not-very-tall portrait screen (computed display), and is elsewhere
+                    fk = p.evaluate("() => { const e = document.querySelector('.start-fullscreen-key'); return e ? getComputedStyle(e).display : null }")
+                    want_hidden = w <= 480 and 27 / 50 <= w / h <= 1
+                    if fk is None:
+                        errs.append("the FULL key is not in the page (does this Chromium have the Fullscreen API?)")
+                    elif (fk == "none") != want_hidden:
+                        errs.append(f"the FULL key has display:{fk} but should be {'hidden' if want_hidden else 'shown'}")
                     bl = p.evaluate(BLUR, [list(SIGN)])
                     if bl.get("missing") or bl.get("noAnim"):
                         errs.append("the blur patch is missing or not animated")

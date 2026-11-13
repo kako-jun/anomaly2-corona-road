@@ -469,3 +469,9 @@ body.start-open #root {
   outline: 3px solid #ffd27a;
   outline-offset: 3px;
 }
+/* a narrow, not-very-tall portrait screen (about 9:16 and wider than 27:50; measured with check:title: 360x640 82%, 375x667 83%, 390x700 84%, 430x740 84% of the signboard clear, below the 85% floor; 360x680 85%, 390x844 92% pass): the FULL / EXIT key would cover the signboard, so it is not shown there. TRANSFER SAVE stays. (#426) */
+@media (max-width: 480px) and (min-aspect-ratio: 27/50) and (max-aspect-ratio: 1/1) {
+  .start-top-key.start-fullscreen-key {
+    display: none;
+  }
+}
