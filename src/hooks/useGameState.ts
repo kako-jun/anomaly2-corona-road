@@ -120,6 +120,25 @@ export const useGameState = () => {
     activeAnomaliesRef.current = activeAnomalies
   }, [activeAnomalies])
 
+  /**
+   * Take back a running anomaly that can never be shown (a voice whose file failed to load for good, #407): it counts
+   * as if it never appeared - gone from the slots, the cap, the REPORT lamp and the false-report check - and its id
+   * stays used, so it is not drawn again this shift. A reported or unknown id is left alone.
+   */
+  const withdrawAnomaly = useCallback((id: string) => {
+    if (!activeAnomaliesRef.current.some(a => a.id === id && !a.detectedAt))
+      return
+    activeAnomaliesRef.current = activeAnomaliesRef.current.filter(
+      a => a.id !== id || a.detectedAt
+    )
+    setActiveAnomalies(prev => prev.filter(a => a.id !== id || a.detectedAt))
+    setStats(prev => ({
+      ...prev,
+      totalAnomalies: Math.max(0, prev.totalAnomalies - 1),
+    }))
+    afterChildIdsRef.current.delete(id)
+  }, [])
+
   const startGame = useCallback(() => {
     // After the true ending the save cannot start a shift; the title offers "start over" only (#294).
     if (load().endingReached) return
@@ -339,12 +358,9 @@ export const useGameState = () => {
         }))
         return 'spawned'
       }
-      return hasUnusedEntry(
-        ANOMALY_LEDGER,
-        nonImageLedger.filter(entry => voiceReady(entry.id)),
-        used,
-        reiwaUnlocked
-      )
+      // Not filtered by voiceReady: a voice still waiting for its file to answer must keep the shift from being
+      // called exhausted (that is permanent for the shift); the failed ones are taken out by the retry in the loop.
+      return hasUnusedEntry(ANOMALY_LEDGER, nonImageLedger, used, reiwaUnlocked)
         ? 'no-free-camera'
         : 'exhausted'
     },
@@ -464,6 +480,7 @@ export const useGameState = () => {
     startGame,
     switchCamera,
     reportAnomaly,
+    withdrawAnomaly,
     gameTime: msToGameTime(stats.currentTime),
   }
 }

@@ -595,13 +595,21 @@ describe('sound anomaly lifecycle', () => {
     vi.useFakeTimers()
     const hold = vi.spyOn(voice, 'holdVoice').mockResolvedValue(false)
     const release = vi.spyOn(voice, 'releaseVoice').mockImplementation(() => {})
+    const gone = vi.fn()
     const { unmount } = render(
-      <Cabinet {...makeProps()} heldVoiceId="RT-SND-06" />
+      <Cabinet
+        {...makeProps()}
+        heldVoiceId="RT-SND-06"
+        onVoiceUnavailable={gone}
+      />
     )
     await act(async () => {
       await vi.advanceTimersByTimeAsync(10 * 60 * 1000)
     })
     expect(hold).toHaveBeenCalledTimes(voice.VOICE_RETRY_LIMIT)
+    // Only after the last try is the anomaly given up (once), so a slow network never loses a voice early.
+    expect(gone).toHaveBeenCalledTimes(1)
+    expect(gone).toHaveBeenCalledWith('RT-SND-06')
     unmount()
     hold.mockRestore()
     release.mockRestore()

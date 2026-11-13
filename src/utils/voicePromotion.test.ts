@@ -10,7 +10,7 @@ import {
   soundOnCamera,
   voiceToHold,
 } from './nonImageEffects'
-import { VOICE_IDS, voiceReady } from './voiceSounds'
+import { VOICE_IDS } from './voiceSounds'
 
 const entry = (id: string): NonImageEntry => ({
   id,
@@ -56,15 +56,6 @@ describe('the five voices are promoted (#407)', () => {
         nonImageShare: 1,
         audible: false,
       })
-    ).toBeNull()
-  })
-
-  it('are not drawn until their file answered (voiceReady), as the game loop filters them', () => {
-    // Nothing has been probed in this test, so every voice is still out of the draw.
-    const ready = voices.filter(v => voiceReady(v.id))
-    expect(ready).toEqual([])
-    expect(
-      pickSpawn([], ready, [1, 2], new Set(), { nonImageShare: 1 })
     ).toBeNull()
   })
 

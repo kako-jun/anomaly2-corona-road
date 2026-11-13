@@ -6885,7 +6885,7 @@ anomalies:
     kind: 'non_image'
     category: 'environment'
     anomaly_type: 'sound'
-    detail: '古い館内放送がかすかに混ざる（声素材 rt-snd-12 を再生機構でループ再生。聴感は実機確認待ち）'
+    detail: '古い館内放送がかすかに混ざる（声素材 rt-snd-12 を再生機構でループ再生（再生側に帯域制限は無い）。聴感は実機確認待ち）'
     memo:
       ja: '古い館内放送がかすかに混じる。'
       en: 'Old announcement, faint in background.'

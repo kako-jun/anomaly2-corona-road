@@ -19,6 +19,16 @@ const ledger = vi.hoisted(() => [] as LedgerEntry[])
 // The non-image side (#77): empty unless a test pushes into it, so the image tests below are not disturbed.
 const nonImage = vi.hoisted(() => [] as NonImageEntry[])
 vi.mock('virtual:non-image-anomalies', () => ({ default: nonImage }))
+// Voices count as drawable only after their file answered (#407): a test decides which ones have.
+const readyVoices = vi.hoisted(() => new Set<string>())
+vi.mock('../utils/voiceSounds', async importOriginal => {
+  const actual = await importOriginal<typeof import('../utils/voiceSounds')>()
+  return {
+    ...actual,
+    voiceReady: (id: string) =>
+      !actual.VOICE_IDS.has(id) || readyVoices.has(id),
+  }
+})
 const preload = vi.hoisted(() => vi.fn())
 vi.mock('../data/anomalyLedger', () => ({
   ANOMALY_LEDGER: ledger,
@@ -104,6 +114,7 @@ beforeEach(() => {
   ;(saveData as unknown as { resetStore: () => void }).resetStore()
   ledger.length = 0
   nonImage.length = 0
+  readyVoices.clear()
 })
 afterEach(() => {
   vi.useRealTimers()
@@ -605,6 +616,80 @@ describe('non-image anomalies (#77)', () => {
     const { result } = start()
     advance(FIRST + INTERVAL * 2)
     expect(result.current.stats.totalAnomalies).toBe(0)
+  })
+})
+
+describe('voice anomalies (#407)', () => {
+  const voice = (id = 'RT-SND-06'): NonImageEntry => ({
+    id,
+    category: 'Environment',
+    anomalyType: 'sound',
+  })
+
+  it('does not appear while its file has not answered, and does once it has', () => {
+    nonImage.push(voice())
+    const { result } = start()
+    advance(FIRST + INTERVAL * 3)
+    expect(result.current.stats.totalAnomalies).toBe(0)
+    readyVoices.add('RT-SND-06')
+    advance(INTERVAL)
+    expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['RT-SND-06'])
+  })
+
+  it('a voice still waiting for its file does not end the draw for the shift (not exhausted)', () => {
+    nonImage.push(voice())
+    const { result } = start()
+    advance(FIRST + INTERVAL * 8)
+    expect(result.current.stats.totalAnomalies).toBe(0)
+    readyVoices.add('RT-SND-06')
+    advance(INTERVAL)
+    expect(result.current.stats.totalAnomalies).toBe(1)
+  })
+
+  describe('withdrawAnomaly', () => {
+    const running = () => {
+      readyVoices.add('RT-SND-06')
+      nonImage.push(voice())
+      const hook = start()
+      advance(FIRST + 100)
+      return hook
+    }
+
+    it('takes a running voice back as if it never appeared, and it is not drawn again', () => {
+      const { result } = running()
+      expect(result.current.unreportedCount).toBe(1)
+      act(() => result.current.withdrawAnomaly('RT-SND-06'))
+      expect(result.current.activeAnomalies).toEqual([])
+      expect(result.current.unreportedCount).toBe(0)
+      expect(result.current.stats.totalAnomalies).toBe(0)
+      advance(INTERVAL * 5)
+      expect(result.current.stats.totalAnomalies).toBe(0)
+    })
+
+    it('a report after the withdrawal is an ordinary false report on an empty camera (nothing to confirm)', () => {
+      const hook = running()
+      const cam = hook.result.current.activeAnomalies[0].cameraId
+      act(() => hook.result.current.withdrawAnomaly('RT-SND-06'))
+      const index = hook.result.current.cameras.findIndex(c => c.id === cam)
+      act(() => hook.result.current.switchCamera(index))
+      act(() => hook.result.current.reportAnomaly('Environment'))
+      expect(hook.result.current.stats.correctReports).toBe(0)
+      expect(hook.result.current.stats.misreports).toBe(1)
+      expect(hook.result.current.feedback?.message).toMatch(/NO ANOMALY HERE/)
+    })
+
+    it('leaves a reported voice and an unknown id alone', () => {
+      const hook = running()
+      const cam = hook.result.current.activeAnomalies[0].cameraId
+      const index = hook.result.current.cameras.findIndex(c => c.id === cam)
+      act(() => hook.result.current.switchCamera(index))
+      act(() => hook.result.current.reportAnomaly('Environment'))
+      act(() => hook.result.current.withdrawAnomaly('RT-SND-06'))
+      act(() => hook.result.current.withdrawAnomaly('nope'))
+      expect(hook.result.current.activeAnomalies).toHaveLength(1)
+      expect(hook.result.current.stats.totalAnomalies).toBe(1)
+      expect(hook.result.current.stats.correctReports).toBe(1)
+    })
   })
 })
 
