@@ -110,6 +110,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 - `camera-key`: RT-UI-03, RT-UI-20
 - `noise`: RT-UI-22, RT-FEED-28, RT-RULE-03
 - `report-lamp`: RT-UI-09, RT-RULE-02
+- `rec-lamp`: RT-UI-12, RT-FEED-29
 
 | kind / status                        | 必須                                                                                        | 省略可・禁止                                                                                                                                                                              |
 | ------------------------------------ | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -173,7 +174,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 | `ui_corruption` | UI の崩れ（画像以外）      | 画面表示が壊れる                             |
 | `rule_break`    | ルール違反（画像以外）     | タイマーの異常                               |
 
-`feed_glitch` の見せ方（#78）: RT-FEED-01〜06・11・12・16〜18・19〜26・27・28 は画面側の効果が実装済み（種類と台帳 ID の対応は `src/utils/feedGlitch.ts`、描画は `src/styles/feedGlitch.css`）。開発サーバーで `?glitch=<種類>`（`zoom` `tilt` `blur` `bright` `dark` `blocks` `scanburn` `lost` `shake` `hardshake` `wave` `chroma` `static` `blink` `deadpixels` `ghost` `fade` `letterbox` `green` `flip` `heavyvignette` `mono` `nonoise`）を付けると全カメラで強制発火して見られる（本番ビルドでは無効）。RT-FEED-07〜10・13〜15 は見送りで、理由は各エントリの `note` に書いてある。RT-FEED-01〜06・11・12・16〜18・19〜26・27・28 は `produced`（#77）で、出現のたびに無作為なカメラで起き（RT-FEED-28 だけは 1〜3 台に同時に出る）、そのカメラを見ている間だけ効果が出て、そのカメラで Camera を報告すると解除される（出現・報告の仕組みは CLAUDE.md の「Non-image anomalies in play」）。
+`feed_glitch` の見せ方（#78）: RT-FEED-01〜06・11・12・16〜18・19〜26・27・28・29 は画面側の効果が実装済み（種類と台帳 ID の対応は `src/utils/feedGlitch.ts`、描画は `src/styles/feedGlitch.css`）。開発サーバーで `?glitch=<種類>`（`zoom` `tilt` `blur` `bright` `dark` `blocks` `scanburn` `lost` `shake` `hardshake` `wave` `chroma` `static` `blink` `deadpixels` `ghost` `fade` `letterbox` `green` `flip` `heavyvignette` `mono` `nonoise` `norec`）を付けると全カメラで強制発火して見られる（本番ビルドでは無効）。RT-FEED-07〜10・13〜15 は見送りで、理由は各エントリの `note` に書いてある。RT-FEED-01〜06・11・12・16〜18・19〜26・27・28・29 は `produced`（#77）で、出現のたびに無作為なカメラで起き（RT-FEED-28 だけは 1〜3 台に同時に出る）、そのカメラを見ている間だけ効果が出て、そのカメラで Camera を報告すると解除される（出現・報告の仕組みは CLAUDE.md の「Non-image anomalies in play」）。RT-FEED-29（`norec`）は CSS の効果ではなく、そのカメラを見ている間だけ画面の REC（丸と文字）を描かない。
 
 ## カテゴリ（ゲーム内分類）
 
