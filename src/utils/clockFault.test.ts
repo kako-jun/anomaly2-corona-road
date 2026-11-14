@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   CLOCK_FAULT_KINDS,
+  CLOCK_JUMP_HOLD_MIN,
+  CLOCK_JUMP_PERIOD_MIN,
   faultedClock,
   pickClockFault,
   type ClockFault,
@@ -24,9 +26,27 @@ describe('RT-UI-05 clock fault', () => {
   it('frozen: stays on the start time while the real time moves', () => {
     expect(faultedClock('02:40', f('frozen'))).toBe('23:10')
   })
-  it('jump: the hour goes to 00 or 06 (the one that is not the real hour), the minutes keep running', () => {
-    expect(faultedClock('01:23', f('jump'))).toBe('00:23')
-    expect(faultedClock('00:23', f('jump'))).toBe('06:23')
+  it('jump: repeats - real time for a while, then the hour goes to 00 or 06 (the one that is not the real hour) with the minutes running, then back', () => {
+    const start = '01:00'
+    const at = (min: number) => {
+      const t = 60 + min
+      return `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`
+    }
+    const shown = (min: number) => faultedClock(at(min), f('jump', start))
+    const real = CLOCK_JUMP_PERIOD_MIN - CLOCK_JUMP_HOLD_MIN
+    expect(shown(0)).toBe(at(0))
+    expect(shown(real - 1)).toBe(at(real - 1))
+    expect(shown(real)).toBe(`00:${at(real).slice(3)}`)
+    expect(shown(CLOCK_JUMP_PERIOD_MIN - 1)).toBe(
+      `00:${at(CLOCK_JUMP_PERIOD_MIN - 1).slice(3)}`
+    )
+    // it comes back, and jumps again in the next period
+    expect(shown(CLOCK_JUMP_PERIOD_MIN)).toBe(at(CLOCK_JUMP_PERIOD_MIN))
+    expect(shown(CLOCK_JUMP_PERIOD_MIN + real)).not.toBe(
+      at(CLOCK_JUMP_PERIOD_MIN + real)
+    )
+    // the hour 00 jumps to 06
+    expect(faultedClock('00:08', f('jump', '00:00'))).toBe('06:08')
   })
   it('picks every kind with the rng and keeps the start time', () => {
     const kinds = [0, 0.4, 0.9].map(r => pickClockFault('22:30', () => r))

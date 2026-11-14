@@ -7001,7 +7001,7 @@ anomalies:
     exclusive: 'digit-window'
     category: 'Surreal'
     anomaly_type: 'ui_corruption'
-    detail: 'timer backwards / jumps / frozen: 時刻が逆走する / 0:00・6:00付近へ飛ぶ / 映像は動くが時刻が止まる。'
+    detail: 'timer backwards / jumps / frozen: 時刻が逆走する / 0:00・6:00付近へ飛ぶ（1回では気づけないので、飛んで戻るのを繰り返す。暫定: 10秒ごとに4秒間飛ぶ）/ 映像は動くが時刻が止まる。'
     memo:
       ja: '時刻が戻り、跳び、止まる。映像は動く。'
       en: 'Clock reverses, jumps, stops; feed runs.'
