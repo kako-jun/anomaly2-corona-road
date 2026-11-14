@@ -46,13 +46,20 @@ describe('situation detection (every opportunity speaks)', () => {
     for (const [i, at] of times.entries()) missed.found(at, at, i + 1, 1)
     expect(missed.take(times[4])).toBeNull() // a false report spoils the clean run
   })
-  it('tenth: the tenth find of the shift, and it wins over hot', () => {
+  it('tenth: the tenth find of the shift offers tenth, never hot (an earlier waiting hot, if any, is the one that holds the place)', () => {
     const t = createSituationTracker(ALWAYS, () => 0)
     for (let i = 1; i <= 9; i++) t.found(i * 1000, i * 1000, i, 0)
     t.settle('hot', 1) // clear whatever hot said
     expect(t.take(9000)).toBeNull()
     t.found(10_000, 10_000, 10, 0)
     expect(t.take(10_000)).toBe('tenth')
+  })
+  it('a find drops a waiting cold (the long quiet it spoke of is over)', () => {
+    const t = createSituationTracker(ALWAYS, () => 0)
+    t.tick(CFG.coldAfterMs, 1)
+    expect(t.take(1)).toBe('cold')
+    t.found(CFG.coldAfterMs + 1000, 2, 1, 0)
+    expect(t.take(2)).toBeNull()
   })
   it('brink: exactly when the false reports reach one short of a withdraw', () => {
     const t = createSituationTracker(ALWAYS, () => 0)

@@ -520,7 +520,11 @@ export const selectNext = (input: SelectInput): Selected | null => {
     )
     if (p) return { ...p, source: 'spawn-hint', hintedAnomaly: id }
   }
-  if (input.pendingQuotaReached) {
+  // The quota line is a light conversation: like a chatter it waits out the quiet time after a serious one.
+  if (
+    input.pendingQuotaReached &&
+    chatterAllowed(input.last ?? null, input.nowMs ?? 0, input.quietMs)
+  ) {
     const p = pickQuotaReached(input.ledger, used, rng, flags)
     if (p) return { ...p, source: 'quota-reached' }
   }

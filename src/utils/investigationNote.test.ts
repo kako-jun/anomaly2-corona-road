@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { QUOTA_MET_LINES, STAGES } from '../data/investigationNotes'
+import { OUTCOMES, QUOTA_MET_LINES, STAGES } from '../data/investigationNotes'
 import {
   NOTE_MAX_COUNT,
   buildNote,
@@ -94,6 +94,38 @@ describe('quota-met result line (#428)', () => {
     expect(quotaMetLine(1)).toBe(quotaMetLine(1 + QUOTA_MET_LINES.length))
     expect(texts(after({ found: 5 }, 2))).toContain(QUOTA_MET_LINES[1].ja)
     expect(texts(after({ found: 5 }, 2))).toEqual(texts(after({ found: 5 }, 2)))
+  })
+})
+
+describe('quota-met line on a night with no new kinds (#445)', () => {
+  const after = (sh: Partial<LastShift>, loops: number) =>
+    buildNote(
+      { mode: 'after', save: save({ loops, foundTotal: 9 }), shift: shift(sh) },
+      'ja'
+    )
+  const claims = QUOTA_MET_LINES.filter(l => l.claimsFind).map(l => l.ja)
+  it('some lines claim a good catch, and some do not (the pool for a night with no new leads is not empty)', () => {
+    expect(claims.length).toBeGreaterThan(0)
+    expect(QUOTA_MET_LINES.length - claims.length).toBeGreaterThanOrEqual(3)
+  })
+  it('never puts a "found things well" line right after "no new leads", on any night number', () => {
+    for (let night = 1; night <= 24; night++) {
+      const t = texts(after({ found: 4, fresh: 0 }, night))
+      expect(t, `night ${night}`).toContain(OUTCOMES.noNewKinds.lines[0].ja)
+      expect(
+        t.filter(x => claims.includes(x)),
+        `night ${night}`
+      ).toEqual([])
+      expect(t.some(x => QUOTA_MET_LINES.some(l => l.ja === x))).toBe(true)
+    }
+  })
+  it('a night with new kinds may still use them, and the choice stays fixed per night', () => {
+    const seen = new Set<string>()
+    for (let night = 1; night <= QUOTA_MET_LINES.length; night++)
+      for (const x of texts(after({ found: 4, fresh: 2 }, night)))
+        if (claims.includes(x)) seen.add(x)
+    expect(seen.size).toBe(claims.length)
+    expect(quotaMetLine(3, 'noNewKinds')).toBe(quotaMetLine(3, 'noNewKinds'))
   })
 })
 

@@ -149,8 +149,10 @@ export const DIALOGUE_CONFIG = {
     rules: {
       hot: { chance: 0.5, minGapMs: 90_000, maxPerShift: 2 },
       cold: { chance: 0.5, minGapMs: 120_000, maxPerShift: 2 },
-      brink: { chance: 0.7, minGapMs: 0, maxPerShift: 2 },
-      tenth: { chance: 0.7, minGapMs: 0, maxPerShift: 2 },
+      // brink and tenth are one-time moments by construction (the false-report count passes `brinkMisreports` once,
+      // the find number passes `tenthCount` once), so a gap and a repeat limit mean nothing: 0 and 1 say so.
+      brink: { chance: 0.7, minGapMs: 0, maxPerShift: 1 },
+      tenth: { chance: 0.7, minGapMs: 0, maxPerShift: 1 },
     },
     hotCount: 3,
     hotWindowMs: 90_000,

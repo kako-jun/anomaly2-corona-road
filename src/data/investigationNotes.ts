@@ -291,13 +291,33 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
  * One more line on the result of a dawn that met the quota (#428; kako-jun: a little happy, no numbers or stamps).
  * Which one is picked by the night number (`quotaMetLine`), so the same night always reads the same and the nights differ.
  */
-export const QUOTA_MET_LINES: KnownPair[] = [
-  k('start', '今夜は、手応えがあった。', 'Felt a solid hit tonight.'),
-  k('start', '最後まで見ていた夜だった。', 'A night of watching to the end.'),
-  k('start', '朝まで、いい夜だった。', 'A good night, start to finish.'),
-  k('start', '気分のいい夜だった。', 'A good-feeling night.'),
-  k('start', '目がよく見えた夜だった。', 'My eyes were sharp tonight.'),
-  k('start', 'うまく見つけられた夜だった。', 'A night of finding things well.'),
+export interface QuotaMetLine extends KnownPair {
+  /**
+   * The line says the night found things well (a hit, a good catch). A night with no new kinds already reads "no new
+   * leads", so these are not drawn for it (they would contradict the line just above).
+   */
+  claimsFind?: true
+}
+
+const kq = (ja: string, en: string, claimsFind?: true): QuotaMetLine => ({
+  ...k('start', ja, en),
+  ...(claimsFind ? { claimsFind } : {}),
+})
+
+export const QUOTA_MET_LINES: QuotaMetLine[] = [
+  kq('今夜は、手応えがあった。', 'Felt a solid hit tonight.', true),
+  kq('見ていてよかった夜だった。', 'A night that made the watching worth it.'),
+  kq('朝まで、いい夜だった。', 'A good night, all the way to morning.'),
+  kq(
+    '少しうれしい、気分のいい夜だった。',
+    'A good-feeling night. A little happy.'
+  ),
+  kq('目がよく見えた夜だった。', 'My eyes were sharp tonight.', true),
+  kq(
+    'うまく見つけられて、少しうれしかった。',
+    'Found things well, and a little happy.',
+    true
+  ),
 ]
 
 /** Added to the synopsis of a start-of-night memo when the last night gave nothing, or ended in a withdraw. */

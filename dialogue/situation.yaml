@@ -4,27 +4,27 @@ dialogues:
     tone: light
     when: { situation: hot }
     lines:
-      - { who: A, text: '今夜は冴えてる　次々見える', en: 'I am sharp tonight. I keep spotting them.' }
-      - { who: M, text: 'はい　いい流れですよ', en: 'Yes, it is a good flow.' }
+      - { who: A, text: '今夜は冴えてる　次々見える', en: "I'm sharp tonight. I keep spotting them." }
+      - { who: M, text: 'はい　いい流れですよ', en: "Yes, it's a good flow." }
   - id: situation-hot-02
     tone: light
     when: { situation: hot }
     lines:
-      - { who: M, text: '出河さん　絶好調ですね', en: 'Ms. Dekawa, you are on fire.' }
+      - { who: M, text: '出河さん　絶好調ですね', en: "Ms. Dekawa, you're on fire." }
       - { who: A, text: 'でしょ？　自分でも怖いくらい', en: 'Right? It scares even me.' }
   - id: situation-hot-03
     tone: light
     when: { situation: hot }
     lines:
       - { who: A, text: '目が慣れてきた　どんどん行くよ', en: 'My eyes have adjusted. Here I go.' }
-      - { who: M, text: '焦らず　確かめてからでお願いします', en: 'Do not rush. Please check before you report.' }
+      - { who: M, text: '焦らず　確かめてからでお願いします', en: "Don't rush. Please check before you report." }
   - id: situation-hot-04
     tone: light
     when: { situation: hot }
     lines:
       - { who: A, text: 'この調子この調子', en: 'Keep it up, keep it up.' }
-      - { who: M, text: '調子に乗ると　お手つきしますよ', en: 'If you get cocky you will slip.' }
-      - { who: A, text: '縁起でもない！', en: 'Do not jinx it!' }
+      - { who: M, text: '調子に乗ると　お手つきしますよ', en: "If you get cocky you'll slip." }
+      - { who: A, text: '縁起でもない！', en: "Don't jinx it!" }
   - id: situation-hot-05
     tone: light
     when: { situation: hot }
@@ -36,40 +36,40 @@ dialogues:
     tone: light
     when: { situation: hot }
     lines:
-      - { who: A, text: 'ふふん　今夜はもらったかも', en: 'Heh, tonight might be mine.' }
-      - { who: M, text: 'その顔　久しぶりに見ました', en: 'I have not seen that face in a while.' }
+      - { who: A, text: 'ふふん　今夜はいい感じかも', en: 'Heh, tonight might feel good.' }
+      - { who: M, text: 'その顔　悪くないですね', en: "That look isn't bad." }
   - id: situation-cold-01
     tone: light
     when: { situation: cold }
     lines:
-      - { who: A, text: 'ずいぶん静かだね　見落としてないよね？', en: 'It is awfully quiet. I have not missed anything, have I?' }
+      - { who: A, text: 'ずいぶん静かだね　見落としてないよね？', en: "It's awfully quiet. I haven't missed anything, have I?" }
       - { who: M, text: 'たぶん　でも一度見直しましょうか', en: 'Probably not, but shall we look over everything once?' }
   - id: situation-cold-02
     tone: light
     when: { situation: cold }
     lines:
-      - { who: A, text: '長いこと何も見つけてない　眠くなる', en: 'Nothing found for ages. I am getting sleepy.' }
-      - { who: M, text: '眠気覚ましに　画面を見渡しましょう', en: 'Let us scan all the screens to wake up.' }
+      - { who: A, text: '長いこと何も見つけてない　眠くなる', en: "Nothing found for ages. I'm getting sleepy." }
+      - { who: M, text: '眠気覚ましに　画面を見渡しましょう', en: "Let's scan all the screens to wake up." }
   - id: situation-cold-03
     tone: light
     when: { situation: cold }
     lines:
-      - { who: M, text: '出河さん　しばらく動きがありませんね', en: 'Ms. Dekawa, nothing has moved for a while.' }
+      - { who: M, text: '出河さん　しばらく何も見つかってませんね', en: "Ms. Dekawa, we haven't found anything for a while." }
       - { who: A, text: '嵐の前ってやつかな', en: 'Maybe the calm before the storm.' }
-      - { who: M, text: 'それなら　今のうちに目を休めます', en: 'Then I will rest my eyes while I can.' }
+      - { who: M, text: 'それなら　もう一度ゆっくり見回します', en: "Then I'll look around once more, slowly." }
   - id: situation-cold-04
     tone: light
     when: { situation: cold }
     lines:
       - { who: M, text: '手持ち無沙汰ですね　お菓子つまみます？', en: 'Nothing to do. Want to snack on something?' }
       - { who: A, text: '夜中のお菓子は　体に悪いよ', en: 'Midnight snacks are bad for you.' }
-      - { who: M, text: 'じゃあ　俺だけ食べます', en: 'Then I will eat alone.' }
+      - { who: M, text: 'じゃあ　俺だけ食べます', en: "Then I'll eat alone." }
   - id: situation-cold-05
     tone: light
     when: { situation: cold }
     lines:
-      - { who: A, text: 'あくびが出ちゃう　何もない時間って長いね', en: 'I keep yawning. Empty time is so long.' }
-      - { who: M, text: '何もないのが　本当は一番ですよ', en: 'Nothing happening is actually the best.' }
+      - { who: A, text: 'あくびが出ちゃう　見つからない時間って長いね', en: 'I keep yawning. Time with nothing found is so long.' }
+      - { who: M, text: '何もないなら　それが一番ですけどね', en: "If there really is nothing, that's the best outcome." }
   - id: situation-cold-06
     tone: light
     when: { situation: cold }
@@ -81,13 +81,13 @@ dialogues:
     when: { situation: brink }
     lines:
       - { who: A, text: 'まずい　あと１回間違えたら撤収だ', en: 'Uh-oh. One more mistake and we pull out.' }
-      - { who: M, text: 'はい　慎重にいきましょう', en: 'Yes, let us be careful.' }
+      - { who: M, text: 'はい　慎重にいきましょう', en: "Yes, let's be careful." }
   - id: situation-brink-02
     tone: serious
     when: { situation: brink }
     lines:
-      - { who: M, text: '出河さん　次に外したら引き上げですよね', en: 'Ms. Dekawa, one more miss and we pull out, right?' }
-      - { who: A, text: '分かってる　確信が持てるまで押さない', en: 'I know. I will not press until I am sure.' }
+      - { who: M, text: '出河さん　まだ大丈夫です　ゆっくり見ましょう', en: "Ms. Dekawa, you're still okay. Let's take it slowly." }
+      - { who: A, text: '分かってる　確信が持てるまで押さない', en: "I know. I won't press until I'm sure." }
   - id: situation-brink-03
     tone: serious
     when: { situation: brink }
@@ -100,7 +100,7 @@ dialogues:
     lines:
       - { who: A, text: '崖っぷちってこういうことか', en: 'So this is what the edge feels like.' }
       - { who: M, text: '落ち着いて見れば大丈夫ですよ', en: 'If you look calmly, it will be fine.' }
-      - { who: A, text: '樫原くんは冷静でいいなあ', en: 'You are lucky to be so calm, Kashihara.' }
+      - { who: A, text: '樫原くんは冷静でいいなあ', en: "You're lucky to be so calm, Kashihara." }
   - id: situation-brink-05
     tone: serious
     when: { situation: brink }
@@ -111,19 +111,19 @@ dialogues:
     tone: serious
     when: { situation: brink }
     lines:
-      - { who: A, text: 'もう間違えられない　目を見開いていくよ', en: 'I cannot be wrong again. Eyes wide open.' }
+      - { who: A, text: 'もう間違えられない　目を見開いていくよ', en: "I can't be wrong again. Eyes wide open." }
       - { who: M, text: '瞬きはしてください', en: 'Please do blink.' }
   - id: situation-tenth-01
     tone: light
     when: { situation: tenth }
     lines:
-      - { who: A, text: 'あっ　１０件目まで来たよ', en: 'Oh, we have made it to ten.' }
+      - { who: A, text: 'おっ　１０件目まで来たよ', en: "Oh, we've made it to ten." }
       - { who: M, text: '大台ですね　すごいです', en: 'A big milestone. Impressive.' }
   - id: situation-tenth-02
     tone: light
     when: { situation: tenth }
     lines:
-      - { who: M, text: '出河さん　１０件目に届きましたね', en: 'Ms. Dekawa, you have reached ten.' }
+      - { who: M, text: '出河さん　１０件目に届きましたね', en: "Ms. Dekawa, you've reached ten." }
       - { who: A, text: 'そんなに見つけてた？　自分でびっくり', en: 'That many? I surprised myself.' }
   - id: situation-tenth-03
     tone: light
@@ -142,12 +142,12 @@ dialogues:
     tone: light
     when: { situation: tenth }
     lines:
-      - { who: M, text: '１０件目ですね　お疲れさまです', en: 'That is ten. Good work.' }
-      - { who: A, text: '気は抜かないよ', en: 'I am not letting up.' }
+      - { who: M, text: '１０件目ですね　お疲れさまです', en: "That's ten. Good work." }
+      - { who: A, text: '気は抜かないよ', en: "I'm not letting up." }
   - id: situation-tenth-06
     tone: light
     when: { situation: tenth }
     lines:
-      - { who: A, text: 'いつの間にか１０件　数えてなかった', en: 'Ten already. I was not counting.' }
+      - { who: A, text: 'いつの間にか１０件　数えてなかった', en: "Ten already. I wasn't counting." }
       - { who: M, text: '俺は数えてました', en: 'I was counting.' }
       - { who: A, text: '細かい！', en: 'So particular!' }

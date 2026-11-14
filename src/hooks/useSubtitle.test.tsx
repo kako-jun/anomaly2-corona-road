@@ -127,8 +127,8 @@ const H = vi.hoisted(() => {
       'situation-tenth-1',
       { situation: 'tenth' },
       'light',
-      'st1a',
-      'st1b'
+      'sn1a',
+      'sn1b'
     ),
     e(
       'situation',
@@ -1184,6 +1184,48 @@ describe('useSubtitle: quota (#428)', () => {
     expect(a.seen.slice(0, 2)).toEqual(['frm1a', 'frm1b'])
   })
 
+  it('the quota line waits out the quiet time after a serious conversation (a light line is not stacked on it)', () => {
+    const d = driver()
+    afterOpening()
+    d.set({ flagEvent: { seq: 1, flags: ['f1'] } })
+    const w = watch(d.result)
+    w.step(2 * GAP + 100) // the story (serious) is now on screen
+    expect(shown(d.result)).toBe('st1a')
+    d.set({ foundThisPlay: Q - 1, elapsedMs: 100_000 })
+    d.set({ foundThisPlay: Q, elapsedMs: 101_000 })
+    let t = 0
+    let storyEnd = -1
+    let quotaAt = -1
+    for (; t < 120_000 && quotaAt < 0; t += 50) {
+      advance(50)
+      const text = shown(d.result)
+      if (text === 'st1b') storyEnd = t
+      if (text === 'qr1a') quotaAt = t
+    }
+    expect(storyEnd).toBeGreaterThanOrEqual(0)
+    expect(quotaAt).toBeGreaterThan(storyEnd)
+    // Not right after the story: at least the quiet time passes (a chatter would wait just as long).
+    expect(quotaAt - storyEnd).toBeGreaterThanOrEqual(
+      DIALOGUE_CONFIG.seriousQuietMs - 200
+    )
+  })
+
+  it('a person flag raised on the same find as the quota: the story first, then the quota line, once each', () => {
+    const d = driver()
+    afterOpening()
+    d.set({ foundThisPlay: Q - 1, elapsedMs: 100_000 })
+    d.set({
+      foundThisPlay: Q,
+      elapsedMs: 101_000,
+      flagEvent: { seq: 1, flags: ['f1'] },
+    })
+    const w = watch(d.result)
+    w.step(3 * SILENCE)
+    expect(w.seen.filter(x => x === 'st1a')).toHaveLength(1)
+    expect(w.seen.filter(x => x === 'qr1a')).toHaveLength(1)
+    expect(w.seen.indexOf('qr1a')).toBeGreaterThan(w.seen.indexOf('st1b'))
+  })
+
   it('ending a play early or with the quota unmet does not touch the quota bags', () => {
     const d = driver({ foundThisPlay: 1 })
     d.set({ ending: 'dawn' })
@@ -1226,6 +1268,39 @@ describe('useSubtitle: situations (#428)', () => {
     expect(w.seen.indexOf('sh1a')).toBeGreaterThan(w.seen.indexOf('qr1a'))
   })
 
+  it('the find that is both the quota and the tenth: the quota line first, then the tenth conversation in the next chatter slot', () => {
+    const d = driver()
+    afterOpening()
+    const w = watch(d.result)
+    d.set({
+      foundThisPlay: DEFAULT_CONFIG.minCorrectReports - 1,
+      elapsedMs: 100_000,
+    })
+    // One progress step that crosses the quota and lands on the tenth find together.
+    d.set({
+      foundThisPlay: DIALOGUE_CONFIG.situations.tenthCount,
+      elapsedMs: 101_000,
+    })
+    w.step(4 * SILENCE)
+    expect(w.seen.filter(x => x === 'qr1a')).toHaveLength(1)
+    expect(w.seen.filter(x => x === 'sn1a')).toHaveLength(1)
+    expect(w.seen.indexOf('sn1a')).toBeGreaterThan(w.seen.indexOf('qr1b'))
+  })
+
+  it('a cold line that waits is dropped by the find that reaches the quota (it would say "nothing found" right after a find)', () => {
+    const d = driver()
+    afterOpening()
+    d.set({ elapsedMs: DIALOGUE_CONFIG.situations.coldAfterMs + 1000 })
+    d.set({
+      foundThisPlay: DEFAULT_CONFIG.minCorrectReports,
+      elapsedMs: DIALOGUE_CONFIG.situations.coldAfterMs + 2000,
+    })
+    const w = watch(d.result)
+    w.step(4 * SILENCE)
+    expect(w.seen).toContain('qr1a')
+    expect(w.seen.some(x => x.startsWith('sc'))).toBe(false)
+  })
+
   it('a miss of the dice says nothing and uses nothing up', () => {
     // Math.random is mocked high: every roll misses.
     vi.spyOn(Math, 'random').mockReturnValue(0.999)
@@ -1249,7 +1324,7 @@ describe('useSubtitle: situations (#428)', () => {
       if (withSituation) d.set({ misreports: MISS_CAP })
       const w = watch(d.result)
       w.step(8 * SILENCE)
-      const n = w.seen.filter(t => /^(ch|sb|sc|st|fr)\d?[a-z]$/.test(t)).length
+      const n = w.seen.filter(t => /^(ch|sb|sc|sn|fr)\d?[a-z]$/.test(t)).length
       d.unmount()
       return n
     }
@@ -1312,7 +1387,7 @@ describe('useSubtitle: situations (#428)', () => {
       w.step(8 * SILENCE)
       d.unmount()
       // One conversation = one first line (a first line is the one that starts a conversation).
-      const firsts = /^(ch1a|ch2a|ch3a|sb1a|sb2a|sc1a|st1a)$/
+      const firsts = /^(ch1a|ch2a|ch3a|sb1a|sb2a|sc1a|sn1a)$/
       return {
         n: w.seen.filter(t => firsts.test(t)).length,
         spoke: w.seen.some(t => t.startsWith('sb')),
