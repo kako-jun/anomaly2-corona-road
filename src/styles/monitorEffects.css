@@ -366,7 +366,7 @@
   content: '';
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 900; /* above the cabinet and the report dialog (100), below the screen fade (999 / 1000, screenFade.css) */
   background: #fff;
   opacity: 0.05;
   pointer-events: none;

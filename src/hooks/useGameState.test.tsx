@@ -1741,7 +1741,7 @@ describe('RT-UI-10 cursor glitch is drawn only with a mouse (#437)', () => {
   it('is drawn when the device has a hover-capable fine pointer', () => {
     expect(spawnedIds(true)).toEqual(['RT-UI-10'])
   })
-  it('is never drawn on a touch device (nothing would show), and the shift keeps retrying instead of ending', () => {
+  it('is never drawn on a touch device (nothing would show)', () => {
     expect(spawnedIds(false)).toEqual([])
   })
 })
