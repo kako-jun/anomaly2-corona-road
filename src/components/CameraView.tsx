@@ -70,6 +70,8 @@ interface CameraViewProps {
   onEdgeTap: (direction: 'next' | 'prev') => void
   /** Where the magnifier loupe is drawn (the control panel, #341). Without it the loupe is off. */
   loupeHost?: HTMLElement | null
+  /** RT-UI-21: the loupe does not come up (pressing the picture shows nothing; taps, double tap and edge taps still work). */
+  loupeBroken?: boolean
 }
 
 export const CameraView = ({
@@ -84,12 +86,13 @@ export const CameraView = ({
   feedGlitchForced,
   onEdgeTap,
   loupeHost,
+  loupeBroken = false,
 }: CameraViewProps) => {
   const glassRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<HTMLDivElement>(null)
   const noise = useNoiseOff()
   const { view: loupeView, handlers } = useLoupeGesture({
-    enabled: !!loupeHost,
+    enabled: !!loupeHost && !loupeBroken,
     glassRef,
     frameRef,
     onEdgeTap,
