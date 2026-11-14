@@ -350,6 +350,7 @@ export const Cabinet = ({
   const userKnobs = useRef({ b: brightness, c: contrast })
   useEffect(() => {
     if (!knobDrift) return
+    const user = userKnobs.current // one object for the whole run (only its fields change)
     const reduced =
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
     const tick = reduced ? 3000 : 100
@@ -383,8 +384,8 @@ export const Cabinet = ({
       document.removeEventListener('pointerup', up)
       document.removeEventListener('pointercancel', up)
       knobTouch.current = { held: false, last: 0 }
-      setBrightness(userKnobs.current.b)
-      setContrast(userKnobs.current.c)
+      setBrightness(user.b)
+      setContrast(user.c)
     }
   }, [knobDrift])
   const changeBrightness = useCallback((v: number) => {
