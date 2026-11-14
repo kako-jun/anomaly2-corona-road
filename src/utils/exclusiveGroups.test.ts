@@ -32,6 +32,16 @@ describe('exclusive groups: the README list and the ledger agree', () => {
       }
     }
   })
+  it('every id the ledger puts in a group is listed under that group in the README (the reverse check)', () => {
+    for (const e of ledger.anomalies) {
+      if (!e.exclusive) continue
+      const row = listed.find(l => l.group === e.exclusive)
+      expect(
+        row?.ids,
+        `${e.id} has exclusive '${e.exclusive}' but the README row does not list it`
+      ).toContain(e.id)
+    }
+  })
   it('every group used in the ledger is listed in the README (no group only the ledger knows)', () => {
     const used = new Set(
       ledger.anomalies.flatMap(e => (e.exclusive ? [e.exclusive] : []))

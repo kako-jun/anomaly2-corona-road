@@ -84,16 +84,19 @@ export const SWITCH_RULES: readonly SwitchRule[] = [
 export const planSwitch = (
   request: SwitchRequest,
   ctx: Omit<SwitchContext, 'source' | 'now'> & { now?: number }
-): SwitchPlan =>
-  SWITCH_RULES.reduce<SwitchPlan>(
-    (plan, rule) =>
-      rule(plan, {
-        ...ctx,
-        source: request.source,
-        now: ctx.now ?? performance.now(),
-      }),
-    { to: request.to, blocked: false, delayMs: 0 }
-  )
+): SwitchPlan => {
+  // read the clock once, so every rule sees the same arrival time
+  const full: SwitchContext = {
+    ...ctx,
+    source: request.source,
+    now: ctx.now ?? performance.now(),
+  }
+  return SWITCH_RULES.reduce<SwitchPlan>((plan, rule) => rule(plan, full), {
+    to: request.to,
+    blocked: false,
+    delayMs: 0,
+  })
+}
 
 /** The camera index a plan leads to, counted from `from` (steps wrap round; a selection is clamped to the cameras). */
 export const targetIndex = (
