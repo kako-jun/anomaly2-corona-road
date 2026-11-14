@@ -36,8 +36,8 @@ dialogues:
     tone: light
     when: { situation: hot }
     lines:
-      - { who: A, text: 'ふふん　今夜はいい感じかも', en: 'Heh, tonight feels good.' }
-      - { who: M, text: 'その顔　悪くないですね', en: 'That look suits you.' }
+      - { who: A, text: 'ふふん　今夜はいい感じかも', en: 'Heh, tonight might feel good.' }
+      - { who: M, text: 'その顔　悪くないですね', en: "That look isn't bad." }
   - id: situation-cold-01
     tone: light
     when: { situation: cold }
@@ -86,7 +86,7 @@ dialogues:
     tone: serious
     when: { situation: brink }
     lines:
-      - { who: M, text: '出河さん　まだ大丈夫です　ゆっくり見ましょう', en: "Ms. Dekawa, you're fine. Let's take it slowly." }
+      - { who: M, text: '出河さん　まだ大丈夫です　ゆっくり見ましょう', en: "Ms. Dekawa, you're still okay. Let's take it slowly." }
       - { who: A, text: '分かってる　確信が持てるまで押さない', en: "I know. I won't press until I'm sure." }
   - id: situation-brink-03
     tone: serious

@@ -135,7 +135,7 @@ dialogues:
     when: { quota: met }
     lines:
       - { who: A, text: 'ちぇっ　ここまで順調だったのに', en: 'Tch, and it was going so well.' }
-      - { who: M, text: 'お手つきくらい　大丈夫ですよ', en: "A slip like that's fine." }
+      - { who: M, text: 'お手つきくらい　大丈夫ですよ', en: 'A slip like that is fine.' }
   - id: false-report-met-04
     tone: light
     when: { quota: met }

@@ -247,7 +247,7 @@ dialogues:
     tone: light
     when: { result: dawn, quota: met }
     lines:
-      - { who: A, text: '朝日がきれいに見えるなあ', en: 'The sunrise looks beautiful.' }
+      - { who: A, text: '朝日がきれいに見えるね', en: 'The sunrise looks beautiful.' }
       - { who: M, text: 'いい夜だったから　そう見えるんですよ', en: "That's how it looks after a good night." }
       - { who: A, text: '単純だなあ　私', en: "I'm so simple." }
   - id: closing-dawn-24
@@ -280,7 +280,7 @@ dialogues:
     tone: light
     when: { result: dawn, quota: met }
     lines:
-      - { who: A, text: '眠い　でも少し嬉しい', en: 'Sleepy, but a little happy.' }
+      - { who: A, text: '眠い　でも嬉しい朝だね', en: "Sleepy, but it's a happy morning." }
       - { who: M, text: 'いい夜でしたからね', en: 'It was a good night.' }
       - { who: A, text: 'また明日もこの調子でいこう', en: "Let's keep this up tomorrow too." }
   - id: closing-dawn-29
@@ -288,7 +288,7 @@ dialogues:
     when: { result: dawn, quota: met }
     lines:
       - { who: M, text: '朝です　今夜はよく見えてましたね', en: "It's morning. You were seeing well tonight." }
-      - { who: A, text: '自分でも手応えあった　ちょっと嬉しい', en: "I felt it too. I'm a little happy." }
+      - { who: A, text: '自分でも手応えあった　悪くない気分', en: "I felt it too. Feels pretty good." }
       - { who: M, text: '次の夜も期待してます', en: "I'm counting on the next night too." }
   - id: closing-dawn-30
     tone: light

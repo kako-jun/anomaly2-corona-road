@@ -312,7 +312,7 @@ export const QUOTA_MET_LINES: QuotaMetLine[] = [
     '少しうれしい、気分のいい夜だった。',
     'A good-feeling night. A little happy.'
   ),
-  kq('目がよく見えた夜だった。', 'My eyes were sharp tonight.'),
+  kq('目がよく見えた夜だった。', 'My eyes were sharp tonight.', true),
   kq(
     'うまく見つけられて、少しうれしかった。',
     'Found things well, and a little happy.',
