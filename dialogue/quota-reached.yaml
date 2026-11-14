@@ -4,35 +4,35 @@ dialogues:
     tone: light
     lines:
       - { who: A, text: 'よし　今夜は収穫があったね', en: 'Good, a decent haul tonight.' }
-      - { who: M, text: 'はい　ここからは　落ち着いて見られますね', en: 'Yes, from here we can look at things calmly.' }
+      - { who: M, text: 'はい　この調子で見ていきましょう', en: "Yes, let's keep watching like this." }
   - id: quota-reached-02
     tone: light
     lines:
       - { who: A, text: 'あれ　今夜は目が利くかも', en: 'Huh, my eyes might be sharp tonight.' }
-      - { who: M, text: '出河さん　さっきから冴えてますよ', en: 'Ms. Dekawa, you have been sharp for a while now.' }
+      - { who: M, text: '出河さん　さっきから冴えてますよ', en: "Ms. Dekawa, you've been sharp for a while now." }
   - id: quota-reached-03
     tone: light
     lines:
-      - { who: M, text: '出河さん　今夜はよく当たりますね', en: 'Ms. Dekawa, you are hitting a lot tonight.' }
-      - { who: A, text: 'ほんと？　顔がにやけちゃう', en: 'Really? I cannot stop grinning.' }
+      - { who: M, text: '出河さん　今夜はよく当たりますね', en: "Ms. Dekawa, you're hitting a lot tonight." }
+      - { who: A, text: 'ほんと？　顔がにやけちゃう', en: "Really? I can't stop grinning." }
   - id: quota-reached-04
     tone: light
     lines:
-      - { who: A, text: 'ふふ　調子いいね　このまま行こう', en: 'Heh, going well. Let us keep it up.' }
-      - { who: M, text: 'はい　油断は禁物ですけど', en: 'Yes, though we should not let our guard down.' }
+      - { who: A, text: 'ふふ　調子いいね　このまま行こう', en: "Heh, going well. Let's keep it up." }
+      - { who: M, text: 'はい　油断は禁物ですけど', en: "Yes, though we shouldn't let our guard down." }
   - id: quota-reached-05
     tone: light
     lines:
-      - { who: A, text: '樫原くん　今夜はけっこう見つけたよね？', en: 'Kashihara, we have found quite a few tonight, right?' }
+      - { who: A, text: '樫原くん　今夜はけっこう見つけたよね？', en: "Kashihara, we've found quite a few tonight, right?" }
       - { who: M, text: 'はい　見ていて分かりましたよ', en: 'Yes, I could tell from watching.' }
-      - { who: A, text: 'さすが　頼りになる', en: 'As expected. You are reliable.' }
+      - { who: A, text: '見ててくれたんだ　なんか嬉しい', en: 'You were watching along? That makes me happy.' }
   - id: quota-reached-06
     tone: light
     lines:
       - { who: M, text: '今夜の出河さん　目が利いてますね', en: 'Ms. Dekawa, your eyes are sharp tonight.' }
-      - { who: A, text: 'ふふ　見えるうちに見ておく', en: 'Heh, I will look while I can see this well.' }
+      - { who: A, text: 'ふふ　見えるうちに見ておく', en: "Heh, I'll look while I can see this well." }
   - id: quota-reached-07
     tone: light
     lines:
-      - { who: A, text: 'やっと一息　でも画面からは目を離さないよ', en: 'Finally a breather, but I am not taking my eyes off the screens.' }
-      - { who: M, text: 'それでこそ出河さんです', en: 'That is the Ms. Dekawa I know.' }
+      - { who: A, text: 'ふう　いい手応え　でも画面からは目を離さないよ', en: "Whew, that felt good, but I'm not taking my eyes off the screens." }
+      - { who: M, text: 'それでこそ出河さんです', en: "That's the Ms. Dekawa I know." }

@@ -40,9 +40,18 @@ export const outcomeOf = (shift: LastShift): Outcome =>
 export const quotaMetAtDawn = (shift: LastShift): boolean =>
   shift.closing === 'dawn' && shift.found >= DEFAULT_CONFIG.minCorrectReports
 
-/** The quota-met line of a night: by the night number, so a night reads the same each time and the nights differ. */
-export const quotaMetLine = (nightNo: number) =>
-  QUOTA_MET_LINES[(Math.max(1, nightNo) - 1) % QUOTA_MET_LINES.length]
+/**
+ * The quota-met line of a night: by the night number, so a night reads the same each time and the nights differ.
+ * A night with no new kinds already says "no new leads" just above, so it draws only from the lines that do not
+ * claim a good catch (`claimsFind`); otherwise "no new leads" and "found things well" would sit side by side.
+ */
+export const quotaMetLine = (nightNo: number, outcome?: Outcome) => {
+  const pool =
+    outcome === 'noNewKinds'
+      ? QUOTA_MET_LINES.filter(l => !l.claimsFind)
+      : QUOTA_MET_LINES
+  return pool[(Math.max(1, nightNo) - 1) % pool.length]
+}
 
 /**
  * The Shift row: the in-game clock, not the real time (kako-jun, #297). A night that ran out (dawn, true ending)
@@ -138,7 +147,7 @@ export const buildNote = (input: NoteInput, lang: NoteLang): NoteView => {
     if (input.shift.found > 0)
       for (const l of o.ifFound ?? []) lines.push({ text: t(l) })
     if (quotaMetAtDawn(input.shift))
-      lines.push({ text: t(quotaMetLine(Math.max(1, save.loops))) })
+      lines.push({ text: t(quotaMetLine(Math.max(1, save.loops), outcome)) })
     for (const l of STAGES[stage].lines.slice(-STAGES[stage].tail))
       lines.push({ text: t(l) })
     // The memos this result earned (#325), chosen when the shift ended: the hypothesis first, then the one-liner.

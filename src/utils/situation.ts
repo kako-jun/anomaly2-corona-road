@@ -116,6 +116,8 @@ export const createSituationTracker = (
       times.push(playMs)
       // The quota conversation speaks now: a cheerful hot that already waits would follow it too closely.
       if (quotaJustReached && pending?.situation === 'hot') pending = null
+      // A find ends the long quiet: a waiting "nothing found for a long time" line would now be false.
+      if (pending?.situation === 'cold') pending = null
       lastFindAt = playMs
       coldSpent = 0
       if (found === cfg.tenthCount) {
