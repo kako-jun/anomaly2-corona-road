@@ -6,6 +6,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { parse as parseYaml } from 'yaml'
 import {
+  checkStoryPersons,
   checkUnlockFlags,
   isGameRecord,
   isNonImageGameRecord,
@@ -14,7 +15,11 @@ import {
   toLedgerEntry,
   toNonImageEntry,
 } from './src/utils/anomalyLedger'
-import { DIALOGUE_FILES, parseDialogueLedger } from './src/utils/dialogueLedger'
+import {
+  DIALOGUE_FILES,
+  checkFlagStories,
+  parseDialogueLedger,
+} from './src/utils/dialogueLedger'
 
 const LEDGER_PATH = resolve(__dirname, 'prompts/anomalies.yaml')
 const FLAGS_PATH = resolve(__dirname, 'dialogue/flags.yaml')
@@ -34,6 +39,7 @@ const readLedgerRecords = (addWatchFile: (path: string) => void) => {
     } | null
   )?.flags
   checkUnlockFlags(records, new Set(Object.keys(flags ?? {})))
+  checkStoryPersons(records, new Set(Object.keys(flags ?? {})))
   return records
 }
 
@@ -116,16 +122,22 @@ const dialogueLedgerPlugin = (): Plugin => ({
       this.addWatchFile(path)
       return parseYaml(readFileSync(path, 'utf8'))
     }
-    const anomalyIds = new Set(
-      parseLedgerRecords(parseYaml(readFileSync(LEDGER_PATH, 'utf8'))).map(
-        e => e.id
-      )
+    const records = parseLedgerRecords(
+      parseYaml(readFileSync(LEDGER_PATH, 'utf8'))
     )
+    const anomalyIds = new Set(records.map(e => e.id))
     const parsed = { flags: read('flags') } as Parameters<
       typeof parseDialogueLedger
     >[0]
     for (const file of DIALOGUE_FILES) parsed[file] = read(file)
-    return `export default ${JSON.stringify(parseDialogueLedger(parsed, anomalyIds))}`
+    const dialogue = parseDialogueLedger(parsed, anomalyIds)
+    // A story person's picture stays until its conversation ends (#430): that conversation must exist and be playable.
+    checkFlagStories(
+      records.flatMap(r => (r.storyFlag ? [r.storyFlag] : [])),
+      dialogue,
+      'a story person flag'
+    )
+    return `export default ${JSON.stringify(dialogue)}`
   },
 })
 

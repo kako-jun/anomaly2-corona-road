@@ -149,6 +149,33 @@ describe('buildNote before a shift', () => {
     expect(noteDigitLevel(big(1234, 'ja'))).toBe(3)
     expect(noteDigitLevel(big(123456, 'en'))).toBe(3)
   })
+  it('two story persons found in one night (#430): the result shows the later person only, both slots are new, and the numbers stay in the box (#429)', () => {
+    const flags = { elder1: true, elder2: true }
+    const v = buildNote(
+      {
+        mode: 'after',
+        save: save({
+          loops: 2,
+          flags,
+          foundTotal: 123456,
+          foundIds: Array.from({ length: 1234 }, (_, i) => `id${i}`),
+        }),
+        shift: shift({
+          found: 123456,
+          fresh: 1234,
+          raised: ['elder1', 'elder2'],
+        }),
+      },
+      'ja'
+    )
+    const stage = STAGES.elder2.lines.slice(-STAGES.elder2.tail).map(l => l.ja)
+    expect(texts(v).slice(-stage.length)).toEqual(stage)
+    expect(texts(v).join('')).not.toContain(STAGES.elder1.lines.slice(-1)[0].ja)
+    expect(v.slots.map(s => s.found)).toEqual([true, true, false, false])
+    expect(v.slots.map(s => s.isNew)).toEqual([true, true, false, false])
+    expect(noteDigitLevel(v)).toBe(3)
+    expect(v.right.rows.map(r => r.value)).toEqual(['９９９', '９９９'])
+  })
   it('adds the last-night line after a night without new kinds or a withdraw', () => {
     const base = { loops: 5, flags: { elder1: true } }
     const none = buildNote(

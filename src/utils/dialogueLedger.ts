@@ -47,6 +47,8 @@ export type DialogueKind = DialogueEntry['kind']
  * `reiwaFound`: number of distinct Reiwa-themed anomalies ever found.
  * `loops`: completed plays. `found`: ids that must all have been found.
  * `requires`: other flags that must already be raised.
+ * `trigger`: the flag is not raised by progress at all; the game raises it when this event happens (one of
+ * `FLAG_TRIGGERS`, #430). It must be the only key.
  */
 export interface FlagCondition {
   foundUnique?: number
@@ -55,7 +57,12 @@ export interface FlagCondition {
   loops?: number
   found?: string[]
   requires?: string[]
+  trigger?: FlagTrigger
 }
+
+/** Events the game raises a flag for (#430): the first Reiwa anomaly appears; the child is about to appear. */
+export const FLAG_TRIGGERS = ['reiwaAppeared', 'childDue'] as const
+export type FlagTrigger = (typeof FLAG_TRIGGERS)[number]
 
 export interface FlagDef {
   name: string
@@ -380,10 +387,21 @@ export const parseFlags = (
           'loops',
           'found',
           'requires',
+          'trigger',
         ],
         'condition'
       )
       const when: FlagCondition = {}
+      if ('trigger' in raw) {
+        const ev = FLAG_TRIGGERS.find(e => e === raw.trigger)
+        if (!ev)
+          throw new Error(
+            `"trigger" must be one of ${FLAG_TRIGGERS.join(', ')}`
+          )
+        if (Object.keys(raw).length !== 1)
+          throw new Error('"trigger" cannot be combined with other keys')
+        return { name, when: { trigger: ev } }
+      }
       if ('foundUnique' in raw)
         when.foundUnique = positiveInt(raw.foundUnique, 'foundUnique')
       if ('foundTotal' in raw)
@@ -467,5 +485,33 @@ export const parseDialogueLedger = (
       entries.push(e)
     }
   }
-  return { flags, entries }
+  const ledger = { flags, entries }
+  checkFlagStories(
+    flags.filter(f => f.when.trigger !== undefined).map(f => f.name),
+    ledger,
+    'a trigger flag'
+  )
+  return ledger
+}
+
+/**
+ * Every flag in `names` must have at least one `story` conversation that is not behind an `unlock` (#430): a story
+ * person's picture, and the child's arrival, wait for that conversation to end, so a flag whose conversation can never
+ * play would hold them for ever.
+ */
+export const checkFlagStories = (
+  names: Iterable<string>,
+  ledger: DialogueLedger,
+  what: string
+): void => {
+  for (const name of names) {
+    const ok = ledger.entries.some(
+      e => e.kind === 'story' && e.when.flag === name && e.unlock === undefined
+    )
+    if (!ok) {
+      throw new Error(
+        `dialogue: ${what} "${name}" has no story conversation without an unlock (dialogue/story.yaml)`
+      )
+    }
+  }
 }

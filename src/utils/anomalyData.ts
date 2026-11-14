@@ -64,10 +64,11 @@ interface Gated {
   anomalyType: string
   unlockFlag?: string
   exclusiveGroup?: string
+  storyFlag?: string
 }
 
 /**
- * The entries that may appear now: Reiwa ones only once `reiwaUnlocked` (the elder3 flag is raised), ones with an
+ * The entries that may appear now: never a story person (#430: they appear on their own, `storyPersonFor`), Reiwa ones only once `reiwaUnlocked` (the elder3 flag is raised), ones with an
  * `unlock` flag only once it is saved, `sound` ones only while `gate.audible` is not false (kako-jun, #79), and none
  * whose exclusive group is busy (an unreported anomaly of that group is running, #77).
  */
@@ -78,6 +79,7 @@ export const spawnableEntries = <T extends Gated>(
 ): readonly T[] =>
   entries.filter(
     e =>
+      e.storyFlag === undefined &&
       (reiwaUnlocked || e.reiwa !== true) &&
       (e.unlockFlag === undefined || gate.flags?.[e.unlockFlag] === true) &&
       !(e.anomalyType === 'sound' && gate.audible === false) &&
@@ -131,6 +133,26 @@ export const pickLedgerEntry = (
   return pickOne(pickWeighted([...byType.values()], exponent, rng), rng)
 }
 
+/**
+ * The story person (#430) of this flag, if it can be placed now: its camera is not the watched one (#418: nothing
+ * pops in on the camera being watched) and holds no unreported anomaly or held person (the person waits until that is
+ * resolved; no other anomaly is removed for it). `occupiedCameraIds` = cameras with an unreported anomaly or a person
+ * still held; `runningIds` = ids of the running (unreported) anomalies, so a person is never drawn twice.
+ */
+export const storyPersonFor = (
+  images: readonly LedgerEntry[],
+  flag: string,
+  watchedCameraId: number | undefined,
+  occupiedCameraIds: ReadonlySet<number>,
+  runningIds: ReadonlySet<string>
+): LedgerEntry | null => {
+  const entry = images.find(e => e.storyFlag === flag)
+  if (!entry || runningIds.has(entry.id)) return null
+  if (entry.cameraId === watchedCameraId) return null
+  if (occupiedCameraIds.has(entry.cameraId)) return null
+  return entry
+}
+
 /** The running anomaly for a ledger entry. `id` is the ledger id (unique per shift). */
 export const createAnomaly = (
   entry: LedgerEntry,
@@ -143,6 +165,7 @@ export const createAnomaly = (
   cameraId: entry.cameraId,
   phase,
   ...(entry.exclusiveGroup ? { exclusiveGroup: entry.exclusiveGroup } : {}),
+  ...(entry.storyFlag ? { storyFlag: entry.storyFlag } : {}),
   overlay: {
     url: overlayUrl,
     origin: entry.origin,
@@ -312,7 +335,9 @@ export const exhaustedGroups = (
       g.candidates.push(e.id)
     groups.set(key, g)
   }
-  for (const e of images) add(`cam:${e.cameraId}`, e, true)
+  // A story person (#430) is not part of the draw, so it must not keep its camera's group from being used up.
+  for (const e of images)
+    if (e.storyFlag === undefined) add(`cam:${e.cameraId}`, e, true)
   for (const e of nonImages) add(NON_IMAGE_GROUP, e, hasNonImageEffect(e))
   const out: { key: string; ids: string[]; last: string }[] = []
   for (const [key, g] of groups) {
@@ -340,7 +365,12 @@ export const hasUnusedEntry = (
   usedIds: ReadonlySet<string>,
   reiwaUnlocked: boolean
 ): boolean =>
-  images.some(e => !usedIds.has(e.id) && (reiwaUnlocked || e.reiwa !== true)) ||
+  images.some(
+    e =>
+      e.storyFlag === undefined &&
+      !usedIds.has(e.id) &&
+      (reiwaUnlocked || e.reiwa !== true)
+  ) ||
   nonImages.some(
     e =>
       !usedIds.has(e.id) &&

@@ -39,6 +39,12 @@ export interface Anomaly {
   overlay?: AnomalyOverlay
   /** Reporting scope; absent = `camera` (every image anomaly). */
   scope?: ReportScope
+  /**
+   * A story person (#430): the flag that reporting it raises. While `hold` is set the reported person's overlay stays
+   * on screen (it is not drawn again as a new anomaly) until its conversation has ended.
+   */
+  storyFlag?: string
+  hold?: boolean
   /** The ledger's `exclusive` group: no other unreported anomaly of this group is drawn while this one runs (#77). */
   exclusiveGroup?: string
   /** Non-image only: the camera feed glitch drawn on `cameraId` while it is watched (removed when reported). */

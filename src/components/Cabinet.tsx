@@ -81,6 +81,8 @@ interface CabinetProps {
   /** Set once the shift is over: the closing conversation plays, then `onEndingDone`. */
   ending: 'dawn' | 'withdraw' | 'ending' | null
   onEndingDone: () => void
+  /** A story conversation has ended (its flag): a story person's picture is taken away (#430). */
+  onStoryDone?: (flag: string) => void
   onSwitch: (to: 'prev' | 'next' | number) => void
   onReport: (category: AnomalyCategory) => void
   /** A voice anomaly whose file could not be loaded after every retry: the game takes it back (#407). */
@@ -105,6 +107,7 @@ export const Cabinet = ({
   flagEvent,
   ending,
   onEndingDone,
+  onStoryDone,
   onSwitch,
   onReport,
   onVoiceUnavailable,
@@ -418,6 +421,7 @@ export const Cabinet = ({
     flagEvent,
     ending,
     onClosingDone: onEndingDone,
+    onStoryDone,
   })
 
   const closeReport = useCallback(() => setReportOpen(false), [])

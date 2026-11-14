@@ -23,6 +23,7 @@ import {
   groupKeyOfSpawn,
   hasUnusedEntry,
   pickSpawn,
+  storyPersonFor,
 } from '../utils/anomalyData'
 import { reportTargetsFor, showsOnCamera } from '../utils/reportTarget'
 import { isAudible } from '../utils/audioSettings'
@@ -30,7 +31,10 @@ import { hasFinePointer, monitorEffectPlayable } from '../utils/monitorEffects'
 import { resetVoiceHistory, voiceReady } from '../utils/voiceSounds'
 import type { FlagEvent } from './useSubtitle'
 import {
+  duePerson,
+  flagOfTrigger,
   raiseFlagsAtStart,
+  raiseTrigger,
   recordFound,
   recordShiftEnd,
   shiftDurationMs,
@@ -56,6 +60,8 @@ export interface Feedback {
 const TOAST_MS = 1500
 /** When a spawn could not happen only for lack of a free camera, try again after this (not every frame). */
 const SPAWN_RETRY_MS = 1000
+/** How often the game looks whether a story person (#430) may appear now (real time; they come "at once"). */
+const PERSON_CHECK_MS = 250
 
 /** How a shift ended: the closing conversation to play, and the result screen that follows. */
 export interface Ending {
@@ -115,6 +121,9 @@ export const useGameState = () => {
   const afterChildIdsRef = useRef<Set<string>>(new Set())
   const afterChildReportedRef = useRef(0)
   // For the investigation note (#297): distinct finds before this shift, and the story-stage flags raised in it.
+  const lastPersonCheckRef = useRef(0)
+  // The child's foreshadowing conversation (the `childDue` trigger flag) has been played to its end (#430).
+  const preludeDoneRef = useRef(false)
   const startUniqueRef = useRef(0)
   const raisedRef = useRef<string[]>([])
 
@@ -175,6 +184,16 @@ export const useGameState = () => {
     startUniqueRef.current = load().foundIds.length
     // The flag is saved, so a shift that starts after the child was found is a "child found" shift from the start.
     childFoundRef.current = isChildFound(load().flags)
+    lastPersonCheckRef.current = 0
+    {
+      // Played in an earlier shift (raised and no longer waiting) counts as done; one waiting plays at this start.
+      const prelude = flagOfTrigger('childDue')
+      const cur = load()
+      preludeDoneRef.current =
+        prelude !== undefined &&
+        cur.flags[prelude] === true &&
+        !cur.pendingStories.includes(prelude)
+    }
     flagSeqRef.current += 1
     setFlagEvent(
       raised.length > 0 ? { seq: flagSeqRef.current, flags: raised } : null
@@ -266,12 +285,24 @@ export const useGameState = () => {
           correctReports: prev.correctReports + 1,
           detectedAnomalies: prev.detectedAnomalies + 1,
         }))
+        const raised = recordFound(anomalyOnCamera.id)
         // The ref is updated here too (not only by the effect after render), so a withdrawal in the same tick sees
         // this anomaly as reported and leaves it alone.
         const reportedAt = statsRef.current.currentTime
         const markReported = (list: Anomaly[]) =>
           list.map(a =>
-            a.id === anomalyOnCamera.id ? { ...a, detectedAt: reportedAt } : a
+            a.id === anomalyOnCamera.id
+              ? {
+                  ...a,
+                  detectedAt: reportedAt,
+                  // A story person stays on screen until its conversation has ended (#430) - but only when this
+                  // report raised its flag now, so a conversation is queued that will end (not when another tab
+                  // had already raised it).
+                  ...(a.storyFlag && raised.includes(a.storyFlag)
+                    ? { hold: true }
+                    : {}),
+                }
+              : a
           )
         activeAnomaliesRef.current = markReported(activeAnomaliesRef.current)
         // The state update is a function of the latest state (not the ref's value), so an anomaly that spawned in
@@ -283,7 +314,6 @@ export const useGameState = () => {
         if (afterChildIdsRef.current.has(anomalyOnCamera.id)) {
           afterChildReportedRef.current += 1
         }
-        const raised = recordFound(anomalyOnCamera.id)
         noteStageFlags(raisedRef.current, raised)
         if (raised.includes(CHILD_FLAG)) childFoundRef.current = true
         if (raised.length > 0) {
@@ -292,6 +322,18 @@ export const useGameState = () => {
         }
         return
       }
+
+      // A story person already reported is still on screen while its conversation runs (#430): pressing its category
+      // again is ignored, not a false report (and it does not stop the conversation).
+      if (
+        activeAnomaliesRef.current.some(
+          a =>
+            a.hold &&
+            showsOnCamera(a, currentCamera.id) &&
+            (a.categories ?? [a.category]).includes(category)
+        )
+      )
+        return
 
       // Misreport — pure state, no setGameState inside the updater (React StrictMode safe).
       const newMisreports = statsRef.current.misreports + 1
@@ -307,6 +349,69 @@ export const useGameState = () => {
     [pushFeedback, endShift]
   )
 
+  /** A flag raised by the game itself (a trigger, #430): hand it to the subtitles like a flag that rose by a report. */
+  const announce = useCallback((flag: string | null) => {
+    if (flag === null) return
+    noteStageFlags(raisedRef.current, [flag])
+    flagSeqRef.current += 1
+    setFlagEvent({ seq: flagSeqRef.current, flags: [flag] })
+  }, [])
+
+  /**
+   * The story person (#430) whose conditions hold appears at once: the subtitle for the child's arrival is raised
+   * first, then the person is placed on its fixed camera if that is free and not the watched one (otherwise it waits).
+   * It takes a slot like any anomaly but is not held back by the concurrent cap. Returns whether one appeared.
+   */
+  const spawnPerson = useCallback(
+    (currentTime: number): boolean => {
+      const running = activeAnomaliesRef.current
+      // A person is already out there waiting to be reported: nothing to do (and no save is read).
+      if (running.some(a => a.storyFlag && !a.detectedAt)) return false
+      const flag = duePerson(load())
+      if (flag === null) return false
+      if (flag === CHILD_FLAG) {
+        // The child comes only after the foreshadowing conversation has been played to its end (#430).
+        announce(raiseTrigger('childDue'))
+        if (flagOfTrigger('childDue') !== undefined && !preludeDoneRef.current)
+          return false
+      }
+      const entry = storyPersonFor(
+        ANOMALY_LEDGER,
+        flag,
+        CAMERAS[currentIndexRef.current]?.id,
+        new Set(
+          running
+            .filter(a => !a.detectedAt || a.hold)
+            .flatMap(a => [a.cameraId, ...(a.feedGlitchCameraIds ?? [])])
+        ),
+        new Set(running.filter(a => !a.detectedAt).map(a => a.id))
+      )
+      if (!entry) return false
+      let url: string
+      try {
+        url = overlayUrlFor(entry)
+      } catch (e) {
+        console.warn(`Skipping person "${entry.id}":`, e)
+        return false
+      }
+      const person = createAnomaly(entry, getGamePhase(currentTime), url)
+      activeAnomaliesRef.current = [...activeAnomaliesRef.current, person]
+      setActiveAnomalies(prev => [...prev, person])
+      setStats(prev => ({ ...prev, totalAnomalies: prev.totalAnomalies + 1 }))
+      return true
+    },
+    [announce]
+  )
+
+  /** The conversation of a story person's flag has ended: its picture goes now (#430). */
+  const releasePerson = useCallback((flag: string) => {
+    if (flag === flagOfTrigger('childDue')) preludeDoneRef.current = true
+    const drop = (list: Anomaly[]) =>
+      list.filter(a => !(a.hold && a.storyFlag === flag))
+    activeAnomaliesRef.current = drop(activeAnomaliesRef.current)
+    setActiveAnomalies(drop)
+  }, [])
+
   /**
    * 'spawned'  - an anomaly was added.
    * 'no-free-camera' - unused entries remain but none is on a camera without an anomaly (retry soon).
@@ -321,15 +426,22 @@ export const useGameState = () => {
       // free one, this returns 'no-free-camera' and the caller retries. Every camera of a multi-camera glitch
       // (RT-FEED-28) is drawn from this same list, so none of them is the watched one either.
       const watchedId = CAMERAS[currentIndexRef.current]?.id
-      const freeCameraIds = CAMERAS.filter(
+      const freeNow = CAMERAS.filter(
         c =>
           c.id !== watchedId &&
           !activeAnomaliesRef.current.some(
-            a => showsOnCamera(a, c.id) && !a.detectedAt
+            a => showsOnCamera(a, c.id) && (!a.detectedAt || a.hold)
           )
       ).map(c => c.id)
       const used = usedLedgerIdsRef.current
       const save = load()
+      // A story person waiting to appear keeps its camera (#430): the ordinary draw does not take it meanwhile.
+      const waitingFlag = duePerson(save)
+      const waitingCameraId =
+        waitingFlag === null
+          ? undefined
+          : ANOMALY_LEDGER.find(e => e.storyFlag === waitingFlag)?.cameraId
+      const freeCameraIds = freeNow.filter(id => id !== waitingCameraId)
       // Reiwa anomalies join the draw once elder3 is saved; one raised mid-shift counts from the next spawn.
       const reiwaUnlocked = save.flags[REIWA_UNLOCK_FLAG] === true
       const finePointer = hasFinePointer()
@@ -400,6 +512,8 @@ export const useGameState = () => {
             freeCameraIds
           )
         }
+        // The first Reiwa anomaly to appear is announced once, by subtitle only (#430).
+        if (spawn.entry.reiwa === true) announce(raiseTrigger('reiwaAppeared'))
         if (childFoundRef.current) afterChildIdsRef.current.add(spawn.entry.id)
         activeAnomaliesRef.current = [...activeAnomaliesRef.current, newAnomaly]
         setActiveAnomalies(prev => [...prev, newAnomaly])
@@ -419,7 +533,7 @@ export const useGameState = () => {
         ? 'no-free-camera'
         : 'exhausted'
     },
-    []
+    [announce]
   )
 
   // Warm the cache for the overlay images once play starts (runs once per page, see preload.ts).
@@ -463,6 +577,12 @@ export const useGameState = () => {
         return
       }
 
+      // A story person whose conditions hold comes at once, ahead of the ordinary draw (#430).
+      if (elapsed - lastPersonCheckRef.current >= PERSON_CHECK_MS) {
+        lastPersonCheckRef.current = elapsed
+        spawnPerson(elapsed)
+      }
+
       const pacing = pacingFor(childFoundRef.current)
       const interval = firstSpawnDoneRef.current
         ? pacing.anomalyIntervalMs
@@ -496,7 +616,7 @@ export const useGameState = () => {
 
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [gameState, spawnAnomaly, endShift])
+  }, [gameState, spawnAnomaly, spawnPerson, endShift])
 
   useEffect(() => {
     if (!feedback) return
@@ -508,7 +628,7 @@ export const useGameState = () => {
   const watchedId = CAMERAS[currentCameraIndex].id
   // The image anomaly on the watched camera (the one with an overlay), if any.
   const activeAnomalyHere = activeAnomalies.find(
-    a => a.cameraId === watchedId && !a.detectedAt && a.overlay
+    a => a.cameraId === watchedId && (!a.detectedAt || a.hold) && a.overlay
   )
   // The feed glitch to draw now: a running (not yet reported) feed_glitch on the watched camera only (#77).
   const feedGlitchHere = activeAnomalies.find(
@@ -536,6 +656,7 @@ export const useGameState = () => {
     switchCamera,
     reportAnomaly,
     withdrawAnomaly,
+    releasePerson,
     gameTime: msToGameTime(stats.currentTime),
   }
 }
