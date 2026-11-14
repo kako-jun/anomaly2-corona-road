@@ -427,6 +427,19 @@ describe('CameraView feed glitch (#78)', () => {
     expect(container.querySelector('.osd-cam')).not.toBeNull()
   })
 
+  it('RT-FEED-29: REC (dot and letters) is not drawn on the glitched camera and comes back when it clears (#450)', () => {
+    const { container, rerender } = render(
+      <CameraView {...props({ feedGlitch: 'norec' })} />
+    )
+    expect(container.querySelector('.osd-rec')).toBeNull()
+    expect(container.querySelector('.rec-dot')).toBeNull()
+    expect(screen.queryByText('REC')).toBeNull()
+    expect(container.querySelector('.osd-cam')).not.toBeNull()
+    rerender(<CameraView {...props({})} />)
+    expect(container.querySelector('.osd-rec .rec-dot')).not.toBeNull()
+    expect(screen.getByText('REC')).toBeInTheDocument()
+  })
+
   it.each([
     ['wave', 'svg'],
     ['chroma', 'svg'],

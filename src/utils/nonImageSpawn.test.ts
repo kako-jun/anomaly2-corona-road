@@ -99,6 +99,16 @@ describe('the six feed filters (#406)', () => {
       expect(css).toMatch(new RegExp(`data-glitch='${kind}'|\\.${kind}\\b`))
     }
   )
+  it('RT-FEED-29 is drawn as norec (no CSS: CameraView leaves the REC out) and shares rec-lamp with RT-UI-12 (#450)', () => {
+    expect(pickFeedGlitchKind(glitch('RT-FEED-29'), () => 0)).toBe('norec')
+    const rows = (
+      parse(
+        readFileSync(join(process.cwd(), 'prompts/anomalies.yaml'), 'utf8')
+      ) as { anomalies: { id: string; exclusive?: string }[] }
+    ).anomalies
+    for (const id of ['RT-FEED-29', 'RT-UI-12'])
+      expect(rows.find(x => x.id === id)?.exclusive).toBe('rec-lamp')
+  })
   it('pickGlitchCameras gives 1 to 3 distinct cameras with the drawn one first', () => {
     const all = [1, 2, 3, 4, 5, 6, 7, 8]
     expect(pickGlitchCameras(4, all, () => 0)).toEqual([4])

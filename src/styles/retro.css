@@ -158,6 +158,18 @@
   font-size: max(9px, 2.9cqw);
 }
 
+/* The dot and the letters share one centre line: the text box is trimmed to the capital letters (text-box, so the
+   centre is the middle of the caps whatever ascent / descent the font has) and the row centres its children. A browser
+   without text-box keeps the plain line box, so there the dot stays slightly low as before (measured, #450). */
+.rec-text {
+  display: block;
+}
+@supports (text-box: trim-both cap alphabetic) {
+  .rec-text {
+    text-box: trim-both cap alphabetic;
+  }
+}
+
 .rec-dot {
   width: 8px;
   height: 8px;
