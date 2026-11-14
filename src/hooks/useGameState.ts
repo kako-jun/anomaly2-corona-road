@@ -26,6 +26,7 @@ import {
 } from '../utils/anomalyData'
 import { reportTargetsFor, showsOnCamera } from '../utils/reportTarget'
 import { isAudible } from '../utils/audioSettings'
+import { hasFinePointer, monitorEffectPlayable } from '../utils/monitorEffects'
 import { resetVoiceHistory, voiceReady } from '../utils/voiceSounds'
 import type { FlagEvent } from './useSubtitle'
 import {
@@ -331,8 +332,10 @@ export const useGameState = () => {
       const save = load()
       // Reiwa anomalies join the draw once elder3 is saved; one raised mid-shift counts from the next spawn.
       const reiwaUnlocked = save.flags[REIWA_UNLOCK_FLAG] === true
-      const playableNonImages = nonImageLedger.filter(entry =>
-        voiceReady(entry.id)
+      const finePointer = hasFinePointer()
+      const playableNonImages = nonImageLedger.filter(
+        entry =>
+          voiceReady(entry.id) && monitorEffectPlayable(entry.id, finePointer)
       )
       // A group (one camera's images / the non-image entries) whose candidates have all been found is refilled now
       // (#427): its retired ids are released. The one found last is remembered per group and avoided on the next draw

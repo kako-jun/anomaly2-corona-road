@@ -28,7 +28,7 @@ const rect = () =>
 let host: HTMLDivElement
 let onEdgeTap: ReturnType<typeof vi.fn>
 
-const setup = (withHost = true) => {
+const setup = (withHost = true, loupeBroken = false) => {
   onEdgeTap = vi.fn()
   const view = render(
     <CameraView
@@ -40,6 +40,7 @@ const setup = (withHost = true) => {
       contrast={1}
       onEdgeTap={onEdgeTap}
       loupeHost={withHost ? host : undefined}
+      loupeBroken={loupeBroken}
     />
   )
   const c = view.container
@@ -84,6 +85,18 @@ afterEach(() => {
   host.remove()
   vi.useRealTimers()
   vi.unstubAllGlobals()
+})
+
+describe('RT-UI-21 loupe broken does not take the knock away', () => {
+  it('a double tap still switches the noise off, and no loupe shows on either tap', () => {
+    const { glass } = setup(true, true)
+    tap(glass)
+    expect(host.querySelector('[data-testid="loupe"]')).toBeNull()
+    act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS / 2))
+    tap(glass, 305, 302)
+    expect(host.querySelector('[data-testid="loupe"]')).toBeNull()
+    expect(isOff(glass)).toBe(true)
+  })
 })
 
 describe('noise off by double tap (#342)', () => {
