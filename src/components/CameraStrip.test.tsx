@@ -76,3 +76,30 @@ describe('CameraStrip', () => {
     expect(onSelect).toHaveBeenCalledWith(2)
   })
 })
+
+describe('CameraStrip RT-UI-20 (a key loses its face)', () => {
+  it('the gone key stays as an empty frame: marked, hidden from assistive tech, unpressable; the others work', async () => {
+    const onSelect = vi.fn()
+    const { container } = render(
+      <CameraStrip
+        cameras={makeCameras(4)}
+        currentIndex={0}
+        onSelect={onSelect}
+        goneIndex={2}
+      />
+    )
+    expect(container.querySelectorAll('.cam-cell')).toHaveLength(4)
+    const keys = [...container.querySelectorAll<HTMLButtonElement>('.key')]
+    expect(keys.map(k => k.classList.contains('key--gone'))).toEqual([
+      false,
+      false,
+      true,
+      false,
+    ])
+    expect(keys[2]).toBeDisabled()
+    expect(keys[2]).toHaveAttribute('aria-hidden', 'true')
+    expect(keys[2]).toHaveAttribute('tabindex', '-1')
+    await userEvent.click(keys[1])
+    expect(onSelect).toHaveBeenCalledWith(1)
+  })
+})

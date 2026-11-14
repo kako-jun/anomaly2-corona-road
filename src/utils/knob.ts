@@ -41,3 +41,24 @@ export const brightnessFilter = (v: number): number =>
 /** CSS contrast() multiplier for the picture, 0.6..1.5. */
 export const contrastFilter = (v: number): number =>
   Number((0.6 + (v / 100) * 0.9).toFixed(3))
+
+/**
+ * RT-UI-13 (the knobs turn by themselves): the range the drift sweeps (so the picture never goes black or washed out
+ * to nothing), and one step of it. A value moves at `speed` units per second in `dir` (+1 / -1) and turns around at
+ * the ends of the range.
+ */
+export const DRIFT_MIN = 25
+export const DRIFT_MAX = 75
+
+export const driftStep = (
+  value: number,
+  dir: 1 | -1,
+  deltaUnits: number
+): { value: number; dir: 1 | -1 } => {
+  // a value the player left outside the range first walks back in, at the same speed (no jump)
+  const d: 1 | -1 = value >= DRIFT_MAX ? -1 : value <= DRIFT_MIN ? 1 : dir
+  const next = value + d * deltaUnits
+  if (d === 1 && next >= DRIFT_MAX) return { value: DRIFT_MAX, dir: -1 }
+  if (d === -1 && next <= DRIFT_MIN) return { value: DRIFT_MIN, dir: 1 }
+  return { value: next, dir: d }
+}
