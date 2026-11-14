@@ -31,6 +31,10 @@ const code = (() => {
 })()
 const seconds = (v: string) => parseFloat(v.match(/([\d.]+)s/)![1])
 
+/** A declaration value with its whitespace and line breaks normalised (the formatter may wrap a long value). */
+const squash = (v: string | undefined): string =>
+  (v ?? '').replace(/\s+/g, ' ').replace(/\(\s+/g, '(').replace(/\s+\)/g, ')')
+
 describe('start.css: the photo drift', () => {
   const zoom = parseFloat(decl('.start-screen', '--start-zoom')!)
   const margin = parseFloat(decl('.start-screen', '--start-margin')!)
@@ -166,11 +170,11 @@ describe('start.css: the drifting blur patch (#331)', () => {
     for (const a of [...loops, 70, 53])
       for (const b of [...loops, 70, 53]) if (a !== b) expect(gcd(a, b)).toBe(1)
     for (const sel of ['.start-blur-x', '.start-blur-y', '.start-blur'])
-      expect(decl(sel, 'animation')).toContain('infinite alternate')
+      expect(squash(decl(sel, 'animation'))).toContain('infinite alternate')
   })
   it('is a masked backdrop blur that takes no pointer', () => {
     expect(decl('.start-blur', 'backdrop-filter')).toContain('blur(')
-    expect(decl('.start-blur', 'mask-image')).toContain(
+    expect(squash(decl('.start-blur', 'mask-image'))).toContain(
       'radial-gradient(closest-side'
     )
     expect(decl('.start-blur-x', 'pointer-events')).toBe('none')
