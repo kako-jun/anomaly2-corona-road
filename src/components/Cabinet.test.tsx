@@ -989,3 +989,219 @@ describe('Cabinet monitor effects (data-fx, #408)', () => {
     for (const id of ids) expect(Object.keys(MONITOR_EFFECTS)).toContain(id)
   })
 })
+
+describe('Cabinet RT-UI-05 / 13 / 14 / 20 / 28 (#438)', () => {
+  const css = readFileSync(
+    resolve(process.cwd(), 'src/styles/monitorEffects.css'),
+    'utf8'
+  )
+  const knob = (c: HTMLElement, name: string) =>
+    Number(
+      c
+        .querySelector(`[role="slider"][aria-label="${name}"]`)
+        ?.getAttribute('aria-valuenow')
+    )
+
+  it('RT-UI-13: both knobs turn by themselves inside the drift range, the knob picture follows (aria-valuenow), and it is back at the player value once the effect is cleared', () => {
+    vi.useFakeTimers()
+    try {
+      const props = makeProps({ monitorEffects: new Set(['RT-UI-13']) })
+      const { container, rerender } = render(<Cabinet {...props} />)
+      expect(knob(container, 'Brightness')).toBe(50)
+      act(() => {
+        vi.advanceTimersByTime(3000)
+      })
+      const b = knob(container, 'Brightness')
+      const c = knob(container, 'Contrast')
+      expect(b).not.toBe(50)
+      expect(c).not.toBe(50)
+      expect(b).toBeGreaterThanOrEqual(25)
+      expect(b).toBeLessThanOrEqual(75)
+      rerender(<Cabinet {...props} monitorEffects={new Set()} />)
+      // cleared: the knobs are back where the player left them (untouched = centre) and stay
+      expect(knob(container, 'Brightness')).toBe(50)
+      act(() => {
+        vi.advanceTimersByTime(3000)
+      })
+      expect(knob(container, 'Brightness')).toBe(50)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+  it('RT-UI-13: a touch pauses the drift (about 1.5 s) and then it goes on; touching still works as before', () => {
+    vi.useFakeTimers()
+    try {
+      const { container } = render(
+        <Cabinet {...makeProps({ monitorEffects: new Set(['RT-UI-13']) })} />
+      )
+      const slider = container.querySelector(
+        '[role="slider"][aria-label="Brightness"]'
+      ) as HTMLElement
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      fireEvent.keyDown(slider, { key: 'End' })
+      expect(knob(container, 'Brightness')).toBe(100)
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      expect(knob(container, 'Brightness')).toBe(100)
+      act(() => {
+        vi.advanceTimersByTime(2000)
+      })
+      expect(knob(container, 'Brightness')).toBeLessThan(100)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+  it('RT-UI-13: while a knob is held down the drift stands still, and it goes on about 1.5 s after the pointer is released', () => {
+    vi.useFakeTimers()
+    try {
+      const { container } = render(
+        <Cabinet {...makeProps({ monitorEffects: new Set(['RT-UI-13']) })} />
+      )
+      const slider = container.querySelector(
+        '[role="slider"][aria-label="Brightness"]'
+      ) as HTMLElement
+      act(() => {
+        vi.advanceTimersByTime(2000)
+      })
+      const held = knob(container, 'Brightness')
+      expect(held).not.toBe(50)
+      slider.setPointerCapture = vi.fn()
+      fireEvent.pointerDown(slider, { pointerId: 1, button: 0 })
+      act(() => {
+        vi.advanceTimersByTime(4000)
+      })
+      expect(knob(container, 'Brightness')).toBe(held)
+      fireEvent.pointerUp(slider, { pointerId: 1, button: 0 })
+      // a tap puts the knob back to the centre (as before)
+      const released = knob(container, 'Brightness')
+      expect(released).toBe(50)
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      expect(knob(container, 'Brightness')).toBe(released)
+      act(() => {
+        vi.advanceTimersByTime(1500)
+      })
+      expect(knob(container, 'Brightness')).not.toBe(released)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+  it('RT-UI-13: when the effect is cleared the knobs go back to what the player last set (not where the drift left them)', () => {
+    vi.useFakeTimers()
+    try {
+      const props = makeProps({ monitorEffects: new Set(['RT-UI-13']) })
+      const { container, rerender } = render(<Cabinet {...props} />)
+      const slider = container.querySelector(
+        '[role="slider"][aria-label="Brightness"]'
+      ) as HTMLElement
+      fireEvent.keyDown(slider, { key: 'End' })
+      act(() => {
+        vi.advanceTimersByTime(6000)
+      })
+      expect(knob(container, 'Brightness')).not.toBe(100)
+      expect(knob(container, 'Contrast')).not.toBe(50)
+      rerender(<Cabinet {...props} monitorEffects={new Set()} />)
+      expect(knob(container, 'Brightness')).toBe(100)
+      expect(knob(container, 'Contrast')).toBe(50)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+  it('RT-UI-13: without the effect the knobs stay where they are', () => {
+    vi.useFakeTimers()
+    try {
+      const { container } = render(<Cabinet {...makeProps()} />)
+      act(() => {
+        vi.advanceTimersByTime(5000)
+      })
+      expect(knob(container, 'Brightness')).toBe(50)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('RT-UI-14 / 28: the plate picture is clipped and the digits are drawn over its corner; alt follows; nothing running leaves it as printed', () => {
+    const { container, rerender } = render(<Cabinet {...makeProps()} />)
+    expect(container.querySelector('.plate-num')).toBeNull()
+    expect(screen.getByAltText('Video Monitor CR-42')).toBeInTheDocument()
+    rerender(
+      <Cabinet {...makeProps({ monitorEffects: new Set(['RT-UI-14']) })} />
+    )
+    const num = container.querySelector('.plate-num')
+    expect(num).toHaveTextContent('24')
+    expect(num).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getByAltText('Video Monitor CR-24')).toBeInTheDocument()
+    expect(container.querySelector('.retro')).toHaveAttribute(
+      'data-fx',
+      'RT-UI-14'
+    )
+    rerender(
+      <Cabinet {...makeProps({ monitorEffects: new Set(['RT-UI-28']) })} />
+    )
+    expect(container.querySelector('.plate-num')).toHaveTextContent('100')
+    // three digits are squeezed into the same corner, never wider than the two-digit text
+    expect(
+      Number(
+        container.querySelector('.plate-num text')?.getAttribute('textLength')
+      )
+    ).toBeLessThanOrEqual(76)
+    expect(screen.getByAltText('Video Monitor CR-100')).toBeInTheDocument()
+    // the clip is in CSS, for both ids, and cuts only the "42" corner
+    expect(css).toMatch(
+      /RT-UI-14'\] \.cabinet-foot > \.model-plate,\s*\.retro\[data-fx~='RT-UI-28'\] \.cabinet-foot > \.model-plate \{\s*clip-path: inset\(0 26\.5% 0 0\)/
+    )
+  })
+
+  it('RT-UI-20: exactly one camera key loses its face, the same one while it runs, and none after it is cleared', () => {
+    const props = makeProps({ monitorEffects: new Set(['RT-UI-20']) })
+    const { container, rerender } = render(<Cabinet {...props} />)
+    const gone = () =>
+      [...container.querySelectorAll('.cam-cell .key')].flatMap((k, i) =>
+        k.classList.contains('key--gone') ? [i] : []
+      )
+    const first = gone()
+    expect(first).toHaveLength(1)
+    rerender(<Cabinet {...props} unreportedCount={3} />)
+    expect(gone()).toEqual(first)
+    rerender(<Cabinet {...props} monitorEffects={new Set()} />)
+    expect(gone()).toEqual([])
+  })
+
+  it('RT-UI-05: the digits lie (kind picked once) while the timer keeps the real time as its name', () => {
+    const spy = vi.spyOn(Math, 'random').mockReturnValue(0.8) // frozen
+    try {
+      const props = makeProps({
+        gameTime: '23:10',
+        monitorEffects: new Set(['RT-UI-05']),
+      })
+      const { container, rerender } = render(<Cabinet {...props} />)
+      const digits = () => container.querySelector('.vfd')?.textContent
+      expect(digits()).toBe('23:10')
+      rerender(<Cabinet {...props} gameTime="01:40" />)
+      expect(digits()).toBe('23:10')
+      expect(screen.getByRole('timer', { name: '01:40' })).toBeInTheDocument()
+      rerender(
+        <Cabinet {...props} gameTime="01:40" monitorEffects={new Set()} />
+      )
+      expect(digits()).toBe('01:40')
+    } finally {
+      spy.mockRestore()
+    }
+  })
+
+  it('RT-UI-01: the REPORT key drifts by `translate` (not the pressed sink), still, off place, under reduced motion', () => {
+    expect(css).toMatch(
+      /RT-UI-01'\] \.key-report \{\s*animation: report-drift [\d.]+s ease-in-out infinite/
+    )
+    const body = css.match(/@keyframes report-drift \{([\s\S]*?)\n\}/)![1]
+    expect(body).toMatch(/translate:/)
+    expect(body).not.toMatch(/transform:/)
+    expect(css).toMatch(
+      /prefers-reduced-motion: reduce\)[^}]*\{\s*\.retro\[data-fx~='RT-UI-01'\] \.key-report \{\s*animation: none;\s*translate: [^;]+;/
+    )
+  })
+})

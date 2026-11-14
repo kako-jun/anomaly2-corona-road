@@ -11,7 +11,12 @@ import { useCameraKeys } from '../hooks/useCameraKeys'
 import { FlagEvent, useSubtitle } from '../hooks/useSubtitle'
 import { Anomaly, AnomalyCategory, Camera, GameStats } from '../types/game'
 import { CAMERAS, ENDING_BAR_CAMERA } from '../utils/gameConfig'
-import { KNOB_DEFAULT, brightnessFilter, contrastFilter } from '../utils/knob'
+import {
+  KNOB_DEFAULT,
+  brightnessFilter,
+  contrastFilter,
+  driftStep,
+} from '../utils/knob'
 import { gameAudio, DEFAULT_VOLUME } from '../utils/audioEngine'
 import { playSynth } from '../utils/synthSounds'
 import {
@@ -27,6 +32,8 @@ import {
 import { HUM_MODES, SOUND_EFFECTS } from '../utils/nonImageEffects'
 import { fxAttribute } from '../utils/monitorEffects'
 import { colonVariant, reportLabel } from '../utils/hudText'
+import { ClockFault, faultedClock, pickClockFault } from '../utils/clockFault'
+import { PLATE_MODEL, plateNumber } from '../utils/modelPlate'
 import '../styles/monitorEffects.css'
 import { readAudioVolume, saveVolume } from '../utils/audioSettings'
 import { FeedGlitchKind, forcedFeedGlitch } from '../utils/feedGlitch'
@@ -319,6 +326,81 @@ export const Cabinet = ({
   const colonActive = fx.has('RT-UI-23')
   const colonKind = useMemo(() => colonVariant(colonActive), [colonActive])
   const reportKeyLabel = useMemo(() => reportLabel(misspelled), [misspelled])
+  // RT-UI-05: one kind per run of the effect, and the real time it began at; the digits on screen are the faulted ones
+  const clockOn = fx.has('RT-UI-05')
+  const [clockFault, setClockFault] = useState<ClockFault | null>(null)
+  if (clockOn && !clockFault) setClockFault(pickClockFault(gameTime))
+  else if (!clockOn && clockFault) setClockFault(null)
+  const shownTime =
+    clockOn && clockFault ? faultedClock(gameTime, clockFault) : gameTime
+  // RT-UI-20: one camera key loses its face per run of the effect
+  const keyGone = fx.has('RT-UI-20')
+  const goneKey = useMemo(
+    () => (keyGone ? Math.floor(Math.random() * cameras.length) : undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- the camera count is fixed for a shift
+    [keyGone]
+  )
+  // RT-UI-14 / 28: digits drawn over the model plate
+  const plateDigits = plateNumber(fx)
+
+  // RT-UI-13 (knob drift): brightness and contrast turn by themselves; a touch (held, or a change within the last
+  // 1.5 s) pauses the drift. Reduced motion: a step every 3 s instead of a smooth turn. Boolean dependency (see above).
+  const knobDrift = fx.has('RT-UI-13')
+  const knobValues = useRef({ b: brightness, c: contrast })
+  knobValues.current = { b: brightness, c: contrast }
+  const knobTouch = useRef({ held: false, last: 0 })
+  // what the player last set (the value before the drift began, until they touch a knob): restored when the effect clears
+  const userKnobs = useRef({ b: brightness, c: contrast })
+  useEffect(() => {
+    if (!knobDrift) return
+    const user = userKnobs.current // one object for the whole run (only its fields change)
+    const reduced =
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+    const tick = reduced ? 3000 : 100
+    let dirB: 1 | -1 = Math.random() < 0.5 ? 1 : -1
+    let dirC: 1 | -1 = dirB === 1 ? -1 : 1
+    const timer = window.setInterval(() => {
+      const t = knobTouch.current
+      if (t.held || performance.now() - t.last < 1500) return
+      const b = driftStep(knobValues.current.b, dirB, reduced ? 12 : 0.7)
+      const c = driftStep(knobValues.current.c, dirC, reduced ? 9 : 0.5)
+      knobValues.current = { b: b.value, c: c.value }
+      dirB = b.dir
+      dirC = c.dir
+      setBrightness(b.value)
+      setContrast(c.value)
+    }, tick)
+    const down = (e: Event) => {
+      if ((e.target as Element | null)?.closest?.('.knob'))
+        knobTouch.current.held = true
+    }
+    const up = () => {
+      if (knobTouch.current.held) knobTouch.current.last = performance.now()
+      knobTouch.current.held = false
+    }
+    document.addEventListener('pointerdown', down)
+    document.addEventListener('pointerup', up)
+    document.addEventListener('pointercancel', up)
+    return () => {
+      window.clearInterval(timer)
+      document.removeEventListener('pointerdown', down)
+      document.removeEventListener('pointerup', up)
+      document.removeEventListener('pointercancel', up)
+      knobTouch.current = { held: false, last: 0 }
+      setBrightness(user.b)
+      setContrast(user.c)
+    }
+  }, [knobDrift])
+  const changeBrightness = useCallback((v: number) => {
+    knobTouch.current.last = performance.now()
+    userKnobs.current.b = v
+    setBrightness(v)
+  }, [])
+  const changeContrast = useCallback((v: number) => {
+    knobTouch.current.last = performance.now()
+    userKnobs.current.c = v
+    setContrast(v)
+  }, [])
   useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
   const handleEdgeTap = useCallback(
     (d: 'next' | 'prev') => {
@@ -373,6 +455,7 @@ export const Cabinet = ({
           <div className="loupe-host" ref={setLoupeHost} />
           <GameHUD
             gameTime={gameTime}
+            shownTime={shownTime}
             stats={stats}
             fx={fx}
             colonVariant={colonKind}
@@ -381,9 +464,9 @@ export const Cabinet = ({
             <Knob
               label="Brightness"
               value={brightness}
-              onChange={setBrightness}
+              onChange={changeBrightness}
             />
-            <Knob label="Contrast" value={contrast} onChange={setContrast} />
+            <Knob label="Contrast" value={contrast} onChange={changeContrast} />
             <Knob
               label="Volume"
               text="VOL"
@@ -397,6 +480,7 @@ export const Cabinet = ({
             currentIndex={currentCameraIndex}
             onSelect={onSwitch}
             disabled={inEnding}
+            goneIndex={goneKey}
           />
           <ReportButton
             open={reportOpen}
@@ -413,11 +497,29 @@ export const Cabinet = ({
           <img
             className="model-plate"
             src="/ui/model-plate.webp"
-            alt="Video Monitor CR-42"
+            alt={`Video Monitor CR-${plateDigits ?? PLATE_MODEL}`}
             width={155}
             height={40}
             draggable={false}
           />
+          {plateDigits && (
+            <svg
+              className="plate-num"
+              viewBox="0 0 82 80"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <text
+                x="79"
+                y="77"
+                textAnchor="end"
+                textLength={plateDigits.length > 2 ? 74 : 70}
+                lengthAdjust="spacingAndGlyphs"
+              >
+                {plateDigits}
+              </text>
+            </svg>
+          )}
         </div>
       </main>
       {reportOpen && (
