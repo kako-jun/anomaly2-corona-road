@@ -9,7 +9,13 @@ import {
   newlyRaisedFlags,
   type FlagProgress,
 } from './dialogueEngine'
-import { parseFlags, type FlagDef } from './dialogueLedger'
+import {
+  checkFlagStories,
+  parseDialogueLedger,
+  parseFlags,
+  type DialogueLedger,
+  type FlagDef,
+} from './dialogueLedger'
 import {
   exhaustedGroups,
   hasUnusedEntry,
@@ -232,5 +238,41 @@ describe('storyPersonFor: where and when a person can be placed', () => {
   })
   it('no person for an unknown flag', () => {
     expect(storyPersonFor(list, 'elder9', 1, none, noIds)).toBeNull()
+  })
+})
+
+describe('every flag whose conversation holds a picture needs a playable story (#430)', () => {
+  const story = (flag: string, unlock?: string) =>
+    ({
+      id: `story-${flag}`,
+      kind: 'story',
+      tone: 'serious',
+      when: { flag },
+      lines: [{ who: 'A', text: 'x' }],
+      ...(unlock ? { unlock } : {}),
+    }) as DialogueLedger['entries'][number]
+  it('passes with a story, fails with none or only a locked one', () => {
+    const ok: DialogueLedger = { flags: [], entries: [story('elder1')] }
+    expect(() => checkFlagStories(['elder1'], ok, 'x')).not.toThrow()
+    expect(() => checkFlagStories(['elder2'], ok, 'x')).toThrow(/elder2/)
+    const locked: DialogueLedger = {
+      flags: [],
+      entries: [story('elder1', 'elder3')],
+    }
+    expect(() => checkFlagStories(['elder1'], locked, 'x')).toThrow(/elder1/)
+  })
+  it('a trigger flag without a story fails parseDialogueLedger', () => {
+    const files = {
+      flags: { flags: { pre: { trigger: 'childDue' } } },
+      opening: { dialogues: [] },
+      closing: { dialogues: [] },
+      midpoint: { dialogues: [] },
+      chatter: { dialogues: [] },
+      story: { dialogues: [] },
+      'false-report': { dialogues: [] },
+      'anomaly-lines': { dialogues: [] },
+      'spawn-hints': { dialogues: [] },
+    }
+    expect(() => parseDialogueLedger(files, new Set())).toThrow(/pre/)
   })
 })

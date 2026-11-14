@@ -328,6 +328,23 @@ dialogues:
     when: { anomaly: AR-03-newspaper }
     lines:
       - { who: A, text: 'ねえ　左の床の中ほど　どうかな', en: "Hey, what about the middle of the left floor?" }
+  - id: spawn-hint-AR-04-person-child-01
+    tone: serious
+    when: { anomaly: AR-04-person-child }
+    lines:
+      - { who: A, text: "通路の右寄り　見てごらん", en: "Look at the right side of the corridor." }
+      - { who: M, text: "右寄りですか　目を向けます", en: "The right side? I will look." }
+  - id: spawn-hint-AR-04-person-child-02
+    tone: serious
+    when: { anomaly: AR-04-person-child }
+    lines:
+      - { who: M, text: "通路の右側の床が　気になります", en: "The floor on the right side of the corridor bothers me." }
+      - { who: A, text: "右側の床ね　私も見る", en: "The right-hand floor. I'll look too." }
+  - id: spawn-hint-AR-04-person-child-03
+    tone: serious
+    when: { anomaly: AR-04-person-child }
+    lines:
+      - { who: A, text: "右の店先のあたり　何かある気がする", en: "I feel like something is near the shops on the right." }
   - id: spawn-hint-AR-04-puddle-01
     tone: serious
     when: { anomaly: AR-04-puddle }
@@ -362,6 +379,23 @@ dialogues:
     lines:
       - { who: A, text: "ガラスの面が怪しいかも　真ん中より少し左", en: "The glass might be off. A little left of center." }
       - { who: M, text: "その辺りですか", en: "About there?" }
+  - id: spawn-hint-AR-06-person-elder2-01
+    tone: serious
+    when: { anomaly: AR-06-person-elder2 }
+    lines:
+      - { who: A, text: "通路の真ん中　見てごらん", en: "Look at the middle of the corridor." }
+      - { who: M, text: "通路の真ん中ですか　目を向けます", en: "The middle of the corridor? I will look." }
+  - id: spawn-hint-AR-06-person-elder2-02
+    tone: serious
+    when: { anomaly: AR-06-person-elder2 }
+    lines:
+      - { who: M, text: "通路の中ほどの床が　気になります", en: "The floor halfway down the corridor bothers me." }
+      - { who: A, text: "床ね　私も見る", en: "The floor. I'll look too." }
+  - id: spawn-hint-AR-06-person-elder2-03
+    tone: serious
+    when: { anomaly: AR-06-person-elder2 }
+    lines:
+      - { who: A, text: "通路の奥へ向かう床の上　何かある気がする", en: "I feel like something is on the floor down the corridor." }
   - id: spawn-hint-AR-06-reflected-umbrella-01
     tone: serious
     when: { anomaly: AR-06-reflected-umbrella }
@@ -494,6 +528,23 @@ dialogues:
     lines:
       - { who: A, text: '扉の左側の壁が　引っかかるな', en: 'Something about the wall left of the door nags at me.' }
       - { who: M, text: '確認してみましょう', en: "Let's check it out." }
+  - id: spawn-hint-AR-07-person-elder1-01
+    tone: serious
+    when: { anomaly: AR-07-person-elder1 }
+    lines:
+      - { who: A, text: "奥の扉の前　ちょっと気になるな", en: "Something about the door in the back bugs me." }
+      - { who: M, text: "そうですか　見てみます", en: "Does it? I will take a look." }
+  - id: spawn-hint-AR-07-person-elder1-02
+    tone: serious
+    when: { anomaly: AR-07-person-elder1 }
+    lines:
+      - { who: M, text: "奥の扉のあたりを　確認してもらえますか", en: "Could you check around the door in the back?" }
+      - { who: A, text: "いいよ　扉の前ね", en: "Sure. In front of the door, right?" }
+  - id: spawn-hint-AR-07-person-elder1-03
+    tone: serious
+    when: { anomaly: AR-07-person-elder1 }
+    lines:
+      - { who: A, text: "広い床の奥　扉の手前に目が行くんだよね…", en: "My eyes keep going to the floor in front of that door..." }
   - id: spawn-hint-AR-07-reopened-01
     tone: serious
     when: { anomaly: AR-07-reopened }
@@ -627,6 +678,23 @@ dialogues:
     lines:
       - { who: M, text: '奥の右のほうの中ほどが　どうも気になります', en: "Something about the middle of the back on the right keeps nagging me." }
       - { who: A, text: 'そうなの？　じゃあ　そこから見よう', en: "Really? Then let's start there." }
+  - id: spawn-hint-AR-03-person-elder3-01
+    tone: serious
+    when: { anomaly: AR-03-person-elder3 }
+    lines:
+      - { who: A, text: "緑の看板の先　見てみて", en: "Look past the green sign." }
+      - { who: M, text: "看板の先ですね　見ます", en: "Past the sign. Got it." }
+  - id: spawn-hint-AR-03-person-elder3-02
+    tone: serious
+    when: { anomaly: AR-03-person-elder3 }
+    lines:
+      - { who: M, text: "緑の看板より奥の床を　確認してもらえますか", en: "Could you check the floor beyond the green sign?" }
+      - { who: A, text: "いいよ　看板の奥ね", en: "Sure. Beyond the sign, right?" }
+  - id: spawn-hint-AR-03-person-elder3-03
+    tone: serious
+    when: { anomaly: AR-03-person-elder3 }
+    lines:
+      - { who: A, text: "看板の向こうの通路に　目が行くんだよね…", en: "My eyes keep going to the corridor past the sign..." }
   - id: spawn-hint-AR-03-red-string-01
     tone: serious
     when: { anomaly: AR-03-red-string }

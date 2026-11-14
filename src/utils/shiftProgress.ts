@@ -12,7 +12,7 @@ import { DEFAULT_CONFIG } from './gameConfig'
 import { stageOf } from './investigationNote'
 import { MEMO_INDEX } from './memoIndex'
 import { markShown, pickMemos, queueMemos } from './memoSelect'
-import { emptySave, nextEpoch, update } from './saveData'
+import { emptySave, load, nextEpoch, update } from './saveData'
 import type { LastShift, SaveData } from './saveData'
 
 /**
@@ -62,6 +62,8 @@ export const raiseTrigger = (trigger: FlagTrigger): string | null => {
 
 /** Save a flag raised by the game itself (a trigger flag, #430): once only; its story waits to be played. Returns whether it was raised now. */
 const raiseTriggerFlag = (name: string): boolean => {
+  // Already raised: nothing to write (this is asked every few hundred ms while the child waits).
+  if (load().flags[name]) return false
   let raised = false
   update(cur => {
     if (cur.flags[name]) return cur

@@ -1889,4 +1889,18 @@ describe('a story person (#430)', () => {
       hook.result.current.activeAnomalies.some(a => a.id === 'later')
     ).toBe(true)
   })
+
+  it('while it waits for its camera (the player watches it), the ordinary draw does not take that camera', () => {
+    seed()
+    ledger.push(person(), entry('other', 6))
+    const hook = start()
+    switchTo(hook, 6)
+    advance(FIRST + INTERVAL)
+    expect(hook.result.current.activeAnomalies).toEqual([])
+    switchTo(hook, 1)
+    advance(600)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+  })
 })

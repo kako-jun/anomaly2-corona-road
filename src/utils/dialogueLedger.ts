@@ -485,5 +485,33 @@ export const parseDialogueLedger = (
       entries.push(e)
     }
   }
-  return { flags, entries }
+  const ledger = { flags, entries }
+  checkFlagStories(
+    flags.filter(f => f.when.trigger !== undefined).map(f => f.name),
+    ledger,
+    'a trigger flag'
+  )
+  return ledger
+}
+
+/**
+ * Every flag in `names` must have at least one `story` conversation that is not behind an `unlock` (#430): a story
+ * person's picture, and the child's arrival, wait for that conversation to end, so a flag whose conversation can never
+ * play would hold them for ever.
+ */
+export const checkFlagStories = (
+  names: Iterable<string>,
+  ledger: DialogueLedger,
+  what: string
+): void => {
+  for (const name of names) {
+    const ok = ledger.entries.some(
+      e => e.kind === 'story' && e.when.flag === name && e.unlock === undefined
+    )
+    if (!ok) {
+      throw new Error(
+        `dialogue: ${what} "${name}" has no story conversation without an unlock (dialogue/story.yaml)`
+      )
+    }
+  }
 }
