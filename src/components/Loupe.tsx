@@ -2,6 +2,7 @@ import { CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { LoupeView } from '../hooks/useLoupeGesture'
 import { LOUPE } from '../utils/loupe'
+import { cx } from '../utils/cx'
 import { FeedGlitchKind } from '../utils/feedGlitch'
 import { GlitchCanvas } from './GlitchCanvas'
 import { NoiseCanvas } from './NoiseCanvas'
@@ -21,6 +22,8 @@ interface LoupeProps {
   contrast: number
   /** The noise is switched off for a while (#342): the grain in the loupe goes with the monitor's. */
   noiseOff?: boolean
+  /** RT-RULE-03: the noise is raised for a while (the knock did the opposite of switching it off). */
+  noiseUp?: boolean
   /** The watched camera's feed glitch (#78): the magnified picture shows it too. */
   feedGlitch?: FeedGlitchKind
   /** Seeds the camera's fixed dead pixels (same as on the monitor). */
@@ -41,6 +44,7 @@ export const Loupe = ({
   brightness,
   contrast,
   noiseOff,
+  noiseUp,
   feedGlitch,
   glitchSeed = 0,
 }: LoupeProps) => {
@@ -64,7 +68,7 @@ export const Loupe = ({
   } as CSSProperties
   return createPortal(
     <div
-      className={noiseOff ? 'loupe noise-off' : 'loupe'}
+      className={cx('loupe', noiseOff && 'noise-off', noiseUp && 'noise-up')}
       style={style}
       data-glitch={feedGlitch}
       data-testid="loupe"

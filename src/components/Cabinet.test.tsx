@@ -1248,3 +1248,120 @@ describe('Cabinet RT-UI-05 / 13 / 14 / 20 / 28 (#438)', () => {
     )
   })
 })
+
+describe('Cabinet rule-break effects (#442)', () => {
+  const fxSet = (...ids: string[]) => new Set(ids)
+  const glassBri = (c: HTMLElement) =>
+    Number(
+      (c.querySelector('.glass') as HTMLElement).style.getPropertyValue('--bri')
+    )
+
+  it('every switching entrance goes through the one plan: RT-RULE-01 turns arrow keys, leaves digit keys and CAMERA SELECT keys', async () => {
+    const onSwitch = vi.fn()
+    render(
+      <Cabinet
+        {...makeProps({
+          onSwitch,
+          currentCameraIndex: 2,
+          currentCamera: cameras[2],
+          monitorEffects: fxSet('RT-RULE-01'),
+        })}
+      />
+    )
+    await userEvent.keyboard('{ArrowRight}')
+    expect(onSwitch).toHaveBeenLastCalledWith(1)
+    await userEvent.keyboard('a')
+    expect(onSwitch).toHaveBeenLastCalledWith(3)
+    await userEvent.keyboard('6')
+    expect(onSwitch).toHaveBeenLastCalledWith(5)
+    await userEvent.click(screen.getByRole('button', { name: 'Camera 4' }))
+    expect(onSwitch).toHaveBeenLastCalledWith(3)
+  })
+
+  it('RT-RULE-05: the arrow key does not come round from the last camera', async () => {
+    const onSwitch = vi.fn()
+    render(
+      <Cabinet
+        {...makeProps({
+          onSwitch,
+          currentCameraIndex: 7,
+          currentCamera: cameras[7],
+          monitorEffects: fxSet('RT-RULE-05'),
+        })}
+      />
+    )
+    await userEvent.keyboard('{ArrowRight}')
+    expect(onSwitch).not.toHaveBeenCalled()
+    await userEvent.keyboard('{ArrowLeft}')
+    expect(onSwitch).toHaveBeenCalledWith(6)
+  })
+
+  it('RT-RULE-06: the selection lamp moves at once and the picture (onSwitch) follows after the lag', () => {
+    vi.useFakeTimers()
+    try {
+      const onSwitch = vi.fn()
+      const { container } = render(
+        <Cabinet
+          {...makeProps({ onSwitch, monitorEffects: fxSet('RT-RULE-06') })}
+        />
+      )
+      fireEvent.click(screen.getByRole('button', { name: 'Camera 4' }))
+      const lamps = () =>
+        [...container.querySelectorAll('.cam-lamps .lamp')].map(l =>
+          l.classList.contains('on')
+        )
+      expect(lamps().indexOf(true)).toBe(3)
+      expect(onSwitch).not.toHaveBeenCalled()
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      expect(onSwitch).toHaveBeenCalledWith(3)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('RT-RULE-02: the first REPORT press only lights the lamp for a moment (no picker, no report); the second opens it', async () => {
+    const onReport = vi.fn()
+    const { container } = render(
+      <Cabinet
+        {...makeProps({ onReport, monitorEffects: fxSet('RT-RULE-02') })}
+      />
+    )
+    const lamp = container.querySelector('.lamp-big') as HTMLElement
+    const btn = screen.getByRole('button', { name: 'REPORT' })
+    expect(lamp.classList.contains('lit')).toBe(false)
+    await userEvent.click(btn)
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(lamp.classList.contains('lit')).toBe(true)
+    await waitFor(() => expect(lamp.classList.contains('lit')).toBe(false))
+    expect(onReport).not.toHaveBeenCalled()
+    await userEvent.click(btn)
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('without RT-RULE-02 one press opens the picker at once', async () => {
+    render(<Cabinet {...makeProps()} />)
+    await userEvent.click(screen.getByRole('button', { name: 'REPORT' }))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
+
+  it('RT-RULE-04: turning a knob up darkens / weakens the picture, and the picture does not jump when the effect starts or ends', async () => {
+    const props = makeProps()
+    const { container, rerender } = render(<Cabinet {...props} />)
+    const base = glassBri(container)
+    rerender(<Cabinet {...props} monitorEffects={fxSet('RT-RULE-04')} />)
+    expect(glassBri(container)).toBeCloseTo(base, 2)
+    const knob = screen.getByRole('slider', { name: 'Brightness' })
+    knob.focus()
+    await userEvent.keyboard('{ArrowRight}')
+    const darker = glassBri(container)
+    expect(darker).toBeLessThan(base)
+    rerender(<Cabinet {...props} monitorEffects={fxSet()} />)
+    const after = glassBri(container)
+    expect(after).toBeCloseTo(darker, 2)
+    knob.focus()
+    await userEvent.keyboard('{ArrowRight}')
+    expect(glassBri(container)).toBeGreaterThan(after)
+  })
+})

@@ -16,19 +16,20 @@ type MotionEventCtor = {
  * "The noise is off for NOISE_OFF_MS" (#342): `off` is true meanwhile, `trigger` starts it or restarts the 10 s (no adding up).
  * With prefers-reduced-motion the noise does not move to begin with, so trigger does nothing.
  * `askMotion` is for a tap handler: it (once) starts listening for a shake, asking iOS for permission inside that tap.
+ * `inverted` (RT-RULE-03): the knock / shake raises the noise (`boost`) instead of switching it off (`off`).
  * Nothing is saved.
  */
-export const useNoiseOff = () => {
-  const [off, setOff] = useState(false)
+export const useNoiseOff = (inverted = false) => {
+  const [active, setActive] = useState(false)
   const timer = useRef(0)
 
   const trigger = useCallback(() => {
     if (reducedMotion()) return
     window.clearTimeout(timer.current)
-    setOff(true)
+    setActive(true)
     timer.current = window.setTimeout(() => {
       timer.current = 0
-      setOff(false)
+      setActive(false)
     }, NOISE_OFF_MS)
   }, [])
 
@@ -94,5 +95,11 @@ export const useNoiseOff = () => {
       })
   }, [listen])
 
-  return { off, trigger, askMotion }
+  // RT-RULE-03 (inverted): the same knock / shake brings the noise UP for the same time instead of switching it off
+  return {
+    off: active && !inverted,
+    boost: active && inverted,
+    trigger,
+    askMotion,
+  }
 }

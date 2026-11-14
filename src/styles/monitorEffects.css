@@ -463,3 +463,14 @@
   stroke-width: 4.2px;
   stroke-linejoin: round;
 }
+
+/* RT-RULE-02 REPORT button double press: while it runs, the REPORT key sits a little way down, as if half pressed (the
+   hint, there before the first press). Looks only. Not while the picker is open or the key is really pressed (those
+   keep their own deeper look). The first press's flash is the lamp's own `.lit` (Cabinet), nothing to draw here. */
+.retro[data-fx~='RT-RULE-02'] .key-report:not(.pressed):not(:active) {
+  transform: translateY(2px);
+  box-shadow:
+    0 2px 0 #6a130d,
+    0 4px 4px #0006,
+    inset 0 2px 3px #0004;
+}
