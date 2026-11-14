@@ -14,7 +14,9 @@ export const SWAPPED_MODEL = '24'
 export const childMilestone = (): string => {
   const n = ledger.flags.find((f: FlagDef) => f.name === 'child')?.when
     .foundUnique
-  return String(n ?? 100)
+  if (n === undefined)
+    throw new Error('dialogue/flags.yaml: flag "child" has no foundUnique')
+  return String(n)
 }
 
 /** The digits drawn over the plate now (undefined = the plate as printed). RT-UI-14 and 28 never run together. */

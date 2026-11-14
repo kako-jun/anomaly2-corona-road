@@ -1002,7 +1002,7 @@ describe('Cabinet RT-UI-05 / 13 / 14 / 20 / 28 (#438)', () => {
         ?.getAttribute('aria-valuenow')
     )
 
-  it('RT-UI-13: both knobs turn by themselves inside the drift range, the knob picture follows (aria-valuenow), and it stops once the effect is cleared', () => {
+  it('RT-UI-13: both knobs turn by themselves inside the drift range, the knob picture follows (aria-valuenow), and it is back at the player value once the effect is cleared', () => {
     vi.useFakeTimers()
     try {
       const props = makeProps({ monitorEffects: new Set(['RT-UI-13']) })
@@ -1018,10 +1018,12 @@ describe('Cabinet RT-UI-05 / 13 / 14 / 20 / 28 (#438)', () => {
       expect(b).toBeGreaterThanOrEqual(25)
       expect(b).toBeLessThanOrEqual(75)
       rerender(<Cabinet {...props} monitorEffects={new Set()} />)
+      // cleared: the knobs are back where the player left them (untouched = centre) and stay
+      expect(knob(container, 'Brightness')).toBe(50)
       act(() => {
         vi.advanceTimersByTime(3000)
       })
-      expect(knob(container, 'Brightness')).toBe(b)
+      expect(knob(container, 'Brightness')).toBe(50)
     } finally {
       vi.useRealTimers()
     }
@@ -1048,6 +1050,63 @@ describe('Cabinet RT-UI-05 / 13 / 14 / 20 / 28 (#438)', () => {
         vi.advanceTimersByTime(2000)
       })
       expect(knob(container, 'Brightness')).toBeLessThan(100)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+  it('RT-UI-13: while a knob is held down the drift stands still, and it goes on about 1.5 s after the pointer is released', () => {
+    vi.useFakeTimers()
+    try {
+      const { container } = render(
+        <Cabinet {...makeProps({ monitorEffects: new Set(['RT-UI-13']) })} />
+      )
+      const slider = container.querySelector(
+        '[role="slider"][aria-label="Brightness"]'
+      ) as HTMLElement
+      act(() => {
+        vi.advanceTimersByTime(2000)
+      })
+      const held = knob(container, 'Brightness')
+      expect(held).not.toBe(50)
+      slider.setPointerCapture = vi.fn()
+      fireEvent.pointerDown(slider, { pointerId: 1, button: 0 })
+      act(() => {
+        vi.advanceTimersByTime(4000)
+      })
+      expect(knob(container, 'Brightness')).toBe(held)
+      fireEvent.pointerUp(slider, { pointerId: 1, button: 0 })
+      // a tap puts the knob back to the centre (as before)
+      const released = knob(container, 'Brightness')
+      expect(released).toBe(50)
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      expect(knob(container, 'Brightness')).toBe(released)
+      act(() => {
+        vi.advanceTimersByTime(1500)
+      })
+      expect(knob(container, 'Brightness')).not.toBe(released)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+  it('RT-UI-13: when the effect is cleared the knobs go back to what the player last set (not where the drift left them)', () => {
+    vi.useFakeTimers()
+    try {
+      const props = makeProps({ monitorEffects: new Set(['RT-UI-13']) })
+      const { container, rerender } = render(<Cabinet {...props} />)
+      const slider = container.querySelector(
+        '[role="slider"][aria-label="Brightness"]'
+      ) as HTMLElement
+      fireEvent.keyDown(slider, { key: 'End' })
+      act(() => {
+        vi.advanceTimersByTime(6000)
+      })
+      expect(knob(container, 'Brightness')).not.toBe(100)
+      expect(knob(container, 'Contrast')).not.toBe(50)
+      rerender(<Cabinet {...props} monitorEffects={new Set()} />)
+      expect(knob(container, 'Brightness')).toBe(100)
+      expect(knob(container, 'Contrast')).toBe(50)
     } finally {
       vi.useRealTimers()
     }

@@ -346,6 +346,8 @@ export const Cabinet = ({
   const knobValues = useRef({ b: brightness, c: contrast })
   knobValues.current = { b: brightness, c: contrast }
   const knobTouch = useRef({ held: false, last: 0 })
+  // what the player last set (the value before the drift began, until they touch a knob): restored when the effect clears
+  const userKnobs = useRef({ b: brightness, c: contrast })
   useEffect(() => {
     if (!knobDrift) return
     const reduced =
@@ -381,13 +383,19 @@ export const Cabinet = ({
       document.removeEventListener('pointerup', up)
       document.removeEventListener('pointercancel', up)
       knobTouch.current = { held: false, last: 0 }
+      setBrightness(userKnobs.current.b)
+      setContrast(userKnobs.current.c)
     }
   }, [knobDrift])
-  const touchKnob = useCallback((set: (v: number) => void) => {
-    return (v: number) => {
-      knobTouch.current.last = performance.now()
-      set(v)
-    }
+  const changeBrightness = useCallback((v: number) => {
+    knobTouch.current.last = performance.now()
+    userKnobs.current.b = v
+    setBrightness(v)
+  }, [])
+  const changeContrast = useCallback((v: number) => {
+    knobTouch.current.last = performance.now()
+    userKnobs.current.c = v
+    setContrast(v)
   }, [])
   useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
   const handleEdgeTap = useCallback(
@@ -451,13 +459,9 @@ export const Cabinet = ({
             <Knob
               label="Brightness"
               value={brightness}
-              onChange={touchKnob(setBrightness)}
+              onChange={changeBrightness}
             />
-            <Knob
-              label="Contrast"
-              value={contrast}
-              onChange={touchKnob(setContrast)}
-            />
+            <Knob label="Contrast" value={contrast} onChange={changeContrast} />
             <Knob
               label="Volume"
               text="VOL"
