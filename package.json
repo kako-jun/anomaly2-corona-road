@@ -28,6 +28,7 @@
     "check:subtitle": "uv run --script scripts/check-subtitle-wrap.py",
     "check:subtitle-en": "node scripts/check-subtitle-en.mjs",
     "check:spawn-hints": "node scripts/check-spawn-hints.mjs",
+    "check:dialogue-counts": "node scripts/check-dialogue-counts.mjs",
     "check:fullwidth": "node scripts/fullwidth-ja.mjs --check",
     "build:prompts": "node scripts/build-prompt-queue.mjs",
     "build:camera-atlas": "node scripts/build-camera-atlas.mjs",

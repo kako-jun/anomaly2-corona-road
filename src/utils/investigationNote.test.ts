@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { STAGES } from '../data/investigationNotes'
+import { QUOTA_MET_LINES, STAGES } from '../data/investigationNotes'
 import {
   NOTE_MAX_COUNT,
   buildNote,
   fmtShiftEnd,
   noteDigitLevel,
   outcomeOf,
+  quotaMetAtDawn,
+  quotaMetLine,
   stageOf,
 } from './investigationNote'
 import { msToGameTime } from './gameConfig'
@@ -54,6 +56,46 @@ describe('outcomeOf', () => {
 })
 
 const fw = toFullWidthDigits
+
+describe('quota-met result line (#428)', () => {
+  const after = (sh: Partial<LastShift>, loops: number) =>
+    buildNote(
+      { mode: 'after', save: save({ loops, foundTotal: 9 }), shift: shift(sh) },
+      'ja'
+    )
+  it('only a dawn that found at least the quota gets the extra line', () => {
+    expect(quotaMetAtDawn(shift({ found: 4 }))).toBe(true)
+    expect(quotaMetAtDawn(shift({ found: 3 }))).toBe(false)
+    expect(quotaMetAtDawn(shift({ found: 9, closing: 'withdraw' }))).toBe(false)
+    expect(quotaMetAtDawn(shift({ found: 9, closing: 'ending' }))).toBe(false)
+  })
+  it('the line is added for a met dawn and absent otherwise, with nothing else changed', () => {
+    const met = texts(after({ found: 4 }, 1))
+    const unmet = texts(after({ found: 3 }, 1))
+    expect(met).toContain(QUOTA_MET_LINES[0].ja)
+    expect(met.filter(t => !QUOTA_MET_LINES.some(l => l.ja === t))).toEqual(
+      unmet
+    )
+    for (const l of QUOTA_MET_LINES) expect(unmet).not.toContain(l.ja)
+    expect(
+      texts(after({ found: 9, closing: 'withdraw' }, 1)).some(t =>
+        QUOTA_MET_LINES.some(l => l.ja === t)
+      )
+    ).toBe(false)
+  })
+  it('the variant follows the night number, so the nights differ and one night reads the same each time', () => {
+    const seen = new Set(
+      Array.from(
+        { length: QUOTA_MET_LINES.length },
+        (_, i) => quotaMetLine(i + 1).ja
+      )
+    )
+    expect(seen.size).toBe(QUOTA_MET_LINES.length)
+    expect(quotaMetLine(1)).toBe(quotaMetLine(1 + QUOTA_MET_LINES.length))
+    expect(texts(after({ found: 5 }, 2))).toContain(QUOTA_MET_LINES[1].ja)
+    expect(texts(after({ found: 5 }, 2))).toEqual(texts(after({ found: 5 }, 2)))
+  })
+})
 
 describe('fmtShiftEnd (in-game clock, not real time)', () => {
   it.each([
@@ -239,7 +281,7 @@ describe('buildNote after a shift', () => {
       'ja'
     )
   it('new kinds: stock lines, then the kept tail of the stage, two lines at most (all one colour); night = loops', () => {
-    const v = after(shift())
+    const v = after(shift({ found: 3 })) // short of the quota: no extra line (#428)
     expect(v.night).toBe('８夜目')
     expect(v.stamps).toEqual([
       { text: '今夜の捜査', big: false },

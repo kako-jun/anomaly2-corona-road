@@ -5,6 +5,8 @@ import type {
   DialogueLedger,
   FlagDef,
   MidpointStage,
+  Quota,
+  Situation,
   Tone,
 } from './dialogueLedger'
 
@@ -161,9 +163,46 @@ export const pickOpening = (
 ): Picked | null =>
   drawChatterBag(unlocked(ofKind(ledger, 'opening'), flags), used, rng)
 
+/**
+ * The closing conversation. A dawn or a withdraw has its own bag per `quota` (met or not when the shift ended, #428);
+ * the ending has no quota. Each bag is drawn like any other (`drawFromBag`), so the same one does not come twice
+ * in a row and none repeats before the bag is empty.
+ */
 export const pickClosing = (
   ledger: DialogueLedger,
   result: ClosingResult,
+  used: UsedState,
+  rng: Rng = Math.random,
+  flags: Readonly<Record<string, boolean>> = {},
+  quota: Quota = 'unmet'
+): Picked | null =>
+  drawChatterBag(
+    unlocked(
+      ledger.entries.filter(
+        e =>
+          e.kind === 'closing' &&
+          e.when.result === result &&
+          (result === 'ending' || e.when.quota === quota)
+      ),
+      flags
+    ),
+    used,
+    rng
+  )
+
+/** The one-time conversation for the moment the quota is reached (#428); its own bag. */
+export const pickQuotaReached = (
+  ledger: DialogueLedger,
+  used: UsedState,
+  rng: Rng = Math.random,
+  flags: Readonly<Record<string, boolean>> = {}
+): Picked | null =>
+  drawChatterBag(unlocked(ofKind(ledger, 'quota-reached'), flags), used, rng)
+
+/** A conversation for a situation of the shift (#428); one bag per situation. */
+export const pickSituation = (
+  ledger: DialogueLedger,
+  situation: Situation,
   used: UsedState,
   rng: Rng = Math.random,
   flags: Readonly<Record<string, boolean>> = {}
@@ -171,7 +210,7 @@ export const pickClosing = (
   drawChatterBag(
     unlocked(
       ledger.entries.filter(
-        e => e.kind === 'closing' && e.when.result === result
+        e => e.kind === 'situation' && e.when.situation === situation
       ),
       flags
     ),
@@ -223,16 +262,26 @@ export const pickStory = (
   )
 
 /**
- * False report: that anomaly's own conversations first (each once); when they are used up, or there
- * are none, the common false-report conversations (bag).
+ * False report: that anomaly's own conversations first (each once, met or not: they carry the hints, which
+ * still help to find the next one); when they are used up, or there are none, the common false-report
+ * conversations (bag). Once the quota is met (#428) the common bag is the `quota: met` one (the talk
+ * is about having found enough already); before it, the ordinary one. The two common bags are separate.
  */
 export const pickFalseReport = (
   ledger: DialogueLedger,
   anomalyId: string | null,
   used: UsedState,
   rng: Rng = Math.random,
-  flags: Readonly<Record<string, boolean>> = {}
+  flags: Readonly<Record<string, boolean>> = {},
+  quota: Quota = 'unmet'
 ): Picked | null => {
+  const common = (met: boolean) =>
+    unlocked(
+      ledger.entries.filter(
+        e => e.kind === 'false-report' && (e.when.quota === 'met') === met
+      ),
+      flags
+    )
   if (anomalyId !== null) {
     const own = ledger.entries.filter(
       e =>
@@ -254,11 +303,11 @@ export const pickFalseReport = (
       }
     }
   }
-  return drawChatterBag(
-    unlocked(ofKind(ledger, 'false-report'), flags),
-    used,
-    rng
-  )
+  if (quota === 'met') {
+    const p = drawChatterBag(common(true), used, rng)
+    if (p) return p
+  }
+  return drawChatterBag(common(false), used, rng)
 }
 
 /**
@@ -403,6 +452,12 @@ export interface SelectInput {
   pendingSpawnHints?: readonly string[]
   /** Anomaly id -> the spawn-hint conversation shown last for it (avoided next time when there is a choice). */
   lastSpawnHints?: Readonly<Record<string, string>>
+  /** The quota was just reached and its one-time conversation waits (#428). */
+  pendingQuotaReached?: boolean
+  /** A situation of the shift is due (#428); it takes the place of a chatter, so the chatter gate applies. */
+  pendingSituation?: Situation | null
+  /** Whether the quota is met now (picks the false-report bag). */
+  quota?: Quota
   /** A midpoint comment is due, with its stage. */
   pendingMidpoint?: MidpointStage | null
   /** Chatter gate input. */
@@ -415,6 +470,8 @@ export type SelectedSource =
   | 'flag'
   | 'false-report'
   | 'spawn-hint'
+  | 'quota-reached'
+  | 'situation'
   | 'midpoint'
   | 'chatter'
 
@@ -424,10 +481,12 @@ export interface Selected extends Picked {
   flag?: string
   /** The anomaly this spawn hint was for (source 'spawn-hint'). */
   hintedAnomaly?: string
+  /** The situation this conversation was for (source 'situation'). */
+  situation?: Situation
 }
 
 /**
- * The next conversation by priority: flag > false report > spawn hint > midpoint > chatter. A pending item
+ * The next conversation by priority: flag > false report > spawn hint > quota reached > situation > midpoint > chatter. A pending item
  * with no conversation available is skipped. Chatter is returned only when the gate allows it;
  * null means "stay silent for now". The caller removes the consumed pending item.
  */
@@ -445,7 +504,8 @@ export const selectNext = (input: SelectInput): Selected | null => {
       input.pendingFalseReport.anomalyId,
       used,
       rng,
-      flags
+      flags,
+      input.quota
     )
     if (p) return { ...p, source: 'false-report' }
   }
@@ -459,6 +519,24 @@ export const selectNext = (input: SelectInput): Selected | null => {
       input.lastSpawnHints?.[id]
     )
     if (p) return { ...p, source: 'spawn-hint', hintedAnomaly: id }
+  }
+  if (input.pendingQuotaReached) {
+    const p = pickQuotaReached(input.ledger, used, rng, flags)
+    if (p) return { ...p, source: 'quota-reached' }
+  }
+  if (
+    input.pendingSituation &&
+    chatterAllowed(input.last ?? null, input.nowMs ?? 0, input.quietMs)
+  ) {
+    const p = pickSituation(
+      input.ledger,
+      input.pendingSituation,
+      used,
+      rng,
+      flags
+    )
+    if (p)
+      return { ...p, source: 'situation', situation: input.pendingSituation }
   }
   if (input.pendingMidpoint) {
     const p = pickMidpoint(

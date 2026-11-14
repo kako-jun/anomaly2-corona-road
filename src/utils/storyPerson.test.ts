@@ -270,6 +270,8 @@ describe('every flag whose conversation holds a picture needs a playable story (
       chatter: { dialogues: [] },
       story: { dialogues: [] },
       'false-report': { dialogues: [] },
+      'quota-reached': { dialogues: [] },
+      situation: { dialogues: [] },
       'anomaly-lines': { dialogues: [] },
       'spawn-hints': { dialogues: [] },
     }

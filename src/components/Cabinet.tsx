@@ -417,6 +417,7 @@ export const Cabinet = ({
       feedback?.kind === 'wrong' ? (feedback.anomalyId ?? null) : null,
     elapsedMs: stats.currentTime,
     foundThisPlay: stats.correctReports,
+    misreports: stats.misreports,
     openAnomalyIds,
     flagEvent,
     ending,

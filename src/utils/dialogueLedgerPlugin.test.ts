@@ -53,15 +53,23 @@ const anomalies = `anomalies:
 const entry = (id: string, extra = '') =>
   `  - id: ${id}\n    tone: light\n${extra}    lines:\n      - { who: A, text: 'あ' }\n`
 
+/** n entries of one condition, enough to meet the minimum count of the build (#428). */
+const many = (prefix: string, n: number, extra = '') =>
+  Array.from({ length: n }, (_, i) =>
+    entry(`${prefix}${String(i + 1).padStart(2, '0')}`, extra)
+  ).join('')
+
 const good = (): Record<string, string> => ({
   anomalies,
   flags: 'flags:\n  f1:\n    loops: 1\n',
   opening: `dialogues:\n${entry('opening-1')}`,
-  closing: `dialogues:\n${entry('closing-1', '    when: { result: dawn }\n')}`,
+  closing: `dialogues:\n${many('closing-dm-', 10, '    when: { result: dawn, quota: met }\n')}${many('closing-du-', 10, '    when: { result: dawn, quota: unmet }\n')}${many('closing-wm-', 5, '    when: { result: withdraw, quota: met }\n')}`,
   midpoint: 'dialogues: []\n',
   chatter: 'dialogues: []\n',
   story: `dialogues:\n${entry('story-1', '    when: { flag: f1 }\n')}`,
-  'false-report': 'dialogues: []\n',
+  'false-report': `dialogues:\n${many('false-report-met-', 8, '    when: { quota: met }\n')}`,
+  'quota-reached': `dialogues:\n${many('quota-reached-', 5)}`,
+  situation: `dialogues:\n${['hot', 'cold', 'brink', 'tenth'].map(k => many(`situation-${k}-`, 5, `    when: { situation: ${k} }\n`)).join('')}`,
   'anomaly-lines': `dialogues:\n${entry('an-a1-1', '    when: { anomaly: a1 }\n')}`,
   'spawn-hints': `dialogues:\n${entry('spawn-hint-a1-1', '    when: { anomaly: a1 }\n')}`,
 })
@@ -98,13 +106,17 @@ describe('dialogue-ledger vite plugin', () => {
     expect(out).toMatch(/^export default /)
     const json = JSON.parse((out as string).replace('export default ', ''))
     expect(json.flags).toEqual([{ name: 'f1', when: { loops: 1 } }])
-    expect(json.entries.map((e: { id: string }) => e.id).sort()).toEqual([
-      'an-a1-1',
-      'closing-1',
-      'opening-1',
-      'spawn-hint-a1-1',
-      'story-1',
-    ])
+    expect(json.entries.map((e: { id: string }) => e.id)).toEqual(
+      expect.arrayContaining([
+        'an-a1-1',
+        'closing-dm-01',
+        'opening-1',
+        'quota-reached-01',
+        'situation-hot-01',
+        'spawn-hint-a1-1',
+        'story-1',
+      ])
+    )
   })
 
   it('watches the anomaly ledger and every dialogue file', async () => {
@@ -119,6 +131,8 @@ describe('dialogue-ledger vite plugin', () => {
       'chatter',
       'story',
       'false-report',
+      'quota-reached',
+      'situation',
       'anomaly-lines',
       'spawn-hints',
     ]) {
@@ -163,6 +177,20 @@ describe('dialogue-ledger vite plugin', () => {
     const files = good()
     files.story = `dialogues:\n${entry('story-1', '    when: { flag: nope }\n')}`
     await expect(run(files)).rejects.toThrow(/entry "story-1".*"nope"/)
+  })
+
+  it('fails the build when a quota / situation condition has too few conversations (#428)', async () => {
+    const files = good()
+    files.situation = `dialogues:\n${many('situation-hot-', 4, '    when: { situation: hot }\n')}`
+    await expect(run(files)).rejects.toThrow(
+      /too few conversations.*situation hot: 4.*situation cold: 0/
+    )
+  })
+
+  it('fails the build when a dawn closing has no quota', async () => {
+    const files = good()
+    files.closing = `dialogues:\n${entry('closing-1', '    when: { result: dawn }\n')}`
+    await expect(run(files)).rejects.toThrow(/entry "closing-1".*quota/)
   })
 
   it('fails the build when a dialogue file is empty YAML', async () => {

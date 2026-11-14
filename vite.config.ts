@@ -18,6 +18,7 @@ import {
 import {
   DIALOGUE_FILES,
   checkFlagStories,
+  dialogueCountShortfalls,
   parseDialogueLedger,
 } from './src/utils/dialogueLedger'
 
@@ -137,6 +138,10 @@ const dialogueLedgerPlugin = (): Plugin => ({
       dialogue,
       'a story person flag'
     )
+    // Too few conversations for a condition (#428): the same lines would come round too often.
+    const short = dialogueCountShortfalls(dialogue.entries)
+    if (short.length > 0)
+      throw new Error(`dialogue/: too few conversations: ${short.join('; ')}`)
     return `export default ${JSON.stringify(dialogue)}`
   },
 })

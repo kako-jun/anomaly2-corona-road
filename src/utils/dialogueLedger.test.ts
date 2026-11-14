@@ -7,7 +7,10 @@ import {
   DIALOGUE_FILES,
   checkSubtitleEn,
   checkSubtitleText,
+  DIALOGUE_COUNT_RULES,
+  countByCondition,
   countEnglish,
+  dialogueCountShortfalls,
   parseDialogueFile,
   parseDialogueLedger,
   parseEntry,
@@ -104,11 +107,103 @@ describe('parseEntry: valid entries of every kind', () => {
   it('parses a closing with its result', () => {
     const e = parseEntry(
       'closing',
-      entry({ id: 'closing-1', when: { result: 'dawn' } }),
+      entry({ id: 'closing-1', when: { result: 'dawn', quota: 'met' } }),
       0,
       ctx
     )
-    expect(e).toMatchObject({ kind: 'closing', when: { result: 'dawn' } })
+    expect(e).toMatchObject({
+      kind: 'closing',
+      when: { result: 'dawn', quota: 'met' },
+    })
+  })
+  it('a dawn or a withdraw closing needs a quota; the ending takes none (#428)', () => {
+    for (const result of ['dawn', 'withdraw'])
+      expect(() =>
+        parseEntry(
+          'closing',
+          entry({ id: 'closing-1', when: { result } }),
+          0,
+          ctx
+        )
+      ).toThrow(/needs "when: \{ quota \}"/)
+    expect(() =>
+      parseEntry(
+        'closing',
+        entry({ id: 'closing-1', when: { result: 'dawn', quota: 'most' } }),
+        0,
+        ctx
+      )
+    ).toThrow(/when\.quota "most" must be one of met\|unmet/)
+    expect(
+      parseEntry(
+        'closing',
+        entry({ id: 'closing-1', when: { result: 'ending' } }),
+        0,
+        ctx
+      )
+    ).toMatchObject({ when: { result: 'ending' } })
+    expect(() =>
+      parseEntry(
+        'closing',
+        entry({
+          id: 'closing-1',
+          when: { result: 'ending', quota: 'met' },
+        }),
+        0,
+        ctx
+      )
+    ).toThrow(/ending takes no "when.quota"/)
+  })
+  it('a false report takes no when (before the quota) or quota: met (after it)', () => {
+    expect(
+      parseEntry('false-report', entry({ id: 'false-report-1' }), 0, ctx)
+    ).toMatchObject({ when: {} })
+    expect(
+      parseEntry(
+        'false-report',
+        entry({ id: 'false-report-2', when: { quota: 'met' } }),
+        0,
+        ctx
+      )
+    ).toMatchObject({ when: { quota: 'met' } })
+    for (const when of [{ quota: 'unmet' }, { other: 1 }])
+      expect(() =>
+        parseEntry(
+          'false-report',
+          entry({ id: 'false-report-3', when }),
+          0,
+          ctx
+        )
+      ).toThrow()
+  })
+  it('parses a quota-reached conversation (no when) and a situation', () => {
+    expect(
+      parseEntry('quota-reached', entry({ id: 'quota-reached-1' }), 0, ctx)
+    ).toMatchObject({ kind: 'quota-reached', when: {} })
+    expect(
+      parseEntry(
+        'situation',
+        entry({ id: 'situation-hot-1', when: { situation: 'hot' } }),
+        0,
+        ctx
+      )
+    ).toMatchObject({ kind: 'situation', when: { situation: 'hot' } })
+    expect(() =>
+      parseEntry(
+        'situation',
+        entry({ id: 'situation-x-1', when: { situation: 'x' } }),
+        0,
+        ctx
+      )
+    ).toThrow(/when\.situation "x" must be one of hot\|cold\|brink\|tenth/)
+    expect(() =>
+      parseEntry(
+        'situation',
+        entry({ id: 'wrong-1', when: { situation: 'hot' } }),
+        0,
+        ctx
+      )
+    ).toThrow(/id must start with "situation-"/)
   })
   it('parses a midpoint with its stage', () => {
     const e = parseEntry(
@@ -153,7 +248,7 @@ describe('parseEntry: unlock', () => {
     ['opening', { id: 'opening-1' }],
     ['chatter', { id: 'chatter-1' }],
     ['false-report', { id: 'false-report-1' }],
-    ['closing', { id: 'closing-1', when: { result: 'dawn' } }],
+    ['closing', { id: 'closing-1', when: { result: 'dawn', quota: 'met' } }],
     ['midpoint', { id: 'midpoint-1', when: { stage: 'few' } }],
     ['story', { id: 'story-1', when: { flag: 'f1' } }],
     ['anomaly-lines', { id: 'an-an1-1', when: { anomaly: 'an1' } }],
@@ -182,7 +277,7 @@ describe('parseEntry: unlock', () => {
 })
 
 describe('parseEntry: when', () => {
-  it.each(['opening', 'chatter', 'false-report'] as const)(
+  it.each(['opening', 'chatter', 'quota-reached'] as const)(
     '%s rejects a non-empty when',
     file => {
       expect(() =>
@@ -214,7 +309,7 @@ describe('parseEntry: when', () => {
     )
   })
   it.each([
-    ['closing', 'closing-1', { result: 'dawn', extra: 1 }],
+    ['closing', 'closing-1', { result: 'dawn', quota: 'met', extra: 1 }],
     ['midpoint', 'midpoint-1', { stage: 'few', extra: 1 }],
     ['story', 'story-1', { flag: 'f1', extra: 1 }],
     ['anomaly-lines', 'an-an1-1', { anomaly: 'an1', extra: 1 }],
@@ -369,7 +464,7 @@ describe('parseEntry: id prefix', () => {
     ['opening', {}],
     ['chatter', {}],
     ['false-report', {}],
-    ['closing', { when: { result: 'dawn' } }],
+    ['closing', { when: { result: 'dawn', quota: 'met' } }],
     ['midpoint', { when: { stage: 'few' } }],
     ['story', { when: { flag: 'f1' } }],
   ] as [DialogueFile, Record<string, unknown>][])(
@@ -674,6 +769,50 @@ describe('the real ledger in the repository', () => {
       ).toBeGreaterThanOrEqual(1)
     }
   )
+  it('every quota / situation condition has at least its minimum number of conversations (#428)', () => {
+    expect(dialogueCountShortfalls(ledger.entries)).toEqual([])
+    // The rules cover every condition the engine branches on.
+    expect(countByCondition(ledger.entries).map(c => c.label)).toEqual(
+      expect.arrayContaining([
+        'closing dawn / quota met',
+        'closing dawn / quota unmet',
+        'closing withdraw / quota met',
+        'false-report / quota met',
+        'quota-reached',
+        'situation hot',
+        'situation cold',
+        'situation brink',
+        'situation tenth',
+      ])
+    )
+  })
+  it('the minimums are the ones kako-jun asked for (#428)', () => {
+    const min = Object.fromEntries(
+      DIALOGUE_COUNT_RULES.map(r => [r.label, r.min])
+    )
+    expect(min['closing dawn / quota met']).toBeGreaterThanOrEqual(10)
+    expect(min['closing dawn / quota unmet']).toBeGreaterThanOrEqual(10)
+    expect(min['false-report / quota met']).toBeGreaterThanOrEqual(8)
+    expect(min['closing withdraw / quota met']).toBeGreaterThanOrEqual(5)
+    expect(min['quota-reached']).toBeGreaterThanOrEqual(5)
+  })
+  it('a count below a minimum is reported (the build and check:dialogue-counts fail on it)', () => {
+    const fewer = ledger.entries.filter(
+      e => !(e.kind === 'situation' && e.id.endsWith('-06'))
+    )
+    expect(dialogueCountShortfalls(fewer)).toEqual([])
+    const wiped = ledger.entries.filter(e => e.kind !== 'quota-reached')
+    expect(dialogueCountShortfalls(wiped)).toEqual([
+      'quota-reached: 0 (needs 5 or more)',
+    ])
+  })
+  it('every dawn / withdraw closing has a quota, and the ending has none', () => {
+    for (const e of ledger.entries) {
+      if (e.kind !== 'closing') continue
+      if (e.when.result === 'ending') expect(e.when.quota).toBeUndefined()
+      else expect(['met', 'unmet']).toContain(e.when.quota)
+    }
+  })
   it.each(['opening', 'chatter', 'false-report'] as const)(
     'has at least one %s',
     kind => {

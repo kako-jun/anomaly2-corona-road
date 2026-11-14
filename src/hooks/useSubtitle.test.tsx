@@ -64,11 +64,84 @@ const H = vi.hoisted(() => {
     e('midpoint', 'midpoint-few-1', { stage: 'few' }, 'light', 'mfa', 'mfb'),
     e('midpoint', 'midpoint-mid-1', { stage: 'mid' }, 'light', 'mma', 'mmb'),
     e('midpoint', 'midpoint-many-1', { stage: 'many' }, 'light', 'mxa', 'mxb'),
-    e('closing', 'closing-dawn-1', { result: 'dawn' }, 'light', 'cda', 'cdb'),
+    e(
+      'closing',
+      'closing-dawn-1',
+      { result: 'dawn', quota: 'unmet' },
+      'light',
+      'cda',
+      'cdb'
+    ),
+    e(
+      'closing',
+      'closing-dawn-met-1',
+      { result: 'dawn', quota: 'met' },
+      'light',
+      'cdma',
+      'cdmb'
+    ),
+    e(
+      'closing',
+      'closing-withdraw-met-1',
+      { result: 'withdraw', quota: 'met' },
+      'light',
+      'cwma',
+      'cwmb'
+    ),
+    e(
+      'false-report',
+      'false-report-met-1',
+      { quota: 'met' },
+      'light',
+      'frm1a',
+      'frm1b'
+    ),
+    e('quota-reached', 'quota-reached-1', {}, 'light', 'qr1a', 'qr1b'),
+    e('quota-reached', 'quota-reached-2', {}, 'light', 'qr2a', 'qr2b'),
+    e(
+      'situation',
+      'situation-brink-1',
+      { situation: 'brink' },
+      'light',
+      'sb1a',
+      'sb1b'
+    ),
+    e(
+      'situation',
+      'situation-brink-2',
+      { situation: 'brink' },
+      'light',
+      'sb2a',
+      'sb2b'
+    ),
+    e(
+      'situation',
+      'situation-hot-1',
+      { situation: 'hot' },
+      'light',
+      'sh1a',
+      'sh1b'
+    ),
+    e(
+      'situation',
+      'situation-tenth-1',
+      { situation: 'tenth' },
+      'light',
+      'st1a',
+      'st1b'
+    ),
+    e(
+      'situation',
+      'situation-cold-1',
+      { situation: 'cold' },
+      'light',
+      'sc1a',
+      'sc1b'
+    ),
     e(
       'closing',
       'closing-withdraw-1',
-      { result: 'withdraw' },
+      { result: 'withdraw', quota: 'unmet' },
       'light',
       'cwa',
       'cwb'
@@ -113,8 +186,21 @@ const base: SubtitleInput = {
 }
 
 const ORIGINAL_INTERVAL = DIALOGUE_CONFIG.chatterIntervalMs
+// The situation conversations (#428) are off (chance 0) except in their own tests, so a test that jumps the play time
+// (e.g. to the midpoint) does not meet a "nothing found for a long time" line it is not about.
+const SITUATION_CHANCES = Object.fromEntries(
+  Object.entries(DIALOGUE_CONFIG.situations.rules).map(([k, v]) => [
+    k,
+    v.chance,
+  ])
+)
+const setSituationChances = (on: boolean) => {
+  for (const [k, rule] of Object.entries(DIALOGUE_CONFIG.situations.rules))
+    rule.chance = on ? SITUATION_CHANCES[k] : 0
+}
 
 beforeEach(() => {
+  setSituationChances(false)
   vi.useFakeTimers()
   localStorage.clear()
   resetStore()
@@ -123,6 +209,7 @@ beforeEach(() => {
   vi.spyOn(Math, 'random').mockReturnValue(0)
 })
 afterEach(() => {
+  setSituationChances(true)
   DIALOGUE_CONFIG.chatterIntervalMs = ORIGINAL_INTERVAL
   vi.restoreAllMocks()
   vi.useRealTimers()
@@ -1010,5 +1097,237 @@ describe('useSubtitle: robustness', () => {
     advance(60_000)
     d.unmount()
     expect(err).not.toHaveBeenCalled()
+  })
+})
+
+// ---- quota and situation conversations (#428) -----------------------------------------------
+
+describe('useSubtitle: quota (#428)', () => {
+  const Q = DEFAULT_CONFIG.minCorrectReports
+  /** Waits out the opening and its silence so the next thing said is whatever was due. */
+  const afterOpening = () => advance(OPENING_END)
+
+  it('the closing dawn depends on whether the quota was met', () => {
+    const met = driver()
+    met.set({ foundThisPlay: Q })
+    met.set({ ending: 'dawn' })
+    const w = watch(met.result)
+    w.step(60_000)
+    expect(w.seen).toEqual(['cdma', 'cdmb'])
+    met.unmount()
+
+    const unmet = driver()
+    unmet.set({ foundThisPlay: Q - 1 })
+    unmet.set({ ending: 'dawn' })
+    const u = watch(unmet.result)
+    u.step(60_000)
+    expect(u.seen).toEqual(['cda', 'cdb'])
+  })
+
+  it('the closing withdraw depends on the quota too (met before the third false report)', () => {
+    const d = driver({ foundThisPlay: Q })
+    d.set({ ending: 'withdraw' })
+    const w = watch(d.result)
+    w.step(60_000)
+    expect(w.seen).toEqual(['cwma', 'cwmb'])
+  })
+
+  it('the moment the quota is reached a short conversation comes, once', () => {
+    const d = driver()
+    afterOpening()
+    d.set({ foundThisPlay: Q - 1, elapsedMs: 100_000 })
+    d.set({ foundThisPlay: Q, elapsedMs: 101_000 })
+    const w = watch(d.result)
+    w.step(SILENCE + 20_000)
+    expect(w.seen.slice(0, 2)).toEqual(['qr1a', 'qr1b'])
+    // Not again: more finds, however many, do not repeat it.
+    d.set({ foundThisPlay: Q + 1, elapsedMs: 102_000 })
+    d.set({ foundThisPlay: Q + 5, elapsedMs: 103_000 })
+    w.step(5 * SILENCE)
+    expect(w.seen.filter(t => t.startsWith('qr'))).toEqual(['qr1a', 'qr1b'])
+  })
+
+  it('a hook that starts with finds already made says nothing about the quota (only the crossing counts)', () => {
+    const d = driver({ foundThisPlay: Q + 2 })
+    afterOpening()
+    const w = watch(d.result)
+    w.step(3 * SILENCE)
+    expect(w.seen.some(t => t.startsWith('qr'))).toBe(false)
+  })
+
+  it('the quota conversation is saved as used when shown, and the next one is another', () => {
+    const d = driver()
+    afterOpening()
+    d.set({ foundThisPlay: Q, elapsedMs: 100_000 })
+    // Not yet shown: nothing saved.
+    expect(load().usedChatter).not.toContain('quota-reached-1')
+    watch(d.result).step(SILENCE)
+    expect(load().usedChatter).toContain('quota-reached-1')
+  })
+
+  it('a false report after the quota uses the after-quota conversation; before it, the ordinary one', () => {
+    const before = driver()
+    afterOpening()
+    before.set({ wrongFeedbackId: 1, foundThisPlay: Q - 1 })
+    const w = watch(before.result)
+    w.step(20_000)
+    expect(w.seen.slice(0, 2)).toEqual(['fr1a', 'fr1b'])
+    before.unmount()
+
+    resetStore()
+    localStorage.clear()
+    const after = driver({ foundThisPlay: Q })
+    afterOpening()
+    after.set({ wrongFeedbackId: 1 })
+    const a = watch(after.result)
+    a.step(20_000)
+    expect(a.seen.slice(0, 2)).toEqual(['frm1a', 'frm1b'])
+  })
+
+  it('ending a play early or with the quota unmet does not touch the quota bags', () => {
+    const d = driver({ foundThisPlay: 1 })
+    d.set({ ending: 'dawn' })
+    watch(d.result).step(60_000)
+    expect(load().usedChatter).toContain('closing-dawn-1')
+    expect(load().usedChatter).not.toContain('closing-dawn-met-1')
+  })
+})
+
+describe('useSubtitle: situations (#428)', () => {
+  beforeEach(() => setSituationChances(true))
+  const afterOpening = () => advance(OPENING_END)
+  const MISS_CAP = DEFAULT_CONFIG.maxMisreports - 1
+
+  it('two false reports (one short of a withdraw) can bring a brink conversation in place of a chatter', () => {
+    const d = driver()
+    afterOpening()
+    d.set({ misreports: 1, wrongFeedbackId: 1 })
+    d.set({ misreports: MISS_CAP, wrongFeedbackId: 2 })
+    const w = watch(d.result)
+    w.step(4 * SILENCE)
+    expect(w.seen.some(t => t.startsWith('fr'))).toBe(true)
+    expect(w.seen).toContain('sb1a')
+    // It is spent when shown: the bag has not yet refilled, a second one is never the same text.
+    expect(load().usedChatter).toContain('situation-brink-1')
+  })
+
+  it('a clean run (five finds, no false report) brings a hot conversation in the real hook, after the quota line', () => {
+    const d = driver()
+    afterOpening()
+    const w = watch(d.result)
+    for (let n = 1; n <= 5; n++) {
+      // Finds are far apart in play time, so only the clean run (not three-in-a-row) can make hot.
+      d.set({ foundThisPlay: n, elapsedMs: 100_000 * n })
+      w.step(60_000)
+    }
+    w.step(4 * SILENCE)
+    expect(w.seen).toContain('qr1a')
+    expect(w.seen).toContain('sh1a')
+    expect(w.seen.indexOf('sh1a')).toBeGreaterThan(w.seen.indexOf('qr1a'))
+  })
+
+  it('a miss of the dice says nothing and uses nothing up', () => {
+    // Math.random is mocked high: every roll misses.
+    vi.spyOn(Math, 'random').mockReturnValue(0.999)
+    const d = driver()
+    afterOpening()
+    d.set({ misreports: MISS_CAP, wrongFeedbackId: 1 })
+    const w = watch(d.result)
+    w.step(6 * SILENCE)
+    expect(w.seen.some(t => t.startsWith('sb'))).toBe(false)
+    expect(load().usedChatter.some(id => id.startsWith('situation-'))).toBe(
+      false
+    )
+  })
+
+  it('does not add subtitles: a situation takes the chatter slot (same number of conversations as without)', () => {
+    const count = (withSituation: boolean) => {
+      resetStore()
+      localStorage.clear()
+      const d = driver()
+      afterOpening()
+      if (withSituation) d.set({ misreports: MISS_CAP })
+      const w = watch(d.result)
+      w.step(8 * SILENCE)
+      const n = w.seen.filter(t => /^(ch|sb|sc|st|fr)\d?[a-z]$/.test(t)).length
+      d.unmount()
+      return n
+    }
+    expect(count(true)).toBe(count(false))
+  })
+
+  it('brink does not outrank a false report: the false-report conversation comes first', () => {
+    const d = driver()
+    afterOpening()
+    d.set({ misreports: MISS_CAP, wrongFeedbackId: 1 })
+    const w = watch(d.result)
+    w.step(8 * SILENCE)
+    const first = w.seen.findIndex(t => t === 'fr1a')
+    const brink = w.seen.findIndex(t => t === 'sb1a')
+    expect(first).toBeGreaterThanOrEqual(0)
+    expect(brink).toBeGreaterThan(first)
+  })
+
+  it('a situation that becomes due when the shift ends is not said: the closing plays alone', () => {
+    const d = driver()
+    afterOpening()
+    d.set({ ending: 'dawn' })
+    d.set({ misreports: MISS_CAP })
+    const w = watch(d.result)
+    w.step(60_000)
+    expect(w.seen.some(t => t.startsWith('sb'))).toBe(false)
+  })
+
+  it('a situation that did not get to speak within expireMs is dropped (not carried to a later slot)', () => {
+    const rules = DIALOGUE_CONFIG.situations
+    const saved = rules.expireMs
+    rules.expireMs = 1000 // shorter than the silence before the next slot
+    try {
+      const d = driver()
+      afterOpening()
+      d.set({ misreports: MISS_CAP })
+      const w = watch(d.result)
+      w.step(8 * SILENCE)
+      expect(w.seen.some(t => t.startsWith('sb'))).toBe(false)
+    } finally {
+      rules.expireMs = saved
+    }
+  })
+
+  it('over several seeded shifts through the real hook: a situation replaces a chatter, never adds a conversation, and is not said every time', () => {
+    const seeded = (seed: number) => () => {
+      seed = (seed + 0x6d2b79f5) | 0
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+    }
+    const conversations = (seed: number, trigger: boolean) => {
+      resetStore()
+      localStorage.clear()
+      vi.mocked(Math.random).mockImplementation(seeded(seed))
+      const d = driver()
+      afterOpening()
+      if (trigger) d.set({ misreports: MISS_CAP })
+      const w = watch(d.result)
+      w.step(8 * SILENCE)
+      d.unmount()
+      // One conversation = one first line (a first line is the one that starts a conversation).
+      const firsts = /^(ch1a|ch2a|ch3a|sb1a|sb2a|sc1a|st1a)$/
+      return {
+        n: w.seen.filter(t => firsts.test(t)).length,
+        spoke: w.seen.some(t => t.startsWith('sb')),
+      }
+    }
+    let spoke = 0
+    let silent = 0
+    for (let seed = 1; seed <= 12; seed++) {
+      const on = conversations(seed, true)
+      const off = conversations(seed, false)
+      expect(on.n).toBe(off.n)
+      if (on.spoke) spoke++
+      else silent++
+    }
+    expect(spoke).toBeGreaterThan(0)
+    expect(silent).toBeGreaterThan(0)
   })
 })
