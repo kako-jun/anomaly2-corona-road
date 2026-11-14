@@ -493,7 +493,6 @@ describe('reporting', () => {
       expect(sounds).toHaveLength(18)
       const person = new Set([
         'RT-SND-04',
-        'RT-SND-05',
         'RT-SND-06',
         'RT-SND-07',
         'RT-SND-12',

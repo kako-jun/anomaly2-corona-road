@@ -45,6 +45,8 @@ describe('RT-UI-05 clock fault', () => {
     expect(shown(CLOCK_JUMP_PERIOD_MIN + real)).not.toBe(
       at(CLOCK_JUMP_PERIOD_MIN + real)
     )
+    // crossing midnight (start 23:55, real 00:01 = 6 minutes in, the first jump minute): 00 becomes 06
+    expect(faultedClock('00:01', f('jump', '23:55'))).toBe('06:01')
     // the hour 00 jumps to 06
     expect(faultedClock('00:08', f('jump', '00:00'))).toBe('06:08')
   })
