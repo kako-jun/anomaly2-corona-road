@@ -8,8 +8,8 @@ dialogues:
   - id: quota-reached-02
     tone: light
     lines:
-      - { who: A, text: 'やった　ひとまず一安心', en: 'Yes. A relief for now.' }
-      - { who: M, text: '出河さん　嬉しそうですね', en: 'You look happy, Ms. Dekawa.' }
+      - { who: A, text: 'あれ　今夜は目が利くかも', en: 'Huh, my eyes might be sharp tonight.' }
+      - { who: M, text: '出河さん　さっきから冴えてますよ', en: 'Ms. Dekawa, you have been sharp for a while now.' }
   - id: quota-reached-03
     tone: light
     lines:
@@ -24,13 +24,13 @@ dialogues:
     tone: light
     lines:
       - { who: A, text: '樫原くん　今夜はけっこう見つけたよね？', en: 'Kashihara, we have found quite a few tonight, right?' }
-      - { who: M, text: 'はい　ちゃんと数えてますよ', en: 'Yes, I have been keeping count.' }
+      - { who: M, text: 'はい　見ていて分かりましたよ', en: 'Yes, I could tell from watching.' }
       - { who: A, text: 'さすが　頼りになる', en: 'As expected. You are reliable.' }
   - id: quota-reached-06
     tone: light
     lines:
-      - { who: M, text: 'ひと息つけますね', en: 'You can catch your breath now.' }
-      - { who: A, text: 'うん　肩の力が抜けた', en: 'Yeah, my shoulders relaxed.' }
+      - { who: M, text: '今夜の出河さん　目が利いてますね', en: 'Ms. Dekawa, your eyes are sharp tonight.' }
+      - { who: A, text: 'ふふ　見えるうちに見ておく', en: 'Heh, I will look while I can see this well.' }
   - id: quota-reached-07
     tone: light
     lines:

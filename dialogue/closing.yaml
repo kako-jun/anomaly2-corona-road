@@ -234,7 +234,7 @@ dialogues:
     tone: light
     when: { result: dawn, quota: met }
     lines:
-      - { who: A, text: 'よし　今夜もちゃんと見つけたね', en: 'Good, we found plenty again tonight.' }
+      - { who: A, text: 'よし　今夜もいい収穫だったね', en: 'Good, a fine haul again tonight.' }
       - { who: M, text: 'はい　いつもより多かったです', en: 'Yes, more than usual.' }
       - { who: A, text: 'ふふ　ちょっと誇らしい', en: 'Heh, I am a little proud.' }
   - id: closing-dawn-22
@@ -248,7 +248,7 @@ dialogues:
     when: { result: dawn, quota: met }
     lines:
       - { who: A, text: '朝日がいつもよりきれいに見える', en: 'The sunrise looks prettier than usual.' }
-      - { who: M, text: '見つけた数が多いと　そう見えますよ', en: 'It does when you have found a lot.' }
+      - { who: M, text: 'いい夜だったと　そう見えますよ', en: 'It does when it has been a good night.' }
       - { who: A, text: '単純だなあ　私', en: 'I am so simple.' }
   - id: closing-dawn-24
     tone: light
@@ -370,7 +370,7 @@ dialogues:
     lines:
       - { who: M, text: '朝です　今夜は静かな夜でしたね', en: "It is morning. A quiet night, wasn't it." }
       - { who: A, text: '静かすぎて　見逃したのかも', en: 'So quiet that I may have missed something.' }
-      - { who: M, text: '静かな夜も　記録にはなりますよ', en: 'Even a quiet night goes in the record.' }
+      - { who: M, text: '静かな夜も　あっていいんですよ', en: 'Quiet nights are allowed too.' }
   - id: closing-dawn-42
     tone: light
     when: { result: dawn, quota: unmet }
@@ -395,12 +395,12 @@ dialogues:
     when: { result: withdraw, quota: met }
     lines:
       - { who: A, text: '撤収するよ　でも　今夜はちゃんと見つけた', en: 'We are pulling out, but we did find things tonight.' }
-      - { who: M, text: 'はい　記録には残ってます', en: 'Yes, it is in the record.' }
+      - { who: M, text: 'はい　報告書に書いておきます', en: 'Yes, I will write it in the report.' }
   - id: closing-withdraw-22
     tone: serious
     when: { result: withdraw, quota: met }
     lines:
-      - { who: M, text: '出河さん　今夜は焦りが出てますね', en: 'Ms. Dekawa, you are getting hasty tonight.' }
+      - { who: M, text: '出河さん　今夜は力が入りすぎですね', en: 'Ms. Dekawa, you are trying too hard tonight.' }
       - { who: A, text: 'うん　間違いが続いちゃった　今日はここまで', en: 'Yeah, the mistakes piled up. That is it for today.' }
       - { who: M, text: 'はい　先に記録をまとめておきます', en: 'Yes, I will put the record together first.' }
       - { who: A, text: 'ありがとう　頼んだ', en: 'Thanks. I am counting on you.' }
@@ -416,7 +416,7 @@ dialogues:
     when: { result: withdraw, quota: met }
     lines:
       - { who: A, text: '悔しいけど　見るものは見たよ', en: 'Frustrating, but I saw what there was to see.' }
-      - { who: M, text: 'はい　顔を上げて引き上げましょう', en: 'Yes, let us pull out with our heads up.' }
+      - { who: M, text: 'はい　顔を上げていきましょう', en: 'Yes, let us keep our heads up.' }
       - { who: A, text: 'うん　今日はここまでにする', en: 'Yeah. That is enough for today.' }
   - id: closing-withdraw-25
     tone: serious
@@ -430,9 +430,9 @@ dialogues:
     tone: serious
     when: { result: withdraw, quota: met }
     lines:
-      - { who: A, text: '焦りが出ちゃった　ここで引き上げる', en: 'I got hasty. We are pulling out here.' }
-      - { who: M, text: '次の夜は落ち着いていきましょう', en: 'Let us stay calm on the next night.' }
-      - { who: A, text: 'うん　見つけた分は誇りにする', en: 'Yeah. I will take pride in what we found.' }
+      - { who: A, text: '今夜は目が疲れた　ここで引き上げる', en: 'My eyes are tired tonight. We are pulling out here.' }
+      - { who: M, text: 'はい　帰ってゆっくり休みましょう', en: 'Yes, let us go home and rest well.' }
+      - { who: A, text: 'うん　次の夜に備えるよ', en: 'Yeah. I will get ready for the next night.' }
   - id: closing-ending-01
     tone: serious
     when: { result: ending }

@@ -293,7 +293,7 @@ export const OUTCOMES: Record<Outcome, OutcomeText> = {
  */
 export const QUOTA_MET_LINES: KnownPair[] = [
   k('start', '今夜は、手応えがあった。', 'Felt a solid hit tonight.'),
-  k('start', '見るべきものを、見た夜だった。', 'Saw what needed seeing.'),
+  k('start', '最後まで見ていた夜だった。', 'A night of watching to the end.'),
   k('start', '朝まで、いい夜だった。', 'A good night, start to finish.'),
   k('start', '気分のいい夜だった。', 'A good-feeling night.'),
   k('start', '目がよく見えた夜だった。', 'My eyes were sharp tonight.'),

@@ -175,5 +175,5 @@ dialogues:
     lines:
       - { who: M, text: 'あ　今のは違いました', en: 'Ah, that one was wrong.' }
       - { who: A, text: 'もう　恥ずかしいなあ', en: 'Oh, how embarrassing.' }
-      - { who: M, text: '見つけた数は減りませんよ', en: 'It does not take away what you found.' }
+      - { who: M, text: '手応えは消えませんよ', en: 'The feeling of the night does not go away.' }
       - { who: A, text: 'それでも悔しいの！', en: 'I am still annoyed!' }
