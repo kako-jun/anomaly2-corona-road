@@ -32,6 +32,7 @@ export const FEED_GLITCH_KINDS = [
   'heavyvignette',
   'mono',
   'nonoise',
+  'norec',
 ] as const
 
 export type FeedGlitchKind = (typeof FEED_GLITCH_KINDS)[number]
@@ -61,6 +62,7 @@ export const FEED_GLITCH_LEDGER_ID: Record<FeedGlitchKind, string> = {
   heavyvignette: 'RT-FEED-18',
   mono: 'RT-FEED-27',
   nonoise: 'RT-FEED-28',
+  norec: 'RT-FEED-29',
 }
 
 /** The kinds that draw one ledger entry (exposure has two, shake has two); empty for an entry no kind draws. */

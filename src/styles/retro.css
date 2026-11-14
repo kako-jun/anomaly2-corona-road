@@ -158,6 +158,21 @@
   font-size: max(9px, 2.9cqw);
 }
 
+/* The dot and the letters share one centre line: the text box is trimmed to the capital letters (text-box, so the
+   centre is the middle of the caps whatever ascent / descent the font has) and the row centres its children. Browsers
+   without text-box keep the plain line box (line-height 1 keeps it small). */
+.osd-rec {
+  line-height: 1;
+}
+.rec-text {
+  display: block;
+}
+@supports (text-box: trim-both cap alphabetic) {
+  .rec-text {
+    text-box: trim-both cap alphabetic;
+  }
+}
+
 .rec-dot {
   width: 8px;
   height: 8px;
@@ -746,7 +761,10 @@
   .cabinet {
     /* the picture's height: the viewport height, but never so tall that the 3:4 frame leaves the control column narrower than --col-min (tall screens such as 900x1000); (100vw - 8px*2 padding - 14px gap - --col-min) is the frame width left over */
     --col-min: 340px;
-    --tube-h: min(var(--vh) - 16px, (100vw - 30px - var(--col-min)) * 1679 / 1246);
+    --tube-h: min(
+      var(--vh) - 16px,
+      (100vw - 30px - var(--col-min)) * 1679 / 1246
+    );
     max-width: none;
     width: 100%;
     min-height: var(--vh);

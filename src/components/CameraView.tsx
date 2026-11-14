@@ -256,10 +256,13 @@ export const CameraView = ({
             <div className="osd osd-dev">DEV GLITCH: {feedGlitch}</div>
           )}
           <div className="osd osd-cam">CAM {camera.osdNumber ?? camera.id}</div>
-          <div className="osd osd-rec">
-            <i className="rec-dot" />
-            REC
-          </div>
+          {/* RT-FEED-29: on the camera it drew, the REC (dot and letters) is gone while this camera is watched. */}
+          {feedGlitch !== 'norec' && (
+            <div className="osd osd-rec">
+              <i className="rec-dot" />
+              <span className="rec-text">REC</span>
+            </div>
+          )}
 
           <div className={cx('movie-sub', subtitle.visible && 'show')}>
             {subtitle.text &&
