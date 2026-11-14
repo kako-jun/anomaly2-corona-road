@@ -383,19 +383,19 @@ dialogues:
     tone: serious
     when: { anomaly: AR-06-person-elder2 }
     lines:
-      - { who: A, text: "通路の真ん中　見てごらん", en: "Look at the middle of the corridor." }
-      - { who: M, text: "通路の真ん中ですか　目を向けます", en: "The middle of the corridor? I will look." }
+      - { who: A, text: "通路の右側の床　見てごらん", en: "Look at the floor on the right of the corridor." }
+      - { who: M, text: "通路の右寄りですか　目を向けます", en: "The right side of the corridor? I will look." }
   - id: spawn-hint-AR-06-person-elder2-02
     tone: serious
     when: { anomaly: AR-06-person-elder2 }
     lines:
-      - { who: M, text: "通路の中ほどの床が　気になります", en: "The floor halfway down the corridor bothers me." }
+      - { who: M, text: "通路の右寄りの床が　気になります", en: "The floor on the right side of the corridor bothers me." }
       - { who: A, text: "床ね　私も見る", en: "The floor. I'll look too." }
   - id: spawn-hint-AR-06-person-elder2-03
     tone: serious
     when: { anomaly: AR-06-person-elder2 }
     lines:
-      - { who: A, text: "通路の奥へ向かう床の上　何かある気がする", en: "I feel like something is on the floor down the corridor." }
+      - { who: A, text: "通路の右側の床の上　何かある気がする", en: "I feel like something is on the floor on the right side of the corridor." }
   - id: spawn-hint-AR-06-reflected-umbrella-01
     tone: serious
     when: { anomaly: AR-06-reflected-umbrella }
