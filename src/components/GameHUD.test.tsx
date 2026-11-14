@@ -133,3 +133,32 @@ describe('GameHUD colon (RT-UI-23)', () => {
     }
   )
 })
+
+describe('GameHUD RT-UI-04 (false strikes) and RT-UI-05 (time shown)', () => {
+  const strikes = (misreports: number, fx: string[]) => {
+    const { container } = render(
+      <GameHUD
+        gameTime="01:23"
+        stats={makeStats({ misreports })}
+        fx={new Set(fx)}
+      />
+    )
+    return [...container.querySelectorAll('.lamps .lamp.on')].length
+  }
+  it('RT-UI-04 lights one more lamp than the real count (capped at the max), the accessible name keeps the real count', () => {
+    expect(strikes(0, [])).toBe(0)
+    expect(strikes(0, ['RT-UI-04'])).toBe(1)
+    expect(strikes(1, ['RT-UI-04'])).toBe(2)
+    expect(strikes(max, ['RT-UI-04'])).toBe(max)
+    expect(
+      screen.getByRole('img', { name: `Strikes ${max} of ${max}` })
+    ).toBeInTheDocument()
+  })
+  it('shownTime replaces the digits only; the timer keeps the real time as its name', () => {
+    const { container } = render(
+      <GameHUD gameTime="01:23" shownTime="06:23" stats={makeStats()} />
+    )
+    expect(container.querySelector('.vfd')?.textContent).toBe('06:23')
+    expect(screen.getByRole('timer', { name: '01:23' })).toBeInTheDocument()
+  })
+})
