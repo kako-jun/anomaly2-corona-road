@@ -159,11 +159,8 @@
 }
 
 /* The dot and the letters share one centre line: the text box is trimmed to the capital letters (text-box, so the
-   centre is the middle of the caps whatever ascent / descent the font has) and the row centres its children. Browsers
-   without text-box keep the plain line box (line-height 1 keeps it small). */
-.osd-rec {
-  line-height: 1;
-}
+   centre is the middle of the caps whatever ascent / descent the font has) and the row centres its children. A browser
+   without text-box keeps the plain line box, so there the dot stays slightly low as before (measured, #450). */
 .rec-text {
   display: block;
 }
