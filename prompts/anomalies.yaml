@@ -6695,7 +6695,7 @@ anomalies:
     memo:
       ja: '時刻だけ進み、映像が止まる。時計は正常？'
       en: 'Clock runs, picture still. Clock right?'
-    note: '見送り(#78): #381 の対象外で未着手。景色の時計でなく監視モニターの TIME 表示が止まる・進む形で作れる（kako-jun 訂正、#80）。'
+    note: '見送り(#78): #381 の対象外で未着手。景色の時計でなく監視モニターの TIME 表示が止まる・進む形で作れる（kako-jun 訂正、#80）。RT-UI-05（TIME の偽時刻）と同じ TIME の数字窓を触るので、作るなら排他グループ digit-window に入れる（#444）。'
   - id: 'RT-FEED-08'
     status: 'planned'
     kind: 'non_image'
@@ -6886,7 +6886,7 @@ anomalies:
   - id: 'RT-SND-05'
     status: 'produced'
     kind: 'non_image'
-    category: ['environment', 'surreal', 'person']
+    category: ['environment', 'surreal']
     anomaly_type: 'sound'
     detail: 'knock: シャッター/壁/ガラスを叩く音。'
     memo:
@@ -7001,10 +7001,11 @@ anomalies:
     exclusive: 'digit-window'
     category: 'Surreal'
     anomaly_type: 'ui_corruption'
-    detail: 'timer backwards / jumps / frozen: 時刻が逆走する / 0:00・6:00付近へ飛ぶ / 映像は動くが時刻が止まる。'
+    detail: 'timer backwards / jumps / frozen: 時刻が逆走する / 0:00・6:00付近へ飛ぶ（1回では気づけないので、飛んで戻るのを繰り返す。暫定: 10秒ごとに4秒間飛ぶ）/ 映像は動くが時刻が止まる。'
     memo:
       ja: '時刻が戻り、跳び、止まる。映像は動く。'
       en: 'Clock reverses, jumps, stops; feed runs.'
+    note: '偽時刻の途中で0時をまたぐと、時だけが跳ぶ（00:59 の次が 06:00 になる。置き換え先の時が実時刻の時に連動するため。仕様、#444）。'
   - id: 'RT-UI-06'
     status: 'produced'
     exclusive: 'hud-labels'
