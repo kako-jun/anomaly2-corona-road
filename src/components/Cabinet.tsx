@@ -32,6 +32,7 @@ import {
 } from '../utils/voiceSounds'
 import { HUM_MODES, SOUND_EFFECTS } from '../utils/nonImageEffects'
 import { fxAttribute } from '../utils/monitorEffects'
+import { prefersReducedMotion } from '../utils/screenTransition'
 import { colonVariant, reportLabel } from '../utils/hudText'
 import { ClockFault, faultedClock, pickClockFault } from '../utils/clockFault'
 import { PLATE_MODEL, plateNumber } from '../utils/modelPlate'
@@ -360,8 +361,7 @@ export const Cabinet = ({
   useEffect(() => {
     if (!knobDrift) return
     const user = userKnobs.current // one object for the whole run (only its fields change)
-    const reduced =
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+    const reduced = prefersReducedMotion()
     const tick = reduced ? 3000 : 100
     let dirB: 1 | -1 = Math.random() < 0.5 ? 1 : -1
     let dirC: 1 | -1 = dirB === 1 ? -1 : 1
@@ -406,6 +406,15 @@ export const Cabinet = ({
     setBrightness(v => 100 - v)
     setContrast(v => 100 - v)
   }
+  // what the player last set (userKnobs, RT-UI-13 restores it) is in the same space as the stored values: flip it too, so
+  // RT-RULE-04 ending and then RT-UI-13 ending never restores a value from before the flip
+  const knobsFlipped = useRef(false)
+  useEffect(() => {
+    if (knobsFlipped.current === knobReversed) return
+    knobsFlipped.current = knobReversed
+    userKnobs.current.b = 100 - userKnobs.current.b
+    userKnobs.current.c = 100 - userKnobs.current.c
+  }, [knobReversed])
   const changeBrightness = useCallback((v: number) => {
     knobTouch.current.last = performance.now()
     userKnobs.current.b = v
@@ -420,6 +429,9 @@ export const Cabinet = ({
   // so the rule-break anomalies can act on all of them (src/utils/cameraSwitch.ts, #442).
   const { request: requestSwitch, lampIndex } = useCameraSwitch({
     enabled: !inEnding,
+    // a waiting (lagged) switch is held while the REPORT picker is open and runs once it closes: the camera under the
+    // player's feet must not change between opening the picker and choosing a category
+    hold: reportOpen,
     fx,
     currentIndex: currentCameraIndex,
     count: CAMERAS.length,

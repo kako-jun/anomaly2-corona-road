@@ -1321,6 +1321,93 @@ describe('Cabinet rule-break effects (#442)', () => {
     }
   })
 
+  it('RT-RULE-06: an edge tap and a CAMERA SELECT key are delayed too, and a switch due while the REPORT picker is open runs after it closes', () => {
+    vi.useFakeTimers()
+    try {
+      const onSwitch = vi.fn()
+      const { container } = render(
+        <Cabinet
+          {...makeProps({ onSwitch, monitorEffects: fxSet('RT-RULE-06') })}
+        />
+      )
+      const lampAt = () =>
+        [...container.querySelectorAll('.cam-lamps .lamp')].findIndex(l =>
+          l.classList.contains('on')
+        )
+      // a short tap on the right edge of the bezel (outside the picture) is the step to the next camera
+      const bezel = container.querySelector('.bezel') as HTMLElement
+      const glass = container.querySelector('.glass') as HTMLElement
+      const r = { left: 100, top: 50, width: 400, height: 600 }
+      const rect = () =>
+        ({
+          ...r,
+          right: 500,
+          bottom: 650,
+          x: 100,
+          y: 50,
+          toJSON: () => ({}),
+        }) as DOMRect
+      glass.getBoundingClientRect = rect
+      ;(
+        container.querySelector('.pic__frame') as HTMLElement
+      ).getBoundingClientRect = rect
+      const ev = {
+        pointerId: 1,
+        clientX: 510,
+        clientY: 300,
+        pointerType: 'touch',
+        button: 0,
+      }
+      fireEvent.pointerDown(bezel, ev)
+      fireEvent.pointerUp(bezel, ev)
+      expect(lampAt()).toBe(1)
+      expect(onSwitch).not.toHaveBeenCalled()
+      act(() => {
+        vi.advanceTimersByTime(1000)
+      })
+      expect(onSwitch).toHaveBeenCalledWith(1)
+      onSwitch.mockClear()
+      // a select key, then the picker opens before it is due
+      fireEvent.click(screen.getByRole('button', { name: 'Camera 6' }))
+      fireEvent.click(screen.getByRole('button', { name: 'REPORT' }))
+      act(() => {
+        vi.advanceTimersByTime(3000)
+      })
+      expect(onSwitch).not.toHaveBeenCalled()
+      fireEvent.click(screen.getByRole('button', { name: 'CANCEL' }))
+      expect(onSwitch).toHaveBeenCalledWith(5)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('RT-RULE-04 then RT-UI-13 ending: the picture does not jump (what the player last set is flipped too)', async () => {
+    const props = makeProps()
+    const { container, rerender } = render(
+      <Cabinet {...props} monitorEffects={fxSet('RT-RULE-04')} />
+    )
+    const knob = screen.getByRole('slider', { name: 'Brightness' })
+    knob.focus()
+    await userEvent.keyboard('{ArrowRight}{ArrowRight}')
+    rerender(<Cabinet {...props} monitorEffects={fxSet()} />)
+    const settled = glassBri(container)
+    vi.useFakeTimers()
+    // the drift waits 1.5 s after a touch of a knob (real clock): move the clock past it
+    const clock = vi.spyOn(performance, 'now').mockReturnValue(1e9)
+    try {
+      rerender(<Cabinet {...props} monitorEffects={fxSet('RT-UI-13')} />)
+      act(() => {
+        vi.advanceTimersByTime(2000)
+      })
+      expect(glassBri(container)).not.toBeCloseTo(settled, 3)
+      rerender(<Cabinet {...props} monitorEffects={fxSet()} />)
+      expect(glassBri(container)).toBeCloseTo(settled, 3)
+    } finally {
+      clock.mockRestore()
+      vi.useRealTimers()
+    }
+  })
+
   it('RT-RULE-02: the first REPORT press only lights the lamp for a moment (no picker, no report); the second opens it', async () => {
     const onReport = vi.fn()
     const { container } = render(

@@ -7,18 +7,31 @@ import { useCameraSwitch } from './useCameraSwitch'
 beforeEach(() => vi.useFakeTimers())
 afterEach(() => vi.useRealTimers())
 
-const setup = (fx: string[] = [], enabled = true, current = 2) => {
+const setup = (
+  fx: string[] = [],
+  enabled = true,
+  current = 2,
+  hold = false
+) => {
   const onSwitch = vi.fn()
   const hook = renderHook(
-    (p: { fx: string[]; enabled: boolean; current: number }) =>
+    (p: { fx: string[]; enabled: boolean; current: number; hold?: boolean }) =>
       useCameraSwitch({
         enabled: p.enabled,
+        hold: p.hold,
         fx: new Set(p.fx),
         currentIndex: p.current,
         count: 8,
         onSwitch,
       }),
-    { initialProps: { fx, enabled, current } }
+    {
+      initialProps: { fx, enabled, current, hold } as {
+        fx: string[]
+        enabled: boolean
+        current: number
+        hold?: boolean
+      },
+    }
   )
   return { onSwitch, ...hook }
 }
@@ -99,5 +112,19 @@ describe('useCameraSwitch', () => {
       vi.advanceTimersByTime(SWITCH_LAG_MS * 2)
     })
     expect(onSwitch).not.toHaveBeenCalled()
+  })
+
+  it('a delayed switch that comes due while held (the REPORT picker is open) waits and runs when the hold ends', () => {
+    const { result, rerender, onSwitch } = setup(['RT-RULE-06'])
+    act(() => result.current.request({ source: 'strip', to: 5 }))
+    rerender({ fx: ['RT-RULE-06'], enabled: true, current: 2, hold: true })
+    act(() => {
+      vi.advanceTimersByTime(SWITCH_LAG_MS * 3)
+    })
+    expect(onSwitch).not.toHaveBeenCalled()
+    expect(result.current.lampIndex).toBe(5)
+    rerender({ fx: ['RT-RULE-06'], enabled: true, current: 2, hold: false })
+    expect(onSwitch).toHaveBeenCalledTimes(1)
+    expect(onSwitch).toHaveBeenCalledWith(5)
   })
 })

@@ -386,9 +386,10 @@ describe('rule-break effects (#442): RT-RULE-01..06', () => {
       ).toBeUndefined()
     }
   )
-  it('exclusive groups: switch direction and lag never run together (01 / 06); the REPORT lamp (09 / RULE-02); the noise (22 / FEED-28 / RULE-03); the knobs (13 / RULE-04)', () => {
-    expect(g('RT-RULE-01')?.exclusive).toBe('camera-switch')
-    expect(g('RT-RULE-06')?.exclusive).toBe('camera-switch')
+  it('exclusive groups: switch direction and lag never run together (01 / 06), and a mirrored cabinet (UI-16) never meets a reversed switch direction (01); the REPORT lamp (09 / RULE-02); the noise (22 / FEED-28 / RULE-03); the knobs (13 / RULE-04)', () => {
+    expect(g('RT-RULE-01')?.exclusive).toBe('cabinet-transform')
+    expect(g('RT-RULE-06')?.exclusive).toBe('cabinet-transform')
+    expect(g('RT-UI-16')?.exclusive).toBe('cabinet-transform')
     expect(g('RT-UI-09')?.exclusive).toBe('report-lamp')
     expect(g('RT-RULE-02')?.exclusive).toBe('report-lamp')
     expect(g('RT-RULE-03')?.exclusive).toBe('noise')

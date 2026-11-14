@@ -16,22 +16,38 @@ import {
  */
 export const useCameraSwitch = (opts: {
   enabled: boolean
+  /** True while something must not see the camera change under it (the REPORT picker): a due delayed switch waits. */
+  hold?: boolean
   fx: ReadonlySet<string>
   currentIndex: number
   count: number
   onSwitch: (to: number) => void
 }) => {
-  const { enabled, fx, currentIndex, count, onSwitch } = opts
+  const { enabled, hold = false, fx, currentIndex, count, onSwitch } = opts
   const [pending, setPending] = useState<number | null>(null)
   const timer = useRef(0)
-  const latest = useRef({ fx, currentIndex, count, onSwitch, pending })
-  latest.current = { fx, currentIndex, count, onSwitch, pending }
+  const latest = useRef({ fx, currentIndex, count, onSwitch, pending, hold })
+  latest.current = { fx, currentIndex, count, onSwitch, pending, hold }
+  // the target of a delayed switch whose time came while `hold` was on
+  const due = useRef<number | null>(null)
 
   const cancel = useCallback(() => {
     window.clearTimeout(timer.current)
     timer.current = 0
+    due.current = null
     setPending(null)
   }, [])
+  const run = useCallback((to: number) => {
+    setPending(null)
+    latest.current.onSwitch(to)
+  }, [])
+  useEffect(() => {
+    if (!hold && due.current !== null) {
+      const to = due.current
+      due.current = null
+      run(to)
+    }
+  }, [hold, run])
   useEffect(() => cancel, [cancel])
   useEffect(() => {
     if (!enabled) cancel()
@@ -47,20 +63,21 @@ export const useCameraSwitch = (opts: {
       const to = targetIndex(plan.to, from, l.count)
       window.clearTimeout(timer.current)
       timer.current = 0
+      due.current = null
       if (plan.delayMs <= 0) {
-        setPending(null)
-        l.onSwitch(to)
+        run(to)
         return
       }
       setPending(to)
       latest.current.pending = to
       timer.current = window.setTimeout(() => {
         timer.current = 0
-        setPending(null)
-        latest.current.onSwitch(to)
+        // never lose the switch ("it always switches"), only hold it back while the picker is open
+        if (latest.current.hold) due.current = to
+        else run(to)
       }, plan.delayMs)
     },
-    [enabled]
+    [enabled, run]
   )
 
   return { request, lampIndex: pending ?? currentIndex }

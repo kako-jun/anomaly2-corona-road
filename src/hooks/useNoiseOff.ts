@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   NOISE_OFF_MS,
+  NOISE_RAISED_MS,
   createShakeDetector,
   motionMagnitude,
 } from '../utils/noiseOff'
-
-const reducedMotion = () =>
-  !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+import { prefersReducedMotion } from '../utils/screenTransition'
 
 type MotionEventCtor = {
   requestPermission?: () => Promise<'granted' | 'denied' | string>
@@ -24,14 +23,17 @@ export const useNoiseOff = (inverted = false) => {
   const timer = useRef(0)
 
   const trigger = useCallback(() => {
-    if (reducedMotion()) return
+    if (prefersReducedMotion()) return
     window.clearTimeout(timer.current)
     setActive(true)
-    timer.current = window.setTimeout(() => {
-      timer.current = 0
-      setActive(false)
-    }, NOISE_OFF_MS)
-  }, [])
+    timer.current = window.setTimeout(
+      () => {
+        timer.current = 0
+        setActive(false)
+      },
+      inverted ? NOISE_RAISED_MS : NOISE_OFF_MS
+    )
+  }, [inverted])
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
 

@@ -101,7 +101,7 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 
 グループ名は「触る部品」で付ける。**ここに書いたグループは、挙げた全 ID の台帳に `exclusive` が付いていなければならない**（`src/utils/exclusiveGroups.test.ts` が検査する。新しいグループはここに1行足してから台帳に付ける）。形式は `- \`グループ名\`: ID, ID`。
 
-- `cabinet-transform`: RT-UI-11, RT-UI-16
+- `cabinet-transform`: RT-UI-11, RT-UI-16, RT-RULE-01, RT-RULE-06
 - `model-plate`: RT-UI-14, RT-UI-28
 - `camera-lamp`: RT-UI-19, RT-UI-24, RT-UI-25
 - `hud-labels`: RT-UI-02, RT-UI-06, RT-UI-07
@@ -109,7 +109,6 @@ planned の画像案は制作済みの後ろ、画像以外の異変はその後
 - `knob`: RT-UI-13, RT-RULE-04
 - `camera-key`: RT-UI-03, RT-UI-20
 - `noise`: RT-UI-22, RT-FEED-28, RT-RULE-03
-- `camera-switch`: RT-RULE-01, RT-RULE-06
 - `report-lamp`: RT-UI-09, RT-RULE-02
 
 | kind / status                        | 必須                                                                                        | 省略可・禁止                                                                                                                                                                              |

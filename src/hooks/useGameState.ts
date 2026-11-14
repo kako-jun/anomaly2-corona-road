@@ -27,11 +27,8 @@ import {
 } from '../utils/anomalyData'
 import { reportTargetsFor, showsOnCamera } from '../utils/reportTarget'
 import { isAudible } from '../utils/audioSettings'
-import {
-  hasFinePointer,
-  monitorEffectPlayable,
-  prefersReducedMotion,
-} from '../utils/monitorEffects'
+import { hasFinePointer, monitorEffectPlayable } from '../utils/monitorEffects'
+import { prefersReducedMotion } from '../utils/screenTransition'
 import { forcedSpawnIds } from '../utils/forcedSpawn'
 import { resetVoiceHistory, voiceReady } from '../utils/voiceSounds'
 import type { FlagEvent } from './useSubtitle'
@@ -376,7 +373,7 @@ export const useGameState = () => {
       // A person is already out there waiting to be reported: nothing to do (and no save is read).
       if (running.some(a => a.storyFlag && !a.detectedAt)) return false
       const flag = duePerson(load())
-      if (flag === null) return false
+      if (flag === null || FORCED_SPAWN !== null) return false
       if (flag === CHILD_FLAG) {
         // The child comes only after the foreshadowing conversation has been played to its end (#430).
         announce(raiseTrigger('childDue'))

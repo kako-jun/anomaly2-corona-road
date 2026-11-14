@@ -6,15 +6,25 @@
  * (`useCameraSwitch`), and the plan that comes back says where to go, whether to go, and how late.
  *
  * The rule-break anomalies are `SwitchRule`s: small pure functions `(plan, context) => plan`, applied in the order of
- * `SWITCH_RULES`. A rule that does not apply returns the plan unchanged. To add a rule (the next batch: RT-FEED-07, 08,
- * 13, 14, 15), write one function and put it in the list; nothing else (no key handler, no tap handler) has to know.
+ * `SWITCH_RULES`. A rule that does not apply returns the plan unchanged.
  *  - It may change the direction (`to`), forbid the move (`blocked`) or hold it back (`delayMs`).
  *  - The order matters where two rules touch the same thing: a direction is reversed BEFORE the end of the line is
  *    checked, so the end that stops the player is the end they are really heading for.
+ *
+ * What the next batch (RT-FEED-07, 08, 13, 14, 15) can and cannot do with it, honestly:
+ *  - RT-FEED-07 / 08 / 13 are about what is DRAWN after a switch (the picture, TIME), not about the switch: they need
+ *    changes on the drawing side and use this entrance only for "a switch happened".
+ *  - RT-FEED-14 (a switch that does not happen) is a `blocked` rule, but it needs `ctx.now` (when the press came, below)
+ *    and, if it is triggered by the game rather than a key, a new `SwitchSource` such as 'auto'.
+ *  - RT-FEED-15 needs the same extension (`SwitchSource`, and `SwitchContext` for what it looks at: add the field
+ *    when it is built; the camera ids that hold an anomaly are not in the context yet on purpose).
+ * So: a rule is one function in the list, but a rule that needs new information also widens `SwitchContext` /
+ * `SwitchSource` (one place, here, filled in by `useCameraSwitch`).
  */
 
 /** Where a request came from (a rule may care: RT-RULE-01 only turns the steps, which have a direction). */
 export type SwitchSource = 'edge' | 'arrow' | 'digit' | 'strip'
+// 'auto' (a switch the game makes by itself) joins when the first rule needs it (RT-FEED-14 / 15)
 
 /** `prev` / `next` = a step in a direction; a number = a direct selection of that camera index. */
 export type SwitchTo = 'prev' | 'next' | number
@@ -39,6 +49,8 @@ export interface SwitchContext {
   index: number
   count: number
   source: SwitchSource
+  /** When the request arrived (ms, `performance.now()`): for rules that depend on timing (e.g. a switch refused for a while). */
+  now: number
 }
 
 export type SwitchRule = (plan: SwitchPlan, ctx: SwitchContext) => SwitchPlan
@@ -71,10 +83,15 @@ export const SWITCH_RULES: readonly SwitchRule[] = [
 /** The plan for one request: the request itself, passed through every rule in order. */
 export const planSwitch = (
   request: SwitchRequest,
-  ctx: Omit<SwitchContext, 'source'>
+  ctx: Omit<SwitchContext, 'source' | 'now'> & { now?: number }
 ): SwitchPlan =>
   SWITCH_RULES.reduce<SwitchPlan>(
-    (plan, rule) => rule(plan, { ...ctx, source: request.source }),
+    (plan, rule) =>
+      rule(plan, {
+        ...ctx,
+        source: request.source,
+        now: ctx.now ?? performance.now(),
+      }),
     { to: request.to, blocked: false, delayMs: 0 }
   )
 

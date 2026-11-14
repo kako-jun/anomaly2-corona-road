@@ -80,11 +80,6 @@ export const monitorEffectPlayable = (
  */
 const NEEDS_MOTION: ReadonlySet<string> = new Set(['RT-RULE-03'])
 
-/** True when the player asked for reduced motion. */
-export const prefersReducedMotion = (): boolean =>
-  typeof window !== 'undefined' &&
-  !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-
 /** True on a device with a mouse-like pointer (the same media query the cursor effect's CSS is under). */
 export const hasFinePointer = (): boolean =>
   typeof window !== 'undefined' &&
