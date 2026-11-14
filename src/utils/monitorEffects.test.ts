@@ -289,9 +289,23 @@ describe('input-side effects (#437): RT-UI-10 / 21 / 30', () => {
     const rest = Number(rule.match(/--veil-rest: ([\d.]+);/)![1])
     const pulse = Number(rule.match(/--veil-pulse: ([\d.]+);/)![1])
     expect(rule).toMatch(/\n\s*opacity: var\(--veil-rest\);/)
-    // a still veil you can find (5% was not noticed, #453), and a pulse that rises clearly above it
+    // floors: 15% was the faintest veil still seen in the A/B shots, 5% was not seen at all (#453); the pulse must rise
+    // clearly above the still veil (10 points) but stay a faint step (at most 15 points, never a full white flash)
     expect(rest).toBeGreaterThanOrEqual(0.15)
     expect(pulse).toBeGreaterThanOrEqual(0.1)
+    expect(pulse).toBeLessThanOrEqual(0.15)
+    // the strength lives only in the CSS: the ledger / README / CLAUDE.md point there and carry no percentages
+    const detail = (
+      ledger.anomalies.find(e => e.id === 'RT-UI-30') as { detail?: string }
+    ).detail!
+    expect(detail).toMatch(/--veil-rest/)
+    expect(detail).not.toMatch(/\d+\s*%/)
+    const readme = readFileSync(
+      join(process.cwd(), 'prompts/README.md'),
+      'utf8'
+    )
+    expect(readme).toMatch(/--veil-rest/)
+    expect(readme).not.toMatch(/RT-UI-30[^\n]{0,200}\d+\s*%/)
     // a finite animation (iteration count 1), never `infinite`
     const use = rule.match(/animation: screen-flash ([\d.]+)s linear (\w+);/)!
     expect(use[2]).toBe('1')

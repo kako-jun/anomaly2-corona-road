@@ -360,9 +360,13 @@
 /* RT-UI-30 whole screen flash: the moment it appears, a white veil over the whole browser viewport (cabinet, knobs,
    buttons and all) pulses 3 times (0.5 s each, 2 a second, under the 3 a second limit) and the animation then ENDS
    (iteration count 1): a full-screen flash must end after a few times (prompts/README.md, the flashing safety limit).
-   What stays until the report is a still white veil. THE STRENGTH IS TWO NUMBERS HERE, `--veil-rest` (the still veil,
-   PROVISIONAL 20%: 5% was not noticed at all, #453; kako-jun decides the final value) and `--veil-pulse` (how far the
-   pulse peaks above it: 12 points, so the peak is a third of full white at most, never a full white flash). The still
+   What stays until the report is a still white veil. THE STRENGTH IS TWO NUMBERS HERE AND NOWHERE ELSE (the ledger and
+   the README only point at them; monitorEffects.test.ts checks), `--veil-rest` (the still veil, PROVISIONAL 20%: 5% was
+   not noticed at all, #453; kako-jun decides the final value) and `--veil-pulse` (how far the pulse peaks above it:
+   12 points, so the peak is about a third of full white at most (test: <= 0.4), never a full white flash). Safety
+   margin: 2 pulses a second and only 3 in all (limit 3 a second, WCAG 2.3.1), and a step of at most 12 points of white
+   (less over a bright picture). The report dialog (z-index 100) is under the veil on purpose: a full-screen effect
+   covers everything and stays readable. The still
    veil is also the reduced-motion look: no pulses at all, #381. The veil takes no pointer events. */
 .retro[data-fx~='RT-UI-30']::after {
   --veil-rest: 0.2;
