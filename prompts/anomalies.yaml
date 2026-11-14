@@ -370,8 +370,8 @@ anomalies:
     location: 'CAM06-E16 の床、差分左上 (401,349) px'
     detail: '通路の右寄りの床に、老人2人目（人当たりのよい老婆）が立つ'
     memo:
-      ja: '通路の右寄りに人が立っている。'
-      en: 'Someone standing on the right of the corridor.'
+      ja: '壁ぎわに人が立っている。'
+      en: 'Someone standing by the wall.'
     overlay: 'assets/anomaly-overlays/cam06/person-elder2.webp'
     overlay_origin: '(401,349)'
     dimensions: '129x329'
