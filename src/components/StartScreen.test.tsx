@@ -2,7 +2,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { titleNotes } from '../data/titleNotes'
 import { StartScreen } from './StartScreen'
 
@@ -358,5 +358,74 @@ describe('StartScreen language (#292)', () => {
     expect(
       screen.getByRole('button', { name: 'START SHIFT' })
     ).toBeInTheDocument()
+  })
+})
+
+const stubMatchMedia = (matches: (q: string) => boolean) =>
+  vi.stubGlobal('matchMedia', (q: string) => ({
+    matches: matches(q),
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
+  }))
+
+describe('StartScreen fullscreen key (#426)', () => {
+  const enable = () => {
+    const doc = document as unknown as Record<string, unknown>
+    doc.fullscreenEnabled = true
+    doc.fullscreenElement = null
+    const enter = vi.fn().mockImplementation(async () => {
+      doc.fullscreenElement = document.documentElement
+      document.dispatchEvent(new Event('fullscreenchange'))
+    })
+    const exit = vi.fn().mockImplementation(async () => {
+      doc.fullscreenElement = null
+      document.dispatchEvent(new Event('fullscreenchange'))
+    })
+    Object.assign(document.documentElement, { requestFullscreen: enter })
+    doc.exitFullscreen = exit
+    stubMatchMedia(() => false)
+    return { enter, exit }
+  }
+  afterEach(() => {
+    const doc = document as unknown as Record<string, unknown>
+    delete doc.fullscreenEnabled
+    delete doc.fullscreenElement
+    delete doc.exitFullscreen
+    delete (document.documentElement as unknown as Record<string, unknown>)
+      .requestFullscreen
+    vi.unstubAllGlobals()
+  })
+  it('is absent where the API is missing (iPhone Safari)', () => {
+    setup()
+    expect(screen.queryByRole('button', { name: /FULL|EXIT/ })).toBeNull()
+  })
+  it('is absent in a standalone PWA', () => {
+    enable()
+    stubMatchMedia(q => q.includes('standalone'))
+    setup()
+    expect(screen.queryByRole('button', { name: /FULL|EXIT/ })).toBeNull()
+  })
+  it('enters on click, shows EXIT, and follows ESC (fullscreenchange)', async () => {
+    const { enter, exit } = enable()
+    setup()
+    await userEvent.click(screen.getByRole('button', { name: 'FULL' }))
+    expect(enter).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button', { name: 'EXIT' })).not.toHaveAttribute(
+      'aria-pressed'
+    )
+    // the browser leaves on its own (ESC)
+    ;(document as unknown as Record<string, unknown>).fullscreenElement = null
+    fireEvent(document, new Event('fullscreenchange'))
+    expect(await screen.findByRole('button', { name: 'FULL' })).toBeTruthy()
+    expect(exit).not.toHaveBeenCalled()
+  })
+  it('leaves on the second click', async () => {
+    const { exit } = enable()
+    setup()
+    await userEvent.click(screen.getByRole('button', { name: 'FULL' }))
+    await userEvent.click(screen.getByRole('button', { name: 'EXIT' }))
+    expect(exit).toHaveBeenCalledTimes(1)
   })
 })

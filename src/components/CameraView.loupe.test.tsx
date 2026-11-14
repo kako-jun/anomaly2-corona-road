@@ -357,3 +357,39 @@ describe('loupe hint', () => {
     expect(screen.queryByTestId('loupe')).toBeNull()
   })
 })
+
+describe('RT-UI-21 loupe broken', () => {
+  const brokenSetup = () => {
+    onEdgeTap = vi.fn()
+    const view = render(
+      <CameraView {...viewProps(cams[0], true)} loupeBroken />
+    )
+    const glass = view.container.querySelector('.glass') as HTMLElement
+    const frame = view.container.querySelector('.pic__frame') as HTMLElement
+    glass.getBoundingClientRect = () => rect(GLASS)
+    frame.getBoundingClientRect = () => rect(GLASS)
+    return { glass, view }
+  }
+  it('pressing the picture (and dragging on it) shows no loupe', () => {
+    const { glass } = brokenSetup()
+    pe('pointerDown', glass, 300)
+    expect(loupe()).toBeNull()
+    pe('pointerMove', glass, 340, 340)
+    expect(loupe()).toBeNull()
+    pe('pointerUp', glass, 340, 340)
+    expect(loupe()).toBeNull()
+  })
+  it('the other inputs still work: an edge tap on the bezel switches the camera', () => {
+    const { view } = brokenSetup()
+    const bezel = view.container.querySelector('.bezel') as HTMLElement
+    pe('pointerDown', bezel, GLASS.left - 10)
+    pe('pointerUp', bezel, GLASS.left - 10)
+    expect(onEdgeTap).toHaveBeenCalledWith('prev')
+  })
+  it('the loupe comes back when the flag is off (the anomaly is cleared)', () => {
+    const { glass, view } = brokenSetup()
+    view.rerender(<CameraView {...viewProps(cams[0], true)} />)
+    pe('pointerDown', glass, 300)
+    expect(loupe()).not.toBeNull()
+  })
+})

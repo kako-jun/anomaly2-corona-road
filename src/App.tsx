@@ -115,6 +115,7 @@ function useScreen(): [string, ReactNode] {
     switchCamera,
     reportAnomaly,
     withdrawAnomaly,
+    releasePerson,
     gameTime,
   } = useGameState()
   const monitorEffects = useMemo(
@@ -231,6 +232,7 @@ function useScreen(): [string, ReactNode] {
         flagEvent={flagEvent}
         ending={ending?.closing ?? null}
         onEndingDone={finishEnding}
+        onStoryDone={releasePerson}
         onSwitch={switchCamera}
         onReport={reportAnomaly}
         onVoiceUnavailable={withdrawAnomaly}

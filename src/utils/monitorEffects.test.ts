@@ -9,6 +9,7 @@ import {
   MONITOR_EFFECTS,
   fxAttribute,
   hasMonitorEffect,
+  monitorEffectPlayable,
   runningMonitorEffects,
 } from './monitorEffects'
 import { hasNonImageEffect } from './nonImageEffects'
@@ -65,7 +66,7 @@ describe('the monitor effects table and the ledger agree', () => {
     expect(
       hasNonImageEffect(ui('RT-UI-11', { anomalyType: 'rule_break' }))
     ).toBe(true)
-    expect(hasNonImageEffect(ui('RT-UI-13'))).toBe(false)
+    expect(hasNonImageEffect(ui('RT-RULE-01'))).toBe(false)
     expect(
       hasNonImageEffect(ui('RT-UI-11', { anomalyType: 'feed_glitch' }))
     ).toBe(false)
@@ -102,7 +103,7 @@ describe('runningMonitorEffects: appear, draw, report from any camera, clear', (
     expect(
       runningMonitorEffects([
         run('RT-UI-11', 1, { scope: 'camera' }),
-        run('RT-UI-13', 2),
+        run('RT-RULE-01', 2),
       ]).size
     ).toBe(0)
   })
@@ -237,5 +238,121 @@ describe('digit window / text batch (#416)', () => {
     expect(['RT-UI-08', 'RT-UI-17', 'RT-UI-18'].map(g)).toEqual(
       Array(3).fill('digit-window')
     )
+  })
+})
+
+describe('input-side effects (#437): RT-UI-10 / 21 / 30', () => {
+  const css = readFileSync(
+    join(process.cwd(), 'src/styles/monitorEffects.css'),
+    'utf8'
+  )
+  const ledger = parse(
+    readFileSync(join(process.cwd(), 'prompts/anomalies.yaml'), 'utf8')
+  ) as { anomalies: { id: string; status?: string; exclusive?: string }[] }
+  const IDS = ['RT-UI-10', 'RT-UI-21', 'RT-UI-30']
+
+  it.each(IDS)(
+    '%s is produced, runs on a monitor-scope spawn, is reportable from any camera and the report clears it',
+    id => {
+      expect(ledger.anomalies.find(e => e.id === id)?.status).toBe('produced')
+      const a = run(id, 3)
+      expect(a.scope).toBe('monitor')
+      expect(fxAttribute(runningMonitorEffects([a]))).toBe(id)
+      for (const cam of [1, 4, 8])
+        expect(reportTargetsFor([a], cam, 'Surreal').hit?.id).toBe(id)
+      expect(
+        fxAttribute(runningMonitorEffects([{ ...a, detectedAt: 9 }]))
+      ).toBeUndefined()
+    }
+  )
+  it('the cursor effect is only drawn for a hover-capable fine pointer; the draw leaves it out on touch', () => {
+    expect(monitorEffectPlayable('RT-UI-10', false)).toBe(false)
+    expect(monitorEffectPlayable('RT-UI-10', true)).toBe(true)
+    expect(monitorEffectPlayable('RT-UI-30', false)).toBe(true)
+    expect(monitorEffectPlayable('RT-UI-21', false)).toBe(true)
+    expect(css).toMatch(
+      /@media \(hover: hover\) and \(pointer: fine\) \{\s*\.retro\[data-fx~='RT-UI-10'\] \{\s*animation: cursor-glitch/
+    )
+  })
+  it('the cursor keeps changing (several different shapes) and never stops the click (no pointer-events change)', () => {
+    const body = css.match(/@keyframes cursor-glitch \{([\s\S]*?)\n\}/)![1]
+    const shapes = [...body.matchAll(/cursor: ([a-z-]+);/g)].map(m => m[1])
+    expect(new Set(shapes).size).toBeGreaterThanOrEqual(3)
+    expect(css).not.toMatch(/RT-UI-10'\][^{]*\{[^}]*pointer-events: none/)
+  })
+  it('the whole-screen flash is a fixed veil over the viewport that takes no pointer events; its pulses (at most 3 a second, faint peak) END after a few and a still veil stays', () => {
+    const rule = css.match(/RT-UI-30'\]::after \{([^}]*)\}/)![1]
+    expect(rule).toMatch(/position: fixed;\s*inset: 0;/)
+    expect(rule).toMatch(/pointer-events: none;/)
+    // the resting state is the still veil, not 0: it stays after the pulses until the report
+    const rest = Number(rule.match(/\n\s*opacity: ([\d.]+);/)![1])
+    expect(rest).toBeGreaterThan(0)
+    // a finite animation (iteration count 1), never `infinite`
+    const use = rule.match(/animation: screen-flash ([\d.]+)s linear (\w+);/)!
+    expect(use[2]).toBe('1')
+    expect(rule).not.toMatch(/infinite/)
+    const total = Number(use[1])
+    const body = css.match(/@keyframes screen-flash \{([\s\S]*?)\n\}/)![1]
+    const blocks = [...body.matchAll(/([\d.%,\s]+)\{\s*opacity: ([\d.]+);/g)]
+    const stops = (pred: (o: number) => boolean) =>
+      blocks
+        .filter(b => pred(Number(b[2])))
+        .flatMap(b => b[1].match(/[\d.]+(?=%)/g)!.map(Number))
+        .sort((x, y) => x - y)
+    const peaks = stops(o => o > rest)
+    expect(peaks.length).toBeGreaterThanOrEqual(2)
+    expect(peaks.length).toBeLessThanOrEqual(5) // a few times, not a strobe
+    for (const [i, p] of peaks.slice(1).entries())
+      expect(((p - peaks[i]) / 100) * total).toBeGreaterThanOrEqual(1 / 3)
+    // the keyframes start and end on the resting veil (so nothing jumps when the animation ends)
+    expect(stops(o => o === rest)).toEqual(expect.arrayContaining([0, 100]))
+    const peak = Math.max(...blocks.map(b => Number(b[2])))
+    expect(peak).toBeLessThanOrEqual(0.2) // never a full white flash
+    expect(total).toBeLessThanOrEqual(3) // over within a few seconds
+    expect(css).toMatch(
+      /@media \(prefers-reduced-motion: reduce\) \{\s*\.retro\[data-fx~='RT-UI-30'\]::after \{\s*animation: none;\s*\}/
+    )
+  })
+})
+
+describe('HUD / knob / plate batch (#438)', () => {
+  const ids = [
+    'RT-UI-01',
+    'RT-UI-04',
+    'RT-UI-05',
+    'RT-UI-13',
+    'RT-UI-14',
+    'RT-UI-20',
+    'RT-UI-28',
+  ]
+  const ledger = parse(
+    readFileSync(join(process.cwd(), 'prompts/anomalies.yaml'), 'utf8')
+  ) as {
+    anomalies: {
+      id: string
+      status?: string
+      exclusive?: string
+      unlock?: { flag: string }
+    }[]
+  }
+  const g = (id: string) => ledger.anomalies.find(e => e.id === id)
+  it('all seven are in the table and produced', () => {
+    for (const id of ids) {
+      expect(hasMonitorEffect(id), id).toBe(true)
+      expect(g(id)?.status, id).toBe('produced')
+    }
+  })
+  it('exclusive groups: the TIME digits (05 with 08 / 17 / 18), the knobs (13 with RULE-04), the camera keys (03 with 20), the plate (14 with 28)', () => {
+    expect(g('RT-UI-05')?.exclusive).toBe('digit-window')
+    expect(g('RT-UI-13')?.exclusive).toBe('knob')
+    expect(g('RT-RULE-04')?.exclusive).toBe('knob')
+    expect(g('RT-UI-20')?.exclusive).toBe('camera-key')
+    expect(g('RT-UI-03')?.exclusive).toBe('camera-key')
+    expect(g('RT-UI-14')?.exclusive).toBe('model-plate')
+    expect(g('RT-UI-28')?.exclusive).toBe('model-plate')
+  })
+  it('RT-UI-28 waits for the first elder (the answer is not shown early)', () => {
+    expect(g('RT-UI-28')?.unlock).toEqual({ flag: 'elder1' })
+    expect(g('RT-UI-14')?.unlock).toBeUndefined()
   })
 })

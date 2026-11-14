@@ -1,16 +1,27 @@
 # ストーリーのフラグの定義（唯一の置き場）。会話側（story.yaml）はフラグ名だけを参照する。
 # 条件はすべて AND。数値は「以上」。書式は README.md。
 # 節目の数値（老人 10/30/60、子供 100）は決定済み（kako-jun 2026-11-12, #273）。変えるのはここだけ。
+#
+# 人物のフラグ（elder1〜elder3・child、#430）: 条件は『その人物が画面に出現してよい条件』で、フラグ自体は
+# 『その人物を Person で指摘した瞬間』に立つ（台帳 prompts/anomalies.yaml の story_flag が対応する人物）。
+# requires が出現の順序を固定する（前の人物を指摘するまで次は出ない。人物が2人同時に出ることはない）。
 flags:
   elder1:
     foundUnique: 10 # 見つけた異変の数（重複なし。foundIds の長さ）
   elder2:
     foundUnique: 30
+    requires: [elder1]
   elder3:
     foundUnique: 60
+    requires: [elder2]
   child:
     foundUnique: 100 # 累計に加えて令和の異変の条件でも決まる
     reiwaFound: 3 # 令和の異変を重複なしで3つ（docs/story.md）
     requires: [elder3]
   childResponse:
     requires: [child] # 子供発見の会話の直後に続ける短い反応
+  # 前触れの字幕（#430）: 進行ではなくゲームの出来事で一度だけ立つ（trigger）。画面の演出は付けない。
+  reiwaPrelude:
+    trigger: reiwaAppeared # 令和の異変が初めて出現した時
+  childPrelude:
+    trigger: childDue # 子供の出現条件を満たした時（直後に子供が出る）

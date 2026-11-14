@@ -10,7 +10,7 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
      edge never shows (the margin must stay >= 0 on all four sides)
   2. the signboard stays in view: the share of its area that is on screen at the worst point of the drift (phones:
      nearly all; wide screens cut the top and bottom by the cover crop, which is accepted, so only a floor), and of
-     the part that is on screen the note and the START key cover at most 15% (>= 85% clear)
+     the part that is on screen the note, the START key and the corner keys (FULL at the top left, TRANSFER SAVE at the top right) cover at most 15% (>= 85% clear)
   3. the visible note is wholly inside the viewport and overlaps the START key,
      on every page (1/3 ... 3/3); on a wide / landscape screen the note's right edge is the START key's (within 2px)
   4. the page turns by click, by keyboard (Enter, arrows), by touch-style drag and by mouse drag, wraps from the last to the first,
@@ -21,8 +21,9 @@ At 360x640 ... 3440x1440, in Japanese and English, it checks
   8. the START OVER confirmation (after the true ending): ERASE ALL on top and CANCEL below, the same width and height
      (within 1px), >= 44px high, >= 10px apart, inside the viewport, the note hidden, the signboard clear, and the
      right edge and bottom where the START OVER key was (within 2px: the eye does not have to move)
-  9. nothing dark covers the photo: no element other than the notes, the keys and the pager has a solid background
-  10. (#331) the drifting blur patch: it sits over the photo, under the noise, the notes and the key, takes no pointer, has a
+  9. (#426) the FULL / EXIT key is displayed, at least 44px high and inside the viewport at every size
+  10. nothing dark covers the photo: no element other than the notes, the keys and the pager has a solid background
+  11. (#331) the drifting blur patch: it sits over the photo, under the noise, the notes and the key, takes no pointer, has a
      fixed-radius backdrop-filter (<= BLUR_PX_MAX) whose strength breathes by opacity only, and: (a) over the whole joint cycle
      (x 61 s, y 47 s, strength 37 s) the signboard's centre is under the strong part of the patch (mask x opacity > 0.5) for at
      most BLUR_STRONG_MAX of the time; (b) with the patch centred on the sign at full strength the sign's edges keep at least
@@ -43,8 +44,9 @@ import sys
 import time
 import urllib.request
 
-SIZES = [(360, 640), (390, 844), (430, 932), (768, 1024), (898, 1000), (900, 1000), (1280, 720), (1920, 1080),
-         (2560, 1440), (3440, 1440), (844, 390), (667, 375)]
+SIZES = [(360, 640), (360, 667), (360, 680), (375, 667), (390, 700), (390, 844), (430, 740), (430, 932), (481, 700),
+         (500, 700), (768, 1024), (898, 1000), (900, 1000), (1280, 720), (1920, 1080), (2560, 1440), (3440, 1440), (844, 390),
+         (667, 375)]
 # the signboard in the photo (450x600), as fractions of the picture: x0, y0, x1, y1 (measured on the picture)
 SIGN = (0.59, 0.09, 0.86, 0.66)
 PHONE_SIGN_MIN = 0.55  # a phone keeps most of the board in view
@@ -87,7 +89,9 @@ SWEEP = """([sign]) => {
   const sec = document.querySelector('.start-notes')
   const noteHidden = sec.getBoundingClientRect().height === 0 && getComputedStyle(sec).visibility === 'hidden'
   const noteVisible = noteImg && !noteHidden
-  const cover = [noteVisible && rr(noteImg), rr(document.querySelector('.start-deck'))].filter(Boolean)
+  // the corner keys (FULL at the top left, TRANSFER SAVE at the top right, #426) cover the board too, when it is there
+  const topKeys = [...document.querySelectorAll('.start-top-key')].map(rr)
+  const cover = [noteVisible && rr(noteImg), rr(document.querySelector('.start-deck')), ...topKeys].filter(Boolean)
   const inter = (a, b) => Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]))
   let minSlack = 1e9, minSign = 1, minClear = 1
   const at = (tx, ty) => {
@@ -290,6 +294,12 @@ def main():
                             errs.append(f"signboard visible only {sw['minSign']:.0%} at worst (< {floor:.0%})")
                         if sw["minClear"] < CLEAR_MIN:
                             errs.append(f"note / key cover the signboard: only {sw['minClear']:.0%} of it is clear (< {CLEAR_MIN:.0%})")
+                    # (#426) the FULL / EXIT key is always shown (this Chromium has the Fullscreen API), at every size, at the top left
+                    fk = p.evaluate("() => { const e = document.querySelector('.start-fullscreen-key'); if (!e) return null; const b = e.getBoundingClientRect(); return {display: getComputedStyle(e).display, left: b.left, top: b.top, right: b.right, bottom: b.bottom, h: b.height, vw: innerWidth} }")
+                    if fk is None:
+                        errs.append("the FULL key is not in the page (does this Chromium have the Fullscreen API?)")
+                    elif fk["display"] == "none" or fk["h"] < 44 or fk["left"] < 0 or fk["top"] < 0 or fk["right"] > fk["vw"]:
+                        errs.append(f"the FULL key is hidden, under 44px or outside the viewport ({fk})")
                     bl = p.evaluate(BLUR, [list(SIGN)])
                     if bl.get("missing") or bl.get("noAnim"):
                         errs.append("the blur patch is missing or not animated")

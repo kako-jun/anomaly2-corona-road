@@ -2,12 +2,17 @@ import ledger from 'virtual:dialogue'
 import anomalies from 'virtual:anomalies'
 import nonImage from 'virtual:non-image-anomalies'
 import { reiwaIdsOf } from './anomalyLedger'
-import { newlyRaisedFlags, storyFlagNames } from './dialogueEngine'
+import type { FlagDef, FlagTrigger } from './dialogueLedger'
+import {
+  duePersonFlags,
+  newlyRaisedFlags,
+  storyFlagNames,
+} from './dialogueEngine'
 import { DEFAULT_CONFIG } from './gameConfig'
 import { stageOf } from './investigationNote'
 import { MEMO_INDEX } from './memoIndex'
 import { markShown, pickMemos, queueMemos } from './memoSelect'
-import { emptySave, nextEpoch, update } from './saveData'
+import { emptySave, load, nextEpoch, update } from './saveData'
 import type { LastShift, SaveData } from './saveData'
 
 /**
@@ -20,14 +25,65 @@ const REIWA_IDS: ReadonlySet<string> = new Set(
 
 const STORY_FLAGS = storyFlagNames(ledger)
 
+/**
+ * The story persons (#430): ledger entries with `story_flag`, by flag name. A person's flag is raised by reporting the
+ * person (`recordFound`), never by progress; the flag's conditions only say when the person may appear.
+ */
+export const PERSON_BY_FLAG: ReadonlyMap<string, string> = new Map(
+  anomalies.flatMap(e => (e.storyFlag ? [[e.storyFlag, e.id] as const] : []))
+)
+const PERSON_FLAGS: ReadonlySet<string> = new Set(PERSON_BY_FLAG.keys())
+const PERSON_ID_SET: ReadonlySet<string> = new Set(PERSON_BY_FLAG.values())
+
+/** True for the id of a story person's anomaly (#430). */
+export const isPersonId = (id: string): boolean => PERSON_ID_SET.has(id)
+
+const progressOf = (cur: SaveData) => ({
+  foundIds: cur.foundIds,
+  foundTotal: cur.foundTotal,
+  loops: cur.loops,
+  flags: cur.flags,
+  reiwaIds: REIWA_IDS,
+})
+
+/** The flag of the story person who may appear now (conditions hold, not reported yet), or null. At most one at a time. */
+export const duePerson = (cur: SaveData): string | null =>
+  duePersonFlags(ledger.flags, progressOf(cur), PERSON_FLAGS)[0] ?? null
+
+/** Name of the flag that a trigger (#430) raises, per flags.yaml (`trigger:`); absent = no flag listens to it. */
+export const flagOfTrigger = (trigger: FlagTrigger): string | undefined =>
+  ledger.flags.find((d: FlagDef) => d.when.trigger === trigger)?.name
+
+/** Raise the flag that listens to `trigger`, once. Returns its name when it rose now (its story is queued), else null. */
+export const raiseTrigger = (trigger: FlagTrigger): string | null => {
+  const name = flagOfTrigger(trigger)
+  return name !== undefined && raiseTriggerFlag(name) ? name : null
+}
+
+/** Save a flag raised by the game itself (a trigger flag, #430): once only; its story waits to be played. Returns whether it was raised now. */
+const raiseTriggerFlag = (name: string): boolean => {
+  // Already raised: nothing to write (this is asked every few hundred ms while the child waits).
+  if (load().flags[name]) return false
+  let raised = false
+  update(cur => {
+    if (cur.flags[name]) return cur
+    raised = true
+    return {
+      ...cur,
+      flags: { ...cur.flags, [name]: true },
+      pendingStories: cur.pendingStories.includes(name)
+        ? cur.pendingStories
+        : [...cur.pendingStories, name],
+    }
+  })
+  return raised
+}
+
 /** Raise every flag whose condition now holds; the new names go to `out` (definition order). */
 const withRaisedFlags = (cur: SaveData, out: string[]): SaveData => {
   const raised = newlyRaisedFlags(ledger.flags, {
-    foundIds: cur.foundIds,
-    foundTotal: cur.foundTotal,
-    loops: cur.loops,
-    flags: cur.flags,
-    reiwaIds: REIWA_IDS,
+    ...progressOf(cur),
+    manualFlags: PERSON_FLAGS,
   })
   if (raised.length === 0) return cur
   out.push(...raised)
@@ -43,21 +99,46 @@ const withRaisedFlags = (cur: SaveData, out: string[]): SaveData => {
   return { ...cur, flags, pendingStories }
 }
 
-/** A correct report: count it, remember the id, save, and return the flags that just rose. */
+/** Reporting a story person raises that person's flag (#430), with its story waiting to be played. */
+const raisePersonFlag = (
+  cur: SaveData,
+  anomalyId: string,
+  out: string[]
+): SaveData => {
+  const flag = [...PERSON_BY_FLAG].find(([, id]) => id === anomalyId)?.[0]
+  if (flag === undefined || cur.flags[flag]) return cur
+  out.push(flag)
+  return {
+    ...cur,
+    flags: { ...cur.flags, [flag]: true },
+    pendingStories: STORY_FLAGS.has(flag)
+      ? [...cur.pendingStories.filter(f => f !== flag), flag]
+      : cur.pendingStories,
+  }
+}
+
+/** A correct report: count it, remember the id (and retire it from the draw, #427), save, and return the flags that just rose. */
 export const recordFound = (anomalyId: string): string[] => {
   const out: string[] = []
   update(cur =>
     withRaisedFlags(
-      queueMemos(
-        {
-          ...cur,
-          foundTotal: cur.foundTotal + 1,
-          foundIds: cur.foundIds.includes(anomalyId)
-            ? cur.foundIds
-            : [...cur.foundIds, anomalyId],
-        },
+      raisePersonFlag(
+        queueMemos(
+          {
+            ...cur,
+            foundTotal: cur.foundTotal + 1,
+            foundIds: cur.foundIds.includes(anomalyId)
+              ? cur.foundIds
+              : [...cur.foundIds, anomalyId],
+            retiredIds: cur.retiredIds.includes(anomalyId)
+              ? cur.retiredIds
+              : [...cur.retiredIds, anomalyId],
+          },
+          anomalyId,
+          MEMO_INDEX.get(anomalyId)
+        ),
         anomalyId,
-        MEMO_INDEX.get(anomalyId)
+        out
       ),
       out
     )
@@ -120,3 +201,16 @@ export const shiftDurationMs = (
   closing === 'withdraw'
     ? Math.min(Math.max(0, elapsedMs), DEFAULT_CONFIG.totalDurationMs)
     : DEFAULT_CONFIG.totalDurationMs
+
+/**
+ * Un-retire ids (#427): a group of anomalies was used up, so all of its ids may be drawn again. `foundIds` is not
+ * touched (statistics, milestones and the Reiwa/child conditions keep counting what was ever found).
+ */
+export const unretire = (ids: readonly string[]): void => {
+  if (ids.length === 0) return
+  const drop = new Set(ids)
+  update(cur => ({
+    ...cur,
+    retiredIds: cur.retiredIds.filter(id => !drop.has(id)),
+  }))
+}

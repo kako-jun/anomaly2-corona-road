@@ -119,13 +119,15 @@ body.start-open #root {
   width: var(--blur-w);
   height: var(--blur-h);
   pointer-events: none;
-  animation: start-blur-x 30.5s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  animation: start-blur-x 30.5s cubic-bezier(0.37, 0, 0.63, 1) infinite
+    alternate;
   animation-delay: var(--start-blur-x-delay, 0s);
 }
 .start-blur-y {
   position: absolute;
   inset: 0;
-  animation: start-blur-y 23.5s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  animation: start-blur-y 23.5s cubic-bezier(0.37, 0, 0.63, 1) infinite
+    alternate;
   animation-delay: var(--start-blur-y-delay, 0s);
 }
 .start-blur {
@@ -133,9 +135,20 @@ body.start-open #root {
   inset: 0;
   -webkit-backdrop-filter: blur(var(--blur-px));
   backdrop-filter: blur(var(--blur-px));
-  -webkit-mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.7) 40%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.7) 40%, transparent 100%);
-  animation: start-blur-power 18.5s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  -webkit-mask-image: radial-gradient(
+    closest-side,
+    #000 0%,
+    rgba(0, 0, 0, 0.7) 40%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    closest-side,
+    #000 0%,
+    rgba(0, 0, 0, 0.7) 40%,
+    transparent 100%
+  );
+  animation: start-blur-power 18.5s cubic-bezier(0.37, 0, 0.63, 1) infinite
+    alternate;
   animation-delay: var(--start-blur-power-delay, 0s);
 }
 @keyframes start-blur-x {
@@ -163,7 +176,9 @@ body.start-open #root {
   }
 }
 /* no backdrop-filter (old engines): no patch at all */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
   .start-blur-x {
     display: none;
   }
@@ -440,13 +455,22 @@ body.start-open #root {
   }
 }
 
-/* ----- save transfer (#84): a small text key at the top right (the panel itself is in transfer.css) ----- */
+/* ----- the top corners (#84, #426): small text keys. TRANSFER SAVE at the top right, FULL / EXIT (fullscreen) at the top left, away from the signboard (the right side of the photo, x 59-86%) (the panel itself is in transfer.css) ----- */
+.start-fullscreen-key,
 .start-transfer-key {
   position: absolute;
   top: max(10px, env(safe-area-inset-top));
-  right: 10px;
   z-index: 3;
+}
+.start-transfer-key {
+  right: 10px;
+}
+.start-fullscreen-key {
+  left: 10px;
+}
+.start-top-key {
   min-height: 44px;
+  min-width: 64px; /* FULL and EXIT are the same width: the row does not shift when it flips */
   padding: 0 12px;
   font: inherit;
   font-size: 12px;
@@ -460,7 +484,7 @@ body.start-open #root {
     0 0 6px #000;
   cursor: pointer;
 }
-.start-transfer-key:focus-visible {
+.start-top-key:focus-visible {
   outline: 3px solid #ffd27a;
   outline-offset: 3px;
 }

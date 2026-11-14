@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import {
+  DRIFT_MAX,
+  DRIFT_MIN,
   KNOB_DEFAULT,
   PX_FULL_RANGE,
   brightnessFilter,
   clampKnob,
   contrastFilter,
   dragKnobValue,
+  driftStep,
   keyKnobValue,
   knobAngle,
 } from './knob'
@@ -125,5 +128,20 @@ describe('constants', () => {
   it('KNOB_DEFAULT is within 0..100', () => {
     expect(KNOB_DEFAULT).toBeGreaterThanOrEqual(0)
     expect(KNOB_DEFAULT).toBeLessThanOrEqual(100)
+  })
+})
+
+describe('driftStep (RT-UI-13)', () => {
+  it('moves by the step in its direction inside the range', () => {
+    expect(driftStep(50, 1, 2)).toEqual({ value: 52, dir: 1 })
+    expect(driftStep(50, -1, 2)).toEqual({ value: 48, dir: -1 })
+  })
+  it('turns around at both ends of the range and never leaves it', () => {
+    expect(driftStep(74, 1, 5)).toEqual({ value: DRIFT_MAX, dir: -1 })
+    expect(driftStep(26, -1, 5)).toEqual({ value: DRIFT_MIN, dir: 1 })
+  })
+  it('a value the player left outside the range walks back in at the normal speed (no jump)', () => {
+    expect(driftStep(100, 1, 2)).toEqual({ value: 98, dir: -1 })
+    expect(driftStep(0, -1, 2)).toEqual({ value: 2, dir: 1 })
   })
 })

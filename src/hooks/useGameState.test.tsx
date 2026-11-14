@@ -12,13 +12,35 @@ import {
 } from '../utils/anomalyLedger'
 import * as saveData from '../utils/saveData'
 import { CHILD_FOUND_PACING, DEFAULT_CONFIG } from '../utils/gameConfig'
+import { resetProgress } from '../utils/shiftProgress'
 import { useGameState } from './useGameState'
+
+const personEntry = vi.hoisted(() => ({
+  id: 'person-guest',
+  cameraId: 6,
+  category: 'Person' as const,
+  anomalyType: 'add_person' as const,
+  overlay: 'assets/person-guest.webp',
+  origin: { x: 1, y: 2 },
+  size: { w: 3, h: 4 },
+  storyFlag: 'guest',
+}))
 
 // A small, controllable ledger instead of the real one (mutated in place per test).
 const ledger = vi.hoisted(() => [] as LedgerEntry[])
 // The non-image side (#77): empty unless a test pushes into it, so the image tests below are not disturbed.
 const nonImage = vi.hoisted(() => [] as NonImageEntry[])
 vi.mock('virtual:non-image-anomalies', () => ({ default: nonImage }))
+// The real ledger plus one story person (#430): flag 'guest' (see the dialogue mock below).
+vi.mock('virtual:anomalies', async importOriginal => {
+  const actual = await importOriginal<{ default: LedgerEntry[] }>()
+  return {
+    default: [
+      ...actual.default.filter(e => !e.storyFlag),
+      { ...personEntry, id: 'person-guest', cameraId: 6 },
+    ],
+  }
+})
 // Voices count as drawable only after their file answered (#407): a test decides which ones have.
 const readyVoices = vi.hoisted(() => new Set<string>())
 vi.mock('../utils/voiceSounds', async importOriginal => {
@@ -47,6 +69,8 @@ vi.mock('virtual:dialogue', () => ({
       { name: 'loopy', when: { loops: 1 } },
       // The child flag (Issue #86): tests seed foundTotal 49 so the next correct report raises it.
       { name: 'child', when: { foundTotal: 50 } },
+      // A story person (#430): may appear after 100 found and the flag 'two'; the flag rises when it is reported.
+      { name: 'guest', when: { foundUnique: 100, requires: ['two'] } },
     ],
     entries: [
       {
@@ -55,6 +79,13 @@ vi.mock('virtual:dialogue', () => ({
         tone: 'serious',
         when: { flag: 'two' },
         lines: [{ who: 'A', text: 'two' }],
+      },
+      {
+        kind: 'story',
+        id: 'story-guest',
+        tone: 'serious',
+        when: { flag: 'guest' },
+        lines: [{ who: 'A', text: 'guest' }],
       },
       {
         kind: 'story',
@@ -126,6 +157,34 @@ const start = () => {
   return hook
 }
 
+/** `start()`, then the player looks at the last camera: nothing is drawn there (#418: never on the watched one). */
+const startAway = () => {
+  const hook = start()
+  act(() =>
+    hook.result.current.switchCamera(hook.result.current.cameras.length - 1)
+  )
+  return hook
+}
+
+/** Reports from the camera the first open anomaly is on (the report must be made there). */
+const reportAt = (
+  result: { current: ReturnType<typeof useGameState> },
+  category: Parameters<ReturnType<typeof useGameState>['reportAnomaly']>[0]
+) => {
+  const open = result.current.activeAnomalies.find(a => !a.detectedAt)
+  if (open) {
+    const index = result.current.cameras.findIndex(c => c.id === open.cameraId)
+    act(() => result.current.switchCamera(index))
+  }
+  act(() => result.current.reportAnomaly(category))
+  // A cleared one: look away again, so the next anomaly may be drawn on the camera just cleared (#418).
+  if (
+    open &&
+    !result.current.activeAnomalies.some(a => a.id === open.id && !a.detectedAt)
+  )
+    act(() => result.current.switchCamera(result.current.cameras.length - 1))
+}
+
 describe('rule constants are unchanged by the ledger connection', () => {
   it('keeps the shift rules', () => {
     expect(DEFAULT_CONFIG).toEqual({
@@ -142,7 +201,7 @@ describe('rule constants are unchanged by the ledger connection', () => {
 describe('spawning from the ledger', () => {
   it('spawns nothing before the first delay and one anomaly right after', () => {
     ledger.push(entry('a', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST - 100)
     expect(result.current.stats.totalAnomalies).toBe(0)
     expect(result.current.activeAnomalies).toEqual([])
@@ -153,7 +212,7 @@ describe('spawning from the ledger', () => {
 
   it('builds the anomaly from the ledger entry with the resolved overlay URL', () => {
     ledger.push(entry('a', 1, 'Person'))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     expect(result.current.activeAnomalies[0]).toMatchObject({
       id: 'a',
@@ -166,9 +225,9 @@ describe('spawning from the ledger', () => {
 
   it('never shows the same ledger entry twice in a shift, then stops when used up', () => {
     ledger.push(entry('a', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
-    act(() => result.current.reportAnomaly('Object')) // resolve it: camera 1 is free again
+    reportAt(result, 'Object') // resolve it: camera 1 is free again
     advance(INTERVAL * 2)
     expect(result.current.stats.totalAnomalies).toBe(1)
     expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['a'])
@@ -176,7 +235,7 @@ describe('spawning from the ledger', () => {
 
   it('does not spawn on a camera that already has an unresolved anomaly (one per camera)', () => {
     ledger.push(entry('a1', 1), entry('a2', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     advance(INTERVAL)
     expect(result.current.stats.totalAnomalies).toBe(1)
@@ -184,9 +243,9 @@ describe('spawning from the ledger', () => {
 
   it('spawns on a camera again once its anomaly is resolved', () => {
     ledger.push(entry('a1', 1), entry('a2', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
-    act(() => result.current.reportAnomaly('Object'))
+    reportAt(result, 'Object')
     advance(INTERVAL)
     expect(result.current.stats.totalAnomalies).toBe(2)
     expect(result.current.activeAnomalies.map(a => a.id).sort()).toEqual([
@@ -198,7 +257,7 @@ describe('spawning from the ledger', () => {
   it('respects the concurrent cap (and counts only real spawns)', () => {
     // cameras 1-4 each have one entry; camera 5 gets one later (held back so camera 1 is surely taken first)
     for (let i = 1; i <= 4; i++) ledger.push(entry(`c${i}`, i))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100 + INTERVAL * 6)
     expect(result.current.stats.totalAnomalies).toBe(
       DEFAULT_CONFIG.maxConcurrentAnomalies
@@ -211,13 +270,13 @@ describe('spawning from the ledger', () => {
     ledger.push(entry('c5', 5), entry('c6', 6))
     advance(INTERVAL)
     expect(result.current.stats.totalAnomalies).toBe(4)
-    act(() => result.current.reportAnomaly('Object'))
+    reportAt(result, 'Object')
     advance(INTERVAL + 500)
     expect(result.current.stats.totalAnomalies).toBe(5)
   })
 
   it('an empty ledger stops spawning for the shift (no retries)', () => {
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     expect(result.current.stats.totalAnomalies).toBe(0)
     ledger.push(entry('late', 1))
@@ -228,12 +287,12 @@ describe('spawning from the ledger', () => {
   it('a failed spawn for lack of a free camera does not use up the interval: retry after ~1 s', () => {
     // Both entries sit on camera 1: after 'a' spawns, 'b' has no free camera.
     ledger.push(entry('a', 1), entry('b', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     expect(result.current.stats.totalAnomalies).toBe(1)
     advance(INTERVAL + 2000) // the interval elapses; the attempt fails (camera 1 busy)
     expect(result.current.stats.totalAnomalies).toBe(1)
-    act(() => result.current.reportAnomaly('Object')) // frees camera 1
+    reportAt(result, 'Object') // frees camera 1
     // Retries on a ~1 s cadence, so 'b' comes right away instead of one more 30 s interval later.
     advance(1500)
     expect(result.current.stats.totalAnomalies).toBe(2)
@@ -241,7 +300,7 @@ describe('spawning from the ledger', () => {
 
   it('keeps Reiwa entries out until elder3 is saved (#83), and stops spawning when only they remain', () => {
     ledger.push({ ...entry('rz', 1), reiwa: true })
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + INTERVAL * 2)
     expect(result.current.stats.totalAnomalies).toBe(0)
   })
@@ -249,14 +308,14 @@ describe('spawning from the ledger', () => {
   it('draws Reiwa entries once elder3 is saved (#83)', () => {
     saveData.update(cur => ({ ...cur, flags: { ...cur.flags, elder3: true } }))
     ledger.push({ ...entry('rz', 1), reiwa: true })
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['rz'])
   })
 
   it('does not retry every frame while no camera is free', () => {
     ledger.push(entry('a', 1), entry('b', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     // One attempt reads the image ledger through `filter` a few times (#77: the draw checks both kinds).
     const filter = vi.spyOn(ledger, 'filter')
@@ -271,7 +330,7 @@ describe('spawning from the ledger', () => {
     // rng = 0 picks the first entry, so the broken one is tried first (deterministic).
     vi.spyOn(Math, 'random').mockReturnValue(0)
     ledger.push(entry('broken1', 1), entry('ok', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['ok'])
     expect(warn).toHaveBeenCalledWith(
@@ -286,7 +345,7 @@ describe('spawning from the ledger', () => {
   it('stops spawning when only unresolvable entries are left', () => {
     vi.spyOn(console, 'warn').mockImplementation(() => {})
     ledger.push(entry('broken1', 1), entry('broken2', 2))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + INTERVAL * 2)
     expect(result.current.stats.totalAnomalies).toBe(0)
     expect(result.current.gameState).toBe('playing')
@@ -302,7 +361,7 @@ describe('spawning from the ledger', () => {
 
   it('after a successful first spawn the longer interval applies', () => {
     ledger.push(entry('a', 1), entry('b', 2))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     advance(INTERVAL - 1000)
     expect(result.current.stats.totalAnomalies).toBe(1)
@@ -312,10 +371,11 @@ describe('spawning from the ledger', () => {
 
   it('startGame resets the used ids, so entries can appear again in the next shift', () => {
     ledger.push(entry('a', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     expect(result.current.stats.totalAnomalies).toBe(1)
     act(() => result.current.startGame())
+    act(() => result.current.switchCamera(7)) // a new shift starts on camera 1
     expect(result.current.activeAnomalies).toEqual([])
     expect(result.current.stats.totalAnomalies).toBe(0)
     advance(FIRST + 100)
@@ -327,14 +387,14 @@ describe('spawning from the ledger', () => {
 describe('reporting', () => {
   const withAnomaly = (category: LedgerEntry['category'] = 'Object') => {
     ledger.push(entry('a', 1, category))
-    const hook = start()
+    const hook = startAway()
     advance(FIRST + 100)
     return hook
   }
 
   it('right camera + right category resolves it and counts a correct report', () => {
     const { result } = withAnomaly()
-    act(() => result.current.reportAnomaly('Object'))
+    reportAt(result, 'Object')
     expect(result.current.stats.correctReports).toBe(1)
     expect(result.current.stats.detectedAnomalies).toBe(1)
     expect(result.current.stats.misreports).toBe(0)
@@ -344,7 +404,7 @@ describe('reporting', () => {
 
   it('right camera + wrong category is a false report and leaves it unresolved', () => {
     const { result } = withAnomaly('Object')
-    act(() => result.current.reportAnomaly('Person'))
+    reportAt(result, 'Person')
     expect(result.current.stats.misreports).toBe(1)
     expect(result.current.stats.correctReports).toBe(0)
     expect(result.current.activeAnomalyHere?.id).toBe('a')
@@ -357,41 +417,41 @@ describe('reporting', () => {
         ...entry('a', 1, 'Object'),
         categories: ['Object', 'Person'],
       })
-      const hook = start()
+      const hook = startAway()
       advance(FIRST + 100)
       return hook
     }
 
     it('the primary category is correct and the feedback names it', () => {
       const { result } = withAlso()
-      act(() => result.current.reportAnomaly('Object'))
+      reportAt(result, 'Object')
       expect(result.current.stats.correctReports).toBe(1)
       expect(result.current.feedback?.kind).toBe('correct')
       expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
     })
 
-    it('a category listed after the first is correct too, and the feedback still names the primary', () => {
+    it('a category listed after the first is correct too, and the feedback names the one the player chose (#423)', () => {
       const { result } = withAlso()
-      act(() => result.current.reportAnomaly('Person'))
+      reportAt(result, 'Person')
       expect(result.current.stats.correctReports).toBe(1)
       expect(result.current.stats.misreports).toBe(0)
       expect(result.current.activeAnomalyHere).toBeUndefined()
-      expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
+      expect(result.current.feedback?.message).toBe('CONFIRMED — Person')
     })
 
-    it('every category in the array is correct, feedback names the primary', () => {
+    it('every category in the array is correct, feedback names the chosen one', () => {
       for (const c of ['Person', 'Surreal'] as const) {
         ledger.length = 0
         ledger.push({
           ...entry('a', 1, 'Object'),
           categories: ['Object', 'Person', 'Surreal'],
         })
-        const { result, unmount } = start()
+        const { result, unmount } = startAway()
         advance(FIRST + 100)
-        act(() => result.current.reportAnomaly(c))
+        reportAt(result, c)
         expect(result.current.stats.correctReports).toBe(1)
         expect(result.current.stats.misreports).toBe(0)
-        expect(result.current.feedback?.message).toBe('CONFIRMED — Object')
+        expect(result.current.feedback?.message).toBe(`CONFIRMED — ${c}`)
         unmount()
       }
     })
@@ -409,13 +469,59 @@ describe('reporting', () => {
       for (const c of ['Person', 'Object', 'Surreal'] as const) {
         ledger.length = 0
         ledger.push({ ...toLedgerEntry(rec!), cameraId: 1 })
-        const { result, unmount } = start()
+        const { result, unmount } = startAway()
         advance(FIRST + 100)
-        act(() => result.current.reportAnomaly(c))
+        reportAt(result, c)
         expect(result.current.stats.correctReports, c).toBe(1)
         expect(result.current.stats.misreports, c).toBe(0)
         unmount()
       }
+    })
+
+    it('the real ledger: every sound accepts Surreal, the human-made ones Person too, RT-UI-22 Camera (#423)', () => {
+      const recs = parseLedgerRecords(
+        parseYaml(
+          readFileSync(
+            resolve(__dirname, '../../prompts/anomalies.yaml'),
+            'utf8'
+          )
+        )
+      )
+      const accepted = (r: (typeof recs)[number]) =>
+        r.categories ?? (r.category ? [r.category] : [])
+      const sounds = recs.filter(r => r.anomalyType === 'sound')
+      expect(sounds).toHaveLength(18)
+      const person = new Set([
+        'RT-SND-04',
+        'RT-SND-05',
+        'RT-SND-06',
+        'RT-SND-07',
+        'RT-SND-12',
+        'CR-SH-04',
+        'CR-SH-06',
+      ])
+      for (const r of sounds) {
+        expect(accepted(r)[0], r.id).toBe('Environment') // the primary stays
+        expect(accepted(r), r.id).toContain('Surreal')
+        expect(accepted(r).includes('Person'), r.id).toBe(person.has(r.id))
+      }
+      expect(accepted(recs.find(r => r.id === 'RT-UI-22')!)).toEqual([
+        'Surreal',
+        'Camera',
+      ])
+    })
+
+    it('a sound reported as Surreal is confirmed as Surreal, never as its primary Environment (#423)', () => {
+      nonImage.push({
+        id: 'RT-SND-01',
+        category: 'Environment',
+        categories: ['Environment', 'Surreal'],
+        anomalyType: 'sound',
+      })
+      const hook = startAway()
+      advance(FIRST + 100)
+      reportAt(hook.result, 'Surreal')
+      expect(hook.result.current.feedback?.message).toBe('CONFIRMED — Surreal')
     })
 
     it('the real ledger: AR-07-floor-frost is correct as Camera or Environment, a false report as Object (#347)', () => {
@@ -437,9 +543,9 @@ describe('reporting', () => {
       ] as const) {
         ledger.length = 0
         ledger.push({ ...toLedgerEntry(rec!), cameraId: 1 })
-        const { result, unmount } = start()
+        const { result, unmount } = startAway()
         advance(FIRST + 100)
-        act(() => result.current.reportAnomaly(c))
+        reportAt(result, c)
         expect(result.current.stats.correctReports, c).toBe(ok ? 1 : 0)
         expect(result.current.stats.misreports, c).toBe(ok ? 0 : 1)
         unmount()
@@ -452,9 +558,9 @@ describe('reporting', () => {
         ...entry('a', 1, 'Object'),
         categories: ['Object', 'Person', 'Surreal'],
       })
-      const { result } = start()
+      const { result } = startAway()
       advance(FIRST + 100)
-      act(() => result.current.reportAnomaly('Environment'))
+      reportAt(result, 'Environment')
       expect(result.current.stats.misreports).toBe(1)
       expect(result.current.stats.correctReports).toBe(0)
       expect(result.current.activeAnomalyHere?.id).toBe('a')
@@ -462,7 +568,7 @@ describe('reporting', () => {
 
     it('a third category is a false report', () => {
       const { result } = withAlso()
-      act(() => result.current.reportAnomaly('Camera'))
+      reportAt(result, 'Camera')
       expect(result.current.stats.misreports).toBe(1)
       expect(result.current.stats.correctReports).toBe(0)
       expect(result.current.activeAnomalyHere?.id).toBe('a')
@@ -470,9 +576,9 @@ describe('reporting', () => {
 
     it('an anomaly with a single category accepts only its primary category', () => {
       const { result } = withAnomaly('Object')
-      act(() => result.current.reportAnomaly('Person'))
+      reportAt(result, 'Person')
       expect(result.current.stats.misreports).toBe(1)
-      act(() => result.current.reportAnomaly('Object'))
+      reportAt(result, 'Object')
       expect(result.current.stats.correctReports).toBe(1)
     })
   })
@@ -489,21 +595,22 @@ describe('reporting', () => {
 
   it('reporting on a camera with no anomaly is a false report', () => {
     ledger.push(entry('a', 2))
-    const { result } = start()
-    act(() => result.current.reportAnomaly('Object'))
+    const { result } = startAway()
+    reportAt(result, 'Object')
     expect(result.current.stats.misreports).toBe(1)
   })
 
   it('a resolved anomaly cannot be reported twice', () => {
     const { result } = withAnomaly()
-    act(() => result.current.reportAnomaly('Object'))
-    act(() => result.current.reportAnomaly('Object'))
+    reportAt(result, 'Object')
+    reportAt(result, 'Object')
     expect(result.current.stats.correctReports).toBe(1)
     expect(result.current.stats.misreports).toBe(1)
   })
 
   it('activeAnomalyHere follows the current camera', () => {
     const { result } = withAnomaly()
+    act(() => result.current.switchCamera(0))
     expect(result.current.activeAnomalyHere?.cameraId).toBe(1)
     act(() => result.current.switchCamera('next'))
     expect(result.current.activeAnomalyHere).toBeUndefined()
@@ -519,7 +626,7 @@ describe('non-image anomalies (#77)', () => {
   /** One shift where only a non-image entry exists; it appears on a camera drawn at random. */
   const withGlitch = () => {
     nonImage.push(glitch())
-    const hook = start()
+    const hook = startAway()
     advance(FIRST + 100)
     return hook
   }
@@ -545,7 +652,7 @@ describe('non-image anomalies (#77)', () => {
     for (let i = 0; i < 12; i++) {
       nonImage.length = 0
       nonImage.push(glitch())
-      const hook = start()
+      const hook = startAway()
       advance(FIRST + 100)
       seen.add(hook.result.current.activeAnomalies[0].cameraId)
       hook.unmount()
@@ -568,7 +675,7 @@ describe('non-image anomalies (#77)', () => {
     const hook = withGlitch()
     const cam = hook.result.current.activeAnomalies[0].cameraId
     watch(hook, cam)
-    act(() => hook.result.current.reportAnomaly('Camera'))
+    reportAt(hook.result, 'Camera')
     expect(hook.result.current.stats.correctReports).toBe(1)
     expect(hook.result.current.stats.misreports).toBe(0)
     expect(hook.result.current.feedGlitchHere).toBeUndefined()
@@ -580,7 +687,7 @@ describe('non-image anomalies (#77)', () => {
     const hook = withGlitch()
     const cam = hook.result.current.activeAnomalies[0].cameraId
     watch(hook, cam)
-    act(() => hook.result.current.reportAnomaly('Object'))
+    reportAt(hook.result, 'Object')
     expect(hook.result.current.stats.misreports).toBe(1)
     expect(hook.result.current.feedGlitchHere).toBe('static')
     expect(hook.result.current.feedback?.message).toMatch(/WRONG CATEGORY/)
@@ -599,7 +706,7 @@ describe('non-image anomalies (#77)', () => {
 
   it('noise gone (RT-FEED-28) shows on every camera it was given, and a report on any of them clears it', () => {
     nonImage.push(glitch('RT-FEED-28'))
-    const hook = start()
+    const hook = startAway()
     advance(FIRST + 100)
     const [a] = hook.result.current.activeAnomalies
     expect(a.feedGlitch).toBe('nonoise')
@@ -615,7 +722,7 @@ describe('non-image anomalies (#77)', () => {
       )
     }
     watch(hook, last)
-    act(() => hook.result.current.reportAnomaly('Camera'))
+    reportAt(hook.result, 'Camera')
     expect(hook.result.current.stats.correctReports).toBe(1)
     expect(hook.result.current.feedGlitchHere).toBeUndefined()
   })
@@ -624,7 +731,7 @@ describe('non-image anomalies (#77)', () => {
     for (let c = 1; c <= 8; c++) ledger.push(entry(`img${c}`, c))
     nonImage.push(glitch('RT-FEED-28'))
     nonImage.push(glitch('RT-FEED-22'))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + INTERVAL * 20)
     const open = result.current.activeAnomalies.filter(a => !a.detectedAt)
     const shown = open.flatMap(a => a.feedGlitchCameraIds ?? [a.cameraId])
@@ -634,7 +741,7 @@ describe('non-image anomalies (#77)', () => {
   it('shares the cap and the camera slots with image anomalies, and is used once per shift', () => {
     nonImage.push(glitch())
     for (let c = 1; c <= 8; c++) ledger.push(entry(`img${c}`, c))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + INTERVAL * 20)
     const ids = result.current.activeAnomalies.map(a => a.id)
     expect(ids.filter(id => id === 'RT-FEED-22').length).toBeLessThanOrEqual(1)
@@ -647,7 +754,7 @@ describe('non-image anomalies (#77)', () => {
 
   it('an entry without a registered effect never appears', () => {
     nonImage.push({ ...glitch('RT-FEED-07') }) // no effect yet: it is still planned in the real ledger
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + INTERVAL * 2)
     expect(result.current.stats.totalAnomalies).toBe(0)
   })
@@ -662,7 +769,7 @@ describe('voice anomalies (#407)', () => {
 
   it('does not appear while its file has not answered, and does once it has', () => {
     nonImage.push(voice())
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + INTERVAL * 3)
     expect(result.current.stats.totalAnomalies).toBe(0)
     readyVoices.add('RT-SND-06')
@@ -672,7 +779,7 @@ describe('voice anomalies (#407)', () => {
 
   it('a voice still waiting for its file does not end the draw for the shift (not exhausted)', () => {
     nonImage.push(voice())
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + INTERVAL * 8)
     expect(result.current.stats.totalAnomalies).toBe(0)
     readyVoices.add('RT-SND-06')
@@ -684,7 +791,7 @@ describe('voice anomalies (#407)', () => {
     const running = () => {
       readyVoices.add('RT-SND-06')
       nonImage.push(voice())
-      const hook = start()
+      const hook = startAway()
       advance(FIRST + 100)
       return hook
     }
@@ -706,7 +813,7 @@ describe('voice anomalies (#407)', () => {
       act(() => hook.result.current.withdrawAnomaly('RT-SND-06'))
       const index = hook.result.current.cameras.findIndex(c => c.id === cam)
       act(() => hook.result.current.switchCamera(index))
-      act(() => hook.result.current.reportAnomaly('Environment'))
+      reportAt(hook.result, 'Environment')
       expect(hook.result.current.stats.correctReports).toBe(0)
       expect(hook.result.current.stats.misreports).toBe(1)
       expect(hook.result.current.feedback?.message).toMatch(/NO ANOMALY HERE/)
@@ -735,7 +842,7 @@ describe('voice anomalies (#407)', () => {
       voiceSounds.releaseVoice('CR-SH-04')
       vi.useFakeTimers()
       expect(voiceSounds.voiceWasLoaded('CR-SH-04')).toBe(true)
-      start()
+      startAway()
       expect(voiceSounds.voiceWasLoaded('CR-SH-04')).toBe(false)
       vi.unstubAllGlobals()
     })
@@ -748,7 +855,7 @@ describe('voice anomalies (#407)', () => {
           { id: 'RT-FEED-22', category: 'Camera', anomalyType: 'feed_glitch' },
           { id: 'RT-FEED-23', category: 'Camera', anomalyType: 'feed_glitch' }
         )
-        const hook = start()
+        const hook = startAway()
         // A catch-up frame (a long pause) can run several spawns before React re-renders.
         act(() => {
           vi.advanceTimersByTime(FIRST + 100)
@@ -763,7 +870,7 @@ describe('voice anomalies (#407)', () => {
 
     it('a report in the same batch as a new spawn does not overwrite the spawned anomaly', () => {
       ledger.push(entry('a', 1), entry('b', 2))
-      const { result } = start()
+      const { result } = startAway()
       advance(FIRST + 100)
       const first = result.current.activeAnomalies[0]
       act(() =>
@@ -803,7 +910,7 @@ describe('voice anomalies (#407)', () => {
       readyVoices.add('RT-SND-06')
       nonImage.push(voice())
       saveData.update(cur => ({ ...cur, flags: { ...cur.flags, child: true } }))
-      const { result } = start()
+      const { result } = startAway()
       advance(FIRST + 100)
       expect(result.current.activeAnomalies).toHaveLength(1)
       act(() => result.current.withdrawAnomaly('RT-SND-06'))
@@ -816,7 +923,7 @@ describe('voice anomalies (#407)', () => {
       const cam = hook.result.current.activeAnomalies[0].cameraId
       const index = hook.result.current.cameras.findIndex(c => c.id === cam)
       act(() => hook.result.current.switchCamera(index))
-      act(() => hook.result.current.reportAnomaly('Environment'))
+      reportAt(hook.result, 'Environment')
       act(() => hook.result.current.withdrawAnomaly('RT-SND-06'))
       act(() => hook.result.current.withdrawAnomaly('nope'))
       expect(hook.result.current.activeAnomalies).toHaveLength(1)
@@ -829,7 +936,7 @@ describe('voice anomalies (#407)', () => {
 // ---- ending, saving and flags (Issue #74) -----------------------------------------------------
 
 const wrongReport = (result: { current: ReturnType<typeof useGameState> }) =>
-  act(() => result.current.reportAnomaly('Person')) // no anomaly on camera 1 unless one is spawned
+  act(() => result.current.reportAnomaly('Person')) // from wherever the player is looking
 
 /** Goes on until `total` ms of the shift have passed, counting from the start. */
 const advanceTo = (done: number, total: number) => advance(total - done)
@@ -837,30 +944,30 @@ const advanceTo = (done: number, total: number) => advance(total - done)
 describe('a correct report is recorded in the save', () => {
   it('remembers the anomaly id and counts it', () => {
     ledger.push(entry('a', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
-    act(() => result.current.reportAnomaly('Object'))
+    reportAt(result, 'Object')
     expect(saveData.load().foundIds).toEqual(['a'])
     expect(saveData.load().foundTotal).toBe(1)
   })
 
   it('does not raise a flag event before a milestone', () => {
     ledger.push(entry('a', 1))
-    const { result } = start()
+    const { result } = startAway()
     const seqAtStart = result.current.flagEvent
     advance(FIRST + 100)
-    act(() => result.current.reportAnomaly('Object'))
+    reportAt(result, 'Object')
     expect(result.current.flagEvent).toEqual(seqAtStart)
     expect(result.current.flagEvent).toBeNull()
   })
 
   it('raises a flag event with a new seq when the report reaches a milestone', () => {
     ledger.push(entry('a', 1), entry('b', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
-    act(() => result.current.reportAnomaly('Object'))
+    reportAt(result, 'Object')
     advance(INTERVAL)
-    act(() => result.current.reportAnomaly('Object'))
+    reportAt(result, 'Object')
     expect(result.current.flagEvent).toEqual({
       seq: expect.any(Number),
       flags: ['two'],
@@ -873,8 +980,9 @@ describe('a correct report is recorded in the save', () => {
 describe('Feedback.anomalyId of a false report', () => {
   it('is the anomaly on the watched camera when the category was wrong', () => {
     ledger.push(entry('a', 1, 'Object'))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
+    act(() => result.current.switchCamera(0))
     wrongReport(result)
     expect(result.current.feedback).toMatchObject({
       kind: 'wrong',
@@ -884,7 +992,7 @@ describe('Feedback.anomalyId of a false report', () => {
 
   it('is null when there is no anomaly on the watched camera', () => {
     ledger.push(entry('a', 2))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     wrongReport(result)
     expect(result.current.feedback).toMatchObject({
@@ -900,7 +1008,7 @@ describe('withdraw ending (too many false reports)', () => {
   }
 
   it('waits 1500 ms after the third false report, then ends with withdraw / lose', () => {
-    const { result } = start()
+    const { result } = startAway()
     threeWrong(result)
     advance(1499)
     expect(result.current.gameState).toBe('playing')
@@ -913,7 +1021,7 @@ describe('withdraw ending (too many false reports)', () => {
   })
 
   it('goes to the lose screen when the ending is finished', () => {
-    const { result } = start()
+    const { result } = startAway()
     threeWrong(result)
     advance(1500)
     act(() => result.current.finishEnding())
@@ -921,7 +1029,7 @@ describe('withdraw ending (too many false reports)', () => {
   })
 
   it('does not end before the third false report', () => {
-    const { result } = start()
+    const { result } = startAway()
     wrongReport(result)
     wrongReport(result)
     advance(5000)
@@ -930,19 +1038,19 @@ describe('withdraw ending (too many false reports)', () => {
 
   it('accepts no further report once the limit is reached: a correct one does not count', () => {
     ledger.push(entry('a', 1, 'Object'))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
-    act(() => result.current.reportAnomaly('Person'))
-    act(() => result.current.reportAnomaly('Person'))
-    act(() => result.current.reportAnomaly('Person'))
-    act(() => result.current.reportAnomaly('Object')) // right answer inside the 1.5 s window
+    reportAt(result, 'Person')
+    reportAt(result, 'Person')
+    reportAt(result, 'Person')
+    reportAt(result, 'Object') // right answer inside the 1.5 s window
     expect(result.current.stats.correctReports).toBe(0)
     expect(result.current.stats.misreports).toBe(3)
     expect(saveData.load().foundIds).toEqual([])
   })
 
   it('accepts no further false report either: the count stays at the limit', () => {
-    const { result } = start()
+    const { result } = startAway()
     threeWrong(result)
     wrongReport(result)
     expect(result.current.stats.misreports).toBe(DEFAULT_CONFIG.maxMisreports)
@@ -955,13 +1063,13 @@ describe('dawn ending (time ran out)', () => {
   /** Resolves `n` anomalies (one per interval on camera 1), then plays up to `total` ms. */
   const playWith = (n: number, end = total) => {
     for (let i = 0; i < 6; i++) ledger.push(entry(`a${i}`, 1))
-    const hook = start()
+    const hook = startAway()
     let at = 0
     for (let i = 0; i < n; i++) {
       const step = i === 0 ? FIRST + 100 : INTERVAL
       advance(step)
       at += step
-      act(() => hook.result.current.reportAnomaly('Object'))
+      reportAt(hook.result, 'Object')
     }
     advanceTo(at, end)
     return hook
@@ -1001,7 +1109,7 @@ describe('dawn ending (time ran out)', () => {
 
 describe('the end is counted once', () => {
   it('time out and withdraw in the same shift add only one loop', () => {
-    const { result } = start()
+    const { result } = startAway()
     advance(DEFAULT_CONFIG.totalDurationMs - TOAST_MS)
     for (let i = 0; i < DEFAULT_CONFIG.maxMisreports; i++) wrongReport(result)
     // The withdraw timer and the time-out now fall due together.
@@ -1011,7 +1119,7 @@ describe('the end is counted once', () => {
   })
 
   it('the cap was reached first: time running out during the toast still ends as a withdraw', () => {
-    const { result } = start()
+    const { result } = startAway()
     advance(DEFAULT_CONFIG.totalDurationMs - 500)
     for (let i = 0; i < DEFAULT_CONFIG.maxMisreports; i++) wrongReport(result)
     advance(5000)
@@ -1036,13 +1144,13 @@ describe('time running out around the false-report limit', () => {
       const step = i === 0 ? FIRST + 100 : INTERVAL
       advance(step)
       at += step
-      act(() => hook.result.current.reportAnomaly('Object'))
+      reportAt(hook.result, 'Object')
     }
     return at
   }
 
   it('the limit reached just before time runs out ends as withdraw / lose, counted once', () => {
-    const { result } = start()
+    const { result } = startAway()
     advance(total - 500)
     wrong(result, DEFAULT_CONFIG.maxMisreports)
     advance(TOAST_MS + 5000)
@@ -1054,7 +1162,7 @@ describe('time running out around the false-report limit', () => {
   })
 
   it('stays a withdraw / lose even with enough correct reports to win', () => {
-    const hook = start()
+    const hook = startAway()
     const at = resolve(hook, DEFAULT_CONFIG.minCorrectReports)
     advance(total - 500 - at)
     wrong(hook.result, DEFAULT_CONFIG.maxMisreports)
@@ -1066,14 +1174,14 @@ describe('time running out around the false-report limit', () => {
   })
 
   it('below the limit, time running out is still a dawn: lose under the minimum', () => {
-    const { result } = start()
+    const { result } = startAway()
     wrong(result, DEFAULT_CONFIG.maxMisreports - 1)
     advance(total)
     expect(result.current.ending).toEqual({ closing: 'dawn', outcome: 'lose' })
   })
 
   it('below the limit, time running out is still a dawn: win at the minimum', () => {
-    const hook = start()
+    const hook = startAway()
     const at = resolve(hook, DEFAULT_CONFIG.minCorrectReports)
     wrong(hook.result, DEFAULT_CONFIG.maxMisreports - 1)
     advance(total - at)
@@ -1084,7 +1192,7 @@ describe('time running out around the false-report limit', () => {
   })
 
   it('the withdraw due after the toast does not run again once the shift has ended', () => {
-    const { result } = start()
+    const { result } = startAway()
     wrong(result, DEFAULT_CONFIG.maxMisreports)
     advance(TOAST_MS)
     expect(result.current.ending?.closing).toBe('withdraw')
@@ -1095,7 +1203,7 @@ describe('time running out around the false-report limit', () => {
   })
 
   it('boundary below the limit: playing at 479999 ms, dawn at 480000 ms', () => {
-    const { result } = start()
+    const { result } = startAway()
     wrong(result, DEFAULT_CONFIG.maxMisreports - 1)
     advance(total - 1)
     expect(result.current.gameState).toBe('playing')
@@ -1104,7 +1212,7 @@ describe('time running out around the false-report limit', () => {
   })
 
   it('records a dawn as the whole shift (8:00) even though a tick lands a little late or early', () => {
-    const { result } = start()
+    const { result } = startAway()
     advance(total + 7)
     expect(result.current.ending?.closing).toBe('dawn')
     expect(saveData.load().lastShift).toMatchObject({
@@ -1114,7 +1222,7 @@ describe('time running out around the false-report limit', () => {
   })
 
   it('boundary at the limit: playing at 479999 ms, withdraw at 480000 ms (toast still pending)', () => {
-    const { result } = start()
+    const { result } = startAway()
     advance(total - 1000)
     wrong(result, DEFAULT_CONFIG.maxMisreports)
     advance(999)
@@ -1138,13 +1246,14 @@ describe('startGame after a withdraw by the false-report limit', () => {
 
   it('accepts reports again in the second shift (correct and false)', () => {
     ledger.push(entry('a', 1))
-    const hook = start()
+    const hook = startAway()
     withdraw(hook)
     act(() => hook.result.current.startGame())
+    act(() => hook.result.current.switchCamera(7)) // a new shift starts on camera 1
     expect(hook.result.current.stats.misreports).toBe(0)
 
     advance(FIRST + 100)
-    act(() => hook.result.current.reportAnomaly('Object'))
+    reportAt(hook.result, 'Object')
     expect(hook.result.current.stats.correctReports).toBe(1)
 
     wrongReport(hook.result)
@@ -1152,7 +1261,7 @@ describe('startGame after a withdraw by the false-report limit', () => {
   })
 
   it('applies the false-report limit again in the second shift, counting loops cumulatively', () => {
-    const hook = start()
+    const hook = startAway()
     withdraw(hook)
     expect(saveData.load().loops).toBe(1)
     act(() => hook.result.current.startGame())
@@ -1176,14 +1285,14 @@ describe('startGame after a withdraw by the false-report limit', () => {
 describe('reports during the ending', () => {
   it('change neither the stats nor the save', () => {
     ledger.push(entry('a', 1))
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     advance(DEFAULT_CONFIG.totalDurationMs)
     expect(result.current.gameState).toBe('ending')
     const before = JSON.stringify(result.current.stats)
     const saved = JSON.stringify(saveData.load())
-    act(() => result.current.reportAnomaly('Object'))
-    act(() => result.current.reportAnomaly('Person'))
+    reportAt(result, 'Object')
+    reportAt(result, 'Person')
     expect(JSON.stringify(result.current.stats)).toBe(before)
     expect(JSON.stringify(saveData.load())).toBe(saved)
   })
@@ -1192,7 +1301,7 @@ describe('reports during the ending', () => {
 describe('startGame resets the ending and the flag event', () => {
   it('a loops-based flag is put on flagEvent at the start', () => {
     saveData.update(cur => ({ ...cur, loops: 1 }))
-    const { result } = start()
+    const { result } = startAway()
     expect(result.current.flagEvent).toEqual({
       seq: expect.any(Number),
       flags: ['loopy'],
@@ -1200,13 +1309,13 @@ describe('startGame resets the ending and the flag event', () => {
   })
 
   it('flagEvent is null at the start when no flag became true', () => {
-    const { result } = start()
+    const { result } = startAway()
     expect(result.current.flagEvent).toBeNull()
   })
 
   it('a new shift forgets the previous ending and the previous flag event', () => {
     saveData.update(cur => ({ ...cur, loops: 1 }))
-    const { result } = start()
+    const { result } = startAway()
     advance(DEFAULT_CONFIG.totalDurationMs)
     expect(result.current.ending).not.toBeNull()
     act(() => result.current.finishEnding())
@@ -1217,7 +1326,7 @@ describe('startGame resets the ending and the flag event', () => {
   })
 
   it('a second shift can end and be counted again', () => {
-    const { result } = start()
+    const { result } = startAway()
     advance(DEFAULT_CONFIG.totalDurationMs)
     act(() => result.current.finishEnding())
     act(() => result.current.startGame())
@@ -1239,7 +1348,7 @@ describe('after the child is found', () => {
 
   it('before the child is found, time running out stays a dawn', () => {
     fill()
-    const { result } = start()
+    const { result } = startAway()
     advance(total)
     expect(result.current.ending?.closing).toBe('dawn')
   })
@@ -1247,26 +1356,25 @@ describe('after the child is found', () => {
   it('in a shift that starts with the child already found, anomalies come faster and up to the higher cap', () => {
     fill()
     seed({ flags: { child: true } })
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     expect(result.current.activeAnomalies).toHaveLength(1)
     advance(CHILD_FOUND_PACING.anomalyIntervalMs)
     expect(result.current.activeAnomalies).toHaveLength(2)
     advance(CHILD_FOUND_PACING.anomalyIntervalMs * 10)
     expect(CHILD_FOUND_PACING.maxConcurrentAnomalies).toBe(8)
-    expect(result.current.activeAnomalies).toHaveLength(
-      CHILD_FOUND_PACING.maxConcurrentAnomalies
-    )
-    // 8 cameras, 8 anomalies: exactly one per camera
+    // The cap is 8, but the watched camera never gets one (#418): 8 cameras leave 7 for the anomalies.
+    expect(result.current.cameras).toHaveLength(8)
+    expect(result.current.activeAnomalies).toHaveLength(7)
     expect(
       new Set(result.current.activeAnomalies.map(a => a.cameraId)).size
-    ).toBe(8)
+    ).toBe(7)
   })
 
   it('child found and nothing reported afterwards: the ending, a win, one loop', () => {
     fill()
     seed({ flags: { child: true } })
-    const { result } = start()
+    const { result } = startAway()
     advance(total)
     expect(result.current.ending).toEqual({ closing: 'ending', outcome: 'win' })
     expect(result.current.gameState).toBe('ending')
@@ -1278,7 +1386,7 @@ describe('after the child is found', () => {
   it('reaching the ending is saved, and a later startGame does not start a shift (#294)', () => {
     fill()
     seed({ flags: { child: true } })
-    const { result } = start()
+    const { result } = startAway()
     advance(total)
     expect(saveData.load().endingReached).toBe(true)
     act(() => result.current.finishEnding())
@@ -1292,7 +1400,7 @@ describe('after the child is found', () => {
 
   it('an ordinary dawn does not mark the ending', () => {
     fill()
-    const { result } = start()
+    const { result } = startAway()
     advance(total)
     expect(result.current.ending?.closing).toBe('dawn')
     expect(saveData.load().endingReached).toBe(false)
@@ -1305,11 +1413,11 @@ describe('after the child is found', () => {
   it('one report of an anomaly that appeared after the child makes it an ordinary dawn', () => {
     fill()
     seed({ flags: { child: true } })
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     const here = result.current.activeAnomalies[0]
     act(() => result.current.switchCamera(here.cameraId - 1))
-    act(() => result.current.reportAnomaly(here.category))
+    reportAt(result, here.category)
     expect(result.current.stats.correctReports).toBe(1)
     advanceTo(FIRST + 100, total)
     expect(result.current.ending?.closing).toBe('dawn')
@@ -1318,11 +1426,11 @@ describe('after the child is found', () => {
   it('the report that raises the child flag mid-shift does not count: ignoring the rest is the ending', () => {
     fill()
     seed({ foundTotal: 49 })
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     const first = result.current.activeAnomalies[0]
     act(() => result.current.switchCamera(first.cameraId - 1))
-    act(() => result.current.reportAnomaly(first.category))
+    reportAt(result, first.category)
     expect(saveData.load().flags.child).toBe(true)
     // Anomalies spawned from now on are post-child (faster cadence); none is reported.
     advanceTo(FIRST + 100, total)
@@ -1333,17 +1441,17 @@ describe('after the child is found', () => {
   it('reporting an older anomaly (shown before the child) after the child is found does not stop the ending', () => {
     fill()
     seed({ foundTotal: 49 })
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     const old = result.current.activeAnomalies[0]
     advance(INTERVAL)
     const second = result.current.activeAnomalies[1]
     // Raise the child with the second one, then report the first (older) one.
     act(() => result.current.switchCamera(second.cameraId - 1))
-    act(() => result.current.reportAnomaly(second.category))
+    reportAt(result, second.category)
     expect(saveData.load().flags.child).toBe(true)
     act(() => result.current.switchCamera(old.cameraId - 1))
-    act(() => result.current.reportAnomaly(old.category))
+    reportAt(result, old.category)
     advanceTo(FIRST + 100 + INTERVAL, total)
     expect(result.current.ending?.closing).toBe('ending')
   })
@@ -1351,9 +1459,9 @@ describe('after the child is found', () => {
   it('nothing appeared after the child (the last ledger entry raised it): dawn', () => {
     ledger.push(entry('only', 1))
     seed({ foundTotal: 49 })
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
-    act(() => result.current.reportAnomaly('Object'))
+    reportAt(result, 'Object')
     expect(saveData.load().flags.child).toBe(true)
     advanceTo(FIRST + 100, total)
     expect(result.current.ending?.closing).toBe('dawn')
@@ -1362,11 +1470,11 @@ describe('after the child is found', () => {
   it('a withdraw is never the ending, even with the child found and nothing reported', () => {
     fill()
     seed({ flags: { child: true } })
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     for (let i = 0; i < DEFAULT_CONFIG.maxMisreports; i++) {
       act(() => result.current.switchCamera(7))
-      act(() => result.current.reportAnomaly('Person'))
+      reportAt(result, 'Person')
     }
     advance(TOAST_MS + 100)
     expect(result.current.ending).toEqual({
@@ -1378,12 +1486,12 @@ describe('after the child is found', () => {
   it('the next shift keeps the child found state (the flag is saved)', () => {
     fill()
     seed({ flags: { child: true } })
-    const { result } = start()
+    const { result } = startAway()
     advance(FIRST + 100)
     // End the first shift by a withdraw: after the true ending itself no shift can start (#294).
     for (let i = 0; i < DEFAULT_CONFIG.maxMisreports; i++) {
       act(() => result.current.switchCamera(7))
-      act(() => result.current.reportAnomaly('Person'))
+      reportAt(result, 'Person')
     }
     advance(TOAST_MS + 100)
     act(() => result.current.finishEnding())
@@ -1391,5 +1499,442 @@ describe('after the child is found', () => {
     advance(FIRST + 100)
     advance(CHILD_FOUND_PACING.anomalyIntervalMs)
     expect(result.current.activeAnomalies).toHaveLength(2)
+  })
+})
+
+describe('spawn rules (#418, #427)', () => {
+  const switchTo = (hook: ReturnType<typeof start>, cameraId: number) => {
+    const index = hook.result.current.cameras.findIndex(c => c.id === cameraId)
+    act(() => hook.result.current.switchCamera(index))
+  }
+
+  describe('never on the watched camera (#418)', () => {
+    it('an entry fixed to the watched camera waits, and appears once the player looks elsewhere', () => {
+      ledger.push(entry('a', 1)) // the shift starts on camera 1
+      const { result } = start()
+      advance(FIRST + INTERVAL)
+      expect(result.current.stats.totalAnomalies).toBe(0)
+      switchTo({ result } as ReturnType<typeof start>, 2)
+      advance(1500) // retried on the short cadence, no interval spent
+      expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['a'])
+      // switching back shows it already there
+      switchTo({ result } as ReturnType<typeof start>, 1)
+      expect(result.current.activeAnomalyHere?.id).toBe('a')
+    })
+
+    it('draws another camera instead when the watched one is a candidate too', () => {
+      ledger.push(entry('a', 1), entry('b', 2))
+      const { result } = start()
+      advance(FIRST + 100)
+      expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['b'])
+    })
+
+    it('a non-image anomaly is never drawn on the watched camera', () => {
+      for (let i = 0; i < 12; i++) {
+        nonImage.length = 0
+        nonImage.push({
+          id: 'RT-FEED-22',
+          category: 'Camera',
+          anomalyType: 'feed_glitch',
+        })
+        const hook = start()
+        advance(FIRST + 100)
+        expect(hook.result.current.activeAnomalies[0].cameraId).not.toBe(1)
+        hook.unmount()
+      }
+    })
+
+    it('RT-FEED-28 takes its extra cameras only among the free ones: not the watched camera, not a busy one', () => {
+      // rng 0.5 everywhere: one extra camera is asked for, and it is the middle of whatever list it is drawn from.
+      vi.spyOn(Math, 'random').mockReturnValue(0.5)
+      ledger.push(entry('i3', 3), entry('i4', 4), entry('i5', 5))
+      const hook = start() // watching camera 1
+      advance(FIRST + INTERVAL * 2 + 300)
+      expect(
+        hook.result.current.activeAnomalies.map(x => x.cameraId).sort()
+      ).toEqual([3, 4, 5])
+      nonImage.push({
+        id: 'RT-FEED-28',
+        category: 'Camera',
+        anomalyType: 'feed_glitch',
+      })
+      advance(INTERVAL + 300)
+      const g = hook.result.current.activeAnomalies.find(
+        x => x.id === 'RT-FEED-28'
+      )
+      expect(g?.feedGlitch).toBe('nonoise')
+      const free = [2, 6, 7, 8] // not 1 (watched), not 3, 4, 5 (busy)
+      expect(free).toContain(g!.cameraId)
+      expect(g!.feedGlitchCameraIds).toHaveLength(2)
+      for (const id of g!.feedGlitchCameraIds!) expect(free).toContain(id)
+    })
+
+    it('a spawn lands out of sight; looking at it right after shows it, and it never lands on the camera now watched', () => {
+      ledger.push(entry('a', 2), entry('b', 3))
+      const hook = start()
+      switchTo(hook, 2) // before the first spawn
+      advance(FIRST + 100)
+      expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual(['b'])
+      switchTo(hook, 3) // right after it appeared
+      expect(hook.result.current.activeAnomalyHere?.id).toBe('b')
+      // now camera 3 is watched and holds 'b'; 'a' (camera 2) is free and not watched
+      advance(INTERVAL)
+      expect(hook.result.current.activeAnomalies.map(x => x.id).sort()).toEqual(
+        ['a', 'b']
+      )
+    })
+  })
+
+  describe('a found anomaly is not drawn again until START OVER (#427)', () => {
+    const findA = () => {
+      ledger.push(entry('a', 2), entry('b', 2))
+      const hook = start()
+      switchTo(hook, 3) // so camera 2 is out of sight when it appears
+      advance(FIRST + 100)
+      switchTo(hook, 2)
+      const id = hook.result.current.activeAnomalies[0].id
+      act(() => hook.result.current.reportAnomaly('Object'))
+      return { hook, id }
+    }
+
+    it('retires the found id (and foundIds keeps it); a missed one is drawn again next shift', () => {
+      const { hook, id } = findA()
+      expect(saveData.load().retiredIds).toEqual([id])
+      expect(saveData.load().foundIds).toEqual([id])
+      // next shift: only the other entry on camera 2 is a candidate
+      act(() => hook.result.current.startGame())
+      switchTo(hook, 3)
+      advance(FIRST + 100)
+      const other = id === 'a' ? 'b' : 'a'
+      expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+        other,
+      ])
+      // not reported -> not retired
+      expect(saveData.load().retiredIds).toEqual([id])
+    })
+
+    it('a camera whose images are all found is refilled alone, avoiding the one found last', () => {
+      ledger.push(entry('a', 2), entry('z', 3))
+      saveData.update(cur => ({ ...cur, retiredIds: ['z', 'a'] }))
+      const hook = start()
+      advance(FIRST + 100)
+      // camera 2 and camera 3 are both used up -> both refilled; only 'a'/'z' exist, and each is "last" of its own
+      // camera, but a draw avoids them only while another choice exists
+      expect(hook.result.current.stats.totalAnomalies).toBe(1)
+      expect(saveData.load().retiredIds).toEqual([])
+      expect(saveData.load().foundIds).toEqual([])
+    })
+
+    it('refills one group without touching another', () => {
+      ledger.push(entry('a', 2), entry('c', 3), entry('d', 3))
+      saveData.update(cur => ({ ...cur, retiredIds: ['c', 'a'] }))
+      const hook = start()
+      advance(FIRST + 100)
+      // camera 2 (just 'a') is used up and released; camera 3 still has 'd', so 'c' stays retired
+      expect(saveData.load().retiredIds).toEqual(['c'])
+      expect(hook.result.current.activeAnomalies).toHaveLength(1)
+      expect(hook.result.current.activeAnomalies[0].id).not.toBe('c')
+    })
+
+    it('the non-image group is refilled on its own', () => {
+      nonImage.push({
+        id: 'RT-FEED-22',
+        category: 'Camera',
+        anomalyType: 'feed_glitch',
+      })
+      ledger.push(entry('a', 2))
+      saveData.update(cur => ({ ...cur, retiredIds: ['a', 'RT-FEED-22'] }))
+      start()
+      advance(FIRST + 100)
+      expect(saveData.load().retiredIds).toEqual([])
+    })
+
+    it('never leaves the shift without anything to draw (no dead end)', () => {
+      ledger.push(entry('a', 2))
+      saveData.update(cur => ({ ...cur, retiredIds: ['a'] }))
+      const { result } = start()
+      advance(FIRST + 100)
+      expect(result.current.activeAnomalies.map(a => a.id)).toEqual(['a'])
+    })
+
+    it('a group refilled while its camera is watched still avoids the one found last on its next draw', () => {
+      for (const v of [0, 0.99]) {
+        const spy = vi.spyOn(Math, 'random').mockReturnValue(v)
+        ledger.length = 0
+        ledger.push(entry('a', 2), entry('b', 2))
+        saveData.update(cur => ({ ...cur, retiredIds: ['a', 'b'] }))
+        const hook = start()
+        switchTo(hook, 2) // the group's camera is the watched one: refilled now, cannot be drawn yet
+        advance(FIRST + 100)
+        expect(hook.result.current.activeAnomalies).toEqual([])
+        expect(saveData.load().retiredIds).toEqual([])
+        switchTo(hook, 3)
+        advance(1500)
+        // 'b' was found last, so 'a' comes, whichever way the rng leans
+        expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual([
+          'a',
+        ])
+        hook.unmount()
+        spy.mockRestore()
+        saveData.update(cur => ({ ...cur, retiredIds: [] }))
+      }
+    })
+
+    it('the avoided id stays avoided across a spawn from another group, until its own group is drawn from (#427)', () => {
+      for (const v of [0, 0.99]) {
+        const spy = vi.spyOn(Math, 'random').mockReturnValue(v)
+        ledger.length = 0
+        ledger.push(entry('a', 2), entry('b', 2), entry('c', 4))
+        saveData.update(cur => ({ ...cur, retiredIds: ['a', 'b'] }))
+        const hook = start()
+        switchTo(hook, 2)
+        advance(FIRST + 100)
+        expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual([
+          'c',
+        ])
+        switchTo(hook, 3)
+        advance(INTERVAL + 100)
+        expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual([
+          'c',
+          'a',
+        ])
+        hook.unmount()
+        spy.mockRestore()
+        saveData.update(cur => ({ ...cur, retiredIds: [] }))
+      }
+    })
+
+    it('found-but-not-released ids do not stop the shift: the report that exhausts a group is followed by a refill', () => {
+      ledger.push(entry('a', 2), entry('c', 2))
+      saveData.update(cur => ({ ...cur, retiredIds: ['a'] }))
+      const hook = start()
+      advance(FIRST + 100)
+      expect(hook.result.current.activeAnomalies.map(x => x.id)).toEqual(['c'])
+      advance(INTERVAL * 2) // failed attempts while 'a' is retired and 'c' is up: must not end the spawning
+      switchTo(hook, 2)
+      act(() => hook.result.current.reportAnomaly('Object'))
+      switchTo(hook, 3)
+      advance(3000)
+      // both found now -> the group is refilled; 'c' was shown this shift, so 'a' is what can come
+      expect(hook.result.current.activeAnomalies.some(x => x.id === 'a')).toBe(
+        true
+      )
+    })
+
+    it('only the non-image group is refilled when only it is used up', () => {
+      nonImage.push({
+        id: 'RT-FEED-22',
+        category: 'Camera',
+        anomalyType: 'feed_glitch',
+      })
+      ledger.push(entry('c', 3), entry('d', 3))
+      saveData.update(cur => ({ ...cur, retiredIds: ['c', 'RT-FEED-22'] }))
+      start()
+      advance(FIRST + 100)
+      expect(saveData.load().retiredIds).toEqual(['c'])
+    })
+
+    it('START OVER clears the retired ids', () => {
+      saveData.update(cur => ({ ...cur, retiredIds: ['a'], foundIds: ['a'] }))
+      act(() => resetProgress())
+      expect(saveData.load().retiredIds).toEqual([])
+    })
+  })
+})
+
+describe('a story person (#430)', () => {
+  const ids = Array.from({ length: 100 }, (_, i) => `seen-${i}`)
+  const seed = (extra: Partial<saveData.SaveData> = {}) =>
+    saveData.update(cur => ({
+      ...cur,
+      foundIds: ids,
+      flags: { two: true },
+      ...extra,
+    }))
+  const person = () => ({ ...personEntry })
+  const switchTo = (hook: ReturnType<typeof start>, cameraId: number) => {
+    const index = hook.result.current.cameras.findIndex(c => c.id === cameraId)
+    act(() => hook.result.current.switchCamera(index))
+  }
+
+  it('appears at once when its conditions hold, on its own fixed camera, even with a full cap and an empty ordinary ledger', () => {
+    seed()
+    ledger.push(person())
+    const hook = start()
+    advance(600)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+    expect(hook.result.current.activeAnomalies[0].cameraId).toBe(6)
+    expect(hook.result.current.activeAnomalies[0].storyFlag).toBe('guest')
+  })
+
+  it('does not appear before its conditions hold', () => {
+    seed({ foundIds: ids.slice(0, 99) })
+    ledger.push(person())
+    const hook = start()
+    advance(2000)
+    expect(hook.result.current.activeAnomalies).toEqual([])
+    // the hundredth find lets it appear (the condition is a permission, the flag rises only on a report)
+    saveData.update(cur => ({ ...cur, foundIds: ids }))
+    advance(600)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+    expect(saveData.load().flags.guest).toBeUndefined()
+  })
+
+  it('is never drawn by the ordinary draw', () => {
+    ledger.push(person())
+    const hook = startAway()
+    advance(FIRST + INTERVAL * 3)
+    expect(hook.result.current.activeAnomalies).toEqual([])
+  })
+
+  it('waits while its camera is the watched one (#418), then appears when the player looks away', () => {
+    seed()
+    ledger.push(person())
+    const hook = start()
+    switchTo(hook, 6)
+    advance(2000)
+    expect(hook.result.current.activeAnomalies).toEqual([])
+    switchTo(hook, 1)
+    advance(600)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+  })
+
+  it('waits while another anomaly holds its camera, and removes nothing for it', () => {
+    ledger.push(entry('busy', 6), person())
+    const hook = startAway()
+    advance(FIRST + 100)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual(['busy'])
+    seed()
+    advance(3000)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual(['busy'])
+    reportAt(hook.result, 'Object')
+    advance(600)
+    expect(
+      hook.result.current.activeAnomalies.some(a => a.id === 'person-guest')
+    ).toBe(true)
+  })
+
+  it('stays across shifts until it is reported (not by time)', () => {
+    seed()
+    ledger.push(person())
+    const first = startAway()
+    advance(DEFAULT_CONFIG.totalDurationMs - 2000)
+    expect(
+      first.result.current.activeAnomalies.some(a => a.id === 'person-guest')
+    ).toBe(true)
+    first.unmount()
+    const second = startAway()
+    advance(600)
+    expect(
+      second.result.current.activeAnomalies.some(a => a.id === 'person-guest')
+    ).toBe(true)
+    expect(saveData.load().flags.guest).toBeUndefined()
+  })
+
+  it('a report raises its flag (not the condition), keeps the picture until releasePerson, and is drawn once only', () => {
+    seed()
+    ledger.push(person())
+    const hook = start()
+    advance(600)
+    switchTo(hook, 6)
+    expect(hook.result.current.activeAnomalyHere?.id).toBe('person-guest')
+    // a wrong category is an ordinary false report: the person stays
+    act(() => hook.result.current.reportAnomaly('Object'))
+    expect(hook.result.current.stats.misreports).toBe(1)
+    expect(hook.result.current.activeAnomalyHere?.id).toBe('person-guest')
+    act(() => hook.result.current.reportAnomaly('Person'))
+    expect(saveData.load().flags.guest).toBe(true)
+    expect(saveData.load().pendingStories).toContain('guest')
+    expect(hook.result.current.flagEvent?.flags).toContain('guest')
+    // still shown while its conversation runs, but no longer counted as unreported
+    expect(hook.result.current.activeAnomalyHere?.id).toBe('person-guest')
+    expect(hook.result.current.unreportedCount).toBe(0)
+    // a camera switch does not take it away
+    switchTo(hook, 1)
+    switchTo(hook, 6)
+    expect(hook.result.current.activeAnomalyHere?.id).toBe('person-guest')
+    advance(3000)
+    expect(
+      hook.result.current.activeAnomalies.filter(a => a.id === 'person-guest')
+    ).toHaveLength(1)
+    act(() => hook.result.current.releasePerson('guest'))
+    expect(hook.result.current.activeAnomalyHere).toBeUndefined()
+    advance(3000)
+    expect(
+      hook.result.current.activeAnomalies.some(a => a.id === 'person-guest')
+    ).toBe(false)
+  })
+
+  it('a held person keeps its camera: no other anomaly is drawn there meanwhile', () => {
+    seed()
+    ledger.push(person(), entry('later', 6))
+    const hook = start()
+    advance(600)
+    switchTo(hook, 6)
+    act(() => hook.result.current.reportAnomaly('Person'))
+    switchTo(hook, 1)
+    advance(FIRST + INTERVAL)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+    act(() => hook.result.current.releasePerson('guest'))
+    advance(INTERVAL)
+    expect(
+      hook.result.current.activeAnomalies.some(a => a.id === 'later')
+    ).toBe(true)
+  })
+
+  it('while it waits for its camera (the player watches it), the ordinary draw does not take that camera', () => {
+    seed()
+    ledger.push(person(), entry('other', 6))
+    const hook = start()
+    switchTo(hook, 6)
+    advance(FIRST + INTERVAL)
+    expect(hook.result.current.activeAnomalies).toEqual([])
+    switchTo(hook, 1)
+    advance(600)
+    expect(hook.result.current.activeAnomalies.map(a => a.id)).toEqual([
+      'person-guest',
+    ])
+  })
+})
+
+describe('RT-UI-10 cursor glitch is drawn only with a mouse (#437)', () => {
+  const stubFinePointer = (fine: boolean) =>
+    vi.stubGlobal(
+      'matchMedia',
+      (q: string) =>
+        ({
+          matches: fine && q.includes('pointer: fine'),
+          media: q,
+          addEventListener: () => {},
+          removeEventListener: () => {},
+        }) as unknown as MediaQueryList
+    )
+  afterEach(() => vi.unstubAllGlobals())
+  const spawnedIds = (fine: boolean) => {
+    stubFinePointer(fine)
+    nonImage.push({
+      id: 'RT-UI-10',
+      category: 'Surreal',
+      anomalyType: 'ui_corruption',
+    })
+    const hook = startAway()
+    advance(FIRST + 100)
+    const ids = hook.result.current.activeAnomalies.map(a => a.id)
+    hook.unmount()
+    return ids
+  }
+  it('is drawn when the device has a hover-capable fine pointer', () => {
+    expect(spawnedIds(true)).toEqual(['RT-UI-10'])
+  })
+  it('is never drawn on a touch device (nothing would show)', () => {
+    expect(spawnedIds(false)).toEqual([])
   })
 })

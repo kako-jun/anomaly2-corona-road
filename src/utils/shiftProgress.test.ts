@@ -230,3 +230,103 @@ describe('recordEndingReached / resetProgress (#294)', () => {
     expect(p.load().settings).toBeUndefined()
   })
 })
+
+describe('retiredIds (#427)', () => {
+  it('a correct report retires the id once; foundIds and foundTotal are unaffected by un-retiring', async () => {
+    const p = await fresh()
+    p.recordFound('a')
+    p.recordFound('a')
+    p.recordFound('b')
+    expect(p.load().retiredIds).toEqual(['a', 'b'])
+    p.unretire(['a', 'zzz'])
+    expect(p.load().retiredIds).toEqual(['b'])
+    expect(p.load().foundIds).toEqual(['a', 'b'])
+    expect(p.load().foundTotal).toBe(3)
+    // found again after the refill: retired again, still one entry in foundIds
+    p.recordFound('a')
+    expect(p.load().retiredIds).toEqual(['b', 'a'])
+    expect(p.load().foundIds).toEqual(['a', 'b'])
+  })
+  it('START OVER (resetProgress) clears it', async () => {
+    const p = await fresh()
+    p.recordFound('a')
+    p.resetProgress()
+    expect(p.load().retiredIds).toEqual([])
+  })
+})
+
+describe('story persons and trigger flags (#430)', () => {
+  const personLedger: DialogueLedger = {
+    flags: [
+      { name: 'elder1', when: { foundUnique: 2 } },
+      { name: 'elder2', when: { foundUnique: 3, requires: ['elder1'] } },
+      { name: 'pre', when: { trigger: 'childDue' } },
+    ],
+    entries: [
+      story('story-elder1', 'elder1'),
+      story('story-elder2', 'elder2'),
+      story('story-pre', 'pre'),
+    ],
+  }
+  const freshPersons = async () => {
+    localStorage.clear()
+    vi.resetModules()
+    vi.doMock('virtual:dialogue', () => ({ default: personLedger }))
+    vi.doMock('virtual:anomalies', () => ({
+      default: [
+        { id: 'p1', cameraId: 3, storyFlag: 'elder1' },
+        { id: 'p2', cameraId: 4, storyFlag: 'elder2' },
+      ],
+    }))
+    const progress = await import('./shiftProgress')
+    const saveData = await import('./saveData')
+    return { ...progress, load: saveData.load }
+  }
+
+  it('reaching the count does not raise a person flag: it only lets the person appear', async () => {
+    const { recordFound, duePerson, load } = await freshPersons()
+    expect(duePerson(load())).toBeNull()
+    recordFound('a')
+    expect(recordFound('b')).toEqual([])
+    expect(load().flags.elder1).toBeUndefined()
+    expect(load().pendingStories).toEqual([])
+    expect(duePerson(load())).toBe('elder1')
+  })
+
+  it('reporting the person raises its flag, queues its story, and releases the next one', async () => {
+    const { recordFound, duePerson, load } = await freshPersons()
+    recordFound('a')
+    recordFound('b')
+    recordFound('c')
+    // the third find meets elder2's count, but elder1 has not been reported
+    expect(duePerson(load())).toBe('elder1')
+    expect(recordFound('p1')).toEqual(['elder1'])
+    expect(load().flags.elder1).toBe(true)
+    expect(load().pendingStories).toEqual(['elder1'])
+    expect(duePerson(load())).toBe('elder2')
+    expect(recordFound('p2')).toEqual(['elder2'])
+    expect(duePerson(load())).toBeNull()
+  })
+
+  it('a repeated report of a person does not raise its flag or queue its story twice', async () => {
+    const { recordFound, load } = await freshPersons()
+    recordFound('p1')
+    expect(recordFound('p1')).toEqual([])
+    expect(load().pendingStories).toEqual(['elder1'])
+  })
+
+  it('isPersonId tells the persons from the rest', async () => {
+    const { isPersonId } = await freshPersons()
+    expect(isPersonId('p1')).toBe(true)
+    expect(isPersonId('a')).toBe(false)
+  })
+
+  it('raiseTrigger raises the listening flag once, with its story queued', async () => {
+    const { raiseTrigger, load } = await freshPersons()
+    expect(raiseTrigger('reiwaAppeared')).toBeNull() // nobody listens
+    expect(raiseTrigger('childDue')).toBe('pre')
+    expect(raiseTrigger('childDue')).toBeNull()
+    expect(load().flags.pre).toBe(true)
+    expect(load().pendingStories).toEqual(['pre'])
+  })
+})

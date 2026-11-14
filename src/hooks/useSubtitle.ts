@@ -59,6 +59,8 @@ export interface SubtitleInput {
   /** Set when the shift is over: the closing conversation plays, then `onClosingDone` runs. */
   ending: 'dawn' | 'withdraw' | 'ending' | null
   onClosingDone: () => void
+  /** A story conversation has played to its end: the flag it belongs to (a story person's picture goes now, #430). */
+  onStoryDone?: (flag: string) => void
 }
 
 type Phase = 'pre' | 'talking' | 'silent'
@@ -126,6 +128,7 @@ export const useSubtitle = (input: SubtitleInput) => {
       storyFlags.has(f)
     )
     let playingStory = false
+    let playingFlag: string | undefined
     // Flags already waiting when the opening starts: the opening is not cut for them; their story follows it.
     let heldFlags: string[] = []
     // The drawn conversation's used state, saved when its first line shows.
@@ -221,6 +224,11 @@ export const useSubtitle = (input: SubtitleInput) => {
 
     const endConversation = () => {
       hide()
+      if (playingFlag !== undefined) {
+        const f = playingFlag
+        playingFlag = undefined
+        inputRef.current.onStoryDone?.(f)
+      }
       last = { tone, endedAtMs: Date.now() }
       if (closing) {
         later(() => inputRef.current.onClosingDone(), SUBTITLE_GAP_MS)
@@ -312,6 +320,7 @@ export const useSubtitle = (input: SubtitleInput) => {
     ) => {
       candidate = { prev: used, next: u, meta }
       playingStory = meta.source === 'flag'
+      playingFlag = playingStory ? meta.flag : undefined
       phase = 'talking'
       tone = entry.tone
       lines = entry.lines.slice()

@@ -64,10 +64,11 @@ interface Gated {
   anomalyType: string
   unlockFlag?: string
   exclusiveGroup?: string
+  storyFlag?: string
 }
 
 /**
- * The entries that may appear now: Reiwa ones only once `reiwaUnlocked` (the elder3 flag is raised), ones with an
+ * The entries that may appear now: never a story person (#430: they appear on their own, `storyPersonFor`), Reiwa ones only once `reiwaUnlocked` (the elder3 flag is raised), ones with an
  * `unlock` flag only once it is saved, `sound` ones only while `gate.audible` is not false (kako-jun, #79), and none
  * whose exclusive group is busy (an unreported anomaly of that group is running, #77).
  */
@@ -78,6 +79,7 @@ export const spawnableEntries = <T extends Gated>(
 ): readonly T[] =>
   entries.filter(
     e =>
+      e.storyFlag === undefined &&
       (reiwaUnlocked || e.reiwa !== true) &&
       (e.unlockFlag === undefined || gate.flags?.[e.unlockFlag] === true) &&
       !(e.anomalyType === 'sound' && gate.audible === false) &&
@@ -131,6 +133,26 @@ export const pickLedgerEntry = (
   return pickOne(pickWeighted([...byType.values()], exponent, rng), rng)
 }
 
+/**
+ * The story person (#430) of this flag, if it can be placed now: its camera is not the watched one (#418: nothing
+ * pops in on the camera being watched) and holds no unreported anomaly or held person (the person waits until that is
+ * resolved; no other anomaly is removed for it). `occupiedCameraIds` = cameras with an unreported anomaly or a person
+ * still held; `runningIds` = ids of the running (unreported) anomalies, so a person is never drawn twice.
+ */
+export const storyPersonFor = (
+  images: readonly LedgerEntry[],
+  flag: string,
+  watchedCameraId: number | undefined,
+  occupiedCameraIds: ReadonlySet<number>,
+  runningIds: ReadonlySet<string>
+): LedgerEntry | null => {
+  const entry = images.find(e => e.storyFlag === flag)
+  if (!entry || runningIds.has(entry.id)) return null
+  if (entry.cameraId === watchedCameraId) return null
+  if (occupiedCameraIds.has(entry.cameraId)) return null
+  return entry
+}
+
 /** The running anomaly for a ledger entry. `id` is the ledger id (unique per shift). */
 export const createAnomaly = (
   entry: LedgerEntry,
@@ -143,6 +165,7 @@ export const createAnomaly = (
   cameraId: entry.cameraId,
   phase,
   ...(entry.exclusiveGroup ? { exclusiveGroup: entry.exclusiveGroup } : {}),
+  ...(entry.storyFlag ? { storyFlag: entry.storyFlag } : {}),
   overlay: {
     url: overlayUrl,
     origin: entry.origin,
@@ -272,10 +295,69 @@ export const pickSpawn = (
   return pickIn(group[0], group[1])
 }
 
+/** The group an entry is retired/refilled with (#427): one camera's images, or the camera-free non-image entries. */
+const NON_IMAGE_GROUP = 'non-image'
+
+/** The group key of a spawn (#427): `cam:N` for an image entry, `non-image` for any non-image one. */
+export const groupKeyOfSpawn = (spawn: Spawn): string =>
+  spawn.kind === 'image' ? `cam:${spawn.entry.cameraId}` : NON_IMAGE_GROUP
+
+/**
+ * Groups used up by retired ids (#427). A group is one camera's image entries (fixed `cameraId`) or all non-image
+ * entries (their camera is drawn at appearance). It is used up when it has at least one candidate (the same gates
+ * `pickSpawn` applies that do not change within a moment: the Reiwa lock, the `unlock` flag, a non-image effect) and
+ * every candidate is retired. Returns, per used-up group, every id of the group (all of them become drawable again,
+ * candidate or not), the group's key, and the group's last retired id in `retired` order (the one just found, to be
+ * avoided on the next draw from that group). `nonImages` should already be filtered to the playable ones (`voiceReady`).
+ */
+export const exhaustedGroups = (
+  images: readonly LedgerEntry[],
+  nonImages: readonly NonImageEntry[],
+  retired: readonly string[],
+  reiwaUnlocked: boolean,
+  flags: Readonly<Record<string, boolean>> = {}
+): { key: string; ids: string[]; last: string }[] => {
+  if (retired.length === 0) return []
+  const retiredSet = new Set(retired)
+  const groups = new Map<string, { all: string[]; candidates: string[] }>()
+  const add = (
+    key: string,
+    e: { id: string; reiwa?: true; unlockFlag?: string },
+    playable: boolean
+  ) => {
+    const g = groups.get(key) ?? { all: [], candidates: [] }
+    g.all.push(e.id)
+    if (
+      playable &&
+      (reiwaUnlocked || e.reiwa !== true) &&
+      (e.unlockFlag === undefined || flags[e.unlockFlag] === true)
+    )
+      g.candidates.push(e.id)
+    groups.set(key, g)
+  }
+  // A story person (#430) is not part of the draw, so it must not keep its camera's group from being used up.
+  for (const e of images)
+    if (e.storyFlag === undefined) add(`cam:${e.cameraId}`, e, true)
+  for (const e of nonImages) add(NON_IMAGE_GROUP, e, hasNonImageEffect(e))
+  const out: { key: string; ids: string[]; last: string }[] = []
+  for (const [key, g] of groups) {
+    if (
+      g.candidates.length === 0 ||
+      !g.candidates.every(id => retiredSet.has(id))
+    )
+      continue
+    const last = [...retired].reverse().find(id => g.candidates.includes(id))
+    if (last !== undefined) out.push({ key, ids: g.all, last })
+  }
+  return out
+}
+
 /**
  * True while an unused entry (of either kind) that could appear when a camera frees up still exists. Only the Reiwa
  * lock counts as "never" (as before): an entry waiting for a flag, for sound, or for its exclusive group is still
  * unused, because any of those can change during the shift, so the spawner keeps retrying instead of giving up.
+ * It is called with the ledger BEFORE the device filter (`monitorEffectPlayable`, RT-UI-10 on a touch device), on purpose:
+ * a mouse-only entry that can never be drawn here still counts as unused, so the shift is not called exhausted for it.
  */
 export const hasUnusedEntry = (
   images: readonly LedgerEntry[],
@@ -283,7 +365,12 @@ export const hasUnusedEntry = (
   usedIds: ReadonlySet<string>,
   reiwaUnlocked: boolean
 ): boolean =>
-  images.some(e => !usedIds.has(e.id) && (reiwaUnlocked || e.reiwa !== true)) ||
+  images.some(
+    e =>
+      e.storyFlag === undefined &&
+      !usedIds.has(e.id) &&
+      (reiwaUnlocked || e.reiwa !== true)
+  ) ||
   nonImages.some(
     e =>
       !usedIds.has(e.id) &&

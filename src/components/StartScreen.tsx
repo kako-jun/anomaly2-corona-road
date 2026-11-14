@@ -6,6 +6,11 @@ import type { Language } from '../utils/saveData'
 import { nextPage, prevPage, swipeDirection } from '../utils/titlePager'
 import { initialPerf, stepPerf } from '../utils/titlePerf'
 import type { PerfLevel } from '../utils/titlePerf'
+import {
+  fullscreenAvailable,
+  isFullscreen,
+  toggleFullscreen,
+} from '../utils/fullscreen'
 import { TitleNoise } from './TitleNoise'
 import { TransferPanel } from './TransferPanel'
 
@@ -55,6 +60,16 @@ export const StartScreen = ({
   onTransferFailed,
 }: StartScreenProps) => {
   const [transferring, setTransferring] = useState(false)
+  // Fullscreen key (#426): only where the browser can (not iPhone Safari, not an installed PWA); the state follows the
+  // browser (ESC leaves fullscreen too).
+  const [canFull] = useState(fullscreenAvailable)
+  const [full, setFull] = useState(isFullscreen)
+  useEffect(() => {
+    if (!canFull) return
+    const sync = () => setFull(isFullscreen())
+    document.addEventListener('fullscreenchange', sync)
+    return () => document.removeEventListener('fullscreenchange', sync)
+  }, [canFull])
   const [confirming, setConfirming] = useState(false)
   // Keyboard focus follows the confirmation: CANCEL (the safe side) when it opens, START OVER when
   // it is cancelled, and START SHIFT once the erase has taken effect.
@@ -141,11 +156,20 @@ export const StartScreen = ({
         {perf !== 'off' && <TitleNoise />}
       </div>
       <h1 className="start-sr-only">ANOMALY² Corona Road</h1>
+      {canFull && (
+        <button
+          type="button"
+          className="start-top-key start-fullscreen-key"
+          onClick={() => void toggleFullscreen()}
+        >
+          {full ? 'EXIT' : 'FULL'}
+        </button>
+      )}
       {onTransferred && (
         <button
           type="button"
           ref={transferKeyRef}
-          className="start-transfer-key"
+          className="start-top-key start-transfer-key"
           onClick={() => setTransferring(true)}
         >
           TRANSFER SAVE

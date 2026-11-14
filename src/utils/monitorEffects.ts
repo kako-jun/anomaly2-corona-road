@@ -19,27 +19,54 @@ import type { Anomaly } from '../types/game'
  * `exclusive` group, named after the part they touch (prompts/README.md); they then never run together.
  */
 export const MONITOR_EFFECTS: Readonly<Record<string, { what: string }>> = {
+  'RT-UI-01': { what: 'REPORT button drifts out of place' },
   'RT-UI-02': { what: 'TIME / REPORTS headings swapped' },
   'RT-UI-03': { what: 'camera keys 2, 5, 8 stuck down' },
+  'RT-UI-04': { what: 'one more STRIKES lamp lit than the real count' },
+  'RT-UI-05': { what: 'TIME runs backwards / jumps / freezes' },
   'RT-UI-06': { what: 'HUD heading text corrupted' },
   'RT-UI-07': { what: 'Japanese / symbols mixed into the HUD headings' },
   'RT-UI-08': { what: 'digit windows glow orange-red' },
   'RT-UI-09': { what: 'REPORT lamp blinks irregularly' },
+  'RT-UI-10': { what: 'mouse cursor shape glitches (desktop only)' },
   'RT-UI-11': { what: 'cabinet tilted' },
   'RT-UI-12': { what: 'REC dot blinks irregularly' },
+  'RT-UI-13': { what: 'brightness / contrast knobs turn by themselves' },
+  'RT-UI-14': { what: 'model plate digits swapped (CR-24)' },
   'RT-UI-15': { what: 'speaker grille pulses in silence' },
   'RT-UI-16': { what: 'cabinet mirrored left-right' },
   'RT-UI-17': { what: 'digit glow drops out (cut-away digits)' },
   'RT-UI-18': { what: 'faint other digit smeared over the digits' },
   'RT-UI-19': { what: 'all camera lamps lit' },
+  'RT-UI-20': { what: 'one camera key loses its face' },
+  'RT-UI-21': { what: 'loupe does not come up when pressed' },
   'RT-UI-22': { what: 'noise and scanlines gone for good' },
   'RT-UI-23': { what: 'TIME colon blinks fast or stays lit' },
   'RT-UI-24': { what: 'selected camera lamp blue' },
   'RT-UI-25': { what: 'selected camera lamp white' },
   'RT-UI-26': { what: 'REPORT label misspelled' },
   'RT-UI-27': { what: 'speaker holes checkered' },
+  'RT-UI-28': { what: 'model number becomes the child milestone (CR-100)' },
   'RT-UI-29': { what: 'cabinet body tinted blue-green' },
+  'RT-UI-30': { what: 'whole browser screen flashes a few times' },
 }
+
+/**
+ * Effects a player can only see with a mouse (RT-UI-10: the cursor). On a touch device nothing shows, so the draw
+ * (`useGameState`) leaves them out there (`monitorEffectPlayable`).
+ */
+const NEEDS_FINE_POINTER: ReadonlySet<string> = new Set(['RT-UI-10'])
+
+/** False when the id is an effect that cannot be seen on this device (`finePointer`: hover-capable fine pointer). */
+export const monitorEffectPlayable = (
+  id: string,
+  finePointer: boolean
+): boolean => finePointer || !NEEDS_FINE_POINTER.has(id)
+
+/** True on a device with a mouse-like pointer (the same media query the cursor effect's CSS is under). */
+export const hasFinePointer = (): boolean =>
+  typeof window !== 'undefined' &&
+  !!window.matchMedia?.('(hover: hover) and (pointer: fine)').matches
 
 export const hasMonitorEffect = (id: string): boolean =>
   Object.hasOwn(MONITOR_EFFECTS, id)
