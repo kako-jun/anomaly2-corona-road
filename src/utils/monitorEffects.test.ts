@@ -284,16 +284,46 @@ describe('input-side effects (#437): RT-UI-10 / 21 / 30', () => {
     const rule = css.match(/RT-UI-30'\]::after \{([^}]*)\}/)![1]
     expect(rule).toMatch(/position: fixed;\s*inset: 0;/)
     expect(rule).toMatch(/pointer-events: none;/)
-    // the resting state is the still veil, not 0: it stays after the pulses until the report
-    const rest = Number(rule.match(/\n\s*opacity: ([\d.]+);/)![1])
-    expect(rest).toBeGreaterThan(0)
+    // the resting state is the still veil, not 0: it stays after the pulses until the report.
+    // the strength is two numbers on the rule (--veil-rest, --veil-pulse); the keyframes only use them
+    const rest = Number(rule.match(/--veil-rest: ([\d.]+);/)![1])
+    const pulse = Number(rule.match(/--veil-pulse: ([\d.]+);/)![1])
+    expect(rule).toMatch(/\n\s*opacity: var\(--veil-rest\);/)
+    // floors: 15% was the faintest veil still seen in the A/B shots, 5% was not seen at all (#453); the pulse must rise
+    // clearly above the still veil (10 points) but stay a faint step (at most 15 points, never a full white flash)
+    expect(rest).toBeGreaterThanOrEqual(0.15)
+    expect(pulse).toBeGreaterThanOrEqual(0.1)
+    expect(pulse).toBeLessThanOrEqual(0.15)
+    // the strength lives only in the CSS: the ledger / README / CLAUDE.md point there and carry no percentages
+    const detail = (
+      ledger.anomalies.find(e => e.id === 'RT-UI-30') as { detail?: string }
+    ).detail!
+    expect(detail).toMatch(/--veil-rest/)
+    expect(detail).not.toMatch(/\d+\s*%/)
+    const readme = readFileSync(
+      join(process.cwd(), 'prompts/README.md'),
+      'utf8'
+    )
+    expect(readme).toMatch(/--veil-rest/)
+    expect(readme).not.toMatch(/RT-UI-30[^\n]{0,200}\d+\s*%/)
     // a finite animation (iteration count 1), never `infinite`
     const use = rule.match(/animation: screen-flash ([\d.]+)s linear (\w+);/)!
     expect(use[2]).toBe('1')
     expect(rule).not.toMatch(/infinite/)
     const total = Number(use[1])
     const body = css.match(/@keyframes screen-flash \{([\s\S]*?)\n\}/)![1]
-    const blocks = [...body.matchAll(/([\d.%,\s]+)\{\s*opacity: ([\d.]+);/g)]
+    const blocks = [
+      ...body.matchAll(
+        /([\d.%,\s]+)\{\s*opacity: (var\(--veil-rest\)|calc\(var\(--veil-rest\) \+ var\(--veil-pulse\)\));/g
+      ),
+    ].map(
+      m =>
+        [m[0], m[1], m[2].startsWith('calc') ? rest + pulse : rest] as [
+          string,
+          string,
+          number,
+        ]
+    )
     const stops = (pred: (o: number) => boolean) =>
       blocks
         .filter(b => pred(Number(b[2])))
@@ -307,7 +337,7 @@ describe('input-side effects (#437): RT-UI-10 / 21 / 30', () => {
     // the keyframes start and end on the resting veil (so nothing jumps when the animation ends)
     expect(stops(o => o === rest)).toEqual(expect.arrayContaining([0, 100]))
     const peak = Math.max(...blocks.map(b => Number(b[2])))
-    expect(peak).toBeLessThanOrEqual(0.2) // never a full white flash
+    expect(peak).toBeLessThanOrEqual(0.4) // never a full white flash (at most a third-ish white)
     expect(total).toBeLessThanOrEqual(3) // over within a few seconds
     expect(css).toMatch(
       /@media \(prefers-reduced-motion: reduce\) \{\s*\.retro\[data-fx~='RT-UI-30'\]::after \{\s*animation: none;\s*\}/

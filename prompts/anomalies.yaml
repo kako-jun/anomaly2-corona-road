@@ -7256,7 +7256,7 @@ anomalies:
     kind: 'non_image'
     category: 'Surreal'
     anomaly_type: 'ui_corruption'
-    detail: 'whole screen flash: ユーザーの見ている画面全体（ブラウザの表示領域。筐体・つまみ・ボタンを含む全体）が、出現した直後にうっすら白く3回チカチカし（1回0.5秒・最大でも白16%。1秒3回以下）、そこで点滅は終わる。その後は、報告されるまでごく薄い白（5%）のベールが静止したまま画面全体に残る（全面の点滅は数回で終わる、README の点滅の安全上限）。映像の中だけの黒フレーム RT-FEED-23 や REC の赤い点の点滅 RT-UI-12 とは別の見え方。reduced-motion では点滅せず、最初から薄い白（5%）の静止ベールだけ（#381 と同じ扱い）。操作は奪わない。'
+    detail: 'whole screen flash: ユーザーの見ている画面全体（ブラウザの表示領域。筐体・つまみ・ボタンを含む全体）が、出現した直後にうっすら白く3回チカチカし（1回0.5秒・ピークは静止ベールより少し濃い白。1秒3回以下）、そこで点滅は終わる。その後は、報告されるまで見つけられる濃さの白いベール（濃さの正本は src/styles/monitorEffects.css の --veil-rest / --veil-pulse、暫定値。#453）が静止したまま画面全体に残る（全面の点滅は数回で終わる、README の点滅の安全上限）。映像の中だけの黒フレーム RT-FEED-23 や REC の赤い点の点滅 RT-UI-12 とは別の見え方。reduced-motion では点滅せず、最初から静止ベールだけ（#381 と同じ扱い）。操作は奪わない。'
     memo:
       ja: '画面全体がチカチカした。'
       en: 'The whole screen flickered for a moment.'
