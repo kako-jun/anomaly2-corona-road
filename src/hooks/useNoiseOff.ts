@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   NOISE_OFF_MS,
+  NOISE_RAISED_MS,
   createShakeDetector,
   motionMagnitude,
 } from '../utils/noiseOff'
-
-const reducedMotion = () =>
-  !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+import { prefersReducedMotion } from '../utils/screenTransition'
 
 type MotionEventCtor = {
   requestPermission?: () => Promise<'granted' | 'denied' | string>
@@ -16,21 +15,25 @@ type MotionEventCtor = {
  * "The noise is off for NOISE_OFF_MS" (#342): `off` is true meanwhile, `trigger` starts it or restarts the 10 s (no adding up).
  * With prefers-reduced-motion the noise does not move to begin with, so trigger does nothing.
  * `askMotion` is for a tap handler: it (once) starts listening for a shake, asking iOS for permission inside that tap.
+ * `inverted` (RT-RULE-03): the knock / shake raises the noise (`boost`) instead of switching it off (`off`).
  * Nothing is saved.
  */
-export const useNoiseOff = () => {
-  const [off, setOff] = useState(false)
+export const useNoiseOff = (inverted = false) => {
+  const [active, setActive] = useState(false)
   const timer = useRef(0)
 
   const trigger = useCallback(() => {
-    if (reducedMotion()) return
+    if (prefersReducedMotion()) return
     window.clearTimeout(timer.current)
-    setOff(true)
-    timer.current = window.setTimeout(() => {
-      timer.current = 0
-      setOff(false)
-    }, NOISE_OFF_MS)
-  }, [])
+    setActive(true)
+    timer.current = window.setTimeout(
+      () => {
+        timer.current = 0
+        setActive(false)
+      },
+      inverted ? NOISE_RAISED_MS : NOISE_OFF_MS
+    )
+  }, [inverted])
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
@@ -94,5 +97,11 @@ export const useNoiseOff = () => {
       })
   }, [listen])
 
-  return { off, trigger, askMotion }
+  // RT-RULE-03 (inverted): the same knock / shake brings the noise UP for the same time instead of switching it off
+  return {
+    off: active && !inverted,
+    boost: active && inverted,
+    trigger,
+    askMotion,
+  }
 }

@@ -28,6 +28,8 @@ import {
 import { reportTargetsFor, showsOnCamera } from '../utils/reportTarget'
 import { isAudible } from '../utils/audioSettings'
 import { hasFinePointer, monitorEffectPlayable } from '../utils/monitorEffects'
+import { prefersReducedMotion } from '../utils/screenTransition'
+import { forcedSpawnIds } from '../utils/forcedSpawn'
 import { resetVoiceHistory, voiceReady } from '../utils/voiceSounds'
 import type { FlagEvent } from './useSubtitle'
 import {
@@ -56,6 +58,9 @@ export interface Feedback {
   /** Wrong reports only: the anomaly showing on the watched camera at that moment (null = none). */
   anomalyId?: string | null
 }
+
+// Dev only (`?force=<id,...>`, ignored by a production build): the draw gives only these non-image anomalies (#442).
+const FORCED_SPAWN = forcedSpawnIds(window.location.search, import.meta.env.DEV)
 
 const TOAST_MS = 1500
 /** When a spawn could not happen only for lack of a free camera, try again after this (not every frame). */
@@ -368,7 +373,7 @@ export const useGameState = () => {
       // A person is already out there waiting to be reported: nothing to do (and no save is read).
       if (running.some(a => a.storyFlag && !a.detectedAt)) return false
       const flag = duePerson(load())
-      if (flag === null) return false
+      if (flag === null || FORCED_SPAWN !== null) return false
       if (flag === CHILD_FLAG) {
         // The child comes only after the foreshadowing conversation has been played to its end (#430).
         announce(raiseTrigger('childDue'))
@@ -445,9 +450,12 @@ export const useGameState = () => {
       // Reiwa anomalies join the draw once elder3 is saved; one raised mid-shift counts from the next spawn.
       const reiwaUnlocked = save.flags[REIWA_UNLOCK_FLAG] === true
       const finePointer = hasFinePointer()
+      const reducedMotion = prefersReducedMotion()
       const playableNonImages = nonImageLedger.filter(
         entry =>
-          voiceReady(entry.id) && monitorEffectPlayable(entry.id, finePointer)
+          voiceReady(entry.id) &&
+          monitorEffectPlayable(entry.id, finePointer, reducedMotion) &&
+          (FORCED_SPAWN === null || FORCED_SPAWN.has(entry.id))
       )
       // A group (one camera's images / the non-image entries) whose candidates have all been found is refilled now
       // (#427): its retired ids are released. The one found last is remembered per group and avoided on the next draw
@@ -470,16 +478,22 @@ export const useGameState = () => {
       ])
       for (;;) {
         const draw = (skip: ReadonlySet<string>) =>
-          pickSpawn(ANOMALY_LEDGER, playableNonImages, freeCameraIds, skip, {
-            reiwaUnlocked,
-            flags: save.flags,
-            audible: isAudible(),
-            busyGroups: new Set(
-              activeAnomaliesRef.current
-                .filter(a => !a.detectedAt && a.exclusiveGroup)
-                .map(a => a.exclusiveGroup as string)
-            ),
-          })
+          pickSpawn(
+            FORCED_SPAWN === null ? ANOMALY_LEDGER : [],
+            playableNonImages,
+            freeCameraIds,
+            skip,
+            {
+              reiwaUnlocked,
+              flags: save.flags,
+              audible: isAudible(),
+              busyGroups: new Set(
+                activeAnomaliesRef.current
+                  .filter(a => !a.detectedAt && a.exclusiveGroup)
+                  .map(a => a.exclusiveGroup as string)
+              ),
+            }
+          )
         const avoid = new Set(avoidNextRef.current.values())
         const spawn =
           (avoid.size > 0 ? draw(new Set([...blocked, ...avoid])) : null) ??

@@ -72,6 +72,8 @@ interface CameraViewProps {
   loupeHost?: HTMLElement | null
   /** RT-UI-21: the loupe does not come up (pressing the picture shows nothing; taps, double tap and edge taps still work). */
   loupeBroken?: boolean
+  /** RT-RULE-03: knocking / shaking raises the noise instead of switching it off. */
+  noiseInverted?: boolean
 }
 
 export const CameraView = ({
@@ -87,10 +89,11 @@ export const CameraView = ({
   onEdgeTap,
   loupeHost,
   loupeBroken = false,
+  noiseInverted = false,
 }: CameraViewProps) => {
   const glassRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<HTMLDivElement>(null)
-  const noise = useNoiseOff()
+  const noise = useNoiseOff(noiseInverted)
   const { view: loupeView, handlers } = useLoupeGesture({
     enabled: !!loupeHost && !loupeBroken,
     glassRef,
@@ -152,7 +155,11 @@ export const CameraView = ({
     <section className="tube" aria-label="Monitor">
       <div className="bezel" {...handlers} onClick={noise.askMotion}>
         <div
-          className={cx('glass', noise.off && 'noise-off')}
+          className={cx(
+            'glass',
+            noise.off && 'noise-off',
+            noise.boost && 'noise-up'
+          )}
           style={style}
           ref={glassRef}
           data-glitch={feedGlitch}
@@ -290,6 +297,7 @@ export const CameraView = ({
           brightness={brightness}
           contrast={contrast}
           noiseOff={noise.off}
+          noiseUp={noise.boost}
           feedGlitch={feedGlitch}
           glitchSeed={camera.id * 7919}
         />

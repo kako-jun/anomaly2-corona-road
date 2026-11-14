@@ -20,6 +20,8 @@ interface ReportButtonProps {
   lampsOff?: boolean
   /** The key caption: REPORT, or a misspelling while RT-UI-26 runs (the accessible name stays REPORT). */
   label?: string
+  /** RT-RULE-02: the lamp is lit for a moment because a first press was taken in (the picker did not open). */
+  flash?: boolean
   buttonRef: RefObject<HTMLButtonElement>
   onToggle: () => void
 }
@@ -34,6 +36,7 @@ export const ReportButton = ({
   alert = false,
   lampsOff = false,
   label = 'REPORT',
+  flash = false,
   buttonRef,
   onToggle,
 }: ReportButtonProps) => (
@@ -42,8 +45,8 @@ export const ReportButton = ({
       <div
         className={cx(
           'lamp-big red',
-          !lampsOff && open && 'lit',
-          !lampsOff && alert && !open && 'alert'
+          !lampsOff && (open || flash) && 'lit',
+          !lampsOff && alert && !open && !flash && 'alert'
         )}
         aria-hidden="true"
       />

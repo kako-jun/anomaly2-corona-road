@@ -66,7 +66,7 @@ describe('the monitor effects table and the ledger agree', () => {
     expect(
       hasNonImageEffect(ui('RT-UI-11', { anomalyType: 'rule_break' }))
     ).toBe(true)
-    expect(hasNonImageEffect(ui('RT-RULE-01'))).toBe(false)
+    expect(hasNonImageEffect(ui('RT-RULE-99'))).toBe(false)
     expect(
       hasNonImageEffect(ui('RT-UI-11', { anomalyType: 'feed_glitch' }))
     ).toBe(false)
@@ -103,7 +103,7 @@ describe('runningMonitorEffects: appear, draw, report from any camera, clear', (
     expect(
       runningMonitorEffects([
         run('RT-UI-11', 1, { scope: 'camera' }),
-        run('RT-RULE-01', 2),
+        run('RT-RULE-99', 2),
       ]).size
     ).toBe(0)
   })
@@ -354,5 +354,55 @@ describe('HUD / knob / plate batch (#438)', () => {
   it('RT-UI-28 waits for the first elder (the answer is not shown early)', () => {
     expect(g('RT-UI-28')?.unlock).toEqual({ flag: 'elder1' })
     expect(g('RT-UI-14')?.unlock).toBeUndefined()
+  })
+})
+
+describe('rule-break effects (#442): RT-RULE-01..06', () => {
+  const ids = [1, 2, 3, 4, 5, 6].map(n => `RT-RULE-0${n}`)
+  const ledger = parse(
+    readFileSync(join(process.cwd(), 'prompts/anomalies.yaml'), 'utf8')
+  ) as { anomalies: { id: string; status?: string; exclusive?: string }[] }
+  const g = (id: string) => ledger.anomalies.find(e => e.id === id)
+  const entry = (id: string): NonImageEntry => ({
+    id,
+    category: 'Surreal',
+    anomalyType: 'rule_break',
+  })
+
+  it.each(ids)(
+    '%s: produced, in the table, drawn, reportable from any camera, cleared by the report',
+    id => {
+      expect(g(id)?.status).toBe('produced')
+      expect(hasNonImageEffect(entry(id))).toBe(true)
+      const a = {
+        ...createNonImageAnomaly(entry(id), 3, 'early'),
+      }
+      expect(a.scope).toBe('monitor')
+      expect(fxAttribute(runningMonitorEffects([a]))).toBe(id)
+      for (const cam of [1, 4, 8])
+        expect(reportTargetsFor([a], cam, 'Surreal').hit?.id).toBe(id)
+      expect(
+        fxAttribute(runningMonitorEffects([{ ...a, detectedAt: 9 }]))
+      ).toBeUndefined()
+    }
+  )
+  it('exclusive groups: switch direction and lag never run together (01 / 06), and a mirrored cabinet (UI-16) never meets a reversed switch direction (01); the REPORT lamp (09 / RULE-02); the noise (22 / FEED-28 / RULE-03); the knobs (13 / RULE-04)', () => {
+    expect(g('RT-RULE-01')?.exclusive).toBe('cabinet-transform')
+    expect(g('RT-RULE-06')?.exclusive).toBe('cabinet-transform')
+    expect(g('RT-UI-16')?.exclusive).toBe('cabinet-transform')
+    expect(g('RT-UI-09')?.exclusive).toBe('report-lamp')
+    expect(g('RT-RULE-02')?.exclusive).toBe('report-lamp')
+    expect(g('RT-RULE-03')?.exclusive).toBe('noise')
+    expect(g('RT-UI-22')?.exclusive).toBe('noise')
+    expect(g('RT-RULE-04')?.exclusive).toBe('knob')
+    // 05 (wrap) is compatible with both 01 and 06
+    expect(g('RT-RULE-05')?.exclusive).toBeUndefined()
+  })
+  it('RT-RULE-03 is left out of the draw under prefers-reduced-motion (the noise does not move there); the others are not', () => {
+    expect(monitorEffectPlayable('RT-RULE-03', true, true)).toBe(false)
+    expect(monitorEffectPlayable('RT-RULE-03', true, false)).toBe(true)
+    expect(monitorEffectPlayable('RT-RULE-03', true)).toBe(true)
+    for (const id of ids.filter(i => i !== 'RT-RULE-03'))
+      expect(monitorEffectPlayable(id, true, true)).toBe(true)
   })
 })

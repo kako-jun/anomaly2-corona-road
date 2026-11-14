@@ -49,6 +49,14 @@ export const MONITOR_EFFECTS: Readonly<Record<string, { what: string }>> = {
   'RT-UI-28': { what: 'model number becomes the child milestone (CR-100)' },
   'RT-UI-29': { what: 'cabinet body tinted blue-green' },
   'RT-UI-30': { what: 'whole browser screen flashes a few times' },
+  'RT-RULE-01': { what: 'edge taps / arrow keys switch cameras the other way' },
+  'RT-RULE-02': { what: 'REPORT needs two presses to open the picker' },
+  'RT-RULE-03': {
+    what: 'knock / shake raises the noise instead of clearing it',
+  },
+  'RT-RULE-04': { what: 'brightness / contrast knobs act reversed' },
+  'RT-RULE-05': { what: 'stepping forward stops at the last camera' },
+  'RT-RULE-06': { what: 'camera switching answers about a second late' },
 }
 
 /**
@@ -60,8 +68,17 @@ const NEEDS_FINE_POINTER: ReadonlySet<string> = new Set(['RT-UI-10'])
 /** False when the id is an effect that cannot be seen on this device (`finePointer`: hover-capable fine pointer). */
 export const monitorEffectPlayable = (
   id: string,
-  finePointer: boolean
-): boolean => finePointer || !NEEDS_FINE_POINTER.has(id)
+  finePointer: boolean,
+  reducedMotion = false
+): boolean =>
+  (finePointer || !NEEDS_FINE_POINTER.has(id)) &&
+  (!reducedMotion || !NEEDS_MOTION.has(id))
+
+/**
+ * Effects that cannot be seen with prefers-reduced-motion (RT-RULE-03: the noise does not move there, so a knock that
+ * "raises" it shows nothing; the knock does nothing in that setting at all, #342). Left out of the draw there.
+ */
+const NEEDS_MOTION: ReadonlySet<string> = new Set(['RT-RULE-03'])
 
 /** True on a device with a mouse-like pointer (the same media query the cursor effect's CSS is under). */
 export const hasFinePointer = (): boolean =>

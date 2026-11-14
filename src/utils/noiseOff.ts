@@ -4,6 +4,8 @@
  */
 /** How long the noise stays off (ms). A new shake / knock while it is off starts this over (it does not add up). */
 export const NOISE_OFF_MS = 10_000
+/** RT-RULE-03 (noise inverted): how long the raised noise lasts (ms). Its own number, so tuning one never moves the other. */
+export const NOISE_RAISED_MS = 10_000
 /** A shake peak: the acceleration (m/s^2, without gravity) over this counts as one hard movement. */
 export const SHAKE_THRESHOLD = 15
 /** A shake is this many peaks inside SHAKE_WINDOW_MS ... */

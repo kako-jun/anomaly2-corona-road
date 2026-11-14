@@ -8,6 +8,7 @@ import {
 } from 'react'
 import { Feedback } from '../hooks/useGameState'
 import { useCameraKeys } from '../hooks/useCameraKeys'
+import { useCameraSwitch } from '../hooks/useCameraSwitch'
 import { FlagEvent, useSubtitle } from '../hooks/useSubtitle'
 import { Anomaly, AnomalyCategory, Camera, GameStats } from '../types/game'
 import { CAMERAS, ENDING_BAR_CAMERA } from '../utils/gameConfig'
@@ -31,6 +32,7 @@ import {
 } from '../utils/voiceSounds'
 import { HUM_MODES, SOUND_EFFECTS } from '../utils/nonImageEffects'
 import { fxAttribute } from '../utils/monitorEffects'
+import { prefersReducedMotion } from '../utils/screenTransition'
 import { colonVariant, reportLabel } from '../utils/hudText'
 import { ClockFault, faultedClock, pickClockFault } from '../utils/clockFault'
 import { PLATE_MODEL, plateNumber } from '../utils/modelPlate'
@@ -46,6 +48,9 @@ import { shouldAlert } from '../utils/reportAlert'
 import { ReportButton, ReportDialog } from './ReportPanel'
 
 const NO_EFFECTS: ReadonlySet<string> = new Set()
+
+/** RT-RULE-02: how long the REPORT lamp stays lit after the first press (ms; one short flash, well under 3 a second). */
+const REPORT_FLASH_MS = 300
 
 // Fixed at module load: changing `?wear=` needs a page reload.
 const WEAR = parseWear(window.location.search)
@@ -356,8 +361,7 @@ export const Cabinet = ({
   useEffect(() => {
     if (!knobDrift) return
     const user = userKnobs.current // one object for the whole run (only its fields change)
-    const reduced =
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+    const reduced = prefersReducedMotion()
     const tick = reduced ? 3000 : 100
     let dirB: 1 | -1 = Math.random() < 0.5 ? 1 : -1
     let dirC: 1 | -1 = dirB === 1 ? -1 : 1
@@ -393,6 +397,24 @@ export const Cabinet = ({
       setContrast(user.c)
     }
   }, [knobDrift])
+  // RT-RULE-04 (knobs reversed): the knob turns as always but the picture goes the other way (turn right = darker /
+  // weaker). The stored values are flipped when the effect starts and ends, so the picture itself never jumps.
+  const knobReversed = fx.has('RT-RULE-04')
+  const [wasReversed, setWasReversed] = useState(false)
+  if (wasReversed !== knobReversed) {
+    setWasReversed(knobReversed)
+    setBrightness(v => 100 - v)
+    setContrast(v => 100 - v)
+  }
+  // what the player last set (userKnobs, RT-UI-13 restores it) is in the same space as the stored values: flip it too, so
+  // RT-RULE-04 ending and then RT-UI-13 ending never restores a value from before the flip
+  const knobsFlipped = useRef(false)
+  useEffect(() => {
+    if (knobsFlipped.current === knobReversed) return
+    knobsFlipped.current = knobReversed
+    userKnobs.current.b = 100 - userKnobs.current.b
+    userKnobs.current.c = 100 - userKnobs.current.c
+  }, [knobReversed])
   const changeBrightness = useCallback((v: number) => {
     knobTouch.current.last = performance.now()
     userKnobs.current.b = v
@@ -403,13 +425,60 @@ export const Cabinet = ({
     userKnobs.current.c = v
     setContrast(v)
   }, [])
-  useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, onSwitch)
-  const handleEdgeTap = useCallback(
-    (d: 'next' | 'prev') => {
-      if (!inEnding) onSwitch(d)
-    },
-    [inEnding, onSwitch]
+  // Every camera switch (screen edge, arrows / A / D, number keys, CAMERA SELECT keys) enters here and nowhere else,
+  // so the rule-break anomalies can act on all of them (src/utils/cameraSwitch.ts, #442).
+  const { request: requestSwitch, lampIndex } = useCameraSwitch({
+    enabled: !inEnding,
+    // a waiting (lagged) switch is held while the REPORT picker is open and runs once it closes: the camera under the
+    // player's feet must not change between opening the picker and choosing a category
+    hold: reportOpen,
+    fx,
+    currentIndex: currentCameraIndex,
+    count: CAMERAS.length,
+    onSwitch,
+  })
+  const handleKeySwitch = useCallback(
+    (to: 'prev' | 'next' | number) =>
+      requestSwitch({ source: typeof to === 'number' ? 'digit' : 'arrow', to }),
+    [requestSwitch]
   )
+  useCameraKeys(!reportOpen && !inEnding, CAMERAS.length, handleKeySwitch)
+  const handleEdgeTap = useCallback(
+    (d: 'next' | 'prev') => requestSwitch({ source: 'edge', to: d }),
+    [requestSwitch]
+  )
+  const handleStripSelect = useCallback(
+    (i: number) => requestSwitch({ source: 'strip', to: i }),
+    [requestSwitch]
+  )
+
+  // RT-RULE-02: while it runs, the first press of REPORT only lights the lamp for a moment; the second opens the picker.
+  // A second press may come whenever the player likes (no time limit; kako-jun to tune). Reset when the effect ends.
+  const reportDouble = fx.has('RT-RULE-02')
+  const [reportArmed, setReportArmed] = useState(false)
+  const [reportFlash, setReportFlash] = useState(false)
+  useEffect(() => {
+    if (!reportDouble) {
+      setReportArmed(false)
+      setReportFlash(false)
+    }
+  }, [reportDouble])
+  useEffect(() => {
+    if (!reportFlash) return
+    const t = window.setTimeout(() => setReportFlash(false), REPORT_FLASH_MS)
+    return () => window.clearTimeout(t)
+  }, [reportFlash])
+  const toggleReport = () => {
+    if (reportOpen) {
+      setReportOpen(false)
+    } else if (reportDouble && !reportArmed) {
+      setReportArmed(true)
+      setReportFlash(true)
+    } else {
+      setReportArmed(false)
+      setReportOpen(true)
+    }
+  }
 
   const subtitle = useSubtitle({
     wrongFeedbackId: feedback?.kind === 'wrong' ? feedback.id : null,
@@ -445,8 +514,10 @@ export const Cabinet = ({
           result={shownResult}
           resultVisible={feedback !== null}
           subtitle={subtitle}
-          brightness={brightnessFilter(brightness)}
-          contrast={contrastFilter(contrast)}
+          brightness={brightnessFilter(
+            knobReversed ? 100 - brightness : brightness
+          )}
+          contrast={contrastFilter(knobReversed ? 100 - contrast : contrast)}
           feedGlitch={
             ending === 'ending' ? undefined : (FORCED_GLITCH ?? feedGlitchHere)
           }
@@ -454,6 +525,7 @@ export const Cabinet = ({
           onEdgeTap={handleEdgeTap}
           loupeHost={loupeHost}
           loupeBroken={loupeBroken}
+          noiseInverted={fx.has('RT-RULE-03')}
         />
         <section className="panel" aria-label="Control panel">
           <div className="loupe-host" ref={setLoupeHost} />
@@ -481,8 +553,8 @@ export const Cabinet = ({
           </div>
           <CameraStrip
             cameras={cameras}
-            currentIndex={currentCameraIndex}
-            onSelect={onSwitch}
+            currentIndex={lampIndex}
+            onSelect={handleStripSelect}
             disabled={inEnding}
             goneIndex={goneKey}
           />
@@ -491,8 +563,9 @@ export const Cabinet = ({
             alert={shouldAlert(unreportedCount)}
             lampsOff={inEnding}
             label={reportKeyLabel}
+            flash={reportFlash}
             buttonRef={reportBtnRef}
-            onToggle={() => setReportOpen(o => !o)}
+            onToggle={toggleReport}
           />
         </section>
         {/* bottom strip (#304): speaker grille on the left, model plate fixed to the right, one row */}

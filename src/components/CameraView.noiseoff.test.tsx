@@ -28,7 +28,7 @@ const rect = () =>
 let host: HTMLDivElement
 let onEdgeTap: ReturnType<typeof vi.fn>
 
-const setup = (withHost = true, loupeBroken = false) => {
+const setup = (withHost = true, loupeBroken = false, noiseInverted = false) => {
   onEdgeTap = vi.fn()
   const view = render(
     <CameraView
@@ -41,6 +41,7 @@ const setup = (withHost = true, loupeBroken = false) => {
       onEdgeTap={onEdgeTap}
       loupeHost={withHost ? host : undefined}
       loupeBroken={loupeBroken}
+      noiseInverted={noiseInverted}
     />
   )
   const c = view.container
@@ -96,6 +97,46 @@ describe('RT-UI-21 loupe broken does not take the knock away', () => {
     tap(glass, 305, 302)
     expect(host.querySelector('[data-testid="loupe"]')).toBeNull()
     expect(isOff(glass)).toBe(true)
+  })
+})
+
+describe('RT-RULE-03 noise inverted: the knock raises the noise instead', () => {
+  const isUp = (glass: HTMLElement) => glass.classList.contains('noise-up')
+  it('a double tap raises the noise for NOISE_OFF_MS (never noise-off), then it goes back', () => {
+    const { glass } = setup(true, false, true)
+    tap(glass)
+    act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS / 2))
+    tap(glass, 305, 302)
+    expect(isUp(glass)).toBe(true)
+    expect(isOff(glass)).toBe(false)
+    act(() => void vi.advanceTimersByTime(NOISE_OFF_MS - 1))
+    expect(isUp(glass)).toBe(true)
+    act(() => void vi.advanceTimersByTime(1))
+    expect(isUp(glass)).toBe(false)
+  })
+  it('the loupe carries the raised state too, and the knock never takes the controls away', () => {
+    const { glass, bezel } = setup(true, false, true)
+    tap(glass)
+    act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS / 2))
+    tap(glass, 305, 302)
+    expect(isUp(glass)).toBe(true)
+    expect(bezel).toBeTruthy()
+  })
+  it('without the effect a knock does not raise the noise', () => {
+    const { glass } = setup()
+    tap(glass)
+    act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS / 2))
+    tap(glass, 305, 302)
+    expect(isUp(glass)).toBe(false)
+    expect(isOff(glass)).toBe(true)
+  })
+  it('prefers-reduced-motion: nothing happens (the effect is not drawn there anyway)', () => {
+    setReduced(true)
+    const { glass } = setup(true, false, true)
+    tap(glass)
+    act(() => void vi.advanceTimersByTime(KNOCK_GAP_MS / 2))
+    tap(glass, 305, 302)
+    expect(isUp(glass)).toBe(false)
   })
 })
 

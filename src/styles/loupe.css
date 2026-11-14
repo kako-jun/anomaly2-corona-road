@@ -99,3 +99,10 @@
 .loupe.noise-off .scan {
   opacity: 0;
 }
+
+/* RT-RULE-03 (noise inverted): the same knock / shake raises the grain for NOISE_OFF_MS instead.
+   Still the same canvas and the same 12 fps as always, only stronger (no new flicker, nothing near the flash limit). */
+.glass.noise-up .noise,
+.loupe.noise-up .noise {
+  opacity: 0.55;
+}
