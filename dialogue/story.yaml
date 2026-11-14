@@ -37,7 +37,7 @@ dialogues:
       - { who: M, text: 'はい　怖がらせたくなかったので', en: "Yes. I didn't want to scare them." }
       - { who: A, text: '子供には優しいんだね　父性本能かな？', en: "You're good with kids. Paternal instincts, maybe?" }
       - { who: M, text: 'そこまでじゃないですよ　心配だっただけです', en: "I wouldn't go that far. I was just worried." }
-  # 子供の前触れ（#430）。台詞は kako-jun の承認待ち（仮）。袋から1つ。
+  # 令和の異変の前触れ（#430）。令和の異変が初めて出た時に1回（袋から1つ）。台詞は kako-jun の承認待ち（仮）。
   - id: story-reiwa-prelude-1
     tone: serious
     when: { flag: reiwaPrelude }
@@ -54,8 +54,9 @@ dialogues:
     tone: serious
     when: { flag: reiwaPrelude }
     lines:
-      - { who: A, text: '老人たちの記憶とは　別のものだよね', en: "That isn't from the elders' memories, is it?" }
-      - { who: M, text: '誰か別の人の　ものかもしれません', en: "It may belong to someone else." }
+      - { who: A, text: '今までの異変と　どこか違うよね', en: "It feels different from the anomalies so far, doesn't it?" }
+      - { who: M, text: '何かが　変わり始めたのかもしれません', en: "Maybe something has started to change." }
+  # 子供の前触れ（#430）。子供の出現条件を満たした時に1回（袋から1つ）。台詞は kako-jun の承認待ち（仮）。
   - id: story-child-prelude-1
     tone: serious
     when: { flag: childPrelude }
