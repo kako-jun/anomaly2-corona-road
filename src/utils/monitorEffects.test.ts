@@ -66,7 +66,7 @@ describe('the monitor effects table and the ledger agree', () => {
     expect(
       hasNonImageEffect(ui('RT-UI-11', { anomalyType: 'rule_break' }))
     ).toBe(true)
-    expect(hasNonImageEffect(ui('RT-UI-21'))).toBe(false)
+    expect(hasNonImageEffect(ui('RT-RULE-01'))).toBe(false)
     expect(
       hasNonImageEffect(ui('RT-UI-11', { anomalyType: 'feed_glitch' }))
     ).toBe(false)
@@ -103,7 +103,7 @@ describe('runningMonitorEffects: appear, draw, report from any camera, clear', (
     expect(
       runningMonitorEffects([
         run('RT-UI-11', 1, { scope: 'camera' }),
-        run('RT-UI-21', 2),
+        run('RT-RULE-01', 2),
       ]).size
     ).toBe(0)
   })
